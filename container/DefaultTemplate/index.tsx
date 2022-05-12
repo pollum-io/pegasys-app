@@ -1,5 +1,6 @@
 import { Flex } from '@chakra-ui/react';
 import { Header } from 'components';
+import { Swap } from 'components'
 import { usePicasso } from 'hooks';
 import { FunctionComponent, ReactNode } from 'react';
 
@@ -19,6 +20,7 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 			w="100vw"
 		>
 			<Header />
+			<Swap />
 			{children}
 		</Flex>
 	);
