@@ -13,11 +13,11 @@ export const InfoLinks: FunctionComponent<ILinkProps> = props => {
 
     return (
         <Link 
-            fontSize="1rem" 
-            fontWeight={400} 
+            fontSize="md" 
+            fontWeight={500} 
             color={theme.text.infoLink} 
             _hover={{ color: theme.text.mono }} 
-            p="0.5rem"  
+            p="2"  
             isExternal
             {...rest}
         >

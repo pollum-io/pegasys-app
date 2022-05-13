@@ -16,6 +16,8 @@ import {
 import { usePicasso } from 'hooks';
 import { FunctionComponent, ReactNode } from 'react';
 import { BiDownArrowAlt } from 'react-icons/Bi';
+import { IoIosArrowDown } from 'react-icons/Io';
+import { FcInfo } from 'react-icons/Fc'
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
@@ -25,206 +27,128 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 
 	return (
-		<Flex pt="6.25rem" zIndex="1">
+		<Flex pt="24" zIndex="1">
 			<Flex
-				height="23rem"
-				width="26.25rem"
-				backgroundColor="#212429"
+				height="max-content"
+				width="22%"
+				bgColor={theme.bg.swap}
 				margin="0 auto"
 				position="relative"
-				borderRadius="1.875rem"
-				p="1rem"
+				borderRadius={30}
+				p="5"
 				flexDirection="column"
 			>
 				<Flex
-					borderRadius="1.25rem"
+					borderRadius={18}
 					width="100%"
 					height="max-content"
-					p="0.5rem"
-					border="1px solid #2c2f36"
+					px="3"
+					py="1.5"
+					border="1px solid"
+					borderColor={theme.border.swapInput}
 					flexDirection="column"
 				>
 					<Flex
 						flexDirection="row"
 						justifyContent="space-between"
-						pb="0.2rem"
-						color="#c3c5cb"
+						pb="1"
+						color={theme.text.swapInfo}
 					>
-						<Text fontSize="0.875rem">From</Text>
-						<Text fontSize="0.875rem">Balance: 31321</Text>
+						<Text fontSize="sm" fontWeight="500">From</Text>
+						<Text fontSize="sm" fontWeight="500">Balance: 31321</Text>
 					</Flex>
 					<Flex alignItems="center" justifyContent="space-around">
-						<Flex alignItems="center">
+						<Flex alignItems="center" >
 							<Input
-								fontSize="1.5rem"
+								fontSize="2xl"
 								border="none"
 								placeholder="0.0"
-								width="60%"
-								mt="0.5rem"
+								width="50%"
+								mt="2"
 								fontFamily="mono"
+								px="0.5"
+								letterSpacing="-4px"
 							/>
 							<Button
-								fontSize="0.875rem"
-								height="1.75rem"
+								fontSize="sm"
+								height="max-content"
 								fontWeight="500"
-								ml="0.5rem"
-								p="0.5rem"
+								ml="2"
+								px="2"
+								py="1.5"
+								borderRadius="8"
+								color={theme.text.cyanPegasys}
+								bgColor={theme.bg.button.swapBlue}
 							>
 								MAX
 							</Button>
-						</Flex>
-						<Popover>
-							<PopoverTrigger {...props}>
-								<Button
-									borderRadius="0.75rem"
-									m="0rem"
-									p="0rem"
-									width="40%"
-									fontSize="1.25rem"
-								>
-									SYS <BiDownArrowAlt />
-								</Button>
-							</PopoverTrigger>
-							<PopoverContent
-								right="8rem"
-								position="relative"
-								w="30rem"
-								backgroundColor="#212429"
+							<Flex 
+								alignItems="center" 
+								justifyContent="space-between" 
+								px="5"
+								py="1"
+								w="max-content"
+								ml="2"
+								borderRadius={12}
+								cursor="pointer"
+								_hover={{
+									bgColor: theme.bg.button.swapTokenCurrency,
+								}}
 							>
-								<PopoverCloseButton />
-								<Flex p="1rem">Select a token!</Flex>
-								<PopoverBody>
-									<Input
-										borderRadius="1.25rem"
-										placeholder="Search name or paste address"
-									/>
-								</PopoverBody>
-								<PopoverHeader
-									display="flex"
-									flexDirection="row"
-									justifyContent="space-between"
-								>
-									Token Name
-									<Flex
-										borderRadius="0.5rem"
-										backgroundColor="#2c2f36"
-										p="0.3rem"
-										cursor="pointer"
-									>
-										<BiDownArrowAlt />
-									</Flex>
-								</PopoverHeader>
-								<PopoverBody
-									display="flex"
-									flexDirection="row"
-									justifyContent="space-between"
-								>
-									<Flex>☀ SYS</Flex>
-									<Flex>0.31234</Flex>
-								</PopoverBody>
-							</PopoverContent>
-						</Popover>
+								<FcInfo/>
+								<Text fontSize="xl" fontWeight="500" px="3">SYS</Text>
+								<IoIosArrowDown />
+							</Flex>
+						</Flex>
 					</Flex>
 				</Flex>
-				<Flex margin="0 auto" p="0.8rem 0">
+				<Flex margin="0 auto" py="4">
 					<BiDownArrowAlt />
 				</Flex>
 				<Flex
-					borderRadius="1.25rem"
+					borderRadius={18}
 					width="100%"
 					height="max-content"
-					p="0.5rem"
-					border="1px solid #2c2f36"
+					px="3"
+					py="1.5"
+					border="1px solid"
+					borderColor={theme.border.swapInput}
 					flexDirection="column"
 				>
 					<Flex
 						flexDirection="row"
 						justifyContent="space-between"
-						pb="0.2rem"
-						color="#c3c5cb"
+						pb="1"
+						color={theme.text.swapInfo}
 					>
-						<Text fontSize="0.875rem">To</Text>
-						<Text fontSize="0.875rem">Balance: -</Text>
+						<Text fontSize="sm">To</Text>
+						<Text fontSize="sm">-</Text>
 					</Flex>
 					<Flex alignItems="center" justifyContent="space-around">
 						<Flex alignItems="center">
 							<Input
-								fontSize="1.5rem"
+								fontSize="2xl"
 								border="none"
 								placeholder="0.0"
-								width="60%"
-								mt="0.5rem"
+								width="50%"
+								mt="2"
 								fontFamily="mono"
+								px="0.5"
+								letterSpacing="-4px"
 							/>
-							<Button
-								fontSize="0.875rem"
-								height="1.75rem"
-								fontWeight="500"
-								ml="0.5rem"
-								p="0.5rem"
-							>
-								MAX
-							</Button>
+							<Flex cursor="pointer" flexDirection="row" alignItems="center" bgColor={theme.bg.button.swapBlue} px="3" py="1" ml="5" borderRadius={12}>
+								<Text fontWeight="500" pr="2" fontSize="md" color={theme.text.cyanPegasys}>Select a token</Text>
+								<IoIosArrowDown />
+							</Flex>
 						</Flex>
-						<Popover>
-							<PopoverTrigger {...props}>
-								<Button
-									borderRadius="0.75rem"
-									m="0rem"
-									p="0rem"
-									width="80%"
-									fontSize="1rem"
-								>
-									<Text>Select a token</Text> <BiDownArrowAlt />
-								</Button>
-							</PopoverTrigger>
-							<PopoverContent
-								right="8rem"
-								position="relative"
-								w="30rem"
-								backgroundColor="#212429"
-							>
-								<PopoverCloseButton />
-								<Flex p="1rem">Select a token!</Flex>
-								<PopoverBody>
-									<Input
-										borderRadius="1.25rem"
-										placeholder="Search name or paste address"
-									/>
-								</PopoverBody>
-								<PopoverHeader
-									display="flex"
-									flexDirection="row"
-									justifyContent="space-between"
-								>
-									Token Name
-									<Flex
-										borderRadius="0.5rem"
-										backgroundColor="#2c2f36"
-										p="0.3rem"
-										cursor="pointer"
-									>
-										<BiDownArrowAlt />
-									</Flex>
-								</PopoverHeader>
-								<PopoverBody
-									display="flex"
-									flexDirection="row"
-									justifyContent="space-between"
-								>
-									<Flex>☀ SYS</Flex>
-									<Flex>0.31234</Flex>
-								</PopoverBody>
-							</PopoverContent>
-						</Popover>
 					</Flex>
 				</Flex>
-				<Flex justifyContent="space-between" p="0.8rem 0">
-					<Text fontSize="0.875rem">Slippage Tolerance</Text>
-					<Text fontSize="0.875rem">1.01%</Text>
+				<Flex justifyContent="space-between" fontWeight={500} py="4" px="3" color={theme.text.swapInfo}>
+					<Text fontSize="sm">Slippage Tolerance</Text>
+					<Text fontSize="sm">1.01%</Text>
 				</Flex>
 				<Flex>
-					<Button w="100%" p="2rem" borderRadius="0.75rem">
+					<Button w="100%" p="8" borderRadius="12" fontSize="xl">
 						Enter an ammount
 					</Button>
 				</Flex>

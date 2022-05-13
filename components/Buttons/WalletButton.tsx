@@ -13,11 +13,12 @@ export const WalletButton: FunctionComponent<IButtonProps> = props => {
 	const address = '0x5656as5656das65';
 	return (
 		<Button
-			color={theme.text.blue}
-			bgColor={theme.bg.button.tertiary}
+			color={theme.text.cncWallet}
+			bg={theme.bg.button.cncWallet}
 			borderWidth="1px"
 			borderStyle="solid"
-			borderColor="transparent"
+			borderColor={theme.border.cncWallet}
+			borderRadius={12}
 			opacity="0.85"
 			_hover={{
 				opacity: '1',

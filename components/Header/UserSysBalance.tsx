@@ -6,7 +6,7 @@ interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
 }
 
-export const UserSysValue: FunctionComponent<IButtonProps> = props => {
+export const UserSysBalance: FunctionComponent<IButtonProps> = props => {
     const theme = usePicasso();
     const { children, ...rest } = props;
     const isConnected = true;
@@ -15,17 +15,17 @@ export const UserSysValue: FunctionComponent<IButtonProps> = props => {
         isConnected ?
         <Button
 			color="white"
-			bgColor="#315df6"
+			bg={theme.bg.button.sysBalance}
 			borderRadius={12}
-            border="1px solid #315df6"
+            border="1px solid"
+			borderColor={theme.border.blueSys}
 			opacity="0.9"
 			_hover={{ opacity: 1 }}
 			_active={{}}
-			w="6rem"
-            padding="4rem"
+			w="max-content"
 			h="max-content"
 			py="2"
-			px="4"
+			px="2.5"
             overflow="clip"
 			{...rest}
 		>

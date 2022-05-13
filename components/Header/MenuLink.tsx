@@ -13,38 +13,34 @@ interface IButtonProps extends ButtonProps {
 }
 
 export const MenuLinks: FunctionComponent<IButtonProps> = props => {
-	const theme = usePicasso();
+    const theme = usePicasso();
+    
+    const infos = [
+        {name: 'About', link: "https://pegasys.finance/", icon:<AiOutlineInfoCircle />},
+        {name: 'Discord', link: "https://discord.com/invite/UzjWbWWERz", icon:<FaDiscord />},
+        {name: 'Telegram', link: "https://t.me/joinchat/GNosBd1_76E5MTVh", icon:<FaTelegramPlane />},
+        {name: 'Twitter', link: "https://twitter.com/PegasysDEX", icon:<FiTwitter />},
+        {name: 'Vote', link: "https://pegasys.finance/", icon:<BsCheck2Square />},
+    ]
 
     return (
-    <Popover>
-        <PopoverTrigger {...props}>
-            <IconButton aria-label="Popover" icon={<BsThreeDots />} />
-        </PopoverTrigger>
-        <PopoverContent position="absolute" left="-5rem" top="0rem" w="8rem">
-            <PopoverCloseButton />
-            <PopoverBody display="flex" flexDirection="column">
-                <Flex alignItems="center" >
-                    <AiOutlineInfoCircle />
-                    <InfoLinks href="https://pegasys.finance/">About</InfoLinks>
-                </Flex>
-                <Flex alignItems="center">
-                    <FaDiscord />
-                    <InfoLinks href="https://discord.com/invite/UzjWbWWERz">Discord</InfoLinks>
-                </Flex>
-                <Flex alignItems="center">
-                    <FaTelegramPlane />
-                    <InfoLinks href="https://t.me/joinchat/GNosBd1_76E5MTVh">Telegram</InfoLinks>
-                </Flex>
-                <Flex alignItems="center">
-                    <FiTwitter />
-                    <InfoLinks href="https://twitter.com/PegasysDEX">Twitter</InfoLinks>
-                </Flex>
-                <Flex alignItems="center">
-                    <BsCheck2Square />
-                    <InfoLinks href="https://pegasys.finance/">Telegram</InfoLinks>
-                </Flex>
-            </PopoverBody>
-        </PopoverContent>
-    </Popover>
+        <Popover>
+            <PopoverTrigger {...props}>
+                <IconButton aria-label="Popover" icon={<BsThreeDots />} />
+            </PopoverTrigger>
+            <PopoverContent w="max-content" mr='2' bgColor={theme.bg.bgPrimary}>
+                <PopoverCloseButton />
+                <PopoverBody display="flex" flexDirection="column">
+                    <Flex flexDirection="column">
+                        {infos.map(links => 
+                            <Flex alignItems="center" flexDirection="row">
+                                <Flex>{links.icon}</Flex>
+                                <InfoLinks href={links.link}>{links.name}</InfoLinks>
+                            </Flex>
+                        )}
+                    </Flex>
+                </PopoverBody>
+            </PopoverContent>
+        </Popover>
     );
 };
