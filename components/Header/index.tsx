@@ -4,7 +4,10 @@ import { FiArrowUpRight } from 'react-icons/fi';
 import { NavButton } from './NavButton';
 import { NetworkButton } from './NetworkButton';
 import { TokenButton } from './TokenButton';
-import { FiSettings } from 'react-icons/fi';
+import { MenuLinks } from './MenuLink';
+import { Languages } from './Languages';
+import { SettingsButton } from './SettingsButton';
+import { UserSysBalance } from './UserSysBalance';
 import { IconButton } from 'components/Buttons';
 import { usePicasso } from 'hooks';
 
@@ -46,13 +49,15 @@ export const Header: React.FC = () => {
 			<Flex gap="4">
 				<NetworkButton />
 				<TokenButton />
+				<UserSysBalance />
 				<WalletButton />
-				<IconButton aria-label="Settings" icon={<FiSettings />} />
 				<IconButton
 					aria-label="Theme"
 					icon={<theme.icon.theme />}
 					onClick={() => toggleColorMode()}
 				/>
+				<SettingsButton/>
+				<MenuLinks />
 			</Flex>
 		</Flex>
 	);

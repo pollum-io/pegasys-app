@@ -13,14 +13,15 @@ export const TokenButton: FunctionComponent<IButtonProps> = props => {
 	return (
 		<Button
 			color="white"
-			bgColor={theme.bg.button.secondary}
+			borderRadius={12}
+			bg={theme.bg.button.psysBalance}
 			opacity="0.90"
 			_hover={{ opacity: 1 }}
 			_active={{}}
 			w="max-content"
 			h="max-content"
-			py="2"
-			px="4"
+			py="2.5"
+			px="2.5"
 			{...rest}
 		>
 			{token}
