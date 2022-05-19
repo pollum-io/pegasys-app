@@ -1,12 +1,15 @@
-import { Button, Flex, Img, Link, Text } from '@chakra-ui/react';
+import { Button, Flex, Img, Link, Text, useDisclosure } from '@chakra-ui/react';
+import { SelectCoinModal } from 'components';
 import { DefaultTemplate } from 'container';
 import { usePicasso } from 'hooks';
 import { NextPage } from 'next';
 
-export const PoolContainer: NextPage = () => {
+export const PoolsContainer: NextPage = () => {
 	const theme = usePicasso();
+	const { onOpen, isOpen, onClose } = useDisclosure();
 	return (
 		<DefaultTemplate>
+			<SelectCoinModal isOpen={isOpen} onClose={onClose} />
 			<Flex
 				w="100%"
 				h="100%"
@@ -34,8 +37,10 @@ export const PoolContainer: NextPage = () => {
 							objectPosition="25% 20%"
 						/>
 						<Flex zIndex="docked" flexDirection="column" px="4" py="4" gap="3">
-							<Text fontWeight="medium">Liquidity provider rewards</Text>
-							<Text fontWeight="medium" fontSize="sm">
+							<Text fontWeight="medium" color="white">
+								Liquidity provider rewards
+							</Text>
+							<Text fontWeight="medium" fontSize="sm" color="white">
 								Liquidity providers earn a 0.25% fee on all trades proportional
 								to their share of the pool. Fees are added to the pool, accrue
 								in real time and can be claimed by withdrawing your liquidity.
@@ -79,6 +84,7 @@ export const PoolContainer: NextPage = () => {
 									opacity="0.8"
 									_hover={{ opacity: '1' }}
 									_active={{}}
+									onClick={onOpen}
 								>
 									Create a pair
 								</Button>
