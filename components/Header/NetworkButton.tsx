@@ -13,13 +13,14 @@ export const NetworkButton: FunctionComponent<IButtonProps> = props => {
 	return (
 		<Button
 			color="white"
-			bgColor={theme.bg.button.primary}
+			bg={theme.bg.button.network}
+			borderRadius={12}
 			opacity="0.9"
 			_hover={{ opacity: 1 }}
 			_active={{}}
 			w="max-content"
 			h="max-content"
-			py="2"
+			py="2.5"
 			px="4"
 			{...rest}
 		>
