@@ -1,15 +1,17 @@
 import { Button, Flex, Img, Link, Text, useDisclosure } from '@chakra-ui/react';
-import { SelectCoinModal } from 'components';
+import { SelectCoinModal, AddLiquidityModal } from 'components';
 import { DefaultTemplate } from 'container';
 import { usePicasso } from 'hooks';
 import { NextPage } from 'next';
+import { useState } from 'react'
 
 export const PoolsContainer: NextPage = () => {
 	const theme = usePicasso();
 	const { onOpen, isOpen, onClose } = useDisclosure();
+	const [isCreate, setIsCreate] = useState<boolean>()
 	return (
 		<DefaultTemplate>
-			<SelectCoinModal isOpen={isOpen} onClose={onClose} />
+			<AddLiquidityModal isOpen={isOpen} onClose={onClose} isCreate={isCreate}/>
 			<Flex
 				w="100%"
 				h="100%"
@@ -84,7 +86,10 @@ export const PoolsContainer: NextPage = () => {
 									opacity="0.8"
 									_hover={{ opacity: '1' }}
 									_active={{}}
-									onClick={onOpen}
+									onClick={() =>{
+										setIsCreate(true);
+										onOpen();
+									}}
 								>
 									Create a pair
 								</Button>
@@ -98,6 +103,10 @@ export const PoolsContainer: NextPage = () => {
 									opacity="0.8"
 									_hover={{ opacity: '1' }}
 									_active={{}}
+									onClick={() => {
+										setIsCreate(false);
+										onOpen();
+									}}
 								>
 									Add liquidity
 								</Button>
