@@ -11,7 +11,7 @@ export const PoolsContainer: NextPage = () => {
 	const [isCreate, setIsCreate] = useState<boolean>()
 	return (
 		<DefaultTemplate>
-			<AddLiquidityModal isOpen={isOpen} onClose={onClose} isCreate={isCreate}/>
+			<AddLiquidityModal isModalOpen={isOpen} onModalClose={onClose} isCreate={isCreate}/>
 			<Flex
 				w="100%"
 				h="100%"

@@ -1,46 +1,40 @@
 import {
 	Button,
-	Divider,
 	Flex,
 	Icon,
-	IconButton,
-	Img,
 	Input,
 	Modal,
 	ModalBody,
 	ModalCloseButton,
 	ModalContent,
-	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
-	ModalProps,
 	Text,
 	Tooltip,
 	useDisclosure,
 } from '@chakra-ui/react';
 import { usePicasso } from 'hooks';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { MdHelpOutline } from 'react-icons/md';
-import { BsArrowDownShort } from 'react-icons/bs';
-import { number } from 'yup';
-import { getDefaultTokens } from 'networks';
-import BigNumber from 'bignumber.js';
 import { FcInfo } from 'react-icons/Fc';
 import { IoIosArrowDown } from 'react-icons/Io';
 import { BiPlus } from 'react-icons/Bi';
+import { SelectCoinModal } from 'components';
 
 interface IModal {
-	isOpen: boolean;
-	onClose: () => void;
+	isModalOpen: boolean;
+	onModalClose: () => void;
 	isCreate: boolean;
 }
 
 export const AddLiquidityModal: React.FC<IModal> = props => {
-	const { isOpen, onClose, isCreate } = props;
+	const { isModalOpen, onModalClose, isCreate } = props;
 	const theme = usePicasso();
+	const { onOpen, isOpen, onClose } = useDisclosure();
 
 	return (
-		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+		<Modal blockScrollOnMount={false} isOpen={isModalOpen} onClose={onModalClose}>
+			<SelectCoinModal isOpen={isOpen} onClose={onClose} />
 			<ModalOverlay />
 			<ModalContent borderRadius="xl" bgColor={theme.bg.swap}>
 				<ModalHeader display="flex" alignItems="center">
@@ -224,6 +218,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										py="1"
 										ml="5"
 										borderRadius={12}
+										onClick={onOpen}
 									>
 										<Text
 											fontWeight="500"
