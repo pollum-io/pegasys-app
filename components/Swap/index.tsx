@@ -31,7 +31,7 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 			<Flex
 				height="max-content"
 				width="22%"
-				bgColor={theme.bg.swap}
+				bgColor={theme.bg.whiteGray}
 				margin="0 auto"
 				position="relative"
 				borderRadius={30}
@@ -81,7 +81,7 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 								px="2"
 								py="1.5"
 								borderRadius="8"
-								color={theme.text.cyan}
+								color={theme.text.whiteCyan}
 								bgColor={theme.bg.button.swapBlue}
 							>
 								MAX
@@ -156,7 +156,7 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 									fontWeight="500"
 									pr="2"
 									fontSize="md"
-									color={theme.text.cyan}
+									color={theme.text.whiteCyan}
 								>
 									Select a token
 								</Text>

@@ -14,7 +14,9 @@ interface IWeb3 {
 	connectWallet: () => Promise<void>;
 }
 
-export const Web3Context = createContext({} as IWeb3);
+declare var window: any
+
+export const WalletContext = createContext({} as IWeb3);
 
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
@@ -36,10 +38,14 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		setSigner(signer);
 	}, []);
 
-	const connectWallet = async () => {};
+	const connectWallet = async () => {
+		const provider = new ethers.providers.Web3Provider(window.ethereum)
+		console.log(provider)
+		await provider.send("eth_requestAccounts", []);
+	};
 
 	return (
-		<Web3Context.Provider
+		<WalletContext.Provider
 			value={{
 				isConnected,
 				walletAddress,
@@ -47,7 +53,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			}}
 		>
 			{children}
-		</Web3Context.Provider>
+		</WalletContext.Provider>
 	);
 };
-export const useWeb3 = () => useContext(Web3Context);

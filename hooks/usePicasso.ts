@@ -9,7 +9,8 @@ const usePicasso = () => {
 			infoLink: useColorModeValue('#565a69', '#c3c5cb'),
 			connectWallet: useColorModeValue('#ffffff', '#00d9ef'),
 			swapInfo: useColorModeValue('#565a69', '#c3c5cb'),
-			cyan: useColorModeValue('#ffffff', '#00d9ef'),
+			whiteCyan: useColorModeValue('#ffffff', '#00d9ef'),
+			cyan: useColorModeValue('#00d9ef', '#00d9ef')
 		},
 		icon: {
 			theme: useColorModeValue(BsFillMoonFill, BsFillSunFill),
@@ -18,7 +19,8 @@ const usePicasso = () => {
 			primary: useColorModeValue('blackAlpha.50', 'gray.700'),
 			secondary: useColorModeValue('gray.300', 'gray.800'),
 			bgPrimary: useColorModeValue('#f7f8fa', '#2c2f36'),
-			swap: useColorModeValue('#ffffff', '#212429'),
+			whiteGray: useColorModeValue('#ffffff', '#212429'),
+			iceGray: useColorModeValue('#f7f8fa', '#2c2f36'),
 			button: {
 				primary: useColorModeValue('blue.500', 'blue.600'),
 				secondary: useColorModeValue('purple.700', 'purple.600'),
@@ -46,6 +48,7 @@ const usePicasso = () => {
 			borderSettings: useColorModeValue('#edeef2', '#40444f'),
 			blueSys: useColorModeValue('#315df6', '#315df6'),
 			swapInput: useColorModeValue('#f7f8fa', '#2c2f36'),
+			walltes: useColorModeValue('#edeef2', '#40444f'),
 		},
 	};
 
