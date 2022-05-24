@@ -3,6 +3,7 @@ import { usePicasso } from 'hooks';
 import { useContext } from 'react';
 import { WalletProvider } from '../../contexts/wallet'
 import { useWallet } from 'hooks';
+import { WalletOptions }  from 'components/WalletOptions'
 
 interface IModal {
     isOpen: boolean;
@@ -23,65 +24,7 @@ export const SelectWallets: React.FC<IModal> = props => {
                 </ModalHeader>
                 <ModalCloseButton />
                 <ModalBody bgColor={theme.bg.iceGray}>
-                    <Flex 
-                        justifyContent='space-between' 
-                        mx='8' 
-                        my='4' 
-                        p='4' 
-                        border='1px solid' 
-                        borderRadius='10'
-                        borderColor={theme.border.walltes}
-                        _hover={{borderColor:theme.text.cyan}}
-                        fontWeight={500}
-                        onClick={connectWallet}
-                    >
-                        <Text>Metamask</Text>
-                        <Img src='icons/metamask.png' alt='Metamask' w='6'/>
-                    </Flex>
-                    <Flex 
-                        justifyContent='space-between' 
-                        mx='8' 
-                        my='4' 
-                        p='4' 
-                        border='1px solid' 
-                        borderRadius='10'
-                        borderColor={theme.border.walltes}
-                        _hover={{borderColor:theme.text.cyan}}
-                        fontWeight={500}
-                        onClick={connectWallet}
-
-                    >                        
-                        <Text>Coinbase Wallet</Text>
-                        <Img src='icons/coinbaseWalletIcon.svg' alt='Coinbase Wallet' w='6'/>
-                    </Flex>
-                    <Flex 
-                        justifyContent='space-between' 
-                        mx='8' 
-                        my='4' 
-                        p='4' 
-                        border='1px solid' 
-                        borderRadius='10' 
-                        borderColor={theme.border.walltes}
-                        _hover={{borderColor:theme.text.cyan}}
-                        fontWeight={500}
-                    >                        
-                        <Text>Wallet Connect</Text>
-                        <Img src='icons/walletConnectIcon.svg' alt='Wallet Connection' w='6'/>
-                    </Flex>
-                    <Flex 
-                        justifyContent='space-between' 
-                        mx='8' 
-                        my='4' 
-                        p='4' 
-                        border='1px solid' 
-                        borderRadius='10' 
-                        borderColor={theme.border.walltes}
-                        _hover={{borderColor:theme.text.cyan}}
-                        fontWeight={500}
-                    >                        
-                        <Text>Math Wallet</Text>
-                        <Img src='icons/mathwallet.svg' alt='Math Wallet' w='6'/>
-                    </Flex>
+                    <WalletOptions />
                 </ModalBody>
                 <ModalFooter flexDirection='column' bgColor={theme.bg.iceGray} borderRadius={18}>
                     <Text>New to Syscoin? </Text>
