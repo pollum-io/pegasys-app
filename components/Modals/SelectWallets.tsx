@@ -1,9 +1,6 @@
-import { Button, Flex, Img, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react';
+import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react';
 import { usePicasso } from 'hooks';
-import { useContext } from 'react';
-import { WalletProvider } from '../../contexts/wallet'
-import { useWallet } from 'hooks';
-import { WalletOptions }  from 'components/WalletOptions'
+import { WalletOptions }  from 'components/WalletOptinos'
 
 interface IModal {
     isOpen: boolean;
@@ -13,7 +10,6 @@ interface IModal {
 export const SelectWallets: React.FC<IModal> = props => {
     const { isOpen, onClose } = props;
     const theme = usePicasso();
-    const { connectWallet } = useWallet();
 
     return (
         <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>

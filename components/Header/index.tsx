@@ -5,7 +5,6 @@ import { NavButton } from './NavButton';
 import { NetworkButton } from './NetworkButton';
 import { TokenButton } from './TokenButton';
 import { MenuLinks } from './MenuLink';
-import { Languages } from './Languages';
 import { SettingsButton } from './SettingsButton';
 import { UserSysBalance } from './UserSysBalance';
 import { IconButton } from 'components/Buttons';

@@ -2,10 +2,10 @@ import { InjectedConnector } from '@pollum-io/pegasys-injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 
-const NETWORK_URL = process.env.NODE_ENV
+const NETWORK_URL = process.env.NEXT_PUBLIC_NETWORK_URL
 
 if (typeof NETWORK_URL === 'undefined') {
-    throw new Error(`REACT_APP_NETWORK_URL must be a defined environment variable`)
+    throw new Error(`NEXT_PUBLIC_NETWORK_URL must be a defined environment variable`)
   }
 
 export const injected = new InjectedConnector({

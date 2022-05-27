@@ -1,12 +1,10 @@
-import { ButtonProps, Flex, Link } from "@chakra-ui/react";
+import { ButtonProps } from "@chakra-ui/react";
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import { SUPPORTED_WALLETS, NEVM_CHAIN_PARAMS } from "components/Constants";
 import { usePicasso } from "hooks";
 import { FunctionComponent, ReactNode, useState } from "react";
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import ReactGA from 'react-ga'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { Option } from './other'
+import { Wallets } from './Wallets'
 import { injected } from '../Connectores'
 import MetamaskIcon from '../../public/icons/metamask.png'
 import { isMobile } from 'react-device-detect'
@@ -22,7 +20,7 @@ export const WalletOptions:  FunctionComponent<IButtonProps> = props =>  {
     const { active, account, connector, activate, error } = useWeb3React()
     const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
     const [pendingError, setPendingError] = useState<boolean>()
-
+    
     function addSyscoinNetwork() {
       injected.getProvider().then(provider => {
         provider
@@ -37,28 +35,14 @@ export const WalletOptions:  FunctionComponent<IButtonProps> = props =>  {
     }
 
     const tryActivation = async (connector: AbstractConnector | undefined) => {
-        let name: string | undefined
+        let name: any
         name = ''
         Object.keys(SUPPORTED_WALLETS).map(key => {
           if (connector === SUPPORTED_WALLETS[key].connector) {
-            console.log(name, 'nAME')
-            console.log(connector, 'connector')
-
             return (name = SUPPORTED_WALLETS[key].name)
           }
           return true
         })
-        // log selected wallet
-        ReactGA.event({
-          category: 'Wallet',
-          action: 'Change Wallet',
-          label: name
-        })
-        setPendingWallet(connector) // set wallet for pending view
-    
-        if (connector instanceof WalletConnectConnector && connector.walletConnectProvider?.wc?.uri) {
-              connector.walletConnectProvider = undefined
-        }
 
     connector &&
       activate(connector, undefined, true)
@@ -89,18 +73,14 @@ export const WalletOptions:  FunctionComponent<IButtonProps> = props =>  {
                   if (!window.web3 && !window.ethereum && option.mobile) {
                   return (
                     <>
-                      <Option
+                      <Wallets
                         onClick={() => {
                           option.connector !== connector && !option.href && tryActivation(option.connector)
                         }}
                         id={`connect-${key}`}
                         key={key}
-                        active={option.connector && option.connector === connector}
-                        color={option.color}
-                        link={option.href}
                         header={option.name}
-                        subheader={null}
-                        icon={require('../../public/icons/' + option.iconName)}
+                        icon={'icons/' + option.iconName}
                     />
                   </>
                 )}
@@ -112,12 +92,10 @@ export const WalletOptions:  FunctionComponent<IButtonProps> = props =>  {
                 if (!(window.web3 || window.ethereum)) {
                   if (option.name === 'MetaMask') {
                     return (
-                      <Option
+                      <Wallets
                         id={`connect-${key}`}
                         key={key}
-                        color={'#E8831D'}
                         header={'Install Metamask'}
-                        subheader={null}
                         link={'https://metamask.io/'}
                         icon={MetamaskIcon}
                       />
@@ -139,18 +117,15 @@ export const WalletOptions:  FunctionComponent<IButtonProps> = props =>  {
               return (
                 !isMobile &&
                 !option.mobileOnly && (
-                  <Option
+                  <Wallets
                     id={`connect-${key}`}
                     onClick={() => {
                      tryActivation(option.connector)
                     }}
                     key={key}
-                    active={option.connector === connector}
-                    color={option.color}
                     link={option.href}
                     header={option.name}
-                    subheader={null} //use option.descriptio to bring back multi-line
-                    icon={require('../../public/icons/' + option.iconName)}
+                    icon={'icons/' + option.iconName}
                   />
                 )
               )
