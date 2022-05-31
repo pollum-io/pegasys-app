@@ -1,7 +1,8 @@
 
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import { injected, walletconnect, walletlink } from 'components/Connectores'
+import { injected, walletconnect, walletlink } from 'utils/connectors'
+import { IWalletInfo } from 'types'
 
+export const NEXT_PUBLIC_NETWORK_URL= "https://rpc.syscoin.org/"
 
 export const NEVM_CHAIN_PARAMS = {
   chainId: '0x39', // A 0x-prefixed hexadecimal chainId
@@ -13,18 +14,6 @@ export const NEVM_CHAIN_PARAMS = {
   },
   rpcUrls: ['https://rpc.syscoin.org/'],
   blockExplorerUrls: ['https://explorer.syscoin.org/']
-}
-
-export interface IWalletInfo {
-    connector?: AbstractConnector
-    name?: string
-    iconName?: string
-    description?: string
-    href?: string | null
-    color?: string
-    primary?: true
-    mobile?: true
-    mobileOnly?: true
 }
 
 export const SUPPORTED_WALLETS: {[key: string]: IWalletInfo } = {

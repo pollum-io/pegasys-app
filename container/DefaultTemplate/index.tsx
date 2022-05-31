@@ -5,7 +5,7 @@ import { Swap } from 'components';
 import { WalletProvider } from 'contexts/wallet';
 import { usePicasso } from 'hooks';
 import { FunctionComponent, ReactNode } from 'react';
-import getLibrary from '../../utils/getLibrary';
+import getLibrary from 'utils/getLibrary';
 
 interface BaseLayoutProps {
 	children?: ReactNode;

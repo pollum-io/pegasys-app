@@ -2,20 +2,15 @@ import { Flex, Img } from '@chakra-ui/react'
 import { usePicasso } from 'hooks'
 import React from 'react'
 
-
-export function Wallets({
-  onClick = null,
-  header,
-  icon,
-  link,
-  id
-}: {
+interface IWalletProps  {
   link?: string | null
   onClick?: null | (() => void) | any
   header: React.ReactNode
   icon: any
   id: string
-}) {
+}
+
+export const Wallets = ({id, header, icon, onClick}: IWalletProps) => {
   const theme = usePicasso();
 
   return (

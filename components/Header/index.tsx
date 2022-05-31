@@ -39,8 +39,8 @@ export const Header: React.FC = () => {
 		<Flex p="4" mt="1" justifyContent="space-between" alignItems="center">
 			<Flex gap="3" alignItems="center">
 				<Img w="6" h="6" src="icons/pegasys.png" mr="4" />
-				{links.map(item => (
-					<NavButton href={item.url}>{item.name}</NavButton>
+				{links.map((item, key) => (
+					<NavButton key={key} href={item.url}>{item.name}</NavButton>
 				))}
 				<NavButton href="/">
 					Charts{' '}

@@ -1,11 +1,11 @@
 import { useToast, UseToastOptions } from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 
 const useToasty = () => {
 	const [state, setState] = useState({} as UseToastOptions);
 	const toast = useToast();
 
-	useEffect(() => {
+	useMemo(() => {
 		if (Object.keys(state).length !== 0) {
 			toast({
 				...state,
