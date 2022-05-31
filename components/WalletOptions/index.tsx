@@ -59,81 +59,79 @@ export const WalletOptions: FunctionComponent<IButtonProps> = props => {
         })
   }
 
-  const coisas = () => {
-    Object.keys(SUPPORTED_WALLETS).map((key) => {
-
-      const isMetamask = window.ethereum && window.ethereum.isMetaMask
-      const option = SUPPORTED_WALLETS[key]
-      // check for mobile options
-      if (isMobile) {
-        if (!window.web3 && !window.ethereum && option.mobile) {
-
-          return (
-            <>
-              <Wallets
-                onClick={() => {
-                  option.connector !== connector && !option.href && tryActivation(option.connector)
-                }}
-                id={`connect-${key}`}
-                key={key}
-                header={option.name}
-                icon={'icons/' + option.iconName}
-              />
-            </>
-          )
-        }
-        return null
-      }
-      // overwrite injected when needed
-      if (option.connector === injected) {
-        // don't show injected if there's no injected provider
-        if (!(window.web3 || window.ethereum)) {
-          if (option.name === 'MetaMask') {
+  const listWallets = () => {
+    return (
+      Object.keys(SUPPORTED_WALLETS).map((key) => {
+        const isMetamask = window.ethereum && window.ethereum.isMetaMask
+        const option = SUPPORTED_WALLETS[key]
+        // check for mobile options
+        if (isMobile) {
+          if (!window.web3 && !window.ethereum && option.mobile) {
             return (
-              <Wallets
-                id={`connect-${key}`}
-                key={key}
-                header={'Install Metamask'}
-                link={'https://metamask.io/'}
-                icon={'/icons/metamask.png'}
-              />
+              <>
+                <Wallets
+                  onClick={() => {
+                    option.connector !== connector && !option.href && tryActivation(option.connector)
+                  }}
+                  id={`connect-${key}`}
+                  key={key}
+                  header={option.name}
+                  icon={'icons/' + option.iconName}
+                />
+              </>
             )
-          } else {
-            return null //dont want to return install twice
+          }
+          return null
+        }
+        // overwrite injected when needed
+        if (option.connector === injected) {
+          // don't show injected if there's no injected provider
+          if (!(window.web3 || window.ethereum)) {
+            if (option.name === 'MetaMask') {
+              return (
+                <Wallets
+                  id={`connect-${key}`}
+                  key={key}
+                  header={'Install Metamask'}
+                  link={'https://metamask.io/'}
+                  icon={'/icons/metamask.png'}
+                />
+              )
+            } else {
+              return null //dont want to return install twice
+            }
+          }
+          // don't return metamask if injected provider isn't metamask
+          else if (option.name === 'MetaMask' && !isMetamask) {
+            return null
+          }
+          // likewise for generic
+          else if (option.name === 'Injected' && isMetamask) {
+            return null
           }
         }
-        // don't return metamask if injected provider isn't metamask
-        else if (option.name === 'MetaMask' && !isMetamask) {
-          return null
-        }
-        // likewise for generic
-        else if (option.name === 'Injected' && isMetamask) {
-          return null
-        }
-      }
-      // return rest of options
-      console.log('cheguei aqui2')
-      return (
-        !isMobile &&
-        !option.mobileOnly && (
-          <Wallets
-            id={`connect-${key}`}
-            onClick={() => {
-              tryActivation(option.connector)
-            }}
-            key={key}
-            link={option.href}
-            header={option.name}
-            icon={'icons/' + option.iconName}
-          />
+        // return rest of options
+        return (
+          !isMobile &&
+          !option.mobileOnly && (
+            <Wallets
+              id={`connect-${key}`}
+              onClick={() => {
+                tryActivation(option.connector)
+              }}
+              key={key}
+              link={option.href}
+              header={option.name}
+              icon={'icons/' + option.iconName}
+            />
+          )
         )
-      )
-    })
+      }))
   }
 
   return (
     <>
-      {coisas()}
+      {listWallets()}
     </>
   )
 }

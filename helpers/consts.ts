@@ -2,8 +2,6 @@
 import { injected, walletconnect, walletlink } from 'utils/connectors'
 import { IWalletInfo } from 'types'
 
-export const NEXT_PUBLIC_NETWORK_URL= "https://rpc.syscoin.org/"
-
 export const NEVM_CHAIN_PARAMS = {
   chainId: '0x39', // A 0x-prefixed hexadecimal chainId
   chainName: 'Syscoin NEVM Mainnet',
