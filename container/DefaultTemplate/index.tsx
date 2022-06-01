@@ -1,6 +1,6 @@
 import { Flex } from '@chakra-ui/react';
 import { Header } from 'components';
-import { Swap } from 'components'
+import { Swap } from 'components';
 import { usePicasso } from 'hooks';
 import { FunctionComponent, ReactNode } from 'react';
 
@@ -21,7 +21,6 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 			backgroundImage='radial-gradient(50% 50% at 50% 50%, rgba(0, 217, 239, 0.15) 0%, rgba(33, 36, 41, 0) 100%)'
 		>
 			<Header />
-			<Swap />
 			{children}
 		</Flex>
 	);

@@ -14,16 +14,36 @@ import { usePicasso } from 'hooks';
 export const Header: React.FC = () => {
 	const { toggleColorMode } = useColorMode();
 	const theme = usePicasso();
+	const links = [
+		{
+			name: 'Swap',
+			url: '/',
+		},
+		{
+			name: 'Pools',
+			url: '/pools',
+		},
+		{
+			name: 'Farm',
+			url: '/farm',
+		},
+		{
+			name: 'Stake',
+			url: '/stake',
+		},
+		{
+			name: 'Airdrops',
+			url: '/airdrops',
+		},
+	];
 	return (
 		<Flex p="4" mt="1" justifyContent="space-between" alignItems="center">
 			<Flex gap="3" alignItems="center">
 				<Img w="6" h="6" src="icons/pegasys.png" mr="4" />
-				<NavButton>Swap</NavButton>
-				<NavButton>Pool</NavButton>
-				<NavButton>Farm</NavButton>
-				<NavButton>Stake</NavButton>
-				<NavButton>Airdrop</NavButton>
-				<NavButton>
+				{links.map(item => (
+					<NavButton href={item.url}>{item.name}</NavButton>
+				))}
+				<NavButton href="/">
 					Charts{' '}
 					<Icon
 						as={FiArrowUpRight}
@@ -34,7 +54,7 @@ export const Header: React.FC = () => {
 						right="-0.5"
 					/>
 				</NavButton>
-				<NavButton>
+				<NavButton href="/">
 					Bridge{' '}
 					<Icon
 						as={FiArrowUpRight}
@@ -56,7 +76,7 @@ export const Header: React.FC = () => {
 					icon={<theme.icon.theme />}
 					onClick={() => toggleColorMode()}
 				/>
-				<SettingsButton/>
+				<SettingsButton />
 				<MenuLinks />
 			</Flex>
 		</Flex>
