@@ -1,3 +1,3 @@
 export * from './DefaultTemplate';
-export * from './Farm'
+export * from './Stake'
 export * from './Home';
