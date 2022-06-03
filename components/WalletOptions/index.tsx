@@ -1,11 +1,11 @@
-import { ButtonProps, Flex } from "@chakra-ui/react";
-import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
-import { SUPPORTED_WALLETS, NEVM_CHAIN_PARAMS } from "helpers/consts";
-import { FunctionComponent, ReactNode, useState } from "react";
-import { AbstractConnector } from '@web3-react/abstract-connector'
+import { ButtonProps } from "@chakra-ui/react";
+import { useWeb3React } from "@web3-react/core";
+import { SUPPORTED_WALLETS,  } from "helpers/consts";
+import { FunctionComponent, ReactNode } from "react";
 import { Wallets } from './Wallets'
 import { injected } from '../../utils/connectors'
 import { isMobile } from 'react-device-detect'
+import { useWallet } from "hooks";
 
 
 interface IButtonProps extends ButtonProps {
@@ -14,50 +14,8 @@ interface IButtonProps extends ButtonProps {
 }
 
 export const WalletOptions: FunctionComponent<IButtonProps> = props => {
-  const { active, account, connector, activate, error } = useWeb3React()
-  const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
-  const [pendingError, setPendingError] = useState<boolean>()
-
-  const addSyscoinNetwork = () => {
-    injected.getProvider().then(provider => {
-      provider
-        .request({
-          method: 'wallet_addEthereumChain',
-          params: [NEVM_CHAIN_PARAMS]
-        })
-        .catch((error: any) => {
-          console.log(error)
-        })
-    })
-  }
-
-  const tryActivation = async (connector: AbstractConnector | undefined) => {
-    let name
-    Object.keys(SUPPORTED_WALLETS).map(key => {
-      if (connector === SUPPORTED_WALLETS[key].connector) {
-        return (name = SUPPORTED_WALLETS[key].name)
-      }
-      return true
-    })
-
-    connector &&
-      activate(connector, undefined, true)
-        .then(() => {
-          const isCbWalletDappBrowser = window?.ethereum?.isCoinbaseWallet
-          const isWalletlink = !!window?.WalletLinkProvider || !!window?.walletLinkExtension
-          const isCbWallet = isCbWalletDappBrowser || isWalletlink
-          if (isCbWallet) {
-            addSyscoinNetwork()
-          }
-        })
-        .catch(error => {
-          if (error instanceof UnsupportedChainIdError) {
-            activate(connector) // a little janky...can't use setError because the connector isn't set
-          } else {
-            setPendingError(true)
-          }
-        })
-  }
+  const { connector } = useWeb3React()
+  const { connectWallet } = useWallet()
 
   const listWallets = () => {
     return (
@@ -71,7 +29,7 @@ export const WalletOptions: FunctionComponent<IButtonProps> = props => {
               <>
                 <Wallets
                   onClick={() => {
-                    option.connector !== connector && !option.href && tryActivation(option.connector)
+                    option.connector !== connector && !option.href && connectWallet(option.connector)
                   }}
                   id={`connect-${key}`}
                   key={key}
@@ -117,7 +75,7 @@ export const WalletOptions: FunctionComponent<IButtonProps> = props => {
             <Wallets
               id={`connect-${key}`}
               onClick={() => {
-                tryActivation(option.connector)
+                connectWallet(option.connector)
               }}
               key={key}
               link={option.href}

@@ -16,8 +16,8 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 }) => {
 	const theme = usePicasso();
 	return (
-		<WalletProvider>
-			<Web3ReactProvider getLibrary={getLibrary}>
+		<Web3ReactProvider getLibrary={getLibrary}>
+			<WalletProvider>
 				<Flex
 					bgColor={theme.bg.primary}
 					flexDirection={['column']}
@@ -28,7 +28,7 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 					<Header />
 					{children}
 				</Flex>
-			</Web3ReactProvider>
-		</WalletProvider>
+			</WalletProvider>
+		</Web3ReactProvider>
 	);
 };
