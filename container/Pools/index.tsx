@@ -1,15 +1,24 @@
 import { Button, Flex, Img, Link, Text, useDisclosure } from '@chakra-ui/react';
-import { SelectCoinModal } from 'components';
+import { SelectCoinModal, AddLiquidityModal } from 'components';
+import { ImportPoolModal } from 'components/Modals/ImportPool';
 import { DefaultTemplate } from 'container';
 import { usePicasso } from 'hooks';
 import { NextPage } from 'next';
+import { useState } from 'react';
 
 export const PoolsContainer: NextPage = () => {
 	const theme = usePicasso();
 	const { onOpen, isOpen, onClose } = useDisclosure();
+	const {
+		onOpen: onOpenPool,
+		isOpen: isOpenPool,
+		onClose: onClosePool,
+	} = useDisclosure();
+	const [isCreate, setIsCreate] = useState<boolean>();
 	return (
 		<DefaultTemplate>
-			<SelectCoinModal isOpen={isOpen} onClose={onClose} />
+			<AddLiquidityModal isModalOpen={isOpen} onModalClose={onClose} isCreate={isCreate}/>
+			<ImportPoolModal isModalOpen={isOpenPool} onModalClose={onClosePool} />
 			<Flex
 				w="100%"
 				h="100%"
@@ -57,6 +66,7 @@ export const PoolsContainer: NextPage = () => {
 						<Link
 							href="https://info.pegasys.finance/accounts"
 							color={theme.text.mono}
+							target="_blank"
 							textDecoration="underline"
 							fontSize="lg"
 							fontWeight="medium"
@@ -84,7 +94,10 @@ export const PoolsContainer: NextPage = () => {
 									opacity="0.8"
 									_hover={{ opacity: '1' }}
 									_active={{}}
-									onClick={onOpen}
+									onClick={() =>{
+										setIsCreate(true);
+										onOpen();
+									}}
 								>
 									Create a pair
 								</Button>
@@ -98,6 +111,10 @@ export const PoolsContainer: NextPage = () => {
 									opacity="0.8"
 									_hover={{ opacity: '1' }}
 									_active={{}}
+									onClick={() => {
+										setIsCreate(false);
+										onOpen();
+									}}
 								>
 									Add liquidity
 								</Button>
@@ -117,7 +134,9 @@ export const PoolsContainer: NextPage = () => {
 						</Text>
 						<Text color={theme.text.mono} fontSize="sm" w="max-content">
 							Don't see a pool you joined?{' '}
-							<Link fontWeight="medium">Import it.</Link>
+							<Link fontWeight="medium" onClick={onOpenPool}>
+								Import it.
+							</Link>
 						</Text>
 					</Flex>
 				</Flex>
