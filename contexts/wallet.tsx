@@ -47,49 +47,49 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	}, []);
 
 	useEffect(() => {
-		if(active){
+		if (active) {
 			setIsConnected(true)
-        } else {
+		} else {
 			setIsConnected(false)
 		}
 
 	}, [active])
 
 	useEffect(() => {
-    if(window?.ethereum?.selectedAddress){
-      connectWallet(injected)
+		if (window?.ethereum?.selectedAddress) {
+			connectWallet(injected)
 			setAddress(window?.ethereum?.selectedAddress)
-    }
-}, [])
+		}
+	}, [walletAddress, injected])
 
 
 	const connectWallet = async (connector: AbstractConnector | undefined) => {
 		let name
 		Object.keys(SUPPORTED_WALLETS).map(key => {
-		  if (connector === SUPPORTED_WALLETS[key].connector) {
-			return (name = SUPPORTED_WALLETS[key].name)
-		  }
-		  return true
+			if (connector === SUPPORTED_WALLETS[key].connector) {
+				return (name = SUPPORTED_WALLETS[key].name)
+			}
+			return true
 		})
-	
+
 		connector &&
-		  activate(connector, undefined, true)
-			.then(() => {
-			  setIsConnected(true)
-			  const isCbWalletDappBrowser = window?.ethereum?.isCoinbaseWallet
-			  const isWalletlink = !!window?.WalletLinkProvider || !!window?.walletLinkExtension
-			  const isCbWallet = isCbWalletDappBrowser || isWalletlink
-			  if (isCbWallet) {
-				useSyscoinNetwork()
-			  }
-			})
-			.catch(error => {
-			  if (error instanceof UnsupportedChainIdError) {
-				activate(connector)  // a little janky...can't use setError because the connector isn't set
-			  } else {
-				setPendingError(true)
-			  }
-			})
+			activate(connector, undefined, true)
+				.then(() => {
+					setIsConnected(true)
+					const isCbWalletDappBrowser = window?.ethereum?.isCoinbaseWallet
+					const isWalletlink = !!window?.WalletLinkProvider || !!window?.walletLinkExtension
+					const isCbWallet = isCbWalletDappBrowser || isWalletlink
+					if (isCbWallet) {
+						useSyscoinNetwork()
+					}
+				})
+				.catch(error => {
+					if (error instanceof UnsupportedChainIdError) {
+						activate(connector)  // a little janky...can't use setError because the connector isn't set
+					} else {
+						setPendingError(true)
+					}
+				})
 	};
 
 	return (
