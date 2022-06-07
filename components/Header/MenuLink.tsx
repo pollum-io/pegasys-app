@@ -10,7 +10,7 @@ import {
 	PopoverContent,
 	PopoverHeader,
 	PopoverTrigger,
-	Text
+	Text,
 } from '@chakra-ui/react';
 import { FunctionComponent, ReactNode } from 'react';
 import { BsThreeDots, BsCheck2Square } from 'react-icons/bs';
@@ -31,24 +31,28 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 		{
 			name: 'About',
 			link: 'https://pegasys.finance/',
-			icon: <AiOutlineInfoCircle />
+			icon: <AiOutlineInfoCircle />,
 		},
 		{
 			name: 'Discord',
 			link: 'https://discord.com/invite/UzjWbWWERz',
-			icon: <FaDiscord />
+			icon: <FaDiscord />,
 		},
 		{
 			name: 'Telegram',
 			link: 'https://t.me/joinchat/GNosBd1_76E5MTVh',
-			icon: <FaTelegramPlane />
+			icon: <FaTelegramPlane />,
 		},
 		{
 			name: 'Twitter',
 			link: 'https://twitter.com/PegasysDEX',
-			icon: <FiTwitter />
+			icon: <FiTwitter />,
 		},
-		{ name: 'Vote', link: 'https://pegasys.finance/', icon: <BsCheck2Square /> }
+		{
+			name: 'Vote',
+			link: 'https://pegasys.finance/',
+			icon: <BsCheck2Square />,
+		},
 	];
 
 	return (

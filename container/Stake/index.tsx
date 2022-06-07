@@ -1,4 +1,4 @@
-import { Button, Flex, Img, Link, Text, Input } from '@chakra-ui/react';
+import { Button, Flex, Img, Text } from '@chakra-ui/react';
 import { DefaultTemplate } from 'container';
 import { usePicasso } from 'hooks';
 import { NextPage } from 'next';
@@ -82,7 +82,12 @@ export const StakeContainer: NextPage = () => {
 									>
 										<Flex alignItems="center">
 											<Img src="icons/pegasys.png" w="24px" h="24px" />
-											<Text ml="2" color="white" fontWeight={600} fontSize="2xl">
+											<Text
+												ml="2"
+												color="white"
+												fontWeight={600}
+												fontSize="2xl"
+											>
 												Earn PSYS
 											</Text>
 										</Flex>

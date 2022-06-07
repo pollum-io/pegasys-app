@@ -13,16 +13,13 @@ import {
 	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
-	ModalProps,
 	Text,
 	Tooltip,
-	useDisclosure
 } from '@chakra-ui/react';
 import { usePicasso } from 'hooks';
 import React, { useMemo, useState } from 'react';
 import { MdHelpOutline } from 'react-icons/md';
 import { BsArrowDownShort } from 'react-icons/bs';
-import { number } from 'yup';
 import { getDefaultTokens } from 'networks';
 import BigNumber from 'bignumber.js';
 
@@ -48,7 +45,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const [order, setOrder] = useState<'asc' | 'desc'>('desc');
 
 	const orderList = () => {
-		let orderedList: IToken[] = [];
+		const orderedList: IToken[] = [];
 		if (order === 'desc') {
 			defaultTokens.forEach(token => {
 				const firstToken = new BigNumber(defaultTokens[0].balance);

@@ -5,34 +5,26 @@ import {
 	Icon,
 	Input,
 	Text,
-	useDisclosure
+	useDisclosure,
 } from '@chakra-ui/react';
 import { usePicasso, useWallet } from 'hooks';
-import { FunctionComponent, ReactNode } from 'react';
-import { BiDownArrowAlt } from 'react-icons/Bi';
-import { IoIosArrowDown } from 'react-icons/Io';
-import { FcInfo } from 'react-icons/Fc';
+import { FunctionComponent } from 'react';
+import { BiDownArrowAlt } from 'react-icons/bi';
+import { IoIosArrowDown } from 'react-icons/io';
+import { FcInfo } from 'react-icons/fc';
 import { SelectCoinModal, SelectWallets } from 'components/Modals';
 
-interface IButtonProps extends ButtonProps {
-	children?: ReactNode;
-}
-
-export const Swap: FunctionComponent<IButtonProps> = props => {
+export const Swap: FunctionComponent<ButtonProps> = () => {
 	const theme = usePicasso();
 	const { onOpen, isOpen, onClose } = useDisclosure();
 	const {
 		onOpen: onOpenWallet,
 		isOpen: isOpenWallet,
-		onClose: onCloseWallet
+		onClose: onCloseWallet,
 	} = useDisclosure();
 	const { isConnected } = useWallet();
 
-	const swapButton = () => {
-		if (!isConnected) {
-			return onOpenWallet();
-		}
-	};
+	const swapButton = () => !isConnected && onOpenWallet();
 
 	return (
 		<Flex pt="24" zIndex="1">
@@ -108,7 +100,7 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 								borderRadius={12}
 								cursor="pointer"
 								_hover={{
-									bgColor: theme.bg.button.swapTokenCurrency
+									bgColor: theme.bg.button.swapTokenCurrency,
 								}}
 							>
 								<FcInfo />

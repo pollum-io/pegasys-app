@@ -1,13 +1,13 @@
 interface Window {
-	WalletLinkProvider?: any;
-	walletLinkExtension?: any;
+	WalletLinkProvider?: never;
+	walletLinkExtension?: never;
 	ethereum?: {
 		isCoinbaseWallet?: boolean;
 		isMetaMask?: true;
 		selectedAddress?: string;
 		// isMathWallet?: true
-		on?: (...args: any[]) => void;
-		removeListener?: (...args: any[]) => void;
+		on?: (...args: never[]) => void;
+		removeListener?: (...args: never[]) => void;
 	};
-	web3?: {};
+	web3?: unknown;
 }

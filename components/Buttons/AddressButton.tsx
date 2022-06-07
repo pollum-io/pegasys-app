@@ -1,18 +1,17 @@
 import { Button, ButtonProps, Flex } from '@chakra-ui/react';
-import { useWeb3React } from '@web3-react/core';
-import { usePicasso } from 'hooks';
+import { usePicasso, useWallet } from 'hooks';
 import { FunctionComponent, ReactNode } from 'react';
 import Jazzicon from 'react-jazzicon';
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
-	onClick?: any;
+	onClick?: () => void;
 }
 
 export const AddressButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	const { children, ...rest } = props;
-	const { error } = useWeb3React();
+	const { error } = useWallet();
 
 	return (
 		<Button
@@ -29,7 +28,7 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 			fontWeight={500}
 			overflow="hidden"
 			_hover={{
-				borderColor: error ? theme.text.redError : theme.text.cyan
+				borderColor: error ? theme.text.redError : theme.text.cyan,
 			}}
 			_active={{}}
 			{...rest}

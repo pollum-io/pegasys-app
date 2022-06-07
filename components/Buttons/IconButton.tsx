@@ -1,7 +1,6 @@
-import { IconButtonProps } from '@chakra-ui/react';
+import { IconButtonProps, IconButton as Button } from '@chakra-ui/react';
 import { usePicasso } from 'hooks';
 import { FunctionComponent } from 'react';
-import { IconButton as Button } from '@chakra-ui/react';
 
 export const IconButton: FunctionComponent<IconButtonProps> = props => {
 	const theme = usePicasso();

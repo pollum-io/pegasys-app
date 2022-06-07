@@ -4,7 +4,6 @@ import {
 	Icon,
 	Input,
 	Modal,
-	ModalBody,
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
@@ -14,11 +13,11 @@ import {
 	useDisclosure,
 } from '@chakra-ui/react';
 import { usePicasso } from 'hooks';
-import React, { useState } from 'react';
+import React from 'react';
 import { MdHelpOutline } from 'react-icons/md';
-import { FcInfo } from 'react-icons/Fc';
-import { IoIosArrowDown } from 'react-icons/Io';
-import { BiPlus } from 'react-icons/Bi';
+import { FcInfo } from 'react-icons/fc';
+import { IoIosArrowDown } from 'react-icons/io';
+import { BiPlus } from 'react-icons/bi';
 import { SelectCoinModal } from 'components';
 
 interface IModal {
@@ -33,10 +32,14 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const { onOpen, isOpen, onClose } = useDisclosure();
 
 	return (
-		<Modal blockScrollOnMount={false} isOpen={isModalOpen} onClose={onModalClose}>
+		<Modal
+			blockScrollOnMount={false}
+			isOpen={isModalOpen}
+			onClose={onModalClose}
+		>
 			<SelectCoinModal isOpen={isOpen} onClose={onClose} />
 			<ModalOverlay />
-			<ModalContent borderRadius="xl" bgColor={theme.bg.swap}>
+			<ModalContent borderRadius="xl" bgColor={theme.bg.iceGray}>
 				<ModalHeader display="flex" alignItems="center">
 					<Tooltip
 						label="When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
@@ -113,7 +116,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					<Flex
 						height="max-content"
 						width="100%"
-						bgColor={theme.bg.swap}
+						bgColor={theme.bg.iceGray}
 						margin="0 auto"
 						position="relative"
 						borderRadius={30}

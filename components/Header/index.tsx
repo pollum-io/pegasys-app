@@ -1,14 +1,14 @@
 import { Flex, Icon, Img, useColorMode } from '@chakra-ui/react';
 import { WalletButton } from 'components';
 import { FiArrowUpRight } from 'react-icons/fi';
+import { IconButton } from 'components/Buttons';
+import { usePicasso } from 'hooks';
 import { NavButton } from './NavButton';
 import { NetworkButton } from './NetworkButton';
 import { TokenButton } from './TokenButton';
 import { MenuLinks } from './MenuLink';
 import { SettingsButton } from './SettingsButton';
 import { UserSysBalance } from './UserSysBalance';
-import { IconButton } from 'components/Buttons';
-import { usePicasso } from 'hooks';
 
 export const Header: React.FC = () => {
 	const { toggleColorMode } = useColorMode();
@@ -16,24 +16,24 @@ export const Header: React.FC = () => {
 	const links = [
 		{
 			name: 'Swap',
-			url: '/'
+			url: '/',
 		},
 		{
 			name: 'Pools',
-			url: '/pools'
+			url: '/pools',
 		},
 		{
 			name: 'Farms',
-			url: '/farms'
+			url: '/farms',
 		},
 		{
 			name: 'Stake',
-			url: '/stake'
+			url: '/stake',
 		},
 		{
 			name: 'Airdrops',
-			url: '/airdrops'
-		}
+			url: '/airdrops',
+		},
 	];
 
 	return (

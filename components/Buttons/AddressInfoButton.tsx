@@ -1,6 +1,5 @@
 import {
 	Button,
-	ButtonProps,
 	Flex,
 	Icon,
 	Modal,
@@ -10,12 +9,10 @@ import {
 	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
-	Text
+	Text,
 } from '@chakra-ui/react';
-import { usePicasso } from 'hooks';
-import { FunctionComponent, ReactNode } from 'react';
-import { SwitchToSyscoin } from 'components/Buttons';
-import { useWeb3React } from '@web3-react/core';
+import { usePicasso, useWallet } from 'hooks';
+import { FunctionComponent } from 'react';
 import Jazzicon from 'react-jazzicon';
 import { MdOutlineContentCopy } from 'react-icons/md';
 import { HiExternalLink } from 'react-icons/hi';
@@ -28,13 +25,13 @@ interface IModal {
 export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
-	const { account } = useWeb3React();
+	const { account } = useWallet();
 
 	const shortAddress = (address: any) =>
 		address ? `${address.substr(0, 5)}…${address.substr(-4)}` : '';
 
 	return (
-		<Modal blockScrollOnMount={true} isOpen={isOpen} onClose={onClose}>
+		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent borderRadius={18} my="40">
 				<ModalHeader bgColor={theme.bg.whiteGray} borderTopRadius={18}>

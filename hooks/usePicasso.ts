@@ -12,10 +12,10 @@ const usePicasso = () => {
 			whiteCyan: useColorModeValue('#ffffff', '#00d9ef'),
 			cyan: useColorModeValue('#00d9ef', '#00d9ef'),
 			redError: useColorModeValue('#ff2532a3', '#ff2532a3'),
-			gray: useColorModeValue('gray.400', 'gray.400')
+			gray: useColorModeValue('gray.400', 'gray.400'),
 		},
 		icon: {
-			theme: useColorModeValue(BsFillMoonFill, BsFillSunFill)
+			theme: useColorModeValue(BsFillMoonFill, BsFillSunFill),
 		},
 		bg: {
 			primary: useColorModeValue('blackAlpha.50', 'gray.700'),
@@ -47,17 +47,17 @@ const usePicasso = () => {
 				),
 				swapBlue: useColorModeValue('#00d9ef', '#153d6f70'),
 				swapTokenCurrency: useColorModeValue('#F7F8FA', '#2C2F36'),
-				switchNetwork: useColorModeValue('#04d3c0', '#153d6f70')
-			}
+				switchNetwork: useColorModeValue('#04d3c0', '#153d6f70'),
+			},
 		},
 		border: {
 			connectWallet: useColorModeValue('#04d3c0', '#153d6f70'),
 			borderSettings: useColorModeValue('#edeef2', '#40444f'),
 			blueSys: useColorModeValue('#315df6', '#315df6'),
 			swapInput: useColorModeValue('#f7f8fa', '#2c2f36'),
-			walltes: useColorModeValue('#edeef2', '#40444f'),
-			redError: useColorModeValue('#ff2532a3', '#ff2532a3')
-		}
+			wallets: useColorModeValue('#edeef2', '#40444f'),
+			redError: useColorModeValue('#ff2532a3', '#ff2532a3'),
+		},
 	};
 
 	return theme;

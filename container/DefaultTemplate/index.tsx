@@ -1,17 +1,17 @@
 import { Flex } from '@chakra-ui/react';
-import { Header } from 'components';
-import { Web3ReactProvider } from '@web3-react/core';
-import { WalletProvider } from 'contexts/wallet';
-import { usePicasso } from 'hooks';
 import { FunctionComponent, ReactNode } from 'react';
-import getLibrary from 'utils/getLibrary';
+import { Web3ReactProvider } from '@web3-react/core';
+import { Header } from 'components';
+import { WalletProvider } from 'contexts';
+import { usePicasso } from 'hooks';
+import { getLibrary } from 'utils';
 
 interface BaseLayoutProps {
 	children?: ReactNode;
 }
 
 export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
-	children
+	children,
 }) => {
 	const theme = usePicasso();
 	return (

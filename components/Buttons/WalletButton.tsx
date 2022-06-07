@@ -1,10 +1,10 @@
-import { Button, ButtonProps, Text, useDisclosure } from '@chakra-ui/react';
-import { useWeb3React } from '@web3-react/core';
+import { Button, ButtonProps, useDisclosure } from '@chakra-ui/react';
 import { SelectSyscoin, SelectWallets } from 'components/Modals';
 import { usePicasso, useWallet } from 'hooks';
-import { FunctionComponent, ReactNode, useCallback, useMemo } from 'react';
-import { AddressButton } from './AddressButton';
+import { FunctionComponent, ReactNode } from 'react';
 import { AddressInfoButton } from 'components/Buttons';
+import { AddressButton } from './AddressButton';
+
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
 }
@@ -13,9 +13,13 @@ export const WalletButton: FunctionComponent<IButtonProps> = props => {
 	const { children, ...rest } = props;
 	const theme = usePicasso();
 	const { onOpen, isOpen, onClose } = useDisclosure();
-	const {isOpen: isOpenAddress, onOpen: onOpenAddress, onClose: onCloseAddress} = useDisclosure()
-	const { error } = useWeb3React();
-	const { isConnected, walletAddress} = useWallet()
+	const {
+		isOpen: isOpenAddress,
+		onOpen: onOpenAddress,
+		onClose: onCloseAddress,
+	} = useDisclosure();
+	const { error } = useWallet();
+	const { isConnected, walletAddress } = useWallet();
 
 	const shortAddress = (address: any) =>
 		address ? `${address.substr(0, 5)}…${address.substr(-4)}` : '';
@@ -52,14 +56,18 @@ export const WalletButton: FunctionComponent<IButtonProps> = props => {
 			{error && (
 				<>
 					<SelectSyscoin isOpen={isOpen} onClose={onClose} />
-					<AddressButton onClick={error ? onOpen : ''}>{walletAddress}</AddressButton>
+					<AddressButton onClick={error ? onOpen : ''}>
+						{walletAddress}
+					</AddressButton>
 				</>
 			)}
 
 			{isConnected && !error && (
 				<>
 					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
-					<AddressButton onClick={error ? onOpen : onOpenAddress}>{shortAddress(walletAddress)}</AddressButton>
+					<AddressButton onClick={error ? onOpen : onOpenAddress}>
+						{shortAddress(walletAddress)}
+					</AddressButton>
 				</>
 			)}
 		</>

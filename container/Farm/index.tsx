@@ -43,7 +43,7 @@ export const FarmContainer: NextPage = () => {
 								Deposit your Pegasys Liquidity Provider PLP tokens to receive
 								PSYS, the Pegasys protocol governance token.
 							</Text>
-							<Link textDecoration="underline" color="white">
+							<Link textDecoration="underline" color="white" href="/">
 								Read more about PSYS
 							</Link>
 						</Flex>

@@ -6,7 +6,7 @@ import {
 	PopoverBody,
 	PopoverContent,
 	PopoverTrigger,
-	Text
+	Text,
 } from '@chakra-ui/react';
 import { FunctionComponent, ReactNode } from 'react';
 import ReactCountryFlag from 'react-country-flag';

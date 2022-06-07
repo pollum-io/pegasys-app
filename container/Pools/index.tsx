@@ -1,5 +1,5 @@
 import { Button, Flex, Img, Link, Text, useDisclosure } from '@chakra-ui/react';
-import { SelectCoinModal, AddLiquidityModal } from 'components';
+import { AddLiquidityModal } from 'components';
 import { ImportPoolModal } from 'components/Modals/ImportPool';
 import { DefaultTemplate } from 'container';
 import { usePicasso } from 'hooks';
@@ -14,10 +14,14 @@ export const PoolsContainer: NextPage = () => {
 		isOpen: isOpenPool,
 		onClose: onClosePool,
 	} = useDisclosure();
-	const [isCreate, setIsCreate] = useState<boolean>();
+	const [isCreate, setIsCreate] = useState(false);
 	return (
 		<DefaultTemplate>
-			<AddLiquidityModal isModalOpen={isOpen} onModalClose={onClose} isCreate={isCreate}/>
+			<AddLiquidityModal
+				isModalOpen={isOpen}
+				onModalClose={onClose}
+				isCreate={isCreate}
+			/>
 			<ImportPoolModal isModalOpen={isOpenPool} onModalClose={onClosePool} />
 			<Flex
 				w="100%"
@@ -94,7 +98,7 @@ export const PoolsContainer: NextPage = () => {
 									opacity="0.8"
 									_hover={{ opacity: '1' }}
 									_active={{}}
-									onClick={() =>{
+									onClick={() => {
 										setIsCreate(true);
 										onOpen();
 									}}
@@ -133,10 +137,10 @@ export const PoolsContainer: NextPage = () => {
 							Connect a wallet to view your liquidity.
 						</Text>
 						<Text color={theme.text.mono} fontSize="sm" w="max-content">
-							Don't see a pool you joined?{' '}
-							<Link fontWeight="medium" onClick={onOpenPool}>
+							Don&apos;t see a pool you joined?{' '}
+							<Button fontWeight="medium" onClick={onOpenPool}>
 								Import it.
-							</Link>
+							</Button>
 						</Text>
 					</Flex>
 				</Flex>
