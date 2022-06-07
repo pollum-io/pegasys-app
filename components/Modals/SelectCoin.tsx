@@ -16,7 +16,7 @@ import {
 	ModalProps,
 	Text,
 	Tooltip,
-	useDisclosure,
+	useDisclosure
 } from '@chakra-ui/react';
 import { usePicasso } from 'hooks';
 import React, { useMemo, useState } from 'react';
@@ -127,12 +127,13 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					</Flex>
 				</ModalBody>
 				<Flex flexDirection="column">
-					{defaultTokens.map(token => (
+					{defaultTokens.map((token, index) => (
 						<Button
 							bg="transparent"
 							px="10"
 							py="6"
 							justifyContent="space-between"
+							key={token.address + Number(index)}
 						>
 							<Flex
 								gap="4"

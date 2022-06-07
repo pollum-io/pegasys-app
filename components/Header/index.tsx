@@ -16,33 +16,34 @@ export const Header: React.FC = () => {
 	const links = [
 		{
 			name: 'Swap',
-			url: '/',
+			url: '/'
 		},
 		{
 			name: 'Pools',
-			url: '/pools',
+			url: '/pools'
 		},
 		{
 			name: 'Farms',
-			url: '/farms',
+			url: '/farms'
 		},
 		{
 			name: 'Stake',
-			url: '/stake',
+			url: '/stake'
 		},
 		{
 			name: 'Airdrops',
-			url: '/airdrops',
-		},
+			url: '/airdrops'
+		}
 	];
-
 
 	return (
 		<Flex p="4" mt="1" justifyContent="space-between" alignItems="center">
 			<Flex gap="3" alignItems="center">
 				<Img w="6" h="6" src="icons/pegasys.png" mr="4" />
-				{links.map((item, key) => (
-					<NavButton key={key} href={item.url}>{item.name}</NavButton>
+				{links.map((item, index) => (
+					<NavButton key={item.name + Number(index)} href={item.url}>
+						{item.name}
+					</NavButton>
 				))}
 				<NavButton href="/">
 					Charts{' '}
