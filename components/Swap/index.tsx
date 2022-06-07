@@ -2,22 +2,16 @@ import {
 	Button,
 	ButtonProps,
 	Flex,
-	IconButton,
 	Input,
-	Popover,
-	PopoverArrow,
-	PopoverBody,
-	PopoverCloseButton,
-	PopoverContent,
-	PopoverHeader,
-	PopoverTrigger,
 	Text,
+	useDisclosure,
 } from '@chakra-ui/react';
-import { usePicasso } from 'hooks';
+import { usePicasso, useWallet } from 'hooks';
 import { FunctionComponent, ReactNode } from 'react';
 import { BiDownArrowAlt } from 'react-icons/Bi';
 import { IoIosArrowDown } from 'react-icons/Io';
 import { FcInfo } from 'react-icons/Fc';
+import { SelectCoinModal, SelectWallets } from 'components/Modals';
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
@@ -25,13 +19,24 @@ interface IButtonProps extends ButtonProps {
 
 export const Swap: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
+	const { onOpen, isOpen, onClose } = useDisclosure();
+	const { onOpen: onOpenWallet , isOpen: isOpenWallet, onClose: onCloseWallet } = useDisclosure();
+	const { isConnected } = useWallet()
+
+	const swapButton = () => {
+		if(!isConnected){
+			return onOpenWallet()
+		}
+	}
 
 	return (
 		<Flex pt="24" zIndex="1">
+			<SelectCoinModal isOpen={isOpen} onClose={onClose} />
+			<SelectWallets isOpen={isOpenWallet} onClose={onCloseWallet} />
 			<Flex
 				height="max-content"
 				width="22%"
-				bgColor={theme.bg.swap}
+				bgColor={theme.bg.whiteGray}
 				margin="0 auto"
 				position="relative"
 				borderRadius={30}
@@ -81,7 +86,7 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 								px="2"
 								py="1.5"
 								borderRadius="8"
-								color={theme.text.cyan}
+								color={theme.text.whiteCyan}
 								bgColor={theme.bg.button.swapBlue}
 							>
 								MAX
@@ -100,7 +105,7 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 								}}
 							>
 								<FcInfo />
-								<Text fontSize="xl" fontWeight="500" px="3">
+								<Text fontSize="xl" fontWeight="500" px="3" onClick={onOpen}>
 									SYS
 								</Text>
 								<IoIosArrowDown />
@@ -156,7 +161,7 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 									fontWeight="500"
 									pr="2"
 									fontSize="md"
-									color={theme.text.cyan}
+									color={theme.text.whiteCyan}
 								>
 									Select a token
 								</Text>
@@ -175,9 +180,9 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 					<Text fontSize="sm">Slippage Tolerance</Text>
 					<Text fontSize="sm">1.01%</Text>
 				</Flex>
-				<Flex>
-					<Button w="100%" p="8" borderRadius="12" fontSize="xl">
-						Enter an ammount
+				<Flex>						
+					<Button w="100%" p="8" borderRadius="12" fontSize="xl" onClick={swapButton}>						
+						{isConnected ? 'Enter an ammount' : 'Connect your Wallet'}
 					</Button>
 				</Flex>
 			</Flex>

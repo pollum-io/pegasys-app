@@ -5,7 +5,6 @@ import { NavButton } from './NavButton';
 import { NetworkButton } from './NetworkButton';
 import { TokenButton } from './TokenButton';
 import { MenuLinks } from './MenuLink';
-import { Languages } from './Languages';
 import { SettingsButton } from './SettingsButton';
 import { UserSysBalance } from './UserSysBalance';
 import { IconButton } from 'components/Buttons';
@@ -36,12 +35,14 @@ export const Header: React.FC = () => {
 			url: '/airdrops',
 		},
 	];
+
+
 	return (
 		<Flex p="4" mt="1" justifyContent="space-between" alignItems="center">
 			<Flex gap="3" alignItems="center">
 				<Img w="6" h="6" src="icons/pegasys.png" mr="4" />
-				{links.map(item => (
-					<NavButton href={item.url}>{item.name}</NavButton>
+				{links.map((item, key) => (
+					<NavButton key={key} href={item.url}>{item.name}</NavButton>
 				))}
 				<NavButton href="/">
 					Charts{' '}
@@ -66,7 +67,7 @@ export const Header: React.FC = () => {
 					/>
 				</NavButton>
 			</Flex>
-			<Flex gap="4">
+			<Flex gap="3">
 				<NetworkButton />
 				<TokenButton />
 				<UserSysBalance />

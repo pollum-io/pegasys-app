@@ -38,7 +38,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
                         borderRadius={36} 
                         placeholder="1.0%" 
                         fontWeight={400} 
-                        backgroundColor={theme.bg.button.slippageSetting}
+                        backgroundColor={theme.bg.whiteGray}
                         border='1px solid'
                         borderColor={theme.border.borderSettings}
                         color={theme.text.mono}
@@ -48,7 +48,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 
                     <Text fontSize="sm" fontWeight={400} pt="4">Transaction deadline</Text>
                     <Flex flexDirection="row" alignItems="center" pt="2">
-                        <Input px='2' py='1' w='30%' h='max-content' borderRadius={36} placeholder="1.0%" fontWeight={400} backgroundColor={theme.bg.button.slippageSetting}/>
+                        <Input px='2' py='1' w='30%' h='max-content' borderRadius={36} placeholder="1.0%" fontWeight={400} backgroundColor={theme.bg.whiteGray}/>
                         <Text fontSize="sm" fontWeight={400} pl="2">minutes</Text>
                     </Flex>
 

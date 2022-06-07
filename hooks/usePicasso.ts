@@ -9,7 +9,10 @@ const usePicasso = () => {
 			infoLink: useColorModeValue('#565a69', '#c3c5cb'),
 			connectWallet: useColorModeValue('#ffffff', '#00d9ef'),
 			swapInfo: useColorModeValue('#565a69', '#c3c5cb'),
-			cyan: useColorModeValue('#ffffff', '#00d9ef'),
+			whiteCyan: useColorModeValue('#ffffff', '#00d9ef'),
+			cyan: useColorModeValue('#00d9ef', '#00d9ef'),
+			redError: useColorModeValue('#ff2532a3', '#ff2532a3'),
+			gray: useColorModeValue('#6c7284', '#6c7284')
 		},
 		icon: {
 			theme: useColorModeValue(BsFillMoonFill, BsFillSunFill),
@@ -18,7 +21,8 @@ const usePicasso = () => {
 			primary: useColorModeValue('blackAlpha.50', 'gray.700'),
 			secondary: useColorModeValue('gray.300', 'gray.800'),
 			bgPrimary: useColorModeValue('#f7f8fa', '#2c2f36'),
-			swap: useColorModeValue('#ffffff', '#212429'),
+			whiteGray: useColorModeValue('#ffffff', '#212429'),
+			iceGray: useColorModeValue('#f7f8fa', '#2c2f36'),
 			button: {
 				primary: useColorModeValue('blue.500', 'blue.600'),
 				secondary: useColorModeValue('purple.700', 'purple.600'),
@@ -37,8 +41,10 @@ const usePicasso = () => {
 					'#315df6',
 					'linear-gradient(128.17deg, rgb(49, 93, 246) -14.78%, rgba(49, 93, 246, 0.2) 110.05%)'
 				),
+				userAddress: useColorModeValue('linear-gradient(128.17deg, rgb(83, 217, 217) -14.78%, rgb(0, 184, 255) 110.05%)', 'linear-gradient(128.17deg, rgb(83, 217, 217) -14.78%, rgba(0, 184, 255, 0.1) 110.05%)'),
 				swapBlue: useColorModeValue('#00d9ef', '#153d6f70'),
 				swapTokenCurrency: useColorModeValue('#F7F8FA', '#2C2F36'),
+				switchNetwork: useColorModeValue('#04d3c0', '#153d6f70')
 			},
 		},
 		border: {
@@ -46,6 +52,8 @@ const usePicasso = () => {
 			borderSettings: useColorModeValue('#edeef2', '#40444f'),
 			blueSys: useColorModeValue('#315df6', '#315df6'),
 			swapInput: useColorModeValue('#f7f8fa', '#2c2f36'),
+			walltes: useColorModeValue('#edeef2', '#40444f'),
+			redError: useColorModeValue('#ff2532a3', '#ff2532a3')
 		},
 	};
 

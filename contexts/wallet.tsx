@@ -7,24 +7,34 @@ import React, {
 	useMemo,
 } from 'react';
 import { ethers, providers, Signer } from 'ethers';
+import { AbstractConnector } from '@web3-react/abstract-connector';
+import { SUPPORTED_WALLETS } from 'helpers/consts';
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
+import { ConnectSyscoinNetwork } from 'utils/ConnectSyscoinNetwork';
+import { injected } from 'utils';
 
 interface IWeb3 {
 	isConnected: boolean;
 	walletAddress: string;
-	connectWallet: () => Promise<void>;
+	connectWallet: (connector: AbstractConnector | undefined) => Promise<void>
 }
 
-export const Web3Context = createContext({} as IWeb3);
+declare var window: any
+
+export const WalletContext = createContext({} as IWeb3);
 
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [isConnected, setIsConnected] = useState(false);
-	const [walletAddress, setAddress] = useState<string>('');
+	const [walletAddress, setAddress] = useState('');
+	const [pendingError, setPendingError] = useState<boolean>()
 	const [signer, setSigner] = useState<Signer>();
 	const [provider, setProvider] = useState<
 		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
 	>();
+	const { active, account, connector, activate, error, setError } = useWeb3React()
+
 
 	useMemo(() => {
 		const provider = new ethers.providers.JsonRpcProvider(
@@ -36,10 +46,55 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		setSigner(signer);
 	}, []);
 
-	const connectWallet = async () => {};
+	useEffect(() => {
+		if (active) {
+			setIsConnected(true)
+		} else {
+			setIsConnected(false)
+		}
+
+	}, [active])
+
+	useEffect(() => {
+		if (window?.ethereum?.selectedAddress) {
+			connectWallet(injected)
+			setAddress(window?.ethereum?.selectedAddress)
+		}
+	}, [walletAddress, injected])
+
+
+	const connectWallet = async (connector: AbstractConnector | undefined) => {
+		let name
+		Object.keys(SUPPORTED_WALLETS).map(key => {
+			if (connector === SUPPORTED_WALLETS[key].connector) {
+				return (name = SUPPORTED_WALLETS[key].name)
+			}
+			return true
+		})
+
+		connector &&
+			activate(connector, undefined, true)
+				.then(() => {
+					setIsConnected(true)
+					setAddress(window?.ethereum?.selectedAddress)
+					const isCbWalletDappBrowser = window?.ethereum?.isCoinbaseWallet
+					const isWalletlink = !!window?.WalletLinkProvider || !!window?.walletLinkExtension
+					const isCbWallet = isCbWalletDappBrowser || isWalletlink
+					if (isCbWallet) {
+						ConnectSyscoinNetwork()
+					}
+				})
+				.catch(error => {
+					if (error instanceof UnsupportedChainIdError) {
+						activate(connector)  // a little janky...can't use setError because the connector isn't set
+					} else {
+						setPendingError(true)
+					}
+				})
+	};
 
 	return (
-		<Web3Context.Provider
+		<WalletContext.Provider
 			value={{
 				isConnected,
 				walletAddress,
@@ -47,7 +102,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			}}
 		>
 			{children}
-		</Web3Context.Provider>
+		</WalletContext.Provider>
 	);
 };
-export const useWeb3 = () => useContext(Web3Context);
