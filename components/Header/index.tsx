@@ -24,8 +24,8 @@ export const Header: React.FC = () => {
 			url: '/pools',
 		},
 		{
-			name: 'Farm',
-			url: '/farm',
+			name: 'Farms',
+			url: '/farms',
 		},
 		{
 			name: 'Stake',

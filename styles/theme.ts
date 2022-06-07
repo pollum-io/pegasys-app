@@ -7,6 +7,38 @@ const config: ThemeConfig = {
 
 export const theme = extendTheme({
 	config,
+	overrides: {
+		styles: {
+			'*': {
+				boxShadow: 'none',
+			},
+		},
+	},
+	components: {
+		Switch: {
+			baseStyle: {
+				track: {
+					_focus: {
+						boxShadow: 'none',
+					},
+				},
+			},
+		},
+		ModalCloseButton: {
+			baseStyle: {
+				_focus: {
+					boxShadow: 'none',
+				},
+			},
+		},
+		Button: {
+			baseStyle: {
+				_focus: {
+					boxShadow: 'none',
+				},
+			},
+		},
+	},
 	zIndices: {
 		default: 1,
 		behind: '-1000',

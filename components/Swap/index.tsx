@@ -17,7 +17,7 @@ import { usePicasso } from 'hooks';
 import { FunctionComponent, ReactNode } from 'react';
 import { BiDownArrowAlt } from 'react-icons/Bi';
 import { IoIosArrowDown } from 'react-icons/Io';
-import { FcInfo } from 'react-icons/Fc'
+import { FcInfo } from 'react-icons/Fc';
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
@@ -54,11 +54,15 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 						pb="1"
 						color={theme.text.swapInfo}
 					>
-						<Text fontSize="sm" fontWeight="500">From</Text>
-						<Text fontSize="sm" fontWeight="500">Balance: 31321</Text>
+						<Text fontSize="sm" fontWeight="500">
+							From
+						</Text>
+						<Text fontSize="sm" fontWeight="500">
+							Balance: 31321
+						</Text>
 					</Flex>
 					<Flex alignItems="center" justifyContent="space-around">
-						<Flex alignItems="center" >
+						<Flex alignItems="center">
 							<Input
 								fontSize="2xl"
 								border="none"
@@ -77,14 +81,14 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 								px="2"
 								py="1.5"
 								borderRadius="8"
-								color={theme.text.cyanPegasys}
+								color={theme.text.cyan}
 								bgColor={theme.bg.button.swapBlue}
 							>
 								MAX
 							</Button>
-							<Flex 
-								alignItems="center" 
-								justifyContent="space-between" 
+							<Flex
+								alignItems="center"
+								justifyContent="space-between"
 								px="5"
 								py="1"
 								w="max-content"
@@ -95,8 +99,10 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 									bgColor: theme.bg.button.swapTokenCurrency,
 								}}
 							>
-								<FcInfo/>
-								<Text fontSize="xl" fontWeight="500" px="3">SYS</Text>
+								<FcInfo />
+								<Text fontSize="xl" fontWeight="500" px="3">
+									SYS
+								</Text>
 								<IoIosArrowDown />
 							</Flex>
 						</Flex>
@@ -136,14 +142,36 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 								px="0.5"
 								letterSpacing="-4px"
 							/>
-							<Flex cursor="pointer" flexDirection="row" alignItems="center" bgColor={theme.bg.button.swapBlue} px="3" py="1" ml="5" borderRadius={12}>
-								<Text fontWeight="500" pr="2" fontSize="md" color={theme.text.cyanPegasys}>Select a token</Text>
+							<Flex
+								cursor="pointer"
+								flexDirection="row"
+								alignItems="center"
+								bgColor={theme.bg.button.swapBlue}
+								px="3"
+								py="1"
+								ml="5"
+								borderRadius={12}
+							>
+								<Text
+									fontWeight="500"
+									pr="2"
+									fontSize="md"
+									color={theme.text.cyan}
+								>
+									Select a token
+								</Text>
 								<IoIosArrowDown />
 							</Flex>
 						</Flex>
 					</Flex>
 				</Flex>
-				<Flex justifyContent="space-between" fontWeight={500} py="4" px="3" color={theme.text.swapInfo}>
+				<Flex
+					justifyContent="space-between"
+					fontWeight={500}
+					py="4"
+					px="3"
+					color={theme.text.swapInfo}
+				>
 					<Text fontSize="sm">Slippage Tolerance</Text>
 					<Text fontSize="sm">1.01%</Text>
 				</Flex>
