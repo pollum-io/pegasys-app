@@ -1,16 +1,13 @@
 import { Button, ButtonProps, useDisclosure } from '@chakra-ui/react';
 import { SelectSyscoin, SelectWallets } from 'components/Modals';
 import { usePicasso, useWallet } from 'hooks';
-import { FunctionComponent, ReactNode } from 'react';
+import { FunctionComponent } from 'react';
 import { AddressInfoButton } from 'components/Buttons';
+import { shortAddress } from 'utils';
 import { AddressButton } from './AddressButton';
 
-interface IButtonProps extends ButtonProps {
-	children?: ReactNode;
-}
-
-export const WalletButton: FunctionComponent<IButtonProps> = props => {
-	const { children, ...rest } = props;
+export const WalletButton: FunctionComponent<ButtonProps> = props => {
+	const { ...rest } = props;
 	const theme = usePicasso();
 	const { onOpen, isOpen, onClose } = useDisclosure();
 	const {
@@ -20,9 +17,6 @@ export const WalletButton: FunctionComponent<IButtonProps> = props => {
 	} = useDisclosure();
 	const { error } = useWallet();
 	const { isConnected, walletAddress } = useWallet();
-
-	const shortAddress = (address: any) =>
-		address ? `${address.substr(0, 5)}…${address.substr(-4)}` : '';
 
 	return (
 		<>
@@ -48,7 +42,6 @@ export const WalletButton: FunctionComponent<IButtonProps> = props => {
 						onClick={onOpen}
 						{...rest}
 					>
-						{children}
 						Connect your wallet
 					</Button>
 				</>

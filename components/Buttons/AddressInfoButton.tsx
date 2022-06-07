@@ -16,6 +16,7 @@ import { FunctionComponent } from 'react';
 import Jazzicon from 'react-jazzicon';
 import { MdOutlineContentCopy } from 'react-icons/md';
 import { HiExternalLink } from 'react-icons/hi';
+import { shortAddress } from 'utils';
 
 interface IModal {
 	isOpen: boolean;
@@ -26,9 +27,6 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 	const { account } = useWallet();
-
-	const shortAddress = (address: string) =>
-		address ? `${address.substr(0, 5)}…${address.substr(-4)}` : '';
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -79,7 +77,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									seed={Math.round(Math.random() * 10000000)}
 								/>
 							</Flex>
-							{shortAddress(account)}
+							{account && shortAddress(account)}
 						</Flex>
 						<Flex flexDirection="row" mt="4">
 							<Flex
