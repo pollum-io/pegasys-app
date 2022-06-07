@@ -1,7 +1,6 @@
 import { Flex } from '@chakra-ui/react';
 import { Header } from 'components';
 import { Web3ReactProvider } from '@web3-react/core';
-import { Swap } from 'components';
 import { WalletProvider } from 'contexts/wallet';
 import { usePicasso } from 'hooks';
 import { FunctionComponent, ReactNode } from 'react';

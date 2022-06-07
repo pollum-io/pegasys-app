@@ -12,7 +12,7 @@ interface IModal {
     onClose: () => void;
 }
 
-export const AddresInformationButton: FunctionComponent<IModal> = props => {
+export const AddressInfoButton: FunctionComponent<IModal> = props => {
     const { isOpen, onClose } = props;
     const theme = usePicasso();
 	const { account } = useWeb3React();

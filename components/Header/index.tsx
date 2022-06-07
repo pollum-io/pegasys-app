@@ -9,14 +9,10 @@ import { SettingsButton } from './SettingsButton';
 import { UserSysBalance } from './UserSysBalance';
 import { IconButton } from 'components/Buttons';
 import { usePicasso } from 'hooks';
-import { useEffect } from 'react';
-import { useWeb3React } from '@web3-react/core';
-import { injected } from 'utils';
 
 export const Header: React.FC = () => {
 	const { toggleColorMode } = useColorMode();
 	const theme = usePicasso();
-	const { activate } = useWeb3React();
 	const links = [
 		{
 			name: 'Swap',
@@ -40,11 +36,6 @@ export const Header: React.FC = () => {
 		},
 	];
 
-	useEffect(() => {
-        if(window?.ethereum?.selectedAddress){
-            activate(injected, undefined, true)
-        }
-    }, [])
 
 	return (
 		<Flex p="4" mt="1" justifyContent="space-between" alignItems="center">

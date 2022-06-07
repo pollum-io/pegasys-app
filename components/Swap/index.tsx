@@ -6,13 +6,12 @@ import {
 	Text,
 	useDisclosure,
 } from '@chakra-ui/react';
-import { usePicasso } from 'hooks';
+import { usePicasso, useWallet } from 'hooks';
 import { FunctionComponent, ReactNode } from 'react';
 import { BiDownArrowAlt } from 'react-icons/Bi';
 import { IoIosArrowDown } from 'react-icons/Io';
 import { FcInfo } from 'react-icons/Fc';
 import { SelectCoinModal, SelectWallets } from 'components/Modals';
-import { useWeb3React } from '@web3-react/core';
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
@@ -22,10 +21,10 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	const { onOpen, isOpen, onClose } = useDisclosure();
 	const { onOpen: onOpenWallet , isOpen: isOpenWallet, onClose: onCloseWallet } = useDisclosure();
-	const { active } = useWeb3React();
+	const { isConnected } = useWallet()
 
 	const swapButton = () => {
-		if(!active){
+		if(!isConnected){
 			return onOpenWallet()
 		}
 	}
@@ -183,7 +182,7 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 				</Flex>
 				<Flex>						
 					<Button w="100%" p="8" borderRadius="12" fontSize="xl" onClick={swapButton}>						
-						{active ? 'Enter an ammount' : 'Connect your Wallet'}
+						{isConnected ? 'Enter an ammount' : 'Connect your Wallet'}
 					</Button>
 				</Flex>
 			</Flex>

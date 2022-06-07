@@ -13,7 +13,7 @@ export const SelectSyscoin: FunctionComponent<IModal> = props => {
     const theme = usePicasso();
 
     return (
-        <Modal blockScrollOnMount={true} isOpen={isOpen} onClose={onClose}>
+        <Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent borderRadius={18} my='40'>
                 <ModalHeader bgColor={theme.bg.whiteGray} borderTopRadius={18}>
