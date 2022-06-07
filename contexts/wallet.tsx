@@ -76,6 +76,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			activate(connector, undefined, true)
 				.then(() => {
 					setIsConnected(true)
+					setAddress(window?.ethereum?.selectedAddress)
 					const isCbWalletDappBrowser = window?.ethereum?.isCoinbaseWallet
 					const isWalletlink = !!window?.WalletLinkProvider || !!window?.walletLinkExtension
 					const isCbWallet = isCbWalletDappBrowser || isWalletlink
