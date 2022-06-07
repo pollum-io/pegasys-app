@@ -2,7 +2,7 @@ import { injected } from 'utils/connectors'
 import { NEVM_CHAIN_PARAMS } from "helpers/consts";
 
 
-export const useSyscoinNetwork = () => {
+export const ConnectSyscoinNetwork = () => {
     injected.getProvider().then(provider => {
       provider
         .request({

@@ -10,7 +10,7 @@ import { ethers, providers, Signer } from 'ethers';
 import { AbstractConnector } from '@web3-react/abstract-connector';
 import { SUPPORTED_WALLETS } from 'helpers/consts';
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
-import { useSyscoinNetwork } from 'hooks/useSyscoinNetwork';
+import { ConnectSyscoinNetwork } from 'utils/ConnectSyscoinNetwork';
 import { injected } from 'utils';
 
 interface IWeb3 {
@@ -81,7 +81,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 					const isWalletlink = !!window?.WalletLinkProvider || !!window?.walletLinkExtension
 					const isCbWallet = isCbWalletDappBrowser || isWalletlink
 					if (isCbWallet) {
-						useSyscoinNetwork()
+						ConnectSyscoinNetwork()
 					}
 				})
 				.catch(error => {

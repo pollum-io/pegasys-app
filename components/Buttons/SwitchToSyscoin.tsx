@@ -1,7 +1,7 @@
 import { Button, ButtonProps, Flex } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { FunctionComponent, ReactNode } from "react";
-import { useSyscoinNetwork } from 'hooks/useSyscoinNetwork'
+import { ConnectSyscoinNetwork } from 'utils/ConnectSyscoinNetwork'
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
@@ -20,7 +20,7 @@ export const SwitchToSyscoin: FunctionComponent<IButtonProps> = props => {
             fontWeight={500}
             color={theme.text.whiteCyan}
             bgColor={theme.bg.button.switchNetwork}
-            onClick={useSyscoinNetwork}
+            onClick={ConnectSyscoinNetwork}
             {...rest}
         >
             Switch to Syscoin Chain
