@@ -14,8 +14,8 @@ export const WalletButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	const { onOpen, isOpen, onClose } = useDisclosure();
 	const {isOpen: isOpenAddress, onOpen: onOpenAddress, onClose: onCloseAddress} = useDisclosure()
-	const { account, error } = useWeb3React();
-	const { isConnected } = useWallet()
+	const { error } = useWeb3React();
+	const { isConnected, walletAddress} = useWallet()
 
 	const shortAddress = (address: any) =>
 		address ? `${address.substr(0, 5)}…${address.substr(-4)}` : '';
@@ -52,14 +52,14 @@ export const WalletButton: FunctionComponent<IButtonProps> = props => {
 			{error && (
 				<>
 					<SelectSyscoin isOpen={isOpen} onClose={onClose} />
-					<AddressButton onClick={error ? onOpen : ''}>{account}</AddressButton>
+					<AddressButton onClick={error ? onOpen : ''}>{walletAddress}</AddressButton>
 				</>
 			)}
 
 			{isConnected && !error && (
 				<>
 					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
-					<AddressButton onClick={error ? onOpen : onOpenAddress}>{shortAddress(account)}</AddressButton>
+					<AddressButton onClick={error ? onOpen : onOpenAddress}>{shortAddress(walletAddress)}</AddressButton>
 				</>
 			)}
 		</>

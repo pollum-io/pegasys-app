@@ -50,17 +50,18 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		if(active){
 			setIsConnected(true)
         } else {
-			setIsConnected(false)	
+			setIsConnected(false)
 		}
 
-	}, [isConnected, active])
+	}, [active])
 
 	useEffect(() => {
-        if(window?.ethereum?.selectedAddress){
-            activate(injected, undefined, true)
-        }
-    }, [])
-	
+    if(window?.ethereum?.selectedAddress){
+      connectWallet(injected)
+			setAddress(window?.ethereum?.selectedAddress)
+    }
+}, [])
+
 
 	const connectWallet = async (connector: AbstractConnector | undefined) => {
 		let name
