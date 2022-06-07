@@ -15,6 +15,7 @@ interface IWeb3 {
 	connector: AbstractConnector | undefined;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let window: any;
 
 export const WalletContext = createContext({} as IWeb3);

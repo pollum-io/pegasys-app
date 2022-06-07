@@ -27,7 +27,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const theme = usePicasso();
 	const { account } = useWallet();
 
-	const shortAddress = (address: any) =>
+	const shortAddress = (address: string) =>
 		address ? `${address.substr(0, 5)}…${address.substr(-4)}` : '';
 
 	return (

@@ -24,6 +24,7 @@ export const TokenButton: FunctionComponent<IButtonProps> = props => {
 			px="2.5"
 			{...rest}
 		>
+			{children}
 			{token}
 		</Button>
 	);

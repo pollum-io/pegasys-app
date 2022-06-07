@@ -2,15 +2,11 @@ import {
 	ButtonProps,
 	Flex,
 	IconButton,
-	Link,
 	Popover,
-	PopoverArrow,
 	PopoverBody,
 	PopoverCloseButton,
 	PopoverContent,
-	PopoverHeader,
 	PopoverTrigger,
-	Text,
 } from '@chakra-ui/react';
 import { FunctionComponent, ReactNode } from 'react';
 import { BsThreeDots, BsCheck2Square } from 'react-icons/bs';

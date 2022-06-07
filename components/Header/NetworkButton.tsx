@@ -24,6 +24,7 @@ export const NetworkButton: FunctionComponent<IButtonProps> = props => {
 			px="4"
 			{...rest}
 		>
+			{children}
 			{connectedNetwork}
 		</Button>
 	);

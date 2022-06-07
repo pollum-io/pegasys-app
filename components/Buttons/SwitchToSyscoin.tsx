@@ -1,15 +1,11 @@
-import { Button, ButtonProps, Flex } from '@chakra-ui/react';
+import { Button, ButtonProps } from '@chakra-ui/react';
 import { usePicasso } from 'hooks';
-import { FunctionComponent, ReactNode } from 'react';
+import { FunctionComponent } from 'react';
 import { ConnectSyscoinNetwork } from 'utils/ConnectSyscoinNetwork';
 
-interface IButtonProps extends ButtonProps {
-	children?: ReactNode;
-}
-
-export const SwitchToSyscoin: FunctionComponent<IButtonProps> = props => {
+export const SwitchToSyscoin: FunctionComponent<ButtonProps> = props => {
 	const theme = usePicasso();
-	const { children, ...rest } = props;
+	const { ...rest } = props;
 
 	return (
 		<Button

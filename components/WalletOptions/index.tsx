@@ -68,7 +68,7 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 							connectWallet(option.connector);
 						}}
 						key={key}
-						href={option.href}
+						href={option.href || '/'}
 						header={option.name}
 						icon={`icons/${option.iconName}`}
 					/>

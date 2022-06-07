@@ -28,6 +28,7 @@ export const UserSysBalance: FunctionComponent<IButtonProps> = props => {
 			overflow="clip"
 			{...rest}
 		>
+			{children}
 			10.3321 {sys}
 		</Button>
 	) : null;

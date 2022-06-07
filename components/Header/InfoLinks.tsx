@@ -1,4 +1,4 @@
-import { ButtonProps, Link, LinkProps } from '@chakra-ui/react';
+import { Link, LinkProps } from '@chakra-ui/react';
 import { FunctionComponent, ReactNode } from 'react';
 import { usePicasso } from 'hooks';
 

@@ -48,6 +48,7 @@ export const WalletButton: FunctionComponent<IButtonProps> = props => {
 						onClick={onOpen}
 						{...rest}
 					>
+						{children}
 						Connect your wallet
 					</Button>
 				</>
@@ -56,7 +57,7 @@ export const WalletButton: FunctionComponent<IButtonProps> = props => {
 			{error && (
 				<>
 					<SelectSyscoin isOpen={isOpen} onClose={onClose} />
-					<AddressButton onClick={error ? onOpen : ''}>
+					<AddressButton onClick={error && onOpen}>
 						{walletAddress}
 					</AddressButton>
 				</>
