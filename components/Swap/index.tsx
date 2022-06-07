@@ -2,9 +2,10 @@ import {
 	Button,
 	ButtonProps,
 	Flex,
+	Icon,
 	Input,
 	Text,
-	useDisclosure,
+	useDisclosure
 } from '@chakra-ui/react';
 import { usePicasso, useWallet } from 'hooks';
 import { FunctionComponent, ReactNode } from 'react';
@@ -20,14 +21,18 @@ interface IButtonProps extends ButtonProps {
 export const Swap: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	const { onOpen, isOpen, onClose } = useDisclosure();
-	const { onOpen: onOpenWallet , isOpen: isOpenWallet, onClose: onCloseWallet } = useDisclosure();
-	const { isConnected } = useWallet()
+	const {
+		onOpen: onOpenWallet,
+		isOpen: isOpenWallet,
+		onClose: onCloseWallet
+	} = useDisclosure();
+	const { isConnected } = useWallet();
 
 	const swapButton = () => {
-		if(!isConnected){
-			return onOpenWallet()
+		if (!isConnected) {
+			return onOpenWallet();
 		}
-	}
+	};
 
 	return (
 		<Flex pt="24" zIndex="1">
@@ -77,6 +82,7 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 								fontFamily="mono"
 								px="0.5"
 								letterSpacing="-4px"
+								type="number"
 							/>
 							<Button
 								fontSize="sm"
@@ -88,6 +94,7 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 								borderRadius="8"
 								color={theme.text.whiteCyan}
 								bgColor={theme.bg.button.swapBlue}
+								_hover={{ opacity: 0.75 }}
 							>
 								MAX
 							</Button>
@@ -101,14 +108,14 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 								borderRadius={12}
 								cursor="pointer"
 								_hover={{
-									bgColor: theme.bg.button.swapTokenCurrency,
+									bgColor: theme.bg.button.swapTokenCurrency
 								}}
 							>
 								<FcInfo />
 								<Text fontSize="xl" fontWeight="500" px="3" onClick={onOpen}>
 									SYS
 								</Text>
-								<IoIosArrowDown />
+								<Icon as={IoIosArrowDown} />
 							</Flex>
 						</Flex>
 					</Flex>
@@ -146,6 +153,7 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 								fontFamily="mono"
 								px="0.5"
 								letterSpacing="-4px"
+								type="number"
 							/>
 							<Flex
 								cursor="pointer"
@@ -165,7 +173,7 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 								>
 									Select a token
 								</Text>
-								<IoIosArrowDown />
+								<Icon as={IoIosArrowDown} />
 							</Flex>
 						</Flex>
 					</Flex>
@@ -180,9 +188,15 @@ export const Swap: FunctionComponent<IButtonProps> = props => {
 					<Text fontSize="sm">Slippage Tolerance</Text>
 					<Text fontSize="sm">1.01%</Text>
 				</Flex>
-				<Flex>						
-					<Button w="100%" p="8" borderRadius="12" fontSize="xl" onClick={swapButton}>						
-						{isConnected ? 'Enter an ammount' : 'Connect your Wallet'}
+				<Flex>
+					<Button
+						w="100%"
+						p="8"
+						borderRadius="12"
+						fontSize="lg"
+						onClick={swapButton}
+					>
+						{isConnected ? 'Enter an amount' : 'Connect your Wallet'}
 					</Button>
 				</Flex>
 			</Flex>
