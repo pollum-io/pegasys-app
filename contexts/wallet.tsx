@@ -1,18 +1,16 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers, Signer } from "ethers";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import { SUPPORTED_WALLETS } from "helpers/consts";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { ConnectSyscoinNetwork } from "utils/ConnectSyscoinNetwork";
-import { injected } from "utils";
+import { injected, walletlink } from "utils";
 
 interface IWeb3 {
 	isConnected: boolean;
 	walletAddress: string;
-	connectWallet: (connector: AbstractConnector | undefined) => Promise<void>;
-	error: Error | undefined;
-	account: string | null | undefined;
-	connector: AbstractConnector | undefined;
+	connectWallet: any;
+	error?: boolean;
+	setError?: any;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -28,12 +26,16 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [pendingError, setPendingError] = useState<boolean>();
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const [error, setError] = useState<boolean>();
+	const [isSyscoin, setIsSyscoin] = useState<boolean>();
 	const [signer, setSigner] = useState<Signer>();
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [provider, setProvider] = useState<
 		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
 	>();
-	const { active, account, connector, activate, error } = useWeb3React();
+
+	console.log(isConnected, "isConnected");
+	console.log(walletAddress, "walletAddress");
 
 	useMemo(() => {
 		const rpcProvider = new ethers.providers.JsonRpcProvider(
@@ -45,66 +47,54 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		setSigner(rpcSigner);
 	}, []);
 
-	useEffect(() => {
-		setIsConnected(active);
-	}, [active]);
-
-	const connectWallet = async (
-		providedConnector: AbstractConnector | undefined
-	) => {
-		let name;
-		Object.keys(SUPPORTED_WALLETS).map(key => {
-			if (providedConnector === SUPPORTED_WALLETS[key].connector) {
-				name = SUPPORTED_WALLETS[key].name;
-				return name;
-			}
-			return true;
-		});
-
-		console.log("connector", providedConnector);
-		if (providedConnector) {
-			activate(providedConnector, undefined, true)
-				.then(() => {
-					setIsConnected(true);
+	const connectWallet = async (connector: any) => {
+		connector
+			.activate()
+			.then(() => {
+				if (Number(window?.ethereum?.networkVersion) === 57) {
+					setIsConnected(!!window?.ethereum?.selectedAddress);
 					setAddress(window?.ethereum?.selectedAddress);
-					const isCbWalletDappBrowser = window?.ethereum?.isCoinbaseWallet;
-					const isWalletlink =
-						!!window?.WalletLinkProvider || !!window?.walletLinkExtension;
-					const isCbWallet = isCbWalletDappBrowser || isWalletlink;
-					if (isCbWallet) {
-						ConnectSyscoinNetwork();
-					}
-				})
-				.catch((errorMessage: unknown) => {
-					console.log(errorMessage);
-					if (errorMessage instanceof UnsupportedChainIdError) {
-						activate(providedConnector); // a little janky...can't use setError because the connector isn't set
-					} else {
-						setPendingError(true);
-					}
-				});
-		}
+				} else {
+					setError(true);
+				}
+			})
+			.catch((errorMessage: Error) => {
+				if (errorMessage) {
+					console.log(errorMessage, "errorMessage");
+				}
+			});
 	};
 
-	useMemo(() => {
-		if (typeof window === "undefined") return;
-		if (window?.ethereum?.selectedAddress) {
-			connectWallet(injected);
+	useEffect(() => {
+		if (
+			window?.ethereum?.selectedAddress &&
+			Number(window?.ethereum?.networkVersion) === 57
+		) {
+			setIsConnected(!!window?.ethereum?.selectedAddress);
 			setAddress(window?.ethereum?.selectedAddress);
+			setIsSyscoin(true);
+		} else {
+			setError(true);
+			setIsSyscoin(false);
 		}
-	}, [walletAddress, injected]);
+	}, []);
 
-	const providerValue = useMemo(
-		() => ({
-			isConnected,
-			walletAddress,
-			connectWallet,
-			account,
-			error,
-			connector,
-		}),
-		[]
-	);
+	useEffect(() => {
+		if (Number(window?.ethereum?.networkVersion) === 57) {
+			setError(false);
+		} else {
+			setError(true);
+		}
+	}, [isSyscoin]);
+
+	// eslint-disable-next-line
+	const providerValue = {
+		isConnected,
+		walletAddress,
+		connectWallet,
+		error,
+		setError,
+	};
 
 	return (
 		<WalletContext.Provider value={providerValue}>

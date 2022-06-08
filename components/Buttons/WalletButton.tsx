@@ -15,8 +15,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 		onOpen: onOpenAddress,
 		onClose: onCloseAddress,
 	} = useDisclosure();
-	const { error } = useWallet();
-	const { isConnected, walletAddress } = useWallet();
+	const { isConnected, walletAddress, error } = useWallet();
 
 	return (
 		<>

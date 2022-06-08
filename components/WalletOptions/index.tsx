@@ -3,14 +3,14 @@ import { SUPPORTED_WALLETS } from "helpers/consts";
 import { FunctionComponent } from "react";
 import { isMobile } from "react-device-detect";
 import { useWallet } from "hooks";
+import { injected } from "utils";
 import { Wallets } from "./Wallets";
-import { injected } from "../../utils/connectors";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let window: any;
 
 export const WalletOptions: FunctionComponent<ButtonProps> = () => {
-	const { connectWallet, connector } = useWallet();
+	const { connectWallet } = useWallet();
 
 	const listWallets = () =>
 		Object.keys(SUPPORTED_WALLETS).map(key => {
@@ -22,7 +22,7 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 					return (
 						<Wallets
 							onClick={() =>
-								option.connector !== connector &&
+								option.connector !== injected &&
 								!option.href &&
 								connectWallet(option.connector)
 							}
