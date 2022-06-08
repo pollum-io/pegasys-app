@@ -1,5 +1,5 @@
-import { useToast, UseToastOptions } from '@chakra-ui/react';
-import { useState, useMemo } from 'react';
+import { useToast, UseToastOptions } from "@chakra-ui/react";
+import { useState, useMemo } from "react";
 
 const useToasty = () => {
 	const [state, setState] = useState({} as UseToastOptions);
@@ -10,7 +10,7 @@ const useToasty = () => {
 			toast({
 				...state,
 				duration: 5000,
-				position: 'top',
+				position: "top",
 				isClosable: true,
 			});
 		}

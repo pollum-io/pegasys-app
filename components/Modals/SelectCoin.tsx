@@ -15,13 +15,13 @@ import {
 	ModalOverlay,
 	Text,
 	Tooltip,
-} from '@chakra-ui/react';
-import { usePicasso } from 'hooks';
-import React, { useMemo, useState } from 'react';
-import { MdHelpOutline } from 'react-icons/md';
-import { BsArrowDownShort } from 'react-icons/bs';
-import { getDefaultTokens } from 'networks';
-import BigNumber from 'bignumber.js';
+} from "@chakra-ui/react";
+import { usePicasso } from "hooks";
+import React, { useMemo, useState } from "react";
+import { MdHelpOutline } from "react-icons/md";
+import { BsArrowDownShort } from "react-icons/bs";
+import { getDefaultTokens } from "networks";
+import BigNumber from "bignumber.js";
 
 interface IModal {
 	isOpen: boolean;
@@ -42,11 +42,11 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 	const [defaultTokens, setDefaultTokens] = useState<IToken[]>([]);
-	const [order, setOrder] = useState<'asc' | 'desc'>('desc');
+	const [order, setOrder] = useState<"asc" | "desc">("desc");
 
 	const orderList = () => {
 		const orderedList: IToken[] = [];
-		if (order === 'desc') {
+		if (order === "desc") {
 			defaultTokens.forEach(token => {
 				const firstToken = new BigNumber(defaultTokens[0].balance);
 				const tokenBalance = new BigNumber(token.balance);
@@ -66,7 +66,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				return orderedList.unshift(token);
 			});
 		}
-		setOrder(previousState => (previousState === 'asc' ? 'desc' : 'asc'));
+		setOrder(previousState => (previousState === "asc" ? "desc" : "asc"));
 		setDefaultTokens(orderedList);
 	};
 
@@ -159,7 +159,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					<Button
 						bg="transparent"
 						color="gray.400"
-						_hover={{ color: 'white' }}
+						_hover={{ color: "white" }}
 						_active={{}}
 						pt="8"
 						pb="8"

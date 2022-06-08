@@ -1,10 +1,10 @@
-import React, { useEffect, createContext, useState, useMemo } from 'react';
-import { ethers, Signer } from 'ethers';
-import { AbstractConnector } from '@web3-react/abstract-connector';
-import { SUPPORTED_WALLETS } from 'helpers/consts';
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
-import { ConnectSyscoinNetwork } from 'utils/ConnectSyscoinNetwork';
-import { injected } from 'utils';
+import React, { useEffect, createContext, useState, useMemo } from "react";
+import { ethers, Signer } from "ethers";
+import { AbstractConnector } from "@web3-react/abstract-connector";
+import { SUPPORTED_WALLETS } from "helpers/consts";
+import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
+import { ConnectSyscoinNetwork } from "utils/ConnectSyscoinNetwork";
+import { injected } from "utils";
 
 interface IWeb3 {
 	isConnected: boolean;
@@ -15,16 +15,16 @@ interface IWeb3 {
 	connector: AbstractConnector | undefined;
 }
 
+export const WalletContext = createContext({} as IWeb3);
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let window: any;
-
-export const WalletContext = createContext({} as IWeb3);
 
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [isConnected, setIsConnected] = useState(false);
-	const [walletAddress, setAddress] = useState('');
+	const [walletAddress, setAddress] = useState("");
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [pendingError, setPendingError] = useState<boolean>();
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -37,7 +37,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	useMemo(() => {
 		const rpcProvider = new ethers.providers.JsonRpcProvider(
-			'https://rpc.syscoin.org/' || 'https://rpc.ankr.com/syscoin'
+			"https://rpc.syscoin.org/" || "https://rpc.ankr.com/syscoin"
 		);
 		setProvider(rpcProvider);
 
@@ -52,24 +52,18 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const connectWallet = async (
 		providedConnector: AbstractConnector | undefined
 	) => {
+		let name;
 		Object.keys(SUPPORTED_WALLETS).map(key => {
 			if (providedConnector === SUPPORTED_WALLETS[key].connector) {
-				return SUPPORTED_WALLETS[key].name;
+				name = SUPPORTED_WALLETS[key].name;
+				return name;
 			}
 			return true;
 		});
-	};
 
-	useMemo(() => {
-		if (window?.ethereum?.selectedAddress) {
-			connectWallet(injected);
-			setAddress(window?.ethereum?.selectedAddress);
-		}
-	}, [walletAddress, injected]);
-
-	useMemo(() => {
-		if (connector) {
-			activate(connector, undefined, true)
+		console.log("connector", providedConnector);
+		if (providedConnector) {
+			activate(providedConnector, undefined, true)
 				.then(() => {
 					setIsConnected(true);
 					setAddress(window?.ethereum?.selectedAddress);
@@ -82,14 +76,23 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 					}
 				})
 				.catch((errorMessage: unknown) => {
+					console.log(errorMessage);
 					if (errorMessage instanceof UnsupportedChainIdError) {
-						activate(connector); // a little janky...can't use setError because the connector isn't set
+						activate(providedConnector); // a little janky...can't use setError because the connector isn't set
 					} else {
 						setPendingError(true);
 					}
 				});
 		}
-	}, [activate, connector]);
+	};
+
+	useMemo(() => {
+		if (typeof window === "undefined") return;
+		if (window?.ethereum?.selectedAddress) {
+			connectWallet(injected);
+			setAddress(window?.ethereum?.selectedAddress);
+		}
+	}, [walletAddress, injected]);
 
 	const providerValue = useMemo(
 		() => ({

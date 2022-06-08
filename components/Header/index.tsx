@@ -1,38 +1,38 @@
-import { Flex, Icon, Img, useColorMode } from '@chakra-ui/react';
-import { WalletButton } from 'components';
-import { FiArrowUpRight } from 'react-icons/fi';
-import { IconButton } from 'components/Buttons';
-import { usePicasso } from 'hooks';
-import { NavButton } from './NavButton';
-import { NetworkButton } from './NetworkButton';
-import { TokenButton } from './TokenButton';
-import { MenuLinks } from './MenuLink';
-import { SettingsButton } from './SettingsButton';
-import { UserSysBalance } from './UserSysBalance';
+import { Flex, Icon, Img, useColorMode } from "@chakra-ui/react";
+import { WalletButton } from "components";
+import { FiArrowUpRight } from "react-icons/fi";
+import { IconButton } from "components/Buttons";
+import { usePicasso } from "hooks";
+import { NavButton } from "./NavButton";
+import { NetworkButton } from "./NetworkButton";
+import { TokenButton } from "./TokenButton";
+import { MenuLinks } from "./MenuLink";
+import { SettingsButton } from "./SettingsButton";
+import { UserSysBalance } from "./UserSysBalance";
 
 export const Header: React.FC = () => {
 	const { toggleColorMode } = useColorMode();
 	const theme = usePicasso();
 	const links = [
 		{
-			name: 'Swap',
-			url: '/',
+			name: "Swap",
+			url: "/",
 		},
 		{
-			name: 'Pools',
-			url: '/pools',
+			name: "Pools",
+			url: "/pools",
 		},
 		{
-			name: 'Farms',
-			url: '/farms',
+			name: "Farms",
+			url: "/farms",
 		},
 		{
-			name: 'Stake',
-			url: '/stake',
+			name: "Stake",
+			url: "/stake",
 		},
 		{
-			name: 'Airdrops',
-			url: '/airdrops',
+			name: "Airdrops",
+			url: "/airdrops",
 		},
 	];
 
@@ -46,7 +46,7 @@ export const Header: React.FC = () => {
 					</NavButton>
 				))}
 				<NavButton href="/">
-					Charts{' '}
+					Charts{" "}
 					<Icon
 						as={FiArrowUpRight}
 						w="3"
@@ -57,7 +57,7 @@ export const Header: React.FC = () => {
 					/>
 				</NavButton>
 				<NavButton href="/">
-					Bridge{' '}
+					Bridge{" "}
 					<Icon
 						as={FiArrowUpRight}
 						w="3"

@@ -6,13 +6,13 @@ import {
 	Input,
 	Text,
 	useDisclosure,
-} from '@chakra-ui/react';
-import { usePicasso, useWallet } from 'hooks';
-import { FunctionComponent } from 'react';
-import { BiDownArrowAlt } from 'react-icons/bi';
-import { IoIosArrowDown } from 'react-icons/io';
-import { FcInfo } from 'react-icons/fc';
-import { SelectCoinModal, SelectWallets } from 'components/Modals';
+} from "@chakra-ui/react";
+import { usePicasso, useWallet } from "hooks";
+import { FunctionComponent } from "react";
+import { BiDownArrowAlt } from "react-icons/bi";
+import { IoIosArrowDown } from "react-icons/io";
+import { FcInfo } from "react-icons/fc";
+import { SelectCoinModal, SelectWallets } from "components/Modals";
 
 export const Swap: FunctionComponent<ButtonProps> = () => {
 	const theme = usePicasso();
@@ -188,7 +188,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						fontSize="lg"
 						onClick={swapButton}
 					>
-						{isConnected ? 'Enter an amount' : 'Connect your Wallet'}
+						{isConnected ? "Enter an amount" : "Connect your Wallet"}
 					</Button>
 				</Flex>
 			</Flex>

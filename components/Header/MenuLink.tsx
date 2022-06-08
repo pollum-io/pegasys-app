@@ -7,14 +7,14 @@ import {
 	PopoverCloseButton,
 	PopoverContent,
 	PopoverTrigger,
-} from '@chakra-ui/react';
-import { FunctionComponent, ReactNode } from 'react';
-import { BsThreeDots, BsCheck2Square } from 'react-icons/bs';
-import { FiTwitter } from 'react-icons/fi';
-import { FaDiscord, FaTelegramPlane } from 'react-icons/fa';
-import { AiOutlineInfoCircle } from 'react-icons/ai';
-import { usePicasso } from 'hooks';
-import { InfoLinks } from './InfoLinks';
+} from "@chakra-ui/react";
+import { FunctionComponent, ReactNode } from "react";
+import { BsThreeDots, BsCheck2Square } from "react-icons/bs";
+import { FiTwitter } from "react-icons/fi";
+import { FaDiscord, FaTelegramPlane } from "react-icons/fa";
+import { AiOutlineInfoCircle } from "react-icons/ai";
+import { usePicasso } from "hooks";
+import { InfoLinks } from "./InfoLinks";
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
@@ -25,28 +25,28 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 
 	const infos = [
 		{
-			name: 'About',
-			link: 'https://pegasys.finance/',
+			name: "About",
+			link: "https://pegasys.finance/",
 			icon: <AiOutlineInfoCircle />,
 		},
 		{
-			name: 'Discord',
-			link: 'https://discord.com/invite/UzjWbWWERz',
+			name: "Discord",
+			link: "https://discord.com/invite/UzjWbWWERz",
 			icon: <FaDiscord />,
 		},
 		{
-			name: 'Telegram',
-			link: 'https://t.me/joinchat/GNosBd1_76E5MTVh',
+			name: "Telegram",
+			link: "https://t.me/joinchat/GNosBd1_76E5MTVh",
 			icon: <FaTelegramPlane />,
 		},
 		{
-			name: 'Twitter',
-			link: 'https://twitter.com/PegasysDEX',
+			name: "Twitter",
+			link: "https://twitter.com/PegasysDEX",
 			icon: <FiTwitter />,
 		},
 		{
-			name: 'Vote',
-			link: 'https://pegasys.finance/',
+			name: "Vote",
+			link: "https://pegasys.finance/",
 			icon: <BsCheck2Square />,
 		},
 	];

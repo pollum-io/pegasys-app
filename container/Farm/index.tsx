@@ -1,7 +1,7 @@
-import { Button, Flex, Img, Link, Text, Input } from '@chakra-ui/react';
-import { DefaultTemplate } from 'container';
-import { usePicasso } from 'hooks';
-import { NextPage } from 'next';
+import { Button, Flex, Img, Link, Text, Input } from "@chakra-ui/react";
+import { DefaultTemplate } from "container";
+import { usePicasso } from "hooks";
+import { NextPage } from "next";
 
 export const FarmContainer: NextPage = () => {
 	const theme = usePicasso();
@@ -75,14 +75,14 @@ export const FarmContainer: NextPage = () => {
 								<Text
 									fontSize="sm"
 									cursor="pointer"
-									_after={{ content: `"|"`, marginLeft: '2' }}
+									_after={{ content: `"|"`, marginLeft: "2" }}
 								>
 									Liquidity
 								</Text>
 								<Text
 									fontSize="sm"
 									cursor="pointer"
-									_after={{ content: `"|"`, marginLeft: '2' }}
+									_after={{ content: `"|"`, marginLeft: "2" }}
 								>
 									Pool Weight
 								</Text>

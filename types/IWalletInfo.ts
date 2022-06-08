@@ -1,4 +1,4 @@
-import { AbstractConnector } from '@web3-react/abstract-connector';
+import { AbstractConnector } from "@web3-react/abstract-connector";
 
 export interface IWalletInfo {
 	connector?: AbstractConnector;

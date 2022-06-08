@@ -1,10 +1,10 @@
-import { Button, ButtonProps, useDisclosure } from '@chakra-ui/react';
-import { SelectSyscoin, SelectWallets } from 'components/Modals';
-import { usePicasso, useWallet } from 'hooks';
-import { FunctionComponent } from 'react';
-import { AddressInfoButton } from 'components/Buttons';
-import { shortAddress } from 'utils';
-import { AddressButton } from './AddressButton';
+import { Button, ButtonProps, useDisclosure } from "@chakra-ui/react";
+import { SelectSyscoin, SelectWallets } from "components/Modals";
+import { usePicasso, useWallet } from "hooks";
+import { FunctionComponent } from "react";
+import { AddressInfoButton } from "components/Buttons";
+import { shortAddress } from "utils";
+import { AddressButton } from "./AddressButton";
 
 export const WalletButton: FunctionComponent<ButtonProps> = props => {
 	const { ...rest } = props;
@@ -32,7 +32,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						borderRadius={12}
 						opacity="0.85"
 						_hover={{
-							opacity: '1',
+							opacity: "1",
 						}}
 						_active={{}}
 						w="max-content"

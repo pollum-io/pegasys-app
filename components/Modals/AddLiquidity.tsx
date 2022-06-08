@@ -11,14 +11,14 @@ import {
 	Text,
 	Tooltip,
 	useDisclosure,
-} from '@chakra-ui/react';
-import { usePicasso } from 'hooks';
-import React from 'react';
-import { MdHelpOutline } from 'react-icons/md';
-import { FcInfo } from 'react-icons/fc';
-import { IoIosArrowDown } from 'react-icons/io';
-import { BiPlus } from 'react-icons/bi';
-import { SelectCoinModal } from 'components';
+} from "@chakra-ui/react";
+import { usePicasso } from "hooks";
+import React from "react";
+import { MdHelpOutline } from "react-icons/md";
+import { FcInfo } from "react-icons/fc";
+import { IoIosArrowDown } from "react-icons/io";
+import { BiPlus } from "react-icons/bi";
+import { SelectCoinModal } from "components";
 
 interface IModal {
 	isModalOpen: boolean;
@@ -67,7 +67,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						textAlign="center"
 						margin="0 auto"
 					>
-						{isCreate ? 'Create a pair' : 'Add Liquidity'}
+						{isCreate ? "Create a pair" : "Add Liquidity"}
 					</Text>
 				</ModalHeader>
 				<ModalCloseButton top="4" size="md" _focus={{}} />
@@ -238,7 +238,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						</Flex>
 						<Flex mt="7">
 							<Button w="100%" p="8" borderRadius="12" fontSize="xl">
-								{isCreate ? 'Create a pair' : 'Add Liquidity'}
+								{isCreate ? "Create a pair" : "Add Liquidity"}
 							</Button>
 						</Flex>
 					</Flex>

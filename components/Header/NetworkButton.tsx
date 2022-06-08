@@ -1,6 +1,6 @@
-import { Button, ButtonProps } from '@chakra-ui/react';
-import { usePicasso } from 'hooks';
-import { FunctionComponent, ReactNode } from 'react';
+import { Button, ButtonProps } from "@chakra-ui/react";
+import { usePicasso } from "hooks";
+import { FunctionComponent, ReactNode } from "react";
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
@@ -9,7 +9,7 @@ interface IButtonProps extends ButtonProps {
 export const NetworkButton: FunctionComponent<IButtonProps> = props => {
 	const { children, ...rest } = props;
 	const theme = usePicasso();
-	const connectedNetwork = 'NEVM';
+	const connectedNetwork = "NEVM";
 	return (
 		<Button
 			color="white"

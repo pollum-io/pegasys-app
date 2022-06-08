@@ -1,2 +1,2 @@
 export const shortAddress = (address: string) =>
-	address ? `${address.substr(0, 5)}…${address.substr(-4)}` : '';
+	address ? `${address.substr(0, 5)}…${address.substr(-4)}` : "";

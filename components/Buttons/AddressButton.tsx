@@ -1,7 +1,7 @@
-import { Button, ButtonProps, Flex } from '@chakra-ui/react';
-import { usePicasso, useWallet } from 'hooks';
-import { FunctionComponent, ReactNode } from 'react';
-import Jazzicon from 'react-jazzicon';
+import { Button, ButtonProps, Flex } from "@chakra-ui/react";
+import { usePicasso, useWallet } from "hooks";
+import { FunctionComponent, ReactNode } from "react";
+import Jazzicon from "react-jazzicon";
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
@@ -34,7 +34,7 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 			{...rest}
 		>
 			{error ? (
-				'Wrong Network'
+				"Wrong Network"
 			) : (
 				<>
 					{children}

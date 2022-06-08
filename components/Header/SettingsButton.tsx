@@ -11,13 +11,13 @@ import {
 	Input,
 	Stack,
 	Switch,
-} from '@chakra-ui/react';
-import { FunctionComponent, ReactNode } from 'react';
-import { FiSettings } from 'react-icons/fi';
-import { usePicasso } from 'hooks';
-import { IconButton } from '../Buttons/IconButton';
-import { SlippageButton } from '../Buttons/SlippageButton';
-import { Languages } from './Languages';
+} from "@chakra-ui/react";
+import { FunctionComponent, ReactNode } from "react";
+import { FiSettings } from "react-icons/fi";
+import { usePicasso } from "hooks";
+import { IconButton } from "../Buttons/IconButton";
+import { SlippageButton } from "../Buttons/SlippageButton";
+import { Languages } from "./Languages";
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;

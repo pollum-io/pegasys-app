@@ -7,10 +7,10 @@ import {
 	ModalHeader,
 	ModalOverlay,
 	Text,
-} from '@chakra-ui/react';
-import { usePicasso } from 'hooks';
-import { FunctionComponent } from 'react';
-import { SwitchToSyscoin } from 'components/Buttons';
+} from "@chakra-ui/react";
+import { usePicasso } from "hooks";
+import { FunctionComponent } from "react";
+import { SwitchToSyscoin } from "components/Buttons";
 
 interface IModal {
 	isOpen: boolean;

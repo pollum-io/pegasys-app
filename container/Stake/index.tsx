@@ -1,7 +1,7 @@
-import { Button, Flex, Img, Text } from '@chakra-ui/react';
-import { DefaultTemplate } from 'container';
-import { usePicasso } from 'hooks';
-import { NextPage } from 'next';
+import { Button, Flex, Img, Text } from "@chakra-ui/react";
+import { DefaultTemplate } from "container";
+import { usePicasso } from "hooks";
+import { NextPage } from "next";
 
 export const StakeContainer: NextPage = () => {
 	const theme = usePicasso();

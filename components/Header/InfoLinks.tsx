@@ -1,6 +1,6 @@
-import { Link, LinkProps } from '@chakra-ui/react';
-import { FunctionComponent, ReactNode } from 'react';
-import { usePicasso } from 'hooks';
+import { Link, LinkProps } from "@chakra-ui/react";
+import { FunctionComponent, ReactNode } from "react";
+import { usePicasso } from "hooks";
 
 interface ILinkProps extends LinkProps {
 	children?: ReactNode;

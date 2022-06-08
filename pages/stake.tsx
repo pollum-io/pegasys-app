@@ -1,5 +1,5 @@
-import { StakeContainer } from 'container';
-import type { NextPage } from 'next';
+import { StakeContainer } from "container";
+import type { NextPage } from "next";
 
 const Stake: NextPage = () => <StakeContainer />;
 

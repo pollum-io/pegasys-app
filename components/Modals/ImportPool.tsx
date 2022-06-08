@@ -10,14 +10,14 @@ import {
 	Text,
 	Tooltip,
 	useDisclosure,
-} from '@chakra-ui/react';
-import { usePicasso } from 'hooks';
-import React from 'react';
-import { MdHelpOutline } from 'react-icons/md';
-import { FcInfo } from 'react-icons/fc';
-import { IoIosArrowDown } from 'react-icons/io';
-import { BiPlus } from 'react-icons/bi';
-import { SelectCoinModal } from 'components';
+} from "@chakra-ui/react";
+import { usePicasso } from "hooks";
+import React from "react";
+import { MdHelpOutline } from "react-icons/md";
+import { FcInfo } from "react-icons/fc";
+import { IoIosArrowDown } from "react-icons/io";
+import { BiPlus } from "react-icons/bi";
+import { SelectCoinModal } from "components";
 
 interface IModal {
 	isModalOpen: boolean;

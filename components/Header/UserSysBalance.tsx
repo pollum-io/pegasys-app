@@ -1,6 +1,6 @@
-import { Button, ButtonProps } from '@chakra-ui/react';
-import { usePicasso } from 'hooks';
-import { FunctionComponent, ReactNode } from 'react';
+import { Button, ButtonProps } from "@chakra-ui/react";
+import { usePicasso } from "hooks";
+import { FunctionComponent, ReactNode } from "react";
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
@@ -10,7 +10,7 @@ export const UserSysBalance: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	const { children, ...rest } = props;
 	const isConnected = true;
-	const sys = 'SYS';
+	const sys = "SYS";
 	return isConnected ? (
 		<Button
 			color="white"

@@ -1,7 +1,7 @@
-import { extendTheme, ThemeConfig } from '@chakra-ui/react';
+import { extendTheme, ThemeConfig } from "@chakra-ui/react";
 
 const config: ThemeConfig = {
-	initialColorMode: 'dark',
+	initialColorMode: "dark",
 	useSystemColorMode: false,
 };
 
@@ -9,8 +9,8 @@ export const theme = extendTheme({
 	config,
 	overrides: {
 		styles: {
-			'*': {
-				boxShadow: 'none',
+			"*": {
+				boxShadow: "none",
 			},
 		},
 	},
@@ -19,7 +19,7 @@ export const theme = extendTheme({
 			baseStyle: {
 				track: {
 					_focus: {
-						boxShadow: 'none',
+						boxShadow: "none",
 					},
 				},
 			},
@@ -27,30 +27,30 @@ export const theme = extendTheme({
 		ModalCloseButton: {
 			baseStyle: {
 				_focus: {
-					boxShadow: 'none',
+					boxShadow: "none",
 				},
 			},
 		},
 		Button: {
 			baseStyle: {
 				_focus: {
-					boxShadow: 'none',
+					boxShadow: "none",
 				},
 			},
 		},
 	},
 	zIndices: {
 		default: 1,
-		behind: '-1000',
+		behind: "-1000",
 	},
 	colors: {
 		gray: {
-			'700': '#2c2f36',
+			"700": "#2c2f36",
 		},
 	},
 	fonts: {
-		heading: 'Inter',
-		body: 'Inter',
-		mono: 'Roboto Mono',
+		heading: "Inter",
+		body: "Inter",
+		mono: "Roboto Mono",
 	},
 });

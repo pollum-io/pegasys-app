@@ -1,7 +1,7 @@
-import { Button, ButtonProps } from '@chakra-ui/react';
-import { usePicasso } from 'hooks';
-import { FunctionComponent } from 'react';
-import { ConnectSyscoinNetwork } from 'utils/ConnectSyscoinNetwork';
+import { Button, ButtonProps } from "@chakra-ui/react";
+import { usePicasso } from "hooks";
+import { FunctionComponent } from "react";
+import { ConnectSyscoinNetwork } from "utils/ConnectSyscoinNetwork";
 
 export const SwitchToSyscoin: FunctionComponent<ButtonProps> = props => {
 	const theme = usePicasso();

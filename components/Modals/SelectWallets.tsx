@@ -7,9 +7,9 @@ import {
 	ModalHeader,
 	ModalOverlay,
 	Text,
-} from '@chakra-ui/react';
-import { usePicasso } from 'hooks';
-import { WalletOptions } from 'components/WalletOptions';
+} from "@chakra-ui/react";
+import { usePicasso } from "hooks";
+import { WalletOptions } from "components/WalletOptions";
 
 interface IModal {
 	isOpen: boolean;

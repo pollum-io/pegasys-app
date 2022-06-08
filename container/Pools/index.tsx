@@ -1,10 +1,10 @@
-import { Button, Flex, Img, Link, Text, useDisclosure } from '@chakra-ui/react';
-import { AddLiquidityModal } from 'components';
-import { ImportPoolModal } from 'components/Modals/ImportPool';
-import { DefaultTemplate } from 'container';
-import { usePicasso } from 'hooks';
-import { NextPage } from 'next';
-import { useState } from 'react';
+import { Button, Flex, Img, Link, Text, useDisclosure } from "@chakra-ui/react";
+import { AddLiquidityModal } from "components";
+import { ImportPoolModal } from "components/Modals/ImportPool";
+import { DefaultTemplate } from "container";
+import { usePicasso } from "hooks";
+import { NextPage } from "next";
+import { useState } from "react";
 
 export const PoolsContainer: NextPage = () => {
 	const theme = usePicasso();
@@ -96,7 +96,7 @@ export const PoolsContainer: NextPage = () => {
 									borderWidth="1px"
 									borderColor={theme.bg.button.primary}
 									opacity="0.8"
-									_hover={{ opacity: '1' }}
+									_hover={{ opacity: "1" }}
 									_active={{}}
 									onClick={() => {
 										setIsCreate(true);
@@ -113,7 +113,7 @@ export const PoolsContainer: NextPage = () => {
 									bgColor={theme.bg.button.primary}
 									color="white"
 									opacity="0.8"
-									_hover={{ opacity: '1' }}
+									_hover={{ opacity: "1" }}
 									_active={{}}
 									onClick={() => {
 										setIsCreate(false);
@@ -137,7 +137,7 @@ export const PoolsContainer: NextPage = () => {
 							Connect a wallet to view your liquidity.
 						</Text>
 						<Text color={theme.text.mono} fontSize="sm" w="max-content">
-							Don&apos;t see a pool you joined?{' '}
+							Don&apos;t see a pool you joined?{" "}
 							<Button fontWeight="medium" onClick={onOpenPool}>
 								Import it.
 							</Button>

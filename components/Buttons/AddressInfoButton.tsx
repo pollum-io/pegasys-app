@@ -10,13 +10,13 @@ import {
 	ModalHeader,
 	ModalOverlay,
 	Text,
-} from '@chakra-ui/react';
-import { usePicasso, useWallet } from 'hooks';
-import { FunctionComponent } from 'react';
-import Jazzicon from 'react-jazzicon';
-import { MdOutlineContentCopy } from 'react-icons/md';
-import { HiExternalLink } from 'react-icons/hi';
-import { shortAddress } from 'utils';
+} from "@chakra-ui/react";
+import { usePicasso, useWallet } from "hooks";
+import { FunctionComponent } from "react";
+import Jazzicon from "react-jazzicon";
+import { MdOutlineContentCopy } from "react-icons/md";
+import { HiExternalLink } from "react-icons/hi";
+import { shortAddress } from "utils";
 
 interface IModal {
 	isOpen: boolean;
@@ -89,7 +89,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								gap="2"
 							>
 								<Icon as={MdOutlineContentCopy} />
-								<Text _hover={{ textDecoration: 'underline' }}>
+								<Text _hover={{ textDecoration: "underline" }}>
 									Copy Address
 								</Text>
 							</Flex>
@@ -101,7 +101,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								gap="2"
 							>
 								<Icon as={HiExternalLink} />
-								<Text _hover={{ textDecoration: 'underline' }}>
+								<Text _hover={{ textDecoration: "underline" }}>
 									View on the Explorer
 								</Text>
 							</Flex>

@@ -1,6 +1,6 @@
-import { Button, ButtonProps } from '@chakra-ui/react';
-import { usePicasso } from 'hooks';
-import { FunctionComponent, ReactNode } from 'react';
+import { Button, ButtonProps } from "@chakra-ui/react";
+import { usePicasso } from "hooks";
+import { FunctionComponent, ReactNode } from "react";
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;

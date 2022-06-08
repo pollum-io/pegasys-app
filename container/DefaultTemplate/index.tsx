@@ -1,10 +1,10 @@
-import { Flex } from '@chakra-ui/react';
-import { FunctionComponent, ReactNode } from 'react';
-import { Web3ReactProvider } from '@web3-react/core';
-import { Header } from 'components';
-import { WalletProvider } from 'contexts';
-import { usePicasso } from 'hooks';
-import { getLibrary } from 'utils';
+import { Flex } from "@chakra-ui/react";
+import { FunctionComponent, ReactNode } from "react";
+import { Web3ReactProvider } from "@web3-react/core";
+import { Header } from "components";
+import { WalletProvider } from "contexts";
+import { usePicasso } from "hooks";
+import { getLibrary } from "utils";
 
 interface BaseLayoutProps {
 	children?: ReactNode;
@@ -19,7 +19,7 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 			<WalletProvider>
 				<Flex
 					bgColor={theme.bg.primary}
-					flexDirection={['column']}
+					flexDirection={["column"]}
 					h="100vh"
 					w="100vw"
 					backgroundImage="radial-gradient(50% 50% at 50% 50%, rgba(0, 217, 239, 0.15) 0%, rgba(33, 36, 41, 0) 100%)"

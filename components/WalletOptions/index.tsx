@@ -1,10 +1,13 @@
-import { ButtonProps } from '@chakra-ui/react';
-import { SUPPORTED_WALLETS } from 'helpers/consts';
-import { FunctionComponent } from 'react';
-import { isMobile } from 'react-device-detect';
-import { useWallet } from 'hooks';
-import { Wallets } from './Wallets';
-import { injected } from '../../utils/connectors';
+import { ButtonProps } from "@chakra-ui/react";
+import { SUPPORTED_WALLETS } from "helpers/consts";
+import { FunctionComponent } from "react";
+import { isMobile } from "react-device-detect";
+import { useWallet } from "hooks";
+import { Wallets } from "./Wallets";
+import { injected } from "../../utils/connectors";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+declare let window: any;
 
 export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 	const { connectWallet, connector } = useWallet();
@@ -36,13 +39,13 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 			if (option.connector === injected) {
 				// don't show injected if there's no injected provider
 				if (!(window.web3 || window.ethereum)) {
-					if (option.name === 'MetaMask') {
+					if (option.name === "MetaMask") {
 						return (
 							<Wallets
 								id={`connect-${key}`}
 								key={key}
 								header="Install Metamask"
-								href="https://metamask.io/"
+								// href="https://metamask.io/"
 								icon="/icons/metamask.png"
 							/>
 						);
@@ -50,11 +53,11 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 					return null; // dont want to return install twice
 				}
 				// don't return metamask if injected provider isn't metamask
-				if (option.name === 'MetaMask' && !isMetamask) {
+				if (option.name === "MetaMask" && !isMetamask) {
 					return null;
 				}
 				// likewise for generic
-				if (option.name === 'Injected' && isMetamask) {
+				if (option.name === "Injected" && isMetamask) {
 					return null;
 				}
 			}
@@ -68,7 +71,7 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 							connectWallet(option.connector);
 						}}
 						key={key}
-						href={option.href || '/'}
+						// href={option.href || "/"}
 						header={option.name}
 						icon={`icons/${option.iconName}`}
 					/>
