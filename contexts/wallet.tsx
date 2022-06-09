@@ -83,14 +83,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		}
 	}, []);
 
-	useEffect(() => {
-		if (Number(window?.ethereum?.networkVersion) === 57) {
-			setError(false);
-		} else {
-			setError(true);
-		}
-	}, []);
-
 	provider?.on("chainChanged", () =>
 		setError(Number(window?.ethereum?.networkVersion) === 57)
 	);
