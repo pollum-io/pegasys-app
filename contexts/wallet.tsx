@@ -66,6 +66,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	};
 
 	useEffect(() => {
+		setProvider(window?.ethereum);
 		if (
 			window?.ethereum?.selectedAddress &&
 			Number(window?.ethereum?.networkVersion) === 57
@@ -89,6 +90,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setError(true);
 		}
 	}, []);
+
+	provider?.on("chainChanged", () =>
+		setError(Number(window?.ethereum?.networkVersion) === 57)
+	);
+
+	provider?.on("accountsChanged", () => setIsConnected(!!window?.ethereum?.selectedAddress))
 
 	// eslint-disable-next-line
 	const providerValue = {
