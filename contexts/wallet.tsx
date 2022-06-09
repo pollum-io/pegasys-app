@@ -15,7 +15,6 @@ interface IWeb3 {
 
 export const WalletContext = createContext({} as IWeb3);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let window: any;
 
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -23,18 +22,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
 	const [isConnected, setIsConnected] = useState(false);
 	const [walletAddress, setAddress] = useState("");
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [pendingError, setPendingError] = useState<boolean>();
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [error, setError] = useState<boolean>();
 	const [signer, setSigner] = useState<Signer>();
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [provider, setProvider] = useState<
 		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
 	>();
-
-	console.log(isConnected, "isConnected");
-	console.log(walletAddress, "walletAddress");
 
 	useMemo(() => {
 		const rpcProvider = new ethers.providers.JsonRpcProvider(
@@ -87,9 +80,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		setError(Number(window?.ethereum?.networkVersion) === 57)
 	);
 
-	provider?.on("accountsChanged", () => setIsConnected(!!window?.ethereum?.selectedAddress))
+	provider?.on("accountsChanged", () =>
+		setIsConnected(!!window?.ethereum?.selectedAddress)
+	);
 
-	// eslint-disable-next-line
 	const providerValue = {
 		isConnected,
 		walletAddress,
