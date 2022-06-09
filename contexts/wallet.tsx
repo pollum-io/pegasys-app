@@ -50,7 +50,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		connector
 			.activate()
 			.then(() => {
-				if (window?.ethereum?.networkVersion === 57) {
+				if (Number(window?.ethereum?.networkVersion) === 57) {
 					setIsConnected(!!window?.ethereum?.selectedAddress);
 					setAddress(window?.ethereum?.selectedAddress);
 					setError(false);
@@ -73,8 +73,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setIsConnected(!!window?.ethereum?.selectedAddress);
 			setAddress(window?.ethereum?.selectedAddress);
 			setError(false);
-		} else {
-			console.log("a");
+		}
+		if (
+			window?.ethereum?.selectedAddress &&
+			Number(window?.ethereum?.networkVersion) !== 57
+		) {
 			setError(true);
 		}
 	}, []);
@@ -83,10 +86,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		if (Number(window?.ethereum?.networkVersion) === 57) {
 			setError(false);
 		} else {
-			console.log("a");
 			setError(true);
 		}
-	}, [error, setError]);
+	}, []);
 
 	// eslint-disable-next-line
 	const providerValue = {
