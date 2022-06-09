@@ -27,7 +27,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [pendingError, setPendingError] = useState<boolean>();
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [error, setError] = useState<boolean>();
-	const [isSyscoin, setIsSyscoin] = useState<boolean>();
 	const [signer, setSigner] = useState<Signer>();
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [provider, setProvider] = useState<
@@ -51,9 +50,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		connector
 			.activate()
 			.then(() => {
-				if (Number(window?.ethereum?.networkVersion) === 57) {
+				if (window?.ethereum?.networkVersion === 57) {
 					setIsConnected(!!window?.ethereum?.selectedAddress);
 					setAddress(window?.ethereum?.selectedAddress);
+					setError(false);
 				} else {
 					setError(true);
 				}
@@ -72,10 +72,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		) {
 			setIsConnected(!!window?.ethereum?.selectedAddress);
 			setAddress(window?.ethereum?.selectedAddress);
-			setIsSyscoin(true);
+			setError(false);
 		} else {
+			console.log("a");
 			setError(true);
-			setIsSyscoin(false);
 		}
 	}, []);
 
@@ -83,9 +83,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		if (Number(window?.ethereum?.networkVersion) === 57) {
 			setError(false);
 		} else {
+			console.log("a");
 			setError(true);
 		}
-	}, [isSyscoin]);
+	}, [error, setError]);
 
 	// eslint-disable-next-line
 	const providerValue = {
@@ -93,7 +94,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		walletAddress,
 		connectWallet,
 		error,
-		setError,
 	};
 
 	return (
