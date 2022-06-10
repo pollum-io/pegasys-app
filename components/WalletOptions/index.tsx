@@ -24,6 +24,7 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 							onClick={() =>
 								option.connector !== injected &&
 								!option.href &&
+								option.connector &&
 								connectWallet(option.connector)
 							}
 							id={`connect-${key}`}

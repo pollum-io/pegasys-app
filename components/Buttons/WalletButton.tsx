@@ -18,7 +18,6 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 	const { error } = useWallet();
 	const { isConnected, walletAddress } = useWallet();
 
-	console.log(isConnected, "asdadasdadsa");
 	return (
 		<>
 			{!isConnected && !error && (

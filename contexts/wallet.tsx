@@ -1,24 +1,19 @@
-import React, {
-	useEffect,
-	createContext,
-	useState,
-	useMemo,
-	useLayoutEffect,
-} from "react";
+import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers, Signer } from "ethers";
-import { createContractUsingAbi } from "utils/contractInstance";
 import { getBalanceOf } from "utils";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 
 interface IWeb3 {
 	isConnected: boolean;
 	walletAddress: string;
-	connectWallet: any;
+	connectWallet: (connector: AbstractConnector) => Promise<void>;
 	error?: boolean;
-	setError?: any;
+	setError?: React.Dispatch<React.SetStateAction<boolean | undefined>>;
 }
 
 export const WalletContext = createContext({} as IWeb3);
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let window: any;
 
 interface ITokenBalance {
@@ -60,7 +55,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		setSigner(web3Signer);
 	};
 
-	const connectWallet = async (connector: any) => {
+	const connectWallet = async (connector: AbstractConnector) => {
 		connector
 			.activate()
 			.then(() => {
