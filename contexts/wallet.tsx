@@ -1,7 +1,13 @@
-import React, { useEffect, createContext, useState, useMemo } from "react";
+import React, {
+	useEffect,
+	createContext,
+	useState,
+	useMemo,
+	useLayoutEffect,
+} from "react";
 import { ethers, Signer } from "ethers";
 import { createContractUsingAbi } from "utils/contractInstance";
-import abi20 from "../utils/abi/erc20.json";
+import { getBalanceOf } from "utils";
 
 interface IWeb3 {
 	isConnected: boolean;
@@ -15,17 +21,22 @@ export const WalletContext = createContext({} as IWeb3);
 
 declare let window: any;
 
+interface ITokenBalance {
+	contract: string;
+	balance: string;
+}
+
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [isConnected, setIsConnected] = useState(false);
 	const [walletAddress, setAddress] = useState("");
-	const [pendingError, setPendingError] = useState<boolean>();
 	const [error, setError] = useState<boolean>();
 	const [signer, setSigner] = useState<Signer>();
 	const [provider, setProvider] = useState<
 		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
 	>();
+	const [balances, setBalances] = useState<ITokenBalance[]>([]);
 
 	const connectToSysRpcIfNotConnected = () => {
 		const rpcProvider = new ethers.providers.JsonRpcProvider(
@@ -92,30 +103,29 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		}
 	}, []);
 
-	const getTokenBalance = async (address: string) => {
-		try {
-			const contract = await createContractUsingAbi(
-				address,
-				abi20,
-				signer || provider
-			);
-
-			console.log(contract);
-
-			const balance = await contract?.methods?.balanceOf(walletAddress).call();
-
-			console.log("balance", balance);
-
-			return balance;
-		} catch (err) {
-			console.log(err);
-			return 0;
+	const getTokenBalance = async (tokenAddress: string) => {
+		const balance = await getBalanceOf(
+			tokenAddress,
+			walletAddress,
+			signer || provider
+		);
+		const contract = tokenAddress.toLowerCase();
+		const searchedBalance = balances.find(item => item.contract === contract);
+		if (!searchedBalance) {
+			setBalances((previous: ITokenBalance[]) => [
+				...previous,
+				{ contract, balance },
+			]);
+		} else {
+			searchedBalance.balance = balance;
 		}
 	};
 
-	getTokenBalance("0xE18c200A70908c89fFA18C628fE1B83aC0065EA4")
-		.then((response: any) => console.log("teste", response))
-		.catch(err => console.log("error", err));
+	useEffect(() => {
+		if (!isConnected) return;
+		const tokensToFetch = ["0xE18c200A70908c89fFA18C628fE1B83aC0065EA4"];
+		tokensToFetch.map(token => getTokenBalance(token));
+	}, [isConnected]);
 
 	const providerValue = useMemo(
 		() => ({
