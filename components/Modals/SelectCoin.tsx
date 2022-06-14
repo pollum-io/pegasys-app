@@ -17,7 +17,7 @@ import {
 	Tooltip,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { MdHelpOutline } from "react-icons/md";
 import { BsArrowDownShort } from "react-icons/bs";
 import { getDefaultTokens } from "networks";
@@ -43,42 +43,77 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const theme = usePicasso();
 	const [defaultTokens, setDefaultTokens] = useState<IToken[]>([]);
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
+	const [filter, setFilter] = useState<any>();
+	const [text, setText] = useState<any>("");
 
-	const orderList = () => {
+	const handleInput = (event: { target: { value: any } }) => {
+		const input = event.target.value;
+		setText(input);
+		if (input !== "") {
+			const results = defaultTokens.filter(
+				token => token.symbol.toLowerCase().startsWith(input.toLowerCase())
+				// Use the toLowerCase() method to make it case-insensitive
+			);
+			console.log("1");
+			setFilter(results);
+		} else {
+			console.log("2");
+			setFilter(defaultTokens);
+			// If the text field is empty, show all users
+		}
+	};
+
+	const orderList = (array: any) => {
 		const orderedList: IToken[] = [];
 		if (order === "desc") {
-			defaultTokens.forEach(token => {
-				const firstToken = new BigNumber(defaultTokens[0].balance);
+			console.log("3");
+			array.forEach((token: any) => {
+				const firstToken = new BigNumber(array[0].balance);
 				const tokenBalance = new BigNumber(token.balance);
-				if (!defaultTokens[0] || firstToken.isLessThanOrEqualTo(tokenBalance))
+				if (!array[0] || firstToken.isLessThanOrEqualTo(tokenBalance))
 					return orderedList.unshift(token);
 				return orderedList.push(token);
 			});
 		} else {
-			defaultTokens.forEach(token => {
-				const firstToken = new BigNumber(defaultTokens[0].balance);
+			console.log("4");
+			array.forEach((token: any) => {
+				const firstToken = new BigNumber(array[0].balance);
 				const tokenBalance = new BigNumber(token.balance);
 				if (
-					!defaultTokens[defaultTokens.length - 1] ||
+					!array[array.length - 1] ||
 					firstToken.isLessThanOrEqualTo(tokenBalance)
 				)
 					return orderedList.push(token);
 				return orderedList.unshift(token);
 			});
 		}
-		setOrder(previousState => (previousState === "asc" ? "desc" : "asc"));
-		setDefaultTokens(orderedList);
+		if (text === "") {
+			console.log("5");
+			setDefaultTokens(orderedList);
+			setFilter(defaultTokens);
+		} else {
+			console.log("6");
+			setOrder(previousState => (previousState === "asc" ? "desc" : "asc"));
+			setDefaultTokens(orderedList);
+			setFilter(orderedList);
+		}
 	};
 
 	useMemo(async () => {
 		const request = await getDefaultTokens();
 		const { tokens } = request;
-		const orderedTokens = tokens.map((token: IToken, index: number) => {
-			const obj = tokens[tokens.length - index - 1];
-			obj.balance = Math.floor(Math.random() * 100).toString();
-			return obj;
-		});
+		const orderedTokens = tokens
+			.map((token: IToken, index: number) => {
+				const obj = tokens[tokens.length - index - 1];
+				obj.balance = Math.floor(Math.random() * 100).toString();
+				return obj;
+			})
+			.sort(
+				(valueA: { balance: number }, valueB: { balance: number }) =>
+					valueA.balance - valueB.balance
+			);
 		setDefaultTokens(orderedTokens);
+		setFilter(orderedTokens);
 	}, []);
 
 	return (
@@ -110,7 +145,10 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				</ModalHeader>
 				<ModalCloseButton top="4" size="md" _focus={{}} />
 				<ModalBody>
-					<Input placeholder="Search name or paste address" />
+					<Input
+						placeholder="Search name or paste address"
+						onChange={handleInput}
+					/>
 					<Flex justifyContent="space-between" my="4">
 						<Text>Token name</Text>
 						<IconButton
@@ -119,12 +157,12 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							minW="none"
 							w="6"
 							h="6"
-							onClick={() => orderList()}
+							onClick={() => orderList(filter)}
 						/>
 					</Flex>
 				</ModalBody>
 				<Flex flexDirection="column">
-					{defaultTokens.map((token, index) => (
+					{filter?.map((token: any, index: any) => (
 						<Button
 							bg="transparent"
 							px="10"
