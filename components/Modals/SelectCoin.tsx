@@ -17,7 +17,7 @@ import {
 	Tooltip,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { MdHelpOutline } from "react-icons/md";
 import { BsArrowDownShort } from "react-icons/bs";
 import { getDefaultTokens } from "networks";
@@ -43,15 +43,14 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const theme = usePicasso();
 	const [defaultTokens, setDefaultTokens] = useState<IToken[]>([]);
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
-	const [filter, setFilter] = useState<any>();
-	const [text, setText] = useState<any>("");
+	const [filter, setFilter] = useState<[]>([]);
 
-	const handleInput = (event: { target: { value: any } }) => {
-		const input = event.target.value;
-		setText(input);
-		if (input !== "") {
+	const handleInput = (event: Event) => {
+		const { value } = event.target;
+
+		if (value !== "") {
 			const results = defaultTokens.filter(
-				token => token.symbol.toLowerCase().startsWith(input.toLowerCase())
+				token => token.symbol.toLowerCase().startsWith(value.toLowerCase())
 				// Use the toLowerCase() method to make it case-insensitive
 			);
 			console.log("1");
@@ -87,16 +86,8 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				return orderedList.unshift(token);
 			});
 		}
-		if (text === "") {
-			console.log("5");
-			setDefaultTokens(orderedList);
-			setFilter(defaultTokens);
-		} else {
-			console.log("6");
-			setOrder(previousState => (previousState === "asc" ? "desc" : "asc"));
-			setDefaultTokens(orderedList);
-			setFilter(orderedList);
-		}
+		setOrder(previousState => (previousState === "asc" ? "desc" : "asc"));
+		setFilter(orderedList);
 	};
 
 	useMemo(async () => {
