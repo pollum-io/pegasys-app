@@ -8,7 +8,7 @@ import {
 	ModalOverlay,
 	Text,
 } from "@chakra-ui/react";
-import { usePicasso } from "hooks";
+import { usePicasso, useWallet } from "hooks";
 import { FunctionComponent } from "react";
 import { SwitchToSyscoin } from "components/Buttons";
 
@@ -19,10 +19,15 @@ interface IModal {
 
 export const SelectSyscoin: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
+	const { walletError } = useWallet();
 	const theme = usePicasso();
 
 	return (
-		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
+		<Modal
+			blockScrollOnMount
+			isOpen={isOpen || !!walletError}
+			onClose={onClose}
+		>
 			<ModalOverlay />
 			<ModalContent borderRadius={18} my="40">
 				<ModalHeader bgColor={theme.bg.whiteGray} borderTopRadius={18}>

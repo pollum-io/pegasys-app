@@ -3,14 +3,20 @@ import { SUPPORTED_WALLETS } from "helpers/consts";
 import { FunctionComponent } from "react";
 import { isMobile } from "react-device-detect";
 import { useWallet } from "hooks";
-import { injected } from "utils";
+import { injected } from "utils/connectors";
+import { AbstractConnector } from "@web3-react/abstract-connector";
 import { Wallets } from "./Wallets";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let window: any;
 
 export const WalletOptions: FunctionComponent<ButtonProps> = () => {
-	const { connectWallet } = useWallet();
+	const { connectWallet, setConnectorSelected } = useWallet();
+
+	const setConnectorValues = (connector: AbstractConnector) => {
+		connectWallet(connector);
+		setConnectorSelected(connector);
+	};
 
 	const listWallets = () =>
 		Object.keys(SUPPORTED_WALLETS).map(key => {
@@ -25,7 +31,7 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 								option.connector !== injected &&
 								!option.href &&
 								option.connector &&
-								connectWallet(option.connector)
+								setConnectorValues(option.connector)
 							}
 							id={`connect-${key}`}
 							key={key}
@@ -69,7 +75,7 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 					<Wallets
 						id={`connect-${key}`}
 						onClick={() => {
-							if (option.connector) connectWallet(option.connector);
+							if (option.connector) setConnectorValues(option.connector);
 						}}
 						key={key}
 						// href={option.href || "/"}

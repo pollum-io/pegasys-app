@@ -11,11 +11,11 @@ interface IButtonProps extends ButtonProps {
 export const AddressButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	const { children, ...rest } = props;
-	const { error } = useWallet();
+	const { walletError } = useWallet();
 
 	return (
 		<Button
-			bg={error ? theme.text.redError : theme.bg.button.userAddress}
+			bg={walletError ? theme.text.redError : theme.bg.button.userAddress}
 			justifyContent="space-arround"
 			w="max-content"
 			h="max-content"
@@ -28,12 +28,12 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 			fontWeight={500}
 			overflow="hidden"
 			_hover={{
-				borderColor: error ? theme.text.redError : theme.text.cyan,
+				borderColor: walletError ? theme.text.redError : theme.text.cyan,
 			}}
 			_active={{}}
 			{...rest}
 		>
-			{error ? (
+			{walletError ? (
 				"Wrong Network"
 			) : (
 				<>

@@ -11,16 +11,20 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 	const theme = usePicasso();
 	const { onOpen, isOpen, onClose } = useDisclosure();
 	const {
+		isOpen: isOpenSelectSyscoin,
+		onOpen: onOpenSelectSyscoin,
+		onClose: onCloseSelectSyscoin,
+	} = useDisclosure();
+	const {
 		isOpen: isOpenAddress,
 		onOpen: onOpenAddress,
 		onClose: onCloseAddress,
 	} = useDisclosure();
-	const { error } = useWallet();
-	const { isConnected, walletAddress } = useWallet();
+	const { isConnected, walletAddress, walletError } = useWallet();
 
 	return (
 		<>
-			{!isConnected && !error && (
+			{!isConnected && !walletError && (
 				<>
 					<SelectWallets isOpen={isOpen} onClose={onClose} />
 					<Button
@@ -47,19 +51,22 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 				</>
 			)}
 
-			{error && (
+			{walletError && (
 				<>
-					<SelectSyscoin isOpen={isOpen} onClose={onClose} />
-					<AddressButton onClick={error && onOpen}>
+					<SelectSyscoin
+						isOpen={isOpenSelectSyscoin}
+						onClose={onCloseSelectSyscoin}
+					/>
+					<AddressButton onClick={walletError && onOpenSelectSyscoin}>
 						{walletAddress}
 					</AddressButton>
 				</>
 			)}
 
-			{isConnected && !error && (
+			{isConnected && !walletError && (
 				<>
 					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
-					<AddressButton onClick={error ? onOpen : onOpenAddress}>
+					<AddressButton onClick={walletError ? onOpen : onOpenAddress}>
 						{shortAddress(walletAddress)}
 					</AddressButton>
 				</>

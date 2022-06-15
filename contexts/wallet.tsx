@@ -2,13 +2,18 @@ import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers, Signer } from "ethers";
 import { getBalanceOf } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { SYS_TESTNET_CHAIN_PARAMS } from "../helpers/consts";
 
 interface IWeb3 {
 	isConnected: boolean;
 	walletAddress: string;
 	connectWallet: (connector: AbstractConnector) => Promise<void>;
-	error?: boolean;
-	setError?: React.Dispatch<React.SetStateAction<boolean | undefined>>;
+	walletError?: boolean;
+	setWalletError: React.Dispatch<React.SetStateAction<boolean | undefined>>;
+	connectorSelected: AbstractConnector | undefined;
+	setConnectorSelected: React.Dispatch<
+		React.SetStateAction<AbstractConnector | undefined>
+	>;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -26,16 +31,19 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
 	const [isConnected, setIsConnected] = useState(false);
 	const [walletAddress, setAddress] = useState("");
-	const [error, setError] = useState<boolean>();
+	const [walletError, setWalletError] = useState<boolean>();
 	const [signer, setSigner] = useState<Signer>();
 	const [provider, setProvider] = useState<
 		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
 	>();
 	const [balances, setBalances] = useState<ITokenBalance[]>([]);
+	const [connectorSelected, setConnectorSelected] =
+		useState<AbstractConnector>();
 
 	const connectToSysRpcIfNotConnected = () => {
 		const rpcProvider = new ethers.providers.JsonRpcProvider(
-			"https://rpc.syscoin.org/" || "https://rpc.ankr.com/syscoin"
+			// "https://rpc.syscoin.org/" || "https://rpc.ankr.com/syscoin"
+			SYS_TESTNET_CHAIN_PARAMS.rpcUrls[0]
 		);
 		setProvider(rpcProvider);
 
@@ -59,24 +67,25 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		connector
 			.activate()
 			.then(() => {
-				if (Number(window?.ethereum?.networkVersion) === 57) {
+				if (Number(window?.ethereum?.networkVersion) === 5700) {
 					setIsConnected(!!window?.ethereum?.selectedAddress);
 					setAddress(window?.ethereum?.selectedAddress);
 					getSignerIfConnected();
-					setError(false);
+					setWalletError(false);
 				} else {
-					setError(true);
+					setWalletError(true);
 				}
 			})
 			.catch((errorMessage: Error) => {
 				if (errorMessage) {
+					// eslint-disable-next-line no-console
 					console.log(errorMessage, "errorMessage");
 				}
 			});
 	};
 
 	provider?.on("chainChanged", () =>
-		setError(Number(window?.ethereum?.networkVersion) === 57)
+		setWalletError(Number(window?.ethereum?.networkVersion) === 5700)
 	);
 
 	provider?.on("accountsChanged", () =>
@@ -86,7 +95,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	useEffect(() => {
 		const verifySysNetwork =
 			window?.ethereum?.selectedAddress &&
-			Number(window?.ethereum?.networkVersion) === 57;
+			Number(window?.ethereum?.networkVersion) === 5700;
 
 		if (!isConnected) {
 			connectToSysRpcIfNotConnected();
@@ -127,9 +136,20 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			isConnected,
 			walletAddress,
 			connectWallet,
-			error,
+			walletError,
+			setWalletError,
+			setConnectorSelected,
+			connectorSelected,
 		}),
-		[]
+		[
+			isConnected,
+			walletAddress,
+			connectWallet,
+			walletError,
+			setWalletError,
+			connectorSelected,
+			setConnectorSelected,
+		]
 	);
 
 	return (

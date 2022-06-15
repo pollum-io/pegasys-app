@@ -13,13 +13,19 @@ export const NEVM_CHAIN_PARAMS = {
 	blockExplorerUrls: ["https://explorer.syscoin.org/"],
 };
 
-export const SUPPORTED_WALLETS: { [key: string]: IWalletInfo } = {
-	INJECTED: {
-		connector: injected,
-		name: "Injected",
-		iconName: "metamask.png",
-		primary: true,
+export const SYS_TESTNET_CHAIN_PARAMS = {
+	chainId: "0x1644", // A 0x-prefixed hexadecimal chainId
+	chainName: "Syscoin Tanenbaum Testnet",
+	nativeCurrency: {
+		name: "Testnet Syscoin",
+		symbol: "tSYS",
+		decimals: 18,
 	},
+	rpcUrls: ["https://rpc.tanenbaum.io"],
+	blockExplorerUrls: ["https://tanenbaum.io"],
+};
+
+export const SUPPORTED_WALLETS: { [key: string]: IWalletInfo } = {
 	METAMASK: {
 		connector: injected,
 		name: "MetaMask",
