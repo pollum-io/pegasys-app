@@ -107,12 +107,21 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		}
 	}, []);
 
+	const getBalance = async () => {
+		const value = await provider
+			.getBalance(walletAddress)
+			.then(result => result.toString());
+
+		const formattedValue = ethers.utils.formatEther(value);
+		setBalances((previous: ITokenBalance[]) => [
+			...previous,
+			{ contract: "", balance: formattedValue },
+		]);
+
+		return formattedValue;
+	};
 	const getTokenBalance = async (tokenAddress: string) => {
-		const balance = await getBalanceOf(
-			tokenAddress,
-			walletAddress,
-			signer || provider
-		);
+		const balance = await getBalanceOf(tokenAddress, walletAddress, provider);
 		const contract = tokenAddress.toLowerCase();
 		const searchedBalance = balances.find(item => item.contract === contract);
 		if (!searchedBalance) {
@@ -127,8 +136,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	useEffect(() => {
 		if (!isConnected) return;
-		const tokensToFetch = ["0xE18c200A70908c89fFA18C628fE1B83aC0065EA4"];
+		const tokensToFetch = ["0x81821498cD456c9f9239010f3A9F755F3A38A778"];
 		tokensToFetch.map(token => getTokenBalance(token));
+		getBalance();
 	}, [isConnected]);
 
 	const providerValue = useMemo(

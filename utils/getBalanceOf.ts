@@ -18,10 +18,11 @@ export const getBalanceOf = async (
 			abi20,
 			signerOrProvider
 		);
-		const balance: string = await contract.methods
+		const balance: string = await contract
 			.balanceOf(walletAddress)
-			.call();
-		return balance;
+			.then(result => result.toString());
+		const formattedValue = ethers.utils.formatEther(balance);
+		return formattedValue;
 	} catch (err) {
 		return "0";
 	}
