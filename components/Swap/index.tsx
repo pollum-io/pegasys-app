@@ -3,33 +3,73 @@ import {
 	ButtonProps,
 	Flex,
 	Icon,
+	Img,
 	Input,
 	Text,
 	useDisclosure,
 } from "@chakra-ui/react";
 import { usePicasso, useWallet } from "hooks";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useMemo, useState } from "react";
 import { BiDownArrowAlt } from "react-icons/bi";
 import { IoIosArrowDown } from "react-icons/io";
 import { FcInfo } from "react-icons/fc";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
+import { getDefaultTokens } from "networks";
+
+interface IToken {
+	address: string;
+	chainId: number;
+	decimals: number;
+	logoURI: string;
+	name: string;
+	symbol: string;
+	balance: string;
+}
 
 export const Swap: FunctionComponent<ButtonProps> = () => {
 	const theme = usePicasso();
-	const { onOpen, isOpen, onClose } = useDisclosure();
 	const {
 		onOpen: onOpenWallet,
 		isOpen: isOpenWallet,
 		onClose: onCloseWallet,
 	} = useDisclosure();
+	const {
+		onOpen: onOpenCoin,
+		isOpen: isOpenCoin,
+		onClose: onCloseCoin,
+	} = useDisclosure();
 	const { isConnected } = useWallet();
+	const [selectedToken, setSelectedToken] = useState<IToken>();
+	const [defaultTokenSymbol, setDefaultTokenSymbol] = useState("");
+	const [defaultTokenLogo, setDefaultTokenLogo] = useState("");
 
 	const swapButton = () => !isConnected && onOpenWallet();
+	console.log(selectedToken, " asdasda");
+
+	useMemo(async () => {
+		const request = await getDefaultTokens();
+		const { tokens } = request;
+		let sysTokenName = "";
+		let sysTokenLogo = "";
+		tokens.filter((token: IToken, index: number) => {
+			if (token.symbol === "PSYS") {
+				sysTokenName = token.symbol;
+				sysTokenLogo = token.logoURI;
+			}
+			return sysTokenName && sysTokenLogo;
+		});
+		setDefaultTokenSymbol(sysTokenName);
+		setDefaultTokenLogo(sysTokenLogo);
+	}, []);
 
 	return (
 		<Flex pt="24" zIndex="1">
-			<SelectCoinModal isOpen={isOpen} onClose={onClose} />
 			<SelectWallets isOpen={isOpenWallet} onClose={onCloseWallet} />
+			<SelectCoinModal
+				isOpen={isOpenCoin}
+				onClose={onCloseCoin}
+				selectToken={setSelectedToken}
+			/>
 			<Flex
 				height="max-content"
 				width="22%"
@@ -103,9 +143,20 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									bgColor: theme.bg.button.swapTokenCurrency,
 								}}
 							>
-								<FcInfo />
-								<Text fontSize="xl" fontWeight="500" px="3" onClick={onOpen}>
-									SYS
+								<Img
+									src={
+										selectedToken ? selectedToken?.logoURI : defaultTokenLogo
+									}
+									w="6"
+									h="6"
+								/>
+								<Text
+									fontSize="xl"
+									fontWeight="500"
+									px="3"
+									onClick={onOpenCoin}
+								>
+									{selectedToken ? selectedToken?.symbol : defaultTokenSymbol}
 								</Text>
 								<Icon as={IoIosArrowDown} />
 							</Flex>
@@ -147,23 +198,47 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								letterSpacing="-4px"
 								type="number"
 							/>
-							<Flex
-								cursor="pointer"
-								flexDirection="row"
-								alignItems="center"
+							<Button
+								fontSize="sm"
+								height="max-content"
+								fontWeight="500"
+								ml="2"
+								px="2"
+								py="1.5"
+								borderRadius="8"
+								color={theme.text.whiteCyan}
 								bgColor={theme.bg.button.swapBlue}
-								px="3"
-								py="1"
-								ml="5"
-								borderRadius={12}
+								_hover={{ opacity: 0.75 }}
 							>
+								MAX
+							</Button>
+							<Flex
+								alignItems="center"
+								justifyContent="space-between"
+								px="5"
+								py="1"
+								w="max-content"
+								ml="2"
+								borderRadius={12}
+								cursor="pointer"
+								_hover={{
+									bgColor: theme.bg.button.swapTokenCurrency,
+								}}
+							>
+								<Img
+									src={
+										selectedToken ? selectedToken?.logoURI : defaultTokenLogo
+									}
+									w="6"
+									h="6"
+								/>
 								<Text
+									fontSize="xl"
 									fontWeight="500"
-									pr="2"
-									fontSize="md"
-									color={theme.text.whiteCyan}
+									px="3"
+									onClick={onOpenCoin}
 								>
-									Select a token
+									{selectedToken ? selectedToken?.symbol : defaultTokenSymbol}
 								</Text>
 								<Icon as={IoIosArrowDown} />
 							</Flex>

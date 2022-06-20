@@ -17,16 +17,11 @@ import {
 	Tooltip,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import React, { useMemo, useState } from "react";
+import React, { ChangeEvent, useMemo, useState } from "react";
 import { MdHelpOutline } from "react-icons/md";
 import { BsArrowDownShort } from "react-icons/bs";
 import { getDefaultTokens } from "networks";
 import BigNumber from "bignumber.js";
-
-interface IModal {
-	isOpen: boolean;
-	onClose: () => void;
-}
 
 interface IToken {
 	address: string;
@@ -38,44 +33,47 @@ interface IToken {
 	balance: string;
 }
 
+interface IModal {
+	isOpen: boolean;
+	onClose: () => void;
+	selectToken: (token: IToken) => void;
+}
+
 export const SelectCoinModal: React.FC<IModal> = props => {
+	const { selectToken } = props;
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 	const [defaultTokens, setDefaultTokens] = useState<IToken[]>([]);
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
-	const [filter, setFilter] = useState<[]>([]);
+	const [filter, setFilter] = useState<IToken[]>([]);
 
-	const handleInput = (event: Event) => {
-		const { value } = event.target;
+	const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
+		const inputValue = event.target.value;
 
-		if (value !== "") {
+		if (inputValue !== "") {
 			const results = defaultTokens.filter(
-				token => token.symbol.toLowerCase().startsWith(value.toLowerCase())
+				token => token.symbol.toLowerCase().startsWith(inputValue.toLowerCase())
 				// Use the toLowerCase() method to make it case-insensitive
 			);
-			console.log("1");
 			setFilter(results);
 		} else {
-			console.log("2");
 			setFilter(defaultTokens);
 			// If the text field is empty, show all users
 		}
 	};
 
-	const orderList = (array: any) => {
+	const orderList = (array: IToken[]) => {
 		const orderedList: IToken[] = [];
 		if (order === "desc") {
-			console.log("3");
-			array.forEach((token: any) => {
-				const firstToken = new BigNumber(array[0].balance);
+			array?.forEach((token: IToken) => {
+				const firstToken = new BigNumber(array[0]?.balance);
 				const tokenBalance = new BigNumber(token.balance);
 				if (!array[0] || firstToken.isLessThanOrEqualTo(tokenBalance))
 					return orderedList.unshift(token);
 				return orderedList.push(token);
 			});
 		} else {
-			console.log("4");
-			array.forEach((token: any) => {
+			array.forEach((token: IToken) => {
 				const firstToken = new BigNumber(array[0].balance);
 				const tokenBalance = new BigNumber(token.balance);
 				if (
@@ -160,12 +158,14 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							py="6"
 							justifyContent="space-between"
 							key={token.address + Number(index)}
+							onClick={onClose}
 						>
 							<Flex
 								gap="4"
 								alignItems="center"
 								justifyContent="flex-start"
 								w="100%"
+								onClick={() => selectToken(token)}
 							>
 								<Img src={token.logoURI} borderRadius="full" w="6" h="6" />
 								{token.symbol}
