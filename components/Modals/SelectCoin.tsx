@@ -191,17 +191,20 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							py="6"
 							justifyContent="space-between"
 							key={token.address + Number(index)}
-							onClick={onClose}
 							disabled={
-								token.symbol === tokenError[0]?.symbol || tokenError[1]?.symbol
+								token.symbol === tokenError[0]?.symbol ||
+								token.symbol === tokenError[1]?.symbol
 							}
+							onClick={() => {
+								handleSelectToken(buttonId, token);
+								onClose();
+							}}
 						>
 							<Flex
 								gap="4"
 								alignItems="center"
 								justifyContent="flex-start"
 								w="100%"
-								onClick={() => handleSelectToken(buttonId, token)}
 							>
 								<Img src={token.logoURI} borderRadius="full" w="6" h="6" />
 								{token.symbol}

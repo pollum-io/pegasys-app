@@ -42,7 +42,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		{ logoURI: "", symbol: "ETH", id: 1 },
 	]);
 
-	const [buttonId, setButtonId] = useState<number>(0);
+	const [buttonId, setButtonId] = useState<number>();
 	const swapButton = () => !isConnected && onOpenWallet();
 
 	useMemo(async () => {
@@ -60,10 +60,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setDefaultTokenSymbol(sysTokenName);
 		setDefaultTokenLogo(sysTokenLogo);
 	}, []);
-
-	useEffect(() => {
-		console.log("selectedToken: ", selectedToken);
-	}, [selectedToken]);
 
 	return (
 		<Flex pt="24" zIndex="1">
@@ -143,23 +139,19 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								py="1"
 								w="max-content"
 								ml="2"
+								id="0"
 								borderRadius={12}
 								cursor="pointer"
 								_hover={{
 									bgColor: theme.bg.button.swapTokenCurrency,
 								}}
+								onClick={(event: any) => {
+									setButtonId(Number(event.currentTarget?.id));
+									onOpenCoin();
+								}}
 							>
 								<Img src={selectedToken[0].logoURI} w="6" h="6" />
-								<Text
-									fontSize="xl"
-									id="0"
-									fontWeight="500"
-									px="3"
-									onClick={(event: any) => {
-										onOpenCoin();
-										setButtonId(Number(event.target?.id));
-									}}
-								>
+								<Text fontSize="xl" fontWeight="500" px="3">
 									{selectedToken[0].symbol}
 								</Text>
 								<Icon as={IoIosArrowDown} />
@@ -223,23 +215,19 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								py="1"
 								w="max-content"
 								ml="2"
+								id="1"
 								borderRadius={12}
 								cursor="pointer"
+								onClick={(event: any) => {
+									setButtonId(Number(event?.currentTarget?.id));
+									onOpenCoin();
+								}}
 								_hover={{
 									bgColor: theme.bg.button.swapTokenCurrency,
 								}}
 							>
 								<Img src={selectedToken[1].logoURI} w="6" h="6" />
-								<Text
-									fontSize="xl"
-									fontWeight="500"
-									id="1"
-									px="3"
-									onClick={(event: any) => {
-										onOpenCoin();
-										setButtonId(Number(event.target?.id));
-									}}
-								>
+								<Text fontSize="xl" fontWeight="500" px="3">
 									{selectedToken[1].symbol}
 								</Text>
 								<Icon as={IoIosArrowDown} />
