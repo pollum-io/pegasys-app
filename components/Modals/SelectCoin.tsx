@@ -17,7 +17,13 @@ import {
 	Tooltip,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import React, { ChangeEvent, useMemo, useState } from "react";
+import React, {
+	ChangeEvent,
+	useMemo,
+	useState,
+	useEffect,
+	useCallback,
+} from "react";
 import { MdHelpOutline } from "react-icons/md";
 import { BsArrowDownShort } from "react-icons/bs";
 import { getDefaultTokens } from "networks";
@@ -36,16 +42,26 @@ interface IToken {
 interface IModal {
 	isOpen: boolean;
 	onClose: () => void;
-	selectToken: (token: IToken) => void;
+	setSelectedToken: (token: any) => void;
+	selectedToken: any;
+	// eslint-disable-next-line
+	tokens: any;
+	buttonId: number;
 }
 
 export const SelectCoinModal: React.FC<IModal> = props => {
-	const { selectToken } = props;
+	const {
+		setSelectedToken,
+		tokens: generalTokens,
+		selectedToken,
+		buttonId,
+	} = props;
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 	const [defaultTokens, setDefaultTokens] = useState<IToken[]>([]);
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
 	const [filter, setFilter] = useState<IToken[]>([]);
+	const [tokenError, setTokenError] = useState<any>();
 
 	const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
 		const inputValue = event.target.value;
@@ -105,6 +121,23 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 		setFilter(orderedTokens);
 	}, []);
 
+	const handleSelectToken = useCallback((id: number, token: any) => {
+		selectedToken[id] = {
+			logoURI: token.logoURI,
+			symbol: token.symbol,
+		};
+	}, []);
+
+	useEffect(() => {
+		const verify = selectedToken.filter((currentToken: any) =>
+			filter?.some(
+				(filteredValue: any) => filteredValue?.symbol === currentToken.symbol
+			)
+		);
+
+		setTokenError(verify);
+	}, [selectedToken, isOpen]);
+
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
@@ -151,7 +184,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					</Flex>
 				</ModalBody>
 				<Flex flexDirection="column">
-					{filter?.map((token: any, index: any) => (
+					{filter?.map((token: any, index: number) => (
 						<Button
 							bg="transparent"
 							px="10"
@@ -159,13 +192,16 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							justifyContent="space-between"
 							key={token.address + Number(index)}
 							onClick={onClose}
+							disabled={
+								token.symbol === tokenError[0]?.symbol || tokenError[1]?.symbol
+							}
 						>
 							<Flex
 								gap="4"
 								alignItems="center"
 								justifyContent="flex-start"
 								w="100%"
-								onClick={() => selectToken(token)}
+								onClick={() => handleSelectToken(buttonId, token)}
 							>
 								<Img src={token.logoURI} borderRadius="full" w="6" h="6" />
 								{token.symbol}

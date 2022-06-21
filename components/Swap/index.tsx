@@ -9,7 +9,7 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import { usePicasso, useWallet } from "hooks";
-import { FunctionComponent, useMemo, useState } from "react";
+import { FunctionComponent, useMemo, useState, useEffect } from "react";
 import { BiDownArrowAlt } from "react-icons/bi";
 import { IoIosArrowDown } from "react-icons/io";
 import { FcInfo } from "react-icons/fc";
@@ -17,13 +17,9 @@ import { SelectCoinModal, SelectWallets } from "components/Modals";
 import { getDefaultTokens } from "networks";
 
 interface IToken {
-	address: string;
-	chainId: number;
-	decimals: number;
 	logoURI: string;
-	name: string;
 	symbol: string;
-	balance: string;
+	id: number;
 }
 
 export const Swap: FunctionComponent<ButtonProps> = () => {
@@ -39,19 +35,22 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		onClose: onCloseCoin,
 	} = useDisclosure();
 	const { isConnected } = useWallet();
-	const [selectedToken, setSelectedToken] = useState<IToken>();
 	const [defaultTokenSymbol, setDefaultTokenSymbol] = useState("");
 	const [defaultTokenLogo, setDefaultTokenLogo] = useState("");
+	const [selectedToken, setSelectedToken] = useState<IToken[]>([
+		{ logoURI: "public/icons/pegasys.png", symbol: "SYS", id: 0 },
+		{ logoURI: "", symbol: "ETH", id: 1 },
+	]);
 
+	const [buttonId, setButtonId] = useState<number>(0);
 	const swapButton = () => !isConnected && onOpenWallet();
-	console.log(selectedToken, " asdasda");
 
 	useMemo(async () => {
 		const request = await getDefaultTokens();
 		const { tokens } = request;
 		let sysTokenName = "";
 		let sysTokenLogo = "";
-		tokens.filter((token: IToken, index: number) => {
+		tokens.filter((token: IToken) => {
 			if (token.symbol === "PSYS") {
 				sysTokenName = token.symbol;
 				sysTokenLogo = token.logoURI;
@@ -62,13 +61,20 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setDefaultTokenLogo(sysTokenLogo);
 	}, []);
 
+	useEffect(() => {
+		console.log("selectedToken: ", selectedToken);
+	}, [selectedToken]);
+
 	return (
 		<Flex pt="24" zIndex="1">
 			<SelectWallets isOpen={isOpenWallet} onClose={onCloseWallet} />
 			<SelectCoinModal
 				isOpen={isOpenCoin}
 				onClose={onCloseCoin}
-				selectToken={setSelectedToken}
+				setSelectedToken={setSelectedToken}
+				selectedToken={selectedToken}
+				buttonId={buttonId}
+				tokens={getDefaultTokens}
 			/>
 			<Flex
 				height="max-content"
@@ -143,20 +149,18 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									bgColor: theme.bg.button.swapTokenCurrency,
 								}}
 							>
-								<Img
-									src={
-										selectedToken ? selectedToken?.logoURI : defaultTokenLogo
-									}
-									w="6"
-									h="6"
-								/>
+								<Img src={selectedToken[0].logoURI} w="6" h="6" />
 								<Text
 									fontSize="xl"
+									id="0"
 									fontWeight="500"
 									px="3"
-									onClick={onOpenCoin}
+									onClick={(event: any) => {
+										onOpenCoin();
+										setButtonId(Number(event.target?.id));
+									}}
 								>
-									{selectedToken ? selectedToken?.symbol : defaultTokenSymbol}
+									{selectedToken[0].symbol}
 								</Text>
 								<Icon as={IoIosArrowDown} />
 							</Flex>
@@ -225,20 +229,18 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									bgColor: theme.bg.button.swapTokenCurrency,
 								}}
 							>
-								<Img
-									src={
-										selectedToken ? selectedToken?.logoURI : defaultTokenLogo
-									}
-									w="6"
-									h="6"
-								/>
+								<Img src={selectedToken[1].logoURI} w="6" h="6" />
 								<Text
 									fontSize="xl"
 									fontWeight="500"
+									id="1"
 									px="3"
-									onClick={onOpenCoin}
+									onClick={(event: any) => {
+										onOpenCoin();
+										setButtonId(Number(event.target?.id));
+									}}
 								>
-									{selectedToken ? selectedToken?.symbol : defaultTokenSymbol}
+									{selectedToken[1].symbol}
 								</Text>
 								<Icon as={IoIosArrowDown} />
 							</Flex>
