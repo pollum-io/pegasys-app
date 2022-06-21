@@ -5,3 +5,4 @@ export * from "./contractInstance";
 export * from "./getBalanceOf";
 export * from "./getLibrary";
 export * from "./shortAddress";
+export * from "./convertHexToNumber";

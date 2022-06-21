@@ -13,7 +13,7 @@ declare let window: any;
 export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 	const { connectWallet, setConnectorSelected } = useWallet();
 
-	const setConnectorValues = (connector: AbstractConnector) => {
+	const setConnectorValues = async (connector: AbstractConnector) => {
 		connectWallet(connector);
 		setConnectorSelected(connector);
 	};

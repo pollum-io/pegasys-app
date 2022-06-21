@@ -9,7 +9,11 @@ import { AddressButton } from "./AddressButton";
 export const WalletButton: FunctionComponent<ButtonProps> = props => {
 	const { ...rest } = props;
 	const theme = usePicasso();
-	const { onOpen, isOpen, onClose } = useDisclosure();
+	const {
+		onOpen: onOpenSelectWalletModal,
+		isOpen: isOpenSelectWalletModal,
+		onClose: onCloseSelectWalletModal,
+	} = useDisclosure();
 	const {
 		isOpen: isOpenSelectSyscoin,
 		onOpen: onOpenSelectSyscoin,
@@ -26,7 +30,10 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 		<>
 			{!isConnected && !walletError && (
 				<>
-					<SelectWallets isOpen={isOpen} onClose={onClose} />
+					<SelectWallets
+						isOpen={isOpenSelectWalletModal}
+						onClose={onCloseSelectWalletModal}
+					/>
 					<Button
 						color={theme.text.connectWallet}
 						bg={theme.bg.button.connectWallet}
@@ -43,7 +50,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						h="max-content"
 						py="2"
 						px="4"
-						onClick={onOpen}
+						onClick={onOpenSelectWalletModal}
 						{...rest}
 					>
 						Connect your wallet
@@ -66,7 +73,9 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 			{isConnected && !walletError && (
 				<>
 					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
-					<AddressButton onClick={walletError ? onOpen : onOpenAddress}>
+					<AddressButton
+						onClick={walletError ? onOpenSelectWalletModal : onOpenAddress}
+					>
 						{shortAddress(walletAddress)}
 					</AddressButton>
 				</>

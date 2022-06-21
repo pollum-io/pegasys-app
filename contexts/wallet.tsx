@@ -1,15 +1,17 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers, Signer } from "ethers";
-import { getBalanceOf } from "utils";
+import { convertHexToNumber, getBalanceOf } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { SYS_TESTNET_CHAIN_PARAMS } from "../helpers/consts";
 
 interface IWeb3 {
 	isConnected: boolean;
+	currentNetworkChainId: number | null;
+	setCurrentNetworkChainId: React.Dispatch<React.SetStateAction<number | null>>;
 	walletAddress: string;
 	connectWallet: (connector: AbstractConnector) => Promise<void>;
-	walletError?: boolean;
-	setWalletError: React.Dispatch<React.SetStateAction<boolean | undefined>>;
+	walletError: boolean;
+	setWalletError: React.Dispatch<React.SetStateAction<boolean>>;
 	connectorSelected: AbstractConnector | undefined;
 	setConnectorSelected: React.Dispatch<
 		React.SetStateAction<AbstractConnector | undefined>
@@ -30,8 +32,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [isConnected, setIsConnected] = useState(false);
+	const [currentNetworkChainId, setCurrentNetworkChainId] = useState<
+		number | null
+	>(null);
 	const [walletAddress, setAddress] = useState("");
-	const [walletError, setWalletError] = useState<boolean>();
+	const [walletError, setWalletError] = useState<boolean>(false);
 	const [signer, setSigner] = useState<Signer>();
 	const [provider, setProvider] = useState<
 		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
@@ -84,13 +89,21 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			});
 	};
 
-	provider?.on("chainChanged", () =>
-		setWalletError(Number(window?.ethereum?.networkVersion) === 5700)
-	);
+	provider?.on("chainChanged", () => {
+		setWalletError(Number(window?.ethereum?.networkVersion) === 5700);
+	});
 
 	provider?.on("accountsChanged", () =>
 		setIsConnected(!!window?.ethereum?.selectedAddress)
 	);
+
+	useMemo(async () => {
+		const getCurrentConnectorProvider = await connectorSelected?.getProvider();
+
+		getCurrentConnectorProvider?.on("chainChanged", (chainId: string) => {
+			setCurrentNetworkChainId(convertHexToNumber(chainId));
+		});
+	}, [connectorSelected]);
 
 	useEffect(() => {
 		const verifySysNetwork =
@@ -101,16 +114,25 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			connectToSysRpcIfNotConnected();
 		}
 
-		if (verifySysNetwork) {
-			setIsConnected(!!window?.ethereum?.selectedAddress);
-			setAddress(window?.ethereum?.selectedAddress);
+		if (connectorSelected) {
+			setIsConnected(
+				verifySysNetwork ? !!window?.ethereum?.selectedAddress : false
+			);
+			setAddress(verifySysNetwork ? window?.ethereum?.selectedAddress : "");
+			setWalletError(!verifySysNetwork);
 		}
-	}, []);
+
+		if (isConnected && verifySysNetwork) {
+			getSignerIfConnected();
+		}
+	}, [currentNetworkChainId]);
 
 	const getBalance = async () => {
 		const value = await provider
-			.getBalance(walletAddress)
+			?.getBalance(walletAddress)
 			.then(result => result.toString());
+
+		if (!value) return "0";
 
 		const formattedValue = ethers.utils.formatEther(value);
 		setBalances((previous: ITokenBalance[]) => [
@@ -120,6 +142,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		return formattedValue;
 	};
+
 	const getTokenBalance = async (tokenAddress: string) => {
 		const balance = await getBalanceOf(tokenAddress, walletAddress, provider);
 		const contract = tokenAddress.toLowerCase();
@@ -150,16 +173,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setWalletError,
 			setConnectorSelected,
 			connectorSelected,
+			currentNetworkChainId,
+			setCurrentNetworkChainId,
 		}),
-		[
-			isConnected,
-			walletAddress,
-			connectWallet,
-			walletError,
-			setWalletError,
-			connectorSelected,
-			setConnectorSelected,
-		]
+		[isConnected, walletAddress, connectWallet, walletError, connectorSelected]
 	);
 
 	return (
