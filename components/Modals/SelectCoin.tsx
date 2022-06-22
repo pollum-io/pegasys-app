@@ -39,29 +39,28 @@ interface IToken {
 	balance: string;
 }
 
+interface ISymbol {
+	symbol: string;
+	logoURI: string;
+	id: number;
+}
+
 interface IModal {
 	isOpen: boolean;
 	onClose: () => void;
-	setSelectedToken: (token: any) => void;
-	selectedToken: any;
-	// eslint-disable-next-line
-	tokens: any;
+	setSelectedToken: (token: ISymbol[]) => void;
+	selectedToken: ISymbol[];
 	buttonId: number;
 }
 
 export const SelectCoinModal: React.FC<IModal> = props => {
-	const {
-		setSelectedToken,
-		tokens: generalTokens,
-		selectedToken,
-		buttonId,
-	} = props;
+	const { setSelectedToken, selectedToken, buttonId } = props;
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 	const [defaultTokens, setDefaultTokens] = useState<IToken[]>([]);
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
 	const [filter, setFilter] = useState<IToken[]>([]);
-	const [tokenError, setTokenError] = useState<any>();
+	const [tokenError, setTokenError] = useState<ISymbol>();
 
 	const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
 		const inputValue = event.target.value;
@@ -121,7 +120,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 		setFilter(orderedTokens);
 	}, []);
 
-	const handleSelectToken = useCallback((id: number, token: any) => {
+	const handleSelectToken = useCallback((id: number, token: ISymbol) => {
 		selectedToken[id] = {
 			logoURI: token.logoURI,
 			symbol: token.symbol,
@@ -129,9 +128,10 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	}, []);
 
 	useEffect(() => {
-		const verify = selectedToken.filter((currentToken: any) =>
+		const verify = selectedToken.filter((currentToken: ISymbol) =>
 			filter?.some(
-				(filteredValue: any) => filteredValue?.symbol === currentToken.symbol
+				(filteredValue: ISymbol) =>
+					filteredValue?.symbol === currentToken.symbol
 			)
 		);
 
@@ -184,7 +184,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					</Flex>
 				</ModalBody>
 				<Flex flexDirection="column">
-					{filter?.map((token: any, index: number) => (
+					{filter?.map((token: IToken, index: number) => (
 						<Button
 							bg="transparent"
 							px="10"

@@ -70,7 +70,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				setSelectedToken={setSelectedToken}
 				selectedToken={selectedToken}
 				buttonId={buttonId}
-				tokens={getDefaultTokens}
 			/>
 			<Flex
 				height="max-content"
@@ -145,8 +144,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								_hover={{
 									bgColor: theme.bg.button.swapTokenCurrency,
 								}}
-								onClick={(event: any) => {
-									setButtonId(Number(event.currentTarget?.id));
+								onClick={event => {
+									setButtonId(Number(event.currentTarget.id));
 									onOpenCoin();
 								}}
 							>
@@ -218,8 +217,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								id="1"
 								borderRadius={12}
 								cursor="pointer"
-								onClick={(event: any) => {
-									setButtonId(Number(event?.currentTarget?.id));
+								onClick={event => {
+									setButtonId(Number(event.currentTarget.id));
 									onOpenCoin();
 								}}
 								_hover={{
