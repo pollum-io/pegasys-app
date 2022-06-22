@@ -103,7 +103,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			error,
 			connector,
 		}),
-		[isConnected, walletAddress]
+		[isConnected, walletAddress, connectWallet, account, error, connector]
 	);
 
 	return (
