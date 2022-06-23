@@ -42,7 +42,7 @@ interface IToken {
 interface ISymbol {
 	symbol: string;
 	logoURI: string;
-	id: number;
+	id?: number;
 }
 
 interface IModal {
@@ -60,7 +60,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const [defaultTokens, setDefaultTokens] = useState<IToken[]>([]);
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
 	const [filter, setFilter] = useState<IToken[]>([]);
-	const [tokenError, setTokenError] = useState<ISymbol>();
+	const [tokenError, setTokenError] = useState<ISymbol[]>([]);
 
 	const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
 		const inputValue = event.target.value;

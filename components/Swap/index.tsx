@@ -19,7 +19,7 @@ import { getDefaultTokens } from "networks";
 interface IToken {
 	logoURI: string;
 	symbol: string;
-	id: number;
+	id?: number;
 }
 
 export const Swap: FunctionComponent<ButtonProps> = () => {
@@ -35,31 +35,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		onClose: onCloseCoin,
 	} = useDisclosure();
 	const { isConnected } = useWallet();
-	const [defaultTokenSymbol, setDefaultTokenSymbol] = useState("");
-	const [defaultTokenLogo, setDefaultTokenLogo] = useState("");
 	const [selectedToken, setSelectedToken] = useState<IToken[]>([
-		{ logoURI: "public/icons/pegasys.png", symbol: "SYS", id: 0 },
-		{ logoURI: "", symbol: "ETH", id: 1 },
+		{ logoURI: "icons/syscoin-logo.png", symbol: "SYS", id: 0 },
+		{ logoURI: "icons/pegasys.png", symbol: "PSYS", id: 1 },
 	]);
 
-	const [buttonId, setButtonId] = useState<number>();
+	const [buttonId, setButtonId] = useState<number>(0);
 	const swapButton = () => !isConnected && onOpenWallet();
-
-	useMemo(async () => {
-		const request = await getDefaultTokens();
-		const { tokens } = request;
-		let sysTokenName = "";
-		let sysTokenLogo = "";
-		tokens.filter((token: IToken) => {
-			if (token.symbol === "PSYS") {
-				sysTokenName = token.symbol;
-				sysTokenLogo = token.logoURI;
-			}
-			return sysTokenName && sysTokenLogo;
-		});
-		setDefaultTokenSymbol(sysTokenName);
-		setDefaultTokenLogo(sysTokenLogo);
-	}, []);
 
 	return (
 		<Flex pt="24" zIndex="1">
