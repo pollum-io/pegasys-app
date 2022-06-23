@@ -9,12 +9,10 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import { usePicasso, useWallet } from "hooks";
-import { FunctionComponent, useMemo, useState, useEffect } from "react";
+import { FunctionComponent, useState } from "react";
 import { BiDownArrowAlt } from "react-icons/bi";
 import { IoIosArrowDown } from "react-icons/io";
-import { FcInfo } from "react-icons/fc";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
-import { getDefaultTokens } from "networks";
 
 interface IToken {
 	logoURI: string;
@@ -35,7 +33,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		onClose: onCloseCoin,
 	} = useDisclosure();
 	const { isConnected } = useWallet();
-	const [selectedToken, setSelectedToken] = useState<IToken[]>([
+	const [selectedToken] = useState<IToken[]>([
 		{ logoURI: "icons/syscoin-logo.png", symbol: "SYS", id: 0 },
 		{ logoURI: "icons/pegasys.png", symbol: "PSYS", id: 1 },
 	]);
@@ -49,7 +47,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			<SelectCoinModal
 				isOpen={isOpenCoin}
 				onClose={onCloseCoin}
-				setSelectedToken={setSelectedToken}
 				selectedToken={selectedToken}
 				buttonId={buttonId}
 			/>

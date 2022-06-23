@@ -48,13 +48,12 @@ interface ISymbol {
 interface IModal {
 	isOpen: boolean;
 	onClose: () => void;
-	setSelectedToken: (token: ISymbol[]) => void;
 	selectedToken: ISymbol[];
 	buttonId: number;
 }
 
 export const SelectCoinModal: React.FC<IModal> = props => {
-	const { setSelectedToken, selectedToken, buttonId } = props;
+	const { selectedToken, buttonId } = props;
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 	const [defaultTokens, setDefaultTokens] = useState<IToken[]>([]);
@@ -66,14 +65,12 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 		const inputValue = event.target.value;
 
 		if (inputValue !== "") {
-			const results = defaultTokens.filter(
-				token => token.symbol.toLowerCase().startsWith(inputValue.toLowerCase())
-				// Use the toLowerCase() method to make it case-insensitive
+			const results = defaultTokens.filter(token =>
+				token.symbol.toLowerCase().startsWith(inputValue.toLowerCase())
 			);
 			setFilter(results);
 		} else {
 			setFilter(defaultTokens);
-			// If the text field is empty, show all users
 		}
 	};
 
