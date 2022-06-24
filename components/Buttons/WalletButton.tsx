@@ -9,20 +9,31 @@ import { AddressButton } from "./AddressButton";
 export const WalletButton: FunctionComponent<ButtonProps> = props => {
 	const { ...rest } = props;
 	const theme = usePicasso();
-	const { onOpen, isOpen, onClose } = useDisclosure();
+	const {
+		onOpen: onOpenSelectWalletModal,
+		isOpen: isOpenSelectWalletModal,
+		onClose: onCloseSelectWalletModal,
+	} = useDisclosure();
+	const {
+		isOpen: isOpenSelectSyscoin,
+		onOpen: onOpenSelectSyscoin,
+		onClose: onCloseSelectSyscoin,
+	} = useDisclosure();
 	const {
 		isOpen: isOpenAddress,
 		onOpen: onOpenAddress,
 		onClose: onCloseAddress,
 	} = useDisclosure();
-	const { error } = useWallet();
-	const { isConnected, walletAddress } = useWallet();
+	const { isConnected, walletAddress, walletError } = useWallet();
 
 	return (
 		<>
-			{!isConnected && !error && (
+			{!isConnected && !walletError && (
 				<>
-					<SelectWallets isOpen={isOpen} onClose={onClose} />
+					<SelectWallets
+						isOpen={isOpenSelectWalletModal}
+						onClose={onCloseSelectWalletModal}
+					/>
 					<Button
 						color={theme.text.connectWallet}
 						bg={theme.bg.button.connectWallet}
@@ -39,7 +50,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						h="max-content"
 						py="2"
 						px="4"
-						onClick={onOpen}
+						onClick={onOpenSelectWalletModal}
 						{...rest}
 					>
 						Connect your wallet
@@ -47,19 +58,24 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 				</>
 			)}
 
-			{error && (
+			{walletError && (
 				<>
-					<SelectSyscoin isOpen={isOpen} onClose={onClose} />
-					<AddressButton onClick={error && onOpen}>
+					<SelectSyscoin
+						isOpen={isOpenSelectSyscoin}
+						onClose={onCloseSelectSyscoin}
+					/>
+					<AddressButton onClick={walletError && onOpenSelectSyscoin}>
 						{walletAddress}
 					</AddressButton>
 				</>
 			)}
 
-			{isConnected && !error && (
+			{isConnected && !walletError && (
 				<>
 					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
-					<AddressButton onClick={error ? onOpen : onOpenAddress}>
+					<AddressButton
+						onClick={walletError ? onOpenSelectWalletModal : onOpenAddress}
+					>
 						{shortAddress(walletAddress)}
 					</AddressButton>
 				</>

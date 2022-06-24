@@ -26,7 +26,7 @@ interface IModal {
 export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
-	const { account } = useWallet();
+	const { walletAddress } = useWallet();
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -77,7 +77,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									seed={Math.round(Math.random() * 10000000)}
 								/>
 							</Flex>
-							{account && shortAddress(account)}
+							{walletAddress && shortAddress(walletAddress)}
 						</Flex>
 						<Flex flexDirection="row" mt="4">
 							<Flex
