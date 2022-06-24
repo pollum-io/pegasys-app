@@ -3,33 +3,53 @@ import {
 	ButtonProps,
 	Flex,
 	Icon,
+	Img,
 	Input,
 	Text,
 	useDisclosure,
 } from "@chakra-ui/react";
 import { usePicasso, useWallet } from "hooks";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
 import { BiDownArrowAlt } from "react-icons/bi";
 import { IoIosArrowDown } from "react-icons/io";
-import { FcInfo } from "react-icons/fc";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
+
+interface IToken {
+	logoURI: string;
+	symbol: string;
+	id?: number;
+}
 
 export const Swap: FunctionComponent<ButtonProps> = () => {
 	const theme = usePicasso();
-	const { onOpen, isOpen, onClose } = useDisclosure();
 	const {
 		onOpen: onOpenWallet,
 		isOpen: isOpenWallet,
 		onClose: onCloseWallet,
 	} = useDisclosure();
+	const {
+		onOpen: onOpenCoin,
+		isOpen: isOpenCoin,
+		onClose: onCloseCoin,
+	} = useDisclosure();
 	const { isConnected } = useWallet();
+	const [selectedToken] = useState<IToken[]>([
+		{ logoURI: "icons/syscoin-logo.png", symbol: "SYS", id: 0 },
+		{ logoURI: "icons/pegasys.png", symbol: "PSYS", id: 1 },
+	]);
 
+	const [buttonId, setButtonId] = useState<number>(0);
 	const swapButton = () => !isConnected && onOpenWallet();
 
 	return (
 		<Flex pt="24" zIndex="1">
-			<SelectCoinModal isOpen={isOpen} onClose={onClose} />
 			<SelectWallets isOpen={isOpenWallet} onClose={onCloseWallet} />
+			<SelectCoinModal
+				isOpen={isOpenCoin}
+				onClose={onCloseCoin}
+				selectedToken={selectedToken}
+				buttonId={buttonId}
+			/>
 			<Flex
 				height="max-content"
 				width="22%"
@@ -97,15 +117,20 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								py="1"
 								w="max-content"
 								ml="2"
+								id="0"
 								borderRadius={12}
 								cursor="pointer"
 								_hover={{
 									bgColor: theme.bg.button.swapTokenCurrency,
 								}}
+								onClick={event => {
+									setButtonId(Number(event.currentTarget.id));
+									onOpenCoin();
+								}}
 							>
-								<FcInfo />
-								<Text fontSize="xl" fontWeight="500" px="3" onClick={onOpen}>
-									SYS
+								<Img src={selectedToken[0].logoURI} w="6" h="6" />
+								<Text fontSize="xl" fontWeight="500" px="3">
+									{selectedToken[0].symbol}
 								</Text>
 								<Icon as={IoIosArrowDown} />
 							</Flex>
@@ -147,23 +172,41 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								letterSpacing="-4px"
 								type="number"
 							/>
-							<Flex
-								cursor="pointer"
-								flexDirection="row"
-								alignItems="center"
+							<Button
+								fontSize="sm"
+								height="max-content"
+								fontWeight="500"
+								ml="2"
+								px="2"
+								py="1.5"
+								borderRadius="8"
+								color={theme.text.whiteCyan}
 								bgColor={theme.bg.button.swapBlue}
-								px="3"
-								py="1"
-								ml="5"
-								borderRadius={12}
+								_hover={{ opacity: 0.75 }}
 							>
-								<Text
-									fontWeight="500"
-									pr="2"
-									fontSize="md"
-									color={theme.text.whiteCyan}
-								>
-									Select a token
+								MAX
+							</Button>
+							<Flex
+								alignItems="center"
+								justifyContent="space-between"
+								px="5"
+								py="1"
+								w="max-content"
+								ml="2"
+								id="1"
+								borderRadius={12}
+								cursor="pointer"
+								onClick={event => {
+									setButtonId(Number(event.currentTarget.id));
+									onOpenCoin();
+								}}
+								_hover={{
+									bgColor: theme.bg.button.swapTokenCurrency,
+								}}
+							>
+								<Img src={selectedToken[1].logoURI} w="6" h="6" />
+								<Text fontSize="xl" fontWeight="500" px="3">
+									{selectedToken[1].symbol}
 								</Text>
 								<Icon as={IoIosArrowDown} />
 							</Flex>
