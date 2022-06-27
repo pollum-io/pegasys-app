@@ -6,13 +6,14 @@ import {
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
+	Img,
 	ModalOverlay,
 	Text,
 	Tooltip,
 	useDisclosure,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import React from "react";
+import React, { useState } from "react";
 import { MdHelpOutline } from "react-icons/md";
 import { FcInfo } from "react-icons/fc";
 import { IoIosArrowDown } from "react-icons/io";
@@ -24,10 +25,21 @@ interface IModal {
 	onModalClose: () => void;
 }
 
+interface IToken {
+	logoURI: string;
+	symbol: string;
+	id?: number;
+}
+
 export const ImportPoolModal: React.FC<IModal> = props => {
 	const { isModalOpen, onModalClose } = props;
 	const theme = usePicasso();
 	const { onOpen, isOpen, onClose } = useDisclosure();
+	const [selectedToken] = useState<IToken[]>([
+		{ logoURI: "icons/syscoin-logo.png", symbol: "SYS", id: 0 },
+		{ logoURI: "icons/pegasys.png", symbol: "PSYS", id: 1 },
+	]);
+	const [buttonId, setButtonId] = useState<number>(0);
 
 	return (
 		<Modal
@@ -35,14 +47,19 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 			isOpen={isModalOpen}
 			onClose={onModalClose}
 		>
-			<SelectCoinModal isOpen={isOpen} onClose={onClose} />
+			<SelectCoinModal
+				isOpen={isOpen}
+				onClose={onClose}
+				buttonId={buttonId}
+				selectedToken={selectedToken}
+			/>
 			<ModalOverlay />
-			<ModalContent borderRadius="xl" bgColor={theme.bg.iceGray}>
+			<ModalContent borderRadius="xl" bgColor={theme.bg.whiteGray}>
 				<ModalHeader display="flex" alignItems="center">
 					<Tooltip
 						label="Use this tool to find pairs that don't automatically appear in the interface."
 						position="relative"
-						bgColor={theme.bg.secondary}
+						bgColor={theme.bg.whiteGray}
 						border="1px solid"
 						borderColor={theme.border.borderSettings}
 						color={theme.text.swapInfo}
@@ -74,7 +91,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 					<Flex
 						height="max-content"
 						width="100%"
-						bgColor={theme.bg.iceGray}
+						bgColor={theme.bg.whiteGray}
 						margin="0 auto"
 						position="relative"
 						borderRadius={30}
@@ -86,8 +103,12 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 							justifyContent="space-between"
 							border="1px solid"
 							borderColor={theme.border.swapInput}
+							id="0"
 							width="100%"
-							onClick={onOpen}
+							onClick={event => {
+								onOpen();
+								setButtonId(Number(event.currentTarget.id));
+							}}
 							p="5"
 							ml="2"
 							borderRadius={12}
@@ -96,7 +117,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								bgColor: theme.bg.button.swapTokenCurrency,
 							}}
 						>
-							<FcInfo />
+							<Img src={selectedToken[0].logoURI} w="6" h="6" />
 							<Text
 								fontSize="xl"
 								fontWeight="500"
@@ -104,7 +125,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								px="3"
 								textAlign="start"
 							>
-								SYS
+								{selectedToken[0].symbol}
 							</Text>
 							<IoIosArrowDown />
 						</Flex>
@@ -117,8 +138,12 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 							alignItems="center"
 							justifyContent="space-between"
 							border="1px solid"
+							id="1"
 							borderColor={theme.border.swapInput}
-							onClick={onOpen}
+							onClick={event => {
+								onOpen();
+								setButtonId(Number(event.currentTarget.id));
+							}}
 							width="100%"
 							p="5"
 							ml="2"
@@ -128,6 +153,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								bgColor: theme.bg.button.swapTokenCurrency,
 							}}
 						>
+							<Img src={selectedToken[1].logoURI} w="6" h="6" />
 							<Text
 								fontSize="xl"
 								fontWeight="500"
@@ -135,7 +161,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								px="3"
 								textAlign="start"
 							>
-								Select a Token
+								{selectedToken[1].symbol}
 							</Text>
 							<IoIosArrowDown />
 						</Flex>
