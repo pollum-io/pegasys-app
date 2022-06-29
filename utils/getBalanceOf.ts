@@ -20,7 +20,7 @@ export const getBalanceOf = async (
 		);
 		const balance: string = await contract
 			.balanceOf(walletAddress)
-			.then(result => result.toString());
+			.then((result: string | number) => result.toString());
 		const formattedValue = ethers.utils.formatEther(balance);
 		return formattedValue;
 	} catch (err) {
