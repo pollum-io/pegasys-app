@@ -7,15 +7,15 @@ import {
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
+	Img,
 	ModalOverlay,
 	Text,
 	Tooltip,
 	useDisclosure,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import React from "react";
+import React, { useState } from "react";
 import { MdHelpOutline } from "react-icons/md";
-import { FcInfo } from "react-icons/fc";
 import { IoIosArrowDown } from "react-icons/io";
 import { BiPlus } from "react-icons/bi";
 import { SelectCoinModal } from "components";
@@ -25,11 +25,21 @@ interface IModal {
 	onModalClose: () => void;
 	isCreate: boolean;
 }
+interface IToken {
+	logoURI: string;
+	symbol: string;
+	id?: number;
+}
 
 export const AddLiquidityModal: React.FC<IModal> = props => {
 	const { isModalOpen, onModalClose, isCreate } = props;
 	const theme = usePicasso();
 	const { onOpen, isOpen, onClose } = useDisclosure();
+	const [selectedToken] = useState<IToken[]>([
+		{ logoURI: "icons/syscoin-logo.png", symbol: "SYS", id: 0 },
+		{ logoURI: "icons/pegasys.png", symbol: "PSYS", id: 1 },
+	]);
+	const [buttonId, setButtonId] = useState<number>(0);
 
 	return (
 		<Modal
@@ -37,9 +47,14 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			isOpen={isModalOpen}
 			onClose={onModalClose}
 		>
-			<SelectCoinModal isOpen={isOpen} onClose={onClose} />
+			<SelectCoinModal
+				isOpen={isOpen}
+				onClose={onClose}
+				selectedToken={selectedToken}
+				buttonId={buttonId}
+			/>
 			<ModalOverlay />
-			<ModalContent borderRadius="xl" bgColor={theme.bg.iceGray}>
+			<ModalContent borderRadius="xl" bgColor={theme.bg.whiteGray}>
 				<ModalHeader display="flex" alignItems="center">
 					<Tooltip
 						label="When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
@@ -116,7 +131,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					<Flex
 						height="max-content"
 						width="100%"
-						bgColor={theme.bg.iceGray}
+						bgColor={theme.bg.whiteGray}
 						margin="0 auto"
 						position="relative"
 						borderRadius={30}
@@ -161,17 +176,22 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										justifyContent="space-between"
 										px="5"
 										py="1"
+										id="0"
 										w="max-content"
 										ml="2"
+										onClick={event => {
+											onOpen();
+											setButtonId(Number(event.currentTarget.id));
+										}}
 										borderRadius={12}
 										cursor="pointer"
 										_hover={{
 											bgColor: theme.bg.button.swapTokenCurrency,
 										}}
 									>
-										<FcInfo />
+										<Img src={selectedToken[0].logoURI} w="6" h="6" />
 										<Text fontSize="xl" fontWeight="500" px="3">
-											SYS
+											{selectedToken[0].symbol}
 										</Text>
 										<IoIosArrowDown />
 									</Flex>
@@ -213,23 +233,26 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										letterSpacing="-4px"
 									/>
 									<Flex
-										cursor="pointer"
-										flexDirection="row"
 										alignItems="center"
-										bgColor={theme.bg.button.swapBlue}
-										px="3"
+										justifyContent="space-between"
+										px="5"
 										py="1"
-										ml="5"
+										w="max-content"
+										id="1"
+										ml="2"
 										borderRadius={12}
-										onClick={onOpen}
+										cursor="pointer"
+										onClick={event => {
+											onOpen();
+											setButtonId(Number(event.currentTarget.id));
+										}}
+										_hover={{
+											bgColor: theme.bg.button.swapTokenCurrency,
+										}}
 									>
-										<Text
-											fontWeight="500"
-											pr="2"
-											fontSize="md"
-											color={theme.text.cyan}
-										>
-											Select a token
+										<Img src={selectedToken[1].logoURI} w="6" h="6" />
+										<Text fontSize="xl" fontWeight="500" px="3">
+											{selectedToken[1].symbol}
 										</Text>
 										<IoIosArrowDown />
 									</Flex>
