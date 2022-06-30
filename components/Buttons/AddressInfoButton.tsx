@@ -16,7 +16,7 @@ import { FunctionComponent } from "react";
 import Jazzicon from "react-jazzicon";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { HiExternalLink } from "react-icons/hi";
-import { shortAddress } from "utils";
+import { shortAddress, copyToClipboard, openWalletOnExplorer } from "utils";
 
 interface IModal {
 	isOpen: boolean;
@@ -87,6 +87,8 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								flexDirection="row"
 								alignItems="center"
 								gap="2"
+								cursor="pointer"
+								onClick={() => copyToClipboard(walletAddress)}
 							>
 								<Icon as={MdOutlineContentCopy} />
 								<Text _hover={{ textDecoration: "underline" }}>
@@ -99,6 +101,8 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								flexDirection="row"
 								alignItems="center"
 								gap="2"
+								cursor="pointer"
+								onClick={() => openWalletOnExplorer(walletAddress)}
 							>
 								<Icon as={HiExternalLink} />
 								<Text _hover={{ textDecoration: "underline" }}>

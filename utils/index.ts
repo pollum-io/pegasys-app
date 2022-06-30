@@ -6,3 +6,5 @@ export * from "./getBalanceOf";
 export * from "./getLibrary";
 export * from "./shortAddress";
 export * from "./convertHexToNumber";
+export * from "./copyToClipboard";
+export * from "./openWalletOnExplorer";
