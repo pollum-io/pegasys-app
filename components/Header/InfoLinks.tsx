@@ -8,7 +8,7 @@ interface ILinkProps extends LinkProps {
 
 export const InfoLinks: FunctionComponent<ILinkProps> = props => {
 	const theme = usePicasso();
-	const { children, ...rest } = props;
+	const { children, isVote, ...rest } = props;
 
 	return (
 		<Link
@@ -17,7 +17,7 @@ export const InfoLinks: FunctionComponent<ILinkProps> = props => {
 			color={theme.text.infoLink}
 			_hover={{ color: theme.text.mono }}
 			p="2"
-			isExternal
+			isExternal={!isVote}
 			{...rest}
 		>
 			{children}

@@ -46,7 +46,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 		},
 		{
 			name: "Vote",
-			link: "https://pegasys.finance/",
+			link: "/vote",
 			icon: <BsCheck2Square />,
 		},
 	];
@@ -67,7 +67,9 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 								key={links.name + Number(index)}
 							>
 								<Flex>{links.icon}</Flex>
-								<InfoLinks href={links.link}>{links.name}</InfoLinks>
+								<InfoLinks isVote={links.name === "Vote"} href={links.link}>
+									{links.name}
+								</InfoLinks>
 							</Flex>
 						))}
 					</Flex>
