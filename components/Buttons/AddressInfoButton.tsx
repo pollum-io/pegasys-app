@@ -11,7 +11,7 @@ import {
 	ModalOverlay,
 	Text,
 } from "@chakra-ui/react";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso, useWallet, useToasty } from "hooks";
 import { FunctionComponent } from "react";
 import Jazzicon from "react-jazzicon";
 import { MdOutlineContentCopy } from "react-icons/md";
@@ -27,6 +27,17 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 	const { walletAddress } = useWallet();
+	const { toast } = useToasty();
+
+	const handleCopyToClipboard = () => {
+		copyToClipboard(walletAddress);
+
+		toast({
+			status: "success",
+			title: "Successfully copied",
+			description: "Address sucessfully copied to clipboard!",
+		});
+	};
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -88,7 +99,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								alignItems="center"
 								gap="2"
 								cursor="pointer"
-								onClick={() => copyToClipboard(walletAddress)}
+								onClick={() => handleCopyToClipboard()}
 							>
 								<Icon as={MdOutlineContentCopy} />
 								<Text _hover={{ textDecoration: "underline" }}>
