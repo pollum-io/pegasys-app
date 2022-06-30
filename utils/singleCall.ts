@@ -11,7 +11,6 @@ export const singleCall = async (
 		const contractCall = await contract[methodName](parameters);
 		return contractCall;
 	} catch (error) {
-		console.log(error);
 		return error;
 	}
 };

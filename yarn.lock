@@ -3011,6 +3011,11 @@
     tiny-warning "^1.0.3"
     toformat "^2.0.0"
 
+"@pollum-io/syscoin-tokenlist-sdk@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@pollum-io/syscoin-tokenlist-sdk/-/syscoin-tokenlist-sdk-1.0.0.tgz#699d62146ad6380b0fd4b71f361c09c75dcd54fa"
+  integrity sha512-UJTXgXTxHmrzsdmQ/YcZk5//xcqwtvsWK5ZQnuo1h64GMp/zo2JkEhktCgYIPCG5IaO9Qyk/3z50yD1AI4Sn2w==
+
 "@popperjs/core@^2.9.3":
   version "2.11.5"
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.5.tgz#db5a11bf66bdab39569719555b0f76e138d7bd64"

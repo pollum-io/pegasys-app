@@ -48,8 +48,8 @@ interface ISymbol {
 interface IModal {
 	isOpen: boolean;
 	onClose: () => void;
-	selectedToken: ISymbol[];
-	buttonId: number;
+	selectedToken?: ISymbol[];
+	buttonId?: number;
 }
 
 export const SelectCoinModal: React.FC<IModal> = props => {

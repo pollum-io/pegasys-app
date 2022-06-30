@@ -1,6 +1,6 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers, Signer } from "ethers";
-import { convertHexToNumber, getBalanceOf } from "utils";
+import { convertHexToNumber, getBalanceOfMultiCall } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { SYS_TESTNET_CHAIN_PARAMS } from "../helpers/consts";
 
@@ -143,8 +143,20 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		return formattedValue;
 	};
 
+	const tokenArray = [
+		"0x94c80b500C825F3030411a987b7EBb0A8f4adEa0",
+		"0x81821498cD456c9f9239010f3A9F755F3A38A778",
+		"0xa66b2E50c2b805F31712beA422D0D9e7D0Fd0F35",
+		"0x2d2e508c8056c3D92745dC2C39E5Cc316de79C0F",
+	];
+
 	const getTokenBalance = async (tokenAddress: string) => {
-		const balance = await getBalanceOf(tokenAddress, walletAddress, provider);
+		const balance = await getBalanceOfMultiCall(
+			tokenArray,
+			walletAddress,
+			provider,
+			18
+		);
 		const contract = tokenAddress.toLowerCase();
 		const searchedBalance = balances.find(item => item.contract === contract);
 		if (!searchedBalance) {
@@ -159,10 +171,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	useEffect(() => {
 		if (!isConnected) return;
-		const tokensToFetch = ["0x81821498cD456c9f9239010f3A9F755F3A38A778"];
+		const tokensToFetch = tokenArray;
 		tokensToFetch.map(token => getTokenBalance(token));
 		getBalance();
 	}, [isConnected]);
+
+	console.log(balances);
 
 	const providerValue = useMemo(
 		() => ({
