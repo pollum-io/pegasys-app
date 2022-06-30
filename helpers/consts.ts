@@ -36,9 +36,4 @@ export const SUPPORTED_WALLETS: { [key: string]: IWalletInfo } = {
 		name: "Coinbase Wallet",
 		iconName: "coinbaseWalletIcon.svg",
 	},
-	WALLET_CONNECT: {
-		connector: walletconnect,
-		name: "Wallet Connect",
-		iconName: "walletConnectIcon.svg",
-	},
 };
