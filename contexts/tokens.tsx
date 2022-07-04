@@ -33,7 +33,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		const formattedValue = ethers.utils.formatEther(value);
 		// eslint-disable-next-line
-		setUserTokensBalance((previous: any) => [
+		setUserTokensBalance(previous => [
 			{
 				address: "",
 				chainId: 5700,
