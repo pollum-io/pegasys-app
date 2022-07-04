@@ -35,6 +35,11 @@ export const getBalanceOfSingleCall = async (
 	}
 };
 
+interface IAddressessAndBalances {
+	address: string;
+	balance: string;
+}
+
 export const getBalanceOfMultiCall = async (
 	tokenAddress: string[],
 	walletAddress: string,
@@ -42,9 +47,11 @@ export const getBalanceOfMultiCall = async (
 		| Signer
 		| ethers.providers.JsonRpcProvider
 		| ethers.providers.Web3Provider
+		| ethers.providers.Provider
 		| undefined,
-	decimals: number
+	decimals: number[]
 ) => {
+	if (!signerOrProvider) return [];
 	try {
 		const contracts = tokenAddress.map((address: string) =>
 			createContractUsingAbi(address, abi20, signerOrProvider)
@@ -57,8 +64,19 @@ export const getBalanceOfMultiCall = async (
 			decimals
 		);
 
-		return formattedBalances;
+		const addressessAndBalances = tokenAddress.map((token, tokenIndex) => {
+			const tokenBalance = formattedBalances.find(
+				(_, balanceIndex) => tokenIndex === balanceIndex
+			);
+
+			return {
+				address: token,
+				balance: tokenBalance,
+			};
+		});
+
+		return addressessAndBalances as IAddressessAndBalances[];
 	} catch (error) {
-		return "0";
+		return [];
 	}
 };
