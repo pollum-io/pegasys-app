@@ -1,4 +1,4 @@
-import { injected, walletconnect, walletlink } from "utils/connectors";
+import { injected, walletlink } from "utils/connectors";
 import { IWalletInfo } from "types";
 
 export const NEVM_CHAIN_PARAMS = {

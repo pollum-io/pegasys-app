@@ -8,3 +8,4 @@ export * from "./shortAddress";
 export * from "./convertHexToNumber";
 export * from "./copyToClipboard";
 export * from "./openWalletOnExplorer";
+export * from "./formatBigNumberValues";
