@@ -1,8 +1,7 @@
 import { DefaultTemplate } from "container";
 import { NextPage } from "next";
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Button, Flex, Img, Text } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import { PsysTokenAnimated } from "components";
 
 export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
@@ -22,10 +21,11 @@ export const AirdropContainer: NextPage = () => {
 					flexDirection="column"
 				>
 					<Flex alignItems="center" justifyContent="center">
-						<PsysTokenAnimated
+						<Img
 							width="150px"
 							height="150px"
 							src="icons/logo_pegasys.svg"
+							className="token"
 						/>
 					</Flex>
 
