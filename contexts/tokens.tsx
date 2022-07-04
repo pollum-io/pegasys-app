@@ -75,9 +75,9 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		setUserTokensBalance(tokensWithBalance);
 
-		if (userTokensBalance) {
-			getProviderTokenBalance();
-		}
+		if (!userTokensBalance) return;
+
+		getProviderTokenBalance();
 	};
 
 	useEffect(() => {
