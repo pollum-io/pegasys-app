@@ -22,8 +22,10 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 					flexDirection={["column"]}
 					h="100vh"
 					w="100vw"
-					backgroundImage="radial-gradient(50% 50% at 50% 50%, rgba(0, 217, 239, 0.15) 0%, rgba(33, 36, 41, 0) 100%)"
 				>
+					<div id="starsLightMode" />
+					<div id="starsLightMode2" />
+					<div id="starsLightMode3" />
 					<Header />
 					{children}
 				</Flex>

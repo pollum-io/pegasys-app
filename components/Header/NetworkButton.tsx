@@ -12,16 +12,16 @@ export const NetworkButton: FunctionComponent<IButtonProps> = props => {
 	const connectedNetwork = "NEVM";
 	return (
 		<Button
-			color="white"
-			bg={theme.bg.button.network}
-			borderRadius={12}
-			opacity="0.9"
+			bg="white"
+			bgClip="text"
+			fontWeight="500"
+			fontSize="md"
 			_hover={{ opacity: 1 }}
 			_active={{}}
 			w="max-content"
 			h="max-content"
-			py="2.5"
-			px="4"
+			py="4"
+			pr="10"
 			{...rest}
 		>
 			{children}

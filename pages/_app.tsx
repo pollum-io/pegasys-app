@@ -1,6 +1,7 @@
 import Head from "next/head";
 import type { AppProps } from "next/app";
 import { ColorHandler } from "utils";
+import "../styles/backgroundStars.css";
 
 const MyApp = ({ Component, pageProps }: AppProps) => (
 	<>

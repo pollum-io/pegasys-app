@@ -35,12 +35,10 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						onClose={onCloseSelectWalletModal}
 					/>
 					<Button
-						color={theme.text.connectWallet}
+						color="white"
 						bg={theme.bg.button.connectWallet}
-						borderWidth="1px"
-						borderStyle="solid"
 						borderColor={theme.border.connectWallet}
-						borderRadius={12}
+						borderRadius={84}
 						opacity="0.85"
 						_hover={{
 							opacity: "1",
@@ -49,11 +47,14 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						w="max-content"
 						h="max-content"
 						py="2"
-						px="4"
+						px="8"
+						ml="5"
+						position="fixed"
+						bottom="10"
 						onClick={onOpenSelectWalletModal}
 						{...rest}
 					>
-						Connect your wallet
+						Connect wallet
 					</Button>
 				</>
 			)}

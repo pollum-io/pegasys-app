@@ -13,15 +13,19 @@ export const NavButton: FunctionComponent<IButtonProps> = props => {
 	return (
 		<Link href={href} _hover={{ textDecoration: "none" }}>
 			<Button
-				color={theme.text.mono}
+				fontSizes="md"
+				fontWeight="semibold"
 				bgColor="transparent"
 				opacity="0.75"
-				_hover={{ bgColor: "transparent", opacity: 1 }}
+				borderRadius="70px"
+				_hover={{
+					bgColor: "#0B172C",
+					opacity: 1,
+					borderRadius: "70px",
+				}}
 				_active={{}}
-				w="max-content"
-				h="max-content"
-				py="0"
-				px="2"
+				px="6"
+				py="2"
 				{...rest}
 			>
 				{children}

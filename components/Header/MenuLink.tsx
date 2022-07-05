@@ -3,6 +3,7 @@ import {
 	Flex,
 	IconButton,
 	Popover,
+	PopoverArrow,
 	PopoverBody,
 	PopoverCloseButton,
 	PopoverContent,
@@ -11,9 +12,11 @@ import {
 import { FunctionComponent, ReactNode } from "react";
 import { BsThreeDots, BsCheck2Square } from "react-icons/bs";
 import { FiTwitter } from "react-icons/fi";
-import { FaDiscord, FaTelegramPlane } from "react-icons/fa";
+import { FaDiscord, FaParachuteBox, FaTelegramPlane } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { usePicasso } from "hooks";
+import { MdOutlineCheckBox, MdOutlineContentCopy } from "react-icons/md";
+import { RiGithubLine } from "react-icons/ri";
 import { InfoLinks } from "./InfoLinks";
 
 interface IButtonProps extends ButtonProps {
@@ -30,6 +33,26 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 			icon: <AiOutlineInfoCircle />,
 		},
 		{
+			name: "Vote",
+			link: "https://pegasys.finance/",
+			icon: <MdOutlineCheckBox />,
+		},
+		{
+			name: "Airdrop",
+			link: "https://pegasys.finance/",
+			icon: <FaParachuteBox />,
+		},
+		{
+			name: "Docs",
+			link: "https://pegasys.finance/",
+			icon: <MdOutlineContentCopy />,
+		},
+		{
+			name: "Github",
+			link: "https://pegasys.finance/",
+			icon: <RiGithubLine />,
+		},
+		{
 			name: "Discord",
 			link: "https://discord.com/invite/UzjWbWWERz",
 			icon: <FaDiscord />,
@@ -44,30 +67,38 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 			link: "https://twitter.com/PegasysDEX",
 			icon: <FiTwitter />,
 		},
-		{
-			name: "Vote",
-			link: "https://pegasys.finance/",
-			icon: <BsCheck2Square />,
-		},
 	];
 
 	return (
 		<Popover>
 			<PopoverTrigger {...props}>
-				<IconButton aria-label="Popover" icon={<BsThreeDots />} />
+				<IconButton
+					aria-label="Popover"
+					icon={<BsThreeDots />}
+					bg="transparent"
+				/>
 			</PopoverTrigger>
-			<PopoverContent w="max-content" mr="2" bgColor={theme.bg.bgPrimary}>
-				<PopoverCloseButton />
-				<PopoverBody display="flex" flexDirection="column">
+			<PopoverContent
+				w="max-content"
+				bgColor={theme.bg.blueNavy}
+				borderRadius="xl"
+				px="0.938rem"
+				py="0.938rem"
+			>
+				<PopoverArrow bgColor={theme.bg.blueNavy} />
+				<PopoverBody display="flex" flexDirection="column" zIndex="99">
 					<Flex flexDirection="column">
 						{infos.map((links, index) => (
 							<Flex
 								alignItems="center"
 								flexDirection="row"
 								key={links.name + Number(index)}
+								_hover={{ color: theme.text.cyan }}
 							>
 								<Flex>{links.icon}</Flex>
-								<InfoLinks href={links.link}>{links.name}</InfoLinks>
+								<InfoLinks pb="1" href={links.link}>
+									{links.name}
+								</InfoLinks>
 							</Flex>
 						))}
 					</Flex>

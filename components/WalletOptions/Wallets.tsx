@@ -28,12 +28,13 @@ export const Wallets = ({ id, header, icon, onClick }: IWalletProps) => {
 			my="2"
 			p="4"
 			border="1px solid"
-			borderRadius="10"
+			borderRadius="full"
 			fontSize="md"
 			borderColor={theme.border.wallets}
 			_hover={{ borderColor: theme.text.cyan }}
 			fontWeight={500}
 			id={id}
+			fontFamily="inter"
 		>
 			<Flex>{header}</Flex>
 			<Img src={icon} w="6" />
