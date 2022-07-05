@@ -4,7 +4,6 @@ import { ColorHandler } from "utils";
 import "../styles/backgroundStars.css";
 import "styles/style.css";
 
-
 const MyApp = ({ Component, pageProps }: AppProps) => (
 	<>
 		<Head>

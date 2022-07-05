@@ -24,9 +24,9 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 						h="100vh"
 						w="100vw"
 					>
-          	<div id="starsLightMode" />
-					  <div id="starsLightMode2" />
-					  <div id="starsLightMode3" />
+						<div id="starsLightMode" />
+						<div id="starsLightMode2" />
+						<div id="starsLightMode3" />
 						<Header />
 						{children}
 					</Flex>
