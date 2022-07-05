@@ -1,29 +1,82 @@
-import { ethers, Signer } from "ethers";
+import { BigNumber, ethers, Signer } from "ethers";
 import abi20 from "./abis/erc20.json";
 import { createContractUsingAbi } from "./contractInstance";
+import { singleCall } from "./singleCall";
+import { multiCall } from "./multiCall";
+import { formatBigNumberValues } from "./formatBigNumberValues";
 
-export const getBalanceOf = async (
+export const getBalanceOfSingleCall = async (
 	tokenAddress: string,
 	walletAddress: string,
 	signerOrProvider:
 		| Signer
 		| ethers.providers.JsonRpcProvider
 		| ethers.providers.Web3Provider
-		| undefined
+		| undefined,
+	decimals: number
 ) => {
 	if (!signerOrProvider) return "0";
 	try {
-		const contract = await createContractUsingAbi(
-			tokenAddress,
+		const contract = createContractUsingAbi(
+			String(tokenAddress),
 			abi20,
 			signerOrProvider
 		);
-		const balance: string = await contract
-			.balanceOf(walletAddress)
-			.then((result: string | number) => result.toString());
-		const formattedValue = ethers.utils.formatEther(balance);
-		return formattedValue;
+
+		const contractCall = await singleCall(contract, "balanceOf", walletAddress);
+
+		const formattedBalance = String(
+			ethers.utils.formatUnits(contractCall, decimals)
+		);
+
+		return formattedBalance;
 	} catch (err) {
 		return "0";
+	}
+};
+
+interface IAddressessAndBalances {
+	address: string;
+	balance: string;
+}
+
+export const getBalanceOfMultiCall = async (
+	tokenAddress: string[],
+	walletAddress: string,
+	signerOrProvider:
+		| Signer
+		| ethers.providers.JsonRpcProvider
+		| ethers.providers.Web3Provider
+		| ethers.providers.Provider
+		| undefined,
+	decimals: number[]
+) => {
+	if (!signerOrProvider) return [];
+	try {
+		const contracts = tokenAddress.map((address: string) =>
+			createContractUsingAbi(address, abi20, signerOrProvider)
+		);
+
+		const contractCall = await multiCall(contracts, "balanceOf", walletAddress);
+
+		const formattedBalances = formatBigNumberValues(
+			contractCall as BigNumber[],
+			decimals
+		);
+
+		const addressessAndBalances = tokenAddress.map((token, tokenIndex) => {
+			const tokenBalance = formattedBalances.find(
+				(_, balanceIndex) => tokenIndex === balanceIndex
+			);
+
+			return {
+				address: token,
+				balance: tokenBalance,
+			};
+		});
+
+		return addressessAndBalances as IAddressessAndBalances[];
+	} catch (error) {
+		return [];
 	}
 };

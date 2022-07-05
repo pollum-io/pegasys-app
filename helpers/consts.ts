@@ -1,4 +1,4 @@
-import { injected, walletconnect, walletlink } from "utils/connectors";
+import { injected, walletlink } from "utils/connectors";
 import { IWalletInfo } from "types";
 
 export const NEVM_CHAIN_PARAMS = {
@@ -35,10 +35,5 @@ export const SUPPORTED_WALLETS: { [key: string]: IWalletInfo } = {
 		connector: walletlink,
 		name: "Coinbase Wallet",
 		iconName: "coinbaseWalletIcon.svg",
-	},
-	WALLET_CONNECT: {
-		connector: walletconnect,
-		name: "Wallet Connect",
-		iconName: "walletConnectIcon.svg",
 	},
 };

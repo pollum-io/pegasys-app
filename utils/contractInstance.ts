@@ -1,9 +1,10 @@
 import { ethers, Signer } from "ethers";
 
-export const createContractUsingAbi = async (
+export const createContractUsingAbi = (
 	address: string,
 	AbiContract: object | never,
 	signer:
+		| ethers.providers.Provider
 		| Signer
 		| ethers.providers.JsonRpcProvider
 		| ethers.providers.Web3Provider

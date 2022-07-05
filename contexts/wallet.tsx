@@ -1,12 +1,18 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers, Signer } from "ethers";
-import { convertHexToNumber, getBalanceOf } from "utils";
+import { convertHexToNumber } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { SYS_TESTNET_CHAIN_PARAMS } from "../helpers/consts";
 
 interface IWeb3 {
 	isConnected: boolean;
 	currentNetworkChainId: number | null;
+	provider:
+		| ethers.providers.Provider
+		| ethers.providers.Web3Provider
+		| ethers.providers.JsonRpcProvider
+		| Signer
+		| undefined;
 	setCurrentNetworkChainId: React.Dispatch<React.SetStateAction<number | null>>;
 	walletAddress: string;
 	connectWallet: (connector: AbstractConnector) => Promise<void>;
@@ -23,11 +29,6 @@ export const WalletContext = createContext({} as IWeb3);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let window: any;
 
-interface ITokenBalance {
-	contract: string;
-	balance: string;
-}
-
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
@@ -41,13 +42,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [provider, setProvider] = useState<
 		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
 	>();
-	const [balances, setBalances] = useState<ITokenBalance[]>([]);
 	const [connectorSelected, setConnectorSelected] =
 		useState<AbstractConnector>();
 
 	const connectToSysRpcIfNotConnected = () => {
 		const rpcProvider = new ethers.providers.JsonRpcProvider(
-			// "https://rpc.syscoin.org/" || "https://rpc.ankr.com/syscoin"
 			SYS_TESTNET_CHAIN_PARAMS.rpcUrls[0]
 		);
 		setProvider(rpcProvider);
@@ -127,47 +126,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		}
 	}, [currentNetworkChainId]);
 
-	const getBalance = async () => {
-		const value = await provider
-			?.getBalance(walletAddress)
-			.then(result => result.toString());
-
-		if (!value) return "0";
-
-		const formattedValue = ethers.utils.formatEther(value);
-		setBalances((previous: ITokenBalance[]) => [
-			...previous,
-			{ contract: "", balance: formattedValue },
-		]);
-
-		return formattedValue;
-	};
-
-	const getTokenBalance = async (tokenAddress: string) => {
-		const balance = await getBalanceOf(tokenAddress, walletAddress, provider);
-		const contract = tokenAddress.toLowerCase();
-		const searchedBalance = balances.find(item => item.contract === contract);
-		if (!searchedBalance) {
-			setBalances((previous: ITokenBalance[]) => [
-				...previous,
-				{ contract, balance },
-			]);
-		} else {
-			searchedBalance.balance = balance;
-		}
-	};
-
-	useEffect(() => {
-		if (!isConnected) return;
-		const tokensToFetch = ["0x81821498cD456c9f9239010f3A9F755F3A38A778"];
-		tokensToFetch.map(token => getTokenBalance(token));
-		getBalance();
-	}, [isConnected]);
-
 	const providerValue = useMemo(
 		() => ({
 			isConnected,
 			walletAddress,
+			provider,
 			connectWallet,
 			walletError,
 			setWalletError,
@@ -176,7 +139,14 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			currentNetworkChainId,
 			setCurrentNetworkChainId,
 		}),
-		[isConnected, walletAddress, connectWallet, walletError, connectorSelected]
+		[
+			isConnected,
+			walletAddress,
+			provider,
+			connectWallet,
+			walletError,
+			connectorSelected,
+		]
 	);
 
 	return (

@@ -28,6 +28,7 @@ export const ConnectSyscoinNetwork = async (
 				params: [{ chainId: SYS_TESTNET_CHAIN_PARAMS.chainId }],
 			})
 			.then(() => setWalletError(false))
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			.catch(async (error: any) => {
 				if (error.code === 4902) {
 					await getConnectorProvider
