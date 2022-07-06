@@ -35,7 +35,9 @@ export const Languages: FunctionComponent<IButtonProps> = props => {
 							}}
 						/>
 					}
+					transition="0.4s"
 					bg="transparent"
+					_hover={{ background: "rgba(255, 255, 255, 0.08)" }}
 				/>
 			</PopoverTrigger>
 			<PopoverContent w="max-content">

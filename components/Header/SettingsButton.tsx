@@ -30,7 +30,12 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	return (
 		<Popover>
 			<PopoverTrigger {...props}>
-				<IconButton aria-label="Popover" icon={<MdSettings size={25} />} />
+				<IconButton
+					bgColor="transparent"
+					_hover={{ background: "rgba(255, 255, 255, 0.08)" }}
+					aria-label="Popover"
+					icon={<MdSettings size={25} />}
+				/>
 			</PopoverTrigger>
 			<PopoverContent
 				left="74rem"

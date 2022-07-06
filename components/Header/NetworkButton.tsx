@@ -1,8 +1,8 @@
-import { Button, ButtonProps } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { FunctionComponent, ReactNode } from "react";
 
-interface IButtonProps extends ButtonProps {
+interface IButtonProps {
 	children?: ReactNode;
 }
 
@@ -11,21 +11,18 @@ export const NetworkButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	const connectedNetwork = "NEVM";
 	return (
-		<Button
+		<Text
+			h="max-content"
 			bg="white"
 			bgClip="text"
-			fontWeight="500"
+			fontWeight="normal"
 			fontSize="md"
-			_hover={{ opacity: 1 }}
+			transition="0.2s"
+			_hover={{ cursor: "pointer", fontWeight: "700" }}
 			_active={{}}
-			w="max-content"
-			h="max-content"
-			py="4"
-			pr="10"
-			{...rest}
 		>
 			{children}
 			{connectedNetwork}
-		</Button>
+		</Text>
 	);
 };

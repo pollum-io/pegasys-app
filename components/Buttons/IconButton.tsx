@@ -6,10 +6,10 @@ export const IconButton: FunctionComponent<IconButtonProps> = props => {
 	const theme = usePicasso();
 	return (
 		<Button
-			bg="transparent"
 			color={theme.text.mono}
-			opacity="0.85"
-			_hover={{ opacity: "1" }}
+			transition="0.4s"
+			bgColor="transparent"
+			_hover={{ background: "rgba(255, 255, 255, 0.08)" }}
 			_active={{}}
 			{...props}
 		/>

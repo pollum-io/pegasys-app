@@ -1,8 +1,8 @@
-import { Button, ButtonProps } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { FunctionComponent, ReactNode } from "react";
 
-interface IButtonProps extends ButtonProps {
+interface IButtonProps {
 	children?: ReactNode;
 }
 
@@ -12,22 +12,18 @@ export const TokenButton: FunctionComponent<IButtonProps> = props => {
 	const token = "PSYS";
 
 	return (
-		<Button
-			borderRadius={12}
+		<Text
+			h="max-content"
 			bg={theme.text.psysBalance}
 			bgClip="text"
-			opacity="0.90"
+			fontWeight="normal"
 			fontSize="md"
-			_hover={{ opacity: 1 }}
+			transition="0.2s"
+			_hover={{ cursor: "pointer", fontWeight: "700" }}
 			_active={{}}
-			w="max-content"
-			h="max-content"
-			py="4"
-			pr="2"
-			{...rest}
 		>
 			{children}
 			{token}
-		</Button>
+		</Text>
 	);
 };

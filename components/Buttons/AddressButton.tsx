@@ -25,8 +25,7 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 			fontSize="md"
 			borderRadius={84}
 			fontWeight={500}
-			position="fixed"
-			bottom="10"
+			bottom="8"
 			overflow="hidden"
 			_hover={{
 				borderColor: walletError ? theme.text.redError : theme.text.cyan,

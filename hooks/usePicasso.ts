@@ -36,8 +36,8 @@ const usePicasso = () => {
 				secondary: useColorModeValue("purple.700", "purple.600"),
 				tertiary: useColorModeValue("green.600", "blue.800"),
 				connectWallet: useColorModeValue(
-					"linear-gradient(90deg, #53D9D9 9.38%, rgba(0, 184, 255, 0.1) 128.42%);",
-					"linear-gradient(90deg, #53D9D9 9.38%, rgba(0, 184, 255, 0.1) 128.42%);"
+					"linear-gradient(90deg, #53D9D9 9.38%, rgb(0 184 255 / 35%) 128.42%)",
+					"linear-gradient(90deg, #53D9D9 9.38%, rgb(0 184 255 / 35%) 128.42%)"
 				),
 				connectWalletSwap: useColorModeValue(
 					"rgba(21, 61, 111, 1)",

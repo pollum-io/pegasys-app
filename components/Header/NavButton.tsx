@@ -18,6 +18,7 @@ export const NavButton: FunctionComponent<IButtonProps> = props => {
 				bgColor="transparent"
 				opacity="0.75"
 				borderRadius="70px"
+				transition="0.4s"
 				_hover={{
 					bgColor: "#0B172C",
 					opacity: 1,

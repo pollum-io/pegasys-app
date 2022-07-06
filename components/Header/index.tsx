@@ -1,12 +1,8 @@
-import { Flex, Icon, Img, Select, useColorMode } from "@chakra-ui/react";
+import { Flex, Icon, Img, useColorMode } from "@chakra-ui/react";
 import { WalletButton } from "components";
 import { BridgeButton, IconButton } from "components/Buttons";
 import { usePicasso } from "hooks";
-import {
-	MdArrowDropDown,
-	MdExpandMore,
-	MdOutlineCallMade,
-} from "react-icons/md";
+import { MdOutlineCallMade } from "react-icons/md";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
@@ -73,32 +69,34 @@ export const Header: React.FC = () => {
 				<BridgeButton />
 			</Flex>
 			<Flex
-				gap="3"
-				w="max-content"
+				w="32rem"
 				h="max-content"
 				backgroundColor="#081120"
 				mt="60"
-				alignItems="center"
 				borderRadius="46px 46px 0px 0px"
-				border="1px solid rgba(86, 190, 216, 0.15)"
+				border="1px solid rgba(86, 190, 216, 0.26)"
 				position="fixed"
 				bottom="0"
-				justifyContent="center"
 				zIndex="2"
+				alignItems="center"
+				px="10"
+				py="2"
+				justifyContent="space-between"
 			>
-				<WalletButton />
-				<Flex mr="40" pl="35">
+				<Flex w="25%" justifyContent="space-between">
 					<TokenButton />
 					<NetworkButton />
 				</Flex>
-				<Flex pr="35">
+				<Flex>
+					<WalletButton />
+				</Flex>
+				<Flex>
 					<Languages />
 					<MenuLinks />
 					<IconButton
 						aria-label="Theme"
 						icon={<theme.icon.theme />}
 						onClick={() => toggleColorMode()}
-						bg="transparent"
 					/>
 				</Flex>
 			</Flex>

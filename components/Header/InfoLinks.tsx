@@ -4,7 +4,7 @@ import { usePicasso } from "hooks";
 
 interface ILinkProps extends LinkProps {
 	children?: ReactNode;
-  isVote?: boolean;
+	isVote?: boolean;
 }
 
 export const InfoLinks: FunctionComponent<ILinkProps> = props => {
