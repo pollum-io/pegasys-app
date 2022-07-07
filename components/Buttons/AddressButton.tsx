@@ -20,12 +20,12 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 			w="max-content"
 			h="max-content"
 			py="2"
-			px="4"
+			px="8"
+			ml="5"
 			fontSize="md"
-			borderWidth="1px"
-			borderStyle="solid"
-			borderRadius={12}
+			borderRadius={84}
 			fontWeight={500}
+			bottom="8"
 			overflow="hidden"
 			_hover={{
 				borderColor: walletError ? theme.text.redError : theme.text.cyan,

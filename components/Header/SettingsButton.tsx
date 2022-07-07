@@ -11,13 +11,14 @@ import {
 	Input,
 	Stack,
 	Switch,
+	Icon,
+	Button,
 } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
-import { FiSettings } from "react-icons/fi";
+import { MdSettings, MdHelpOutline } from "react-icons/md";
 import { usePicasso } from "hooks";
 import { IconButton } from "../Buttons/IconButton";
 import { SlippageButton } from "../Buttons/SlippageButton";
-import { Languages } from "./Languages";
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
@@ -29,79 +30,104 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	return (
 		<Popover>
 			<PopoverTrigger {...props}>
-				<IconButton aria-label="Popover" icon={<FiSettings />} />
+				<IconButton
+					bgColor="transparent"
+					_hover={{ background: "rgba(255, 255, 255, 0.08)" }}
+					aria-label="Popover"
+					icon={<MdSettings size={25} />}
+				/>
 			</PopoverTrigger>
 			<PopoverContent
-				left="96rem"
-				top="4rem"
-				w="75%"
-				bgColor={theme.bg.bgPrimary}
+				left="74rem"
+				top="11rem"
+				bgColor={theme.bg.blueNavy}
+				p="1rem 1.5rem 1.5rem"
+				w="24.563rem"
+				h="max-content"
 			>
-				<PopoverCloseButton />
-				<PopoverHeader>
-					<Text fontSize="sm" fontWeight={600}>
+				<Flex
+					bgColor={theme.bg.whiteGray}
+					borderRadius="7rem"
+					py="2"
+					justifyContent="center"
+					alignItems="center"
+				>
+					<Text fontSize="md" fontWeight="semibold">
 						Transaction Settings
 					</Text>
-				</PopoverHeader>
+				</Flex>
 				<PopoverBody>
-					<Text fontSize="sm" fontWeight={400} pb="2">
-						Slippage tolerance
-					</Text>
-					<SlippageButton aria-label="Slip">0.1%</SlippageButton>
-					<SlippageButton aria-label="Slip">0.5%</SlippageButton>
-					<SlippageButton aria-label="Slip">1.01%</SlippageButton>
-					<Input
-						px="1"
-						py="1"
-						w="35%"
-						h="max-content"
-						m="0"
-						borderRadius={36}
-						placeholder="1.0%"
-						fontWeight={400}
-						backgroundColor={theme.bg.whiteGray}
-						border="1px solid"
-						borderColor={theme.border.borderSettings}
-						color={theme.text.mono}
-						fontFamily="mono"
-						letterSpacing="-0.8px"
-					/>
-
-					<Text fontSize="sm" fontWeight={400} pt="4">
-						Transaction deadline
-					</Text>
-					<Flex flexDirection="row" alignItems="center" pt="2">
-						<Input
-							px="2"
-							py="1"
-							w="30%"
-							h="max-content"
-							borderRadius={36}
-							placeholder="1.0%"
-							fontWeight={400}
-							backgroundColor={theme.bg.whiteGray}
-						/>
-						<Text fontSize="sm" fontWeight={400} pl="2">
-							minutes
-						</Text>
-					</Flex>
-
-					<Text fontSize="sm" fontWeight={600} pt="4">
-						Interface Settings
-					</Text>
-					<Flex alignItems="baseline" justifyContent="space-between">
-						<Text fontSize="sm" fontWeight={600} pt="4">
-							Toggle Expert Mode
-						</Text>
-						<Stack align="center" direction="row">
-							<Switch size="md" colorScheme="teal" />
-						</Stack>
-					</Flex>
-					<Flex alignItems="baseline" justifyContent="space-between">
-						<Text fontSize="sm" fontWeight={600} pt="4">
-							Languages
-						</Text>
-						<Languages />
+					<Flex flexDirection="column" mt="4">
+						<Flex alignItems="center" flexDirection="row">
+							<Text fontSize="md" pr="1" fontWeight="medium">
+								Slippage tolerance
+							</Text>
+							<Icon as={MdHelpOutline} />
+						</Flex>
+						<Flex flexDirection="row" py="0.5rem">
+							<SlippageButton aria-label="Slip" mr="3">
+								0.1%
+							</SlippageButton>
+							<SlippageButton
+								aria-label="Slip"
+								mr="3"
+								bgColor="rgba(21, 61, 111, 1)"
+							>
+								0.5%
+							</SlippageButton>
+							<SlippageButton aria-label="Slip" mr="3" py="0.5rem" px="1rem">
+								1%
+							</SlippageButton>
+							<Input
+								w="25%"
+								h="max-content"
+								py="0.3rem"
+								px="0.3rem"
+								m="0"
+								borderRadius={36}
+								placeholder="1.0%"
+								fontWeight="semibold"
+								border="1px solid"
+								borderColor={theme.border.borderSettings}
+								textAlign="center"
+							/>
+						</Flex>
+						<Flex alignItems="center" flexDirection="row" pt="0.1rem" mt="4">
+							<Text fontSize="md" pr="1" fontWeight="medium">
+								Transaction tolerance
+							</Text>
+							<Icon as={MdHelpOutline} />
+						</Flex>
+						<Flex flexDirection="row" py="0.5rem" alignItems="center">
+							<Input
+								w="20%"
+								h="max-content"
+								py="0.2rem"
+								px="0.4rem"
+								mr="3"
+								borderRadius={36}
+								placeholder="60"
+								textAlign="center"
+								fontWeight="normal"
+								fontSize="md"
+								border="1px solid"
+								borderColor={theme.border.borderSettings}
+							/>
+							<Text>Minutes</Text>
+						</Flex>
+						<Flex alignItems="center" flexDirection="row" mt="4">
+							<Text fontSize="md" pr="1" fontWeight="medium">
+								Toggle Expert Mode
+							</Text>
+							<Icon as={MdHelpOutline} />
+							<Flex flexDirection="row" ml="12">
+								<Stack align="center" direction="row">
+									<Text>Off</Text>
+									<Switch size="md" colorScheme="teal" />
+									<Text>On</Text>
+								</Stack>
+							</Flex>
+						</Flex>
 					</Flex>
 				</PopoverBody>
 			</PopoverContent>

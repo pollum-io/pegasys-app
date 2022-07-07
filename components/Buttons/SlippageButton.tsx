@@ -12,18 +12,16 @@ export const SlippageButton: FunctionComponent<IButtonProps> = props => {
 
 	return (
 		<Button
-			px="2"
-			py="1.5"
+			w="max-content"
 			h="max-content"
-			mr="0.5rem"
-			fontFamily="mono"
-			letterSpacing="-0.8px"
-			borderRadius={36}
-			fontWeight={400}
-			border="1px solid"
-			borderColor={theme.border.borderSettings}
-			backgroundColor={theme.bg.whiteGray}
-			color={theme.text.mono}
+			py="0.5rem"
+			px="0.5rem"
+			borderRadius="full"
+			fontSize="md"
+			fontWeight="semibold"
+			bgColor="transparent"
+			_active={{}}
+			_hover={{ background: "rgba(21, 61, 111, 1)" }}
 			{...rest}
 		>
 			{children}

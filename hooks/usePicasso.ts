@@ -13,29 +13,40 @@ const usePicasso = () => {
 			cyan: useColorModeValue("#00d9ef", "#00d9ef"),
 			redError: useColorModeValue("#ff2532a3", "#ff2532a3"),
 			gray: useColorModeValue("gray.400", "gray.400"),
+			gray500: useColorModeValue("gray.500", "gray.500"),
+			gray300: useColorModeValue("gray.300", "gray.300"),
+			psysBalance: useColorModeValue(
+				"linear-gradient(90deg, #19EBCE 0%, #8A15E6 84.28%);",
+				"linear-gradient(90deg, #19EBCE 0%, #8A15E6 84.28%);"
+			),
 		},
 		icon: {
-			theme: useColorModeValue(BsFillMoonFill, BsFillSunFill),
+			theme: useColorModeValue(BsFillSunFill, BsFillMoonFill),
 		},
 		bg: {
-			primary: useColorModeValue("blackAlpha.50", "gray.700"),
+			primary: useColorModeValue("blackAlpha.50", "#000913"),
 			secondary: useColorModeValue("gray.300", "gray.800"),
 			bgPrimary: useColorModeValue("#f7f8fa", "#2c2f36"),
-			whiteGray: useColorModeValue("#ffffff", "#212429"),
+			whiteGray: useColorModeValue("#ffffff", "rgba(8, 17, 32, 1)"),
 			iceGray: useColorModeValue("#f7f8fa", "#2c2f36"),
+			blackAlpha: useColorModeValue("#081120", "#081120"),
+			blueNavy: useColorModeValue("rgba(11, 23, 44, 1)", "rgba(11, 23, 44, 1)"),
 			button: {
 				primary: useColorModeValue("blue.500", "blue.600"),
 				secondary: useColorModeValue("purple.700", "purple.600"),
 				tertiary: useColorModeValue("green.600", "blue.800"),
-				connectWallet: useColorModeValue("#04d3c0", "#153d6f70"),
+				connectWallet: useColorModeValue(
+					"linear-gradient(90deg, #53D9D9 9.38%, rgb(0 184 255 / 35%) 128.42%)",
+					"linear-gradient(90deg, #53D9D9 9.38%, rgb(0 184 255 / 35%) 128.42%)"
+				),
+				connectWalletSwap: useColorModeValue(
+					"rgba(21, 61, 111, 1)",
+					"rgba(21, 61, 111, 1)"
+				),
 				slippageSetting: useColorModeValue("#ffffff", "#212429"),
 				sysBalance: useColorModeValue(
 					"#315df6",
 					"linear-gradient(128.17deg, rgb(49, 93, 246) -14.78%, rgba(49, 93, 246, 0.2) 110.05%)"
-				),
-				psysBalance: useColorModeValue(
-					"linear-gradient(128.17deg, rgb(104, 83, 217) -14.78%, rgb(189, 0, 255) 110.05%)",
-					"linear-gradient(321deg, rgba(104, 83, 217, 0.48) -14.78%, rgb(189, 0, 255) 110.05%)"
 				),
 				network: useColorModeValue(
 					"#315df6",
