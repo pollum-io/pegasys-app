@@ -6,6 +6,7 @@ import { SYS_TESTNET_CHAIN_PARAMS } from "../helpers/consts";
 
 interface IWeb3 {
 	isConnected: boolean;
+	chain: number;
 	currentNetworkChainId: number | null;
 	provider:
 		| ethers.providers.Provider
@@ -38,6 +39,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	>(null);
 	const [walletAddress, setAddress] = useState("");
 	const [walletError, setWalletError] = useState<boolean>(false);
+	const [chain, setChain] = useState<number>(0);
 	const [signer, setSigner] = useState<Signer>();
 	const [provider, setProvider] = useState<
 		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
@@ -76,6 +78,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 					setAddress(window?.ethereum?.selectedAddress);
 					getSignerIfConnected();
 					setWalletError(false);
+					setChain(Number(window?.ethereum?.networkVersion));
 				} else {
 					setWalletError(true);
 				}
@@ -131,6 +134,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			isConnected,
 			walletAddress,
 			provider,
+			chain,
 			connectWallet,
 			walletError,
 			setWalletError,
@@ -141,6 +145,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		}),
 		[
 			isConnected,
+			chain,
 			walletAddress,
 			provider,
 			connectWallet,

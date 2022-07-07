@@ -11,7 +11,13 @@ import { Contract } from "@ethersproject/contracts";
 import { useMemo } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
 import { useWallet } from "hooks";
-import { calculateGasMargin, isZero, shortAddress } from 'utils';
+import erc20ABI from "utils/abis/erc20.json";
+import {
+	calculateGasMargin,
+	createContractUsingAbi,
+	isZero,
+	shortAddress,
+} from "utils";
 
 interface SwapCall {
 	contract: Contract;
@@ -37,7 +43,7 @@ function useSwapCallArguments(
 	recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 	allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE // in bips
 ): SwapCall[] {
-	const { walletAddress } = useWallet();
+	const { walletAddress, chain, provider } = useWallet();
 
 	const { address: recipientAddress } = useENS(recipientAddressOrName);
 	const recipient =
@@ -49,14 +55,14 @@ function useSwapCallArguments(
 	deadline = currentTime.add(10);
 
 	return useMemo(() => {
-		const tradeVersion = 'v2';
+		const tradeVersion = "v2";
 		if (!trade || !recipient || !walletAddress || !tradeVersion || !deadline)
 			return [];
 
-		const contract: Contract | null = getRouterContract(
-			chainId,
-			library,
-			walletAddress
+		const contract: Contract | null = createContractUsingAbi(
+			walletAddress,
+			erc20ABI,
+			provider
 		);
 		if (!contract) {
 			return [];
@@ -88,9 +94,8 @@ function useSwapCallArguments(
 	}, [
 		walletAddress,
 		allowedSlippage,
-		chainId,
+		chain,
 		deadline,
-		library,
 		recipient,
 		trade,
 	]);
@@ -105,7 +110,7 @@ export function useSwapCallback(
 	callback: null | (() => Promise<string>);
 	error: string | null;
 } {
-	const { walletAddress, chainId, library } = useWallet();
+	const { walletAddress, chain } = useWallet();
 
 	const swapCalls = useSwapCallArguments(
 		trade,
@@ -120,7 +125,7 @@ export function useSwapCallback(
 		recipientAddressOrName === null ? walletAddress : recipientAddress;
 
 	return useMemo(() => {
-		if (!trade || !library || !walletAddress || !chainId) {
+		if (!trade || !walletAddress || !chain) {
 			return {
 				state: SwapCallbackState.INVALID,
 				callback: null,
@@ -138,7 +143,7 @@ export function useSwapCallback(
 			return { state: SwapCallbackState.LOADING, callback: null, error: null };
 		}
 
-		const tradeVersion = 'v2';
+		const tradeVersion = "v2";
 
 		return {
 			state: SwapCallbackState.VALID,
@@ -271,7 +276,7 @@ export function useSwapCallback(
 		trade,
 		library,
 		walletAddress,
-		chainId,
+		chain,
 		recipient,
 		recipientAddressOrName,
 		swapCalls,
