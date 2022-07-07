@@ -9,7 +9,9 @@ import {
 } from "@pollum-io/pegasys-sdk";
 import { Contract } from "@ethersproject/contracts";
 import { useMemo } from "react";
+import { BigNumber } from "@ethersproject/bignumber";
 import { useWallet } from "hooks";
+import { calculateGasMargin, isZero, shortAddress } from 'utils';
 
 interface SwapCall {
 	contract: Contract;
@@ -40,24 +42,15 @@ function useSwapCallArguments(
 	const { address: recipientAddress } = useENS(recipientAddressOrName);
 	const recipient =
 		recipientAddressOrName === null ? walletAddress : recipientAddress;
-	let deadline = useTransactionDeadline();
+	let deadline: any;
 
 	const currentTime = BigNumber.from(new Date().getTime());
-	if (deadline && deadline < currentTime.add(10)) {
-		deadline = currentTime.add(10);
-	}
+
+	deadline = currentTime.add(10);
 
 	return useMemo(() => {
-		const tradeVersion = Version.v2;
-		if (
-			!trade ||
-			!recipient ||
-			!library ||
-			!walletAddress ||
-			!tradeVersion ||
-			!chainId ||
-			!deadline
-		)
+		const tradeVersion = 'v2';
+		if (!trade || !recipient || !walletAddress || !tradeVersion || !deadline)
 			return [];
 
 		const contract: Contract | null = getRouterContract(
@@ -145,7 +138,7 @@ export function useSwapCallback(
 			return { state: SwapCallbackState.LOADING, callback: null, error: null };
 		}
 
-		const tradeVersion = Version.v2;
+		const tradeVersion = 'v2';
 
 		return {
 			state: SwapCallbackState.VALID,
@@ -246,7 +239,7 @@ export function useSwapCallback(
 								? base
 								: `${base} to ${
 										recipientAddressOrName && isAddress(recipientAddressOrName)
-											? shortenAddress(recipientAddressOrName)
+											? shortAddress(recipientAddressOrName)
 											: recipientAddressOrName
 								  }`;
 
@@ -255,9 +248,9 @@ export function useSwapCallback(
 								? withRecipient
 								: `${withRecipient} on ${(tradeVersion as any).toUpperCase()}`;
 
-						addTransaction(response, {
-							summary: withVersion,
-						});
+						// addTransaction(response, {
+						// 	summary: withVersion,
+						// });
 
 						return response.hash;
 					})
