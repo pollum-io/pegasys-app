@@ -31,6 +31,10 @@ const usePicasso = () => {
 			iceGray: useColorModeValue("#f7f8fa", "#2c2f36"),
 			blackAlpha: useColorModeValue("#081120", "#081120"),
 			blueNavy: useColorModeValue("rgba(11, 23, 44, 1)", "rgba(11, 23, 44, 1)"),
+			blueNavyLightness: useColorModeValue(
+				"rgba(21, 61, 111, 1)",
+				"rgba(21, 61, 111, 1);"
+			),
 			button: {
 				primary: useColorModeValue("blue.500", "blue.600"),
 				secondary: useColorModeValue("purple.700", "purple.600"),
