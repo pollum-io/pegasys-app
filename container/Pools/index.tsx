@@ -1,8 +1,8 @@
 import { Button, Flex, Img, Link, Text, useDisclosure } from "@chakra-ui/react";
-import { AddLiquidityModal } from "components";
+import { AddLiquidityModal, RemoveLiquidity } from "components";
 import { ImportPoolModal } from "components/Modals/ImportPool";
 import { DefaultTemplate } from "container";
-import { usePicasso } from "hooks";
+import { usePicasso, useWallet } from "hooks";
 import { NextPage } from "next";
 import { useState } from "react";
 import { MdOutlineCallMade } from "react-icons/md";
@@ -15,15 +15,31 @@ export const PoolsContainer: NextPage = () => {
 		isOpen: isOpenPool,
 		onClose: onClosePool,
 	} = useDisclosure();
+	const {
+		onOpen: onOpenRemoveLiquidity,
+		isOpen: isOpenRemoveLiquidity,
+		onClose: onCloseRemoveLiquidity,
+	} = useDisclosure();
 	const [isCreate, setIsCreate] = useState(false);
+	const [haveValue, setHaveValue] = useState(false);
+	const { isConnected } = useWallet();
+
 	return (
 		<DefaultTemplate>
 			<AddLiquidityModal
 				isModalOpen={isOpen}
 				onModalClose={onClose}
 				isCreate={isCreate}
+				haveValue={haveValue}
 			/>
 			<ImportPoolModal isModalOpen={isOpenPool} onModalClose={onClosePool} />
+			<RemoveLiquidity
+				isModalOpen={isOpenRemoveLiquidity}
+				onModalClose={onCloseRemoveLiquidity}
+				isCreate={isCreate}
+				haveValue={haveValue}
+			/>
+
 			<Flex
 				w="100%"
 				h="100%"
@@ -60,7 +76,12 @@ export const PoolsContainer: NextPage = () => {
 							<Text fontWeight="bold" color="white" fontSize="md">
 								Liquidity Provider Rewards
 							</Text>
-							<Text fontWeight="semibold" fontSize="sm" lineHeight="shorter">
+							<Text
+								fontWeight="semibold"
+								fontSize="sm"
+								lineHeight="shorter"
+								w="60%"
+							>
 								Liquidity providers earn a 0.25% fee on all trades proportional
 								to their share of the pool. Fees are added to the pool, accrue
 								in real time and can be claimed by withdrawing your liquidity.
@@ -74,6 +95,7 @@ export const PoolsContainer: NextPage = () => {
 							zIndex="docked"
 							borderBottomRadius="xl"
 							py="0.531rem"
+							gap="2.5"
 						>
 							<Text fontWeight="semibold" fontSize="xs">
 								View Your Staked Liquidity
@@ -135,41 +157,145 @@ export const PoolsContainer: NextPage = () => {
 										onOpen();
 									}}
 								>
-									Create a pair
+									Create a Pair
 								</Button>
 							</Flex>
 						</Flex>
 					</Flex>
-					<Flex
-						w="100%"
-						mt="4rem"
-						flexDirection="column"
-						alignItems="center"
-						justifyContent="center"
-						gap="16"
-					>
-						<Text w="max-content" fontSize="md" fontWeight="normal">
-							Please connect your wallet in the button bellow to be ale to view
-							your liquidity.
-						</Text>
-						<Flex flexDirection="row" gap="1">
-							<Text
-								color={theme.text.mono}
-								fontSize="md"
-								fontWeight="normal"
-								w="max-content"
-							>
-								Don&apos;t see a pool you joined?{" "}
+					{isConnected && (
+						<Flex
+							w="100%"
+							mt="4rem"
+							flexDirection="column"
+							alignItems="center"
+							justifyContent="center"
+							gap="16"
+						>
+							<Text w="max-content" fontSize="md" fontWeight="normal">
+								Please connect your wallet in the button bellow to be able to
+								view your liquidity.
 							</Text>
-							<Link
-								fontWeight="semibold"
-								onClick={onOpenPool}
+							<Flex flexDirection="row" gap="1">
+								<Text
+									color={theme.text.mono}
+									fontSize="md"
+									fontWeight="normal"
+									w="max-content"
+								>
+									Don&apos;t see a pool you joined?{" "}
+								</Text>
+								<Text
+									fontWeight="semibold"
+									onClick={onOpenRemoveLiquidity}
+									color={theme.text.cyan}
+									textDecoration="underline"
+									_hover={{ cursor: "pointer" }}
+								>
+									Import it.
+								</Text>
+							</Flex>
+						</Flex>
+					)}
+					<Flex flexWrap="wrap" gap="7" zIndex="1">
+						<Flex
+							flexDirection="column"
+							bgColor={theme.bg.blueNavy}
+							p="6"
+							w="xs"
+							borderRadius="xl"
+							border="1px solid transparent;"
+							background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+						>
+							<Flex gap="2">
+								<Flex>
+									<Img src="icons/syscoin-logo.png" w="6" h="6" />
+									<Img src="icons/pegasys.png" w="6" h="6" />
+								</Flex>
+								<Text fontSize="lg" fontWeight="bold">
+									USDT/SYS
+								</Text>
+							</Flex>
+							<Flex flexDirection="column" pt="6">
+								<Flex justifyContent="space-between" pb="3" fontSize="sm">
+									<Text fontWeight="semibold">Liquidity</Text>
+									<Text>$253,345.09</Text>
+								</Flex>
+								<Flex justifyContent="space-between" pb="3" fontSize="sm">
+									<Text fontWeight="semibold">Volume</Text>
+									<Text>$253,345.09</Text>
+								</Flex>
+								<Flex justifyContent="space-between" pb="3" fontSize="sm">
+									<Text fontWeight="semibold">APR</Text>
+									<Text>33.48%</Text>
+								</Flex>
+								<Flex justifyContent="space-between" pb="3" fontSize="sm">
+									<Text fontWeight="semibold">Your pool share</Text>
+									<Text>-</Text>
+								</Flex>
+							</Flex>
+							<Button
+								w="100%"
+								mt="1.5rem"
+								py="2"
+								px="6"
+								borderRadius="67px"
+								bgColor={theme.bg.button.connectWalletSwap}
 								color={theme.text.cyan}
-								href="/"
-								textDecoration="underline"
+								fontSize="sm"
+								fontWeight="semibold"
 							>
-								Import it.
-							</Link>
+								Add Liquidity
+							</Button>
+						</Flex>
+						<Flex
+							flexDirection="column"
+							bgColor={theme.bg.blueNavy}
+							p="6"
+							w="xs"
+							borderRadius="xl"
+							border="1px solid transparent;"
+							background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+						>
+							<Flex gap="2">
+								<Flex>
+									<Img src="icons/syscoin-logo.png" w="6" h="6" />
+									<Img src="icons/pegasys.png" w="6" h="6" />
+								</Flex>
+								<Text fontSize="lg" fontWeight="bold">
+									USDT/SYS
+								</Text>
+							</Flex>
+							<Flex flexDirection="column" pt="6">
+								<Flex justifyContent="space-between" pb="3" fontSize="sm">
+									<Text fontWeight="semibold">Liquidity</Text>
+									<Text>$253,345.09</Text>
+								</Flex>
+								<Flex justifyContent="space-between" pb="3" fontSize="sm">
+									<Text fontWeight="semibold">Volume</Text>
+									<Text>$253,345.09</Text>
+								</Flex>
+								<Flex justifyContent="space-between" pb="3" fontSize="sm">
+									<Text fontWeight="semibold">APR</Text>
+									<Text>33.48%</Text>
+								</Flex>
+								<Flex justifyContent="space-between" pb="3" fontSize="sm">
+									<Text fontWeight="semibold">Your pool share</Text>
+									<Text>-</Text>
+								</Flex>
+							</Flex>
+							<Button
+								w="100%"
+								mt="1.5rem"
+								py="2"
+								px="6"
+								borderRadius="67px"
+								bgColor={theme.bg.button.connectWalletSwap}
+								color={theme.text.cyan}
+								fontSize="sm"
+								fontWeight="semibold"
+							>
+								Add Liquidity
+							</Button>
 						</Flex>
 					</Flex>
 				</Flex>
