@@ -43,7 +43,15 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const swapButton = () => !isConnected && onOpenWallet();
 
 	return (
-		<Flex pt="24" justifyContent="center" fontFamily="inter" fontStyle="normal">
+		<Flex
+			pt="24"
+			justifyContent="center"
+			fontFamily="inter"
+			fontStyle="normal"
+			h="100vh"
+			w="100%"
+			overflow="none"
+		>
 			<SelectWallets isOpen={isOpenWallet} onClose={onCloseWallet} />
 			<SelectCoinModal
 				isOpen={isOpenCoin}
@@ -73,7 +81,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					bgColor={theme.bg.blueNavy}
 					flexDirection="column"
 					py="1rem"
-					px="1.375rem"
+					px="1.25rem"
 				>
 					<Flex flexDirection="row" justifyContent="space-between">
 						<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
@@ -121,7 +129,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					bgColor={theme.bg.blueNavy}
 					flexDirection="column"
 					py="1rem"
-					px="1.375rem"
+					px="1.25rem"
 				>
 					<Flex flexDirection="row" justifyContent="space-between">
 						<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
