@@ -34,13 +34,16 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		onClose: onCloseCoin,
 	} = useDisclosure();
 	const { isConnected } = useWallet();
-	const [selectedToken] = useState<IToken[]>([
+	const [selectedToken, setSelectedToken] = useState<IToken[]>([
 		{ logoURI: "icons/syscoin-logo.png", symbol: "SYS", id: 0 },
 		{ logoURI: "icons/pegasys.png", symbol: "PSYS", id: 1 },
 	]);
 
 	const [buttonId, setButtonId] = useState<number>(0);
 	const swapButton = () => !isConnected && onOpenWallet();
+
+	const switchTokensPosition = () =>
+		setSelectedToken(prevState => [...prevState]?.reverse());
 
 	return (
 		<Flex
@@ -121,7 +124,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						/>
 					</Flex>
 				</Flex>
-				<Flex margin="0 auto" py="4" _hover={{ cursor: "pointer" }}>
+				<Flex
+					margin="0 auto"
+					py="4"
+					onClick={switchTokensPosition}
+					_hover={{ cursor: "pointer" }}
+				>
 					<MdWifiProtectedSetup size={25} color="cyan" />
 				</Flex>
 				<Flex
