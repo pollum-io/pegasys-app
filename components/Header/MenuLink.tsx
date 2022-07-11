@@ -5,12 +5,11 @@ import {
 	Popover,
 	PopoverArrow,
 	PopoverBody,
-	PopoverCloseButton,
 	PopoverContent,
 	PopoverTrigger,
 } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
-import { BsThreeDots, BsCheck2Square } from "react-icons/bs";
+import { BsThreeDots } from "react-icons/bs";
 import { FiTwitter } from "react-icons/fi";
 import { FaDiscord, FaParachuteBox, FaTelegramPlane } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
