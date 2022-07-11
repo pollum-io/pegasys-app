@@ -10,7 +10,7 @@ import {
 import { Contract } from "@ethersproject/contracts";
 import { useMemo } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
-import { useWallet } from "hooks";
+import { useWallet, useENS } from "hooks";
 import erc20ABI from "utils/abis/erc20.json";
 import {
 	calculateGasMargin,
@@ -118,7 +118,6 @@ export function useSwapCallback(
 		recipientAddressOrName
 	);
 
-	const addTransaction = useTransactionAdder();
 
 	const { address: recipientAddress } = useENS(recipientAddressOrName);
 	const recipient =
@@ -143,7 +142,7 @@ export function useSwapCallback(
 			return { state: SwapCallbackState.LOADING, callback: null, error: null };
 		}
 
-		const tradeVersion = "v2";
+		const tradeVersion: string = "v2";
 
 		return {
 			state: SwapCallbackState.VALID,
@@ -249,13 +248,9 @@ export function useSwapCallback(
 								  }`;
 
 						const withVersion =
-							tradeVersion === Version.v2
+							tradeVersion === 'v2'
 								? withRecipient
-								: `${withRecipient} on ${(tradeVersion as any).toUpperCase()}`;
-
-						// addTransaction(response, {
-						// 	summary: withVersion,
-						// });
+								: `${withRecipient} on ${tradeVersion.toUpperCase()}`;
 
 						return response.hash;
 					})
@@ -274,12 +269,10 @@ export function useSwapCallback(
 		};
 	}, [
 		trade,
-		library,
 		walletAddress,
 		chain,
 		recipient,
 		recipientAddressOrName,
 		swapCalls,
-		addTransaction,
 	]);
 }
