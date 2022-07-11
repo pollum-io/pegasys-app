@@ -4,7 +4,6 @@ import {
 	Icon,
 	Modal,
 	ModalBody,
-	ModalCloseButton,
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
@@ -14,9 +13,9 @@ import {
 import { usePicasso, useWallet, useToasty } from "hooks";
 import { FunctionComponent } from "react";
 import Jazzicon from "react-jazzicon";
-import { MdOutlineContentCopy } from "react-icons/md";
-import { HiExternalLink } from "react-icons/hi";
+import { MdContentCopy, MdOutlineCallMade } from "react-icons/md";
 import { shortAddress, copyToClipboard, openWalletOnExplorer } from "utils";
+import { AiOutlineClose } from "react-icons/ai";
 
 interface IModal {
 	isOpen: boolean;
@@ -26,7 +25,7 @@ interface IModal {
 export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
-	const { walletAddress } = useWallet();
+	const { walletAddress, connectorSelected } = useWallet();
 	const { toast } = useToasty();
 
 	const handleCopyToClipboard = () => {
@@ -43,45 +42,63 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent borderRadius={18} my="40">
-				<ModalHeader bgColor={theme.bg.whiteGray} borderTopRadius={18}>
-					<Text fontSize="md" fontWeight={600}>
-						Account
-					</Text>
+				<ModalHeader bgColor={theme.bg.blueNavy} borderTopRadius={18}>
+					<Flex alignItems="center" justifyContent="space-between">
+						<Text fontSize="lg" fontWeight="semibold">
+							Account
+						</Text>
+						<Flex _hover={{ cursor: "pointer" }}>
+							<AiOutlineClose size={22} onClick={onClose} />
+						</Flex>
+					</Flex>
 				</ModalHeader>
-				<ModalCloseButton />
-				<ModalBody bgColor={theme.bg.whiteGray}>
+				<ModalBody bgColor={theme.bg.blueNavy} pb="6">
 					<Flex
-						borderStyle="solid"
-						borderWidth="1px"
 						borderRadius={18}
-						borderColor={theme.border.borderSettings}
+						bgColor={theme.bg.blackAlpha}
 						py="4"
-						px="5"
+						px="4"
 						flexDirection="column"
 					>
-						<Flex justifyContent="space-between" flexDirection="row">
+						<Flex
+							justifyContent="space-between"
+							flexDirection="row"
+							align="center"
+						>
 							<Flex>
-								<Text fontSize="sm" fontWeight={500}>
-									Connected with MetaMask
+								<Text
+									fontSize="md"
+									fontWeight="semibold"
+									color={theme.text.cyan}
+								>
+									Connected with
 								</Text>
 							</Flex>
 							<Flex>
 								<Button
-									bgColor={theme.bg.iceGray}
-									borderRadius={18}
-									px="3"
-									py="2"
+									borderRadius="full"
+									border="1px solid"
+									borderColor={theme.text.cyan}
+									px="2"
+									py="0.5"
 									w="max-content"
 									h="max-content"
-									color={theme.text.mono}
+									color={theme.text.gray300}
 									fontSize="sm"
+									fontWeight="bold"
 									alignItems="center"
+									bgColor="transparent"
 								>
-									Change
+									CHANGE
 								</Button>
 							</Flex>
 						</Flex>
-						<Flex mt="2" fontSize="lg" fontWeight={500}>
+						<Flex
+							mt="2"
+							fontSize="md"
+							fontWeight="semibold"
+							textTransform="uppercase"
+						>
 							<Flex pr="2" alignItems="center">
 								<Jazzicon
 									diameter={15}
@@ -92,43 +109,48 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 						</Flex>
 						<Flex flexDirection="row" mt="4">
 							<Flex
-								fontSize="sm"
 								color={theme.text.gray}
-								pr="4"
 								flexDirection="row"
 								alignItems="center"
-								gap="2"
 								cursor="pointer"
 								onClick={() => handleCopyToClipboard()}
+								mr="4"
 							>
-								<Icon as={MdOutlineContentCopy} />
-								<Text _hover={{ textDecoration: "underline" }}>
+								<Icon as={MdContentCopy} />
+								<Text
+									_hover={{ textDecoration: "underline" }}
+									color={theme.text.gray300}
+									fontSize="sm"
+									fontWeight="normal"
+									pl="1"
+								>
 									Copy Address
 								</Text>
 							</Flex>
 							<Flex
-								fontSize="sm"
-								color={theme.text.gray}
+								color={theme.text.gray300}
 								flexDirection="row"
 								alignItems="center"
-								gap="2"
 								cursor="pointer"
 								onClick={() => openWalletOnExplorer(walletAddress)}
 							>
-								<Icon as={HiExternalLink} />
-								<Text _hover={{ textDecoration: "underline" }}>
+								<Icon as={MdOutlineCallMade} />
+								<Text
+									_hover={{ textDecoration: "underline" }}
+									fontSize="sm"
+									fontWeight="normal"
+									pl="1"
+								>
 									View on the Explorer
 								</Text>
 							</Flex>
 						</Flex>
 					</Flex>
 				</ModalBody>
-				<ModalFooter
-					bgColor={theme.bg.iceGray}
-					borderRadius={18}
-					justifyContent="flex-start"
-				>
-					<Text>Your transactions will appear here...</Text>
+				<ModalFooter bgColor={theme.bg.blackAlpha} justifyContent="flex-start">
+					<Text fontSize="sm" fontWeight="semibold">
+						Your transactions will appear here...
+					</Text>
 				</ModalFooter>
 			</ModalContent>
 		</Modal>

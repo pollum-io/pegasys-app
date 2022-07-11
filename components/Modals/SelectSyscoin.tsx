@@ -1,4 +1,6 @@
 import {
+	Flex,
+	Icon,
 	Modal,
 	ModalBody,
 	ModalCloseButton,
@@ -11,6 +13,8 @@ import {
 import { usePicasso, useWallet } from "hooks";
 import { FunctionComponent } from "react";
 import { SwitchToSyscoin } from "components/Buttons";
+import { AiOutlineClose } from "react-icons/ai";
+import { IoIosInformationCircle } from "react-icons/io";
 
 interface IModal {
 	isOpen: boolean;
@@ -25,25 +29,27 @@ export const SelectSyscoin: FunctionComponent<IModal> = props => {
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen || walletError} onClose={onClose}>
 			<ModalOverlay />
-			<ModalContent borderRadius={18} my="40">
-				<ModalHeader bgColor={theme.bg.whiteGray} borderTopRadius={18}>
-					<Text fontSize="md" textColor={theme.text.cyan} fontWeight={600}>
+			<ModalContent
+				borderRadius={18}
+				my="40"
+				p="1.5rem"
+				bgColor={theme.bg.blueNavy}
+			>
+				<Flex alignItems="center" justifyContent="space-between">
+					<Text fontSize="lg" fontWeight="semibold">
 						Wrong Network
 					</Text>
-				</ModalHeader>
-				<ModalCloseButton />
-				<ModalBody bgColor={theme.bg.iceGray}>
-					<Text fontSize="md" fontWeight={400} textAlign="center" my="5">
+					<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
+						<AiOutlineClose size={22} />
+					</Flex>
+				</Flex>
+				<Flex py="1.5rem">
+					<IoIosInformationCircle size={24} />
+					<Text fontSize="md" fontWeight="normal" pl="1.125rem">
 						Please connect to the appropriate Syscoin network.
 					</Text>
-				</ModalBody>
-				<ModalFooter
-					flexDirection="column"
-					bgColor={theme.bg.iceGray}
-					borderRadius={18}
-				>
-					<SwitchToSyscoin />
-				</ModalFooter>
+				</Flex>
+				<SwitchToSyscoin />
 			</ModalContent>
 		</Modal>
 	);
