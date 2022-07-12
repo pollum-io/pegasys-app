@@ -17,6 +17,11 @@ import { SettingsButton } from "components/Header/SettingsButton";
 import { ITokenBalance, ITokenBalanceWithId } from "types";
 import { TOKENS_INITIAL_STATE } from "helpers/consts";
 
+interface ITokenInputValue {
+	inputFrom: string;
+	inputTo: string;
+}
+
 export const Swap: FunctionComponent<ButtonProps> = () => {
 	const theme = usePicasso();
 
@@ -37,6 +42,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		ITokenBalanceWithId[] | ITokenBalance[]
 	>(TOKENS_INITIAL_STATE);
 
+	const [tokenInputValue, setTokenInputValue] = useState<ITokenInputValue>({
+		inputFrom: "",
+		inputTo: "",
+	});
+
 	const [buttonId, setButtonId] = useState<number>(0);
 	const swapButton = () => !isConnected && onOpenWallet();
 
@@ -54,8 +64,30 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 		setSelectedToken(setIdToTokens);
 	}, [isConnected, userTokensBalance]);
+
+	const handleOnChangeTokenInputs = (
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		const regexPreventLetters = /^(?!,$)[\d,.]+$/;
+
+		const inputValue = event?.target?.value;
+
+		if (inputValue === "" || regexPreventLetters.test(inputValue)) {
+			setTokenInputValue(prevState => ({
+				...prevState,
+				[event.target.name]: inputValue,
+			}));
+		}
+	};
+
 	const switchTokensPosition = () =>
 		setSelectedToken(prevState => [...prevState]?.reverse());
+
+	const canSubmit =
+		isConnected &&
+		parseFloat(tokenInputValue.inputFrom) > 0 &&
+		parseFloat(selectedToken[0].balance) >
+			parseFloat(tokenInputValue.inputFrom);
 
 	return (
 		<Flex
@@ -133,7 +165,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							mt="2"
 							px="1.5"
 							ml="50"
-							type="number"
+							type="text"
+							onChange={handleOnChangeTokenInputs}
+							name="inputFrom"
+							value={tokenInputValue.inputFrom}
 						/>
 					</Flex>
 				</Flex>
@@ -154,7 +189,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				>
 					<Flex flexDirection="row" justifyContent="space-between">
 						<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
-							From
+							To
 						</Text>
 						<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
 							Balance: {selectedToken[1]?.balance}
@@ -186,7 +221,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							mt="2"
 							px="1.5"
 							ml="50"
-							type="number"
+							type="text"
+							onChange={handleOnChangeTokenInputs}
+							name="inputTo"
+							value={tokenInputValue.inputTo}
 						/>
 					</Flex>
 				</Flex>
@@ -202,6 +240,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						color={theme.text.cyan}
 						fontSize="lg"
 						fontWeight="semibold"
+						disabled={!canSubmit}
 					>
 						{isConnected ? "Enter an amount" : "Connect Wallet"}
 					</Button>
