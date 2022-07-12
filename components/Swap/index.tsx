@@ -54,6 +54,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 		setSelectedToken(setIdToTokens);
 	}, [isConnected, userTokensBalance]);
+	const switchTokensPosition = () =>
+		setSelectedToken(prevState => [...prevState]?.reverse());
 
 	return (
 		<Flex
@@ -135,7 +137,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						/>
 					</Flex>
 				</Flex>
-				<Flex margin="0 auto" py="4" _hover={{ cursor: "pointer" }}>
+				<Flex
+					margin="0 auto"
+					py="4"
+					onClick={switchTokensPosition}
+					_hover={{ cursor: "pointer" }}
+				>
 					<MdWifiProtectedSetup size={25} color="cyan" />
 				</Flex>
 				<Flex

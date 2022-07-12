@@ -1,12 +1,7 @@
 import {
 	Flex,
-	Icon,
 	Modal,
-	ModalBody,
-	ModalCloseButton,
 	ModalContent,
-	ModalFooter,
-	ModalHeader,
 	ModalOverlay,
 	Text,
 } from "@chakra-ui/react";
