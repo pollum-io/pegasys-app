@@ -116,8 +116,8 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	}, [userTokensBalance]);
 
 	const handleSelectToken = useCallback(
-		(id: number | undefined, token: ISymbol) => {
-			if (!selectedToken || !id) return;
+		(id: number, token: ISymbol) => {
+			if (!selectedToken) return;
 
 			const actualTokens = [...selectedToken];
 
@@ -128,7 +128,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 
 			setSelectedToken(actualTokens);
 		},
-		[]
+		[selectedToken]
 	);
 
 	useEffect(() => {

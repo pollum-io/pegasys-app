@@ -55,8 +55,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setSelectedToken(setIdToTokens);
 	}, [isConnected, userTokensBalance]);
 
-	console.log(selectedToken);
-
 	return (
 		<Flex
 			pt="24"
