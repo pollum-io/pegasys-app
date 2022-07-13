@@ -25,7 +25,7 @@ interface IModal {
 export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
-	const { walletAddress, connectorSelected } = useWallet();
+	const { walletAddress } = useWallet();
 	const { toast } = useToasty();
 
 	const handleCopyToClipboard = () => {

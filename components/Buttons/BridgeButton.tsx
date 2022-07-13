@@ -28,7 +28,7 @@ export const BridgeButton: FunctionComponent<IButtonProps> = props => {
 					_active={{}}
 					_hover={{ bgColor: "#0B172C", opacity: 1, borderRadius: "70px" }}
 					color={theme.text.mono}
-					fontSizes="md"
+					fontSize="md"
 					fontWeight="semibold"
 					bgColor="transparent"
 					opacity="0.75"
