@@ -47,7 +47,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			chainId: 5700,
 			address: "0xa66b2E50c2b805F31712beA422D0D9e7D0Fd0F35",
 		},
-		"0.1",
+		"1",
 		{
 			decimals: 18,
 			symbol: "PSYS",
@@ -65,7 +65,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			},
 			tags: [],
 		},
-		"8541",
+		"2",
 		chain
 	);
 

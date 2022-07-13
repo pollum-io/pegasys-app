@@ -41,7 +41,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	>(null);
 	const [walletAddress, setAddress] = useState("");
 	const [walletError, setWalletError] = useState<boolean>(false);
-	const [chain, setChain] = useState<number>(0);
+	const [chain, setChain] = useState<number>(5700);
 	const [signer, setSigner] = useState<Signer>();
 	const [provider, setProvider] = useState<
 		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
