@@ -12,3 +12,5 @@ export * from "./formatBigNumberValues";
 export * from "./isAddress";
 export * from "./isZero";
 export * from "./calculateGasMargin";
+export * from "./tryParseAmout";
+export * from "./wrappedCurrency";

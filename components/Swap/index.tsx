@@ -8,8 +8,8 @@ import {
 	Text,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { usePicasso, useWallet } from "hooks";
-import { FunctionComponent, useState } from "react";
+import { usePicasso, useWallet, useTradeExactIn } from "hooks";
+import { FunctionComponent, useState, useEffect } from "react";
 import { BiDownArrowAlt } from "react-icons/bi";
 import { IoIosArrowDown } from "react-icons/io";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
@@ -32,11 +32,47 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		isOpen: isOpenCoin,
 		onClose: onCloseCoin,
 	} = useDisclosure();
-	const { isConnected } = useWallet();
+	const { isConnected, setTypedValue, chain } = useWallet();
 	const [selectedToken] = useState<IToken[]>([
 		{ logoURI: "icons/syscoin-logo.png", symbol: "SYS", id: 0 },
 		{ logoURI: "icons/pegasys.png", symbol: "PSYS", id: 1 },
 	]);
+
+	const v2Trade = useTradeExactIn(
+		{
+			decimals: 18,
+			symbol: "WSYS",
+			name: "Wrapped SYS",
+			chainId: 5700,
+			address: "0xa66b2E50c2b805F31712beA422D0D9e7D0Fd0F35",
+		},
+		"0.1",
+		{
+			decimals: 18,
+			symbol: "PSYS",
+			name: "Pegasys",
+			chainId: 5700,
+			address: "0x81821498cD456c9f9239010f3A9F755F3A38A778",
+			tokenInfo: {
+				address: "0x81821498cD456c9f9239010f3A9F755F3A38A778",
+				chainId: 5700,
+				name: "Pegasys",
+				symbol: "PSYS",
+				decimals: 18,
+				logoURI:
+					"https://raw.githubusercontent.com/pollum-io/pegasys-tokenlists/master/testnet-logos/0x81821498cD456c9f9239010f3A9F755F3A38A778/logo.png",
+			},
+			tags: [],
+		},
+		"8541",
+		chain
+	);
+
+	useEffect(() => {
+		if (chain === 5700) {
+			console.log(v2Trade);
+		}
+	}, [chain]);
 
 	const [buttonId, setButtonId] = useState<number>(0);
 	const swapButton = () => !isConnected && onOpenWallet();
@@ -95,6 +131,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								px="0.5"
 								letterSpacing="-4px"
 								type="number"
+								onChange={event => {
+									setTypedValue(event.target.value);
+								}}
 							/>
 							<Button
 								fontSize="sm"

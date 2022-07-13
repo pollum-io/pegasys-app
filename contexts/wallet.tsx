@@ -16,6 +16,8 @@ interface IWeb3 {
 		| undefined;
 	setCurrentNetworkChainId: React.Dispatch<React.SetStateAction<number | null>>;
 	walletAddress: string;
+	setTypedValue: React.Dispatch<React.SetStateAction<string>>;
+	typedValue: string;
 	connectWallet: (connector: AbstractConnector) => Promise<void>;
 	walletError: boolean;
 	setWalletError: React.Dispatch<React.SetStateAction<boolean>>;
@@ -44,6 +46,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [provider, setProvider] = useState<
 		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
 	>();
+	const [typedValue, setTypedValue] = useState<string>("");
 	const [connectorSelected, setConnectorSelected] =
 		useState<AbstractConnector>();
 
@@ -135,6 +138,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			walletAddress,
 			provider,
 			chain,
+			setTypedValue,
+			typedValue,
 			connectWallet,
 			walletError,
 			setWalletError,
