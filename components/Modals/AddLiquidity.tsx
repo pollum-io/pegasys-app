@@ -22,8 +22,8 @@ import { SelectCoinModal } from "components";
 interface IModal {
 	isModalOpen: boolean;
 	onModalClose: () => void;
-	isCreate: boolean;
-	haveValue: boolean;
+	isCreate?: boolean;
+	haveValue?: boolean;
 }
 interface IToken {
 	logoURI: string;
