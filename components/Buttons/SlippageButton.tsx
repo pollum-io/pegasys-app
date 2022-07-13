@@ -1,5 +1,4 @@
 import { Button, ButtonProps } from "@chakra-ui/react";
-import { usePicasso } from "hooks";
 import { FunctionComponent, ReactNode } from "react";
 
 interface IButtonProps extends ButtonProps {
@@ -7,7 +6,6 @@ interface IButtonProps extends ButtonProps {
 }
 
 export const SlippageButton: FunctionComponent<IButtonProps> = props => {
-	const theme = usePicasso();
 	const { children, ...rest } = props;
 
 	return (

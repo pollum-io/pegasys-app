@@ -2,9 +2,7 @@ import {
 	Button,
 	Flex,
 	Icon,
-	Input,
 	Modal,
-	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
 	Img,
@@ -22,8 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import React, { useState } from "react";
-import { MdHelpOutline, MdArrowBack, MdAdd } from "react-icons/md";
-import { IoIosArrowDown } from "react-icons/io";
+import { MdHelpOutline, MdArrowBack } from "react-icons/md";
 import { SelectCoinModal } from "components";
 
 interface IModal {
