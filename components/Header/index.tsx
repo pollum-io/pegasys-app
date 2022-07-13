@@ -1,14 +1,13 @@
 import { Flex, Icon, Img, useColorMode } from "@chakra-ui/react";
 import { WalletButton } from "components";
-import { FiArrowUpRight } from "react-icons/fi";
-import { IconButton } from "components/Buttons";
+import { BridgeButton, IconButton } from "components/Buttons";
 import { usePicasso } from "hooks";
+import { MdOutlineCallMade } from "react-icons/md";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
 import { MenuLinks } from "./MenuLink";
-import { SettingsButton } from "./SettingsButton";
-import { UserSysBalance } from "./UserSysBalance";
+import { Languages } from "./Languages";
 
 export const Header: React.FC = () => {
 	const { toggleColorMode } = useColorMode();
@@ -30,56 +29,76 @@ export const Header: React.FC = () => {
 			name: "Stake",
 			url: "/stake",
 		},
-		{
-			name: "Airdrops",
-			url: "/airdrops",
-		},
 	];
 
 	return (
-		<Flex p="4" mt="1" justifyContent="space-between" alignItems="center">
-			<Flex gap="3" alignItems="center">
-				<Img w="6" h="6" src="icons/pegasys.png" mr="4" />
+		<Flex
+			p="4"
+			mt="1"
+			alignItems="center"
+			justifyContent="center"
+			flexDirection="column"
+		>
+			<Flex
+				width="3xl"
+				height="lg"
+				top="0"
+				position="fixed"
+				background="#56BED8;"
+				opacity="0.7"
+				filter="blur(275px)"
+			/>
+			<Img
+				w="6"
+				h="6"
+				src="icons/pegasys.png"
+				ml="4"
+				position="absolute"
+				left="0"
+			/>
+			<Flex gap="6" bgColor="rgb(0, 0, 0)" borderRadius="20">
 				{links.map((item, index) => (
 					<NavButton key={item.name + Number(index)} href={item.url}>
 						{item.name}
 					</NavButton>
 				))}
-				<NavButton href="/">
-					Charts{" "}
-					<Icon
-						as={FiArrowUpRight}
-						w="3"
-						h="3"
-						position="absolute"
-						top="-0.5"
-						right="-0.5"
-					/>
+
+				<NavButton href="/" pr="4">
+					Charts <Icon as={MdOutlineCallMade} w="5" h="5" ml="2" />
 				</NavButton>
-				<NavButton href="/">
-					Bridge{" "}
-					<Icon
-						as={FiArrowUpRight}
-						w="3"
-						h="3"
-						position="absolute"
-						top="-0.5"
-						right="-0.5"
-					/>
-				</NavButton>
+				<BridgeButton />
 			</Flex>
-			<Flex gap="3">
-				<NetworkButton />
-				<TokenButton />
-				<UserSysBalance />
-				<WalletButton />
-				<IconButton
-					aria-label="Theme"
-					icon={<theme.icon.theme />}
-					onClick={() => toggleColorMode()}
-				/>
-				<SettingsButton />
-				<MenuLinks />
+			<Flex
+				w="32rem"
+				h="max-content"
+				backgroundColor="#081120"
+				mt="60"
+				borderRadius="46px 46px 0px 0px"
+				border="1px solid rgba(86, 190, 216, 0.26)"
+				position="fixed"
+				bottom="0"
+				zIndex="2"
+				alignItems="center"
+				px="10"
+				py="2"
+				justifyContent="space-between"
+			>
+				<Flex w="25%" justifyContent="space-between">
+					<TokenButton />
+					<NetworkButton />
+				</Flex>
+				<Flex>
+					<WalletButton />
+				</Flex>
+				<Flex>
+					<Languages />
+					<MenuLinks />
+					<IconButton
+						aria-label="Theme"
+						icon={<theme.icon.theme />}
+						onClick={() => toggleColorMode()}
+					/>
+				</Flex>
 			</Flex>
 		</Flex>
 	);

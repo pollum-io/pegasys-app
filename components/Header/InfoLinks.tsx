@@ -4,6 +4,7 @@ import { usePicasso } from "hooks";
 
 interface ILinkProps extends LinkProps {
 	children?: ReactNode;
+	isVote?: boolean;
 }
 
 export const InfoLinks: FunctionComponent<ILinkProps> = props => {
@@ -13,10 +14,10 @@ export const InfoLinks: FunctionComponent<ILinkProps> = props => {
 	return (
 		<Link
 			fontSize="md"
-			fontWeight={500}
-			color={theme.text.infoLink}
-			_hover={{ color: theme.text.mono }}
+			fontWeight="normal"
+			color={theme.text.mono}
 			p="2"
+			_hover={{ color: theme.text.cyan }}
 			isExternal={!isVote}
 			{...rest}
 		>

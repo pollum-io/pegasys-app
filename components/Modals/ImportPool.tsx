@@ -14,10 +14,8 @@ import {
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import React, { useState } from "react";
-import { MdHelpOutline } from "react-icons/md";
-import { FcInfo } from "react-icons/fc";
+import { MdArrowBack, MdHelpOutline, MdAdd } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
-import { BiPlus } from "react-icons/bi";
 import { SelectCoinModal } from "components";
 
 interface IModal {
@@ -54,12 +52,30 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 				selectedToken={selectedToken}
 			/>
 			<ModalOverlay />
-			<ModalContent borderRadius="xl" bgColor={theme.bg.whiteGray}>
-				<ModalHeader display="flex" alignItems="center">
+			<ModalContent
+				p="1.5rem"
+				borderRadius="3xl"
+				border="1px solid transparent;"
+				background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+			>
+				<ModalHeader
+					display="flex"
+					alignItems="baseline"
+					justifyContent="space-between"
+					p="0"
+				>
+					<Flex alignItems="center">
+						<Flex _hover={{ cursor: "pointer" }} onClick={onModalClose}>
+							<MdArrowBack size={24} />
+						</Flex>
+						<Text fontSize="2xl" fontWeight="medium" textAlign="center" px="4">
+							Import Pool
+						</Text>
+					</Flex>
 					<Tooltip
-						label="Use this tool to find pairs that don't automatically appear in the interface."
+						label="When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
 						position="relative"
-						bgColor={theme.bg.whiteGray}
+						bgColor={theme.bg.blueNavy}
 						border="1px solid"
 						borderColor={theme.border.borderSettings}
 						color={theme.text.swapInfo}
@@ -76,42 +92,29 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 							/>
 						</Text>
 					</Tooltip>
-					<Text
-						fontSize="lg"
-						fontWeight="medium"
-						textAlign="center"
-						margin="0 auto"
-					>
-						Import Pool
-					</Text>
 				</ModalHeader>
-				<ModalCloseButton top="4" size="md" _focus={{}} />
 
-				<Flex flexDirection="column">
+				<Flex flexDirection="column" mt="4">
 					<Flex
 						height="max-content"
 						width="100%"
 						bgColor={theme.bg.whiteGray}
 						margin="0 auto"
 						position="relative"
-						borderRadius={30}
-						p="5"
 						flexDirection="column"
 					>
 						<Flex
 							alignItems="center"
 							justifyContent="space-between"
-							border="1px solid"
-							borderColor={theme.border.swapInput}
+							bgColor={theme.bg.blueNavy}
 							id="0"
 							width="100%"
 							onClick={event => {
 								onOpen();
 								setButtonId(Number(event.currentTarget.id));
 							}}
-							p="5"
-							ml="2"
-							borderRadius={12}
+							p="4"
+							borderRadius="2xl"
 							cursor="pointer"
 							_hover={{
 								bgColor: theme.bg.button.swapTokenCurrency,
@@ -130,44 +133,62 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 							<IoIosArrowDown />
 						</Flex>
 
-						<Flex margin="0 auto" py="4">
-							<BiPlus />
+						<Flex justifyContent="center" my="4">
+							<MdAdd size={24} color={theme.text.cyan} />
 						</Flex>
 
 						<Flex
-							alignItems="center"
-							justifyContent="space-between"
-							border="1px solid"
-							id="1"
-							borderColor={theme.border.swapInput}
-							onClick={event => {
-								onOpen();
-								setButtonId(Number(event.currentTarget.id));
-							}}
+							height="max-content"
 							width="100%"
-							p="5"
-							ml="2"
-							borderRadius={12}
-							cursor="pointer"
-							_hover={{
-								bgColor: theme.bg.button.swapTokenCurrency,
-							}}
+							bgColor={theme.bg.whiteGray}
+							margin="0 auto"
+							position="relative"
+							flexDirection="column"
 						>
-							<Img src={selectedToken[1].logoURI} w="6" h="6" />
-							<Text
-								fontSize="xl"
-								fontWeight="500"
+							<Flex
+								alignItems="center"
+								justifyContent="space-between"
+								bgColor={theme.bg.blueNavy}
+								id="1"
 								width="100%"
-								px="3"
-								textAlign="start"
+								onClick={event => {
+									onOpen();
+									setButtonId(Number(event.currentTarget.id));
+								}}
+								p="4"
+								borderRadius="2xl"
+								cursor="pointer"
+								_hover={{
+									bgColor: theme.bg.button.swapTokenCurrency,
+								}}
 							>
-								{selectedToken[1].symbol}
-							</Text>
-							<IoIosArrowDown />
+								<Img src={selectedToken[1].logoURI} w="6" h="6" />
+								<Text
+									fontSize="xl"
+									fontWeight="500"
+									width="100%"
+									px="3"
+									textAlign="start"
+								>
+									{selectedToken[1].symbol}
+								</Text>
+								<IoIosArrowDown />
+							</Flex>
 						</Flex>
-						<Flex mt="7">
-							<Button w="100%" p="8" borderRadius="12" fontSize="xl">
-								Import Pool
+
+						<Flex>
+							<Button
+								w="100%"
+								mt="1.5rem"
+								py="6"
+								px="6"
+								borderRadius="67px"
+								bgColor={theme.bg.button.connectWalletSwap}
+								color={theme.text.cyan}
+								fontSize="lg"
+								fontWeight="semibold"
+							>
+								Import pool
 							</Button>
 						</Flex>
 					</Flex>

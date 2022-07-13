@@ -1,4 +1,5 @@
 import {
+	Flex,
 	Modal,
 	ModalBody,
 	ModalCloseButton,
@@ -10,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { WalletOptions } from "components/WalletOptions";
+import { AiOutlineClose } from "react-icons/ai";
 
 interface IModal {
 	isOpen: boolean;
@@ -23,26 +25,35 @@ export const SelectWallets: React.FC<IModal> = props => {
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
-			<ModalContent borderRadius={18} my="40">
-				<ModalHeader bgColor={theme.bg.whiteGray} borderTopRadius={18}>
-					<Text fontSize="md" textColor={theme.text.cyan} fontWeight={600}>
-						Connect to a Wallet
-					</Text>
-				</ModalHeader>
-				<ModalCloseButton />
-				<ModalBody bgColor={theme.bg.iceGray}>
-					<WalletOptions />
-				</ModalBody>
-				<ModalFooter
-					flexDirection="column"
-					bgColor={theme.bg.iceGray}
-					borderRadius={18}
-				>
-					<Text>New to Syscoin? </Text>
-					<Text textColor={theme.text.cyan} fontWeight={600}>
-						Learn more about setting up a wallet
-					</Text>
-				</ModalFooter>
+			<ModalContent
+				borderRadius="1.875rem"
+				my="40"
+				bgColor={theme.bg.blueNavy}
+				w="max-content"
+				h="max-content"
+				p="8"
+			>
+				<Flex flexDirection="column" justifyContent="center">
+					<Flex justifyContent="space-between" align="center" pb="5">
+						<Text fontSize="xl" fontWeight="semibold">
+							Connect to a Wallet
+						</Text>
+						<Flex _hover={{ cursor: "pointer" }}>
+							<AiOutlineClose size={22} onClick={onClose} />
+						</Flex>
+					</Flex>
+					<Flex flexDirection="column" pb="5">
+						<WalletOptions />
+					</Flex>
+					<Flex flexDirection="column" fontSize="sm	">
+						<Text textAlign="center" fontWeight="normal">
+							New to Syscoin?{" "}
+						</Text>
+						<Text textColor={theme.text.cyan} fontWeight="semibold">
+							Learn more about setting up a wallet
+						</Text>
+					</Flex>
+				</Flex>
 			</ModalContent>
 		</Modal>
 	);
