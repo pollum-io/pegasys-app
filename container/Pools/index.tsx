@@ -1,4 +1,4 @@
-import { Button, Flex, Img, Link, Text, useDisclosure } from "@chakra-ui/react";
+import { Button, Flex, Img, Text, useDisclosure } from "@chakra-ui/react";
 import { AddLiquidityModal, RemoveLiquidity } from "components";
 import { ImportPoolModal } from "components/Modals/ImportPool";
 import { DefaultTemplate } from "container";
