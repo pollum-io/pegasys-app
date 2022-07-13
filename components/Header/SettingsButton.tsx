@@ -2,9 +2,7 @@ import {
 	ButtonProps,
 	Popover,
 	PopoverBody,
-	PopoverCloseButton,
 	PopoverContent,
-	PopoverHeader,
 	PopoverTrigger,
 	Flex,
 	Text,
@@ -12,7 +10,6 @@ import {
 	Stack,
 	Switch,
 	Icon,
-	Button,
 } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";

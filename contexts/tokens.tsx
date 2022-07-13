@@ -1,13 +1,9 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers } from "ethers";
-import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
+import { ITokenBalance, ITokenBalanceWithId } from "types";
 import { useWallet } from "hooks";
 import { getDefaultTokens } from "networks";
 import { getBalanceOfMultiCall } from "utils";
-
-interface ITokenBalance extends TokenInfo {
-	balance: string;
-}
 
 interface ITokensContext {
 	userTokensBalance: ITokenBalance[];
@@ -18,9 +14,9 @@ export const TokensContext = createContext({} as ITokensContext);
 export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
-	const [userTokensBalance, setUserTokensBalance] = useState<ITokenBalance[]>(
-		[]
-	);
+	const [userTokensBalance, setUserTokensBalance] = useState<
+		ITokenBalance[] | ITokenBalanceWithId[]
+	>([]);
 
 	const { isConnected, provider, walletAddress } = useWallet();
 
@@ -41,6 +37,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 				symbol: "TSYS",
 				decimals: 18,
 				balance: formattedValue,
+				logoURI: "https://cryptologos.cc/logos/syscoin-sys-logo.png?v=022",
 			},
 			...previous,
 		]);

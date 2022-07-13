@@ -8,21 +8,25 @@ import {
 	Text,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { usePicasso, useWallet, useTradeExactIn } from "hooks";
-import { FunctionComponent, useState, useEffect } from "react";
+import { usePicasso, useTokens, useWallet, useTradeExactIn } from "hooks";
+import React, { FunctionComponent, useEffect, useState } from "react";
 import { MdWifiProtectedSetup } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
 import { SettingsButton } from "components/Header/SettingsButton";
+import { ITokenBalance, ITokenBalanceWithId } from "types";
+import { TOKENS_INITIAL_STATE } from "helpers/consts";
 
-interface IToken {
-	logoURI: string;
-	symbol: string;
-	id?: number;
+interface ITokenInputValue {
+	inputFrom: string;
+	inputTo: string;
 }
 
 export const Swap: FunctionComponent<ButtonProps> = () => {
 	const theme = usePicasso();
+
+	const { userTokensBalance } = useTokens();
+
 	const {
 		onOpen: onOpenWallet,
 		isOpen: isOpenWallet,
@@ -34,10 +38,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		onClose: onCloseCoin,
 	} = useDisclosure();
 	const { isConnected, setTypedValue, chain } = useWallet();
-	const [selectedToken] = useState<IToken[]>([
-		{ logoURI: "icons/syscoin-logo.png", symbol: "SYS", id: 0 },
-		{ logoURI: "icons/pegasys.png", symbol: "PSYS", id: 1 },
-	]);
+	const [selectedToken, setSelectedToken] = useState<
+		ITokenBalanceWithId[] | ITokenBalance[]
+	>(TOKENS_INITIAL_STATE);
+
+	const [tokenInputValue, setTokenInputValue] = useState<ITokenInputValue>({
+		inputFrom: "",
+		inputTo: "",
+	});
 
 	const v2Trade = useTradeExactIn(
 		{
@@ -78,6 +86,47 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const [buttonId, setButtonId] = useState<number>(0);
 	const swapButton = () => !isConnected && onOpenWallet();
 
+	useEffect(() => {
+		if (!isConnected || !userTokensBalance) return;
+
+		const getTokensBySymbol = userTokensBalance?.filter(
+			token => token.symbol.includes("TSYS") || token.symbol.includes("PSYS")
+		);
+
+		const setIdToTokens = getTokensBySymbol.map((token, index: number) => ({
+			...token,
+			id: index,
+		}));
+
+		setSelectedToken(setIdToTokens);
+	}, [isConnected, userTokensBalance]);
+
+	const handleOnChangeTokenInputs = (
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		const regexPreventLetters = /^(?!,$)[\d,.]+$/;
+
+		const inputValue = event?.target?.value;
+
+		setTypedValue(inputValue);
+
+		if (inputValue === "" || regexPreventLetters.test(inputValue)) {
+			setTokenInputValue(prevState => ({
+				...prevState,
+				[event.target.name]: inputValue,
+			}));
+		}
+	};
+
+	const switchTokensPosition = () =>
+		setSelectedToken(prevState => [...prevState]?.reverse());
+
+	const canSubmit =
+		isConnected &&
+		parseFloat(tokenInputValue.inputFrom) > 0 &&
+		parseFloat(selectedToken[0].balance) >
+			parseFloat(tokenInputValue.inputFrom);
+
 	return (
 		<Flex
 			pt="24"
@@ -94,6 +143,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				onClose={onCloseCoin}
 				selectedToken={selectedToken}
 				buttonId={buttonId}
+				setSelectedToken={setSelectedToken}
 			/>
 			<Flex
 				h="max-content"
@@ -124,7 +174,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							From
 						</Text>
 						<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-							Balance: 0.0275993
+							Balance: {selectedToken[0]?.balance}
 						</Text>
 					</Flex>
 					<Flex alignItems="center" justifyContent="space-between">
@@ -134,14 +184,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							borderRadius={12}
 							cursor="pointer"
 							_hover={{}}
-							onClick={event => {
+							onClick={(event: React.MouseEvent<HTMLInputElement>) => {
 								setButtonId(Number(event.currentTarget.id));
 								onOpenCoin();
 							}}
 						>
-							<Img src={selectedToken[0].logoURI} w="6" h="6" />
+							<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
 							<Text fontSize="xl" fontWeight="500" px="3">
-								{selectedToken[0].symbol}
+								{selectedToken[0]?.symbol}
 							</Text>
 							<Icon as={IoIosArrowDown} />
 						</Flex>
@@ -153,12 +203,19 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							mt="2"
 							px="1.5"
 							ml="50"
-							type="number"
-							onChange={event => setTypedValue(event.target.value)}
+							type="text"
+							onChange={handleOnChangeTokenInputs}
+							name="inputFrom"
+							value={tokenInputValue.inputFrom}
 						/>
 					</Flex>
 				</Flex>
-				<Flex margin="0 auto" py="4" _hover={{ cursor: "pointer" }}>
+				<Flex
+					margin="0 auto"
+					py="4"
+					onClick={switchTokensPosition}
+					_hover={{ cursor: "pointer" }}
+				>
 					<MdWifiProtectedSetup size={25} color="cyan" />
 				</Flex>
 				<Flex
@@ -170,10 +227,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				>
 					<Flex flexDirection="row" justifyContent="space-between">
 						<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
-							From
+							To
 						</Text>
 						<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-							Balance: 0.0275993
+							Balance: {selectedToken[1]?.balance}
 						</Text>
 					</Flex>
 					<Flex alignItems="center" justifyContent="space-between">
@@ -183,14 +240,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							borderRadius={12}
 							cursor="pointer"
 							_hover={{}}
-							onClick={event => {
+							onClick={(event: React.MouseEvent<HTMLInputElement>) => {
 								setButtonId(Number(event.currentTarget.id));
 								onOpenCoin();
 							}}
 						>
-							<Img src={selectedToken[1].logoURI} w="6" h="6" />
+							<Img src={selectedToken[1]?.logoURI} w="6" h="6" />
 							<Text fontSize="xl" fontWeight="500" px="3">
-								{selectedToken[1].symbol}
+								{selectedToken[1]?.symbol}
 							</Text>
 							<Icon as={IoIosArrowDown} />
 						</Flex>
@@ -202,7 +259,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							mt="2"
 							px="1.5"
 							ml="50"
-							type="number"
+							type="text"
+							onChange={handleOnChangeTokenInputs}
+							name="inputTo"
+							value={tokenInputValue.inputTo}
 						/>
 					</Flex>
 				</Flex>
@@ -218,6 +278,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						color={theme.text.cyan}
 						fontSize="lg"
 						fontWeight="semibold"
+						disabled={!canSubmit}
 					>
 						{isConnected ? "Enter an amount" : "Connect Wallet"}
 					</Button>
