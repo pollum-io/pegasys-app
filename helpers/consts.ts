@@ -37,3 +37,27 @@ export const SUPPORTED_WALLETS: { [key: string]: IWalletInfo } = {
 		iconName: "coinbaseWalletIcon.svg",
 	},
 };
+
+export const TOKENS_INITIAL_STATE = [
+	{
+		address: "",
+		balance: "0",
+		chainId: 5700,
+		decimals: 18,
+		name: "Testnet Syscoin",
+		logoURI: "https://cryptologos.cc/logos/syscoin-sys-logo.png?v=022",
+		symbol: "TSYS",
+		id: 0,
+	},
+	{
+		address: "0x81821498cD456c9f9239010f3A9F755F3A38A778",
+		balance: "0",
+		chainId: 5700,
+		decimals: 18,
+		logoURI:
+			"https://raw.githubusercontent.com/pollum-io/pegasys-tokenlists/master/testnet-logos/0x81821498cD456c9f9239010f3A9F755F3A38A778/logo.png",
+		name: "Pegasys",
+		symbol: "PSYS",
+		id: 1,
+	},
+];

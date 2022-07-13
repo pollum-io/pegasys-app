@@ -95,7 +95,7 @@ export const FarmContainer: NextPage = () => {
 						<Flex flexDirection="column" gap="3">
 							<Flex
 								flexDirection="column"
-								zIndex="docked"
+								zIndex="1"
 								position="relative"
 								borderRadius="xl"
 								h="247px"
