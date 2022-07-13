@@ -18,7 +18,6 @@ export const useCurrency = () => {
 			| undefined
 	): Promise<ITokenInfo> => {
 		// eslint-disable-next-line
-		console.log("PROVIDER: ", signerOrProvider);
 		const contract = createContractUsingAbi(
 			tokenAddress,
 			abi20,
