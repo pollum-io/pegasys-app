@@ -62,16 +62,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			name: "Pegasys",
 			chainId: 5700,
 			address: "0x81821498cD456c9f9239010f3A9F755F3A38A778",
-			tokenInfo: {
-				address: "0x81821498cD456c9f9239010f3A9F755F3A38A778",
-				chainId: 5700,
-				name: "Pegasys",
-				symbol: "PSYS",
-				decimals: 18,
-				logoURI:
-					"https://raw.githubusercontent.com/pollum-io/pegasys-tokenlists/master/testnet-logos/0x81821498cD456c9f9239010f3A9F755F3A38A778/logo.png",
-			},
-			tags: [],
 		},
 		"2",
 		chain

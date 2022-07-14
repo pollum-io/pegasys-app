@@ -10,7 +10,8 @@ import {
 } from "@pollum-io/pegasys-sdk";
 
 interface CurrencyWithAddress extends Currency {
-	address?: string;
+	address: string;
+	chainId: string;
 }
 
 export function useTradeExactIn(
