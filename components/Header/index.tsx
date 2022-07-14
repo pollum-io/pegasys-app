@@ -1,8 +1,9 @@
-import { Flex, Icon, Img, useColorMode } from "@chakra-ui/react";
+import { Flex, Icon, Img, useColorMode, useDisclosure } from "@chakra-ui/react";
 import { WalletButton } from "components";
 import { BridgeButton, IconButton } from "components/Buttons";
 import { usePicasso } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
+import { PsysBreakdown } from "components/Modals/PsysBreakdown";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
@@ -12,6 +13,7 @@ import { Languages } from "./Languages";
 export const Header: React.FC = () => {
 	const { toggleColorMode } = useColorMode();
 	const theme = usePicasso();
+	const { onOpen, isOpen, onClose } = useDisclosure();
 	const links = [
 		{
 			name: "Swap",
@@ -39,15 +41,7 @@ export const Header: React.FC = () => {
 			justifyContent="center"
 			flexDirection="column"
 		>
-			<Flex
-				width="3xl"
-				height="lg"
-				top="0"
-				position="fixed"
-				background="#56BED8;"
-				opacity="0.7"
-				filter="blur(275px)"
-			/>
+			<PsysBreakdown isOpen={isOpen} onClose={onClose} />
 			<Img
 				w="6"
 				h="6"
@@ -56,14 +50,14 @@ export const Header: React.FC = () => {
 				position="absolute"
 				left="0"
 			/>
-			<Flex gap="6" bgColor="rgb(0, 0, 0)" borderRadius="20">
+			<Flex gap="1" bgColor="rgb(0, 0, 0)" borderRadius="20">
 				{links.map((item, index) => (
 					<NavButton key={item.name + Number(index)} href={item.url}>
 						{item.name}
 					</NavButton>
 				))}
 
-				<NavButton href="/" pr="4">
+				<NavButton href="/">
 					Charts <Icon as={MdOutlineCallMade} w="5" h="5" ml="2" />
 				</NavButton>
 				<BridgeButton />
@@ -84,7 +78,7 @@ export const Header: React.FC = () => {
 				justifyContent="space-between"
 			>
 				<Flex w="25%" justifyContent="space-between">
-					<TokenButton />
+					<TokenButton onClick={onOpen} />
 					<NetworkButton />
 				</Flex>
 				<Flex>

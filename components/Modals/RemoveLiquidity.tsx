@@ -26,8 +26,8 @@ import { SelectCoinModal } from "components";
 interface IModal {
 	isModalOpen: boolean;
 	onModalClose: () => void;
-	isCreate: boolean;
-	haveValue: boolean;
+	isCreate?: boolean;
+	haveValue?: boolean;
 }
 interface IToken {
 	logoURI: string;
@@ -241,7 +241,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 					p="1.5rem"
 					background={theme.bg.blueNavy}
 					position="absolute"
-					w="100%"
+					w="90%"
 					bottom="-280"
 					borderRadius="xl"
 				>

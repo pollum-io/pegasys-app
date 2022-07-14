@@ -95,9 +95,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			justifyContent="center"
 			fontFamily="inter"
 			fontStyle="normal"
-			h="100vh"
-			w="100%"
-			overflow="none"
+			alignItems="center"
 		>
 			<SelectWallets isOpen={isOpenWallet} onClose={onCloseWallet} />
 			<SelectCoinModal
