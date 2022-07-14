@@ -31,7 +31,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		// eslint-disable-next-line
 		setUserTokensBalance(previous => [
 			{
-				address: "",
+				address: "0xa66b2E50c2b805F31712beA422D0D9e7D0Fd0F35",
 				chainId: 5700,
 				name: "Testnet Syscoin",
 				symbol: "TSYS",

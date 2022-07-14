@@ -15,7 +15,7 @@ const SYS: Currency = {
 };
 
 export function wrappedCurrency(currency: Currency, chainId: ChainId) {
-	return chainId && currency.name === "Syscoin"
+	return chainId && currency?.name === "Syscoin"
 		? WSYS[chainId]
 		: currency instanceof Token
 		? currency
@@ -28,14 +28,14 @@ export function wrappedCurrencyAmount(
 ): TokenAmount | undefined {
 	const token =
 		currencyAmount && chainId
-			? wrappedCurrency(currencyAmount.currency, chainId)
+			? wrappedCurrency(currencyAmount?.currency, chainId)
 			: undefined;
 	return token && currencyAmount
-		? new TokenAmount(token, currencyAmount.raw)
+		? new TokenAmount(token, currencyAmount?.raw)
 		: undefined;
 }
 
 export function unwrappedToken(token: Token): Currency {
-	if (token.equals(WSYS[token.chainId])) return NSYS;
+	if (token?.equals(WSYS[token?.chainId])) return NSYS;
 	return token;
 }

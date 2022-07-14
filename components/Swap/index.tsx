@@ -8,19 +8,22 @@ import {
 	Text,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { usePicasso, useTokens, useWallet, useTradeExactIn } from "hooks";
+import { ethers } from "ethers";
+import { usePicasso, useTokens, useWallet, useDerivedSwapInfo } from "hooks";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { MdWifiProtectedSetup } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
 import { SettingsButton } from "components/Header/SettingsButton";
-import { ITokenBalance, ITokenBalanceWithId } from "types";
+import {
+	ITokenBalance,
+	ITokenBalanceWithId,
+	ISwapTokenInputValue,
+	IWalletHookInfos,
+} from "types";
 import { TOKENS_INITIAL_STATE } from "helpers/consts";
-
-interface ITokenInputValue {
-	inputFrom: string;
-	inputTo: string;
-}
+import { createContractUsingAbi } from "utils";
+import erc20Abi from "utils/abis/erc20.json";
 
 export const Swap: FunctionComponent<ButtonProps> = () => {
 	const theme = usePicasso();
@@ -37,53 +40,106 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		isOpen: isOpenCoin,
 		onClose: onCloseCoin,
 	} = useDisclosure();
-	const { isConnected, setTypedValue, chain } = useWallet();
+
+	const {
+		isConnected,
+		setTypedValue,
+		currentNetworkChainId,
+		provider,
+		walletAddress,
+	} = useWallet();
+
 	const [selectedToken, setSelectedToken] = useState<
 		ITokenBalanceWithId[] | ITokenBalance[]
 	>(TOKENS_INITIAL_STATE);
 
-	const [tokenInputValue, setTokenInputValue] = useState<ITokenInputValue>({
-		inputFrom: "",
-		inputTo: "",
+	const [buttonId, setButtonId] = useState<number>(0);
+
+	const [tokenInputValue, setTokenInputValue] = useState<ISwapTokenInputValue>({
+		inputFrom: {
+			token: TOKENS_INITIAL_STATE[0],
+			value: "",
+		},
+		inputTo: {
+			token: TOKENS_INITIAL_STATE[1],
+			value: "",
+		},
+		typedValue: "",
+		lastInputTyped: undefined,
 	});
 
-	const v2Trade = useTradeExactIn(
-		{
-			decimals: 18,
-			symbol: "WSYS",
-			name: "Wrapped SYS",
-			chainId: 5700,
-			address: "0xa66b2E50c2b805F31712beA422D0D9e7D0Fd0F35",
-		},
-		"1",
-		{
-			decimals: 18,
-			symbol: "PSYS",
-			name: "Pegasys",
-			chainId: 5700,
-			address: "0x81821498cD456c9f9239010f3A9F755F3A38A778",
-			tokenInfo: {
-				address: "0x81821498cD456c9f9239010f3A9F755F3A38A778",
-				chainId: 5700,
-				name: "Pegasys",
-				symbol: "PSYS",
-				decimals: 18,
-				logoURI:
-					"https://raw.githubusercontent.com/pollum-io/pegasys-tokenlists/master/testnet-logos/0x81821498cD456c9f9239010f3A9F755F3A38A778/logo.png",
-			},
-			tags: [],
-		},
-		"2",
-		chain
-	);
+	// const getTokenAllowance = async (
+	// 	token: ITokenBalance | ITokenBalanceWithId
+	// ) => {
+	// 	try {
+	// 		if (!provider || !token) return;
 
-	useEffect(() => {
-		if (chain === 5700) {
-			console.log(v2Trade);
+	// 		const contract = createContractUsingAbi(
+	// 			String(token.address),
+	// 			erc20Abi,
+	// 			provider
+	// 		);
+
+	// 		const contractCall = await contract.allowance(
+	// 			token.address,
+	// 			walletAddress
+	// 		);
+
+	// 		return String(ethers.utils.formatUnits(contractCall, token.decimals));
+	// 	} catch (error) {
+	// 		return "0";
+	// 	}
+	// };
+
+	const handleOnChangeTokenInputs = (
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		const regexPreventLetters = /^(?!,$)[\d,.]+$/;
+
+		const inputValue = event?.currentTarget?.value;
+
+		const typedInput = event?.currentTarget.name;
+
+		setTypedValue(inputValue);
+
+		if (inputValue === "" || regexPreventLetters.test(inputValue)) {
+			setTokenInputValue({
+				inputFrom:
+					typedInput === "inputFrom"
+						? {
+								token: selectedToken[0],
+								value: inputValue,
+						  }
+						: {
+								token: selectedToken[0],
+								value: "",
+						  },
+
+				inputTo:
+					typedInput === "inputTo"
+						? {
+								token: selectedToken[1],
+								value: inputValue,
+						  }
+						: {
+								token: selectedToken[1],
+								value: "",
+						  },
+
+				typedValue: inputValue,
+				lastInputTyped: typedInput === "inputFrom" ? 0 : 1,
+			});
+
+			// setTokenInputValue(prevState => ({
+			// 	...prevState,
+			// 	[event.target.name]: inputValue,
+			// }));
 		}
-	}, [chain]);
+	};
 
-	const [buttonId, setButtonId] = useState<number>(0);
+	const switchTokensPosition = () =>
+		setSelectedToken(prevState => [...prevState]?.reverse());
+
 	const swapButton = () => !isConnected && onOpenWallet();
 
 	useEffect(() => {
@@ -101,31 +157,31 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setSelectedToken(setIdToTokens);
 	}, [isConnected, userTokensBalance]);
 
-	const handleOnChangeTokenInputs = (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
-		const regexPreventLetters = /^(?!,$)[\d,.]+$/;
-
-		const inputValue = event?.target?.value;
-
-		setTypedValue(inputValue);
-
-		if (inputValue === "" || regexPreventLetters.test(inputValue)) {
-			setTokenInputValue(prevState => ({
-				...prevState,
-				[event.target.name]: inputValue,
-			}));
-		}
-	};
-
-	const switchTokensPosition = () =>
-		setSelectedToken(prevState => [...prevState]?.reverse());
-
 	const canSubmit =
 		isConnected &&
-		parseFloat(tokenInputValue.inputFrom) > 0 &&
-		parseFloat(selectedToken[0].balance) >
-			parseFloat(tokenInputValue.inputFrom);
+		parseFloat(tokenInputValue?.inputFrom?.value) > 0 &&
+		parseFloat(selectedToken[0]?.balance) >
+			parseFloat(tokenInputValue?.inputFrom?.value);
+
+	const walletInfos: IWalletHookInfos = {
+		chainId: currentNetworkChainId,
+		walletAddress,
+		provider,
+	};
+
+	const { parsedAmount, v2Trade } = useDerivedSwapInfo(
+		tokenInputValue,
+		walletInfos
+	);
+
+	// useMemo(() => {
+	// 	if(!isConnected) return
+
+	// 	const {parsedAmount, v2Trade} = useDerivedSwapInfo(tokenInputValue, walletInfos)
+
+	// 	console.log('v2Trade', v2Trade)
+
+	// }, [tokenInputValue, selectedToken])
 
 	return (
 		<Flex
@@ -206,7 +262,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							type="text"
 							onChange={handleOnChangeTokenInputs}
 							name="inputFrom"
-							value={tokenInputValue.inputFrom}
+							value={tokenInputValue?.inputFrom?.value}
 						/>
 					</Flex>
 				</Flex>
@@ -262,7 +318,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							type="text"
 							onChange={handleOnChangeTokenInputs}
 							name="inputTo"
-							value={tokenInputValue.inputTo}
+							value={tokenInputValue?.inputTo?.value}
 						/>
 					</Flex>
 				</Flex>

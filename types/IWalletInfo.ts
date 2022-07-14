@@ -1,4 +1,5 @@
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { ethers, Signer } from "ethers";
 
 export interface IWalletInfo {
 	connector?: AbstractConnector;
@@ -10,4 +11,15 @@ export interface IWalletInfo {
 	primary?: true;
 	mobile?: true;
 	mobileOnly?: true;
+}
+
+export interface IWalletHookInfos {
+	chainId: number | null;
+	walletAddress: string;
+	provider:
+		| ethers.providers.Provider
+		| ethers.providers.Web3Provider
+		| ethers.providers.JsonRpcProvider
+		| Signer
+		| undefined;
 }

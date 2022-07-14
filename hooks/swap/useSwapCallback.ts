@@ -33,7 +33,7 @@ export enum SwapCallbackState {
 
 const INITIAL_ALLOWED_SLIPPAGE = 50;
 
-const BIPS_BASE = JSBI.BigInt(10000)
+const BIPS_BASE = JSBI.BigInt(10000);
 
 /**
  * Returns the swap calls that can be used to make the trade
