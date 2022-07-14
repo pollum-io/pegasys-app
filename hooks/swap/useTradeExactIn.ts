@@ -6,6 +6,7 @@ import {
 	TokenAmount,
 	Route,
 	ChainId,
+	TradeType,
 } from "@pollum-io/pegasys-sdk";
 
 interface CurrencyWithAddress extends Currency {
@@ -36,16 +37,18 @@ export function useTradeExactIn(
 	);
 
 	const pair = new Pair(
-		new TokenAmount(tokenIn, "2000000"),
 		new TokenAmount(tokenOut, "1000000"),
+		new TokenAmount(tokenIn, "2000000"),
 		ChainId.TANENBAUM
 	);
 
-	const TokenInToTokenOutRoute = new Route([pair], tokenOut);
+	const TokenInToTokenOutRoute = new Route([pair], tokenIn);
 
 	const trade = new Trade(
 		TokenInToTokenOutRoute,
-		new TokenAmount(tokenIn, valueIn)
+		new TokenAmount(tokenOut, valueOut),
+		TradeType.EXACT_OUTPUT,
+		ChainId.TANENBAUM
 	);
 
 	return trade;
