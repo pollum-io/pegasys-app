@@ -73,7 +73,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	// ) => {
 	// 	try {
 	// 		if (!provider || !token) return;
-
 	// 		const contract = createContractUsingAbi(
 	// 			String(token.address),
 	// 			erc20Abi,
