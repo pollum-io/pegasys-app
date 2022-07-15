@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import { ColorHandler } from "utils";
 import "../styles/backgroundStars.css";
 import "styles/style.css";
+import "styles/psysAnimation.css";
 
 const MyApp = ({ Component, pageProps }: AppProps) => (
 	<>

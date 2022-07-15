@@ -1,0 +1,24 @@
+.textAnimation {
+	background: linear-gradient(
+		to right,
+		#19ebce 10%,
+		#1997eb 30%,
+		#4e6cf1 50%,
+		#9719eb 70%,
+		#11a390 95%,
+		#19ebce 100%
+	);
+	background-size: 200% auto;
+
+	color: #000;
+	background-clip: text;
+	text-fill-color: transparent;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	animation: shine 6s linear infinite;
+}
+@keyframes shine {
+	to {
+		background-position: 200% center;
+	}
+}

@@ -25,7 +25,7 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 					<Flex
 						bgColor={theme.bg.primary}
 						flexDirection={["column"]}
-						style={{ height: heightValue, width: widthValue }}
+						style={{ minHeight: heightValue, width: widthValue }}
 					>
 						<Flex
 							width="30%"

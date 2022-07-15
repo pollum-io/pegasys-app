@@ -25,7 +25,7 @@ export const SelectSyscoin: FunctionComponent<IModal> = props => {
 		<Modal blockScrollOnMount isOpen={isOpen || walletError} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				borderRadius={18}
+				borderRadius="3xl"
 				my="40"
 				p="1.5rem"
 				bgColor={theme.bg.blueNavy}
@@ -39,7 +39,7 @@ export const SelectSyscoin: FunctionComponent<IModal> = props => {
 					</Flex>
 				</Flex>
 				<Flex py="1.5rem">
-					<IoIosInformationCircle size={24} />
+					<IoIosInformationCircle size={26} />
 					<Text fontSize="md" fontWeight="normal" pl="1.125rem">
 						Please connect to the appropriate Syscoin network.
 					</Text>

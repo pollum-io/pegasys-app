@@ -9,13 +9,14 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import { usePicasso, useTokens, useWallet } from "hooks";
-import React, { FunctionComponent, useEffect, useState } from "react";
-import { MdWifiProtectedSetup } from "react-icons/md";
-import { IoIosArrowDown } from "react-icons/io";
+import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
+import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
+import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
 import { SettingsButton } from "components/Header/SettingsButton";
 import { ITokenBalance, ITokenBalanceWithId } from "types";
 import { TOKENS_INITIAL_STATE } from "helpers/consts";
+import { ConfirmSwap } from "components/Modals/ConfirmSwap";
 
 interface ITokenInputValue {
 	inputFrom: string;
@@ -37,6 +38,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		isOpen: isOpenCoin,
 		onClose: onCloseCoin,
 	} = useDisclosure();
+	const {
+		onOpen: onOpenConfirmSwap,
+		isOpen: isOpenConfirmSwap,
+		onClose: onCloseConfirmSwap,
+	} = useDisclosure();
 	const { isConnected } = useWallet();
 	const [selectedToken, setSelectedToken] = useState<
 		ITokenBalanceWithId[] | ITokenBalance[]
@@ -48,7 +54,26 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	});
 
 	const [buttonId, setButtonId] = useState<number>(0);
-	const swapButton = () => !isConnected && onOpenWallet();
+	const swapButton = () => {
+		if (!isConnected) {
+			onOpenWallet();
+		} else if (
+			tokenInputValue.inputFrom < selectedToken[0]?.balance &&
+			tokenInputValue.inputTo < selectedToken[1]?.balance
+		) {
+			onOpenConfirmSwap();
+		}
+	};
+
+	const buttonName = useMemo(() => {
+		if (isConnected) {
+			return "Enter an amount";
+		}
+		if (isConnected && tokenInputValue.inputTo && tokenInputValue.inputFrom) {
+			return "Aprove";
+		}
+		return "Connect Wallet";
+	}, [isConnected]);
 
 	useEffect(() => {
 		if (!isConnected || !userTokensBalance) return;
@@ -85,9 +110,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const canSubmit =
 		isConnected &&
-		parseFloat(tokenInputValue.inputFrom) > 0 &&
-		parseFloat(selectedToken[0].balance) >
-			parseFloat(tokenInputValue.inputFrom);
+		parseFloat(tokenInputValue?.inputFrom) > 0 &&
+		parseFloat(selectedToken[0]?.balance) >
+			parseFloat(tokenInputValue?.inputFrom);
 
 	return (
 		<Flex
@@ -96,8 +121,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			fontFamily="inter"
 			fontStyle="normal"
 			alignItems="center"
+			flexDirection="column"
 		>
 			<SelectWallets isOpen={isOpenWallet} onClose={onCloseWallet} />
+			<ConfirmSwap isOpen={isOpenConfirmSwap} onClose={onCloseConfirmSwap} />
 			<SelectCoinModal
 				isOpen={isOpenCoin}
 				onClose={onCloseCoin}
@@ -128,6 +155,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					flexDirection="column"
 					py="1rem"
 					px="1.25rem"
+					border="1px solid"
+					borderColor={
+						tokenInputValue.inputFrom > selectedToken[0]?.balance
+							? theme.text.red400
+							: "#ff000000"
+					}
+					transition="0.7s"
 				>
 					<Flex flexDirection="row" justifyContent="space-between">
 						<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
@@ -170,6 +204,27 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						/>
 					</Flex>
 				</Flex>
+				{tokenInputValue.inputFrom > selectedToken[0]?.balance && (
+					<Flex flexDirection="row" gap="1" justifyContent="center">
+						<Text
+							fontSize="sm"
+							pt="2"
+							textAlign="center"
+							color={theme.text.red400}
+							fontWeight="semibold"
+						>
+							Insufficient {selectedToken[0]?.symbol} balance.
+						</Text>
+						<Text
+							fontSize="sm"
+							pt="2"
+							textAlign="center"
+							color={theme.text.red400}
+						>
+							Please insert a valid amount.
+						</Text>
+					</Flex>
+				)}
 				<Flex
 					margin="0 auto"
 					py="4"
@@ -184,6 +239,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					flexDirection="column"
 					py="1rem"
 					px="1.25rem"
+					border="1px solid"
+					borderColor={
+						tokenInputValue.inputTo > selectedToken[1]?.balance
+							? theme.text.red400
+							: "#ff000000"
+					}
+					transition="0.7s"
 				>
 					<Flex flexDirection="row" justifyContent="space-between">
 						<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
@@ -226,6 +288,64 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						/>
 					</Flex>
 				</Flex>
+				{tokenInputValue.inputTo > selectedToken[1]?.balance && (
+					<Flex flexDirection="row" gap="1" justifyContent="center">
+						<Text
+							fontSize="sm"
+							pt="2"
+							textAlign="center"
+							color={theme.text.red400}
+							fontWeight="semibold"
+						>
+							Insufficient {selectedToken[1]?.symbol} balance.
+						</Text>
+						<Text
+							fontSize="sm"
+							pt="2"
+							textAlign="center"
+							color={theme.text.red400}
+						>
+							Please insert a valid amount.
+						</Text>
+					</Flex>
+				)}
+				{tokenInputValue.inputTo && tokenInputValue.inputFrom && (
+					<Flex
+						flexDirection="column"
+						borderRadius="2xl"
+						bgColor="transparent"
+						borderWidth="1px"
+						borderColor={theme.text.cyan}
+						mt="1.5rem"
+					>
+						<Text fontSize="md" fontWeight="medium" px="1.375rem" py="1rem">
+							Price
+						</Text>
+						<Flex
+							flexDirection="row"
+							justifyContent="space-around"
+							py="1rem"
+							px="1rem"
+							borderRadius="2xl"
+							borderWidth="1px"
+							borderColor={theme.text.cyan}
+							bgColor={theme.bg.blueNavy}
+						>
+							<Flex fontSize="sm" flexDirection="column" textAlign="center">
+								<Text fontWeight="semibold">-</Text>
+								<Text fontWeight="normal">
+									{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
+								</Text>
+							</Flex>
+							<Flex fontSize="sm" flexDirection="column" textAlign="center">
+								<Text fontWeight="semibold">-</Text>
+								<Text fontWeight="normal">
+									{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
+								</Text>
+							</Flex>
+						</Flex>
+					</Flex>
+				)}
 				<Flex>
 					<Button
 						w="100%"
@@ -240,10 +360,81 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						fontWeight="semibold"
 						disabled={!canSubmit}
 					>
-						{isConnected ? "Enter an amount" : "Connect Wallet"}
+						{buttonName}
 					</Button>
 				</Flex>
 			</Flex>
+			{tokenInputValue.inputTo && tokenInputValue.inputFrom && (
+				<Flex
+					flexDirection="column"
+					p="1.5rem"
+					background={theme.bg.blueNavy}
+					w="22%"
+					borderRadius="xl"
+					mt="7"
+					mb="10rem"
+				>
+					<Flex flexDirection="column">
+						<Flex flexDirection="row" justifyContent="space-between">
+							<Text fontWeight="normal">
+								Minmum Received <Icon as={MdHelpOutline} />
+							</Text>
+							<Text fontWeight="medium">-</Text>
+						</Flex>
+						<Flex
+							flexDirection="row"
+							justifyContent="space-between"
+							pt="0.75rem"
+						>
+							<Text fontWeight="normal">
+								Price Impact <Icon as={MdHelpOutline} />
+							</Text>
+							<Text fontWeight="medium">-</Text>
+						</Flex>
+						<Flex
+							flexDirection="row"
+							justifyContent="space-between"
+							pt="0.75rem"
+						>
+							<Text fontWeight="normal">
+								Liquidity Provider Fee <Icon as={MdHelpOutline} />
+							</Text>
+							<Text fontWeight="medium">-</Text>
+						</Flex>
+						{tokenInputValue.inputFrom < selectedToken[0]?.balance &&
+							tokenInputValue.inputTo < selectedToken[1]?.balance && (
+								<Flex flexDirection="column">
+									<Flex
+										flexDirection="row"
+										justifyContent="space-between"
+										pt="2rem"
+									>
+										<Text fontWeight="normal">
+											Route <Icon as={MdHelpOutline} />
+										</Text>
+									</Flex>
+									<Flex
+										border="1px solid rgba(160, 174, 192, 1)"
+										py="2.5"
+										px="4"
+										borderRadius="xl"
+										alignItems="center"
+										flexWrap="wrap"
+										mt="2"
+									>
+										<Flex gap="2">
+											<Img src={selectedToken[1]?.logoURI} w="5" h="5" />
+											<Text fontSize="sm">WSYS</Text>
+										</Flex>
+										<Flex mx="3" my="2">
+											<Icon as={IoIosArrowForward} />
+										</Flex>
+									</Flex>
+								</Flex>
+							)}
+					</Flex>
+				</Flex>
+			)}
 		</Flex>
 	);
 };
