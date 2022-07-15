@@ -16,7 +16,7 @@ export const NetworkButton: FunctionComponent<IButtonProps> = props => {
 			fontWeight="normal"
 			fontSize="md"
 			transition="0.2s"
-			_hover={{ cursor: "pointer" }}
+			_hover={{}}
 			_active={{}}
 		>
 			{children}
