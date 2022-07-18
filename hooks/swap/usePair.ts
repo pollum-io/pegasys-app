@@ -22,23 +22,23 @@ export async function usePairs(
 ): Promise<[PairState, Pair | null | any][]> {
 	const tokens = currencies;
 
-	const pairAddresses = tokens.map(([tokenA, tokenB]) => {
-		if (tokenA.chainId && tokenB.chainId) {
-			return Pair.getAddress(
-				tokenA as Token,
-				tokenB as Token,
-				ChainId.TANENBAUM
-			);
-		}
-	});
+	const pairAddresses = tokens
+		.map(([tokenA, tokenB]) => {
+			if (tokenA.chainId && tokenB.chainId) {
+				return Pair.getAddress(
+					tokenA as Token,
+					tokenB as Token,
+					ChainId.TANENBAUM
+				);
+			}
+			return undefined;
+		})
+		.filter(pair => pair !== undefined);
 
-	console.log(
-		"PAIR ADDRESS: ",
-		pairAddresses.filter(pair => pair !== undefined)
-	);
+	console.log("PAIR ADDRESS: ", pairAddresses);
 
 	const results: any[] = await getMultiCall(
-		pairAddresses.filter(pair => pair !== undefined),
+		pairAddresses,
 		walletInfos.walletAddress,
 		walletInfos.provider,
 		"getReserves"
