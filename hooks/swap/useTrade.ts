@@ -1,12 +1,11 @@
-import { useMemo } from "react";
-import { Currency, Trade, CurrencyAmount, Route } from "@pollum-io/pegasys-sdk";
+import { Currency, Trade, CurrencyAmount } from "@pollum-io/pegasys-sdk";
 import { IWalletHookInfos } from "types";
 import { useAllCommonPairs } from "./useAllCommonPairs";
 
 export async function useTradeExactIn(
-	currencyAmountIn?: CurrencyAmount,
-	currencyOut?: Currency,
-	walletInfos?: IWalletHookInfos
+	currencyAmountIn: CurrencyAmount,
+	currencyOut: Currency,
+	walletInfos: IWalletHookInfos
 ): Promise<Trade | null> {
 	const allowedPairs = await useAllCommonPairs(
 		currencyAmountIn?.currency as Currency,
@@ -28,9 +27,9 @@ export async function useTradeExactIn(
 }
 
 export async function useTradeExactOut(
-	currencyIn?: Currency,
-	currencyAmountOut?: CurrencyAmount,
-	walletInfos?: IWalletHookInfos
+	currencyIn: Currency,
+	currencyAmountOut: CurrencyAmount,
+	walletInfos: IWalletHookInfos
 ): Promise<Trade | null> {
 	const allowedPairs = await useAllCommonPairs(
 		currencyIn as Currency,
@@ -38,12 +37,19 @@ export async function useTradeExactOut(
 		walletInfos as IWalletHookInfos
 	);
 
-	console.log("pairsOut:", allowedPairs);
 
 	if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
 		return (
-			Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut)[0] ??
-			null
+			Trade.bestTradeExactOut(
+				allowedPairs,
+				currencyIn,
+				currencyAmountOut,
+				{
+					maxHops: 3,
+					maxNumResults: 1,
+				},
+				allowedPairs
+			)[0] ?? null
 		);
 	}
 	return null;
