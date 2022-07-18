@@ -97,12 +97,15 @@ export const getMultiCall = async (
 	if (!signerOrProvider) return [];
 	try {
 		const contracts = tokenAddress.map((address: string) =>
-			createContractUsingAbi(address, pairPegasysAbi, signerOrProvider)
+			createContractUsingAbi(address, pairPegasysAbi.abi, signerOrProvider)
 		);
-		const contractCall = await multiCall(contracts, method, walletAddress);
+		const contractCall = await multiCall(contracts, method);
+
+		console.log(contractCall);
 
 		return contractCall;
 	} catch (error) {
+		console.log(error)
 		return [];
 	}
 };

@@ -7,8 +7,9 @@ export const multiCall = async (
 ) => {
 	try {
 		const contractCalls = Promise.all(
-			contract.map(call => call[methodName](parameters))
+			contract.map(call => call[methodName](parameters ?? null))
 		);
+		console.log("CONTRACTCALLS: ", contractCalls);
 		return contractCalls;
 	} catch (error) {
 		return error;
