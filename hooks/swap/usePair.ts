@@ -9,6 +9,8 @@ import { useMemo } from "react";
 import { getMultiCall, wrappedCurrency } from "utils";
 import { IWalletHookInfos } from "types";
 
+import IPegasysPairABI from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/interfaces/IPegasysPair.sol/IPegasysPair.json";
+
 export enum PairState {
 	LOADING,
 	NOT_EXISTS,
@@ -37,11 +39,12 @@ export async function usePairs(
 
 	console.log("PAIR ADDRESS: ", pairAddresses);
 
-	const results: any[] = await getMultiCall(
-		pairAddresses,
+	const results: any = await getMultiCall(
+		pairAddresses as string[],
 		walletInfos.walletAddress,
 		walletInfos.provider,
-		"getReserves"
+		"getReserves",
+		IPegasysPairABI
 	);
 	// eslint-disable-next-line
 	console.log("MULTI CALL RESULT: ", results);

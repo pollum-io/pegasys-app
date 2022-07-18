@@ -92,17 +92,33 @@ export const getMultiCall = async (
 		| ethers.providers.Web3Provider
 		| ethers.providers.Provider
 		| undefined,
-	method?: string
+	method?: string,
+	abiInterface?: object | never
 ) => {
 	if (!signerOrProvider) return [];
+
+	console.log("interface", abiInterface);
+
 	try {
 		const contracts = tokenAddress.map((address: string) =>
-			createContractUsingAbi(address, pairPegasysAbi, signerOrProvider)
+			createContractUsingAbi(
+				address,
+				abiInterface || pairPegasysAbi,
+				signerOrProvider
+			)
 		);
-		const contractCall = await multiCall(contracts, method, walletAddress);
+
+		console.log("tokenAddress", tokenAddress);
+
+		const contractCall = await multiCall(
+			contracts,
+			method as string,
+			walletAddress
+		);
 
 		return contractCall;
 	} catch (error) {
+		console.log("error", error);
 		return [];
 	}
 };
