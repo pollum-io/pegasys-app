@@ -168,24 +168,19 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		provider,
 	};
 
-	// const { parsedAmount, v2Trade } = useDerivedSwapInfo(
-	// 	tokenInputValue,
-	// 	walletInfos
-	// );
+	const { parsedAmount, v2Trade } = useDerivedSwapInfo(
+		tokenInputValue,
+		walletInfos
+	);
 
-	const { v2Trade } = useDerivedSwapInfo(tokenInputValue, walletInfos);
+	// useMemo(() => {
+	// 	if(!isConnected) return
 
-	console.log("v2Trade", v2Trade);
+	// 	const {parsedAmount, v2Trade} = useDerivedSwapInfo(tokenInputValue, walletInfos)
 
-	// const useDerivedHook = async () => {
-	// 	await useDerivedSwapInfo(tokenInputValue, walletInfos);
-	// };
+	// 	console.log('v2Trade', v2Trade)
 
-	// useEffect(() => {
-	// 	if (!isConnected) return;
-
-	// 	useDerivedHook();
-	// }, [tokenInputValue, selectedToken]);
+	// }, [tokenInputValue, selectedToken])
 
 	return (
 		<Flex
