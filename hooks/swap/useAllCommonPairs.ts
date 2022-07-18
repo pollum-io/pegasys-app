@@ -1,8 +1,6 @@
-import { Currency, Pair, Token } from "@pollum-io/pegasys-sdk";
+import { Currency, Pair, Token, ChainId } from "@pollum-io/pegasys-sdk";
 import flatMap from "lodash.flatmap";
-import { useMemo } from "react";
 import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from "helpers/consts";
-import { wrappedCurrency } from "utils/wrappedCurrency";
 import { IWalletHookInfos } from "types";
 import { PairState, usePairs } from "./usePair";
 
@@ -15,85 +13,86 @@ export async function useAllCommonPairs(
 		? BASES_TO_CHECK_TRADES_AGAINST[walletInfos.chainId]
 		: [];
 
-	const [tokenA, tokenB] = walletInfos.chainId
-		? [
-				wrappedCurrency(currencyA, walletInfos.chainId),
-				wrappedCurrency(currencyB, walletInfos.chainId),
-		  ]
-		: [undefined, undefined];
+	const [tokenA, tokenB] = [
+		currencyA &&
+			new Token(
+				ChainId.TANEMBAUM,
+				currencyA?.address,
+				18,
+				currencyA?.symbol,
+				currencyA?.name
+			),
+		currencyB &&
+			new Token(
+				ChainId.TANEMBAUM,
+				currencyB?.address,
+				18,
+				currencyB?.symbol,
+				currencyB?.name
+			),
+	];
 
-	const basePairs: [Token, Token][] = useMemo(
-		() =>
-			flatMap(bases, (base): [Token, Token][] =>
-				bases.map(otherBase => [base, otherBase])
-			).filter(([t0, t1]) => t0.address !== t1.address),
-		[bases]
-	);
+	const basePairs: [Token, Token][] = flatMap(bases, (base): [Token, Token][] =>
+		bases.map(otherBase => [base, otherBase])
+	).filter(([t0, t1]) => t0.address !== t1.address);
 
-	const allPairCombinations: [Token, Token][] = useMemo(
-		() =>
-			tokenA && tokenB
-				? [
-						// the direct pair
-						[tokenA, tokenB],
-						// token A against all bases
-						...bases.map((base): [Token, Token] => [tokenA, base]),
-						// token B against all bases
-						...bases.map((base): [Token, Token] => [tokenB, base]),
-						// each base against all bases
-						...basePairs,
-				  ]
-						.filter((tokens): tokens is [Token, Token] =>
-							Boolean(tokens[0] && tokens[1])
-						)
-						.filter(([t0, t1]) => t0.address !== t1.address)
-						.filter(([tokenA, tokenB]) => {
-							if (!walletInfos.chainId) return true;
-							const customBases = CUSTOM_BASES[walletInfos.chainId];
-							if (!customBases) return true;
+	console.log("TOKENA E TOKENB: ", {
+		tokenA,
+		tokenB,
+		chain: walletInfos.chainId,
+	});
 
-							const customBasesA: Token[] | undefined =
-								customBases[tokenA.address];
-							const customBasesB: Token[] | undefined =
-								customBases[tokenB.address];
+	const allPairCombinations: [Token, Token][] =
+		tokenA && tokenB
+			? [
+					// the direct pair
+					[tokenA, tokenB],
+					// token A against all bases
+					...bases.map((base): [Token, Token] => [tokenA, base]),
+					// token B against all bases
+					...bases.map((base): [Token, Token] => [tokenB, base]),
+					// each base against all bases
+					...basePairs,
+			  ]
+					.filter((tokens): tokens is [Token, Token] =>
+						Boolean(tokens[0] && tokens[1])
+					)
+					.filter(([t0, t1]) => t0.address !== t1.address)
+					.filter(([tokenA, tokenB]) => {
+						// if (!walletInfos.chainId) return true;
+						const customBases = CUSTOM_BASES[ChainId.TANEMBAUM];
+						if (!customBases) return true;
 
-							if (!customBasesA && !customBasesB) return true;
+						const customBasesA: Token[] | undefined =
+							customBases[tokenA.address];
+						const customBasesB: Token[] | undefined =
+							customBases[tokenB.address];
 
-							if (
-								customBasesA &&
-								!customBasesA.find(base => tokenB.equals(base))
-							)
-								return false;
-							if (
-								customBasesB &&
-								!customBasesB.find(base => tokenA.equals(base))
-							)
-								return false;
+						if (!customBasesA && !customBasesB) return true;
 
-							return true;
-						})
-				: [],
-		[tokenA, tokenB, bases, basePairs, walletInfos.chainId]
-	);
+						if (customBasesA && !customBasesA.find(base => tokenB.equals(base)))
+							return false;
+						if (customBasesB && !customBasesB.find(base => tokenA.equals(base)))
+							return false;
+
+						return true;
+					})
+			: [];
 
 	const allPairs = await usePairs(allPairCombinations, walletInfos);
 
 	// only pass along valid pairs, non-duplicated pairs
-	return useMemo(
-		() =>
-			Object.values(
-				allPairs
-					// filter out invalid pairs
-					.filter((result): result is [PairState.EXISTS, Pair] =>
-						Boolean(result[0] === PairState.EXISTS && result[1])
-					)
-					// filter out duplicated pairs
-					.reduce<{ [pairAddress: string]: Pair }>((memo, [, curr]) => {
-						memo[curr.liquidityToken.address] =
-							memo[curr.liquidityToken.address] ?? curr;
-						return memo;
-					}, {})
-			),
-		[allPairs]
+	return Object.values(
+		allPairs
+			// filter out invalid pairs
+			.filter((result): result is [PairState.EXISTS, Pair] =>
+				Boolean(result[0] === PairState.EXISTS && result[1])
+			)
+			// filter out duplicated pairs
+			.reduce<{ [pairAddress: string]: Pair }>((memo, [, curr]) => {
+				memo[curr.liquidityToken.address] =
+					memo[curr.liquidityToken.address] ?? curr;
+				return memo;
+			}, {})
 	);
 }

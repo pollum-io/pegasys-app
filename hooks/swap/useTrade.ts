@@ -13,17 +13,16 @@ export async function useTradeExactIn(
 		currencyOut as Currency,
 		walletInfos as IWalletHookInfos
 	);
-	return useMemo(() => {
-		if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
-			return (
-				Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, {
-					maxHops: 3,
-					maxNumResults: 1,
-				})[0] ?? null
-			);
-		}
-		return null;
-	}, [allowedPairs, currencyAmountIn, currencyOut]);
+
+	if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
+		return (
+			Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, {
+				maxHops: 3,
+				maxNumResults: 1,
+			})[0] ?? null
+		);
+	}
+	return null;
 }
 
 export async function useTradeExactOut(
@@ -37,15 +36,13 @@ export async function useTradeExactOut(
 		walletInfos as IWalletHookInfos
 	);
 
-	return useMemo(() => {
-		if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
-			return (
-				Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, {
-					maxHops: 3,
-					maxNumResults: 1,
-				})[0] ?? null
-			);
-		}
-		return null;
-	}, [allowedPairs, currencyIn, currencyAmountOut]);
+	if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
+		return (
+			Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, {
+				maxHops: 3,
+				maxNumResults: 1,
+			})[0] ?? null
+		);
+	}
+	return null;
 }
