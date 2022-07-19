@@ -12,9 +12,8 @@ export function tryParseAmount(
 	currency: Currency
 ): CurrencyAmount {
 	try {
-		const typedValueParsed = parseUnits(value, currency.decimals).toString();
-		if (typedValueParsed !== "0") {
-			return new CurrencyAmount(currency, typedValueParsed);
+		if (value !== "0") {
+			return new CurrencyAmount(currency, value);
 		}
 	} catch (error) {
 		// should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
