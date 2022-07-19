@@ -5,19 +5,18 @@ import {
 	Input,
 	InputGroup,
 	InputLeftElement,
-	Link,
 	Menu,
 	MenuButton,
 	MenuItem,
 	MenuList,
-	Select,
 	Text,
 	useDisclosure,
 } from "@chakra-ui/react";
 import { AddLiquidityModal, RemoveLiquidity } from "components";
 import { ImportPoolModal } from "components/Modals/ImportPool";
+import { TokenImported } from "components/Modals/TokenImported";
+import { TurnExportMode } from "components/Modals/TurnExportMode";
 import { PoolCards } from "components/Pools/PoolCards";
-import { DefaultTemplate } from "container";
 import { usePicasso, useWallet } from "hooks";
 import { NextPage } from "next";
 import { useState } from "react";
@@ -36,12 +35,18 @@ export const PoolsContainer: NextPage = () => {
 		isOpen: isOpenRemoveLiquidity,
 		onClose: onCloseRemoveLiquidity,
 	} = useDisclosure();
+	const {
+		onOpen: onOpenTokenImported,
+		isOpen: isOpenTokenImported,
+		onClose: onCloseTokenImported,
+	} = useDisclosure();
 	const [isCreate, setIsCreate] = useState(false);
 	const [haveValue, setHaveValue] = useState(false);
 	const { isConnected } = useWallet();
+	const [userHavePool, setUserHavePool] = useState(true);
 
 	return (
-		<DefaultTemplate widthValue="100%" heightValue="100%">
+		<Flex justifyContent="center" alignItems="center">
 			<AddLiquidityModal
 				isModalOpen={isOpen}
 				onModalClose={onClose}
@@ -55,7 +60,6 @@ export const PoolsContainer: NextPage = () => {
 				isCreate={isCreate}
 				haveValue={haveValue}
 			/>
-
 			<Flex alignItems="flex-start" justifyContent="center" pt="20" mb="6.2rem">
 				<Flex flexDirection="column" w="2xl">
 					<Flex
@@ -137,7 +141,7 @@ export const PoolsContainer: NextPage = () => {
 							mt="2"
 							alignItems="flex-end"
 						>
-							<Flex>
+							<Flex visibility={userHavePool ? "visible" : "hidden"}>
 								<InputGroup>
 									<InputLeftElement
 										pointerEvents="none"
@@ -174,10 +178,7 @@ export const PoolsContainer: NextPage = () => {
 									Create a Pair
 								</Button>
 								<Flex flexDirection="column">
-									<Text fontSize="sm" pb="2">
-										Sort by
-									</Text>
-									{isConnected ? (
+									{!userHavePool ? (
 										<Button
 											fontSize="sm"
 											fontWeight="semibold"
@@ -198,6 +199,9 @@ export const PoolsContainer: NextPage = () => {
 										</Button>
 									) : (
 										<Menu>
+											<Text fontSize="sm" pb="2">
+												Sort by
+											</Text>
 											<MenuButton
 												as={Button}
 												fontSize="sm"
@@ -233,7 +237,7 @@ export const PoolsContainer: NextPage = () => {
 							</Flex>
 						</Flex>
 					</Flex>
-					{isConnected && (
+					{!isConnected ? (
 						<Flex
 							w="100%"
 							mt="4rem"
@@ -266,12 +270,15 @@ export const PoolsContainer: NextPage = () => {
 								</Text>
 							</Flex>
 						</Flex>
+					) : (
+						<Flex flexWrap="wrap" gap="7" zIndex="1">
+							<PoolCards />
+							<PoolCards />
+							<PoolCards />
+						</Flex>
 					)}
-					<Flex flexWrap="wrap" gap="7" zIndex="1">
-						<PoolCards />
-					</Flex>
 				</Flex>
 			</Flex>
-		</DefaultTemplate>
+		</Flex>
 	);
 };
