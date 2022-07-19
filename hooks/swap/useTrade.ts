@@ -1,4 +1,12 @@
-import { Currency, Trade, CurrencyAmount } from "@pollum-io/pegasys-sdk";
+import {
+	Currency,
+	Trade,
+	CurrencyAmount,
+	Route,
+	Pair,
+	ChainId,
+	TradeType,
+} from "@pollum-io/pegasys-sdk";
 import { IWalletHookInfos } from "types";
 import { useAllCommonPairs } from "./useAllCommonPairs";
 
@@ -13,7 +21,7 @@ export async function useTradeExactIn(
 		walletInfos as IWalletHookInfos
 	);
 
-	console.log("pairsIn:", allowedPairs);
+	// console.log("pairsIn:", allowedPairs);
 
 	if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
 		return (
@@ -37,20 +45,36 @@ export async function useTradeExactOut(
 		walletInfos as IWalletHookInfos
 	);
 
+	const pair = new Pair(
+		allowedPairs[0].reserve0,
+		allowedPairs[0].reserve1,
+		ChainId.TANENBAUM
+	);
 
-	if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
-		return (
-			Trade.bestTradeExactOut(
-				allowedPairs,
-				currencyIn,
-				currencyAmountOut,
-				{
-					maxHops: 3,
-					maxNumResults: 1,
-				},
-				allowedPairs
-			)[0] ?? null
-		);
-	}
-	return null;
+	const route = new Route([pair], allowedPairs[0].token0);
+
+	const trade = new Trade(
+		route,
+		allowedPairs[0].reserve0,
+		TradeType.EXACT_INPUT,
+		ChainId.TANENBAUM
+	);
+	console.log(trade);
+
+	return trade;
+	// if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
+	// 	return (
+	// 		Trade.bestTradeExactOut(
+	// 			allowedPairs,
+	// 			currencyIn,
+	// 			currencyAmountOut,
+	// 			{
+	// 				maxHops: 3,
+	// 				maxNumResults: 1,
+	// 			},
+	// 			allowedPairs
+	// 		)[0] ?? null
+	// 	);
+	// }
+	// return null;
 }

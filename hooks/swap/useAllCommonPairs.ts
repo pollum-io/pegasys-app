@@ -10,7 +10,7 @@ export async function useAllCommonPairs(
 	walletInfos: IWalletHookInfos
 ): Promise<Pair[]> {
 	const bases: Token[] = walletInfos.chainId
-		? BASES_TO_CHECK_TRADES_AGAINST[walletInfos.chainId]
+		? BASES_TO_CHECK_TRADES_AGAINST[ChainId.TANENBAUM]
 		: [];
 
 	const [tokenA, tokenB] = [
