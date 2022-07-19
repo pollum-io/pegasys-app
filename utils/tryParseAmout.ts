@@ -14,7 +14,7 @@ export function tryParseAmount(
 	try {
 		const typedValueParsed = parseUnits(value, currency.decimals).toString();
 		if (typedValueParsed !== "0") {
-			return new TokenAmount(currency as Token, JSBI.BigInt(typedValueParsed));
+			return new CurrencyAmount(currency, typedValueParsed);
 		}
 	} catch (error) {
 		// should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)

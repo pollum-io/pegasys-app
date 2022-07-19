@@ -10,23 +10,23 @@ export async function useAllCommonPairs(
 	walletInfos: IWalletHookInfos
 ): Promise<Pair[]> {
 	const bases: Token[] = walletInfos.chainId
-		? BASES_TO_CHECK_TRADES_AGAINST[walletInfos.chainId]
+		? BASES_TO_CHECK_TRADES_AGAINST[ChainId.TANENBAUM]
 		: [];
 
 	const [tokenA, tokenB] = [
 		currencyA &&
 			new Token(
-				ChainId.TANEMBAUM,
+				ChainId.TANENBAUM,
 				currencyA?.address,
-				18,
+				currencyA?.decimals,
 				currencyA?.symbol,
 				currencyA?.name
 			),
 		currencyB &&
 			new Token(
-				ChainId.TANEMBAUM,
+				ChainId.TANENBAUM,
 				currencyB?.address,
-				18,
+				currencyB?.decimals,
 				currencyB?.symbol,
 				currencyB?.name
 			),
@@ -35,12 +35,6 @@ export async function useAllCommonPairs(
 	const basePairs: [Token, Token][] = flatMap(bases, (base): [Token, Token][] =>
 		bases.map(otherBase => [base, otherBase])
 	).filter(([t0, t1]) => t0.address !== t1.address);
-
-	console.log("TOKENA E TOKENB: ", {
-		tokenA,
-		tokenB,
-		chain: walletInfos.chainId,
-	});
 
 	const allPairCombinations: [Token, Token][] =
 		tokenA && tokenB
@@ -60,7 +54,7 @@ export async function useAllCommonPairs(
 					.filter(([t0, t1]) => t0.address !== t1.address)
 					.filter(([tokenA, tokenB]) => {
 						// if (!walletInfos.chainId) return true;
-						const customBases = CUSTOM_BASES[ChainId.TANEMBAUM];
+						const customBases = CUSTOM_BASES[ChainId.TANENBAUM];
 						if (!customBases) return true;
 
 						const customBasesA: Token[] | undefined =

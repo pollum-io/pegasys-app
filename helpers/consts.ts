@@ -3,7 +3,7 @@ import { IWalletInfo } from "types";
 import { ChainId, Token, WSYS } from "@pollum-io/pegasys-sdk";
 
 type ChainTokenList = {
-	readonly [chainId in number]: Token[];
+	readonly [chainId in ChainId]: Token[];
 };
 
 export const NEVM_CHAIN_PARAMS = {
@@ -206,7 +206,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
  * tokens.
  */
 export const CUSTOM_BASES: {
-	[chainId in number]?: { [tokenAddress: string]: Token[] };
+	[chainId in ChainId]?: { [tokenAddress: string]: Token[] };
 } = {
 	[ChainId.NEVM]: {},
 };

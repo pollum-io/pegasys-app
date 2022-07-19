@@ -1,20 +1,20 @@
-import { Trade } from "@pollum-io/pegasys-sdk";
+import { CurrencyAmount, Trade } from "@pollum-io/pegasys-sdk";
 
 import { ISwapTokenInputValue, IWalletHookInfos } from "types";
 import { tryParseAmount } from "utils";
 
 import { useTradeExactIn, useTradeExactOut } from "./useTrade";
 
-export async function useDerivedSwapInfo(
+export async function UseDerivedSwapInfo(
 	inputs: ISwapTokenInputValue,
 	walletInfos: IWalletHookInfos
-): {
-	parsedAmount: any;
+): Promise<{
+	parsedAmount: CurrencyAmount;
 	v2Trade: Trade | any;
 	// currencies: { [ input in string ]?: Currency }
 	// parsedAmount: any,
 	// inputError?: string
-} {
+}> {
 	const isExactIn: boolean = inputs.lastInputTyped === 0;
 
 	const parsedAmount = tryParseAmount(

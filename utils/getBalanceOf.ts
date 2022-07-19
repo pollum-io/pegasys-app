@@ -105,7 +105,7 @@ export const getMultiCall = async (
 
 		return contractCall;
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		return [];
 	}
 };

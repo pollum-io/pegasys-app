@@ -8,8 +8,7 @@ import {
 	Text,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { ethers } from "ethers";
-import { usePicasso, useTokens, useWallet, useDerivedSwapInfo } from "hooks";
+import { usePicasso, useTokens, useWallet, UseDerivedSwapInfo } from "hooks";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { MdWifiProtectedSetup } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
@@ -22,8 +21,6 @@ import {
 	IWalletHookInfos,
 } from "types";
 import { TOKENS_INITIAL_STATE } from "helpers/consts";
-import { createContractUsingAbi } from "utils";
-import erc20Abi from "utils/abis/erc20.json";
 
 export const Swap: FunctionComponent<ButtonProps> = () => {
 	const theme = usePicasso();
@@ -168,10 +165,18 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		provider,
 	};
 
-	const { parsedAmount, v2Trade } = useDerivedSwapInfo(
-		tokenInputValue,
-		walletInfos
-	);
+	const handleSwapInfo = async () => {
+		const { parsedAmount, v2Trade } = await UseDerivedSwapInfo(
+			tokenInputValue,
+			walletInfos
+		);
+
+		console.log("v2Trade", v2Trade);
+	};
+
+	useEffect(() => {
+		handleSwapInfo();
+	}, [tokenInputValue, selectedToken]);
 
 	// useMemo(() => {
 	// 	if(!isConnected) return
