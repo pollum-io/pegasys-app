@@ -108,8 +108,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		});
 	}, [connectorSelected]);
 
-	console.log("chainID", currentNetworkChainId);
-
 	useEffect(() => {
 		const verifySysNetwork =
 			window?.ethereum?.selectedAddress &&

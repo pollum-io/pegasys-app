@@ -15,7 +15,6 @@ const SYS: Currency = {
 };
 
 export function wrappedCurrency(currency: Currency, chainId: ChainId) {
-	console.log("currency", currency);
 	return chainId && currency?.name === "Syscoin"
 		? WSYS[chainId]
 		: currency instanceof Token

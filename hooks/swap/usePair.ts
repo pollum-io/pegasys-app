@@ -16,7 +16,7 @@ export enum PairState {
 }
 
 export async function usePairs(
-	currencies: [Currency | undefined, Currency | undefined][],
+	currencies: Token[],
 	walletInfos: IWalletHookInfos
 ): Promise<[PairState, Pair | null | any][]> {
 	const tokens = currencies;
@@ -45,7 +45,7 @@ export async function usePairs(
 	// eslint-disable-next-line
 	// console.log("MULTI CALL RESULT: ", results);
 
-	return results?.map((result: any, i: number) => {
+	return results?.map((result: any) => {
 		const { _reserve0, _reserve1 } = result;
 
 		return [

@@ -25,12 +25,14 @@ export async function UseDerivedSwapInfo(
 	const bestTradeExactIn = await useTradeExactIn(
 		isExactIn ? parsedAmount : undefined,
 		inputs.inputTo.token ?? undefined,
-		walletInfos
+		walletInfos,
+		inputs.typedValue
 	);
 	const bestTradeExactOut = await useTradeExactOut(
 		inputs.inputFrom.token ?? undefined,
 		!isExactIn ? parsedAmount : undefined,
-		walletInfos
+		walletInfos,
+		inputs.typedValue
 	);
 
 	const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut;
