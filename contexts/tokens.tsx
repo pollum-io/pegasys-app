@@ -1,6 +1,6 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers } from "ethers";
-import { ITokenBalance, ITokenBalanceWithId } from "types";
+import { ITokenBalance, ITokenBalanceWithId, WrappedTokenInfo } from "types";
 import { useWallet } from "hooks";
 import { getDefaultTokens } from "networks";
 import { getBalanceOfMultiCall } from "utils";
@@ -48,9 +48,11 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 	const getDefaultListToken = async () => {
 		const { tokens } = await getDefaultTokens();
 
-		const tokensAddress = tokens.map(token => token.address);
+		const convertTokens = tokens.map((token) => new WrappedTokenInfo(token))
 
-		const tokensDecimals = tokens.map(token => token.decimals);
+		const tokensAddress = convertTokens.map(token => token.address);
+
+		const tokensDecimals = convertTokens.map(token => token.decimals);
 
 		const balances = await getBalanceOfMultiCall(
 			tokensAddress,
@@ -59,7 +61,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			tokensDecimals
 		);
 
-		const tokensWithBalance = tokens.map(token => {
+		const tokensWithBalance = convertTokens.map(token => {
 			const balanceItems = balances.find(
 				balance => balance.address === token.address
 			);

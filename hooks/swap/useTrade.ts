@@ -22,33 +22,33 @@ export async function useTradeExactIn(
 		currencyOut as Currency,
 		walletInfos as IWalletHookInfos
 	);
+	console.log("allowedPairs: ", allowedPairs);
+	// const tokenIn = allowedPairs[0]?.token1;
+	// const tokenOut = allowedPairs[0]?.token0;
 
-	const tokenIn = allowedPairs[0]?.token1;
-	const tokenOut = allowedPairs[0]?.token0;
+	// // console.log("allowedPairs", { tokenIn, tokenOut, currencyAmountIn });
 
-	// console.log("allowedPairs", { tokenIn, tokenOut, currencyAmountIn });
+	// const pair =
+	// 	tokenIn &&
+	// 	tokenOut &&
+	// 	new Pair(new TokenAmount(tokenIn, "39"), new TokenAmount(tokenOut, "8992"));
 
-	const pair =
-		tokenIn &&
-		tokenOut &&
-		new Pair(new TokenAmount(tokenIn, "39"), new TokenAmount(tokenOut, "8992"));
+	// const route = pair && new Route([pair], tokenIn);
 
-	const route = pair && new Route([pair], tokenIn);
+	// const trade =
+	// 	route &&
+	// 	new Trade(
+	// 		route,
+	// 		new TokenAmount(tokenIn, typedValue),
+	// 		TradeType.EXACT_INPUT,
+	// 		ChainId.TANENBAUM
+	// 	);
+	// console.log("exactIn - ", {
+	// 	input: Number(trade?.inputAmount.toExact()) * 10 ** 18,
+	// 	output: Number(trade?.outputAmount.toExact()) * 10 ** 18,
+	// });
 
-	const trade =
-		route &&
-		new Trade(
-			route,
-			new TokenAmount(tokenIn, typedValue),
-			TradeType.EXACT_INPUT,
-			ChainId.TANENBAUM
-		);
-	console.log("exactIn - ", {
-		input: Number(trade?.inputAmount.toExact()) * 10 ** 18,
-		output: Number(trade?.outputAmount.toExact()) * 10 ** 18,
-	});
-
-	return trade;
+	// return trade;
 
 	// if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
 	// 	return (
@@ -73,37 +73,38 @@ export async function useTradeExactOut(
 		walletInfos as IWalletHookInfos
 	);
 
-	const tokenIn = allowedPairs[0]?.token0;
-	const tokenOut = allowedPairs[0]?.token1;
+	// console.log('allowedPairs', allowedPairs)
+	// const tokenIn = allowedPairs[0]?.token0;
+	// const tokenOut = allowedPairs[0]?.token1;
 
-	const pair =
-		tokenIn &&
-		tokenOut &&
-		new Pair(new TokenAmount(tokenIn, "8992"), new TokenAmount(tokenOut, "39"));
+	// const pair =
+	// 	tokenIn &&
+	// 	tokenOut &&
+	// 	new Pair(new TokenAmount(tokenIn, "8992"), new TokenAmount(tokenOut, "39"));
 
-	const route = pair && new Route([pair], tokenIn);
+	// const route = pair && new Route([pair], tokenIn);
 
-	const trade =
-		route &&
-		new Trade(
-			route,
-			new TokenAmount(tokenOut, typedValue),
-			TradeType.EXACT_OUTPUT,
-			ChainId.TANENBAUM
-		);
-
-	console.log("exactOut - ", {
-		input: Number(trade?.inputAmount.toExact()) * 10 ** 18,
-		output: Number(trade?.outputAmount.toExact()) * 10 ** 18,
-	});
-
-	return trade;
-
-	// if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
-	// 	return (
-	// 		Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut) ??
-	// 		null
+	// const trade =
+	// 	route &&
+	// 	new Trade(
+	// 		route,
+	// 		new TokenAmount(tokenOut, typedValue),
+	// 		TradeType.EXACT_OUTPUT,
+	// 		ChainId.TANENBAUM
 	// 	);
-	// }
-	// return null;
+
+	// console.log("exactOut - ", {
+	// 	input: Number(trade?.inputAmount.toExact()) * 10 ** 18,
+	// 	output: Number(trade?.outputAmount.toExact()) * 10 ** 18,
+	// });
+
+	// return trade;
+
+	if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
+		return (
+			Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut) ??
+			null
+		);
+	}
+	return null;
 }

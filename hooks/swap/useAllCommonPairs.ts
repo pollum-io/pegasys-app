@@ -2,6 +2,7 @@ import { Currency, Pair, Token, ChainId } from "@pollum-io/pegasys-sdk";
 import flatMap from "lodash.flatmap";
 import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from "helpers/consts";
 import { IWalletHookInfos } from "types";
+import { wrappedCurrency } from "utils";
 import { PairState, usePairs } from "./usePair";
 
 export async function useAllCommonPairs(
@@ -13,24 +14,49 @@ export async function useAllCommonPairs(
 		? BASES_TO_CHECK_TRADES_AGAINST[ChainId.TANENBAUM]
 		: [];
 
-	const [tokenA, tokenB] = [
-		currencyA &&
-			new Token(
-				ChainId.TANENBAUM,
-				currencyA?.address,
-				currencyA?.decimals,
-				currencyA?.symbol,
-				currencyA?.name
-			),
-		currencyB &&
-			new Token(
-				ChainId.TANENBAUM,
-				currencyB?.address,
-				currencyB?.decimals,
-				currencyB?.symbol,
-				currencyB?.name
-			),
-	];
+	// const [tokenA, tokenB] = [
+	// 	currencyA &&
+	// 		new Token(
+	// 			ChainId.TANENBAUM,
+	// 			currencyA?.address,
+	// 			currencyA?.decimals,
+	// 			currencyA?.symbol,
+	// 			currencyA?.name
+	// 		),
+	// 	currencyB &&
+	// 		new Token(
+	// 			ChainId.TANENBAUM,
+	// 			currencyB?.address,
+	// 			currencyB?.decimals,
+	// 			currencyB?.symbol,
+	// 			currencyB?.name
+	// 		),
+	// ];
+
+	const [tokenA, tokenB] = walletInfos.chainId
+		? [
+				wrappedCurrency(
+					new Token(
+						ChainId.TANENBAUM,
+						currencyA?.address,
+						currencyA?.decimals,
+						currencyA?.symbol,
+						currencyA?.name
+					),
+					walletInfos.chainId
+				),
+				wrappedCurrency(
+					new Token(
+						ChainId.TANENBAUM,
+						currencyB?.address,
+						currencyB?.decimals,
+						currencyB?.symbol,
+						currencyB?.name
+					),
+					walletInfos.chainId
+				),
+		  ]
+		: [undefined, undefined];
 
 	const basePairs: [Token, Token][] = flatMap(bases, (base): [Token, Token][] =>
 		bases.map(otherBase => [base, otherBase])

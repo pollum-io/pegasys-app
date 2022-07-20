@@ -8,14 +8,8 @@ import {
 	WSYS,
 } from "@pollum-io/pegasys-sdk";
 
-const SYS: Currency = {
-	decimals: 18,
-	symbol: "SYS",
-	name: "Syscoin",
-};
-
 export function wrappedCurrency(currency: Currency, chainId: ChainId) {
-	return chainId && currency?.name === "Syscoin"
+	return chainId && currency?.name?.includes("Syscoin")
 		? WSYS[chainId]
 		: currency instanceof Token
 		? currency
