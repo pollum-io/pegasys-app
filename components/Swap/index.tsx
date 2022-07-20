@@ -156,8 +156,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 		console.log("v2Trade", v2Trade);
 
-		console.log("v2Trade input amount", v2Trade.inputAmount.toExact());
-		console.log("v2Trade output amount", v2Trade.outputAmount.toExact());
+		console.log("v2Trade input amount", v2Trade?.inputAmount?.toExact());
+		console.log("v2Trade output amount", v2Trade?.outputAmount?.toExact());
 	};
 
 	useEffect(() => {
@@ -226,7 +226,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								onOpenCoin();
 							}}
 						>
-							<Img src={selectedToken[0]?.tokenInfo.logoURI} w="6" h="6" />
+							<Img src={selectedToken[0]?.tokenInfo?.logoURI} w="6" h="6" />
 							<Text fontSize="xl" fontWeight="500" px="3">
 								{selectedToken[0]?.symbol}
 							</Text>

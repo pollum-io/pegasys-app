@@ -87,10 +87,6 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		getDefaultListToken();
 	}, [isConnected, currentNetworkChainId]);
 
-	// useEffect(() => {
-	// 	getDefaultListToken();
-	// }, [])
-
 	console.log("user Token", userTokensBalance);
 
 	const tokensProviderValue = useMemo(
