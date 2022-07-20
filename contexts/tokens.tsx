@@ -6,7 +6,7 @@ import { getDefaultTokens } from "networks";
 import { getBalanceOfMultiCall } from "utils";
 
 interface ITokensContext {
-	userTokensBalance: ITokenBalance[];
+	userTokensBalance: WrappedTokenInfo[];
 }
 
 export const TokensContext = createContext({} as ITokensContext);
@@ -15,56 +15,58 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [userTokensBalance, setUserTokensBalance] = useState<
-		ITokenBalance[] | ITokenBalanceWithId[]
+		WrappedTokenInfo[]
 	>([]);
 
-	const { isConnected, provider, walletAddress } = useWallet();
-
-	const getProviderTokenBalance = async () => {
-		const value = await provider
-			?.getBalance(walletAddress)
-			.then(result => result.toString());
-
-		if (!value) return "0";
-
-		const formattedValue = ethers.utils.formatEther(value);
-		// eslint-disable-next-line
-		setUserTokensBalance(previous => [
-			{
-				address: "0xa66b2E50c2b805F31712beA422D0D9e7D0Fd0F35",
-				chainId: 5700,
-				name: "Testnet Syscoin",
-				symbol: "TSYS",
-				decimals: 18,
-				balance: formattedValue,
-				logoURI: "https://cryptologos.cc/logos/syscoin-sys-logo.png?v=022",
-			},
-			...previous,
-		]);
-
-		return formattedValue;
-	};
+	const { isConnected, provider, walletAddress, currentNetworkChainId } =
+		useWallet();
 
 	const getDefaultListToken = async () => {
 		const { tokens } = await getDefaultTokens();
 
-		const convertTokens = tokens.map((token) => new WrappedTokenInfo(token))
+		if (!isConnected || !provider) {
+			const tokensWithBalance = tokens.map(token => ({
+				...token,
+				balance: "0",
+			}));
 
-		const tokensAddress = convertTokens.map(token => token.address);
+			const convertTokens = tokensWithBalance.map(
+				token => new WrappedTokenInfo(token)
+			);
 
-		const tokensDecimals = convertTokens.map(token => token.decimals);
+			setUserTokensBalance(convertTokens);
+		}
 
-		const balances = await getBalanceOfMultiCall(
+		const tokensAddress = tokens.map(token => token.address);
+
+		const tokensDecimals = tokens.map(token => token.decimals);
+
+		const providerTokenBalance = await provider
+			?.getBalance(walletAddress)
+			.then(result => result.toString());
+
+		if (!providerTokenBalance) return "0";
+
+		const formattedValue = ethers.utils.formatEther(providerTokenBalance);
+
+		const contractBalances = await getBalanceOfMultiCall(
 			tokensAddress,
 			walletAddress,
 			provider,
 			tokensDecimals
 		);
 
-		const tokensWithBalance = convertTokens.map(token => {
-			const balanceItems = balances.find(
+		const tokensWithBalance = tokens.map(token => {
+			const balanceItems = contractBalances.find(
 				balance => balance.address === token.address
 			);
+
+			if (token.symbol === "WSYS" || token.symbol === "SYS") {
+				return {
+					...token,
+					balance: formattedValue as string,
+				};
+			}
 
 			return {
 				...token,
@@ -72,18 +74,24 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			};
 		});
 
-		setUserTokensBalance(tokensWithBalance);
+		const convertTokens = tokensWithBalance.map(
+			token => new WrappedTokenInfo(token)
+		);
 
-		if (!userTokensBalance) return;
+		setUserTokensBalance(convertTokens);
 
-		getProviderTokenBalance();
+		return {};
 	};
 
 	useEffect(() => {
-		if (!isConnected) return;
-
 		getDefaultListToken();
-	}, [isConnected]);
+	}, [isConnected, currentNetworkChainId]);
+
+	// useEffect(() => {
+	// 	getDefaultListToken();
+	// }, [])
+
+	console.log("user Token", userTokensBalance);
 
 	const tokensProviderValue = useMemo(
 		() => ({

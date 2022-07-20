@@ -16,12 +16,12 @@ export enum PairState {
 }
 
 export async function usePairs(
-	currencies: Token[],
+	currencies: any[],
 	walletInfos: IWalletHookInfos
 ): Promise<[PairState, Pair | null | any][]> {
 	const tokens = currencies;
 
-	const pairAddresses = tokens
+	const pairAddresses: any = tokens
 		.map(([tokenA, tokenB]) => {
 			if (tokenA.chainId && tokenB.chainId) {
 				return Pair.getAddress(
@@ -36,7 +36,7 @@ export async function usePairs(
 
 	// console.log("PAIR ADDRESS: ", pairAddresses);
 
-	const results: any[] = await getMultiCall(
+	const results: any = await getMultiCall(
 		pairAddresses,
 		walletInfos.walletAddress,
 		walletInfos.provider,

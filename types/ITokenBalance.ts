@@ -1,10 +1,15 @@
 import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
 import { Token } from "@pollum-io/pegasys-sdk";
 
-export class WrappedTokenInfo extends Token {
-	public readonly tokenInfo: TokenInfo;
+export interface ITokenInfoBalance extends TokenInfo {
+	balance: string;
+	id?: number;
+}
 
-	constructor(tokenInfo: TokenInfo) {
+export class WrappedTokenInfo extends Token {
+	public readonly tokenInfo: ITokenInfoBalance;
+
+	constructor(tokenInfo: ITokenInfoBalance) {
 		super(
 			tokenInfo.chainId,
 			tokenInfo.address,
@@ -13,12 +18,22 @@ export class WrappedTokenInfo extends Token {
 			tokenInfo.name
 		);
 		this.tokenInfo = tokenInfo;
+		this.tokenInfo.id = tokenInfo.id;
 	}
 
 	public get logoURI(): string | undefined {
 		return this.tokenInfo.logoURI;
 	}
+
+	public get balance(): string {
+		return this.tokenInfo.balance;
+	}
+
+	public get id(): number | undefined {
+		return this.tokenInfo.id;
+	}
 }
+
 export interface ITokenBalance extends WrappedTokenInfo {
 	balance: string;
 }

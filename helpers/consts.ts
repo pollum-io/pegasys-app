@@ -1,5 +1,5 @@
 import { injected, walletlink } from "utils/connectors";
-import { IWalletInfo } from "types";
+import { IWalletInfo, WrappedTokenInfo } from "types";
 import { ChainId, Token, WSYS } from "@pollum-io/pegasys-sdk";
 
 type ChainTokenList = {

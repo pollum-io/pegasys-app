@@ -14,49 +14,56 @@ export async function useAllCommonPairs(
 		? BASES_TO_CHECK_TRADES_AGAINST[ChainId.TANENBAUM]
 		: [];
 
-	// const [tokenA, tokenB] = [
-	// 	currencyA &&
-	// 		new Token(
-	// 			ChainId.TANENBAUM,
-	// 			currencyA?.address,
-	// 			currencyA?.decimals,
-	// 			currencyA?.symbol,
-	// 			currencyA?.name
-	// 		),
-	// 	currencyB &&
-	// 		new Token(
-	// 			ChainId.TANENBAUM,
-	// 			currencyB?.address,
-	// 			currencyB?.decimals,
-	// 			currencyB?.symbol,
-	// 			currencyB?.name
-	// 		),
-	// ];
+	const [tokenA, tokenB] = [
+		currencyA &&
+			new Token(
+				ChainId.TANENBAUM,
+				currencyA?.address,
+				currencyA?.decimals,
+				currencyA?.symbol,
+				currencyA?.name
+			),
+		currencyB &&
+			new Token(
+				ChainId.TANENBAUM,
+				currencyB?.address,
+				currencyB?.decimals,
+				currencyB?.symbol,
+				currencyB?.name
+			),
+	];
 
-	const [tokenA, tokenB] = walletInfos.chainId
-		? [
-				wrappedCurrency(
-					new Token(
-						ChainId.TANENBAUM,
-						currencyA?.address,
-						currencyA?.decimals,
-						currencyA?.symbol,
-						currencyA?.name
-					),
-					walletInfos.chainId
-				),
-				wrappedCurrency(
-					new Token(
-						ChainId.TANENBAUM,
-						currencyB?.address,
-						currencyB?.decimals,
-						currencyB?.symbol,
-						currencyB?.name
-					),
-					walletInfos.chainId
-				),
-		  ]
-		: [undefined, undefined];
+	// console.log({currencyA, currencyB})
+	// const createTokenA = currencyA && new Token(
+	// 	ChainId.TANENBAUM,
+	// 	currencyA?.address,
+	// 	currencyA?.decimals,
+	// 	currencyA?.symbol,
+	// 	currencyA?.name
+	// )
+
+	// const createTokenB = currencyB && new Token(
+	// 	ChainId.TANENBAUM,
+	// 	currencyB?.address,
+	// 	currencyB?.decimals,
+	// 	currencyB?.symbol,
+	// 	currencyB?.name
+	// )
+
+	// const [tokenA, tokenB] = walletInfos.chainId
+	// 	? [
+	// 			wrappedCurrency(
+	// 				createTokenA,
+	// 				walletInfos.chainId
+	// 			),
+	// 			wrappedCurrency(
+	// 				createTokenB,
+	// 				walletInfos.chainId
+	// 			),
+	// 	  ]
+	// 	: [undefined, undefined];
+
+	// console.log({tokenA, tokenB})
 
 	const basePairs: [Token, Token][] = flatMap(bases, (base): [Token, Token][] =>
 		bases.map(otherBase => [base, otherBase])
@@ -99,6 +106,7 @@ export async function useAllCommonPairs(
 					})
 			: [];
 
+	console.log("allPairCombinations", allPairCombinations);
 	const allPairs = await usePairs(allPairCombinations, walletInfos);
 
 	// only pass along valid pairs, non-duplicated pairs

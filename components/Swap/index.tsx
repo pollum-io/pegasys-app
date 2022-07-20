@@ -19,8 +19,8 @@ import {
 	ITokenBalanceWithId,
 	ISwapTokenInputValue,
 	IWalletHookInfos,
+	WrappedTokenInfo,
 } from "types";
-import { TOKENS_INITIAL_STATE } from "helpers/consts";
 
 export const Swap: FunctionComponent<ButtonProps> = () => {
 	const theme = usePicasso();
@@ -46,46 +46,29 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		walletAddress,
 	} = useWallet();
 
-	const [selectedToken, setSelectedToken] = useState<
-		ITokenBalanceWithId[] | ITokenBalance[]
-	>(TOKENS_INITIAL_STATE);
+	const [selectedToken, setSelectedToken] = useState([
+		{
+			...userTokensBalance[0],
+		},
+		{
+			...userTokensBalance[1],
+		},
+	]);
 
 	const [buttonId, setButtonId] = useState<number>(0);
 
 	const [tokenInputValue, setTokenInputValue] = useState<ISwapTokenInputValue>({
 		inputFrom: {
-			token: TOKENS_INITIAL_STATE[0],
+			token: userTokensBalance[0],
 			value: "",
 		},
 		inputTo: {
-			token: TOKENS_INITIAL_STATE[1],
+			token: userTokensBalance[1],
 			value: "",
 		},
 		typedValue: "",
 		lastInputTyped: undefined,
 	});
-
-	// const getTokenAllowance = async (
-	// 	token: ITokenBalance | ITokenBalanceWithId
-	// ) => {
-	// 	try {
-	// 		if (!provider || !token) return;
-	// 		const contract = createContractUsingAbi(
-	// 			String(token.address),
-	// 			erc20Abi,
-	// 			provider
-	// 		);
-
-	// 		const contractCall = await contract.allowance(
-	// 			token.address,
-	// 			walletAddress
-	// 		);
-
-	// 		return String(ethers.utils.formatUnits(contractCall, token.decimals));
-	// 	} catch (error) {
-	// 		return "0";
-	// 	}
-	// };
 
 	const handleOnChangeTokenInputs = (
 		event: React.ChangeEvent<HTMLInputElement>
@@ -103,33 +86,28 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				inputFrom:
 					typedInput === "inputFrom"
 						? {
-								token: selectedToken[0],
+								token: userTokensBalance[0],
 								value: inputValue,
 						  }
 						: {
-								token: selectedToken[0],
+								token: userTokensBalance[0],
 								value: "",
 						  },
 
 				inputTo:
 					typedInput === "inputTo"
 						? {
-								token: selectedToken[1],
+								token: userTokensBalance[1],
 								value: inputValue,
 						  }
 						: {
-								token: selectedToken[1],
+								token: userTokensBalance[1],
 								value: "",
 						  },
 
 				typedValue: inputValue,
 				lastInputTyped: typedInput === "inputFrom" ? 0 : 1,
 			});
-
-			// setTokenInputValue(prevState => ({
-			// 	...prevState,
-			// 	[event.target.name]: inputValue,
-			// }));
 		}
 	};
 
@@ -142,13 +120,18 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		if (!isConnected || !userTokensBalance) return;
 
 		const getTokensBySymbol = userTokensBalance?.filter(
-			token => token.symbol.includes("TSYS") || token.symbol.includes("PSYS")
+			token =>
+				token?.symbol === "WSYS" ||
+				token?.symbol === "SYS" ||
+				token?.symbol === "PSYS"
 		);
 
-		const setIdToTokens = getTokensBySymbol.map((token, index: number) => ({
-			...token,
-			id: index,
-		}));
+		const setIdToTokens: any = getTokensBySymbol.map(
+			(token, index: number) => ({
+				...token,
+				id: index,
+			})
+		);
 
 		setSelectedToken(setIdToTokens);
 	}, [isConnected, userTokensBalance]);
@@ -156,7 +139,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const canSubmit =
 		isConnected &&
 		parseFloat(tokenInputValue?.inputFrom?.value) > 0 &&
-		parseFloat(selectedToken[0]?.balance) >
+		parseFloat(selectedToken[0]?.tokenInfo?.balance) >
 			parseFloat(tokenInputValue?.inputFrom?.value);
 
 	const walletInfos: IWalletHookInfos = {
@@ -172,20 +155,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		);
 
 		console.log("v2Trade", v2Trade);
+
+		console.log("v2Trade input amount", v2Trade.inputAmount.toExact());
+		console.log("v2Trade output amount", v2Trade.outputAmount.toExact());
 	};
 
 	useEffect(() => {
 		handleSwapInfo();
 	}, [tokenInputValue, selectedToken]);
-
-	// useMemo(() => {
-	// 	if(!isConnected) return
-
-	// 	const {parsedAmount, v2Trade} = useDerivedSwapInfo(tokenInputValue, walletInfos)
-
-	// 	console.log('v2Trade', v2Trade)
-
-	// }, [tokenInputValue, selectedToken])
 
 	return (
 		<Flex
@@ -234,7 +211,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							From
 						</Text>
 						<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-							Balance: {selectedToken[0]?.balance}
+							Balance: {selectedToken[0]?.tokenInfo?.balance}
 						</Text>
 					</Flex>
 					<Flex alignItems="center" justifyContent="space-between">
@@ -249,7 +226,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								onOpenCoin();
 							}}
 						>
-							<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
+							<Img src={selectedToken[0]?.tokenInfo.logoURI} w="6" h="6" />
 							<Text fontSize="xl" fontWeight="500" px="3">
 								{selectedToken[0]?.symbol}
 							</Text>
@@ -290,7 +267,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							To
 						</Text>
 						<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-							Balance: {selectedToken[1]?.balance}
+							Balance: {selectedToken[1]?.tokenInfo?.balance}
 						</Text>
 					</Flex>
 					<Flex alignItems="center" justifyContent="space-between">
@@ -305,7 +282,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								onOpenCoin();
 							}}
 						>
-							<Img src={selectedToken[1]?.logoURI} w="6" h="6" />
+							<Img src={selectedToken[1]?.tokenInfo?.logoURI} w="6" h="6" />
 							<Text fontSize="xl" fontWeight="500" px="3">
 								{selectedToken[1]?.symbol}
 							</Text>

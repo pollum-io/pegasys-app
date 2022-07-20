@@ -26,7 +26,7 @@ import React, {
 } from "react";
 import { MdHelpOutline } from "react-icons/md";
 import { BsArrowDownShort } from "react-icons/bs";
-import { ITokenBalance, ITokenBalanceWithId } from "types";
+import { ITokenBalance, ITokenBalanceWithId, WrappedTokenInfo } from "types";
 import BigNumber from "bignumber.js";
 
 interface ISymbol extends ITokenBalance {
@@ -47,9 +47,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const { selectedToken, buttonId, setSelectedToken } = props;
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
-	const [defaultTokens, setDefaultTokens] = useState<
-		ITokenBalance[] | ITokenBalanceWithId[]
-	>([]);
+	const [defaultTokens, setDefaultTokens] = useState<WrappedTokenInfo[]>([]);
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
 	const [filter, setFilter] = useState<ITokenBalance[] | ITokenBalanceWithId[]>(
 		[]

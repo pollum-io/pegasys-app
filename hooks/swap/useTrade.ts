@@ -16,7 +16,11 @@ export async function useTradeExactIn(
 	currencyOut?: Currency,
 	walletInfos?: IWalletHookInfos,
 	typedValue?: string
-): Promise<Trade[] | null> {
+): Promise<Trade | null> {
+	console.log("ExactIn - ", {
+		currencyIn: currencyAmountIn?.currency,
+		currencyOut,
+	});
 	const allowedPairs = await useAllCommonPairs(
 		currencyAmountIn?.currency as Currency,
 		currencyOut as Currency,
@@ -50,15 +54,18 @@ export async function useTradeExactIn(
 
 	// return trade;
 
-	// if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
-	// 	return (
-	// 		Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, {
-	// 			maxHops: 3,
-	// 			maxNumResults: 1,
-	// 		}) ?? null
-	// 	);
-	// }
-	// return null;
+	if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
+		return (Trade.bestTradeExactIn(
+			allowedPairs,
+			currencyAmountIn,
+			currencyOut,
+			{
+				maxHops: 3,
+				maxNumResults: 1,
+			}
+		) ?? null)[0];
+	}
+	return null;
 }
 
 export async function useTradeExactOut(
@@ -66,7 +73,11 @@ export async function useTradeExactOut(
 	currencyAmountOut?: CurrencyAmount,
 	walletInfos?: IWalletHookInfos,
 	typedValue?: string
-): Promise<Trade[] | null> {
+): Promise<Trade | null> {
+	console.log("ExactOut - ", {
+		currencyIn,
+		currencyOut: currencyAmountOut?.currency,
+	});
 	const allowedPairs = await useAllCommonPairs(
 		currencyIn as Currency,
 		currencyAmountOut?.currency as Currency,
@@ -101,10 +112,11 @@ export async function useTradeExactOut(
 	// return trade;
 
 	if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
-		return (
-			Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut) ??
-			null
-		);
+		return (Trade.bestTradeExactOut(
+			allowedPairs,
+			currencyIn,
+			currencyAmountOut
+		) ?? null)[0];
 	}
 	return null;
 }
