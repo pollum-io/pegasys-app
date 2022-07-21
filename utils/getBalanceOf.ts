@@ -101,8 +101,6 @@ export const getMultiCall = async (
 		);
 		const contractCall = await multiCall(contracts, method);
 
-		console.log(contractCall);
-
 		return contractCall;
 	} catch (error) {
 		console.log(error);

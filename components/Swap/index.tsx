@@ -14,13 +14,7 @@ import { MdWifiProtectedSetup } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
 import { SettingsButton } from "components/Header/SettingsButton";
-import {
-	ITokenBalance,
-	ITokenBalanceWithId,
-	ISwapTokenInputValue,
-	IWalletHookInfos,
-	WrappedTokenInfo,
-} from "types";
+import { ISwapTokenInputValue, IWalletHookInfos } from "types";
 
 export const Swap: FunctionComponent<ButtonProps> = () => {
 	const theme = usePicasso();
@@ -54,7 +48,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			...userTokensBalance[1],
 		},
 	]);
-
+	const [currentInput, setCurrentInput] = useState();
+	const [trade, setTrade] = useState();
 	const [buttonId, setButtonId] = useState<number>(0);
 
 	const [tokenInputValue, setTokenInputValue] = useState<ISwapTokenInputValue>({
@@ -80,6 +75,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		const typedInput = event?.currentTarget.name;
 
 		setTypedValue(inputValue);
+		setCurrentInput(typedInput);
 
 		if (inputValue === "" || regexPreventLetters.test(inputValue)) {
 			setTokenInputValue({
@@ -149,16 +145,42 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	};
 
 	const handleSwapInfo = async () => {
-		const { parsedAmount, v2Trade } = await UseDerivedSwapInfo(
-			tokenInputValue,
-			walletInfos
-		);
-
-		console.log("v2Trade", v2Trade);
-
-		console.log("v2Trade input amount", v2Trade?.inputAmount?.toExact());
-		console.log("v2Trade output amount", v2Trade?.outputAmount?.toExact());
+		const { v2Trade } = await UseDerivedSwapInfo(tokenInputValue, walletInfos);
+		setTrade(v2Trade);
 	};
+
+	useEffect(() => {
+		const { inputTo, inputFrom } = tokenInputValue;
+		if (currentInput !== "inputFrom") {
+			setTokenInputValue(prevState => {
+				const newObject = {
+					...prevState,
+					inputFrom: {
+						...prevState.inputFrom,
+						value:
+							inputTo.value !== "" ? trade?.inputAmount?.toSignificant(6) : "",
+					},
+				};
+				return newObject;
+			});
+			return;
+		}
+		if (currentInput !== "inputTo") {
+			setTokenInputValue(prevState => {
+				const newObject = {
+					...prevState,
+					inputTo: {
+						...prevState.inputTo,
+						value:
+							inputFrom.value !== ""
+								? trade?.outputAmount?.toSignificant(6)
+								: "",
+					},
+				};
+				return newObject;
+			});
+		}
+	}, [trade]);
 
 	useEffect(() => {
 		handleSwapInfo();
