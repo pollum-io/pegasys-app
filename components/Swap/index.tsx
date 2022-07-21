@@ -351,7 +351,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						fontWeight="semibold"
 						disabled={!canSubmit}
 					>
-						{isConnected ? "Enter an amount" : "Connect Wallet"}
+						{isConnected ? "Swap" : "Connect Wallet"}
 					</Button>
 				</Flex>
 			</Flex>
