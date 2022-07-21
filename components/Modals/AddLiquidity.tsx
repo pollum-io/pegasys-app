@@ -4,7 +4,6 @@ import {
 	Icon,
 	Input,
 	Modal,
-	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
 	Img,
@@ -13,11 +12,12 @@ import {
 	Tooltip,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { usePicasso } from "hooks";
-import React, { useState } from "react";
+import { usePicasso, useTokens } from "hooks";
+import React, { useEffect, useState } from "react";
 import { MdHelpOutline, MdArrowBack, MdAdd } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { SelectCoinModal } from "components";
+import { WrappedTokenInfo } from "types";
 
 interface IModal {
 	isModalOpen: boolean;
@@ -25,21 +25,20 @@ interface IModal {
 	isCreate: boolean;
 	haveValue: boolean;
 }
-interface IToken {
-	logoURI: string;
-	symbol: string;
-	id?: number;
-}
 
 export const AddLiquidityModal: React.FC<IModal> = props => {
 	const { isModalOpen, onModalClose, isCreate, haveValue } = props;
+
+	const { userTokensBalance } = useTokens();
+
 	const theme = usePicasso();
 	const { onOpen, isOpen, onClose } = useDisclosure();
-	const [selectedToken] = useState<IToken[]>([
-		{ logoURI: "icons/syscoin-logo.png", symbol: "SYS", id: 0 },
-		{ logoURI: "icons/pegasys.png", symbol: "PSYS", id: 1 },
-	]);
+	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
+
+	useEffect(() => {
+		setSelectedToken([userTokensBalance[0], userTokensBalance[1]]);
+	}, [userTokensBalance]);
 
 	return (
 		<Modal
@@ -51,6 +50,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 				isOpen={isOpen}
 				onClose={onClose}
 				selectedToken={selectedToken}
+				setSelectedToken={setSelectedToken}
 				buttonId={buttonId}
 			/>
 			<ModalOverlay />
@@ -167,7 +167,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										py="1"
 										id="0"
 										w="max-content"
-										onClick={event => {
+										onClick={(event: React.MouseEvent<HTMLInputElement>) => {
 											onOpen();
 											setButtonId(Number(event.currentTarget.id));
 										}}
@@ -224,7 +224,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										py="1"
 										id="1"
 										w="max-content"
-										onClick={event => {
+										onClick={(event: React.MouseEvent<HTMLInputElement>) => {
 											onOpen();
 											setButtonId(Number(event.currentTarget.id));
 										}}

@@ -1,10 +1,4 @@
-import {
-	TokenAmount,
-	Pair,
-	Currency,
-	ChainId,
-	Token,
-} from "@pollum-io/pegasys-sdk";
+import { TokenAmount, Pair, ChainId, Token } from "@pollum-io/pegasys-sdk";
 import { getMultiCall } from "utils";
 import { IWalletHookInfos } from "types";
 
@@ -16,12 +10,12 @@ export enum PairState {
 }
 
 export async function usePairs(
-	currencies: any[],
+	currencies: [Token, Token][],
 	walletInfos: IWalletHookInfos
-): Promise<[PairState, Pair | null | any][]> {
+): Promise<[PairState, Pair | null][]> {
 	const tokens = currencies;
 
-	const pairAddresses: any = tokens
+	const pairAddresses = tokens
 		.map(([tokenA, tokenB]) => {
 			if (tokenA.chainId && tokenB.chainId) {
 				return Pair.getAddress(
@@ -37,7 +31,7 @@ export async function usePairs(
 	// console.log("PAIR ADDRESS: ", pairAddresses);
 
 	const results: any = await getMultiCall(
-		pairAddresses,
+		pairAddresses as string[],
 		walletInfos.walletAddress,
 		walletInfos.provider,
 		"getReserves"

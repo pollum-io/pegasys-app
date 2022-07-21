@@ -3,7 +3,6 @@ import {
 	Flex,
 	Icon,
 	Modal,
-	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
 	Img,
@@ -12,32 +11,31 @@ import {
 	Tooltip,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { usePicasso } from "hooks";
-import React, { useState } from "react";
+import { usePicasso, useTokens } from "hooks";
+import React, { useEffect, useState } from "react";
 import { MdArrowBack, MdHelpOutline, MdAdd } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { SelectCoinModal } from "components";
+import { WrappedTokenInfo } from "types";
 
 interface IModal {
 	isModalOpen: boolean;
 	onModalClose: () => void;
 }
 
-interface IToken {
-	logoURI: string;
-	symbol: string;
-	id?: number;
-}
-
 export const ImportPoolModal: React.FC<IModal> = props => {
 	const { isModalOpen, onModalClose } = props;
+
+	const { userTokensBalance } = useTokens();
+
 	const theme = usePicasso();
 	const { onOpen, isOpen, onClose } = useDisclosure();
-	const [selectedToken] = useState<IToken[]>([
-		{ logoURI: "icons/syscoin-logo.png", symbol: "SYS", id: 0 },
-		{ logoURI: "icons/pegasys.png", symbol: "PSYS", id: 1 },
-	]);
+	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
+
+	useEffect(() => {
+		setSelectedToken([userTokensBalance[0], userTokensBalance[1]]);
+	}, [userTokensBalance]);
 
 	return (
 		<Modal
@@ -50,6 +48,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 				onClose={onClose}
 				buttonId={buttonId}
 				selectedToken={selectedToken}
+				setSelectedToken={setSelectedToken}
 			/>
 			<ModalOverlay />
 			<ModalContent
@@ -109,7 +108,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 							bgColor={theme.bg.blueNavy}
 							id="0"
 							width="100%"
-							onClick={event => {
+							onClick={(event: React.MouseEvent<HTMLInputElement>) => {
 								onOpen();
 								setButtonId(Number(event.currentTarget.id));
 							}}
@@ -151,7 +150,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								bgColor={theme.bg.blueNavy}
 								id="1"
 								width="100%"
-								onClick={event => {
+								onClick={(event: React.MouseEvent<HTMLInputElement>) => {
 									onOpen();
 									setButtonId(Number(event.currentTarget.id));
 								}}

@@ -7,7 +7,7 @@ interface IButtonProps {
 }
 
 export const TokenButton: FunctionComponent<IButtonProps> = props => {
-	const { children, ...rest } = props;
+	const { children } = props;
 	const theme = usePicasso();
 	const token = "PSYS";
 

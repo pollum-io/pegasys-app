@@ -5,7 +5,6 @@ export interface ITokenInfoBalance extends TokenInfo {
 	balance: string;
 	id?: number;
 }
-
 export class WrappedTokenInfo extends Token {
 	public readonly tokenInfo: ITokenInfoBalance;
 
@@ -32,12 +31,4 @@ export class WrappedTokenInfo extends Token {
 	public get id(): number | undefined {
 		return this.tokenInfo.id;
 	}
-}
-
-export interface ITokenBalance extends WrappedTokenInfo {
-	balance: string;
-}
-
-export interface ITokenBalanceWithId extends ITokenBalance {
-	id: number;
 }

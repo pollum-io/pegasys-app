@@ -10,7 +10,7 @@ export async function UseDerivedSwapInfo(
 	walletInfos: IWalletHookInfos
 ): Promise<{
 	parsedAmount: CurrencyAmount | undefined;
-	v2Trade: Trade | any;
+	v2Trade: Trade | undefined;
 }> {
 	const isExactIn: boolean = inputs.lastInputTyped === 0;
 
@@ -22,14 +22,12 @@ export async function UseDerivedSwapInfo(
 	const bestTradeExactIn = await useTradeExactIn(
 		isExactIn ? parsedAmount : undefined,
 		inputs.inputTo.token ?? undefined,
-		walletInfos,
-		inputs.typedValue
+		walletInfos
 	);
 	const bestTradeExactOut = await useTradeExactOut(
 		inputs.inputFrom.token ?? undefined,
 		!isExactIn ? parsedAmount : undefined,
-		walletInfos,
-		inputs.typedValue
+		walletInfos
 	);
 
 	const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut;

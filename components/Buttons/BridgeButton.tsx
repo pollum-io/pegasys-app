@@ -17,7 +17,7 @@ interface IButtonProps extends ButtonProps {
 }
 
 export const BridgeButton: FunctionComponent<IButtonProps> = props => {
-	const { children, ...rest } = props;
+	const { ...rest } = props;
 	const theme = usePicasso();
 	return (
 		<Flex justifyContent="center" alignItems="center">

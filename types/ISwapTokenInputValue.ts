@@ -1,7 +1,7 @@
-import { ITokenBalance, ITokenBalanceWithId } from "./index";
+import { WrappedTokenInfo } from "./index";
 
 interface IInputValues {
-	token: ITokenBalanceWithId | ITokenBalance;
+	token: WrappedTokenInfo;
 	value: string;
 }
 

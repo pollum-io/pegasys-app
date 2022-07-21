@@ -1,6 +1,6 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers } from "ethers";
-import { ITokenBalance, ITokenBalanceWithId, WrappedTokenInfo } from "types";
+import { WrappedTokenInfo } from "types";
 import { useWallet } from "hooks";
 import { getDefaultTokens } from "networks";
 import { getBalanceOfMultiCall } from "utils";

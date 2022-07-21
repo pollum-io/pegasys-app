@@ -26,21 +26,15 @@ import React, {
 } from "react";
 import { MdHelpOutline } from "react-icons/md";
 import { BsArrowDownShort } from "react-icons/bs";
-import { ITokenBalance, ITokenBalanceWithId, WrappedTokenInfo } from "types";
+import { WrappedTokenInfo } from "types";
 import BigNumber from "bignumber.js";
-
-interface ISymbol extends ITokenBalance {
-	id?: number;
-}
 
 interface IModal {
 	isOpen: boolean;
 	onClose: () => void;
-	selectedToken?: ISymbol[];
+	selectedToken?: WrappedTokenInfo[];
 	buttonId?: number;
-	setSelectedToken: React.Dispatch<
-		React.SetStateAction<ITokenBalance[] | ITokenBalanceWithId[]>
-	>;
+	setSelectedToken: React.Dispatch<React.SetStateAction<WrappedTokenInfo[]>>;
 }
 
 export const SelectCoinModal: React.FC<IModal> = props => {
@@ -49,12 +43,8 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const theme = usePicasso();
 	const [defaultTokens, setDefaultTokens] = useState<WrappedTokenInfo[]>([]);
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
-	const [filter, setFilter] = useState<ITokenBalance[] | ITokenBalanceWithId[]>(
-		[]
-	);
-	const [tokenError, setTokenError] = useState<
-		ISymbol[] | ITokenBalanceWithId[]
-	>([]);
+	const [filter, setFilter] = useState<WrappedTokenInfo[]>([]);
+	const [tokenError, setTokenError] = useState<WrappedTokenInfo[]>([]);
 
 	const { userTokensBalance } = useTokens();
 
@@ -63,7 +53,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 
 		if (inputValue !== "") {
 			const results = defaultTokens.filter(token =>
-				token.symbol.toLowerCase().startsWith(inputValue.toLowerCase())
+				token?.symbol?.toLowerCase().startsWith(inputValue.toLowerCase())
 			);
 			setFilter(results);
 		} else {
@@ -71,10 +61,10 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 		}
 	};
 
-	const orderList = (array: ITokenBalance[]) => {
-		const orderedList: ITokenBalance[] = [];
+	const orderList = (array: WrappedTokenInfo[]) => {
+		const orderedList: WrappedTokenInfo[] = [];
 		if (order === "desc") {
-			array?.forEach((token: ITokenBalance) => {
+			array?.forEach((token: WrappedTokenInfo) => {
 				const firstToken = new BigNumber(array[0]?.balance);
 				const tokenBalance = new BigNumber(token.balance);
 				if (!array[0] || firstToken.isLessThanOrEqualTo(tokenBalance))
@@ -82,7 +72,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				return orderedList.push(token);
 			});
 		} else {
-			array.forEach((token: ITokenBalance) => {
+			array.forEach((token: WrappedTokenInfo) => {
 				const firstToken = new BigNumber(array[0].balance);
 				const tokenBalance = new BigNumber(token.balance);
 				if (
@@ -114,7 +104,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	}, [userTokensBalance]);
 
 	const handleSelectToken = useCallback(
-		(id: number, token: ISymbol) => {
+		(id: number, token: WrappedTokenInfo) => {
 			if (!selectedToken) return;
 
 			const actualTokens = [...selectedToken];
@@ -122,7 +112,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 			actualTokens[id] = {
 				...selectedToken[id],
 				...token,
-			};
+			} as WrappedTokenInfo;
 
 			setSelectedToken(actualTokens);
 		},
@@ -132,9 +122,9 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	useEffect(() => {
 		if (!selectedToken) return;
 
-		const verify = selectedToken?.filter((currentToken: ISymbol) =>
+		const verify = selectedToken?.filter((currentToken: WrappedTokenInfo) =>
 			filter?.some(
-				(filteredValue: ISymbol) =>
+				(filteredValue: WrappedTokenInfo) =>
 					filteredValue?.symbol === currentToken.symbol
 			)
 		);
@@ -188,7 +178,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					</Flex>
 				</ModalBody>
 				<Flex flexDirection="column">
-					{filter?.map((token: ITokenBalance, index: number) => (
+					{filter?.map((token: WrappedTokenInfo, index: number) => (
 						<Button
 							bg="transparent"
 							px="10"
@@ -200,7 +190,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 								token.symbol === tokenError[1]?.symbol
 							}
 							onClick={() => {
-								handleSelectToken(buttonId, token);
+								handleSelectToken(buttonId as number, token);
 								onClose();
 							}}
 						>

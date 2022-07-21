@@ -18,10 +18,11 @@ import {
 	SliderFilledTrack,
 	SliderThumb,
 } from "@chakra-ui/react";
-import { usePicasso } from "hooks";
-import React, { useState } from "react";
+import { usePicasso, useTokens } from "hooks";
+import React, { useEffect, useState } from "react";
 import { MdHelpOutline, MdArrowBack } from "react-icons/md";
 import { SelectCoinModal } from "components";
+import { WrappedTokenInfo } from "types";
 
 interface IModal {
 	isModalOpen: boolean;
@@ -29,23 +30,23 @@ interface IModal {
 	isCreate: boolean;
 	haveValue: boolean;
 }
-interface IToken {
-	logoURI: string;
-	symbol: string;
-	id?: number;
-}
 
 export const RemoveLiquidity: React.FC<IModal> = props => {
 	const { isModalOpen, onModalClose, isCreate, haveValue } = props;
+
 	const theme = usePicasso();
+
+	const { userTokensBalance } = useTokens();
+
 	const { onOpen, isOpen, onClose } = useDisclosure();
-	const [selectedToken] = useState<IToken[]>([
-		{ logoURI: "icons/syscoin-logo.png", symbol: "SYS", id: 0 },
-		{ logoURI: "icons/pegasys.png", symbol: "PSYS", id: 1 },
-	]);
+	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
-	const [sliderValue, setSliderValue] = React.useState(5);
+	const [sliderValue, setSliderValue] = React.useState<number>(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
+
+	useEffect(() => {
+		setSelectedToken([userTokensBalance[0], userTokensBalance[1]]);
+	}, [userTokensBalance]);
 
 	return (
 		<Modal
@@ -58,6 +59,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 				onClose={onClose}
 				selectedToken={selectedToken}
 				buttonId={buttonId}
+				setSelectedToken={setSelectedToken}
 			/>
 			<ModalOverlay />
 			<ModalContent
@@ -161,7 +163,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						max={100}
 						mb="4"
 						colorScheme="teal"
-						onChange={value => setSliderValue(value)}
+						onChange={(value: number) => setSliderValue(value)}
 						onMouseEnter={() => setShowTooltip(true)}
 						onMouseLeave={() => setShowTooltip(false)}
 					>

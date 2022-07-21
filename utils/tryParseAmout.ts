@@ -23,6 +23,7 @@ export function tryParseAmount(
 		}
 	} catch (error) {
 		// should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
+		// eslint-disable-next-line no-console
 		console.debug(`Failed to parse input amount: "${value}"`, error);
 	}
 	// necessary for all paths to return a value

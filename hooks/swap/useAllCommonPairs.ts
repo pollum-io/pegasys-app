@@ -2,7 +2,6 @@ import { Currency, Pair, Token, ChainId } from "@pollum-io/pegasys-sdk";
 import flatMap from "lodash.flatmap";
 import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from "helpers/consts";
 import { IWalletHookInfos } from "types";
-import { wrappedCurrency } from "utils";
 import { PairState, usePairs } from "./usePair";
 
 export async function useAllCommonPairs(
@@ -32,38 +31,6 @@ export async function useAllCommonPairs(
 				currencyB?.name
 			),
 	];
-
-	// console.log({currencyA, currencyB})
-	// const createTokenA = currencyA && new Token(
-	// 	ChainId.TANENBAUM,
-	// 	currencyA?.address,
-	// 	currencyA?.decimals,
-	// 	currencyA?.symbol,
-	// 	currencyA?.name
-	// )
-
-	// const createTokenB = currencyB && new Token(
-	// 	ChainId.TANENBAUM,
-	// 	currencyB?.address,
-	// 	currencyB?.decimals,
-	// 	currencyB?.symbol,
-	// 	currencyB?.name
-	// )
-
-	// const [tokenA, tokenB] = walletInfos.chainId
-	// 	? [
-	// 			wrappedCurrency(
-	// 				createTokenA,
-	// 				walletInfos.chainId
-	// 			),
-	// 			wrappedCurrency(
-	// 				createTokenB,
-	// 				walletInfos.chainId
-	// 			),
-	// 	  ]
-	// 	: [undefined, undefined];
-
-	// console.log({tokenA, tokenB})
 
 	const basePairs: [Token, Token][] = flatMap(bases, (base): [Token, Token][] =>
 		bases.map(otherBase => [base, otherBase])

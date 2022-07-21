@@ -20,7 +20,12 @@ import { MdWifiProtectedSetup } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
 import { SettingsButton } from "components/Header/SettingsButton";
-import { ISwapTokenInputValue, IWalletHookInfos } from "types";
+import { Trade } from "@pollum-io/pegasys-sdk";
+import {
+	ISwapTokenInputValue,
+	IWalletHookInfos,
+	WrappedTokenInfo,
+} from "types";
 
 export const Swap: FunctionComponent<ButtonProps> = () => {
 	const theme = usePicasso();
@@ -40,21 +45,16 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const {
 		isConnected,
-		setTypedValue,
 		currentNetworkChainId,
 		provider,
 		signer,
 		walletAddress,
 	} = useWallet();
 
-	const [selectedToken, setSelectedToken] = useState([]);
-	const [currentInput, setCurrentInput] = useState();
-	const [trade, setTrade] = useState();
+	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
+	const [currentInput, setCurrentInput] = useState<string>("");
+	const [trade, setTrade] = useState<Trade | undefined>();
 	const [buttonId, setButtonId] = useState<number>(0);
-
-	useMemo(() => {
-		setSelectedToken([userTokensBalance[0], userTokensBalance[1]]);
-	}, [userTokensBalance]);
 
 	const [tokenInputValue, setTokenInputValue] = useState<ISwapTokenInputValue>({
 		inputFrom: {
@@ -72,13 +72,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const handleOnChangeTokenInputs = (
 		event: React.ChangeEvent<HTMLInputElement>
 	) => {
+		if (!isConnected) return;
+
 		const regexPreventLetters = /^(?!,$)[\d,.]+$/;
 
 		const inputValue = event?.currentTarget?.value;
 
 		const typedInput = event?.currentTarget.name;
 
-		setTypedValue(inputValue);
 		setCurrentInput(typedInput);
 
 		if (inputValue === "" || regexPreventLetters.test(inputValue)) {
@@ -114,8 +115,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const switchTokensPosition = () =>
 		setSelectedToken(prevState => [...prevState]?.reverse());
 
-	// const swapButton = () => !isConnected && onOpenWallet();
-
 	useEffect(() => {
 		if (!isConnected || !userTokensBalance) return;
 
@@ -126,21 +125,23 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				token?.symbol === "PSYS"
 		);
 
-		const setIdToTokens: any = getTokensBySymbol.map(
-			(token, index: number) => ({
-				...token,
-				id: index,
-			})
-		);
+		const setIdToTokens = getTokensBySymbol.map((token, index: number) => ({
+			...token,
+			id: index,
+		})) as WrappedTokenInfo[];
 
 		setSelectedToken(setIdToTokens);
 	}, [isConnected, userTokensBalance]);
 
-	const canSubmit =
-		isConnected &&
-		parseFloat(tokenInputValue?.inputFrom?.value) > 0 &&
-		parseFloat(selectedToken[0]?.tokenInfo?.balance) >
-			parseFloat(tokenInputValue?.inputFrom?.value);
+	const submitValidation = [
+		isConnected && tokenInputValue.lastInputTyped === 0
+			? parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
+			  parseFloat(tokenInputValue?.inputFrom?.value)
+			: parseFloat(selectedToken[1]?.tokenInfo?.balance) >=
+			  parseFloat(tokenInputValue?.inputTo?.value),
+	];
+
+	const canSubmit = submitValidation.every(validation => validation === true);
 
 	const walletInfos: IWalletHookInfos = {
 		chainId: currentNetworkChainId,
@@ -148,52 +149,43 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		provider,
 	};
 
-	const handleSwapInfo = async () => {
-		const { v2Trade } = await UseDerivedSwapInfo(tokenInputValue, walletInfos);
-		setTrade(v2Trade);
-	};
-
 	const swapCall =
 		trade &&
 		signer &&
 		UseSwapCallback(trade, walletAddress, 50, walletInfos, signer);
 
-	useMemo(() => {
-		const { inputTo, inputFrom } = tokenInputValue;
-		if (currentInput !== "inputFrom") {
-			setTokenInputValue(prevState => {
-				const newObject = {
-					...prevState,
-					inputFrom: {
-						...prevState.inputFrom,
-						value:
-							inputTo.value !== "" ? trade?.inputAmount?.toSignificant(6) : "",
-					},
-				};
-				return newObject;
-			});
-			return;
-		}
-		if (currentInput !== "inputTo") {
-			setTokenInputValue(prevState => {
-				const newObject = {
-					...prevState,
-					inputTo: {
-						...prevState.inputTo,
-						value:
-							inputFrom.value !== ""
-								? trade?.outputAmount?.toSignificant(6)
-								: "",
-					},
-				};
-				return newObject;
-			});
-		}
-	}, [trade]);
+	const handleSwapInfo = async () => {
+		const { v2Trade } = await UseDerivedSwapInfo(tokenInputValue, walletInfos);
+		setTrade(v2Trade);
+	};
 
 	useEffect(() => {
+		if (!isConnected) return;
+
 		handleSwapInfo();
-	}, [tokenInputValue, selectedToken]);
+	}, [isConnected, tokenInputValue, selectedToken]);
+
+	useEffect(() => {
+		setSelectedToken([userTokensBalance[0], userTokensBalance[1]]);
+	}, [userTokensBalance]);
+
+	useMemo(() => {
+		if (!isConnected || !trade) return;
+
+		const { inputTo, inputFrom } = tokenInputValue;
+
+		if (currentInput === "inputTo") {
+			tokenInputValue.inputFrom.value = inputTo?.value
+				? trade?.inputAmount?.toSignificant(6)
+				: "";
+		}
+
+		if (currentInput === "inputFrom") {
+			tokenInputValue.inputTo.value = inputFrom?.value
+				? trade?.outputAmount?.toSignificant(6)
+				: "";
+		}
+	}, [isConnected, trade]);
 
 	return (
 		<Flex
@@ -341,7 +333,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						py="6"
 						px="6"
 						borderRadius="67px"
-						onClick={swapCall?.callback}
+						onClick={() => swapCall?.callback}
 						bgColor={theme.bg.button.connectWalletSwap}
 						color={theme.text.cyan}
 						fontSize="lg"
