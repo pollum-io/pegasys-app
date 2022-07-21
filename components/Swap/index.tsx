@@ -15,7 +15,7 @@ import {
 	UseDerivedSwapInfo,
 	UseSwapCallback,
 } from "hooks";
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FunctionComponent, useEffect, useState, useMemo } from "react";
 import { MdWifiProtectedSetup } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
@@ -47,17 +47,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		walletAddress,
 	} = useWallet();
 
-	const [selectedToken, setSelectedToken] = useState([
-		{
-			...userTokensBalance[0],
-		},
-		{
-			...userTokensBalance[1],
-		},
-	]);
+	const [selectedToken, setSelectedToken] = useState([]);
 	const [currentInput, setCurrentInput] = useState();
 	const [trade, setTrade] = useState();
 	const [buttonId, setButtonId] = useState<number>(0);
+
+	useMemo(() => {
+		setSelectedToken([userTokensBalance[0], userTokensBalance[1]]);
+	}, [userTokensBalance]);
 
 	const [tokenInputValue, setTokenInputValue] = useState<ISwapTokenInputValue>({
 		inputFrom: {
@@ -117,7 +114,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const switchTokensPosition = () =>
 		setSelectedToken(prevState => [...prevState]?.reverse());
 
-	const swapButton = () => !isConnected && onOpenWallet();
+	// const swapButton = () => !isConnected && onOpenWallet();
 
 	useEffect(() => {
 		if (!isConnected || !userTokensBalance) return;
@@ -156,12 +153,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setTrade(v2Trade);
 	};
 
-	const swapCall: any =
+	const swapCall =
 		trade &&
 		signer &&
 		UseSwapCallback(trade, walletAddress, 50, walletInfos, signer);
 
-	useEffect(() => {
+	useMemo(() => {
 		const { inputTo, inputFrom } = tokenInputValue;
 		if (currentInput !== "inputFrom") {
 			setTokenInputValue(prevState => {

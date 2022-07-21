@@ -75,7 +75,7 @@ function UseSwapCallArguments(
 
 	const swapMethods = [] as any;
 
-    if (trade.tradeType === TradeType.EXACT_INPUT) {
+    if (trade.tradeType === TradeType.EXACT_INPUT && recipient) {
       swapMethods.push(
         Router.swapCallParameters(trade, {
           feeOnTransfer: true,
@@ -87,7 +87,7 @@ function UseSwapCallArguments(
 			return swapMethods.map(parameters => ({ parameters, contract }));
     }
 
-		swapMethods.push(
+		recipient && swapMethods.push(
       Router.swapCallParameters(trade, {
         feeOnTransfer: false,
         allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),

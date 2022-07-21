@@ -34,7 +34,6 @@ export async function UseDerivedSwapInfo(
 
 	const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut;
 
-
 	return {
 		parsedAmount,
 		v2Trade: v2Trade ?? undefined,
