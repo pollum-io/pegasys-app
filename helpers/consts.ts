@@ -44,7 +44,7 @@ export const SUPPORTED_WALLETS: { [key: string]: IWalletInfo } = {
 };
 
 export const TOKENS_INITIAL_STATE = [
-	{
+	new WrappedTokenInfo({
 		address: "0xa66b2E50c2b805F31712beA422D0D9e7D0Fd0F35",
 		balance: "0",
 		chainId: 5700,
@@ -53,8 +53,8 @@ export const TOKENS_INITIAL_STATE = [
 		logoURI: "https://cryptologos.cc/logos/syscoin-sys-logo.png?v=022",
 		symbol: "TSYS",
 		id: 0,
-	},
-	{
+	}),
+	new WrappedTokenInfo({
 		address: "0x81821498cD456c9f9239010f3A9F755F3A38A778",
 		balance: "0",
 		chainId: 5700,
@@ -64,7 +64,7 @@ export const TOKENS_INITIAL_STATE = [
 		name: "Pegasys",
 		symbol: "PSYS",
 		id: 1,
-	},
+	}),
 ];
 
 export const PSYS: { [chainId in ChainId]: Token } = {

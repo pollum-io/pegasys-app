@@ -4,6 +4,7 @@ import { ITokenBalance, ITokenBalanceWithId, WrappedTokenInfo } from "types";
 import { useWallet } from "hooks";
 import { getDefaultTokens } from "networks";
 import { getBalanceOfMultiCall } from "utils";
+import { TOKENS_INITIAL_STATE } from "helpers/consts";
 
 interface ITokensContext {
 	userTokensBalance: WrappedTokenInfo[];
@@ -14,9 +15,8 @@ export const TokensContext = createContext({} as ITokensContext);
 export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
-	const [userTokensBalance, setUserTokensBalance] = useState<
-		WrappedTokenInfo[]
-	>([]);
+	const [userTokensBalance, setUserTokensBalance] =
+		useState<WrappedTokenInfo[]>(TOKENS_INITIAL_STATE);
 
 	const { isConnected, provider, walletAddress, currentNetworkChainId } =
 		useWallet();
