@@ -8,7 +8,13 @@ import {
 	Text,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { usePicasso, useTokens, useWallet, UseDerivedSwapInfo } from "hooks";
+import {
+	usePicasso,
+	useTokens,
+	useWallet,
+	UseDerivedSwapInfo,
+	UseSwapCallback,
+} from "hooks";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { MdWifiProtectedSetup } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
@@ -37,6 +43,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setTypedValue,
 		currentNetworkChainId,
 		provider,
+		signer,
 		walletAddress,
 	} = useWallet();
 
@@ -148,6 +155,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		const { v2Trade } = await UseDerivedSwapInfo(tokenInputValue, walletInfos);
 		setTrade(v2Trade);
 	};
+
+	const swapCall: any =
+		trade &&
+		signer &&
+		UseSwapCallback(trade, walletAddress, 50, walletInfos, signer);
 
 	useEffect(() => {
 		const { inputTo, inputFrom } = tokenInputValue;
@@ -332,7 +344,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						py="6"
 						px="6"
 						borderRadius="67px"
-						onClick={swapButton}
+						onClick={swapCall?.callback}
 						bgColor={theme.bg.button.connectWalletSwap}
 						color={theme.text.cyan}
 						fontSize="lg"

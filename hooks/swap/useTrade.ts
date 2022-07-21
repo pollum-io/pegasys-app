@@ -30,7 +30,7 @@ export async function useTradeExactIn(
 export async function useTradeExactOut(
 	currencyIn?: Currency,
 	currencyAmountOut?: CurrencyAmount,
-	walletInfos?: IWalletHookInfos,
+	walletInfos?: IWalletHookInfos
 ): Promise<Trade | null> {
 	const allowedPairs = await useAllCommonPairs(
 		currencyIn as Currency,

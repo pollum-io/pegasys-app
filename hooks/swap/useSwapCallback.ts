@@ -7,10 +7,11 @@ import {
 	Trade,
 	TradeType,
 } from "@pollum-io/pegasys-sdk";
+import { Signer } from "ethers";
 import { Contract } from "@ethersproject/contracts";
 import { useMemo, useEffect } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
-import abi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
+import pegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
 import { useWallet, useENS } from "hooks";
 import erc20ABI from "utils/abis/erc20.json";
 import {
@@ -19,6 +20,7 @@ import {
 	isZero,
 	shortAddress,
 } from "utils";
+import { IWalletHookInfos } from "types";
 
 interface SwapCall {
 	contract: Contract;
@@ -41,14 +43,17 @@ const BIPS_BASE = JSBI.BigInt(10000);
  * @param allowedSlippage user allowed slippage
  * @param recipientAddressOrName
  */
-function useSwapCallArguments(
+function UseSwapCallArguments(
 	trade?: Trade | undefined, // trade to execute, required
 	recipientAddressOrName?: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-	allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE // in bips
+	allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
+	walletInfos: IWalletHookInfos,
+	signer: Signer
 ): SwapCall[] {
-	const { walletAddress, chain, provider } = useWallet();
+	const { walletAddress, chainId: chain } = walletInfos;
 
-	const { address: recipientAddress } = useENS(recipientAddressOrName);
+	const { address: recipientAddress } = useENS(walletAddress);
+
 	const recipient =
 		recipientAddressOrName === null ? walletAddress : recipientAddress;
 	let deadline: any;
@@ -56,69 +61,65 @@ function useSwapCallArguments(
 	const currentTime = BigNumber.from(new Date().getTime());
 
 	deadline = currentTime.add(10);
+	const tradeVersion = "v2";
 
-	return useMemo(() => {
-		const tradeVersion = "v2";
-		if (!trade || !recipient || !walletAddress || !tradeVersion || !deadline)
-			return [];
+	const contract: Contract | null = createContractUsingAbi(
+		walletAddress,
+		pegasysAbi.abi,
+		signer
+	);
 
-		const contract: Contract | null = createContractUsingAbi(
-			walletAddress,
-			abi,
-			provider
-		);
-		if (!contract) {
-			return [];
-		}
+	if (!contract) {
+		return [];
+	}
 
-		const swapMethods = [] as any;
+	const swapMethods = [] as any;
+
+    if (trade.tradeType === TradeType.EXACT_INPUT) {
+      swapMethods.push(
+        Router.swapCallParameters(trade, {
+          feeOnTransfer: true,
+          allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+          recipient,
+          deadline: deadline.toNumber()
+        })
+      )
+			return swapMethods.map(parameters => ({ parameters, contract }));
+    }
 
 		swapMethods.push(
-			Router.swapCallParameters(trade, {
-				feeOnTransfer: false,
-				allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-				recipient,
-				deadline: deadline.toNumber(),
-			})
-		);
+      Router.swapCallParameters(trade, {
+        feeOnTransfer: false,
+        allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+        recipient,
+        deadline: deadline.toNumber()
+      })
+    )
 
-		if (trade.tradeType === TradeType.EXACT_INPUT) {
-			swapMethods.push(
-				Router.swapCallParameters(trade, {
-					feeOnTransfer: true,
-					allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-					recipient,
-					deadline: deadline.toNumber(),
-				})
-			);
-		}
-
-		return swapMethods.map(parameters => ({ parameters, contract }));
-	}, [walletAddress, allowedSlippage, chain, deadline, recipient, trade]);
+	return swapMethods.map(parameters => ({ parameters, contract }));
 }
 
-export function useSwapCallback(
+export function UseSwapCallback(
 	trade: Trade | undefined, // trade to execute, required
 	recipientAddressOrName?: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-	allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE // in bips
-): {
-	state: SwapCallbackState;
-	callback: null | (() => Promise<string>);
-	error: string | null;
-} {
-	const { walletAddress, chain, typedValue } = useWallet();
+	allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
+	walletInfos: IWalletHookInfos,
+	signer: Signer
+) {
+	const { walletAddress, chainId: chain } = walletInfos;
 
-	const swapCalls = useSwapCallArguments(
+	const swapCalls = UseSwapCallArguments(
 		trade,
 		allowedSlippage,
-		recipientAddressOrName
+		recipientAddressOrName,
+		walletInfos,
+		signer
 	);
 
 	const { address: recipientAddress } = useENS(recipientAddressOrName);
 	const recipient =
 		recipientAddressOrName === null ? walletAddress : recipientAddress;
 
-	return useMemo(() => {
 		if (!trade || !walletAddress || !chain) {
 			return {
 				state: SwapCallbackState.INVALID,
@@ -252,7 +253,8 @@ export function useSwapCallback(
 					.catch((error: any) => {
 						// if the user rejected the tx, pass this along
 						if (error?.code === 4001) {
-							throw new Error("Transaction rejected.");
+							// throw new Error("Transaction rejected.");
+							console.log("transaction rejected")
 						} else {
 							// otherwise, the error was unexpected and we need to convey that
 							console.error(`Swap failed`, error, methodName, args, value);
@@ -262,12 +264,4 @@ export function useSwapCallback(
 			},
 			error: null,
 		};
-	}, [
-		trade,
-		walletAddress,
-		chain,
-		recipient,
-		recipientAddressOrName,
-		swapCalls,
-	]);
 }

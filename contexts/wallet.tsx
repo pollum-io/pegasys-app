@@ -13,6 +13,7 @@ interface IWeb3 {
 		| ethers.providers.JsonRpcProvider
 		| Signer
 		| undefined;
+	signer: Signer;
 	setCurrentNetworkChainId: React.Dispatch<React.SetStateAction<number | null>>;
 	walletAddress: string;
 	setTypedValue: React.Dispatch<React.SetStateAction<string>>;
@@ -135,6 +136,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			isConnected,
 			walletAddress,
 			provider,
+			signer,
 			setTypedValue,
 			typedValue,
 			connectWallet,
@@ -149,6 +151,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			isConnected,
 			walletAddress,
 			provider,
+			signer,
 			connectWallet,
 			walletError,
 			connectorSelected,
