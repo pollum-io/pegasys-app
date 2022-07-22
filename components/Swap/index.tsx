@@ -140,11 +140,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				zIndex="1"
 				borderRadius={30}
 				border="1px solid transparent;"
-				boxShadow=" 0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4);"
-				background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				boxShadow={theme.border.modalBorderShadow}
+				background={theme.bg.blackAlpha}
 			>
 				<Flex flexDirection="row" justifyContent="space-between" pb="1.5rem">
-					<Text fontWeight="semibold" fontSize="2xl">
+					<Text fontWeight="semibold" fontSize="2xl" color={theme.text.mono}>
 						Swap
 					</Text>
 					<SettingsButton />
@@ -231,7 +231,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					onClick={switchTokensPosition}
 					_hover={{ cursor: "pointer" }}
 				>
-					<MdWifiProtectedSetup size={25} color="cyan" />
+					<MdWifiProtectedSetup size={25} color={theme.text.cyanPurple} />
 				</Flex>
 				<Flex
 					borderRadius="2xl"

@@ -14,8 +14,6 @@ import {
 } from "@chakra-ui/react";
 import { AddLiquidityModal, RemoveLiquidity } from "components";
 import { ImportPoolModal } from "components/Modals/ImportPool";
-import { TokenImported } from "components/Modals/TokenImported";
-import { TurnExportMode } from "components/Modals/TurnExportMode";
 import { PoolCards } from "components/Pools/PoolCards";
 import { usePicasso, useWallet } from "hooks";
 import { NextPage } from "next";
@@ -88,6 +86,7 @@ export const PoolsContainer: NextPage = () => {
 								Liquidity Provider Rewards
 							</Text>
 							<Text
+								color="white"
 								fontWeight="semibold"
 								fontSize="sm"
 								lineHeight="shorter"
@@ -108,10 +107,10 @@ export const PoolsContainer: NextPage = () => {
 							py="0.531rem"
 							gap="2.5"
 						>
-							<Text fontWeight="semibold" fontSize="xs">
+							<Text fontWeight="semibold" fontSize="xs" color="white">
 								View Your Staked Liquidity
 							</Text>
-							<MdOutlineCallMade size={20} />
+							<MdOutlineCallMade size={20} color="white" />
 						</Flex>
 					</Flex>
 					<Flex
@@ -129,7 +128,11 @@ export const PoolsContainer: NextPage = () => {
 							w="100%"
 							zIndex="docked"
 						>
-							<Text fontSize="2xl" fontWeight="semibold">
+							<Text
+								fontSize="2xl"
+								fontWeight="semibold"
+								color={theme.text.mono}
+							>
 								Pools Overview
 							</Text>
 						</Flex>
@@ -146,12 +149,12 @@ export const PoolsContainer: NextPage = () => {
 									<InputLeftElement
 										pointerEvents="none"
 										// eslint-disable-next-line react/no-children-prop
-										children={<MdSearch color="cyan" />}
+										children={<MdSearch color={theme.text.cyanPurple} />}
 									/>
 									<Input
+										borderColor={theme.bg.blueNavyLightness}
 										placeholder="Search by token name"
-										_placeholder={{ opacity: 1, color: theme.text.cyan }}
-										borderColor="#153D6F"
+										_placeholder={{ opacity: 1, color: theme.text.cyanPurple }}
 										borderRadius="full"
 										w="20rem"
 									/>
@@ -166,7 +169,8 @@ export const PoolsContainer: NextPage = () => {
 									h="max-content"
 									bgColor="transparent"
 									borderWidth="1px"
-									borderColor={theme.text.cyan}
+									borderColor={theme.text.cyanPurple}
+									color={theme.text.whitePurple}
 									borderRadius="full"
 									_hover={{ opacity: "1" }}
 									_active={{}}
@@ -178,15 +182,16 @@ export const PoolsContainer: NextPage = () => {
 									Create a Pair
 								</Button>
 								<Flex flexDirection="column">
-									{!userHavePool ? (
+									{!isConnected ? (
 										<Button
 											fontSize="sm"
 											fontWeight="semibold"
 											py="0.625rem"
 											px="1.5rem"
 											h="max-content"
+											mt="2rem"
 											bgColor={theme.bg.blueNavyLightness}
-											color={theme.text.cyan}
+											color={theme.text.cyanWhite}
 											_hover={{ opacity: "1" }}
 											_active={{}}
 											onClick={() => {
@@ -210,17 +215,17 @@ export const PoolsContainer: NextPage = () => {
 												px="1.5rem"
 												h="max-content"
 												bgColor={theme.bg.blueNavyLightness}
-												color={theme.text.mono}
+												color="white"
 												_hover={{ opacity: "1" }}
 												_active={{}}
 												borderRadius="full"
 												rightIcon={<MdExpandMore size={20} />}
 											>
-												Filter
+												Pool Weight
 											</MenuButton>
 											<MenuList
 												bgColor={theme.bg.blueNavy}
-												color={theme.text.mono}
+												color="white"
 												borderColor="transparent"
 												p="4"
 												fontSize="sm"
@@ -252,7 +257,7 @@ export const PoolsContainer: NextPage = () => {
 							</Text>
 							<Flex flexDirection="row" gap="1">
 								<Text
-									color={theme.text.mono}
+									color="white"
 									fontSize="md"
 									fontWeight="normal"
 									w="max-content"
@@ -262,7 +267,7 @@ export const PoolsContainer: NextPage = () => {
 								<Text
 									fontWeight="semibold"
 									onClick={onOpenRemoveLiquidity}
-									color={theme.text.cyan}
+									color={theme.text.cyanWhite}
 									textDecoration="underline"
 									_hover={{ cursor: "pointer" }}
 								>
