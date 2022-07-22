@@ -54,7 +54,7 @@ function getSwapArguments(
 	const { address: recipientAddress } = useENS(walletAddress);
 
 	const recipient =
-	recipientAddress === null ? walletAddress : recipientAddress;
+		recipientAddress === null ? walletAddress : recipientAddress;
 	let deadline: any;
 
 	const currentTime = BigNumber.from(new Date().getTime());
@@ -116,7 +116,7 @@ export function UseSwapCallback(
 
 	const { address: recipientAddress } = useENS(walletAddress);
 	const recipient =
-	recipientAddress === null ? walletAddress : recipientAddress;
+		recipientAddress === null ? walletAddress : recipientAddress;
 
 	if (!trade || !walletAddress || !chain) {
 		return {
