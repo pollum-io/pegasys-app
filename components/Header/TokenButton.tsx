@@ -4,6 +4,7 @@ import { FunctionComponent, ReactNode } from "react";
 
 interface IButtonProps {
 	children?: ReactNode;
+	onClick?: () => void;
 }
 
 export const TokenButton: FunctionComponent<IButtonProps> = props => {
@@ -14,13 +15,14 @@ export const TokenButton: FunctionComponent<IButtonProps> = props => {
 	return (
 		<Text
 			h="max-content"
-			bg={theme.text.psysBalance}
 			bgClip="text"
 			fontWeight="normal"
 			fontSize="md"
 			transition="0.2s"
 			_hover={{ cursor: "pointer", fontWeight: "700" }}
 			_active={{}}
+			className="textAnimation"
+			{...props}
 		>
 			{children}
 			{token}

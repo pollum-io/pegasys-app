@@ -15,6 +15,7 @@ import {
 	ModalOverlay,
 	Text,
 	Tooltip,
+	useDisclosure,
 } from "@chakra-ui/react";
 import { usePicasso, useTokens } from "hooks";
 import React, {
@@ -24,10 +25,11 @@ import React, {
 	useEffect,
 	useCallback,
 } from "react";
-import { MdHelpOutline } from "react-icons/md";
+import { MdHelpOutline, MdArrowDownward, MdArrowUpward } from "react-icons/md";
 import { BsArrowDownShort } from "react-icons/bs";
 import { WrappedTokenInfo } from "types";
 import BigNumber from "bignumber.js";
+import { ManageToken } from "./ManageToken";
 
 interface IModal {
 	isOpen: boolean;
@@ -45,6 +47,12 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
 	const [filter, setFilter] = useState<WrappedTokenInfo[]>([]);
 	const [tokenError, setTokenError] = useState<WrappedTokenInfo[]>([]);
+	const [arrowOrder, setArrowOrder] = useState(false);
+	const {
+		onOpen: onOpenManage,
+		isOpen: isOpenManage,
+		onClose: onCloseManage,
+	} = useDisclosure();
 
 	const { userTokensBalance } = useTokens();
 
@@ -83,6 +91,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				return orderedList.unshift(token);
 			});
 		}
+		setArrowOrder(!arrowOrder);
 		setOrder(previousState => (previousState === "asc" ? "desc" : "asc"));
 		setFilter(orderedList);
 	};
@@ -134,10 +143,11 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+			<ManageToken isOpen={isOpenManage} onClose={onCloseManage} />
 			<ModalOverlay />
-			<ModalContent borderRadius="xl">
-				<ModalHeader display="flex" alignItems="center" gap="3">
-					<Text fontSize="md" fontWeight="medium">
+			<ModalContent borderRadius="3xl" bgColor={theme.bg.blueNavy}>
+				<ModalHeader display="flex" alignItems="baseline" gap="3">
+					<Text fontSize="lg" fontWeight="semibold">
 						Select a token
 					</Text>
 					<Tooltip
@@ -162,15 +172,20 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				<ModalCloseButton top="4" size="md" _focus={{}} />
 				<ModalBody>
 					<Input
+						borderRadius="full"
+						borderColor="rgba(21, 61, 111, 1)"
+						_placeholder={{ color: theme.text.cyan, opacity: "0.6" }}
 						placeholder="Search name or paste address"
 						onChange={handleInput}
 					/>
-					<Flex justifyContent="space-between" my="4">
-						<Text>Token name</Text>
+					<Flex my="5" gap="2">
+						<Text fontSize="md">Token name</Text>
 						<IconButton
-							as={BsArrowDownShort}
+							as={arrowOrder ? MdArrowUpward : MdArrowDownward}
 							aria-label="Order"
 							minW="none"
+							bg="transparent"
+							color={theme.text.cyan}
 							w="6"
 							h="6"
 							onClick={() => orderList(filter)}
@@ -200,12 +215,19 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 								justifyContent="flex-start"
 								w="100%"
 							>
-								<Img src={token.logoURI} borderRadius="full" w="6" h="6" />
-								{token.symbol}
+								<Flex
+									gap="4"
+									alignItems="center"
+									justifyContent="flex-start"
+									w="100%"
+								>
+									<Img src={token.logoURI} borderRadius="full" w="6" h="6" />
+									{token.symbol}
+								</Flex>
+								<Text fontFamily="mono" fontWeight="normal">
+									{token.balance}
+								</Text>
 							</Flex>
-							<Text fontFamily="mono" fontWeight="normal">
-								{token.balance}
-							</Text>
 						</Button>
 					))}
 				</Flex>
@@ -216,20 +238,24 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					flexDirection="column"
 					px="0"
 					py="0"
+					bgColor={theme.bg.whiteGray}
+					alignItems="center"
+					borderBottomRadius="3xl"
 				>
-					<Divider />
-					<Button
-						bg="transparent"
-						color="gray.400"
-						_hover={{ color: "white" }}
-						_active={{}}
-						pt="8"
-						pb="8"
-						mb="0"
-						w="100%"
-					>
-						Manage Token Lists
-					</Button>
+					<Flex pt="8" py="5">
+						<Text
+							bg="transparent"
+							color={theme.text.cyan}
+							_hover={{ opacity: "0.9", cursor: "pointer" }}
+							_active={{}}
+							mb="0"
+							w="100%"
+							fontWeight="semibold"
+							onClick={onOpenManage}
+						>
+							Manage Token Lists
+						</Text>
+					</Flex>
 				</ModalFooter>
 			</ModalContent>
 		</Modal>

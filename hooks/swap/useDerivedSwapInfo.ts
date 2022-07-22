@@ -82,8 +82,6 @@ export async function UseDerivedSwapInfo(
 		);
 	}
 
-	console.log("swapMethods", swapMethods);
-
 	return {
 		parsedAmount,
 		v2Trade: v2Trade ?? undefined,

@@ -11,11 +11,11 @@ export const SwitchToSyscoin: FunctionComponent<ButtonProps> = props => {
 
 	return (
 		<Button
-			py="8"
+			py="2"
 			px="20"
-			borderRadius="12"
+			borderRadius="full"
 			fontSize="md"
-			fontWeight={500}
+			fontWeight="semibold"
 			color={theme.text.whiteCyan}
 			bgColor={theme.bg.button.switchNetwork}
 			onClick={() =>

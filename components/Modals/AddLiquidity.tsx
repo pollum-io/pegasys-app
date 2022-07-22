@@ -22,8 +22,8 @@ import { WrappedTokenInfo } from "types";
 interface IModal {
 	isModalOpen: boolean;
 	onModalClose: () => void;
-	isCreate: boolean;
-	haveValue: boolean;
+	isCreate?: boolean;
+	haveValue?: boolean;
 }
 
 export const AddLiquidityModal: React.FC<IModal> = props => {
