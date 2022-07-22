@@ -1,10 +1,20 @@
 import { injected, walletlink } from "utils/connectors";
-import { IWalletInfo, WrappedTokenInfo } from "types";
-import { ChainId, Token, WSYS } from "@pollum-io/pegasys-sdk";
+import { IWalletInfo } from "types";
+import { ChainId, Token, WSYS, Percent, JSBI } from "@pollum-io/pegasys-sdk";
 
 type ChainTokenList = {
 	readonly [chainId in ChainId]: Token[];
 };
+
+// default allowed slippage, in bips
+export const INITIAL_ALLOWED_SLIPPAGE = 50;
+
+// 60 minutes, denominated in seconds
+export const DEFAULT_DEADLINE_FROM_NOW = 60 * 60;
+
+// one basis point
+export const ONE_BIPS = new Percent(JSBI.BigInt(1), JSBI.BigInt(10000));
+export const BIPS_BASE = JSBI.BigInt(10000);
 
 export const NEVM_CHAIN_PARAMS = {
 	chainId: "0x39", // A 0x-prefixed hexadecimal chainId
@@ -42,30 +52,6 @@ export const SUPPORTED_WALLETS: { [key: string]: IWalletInfo } = {
 		iconName: "coinbaseWalletIcon.svg",
 	},
 };
-
-export const TOKENS_INITIAL_STATE = [
-	new WrappedTokenInfo({
-		address: "0xa66b2E50c2b805F31712beA422D0D9e7D0Fd0F35",
-		balance: "0",
-		chainId: 5700,
-		decimals: 18,
-		name: "Testnet Syscoin",
-		logoURI: "https://cryptologos.cc/logos/syscoin-sys-logo.png?v=022",
-		symbol: "TSYS",
-		id: 0,
-	}),
-	new WrappedTokenInfo({
-		address: "0x81821498cD456c9f9239010f3A9F755F3A38A778",
-		balance: "0",
-		chainId: 5700,
-		decimals: 18,
-		logoURI:
-			"https://raw.githubusercontent.com/pollum-io/pegasys-tokenlists/master/testnet-logos/0x81821498cD456c9f9239010f3A9F755F3A38A778/logo.png",
-		name: "Pegasys",
-		symbol: "PSYS",
-		id: 1,
-	}),
-];
 
 export const PSYS: { [chainId in ChainId]: Token } = {
 	[ChainId.TANENBAUM]: new Token(

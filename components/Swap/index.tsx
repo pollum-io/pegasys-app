@@ -49,6 +49,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		provider,
 		signer,
 		walletAddress,
+		userSlippageTolerance,
 	} = useWallet();
 
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);

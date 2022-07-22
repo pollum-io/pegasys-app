@@ -1,9 +1,19 @@
-import { CurrencyAmount, Trade } from "@pollum-io/pegasys-sdk";
+import {
+	CurrencyAmount,
+	Trade,
+	JSBI,
+	Percent,
+	Router,
+	TradeType,
+} from "@pollum-io/pegasys-sdk";
 
 import { ISwapTokenInputValue, IWalletHookInfos } from "types";
 import { tryParseAmount } from "utils";
 
+import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from "helpers/consts";
+import { BigNumber } from "@ethersproject/bignumber";
 import { useTradeExactIn, useTradeExactOut } from "./useTrade";
+import { useTransactionDeadline } from "./useTransactionDeadline";
 
 export async function UseDerivedSwapInfo(
 	inputs: ISwapTokenInputValue,
@@ -31,6 +41,46 @@ export async function UseDerivedSwapInfo(
 	);
 
 	const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut;
+
+	let deadline = useTransactionDeadline();
+
+	const currentTime = BigNumber.from(new Date().getTime());
+
+	if (deadline && deadline < currentTime.add(10)) {
+		deadline = currentTime.add(10);
+	}
+
+	const swapMethods = [] as any;
+
+	if (v2Trade?.tradeType === TradeType.EXACT_INPUT) {
+		swapMethods.push(
+			Router.swapCallParameters(v2Trade, {
+				feeOnTransfer: true,
+				allowedSlippage: new Percent(
+					JSBI.BigInt(INITIAL_ALLOWED_SLIPPAGE),
+					BIPS_BASE
+				),
+				recipient: walletInfos.walletAddress,
+				deadline: deadline?.toNumber() as number,
+			})
+		);
+	}
+
+	if (v2Trade) {
+		swapMethods.push(
+			Router.swapCallParameters(v2Trade as Trade, {
+				feeOnTransfer: false,
+				allowedSlippage: new Percent(
+					JSBI.BigInt(INITIAL_ALLOWED_SLIPPAGE),
+					BIPS_BASE
+				),
+				recipient: walletInfos.walletAddress,
+				deadline: deadline?.toNumber() as number,
+			})
+		);
+	}
+
+	console.log("swapMethods", swapMethods);
 
 	return {
 		parsedAmount,

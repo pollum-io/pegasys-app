@@ -2,7 +2,10 @@ import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers, Signer } from "ethers";
 import { convertHexToNumber } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { SYS_TESTNET_CHAIN_PARAMS } from "../helpers/consts";
+import {
+	INITIAL_ALLOWED_SLIPPAGE,
+	SYS_TESTNET_CHAIN_PARAMS,
+} from "../helpers/consts";
 
 interface IWeb3 {
 	isConnected: boolean;
@@ -23,6 +26,8 @@ interface IWeb3 {
 	setConnectorSelected: React.Dispatch<
 		React.SetStateAction<AbstractConnector | undefined>
 	>;
+	userSlippageTolerance: number;
+	setUserSlippageTolerance: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -45,6 +50,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	>();
 	const [connectorSelected, setConnectorSelected] =
 		useState<AbstractConnector>();
+	const [userSlippageTolerance, setUserSlippageTolerance] = useState<number>(
+		INITIAL_ALLOWED_SLIPPAGE
+	);
 
 	const connectToSysRpcIfNotConnected = () => {
 		const rpcProvider = new ethers.providers.JsonRpcProvider(
@@ -141,6 +149,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			connectorSelected,
 			currentNetworkChainId,
 			setCurrentNetworkChainId,
+			userSlippageTolerance,
+			setUserSlippageTolerance,
 		}),
 		[
 			isConnected,
@@ -150,6 +160,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			connectWallet,
 			walletError,
 			connectorSelected,
+			userSlippageTolerance,
 		]
 	);
 
