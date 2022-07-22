@@ -43,9 +43,8 @@ const BIPS_BASE = JSBI.BigInt(10000);
  * @param allowedSlippage user allowed slippage
  * @param recipientAddressOrName
  */
-function UseSwapCallArguments(
-	trade?: Trade | undefined, // trade to execute, required
-	recipientAddressOrName?: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+function getSwapArguments(
+	trade: Trade | undefined, // trade to execute, required  // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 	allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
 	walletInfos: IWalletHookInfos,
 	signer: Signer
@@ -102,24 +101,22 @@ function UseSwapCallArguments(
 
 export function UseSwapCallback(
 	trade: Trade | undefined, // trade to execute, required
-	recipientAddressOrName?: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 	allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
 	walletInfos: IWalletHookInfos,
 	signer: Signer
 ) {
 	const { walletAddress, chainId: chain } = walletInfos;
 
-	const swapCalls = UseSwapCallArguments(
+	const swapCalls = getSwapArguments(
 		trade,
 		allowedSlippage,
-		recipientAddressOrName,
 		walletInfos,
 		signer
 	);
 
-	const { address: recipientAddress } = useENS(recipientAddressOrName);
+	const { address: recipientAddress } = useENS(walletAddress);
 	const recipient =
-		recipientAddressOrName === null ? walletAddress : recipientAddress;
+	recipientAddress === null ? walletAddress : recipientAddress;
 
 	if (!trade || !walletAddress || !chain) {
 		return {

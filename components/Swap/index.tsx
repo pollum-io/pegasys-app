@@ -49,7 +49,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		provider,
 		signer,
 		walletAddress,
-		userSlippageTolerance,
 	} = useWallet();
 
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
@@ -151,9 +150,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	};
 
 	const swapCall =
-		trade &&
-		signer &&
-		UseSwapCallback(trade, walletAddress, 50, walletInfos, signer);
+		trade && signer && UseSwapCallback(trade, 50, walletInfos, signer);
 
 	const handleSwapInfo = async () => {
 		const { v2Trade } = await UseDerivedSwapInfo(tokenInputValue, walletInfos);
@@ -334,7 +331,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						py="6"
 						px="6"
 						borderRadius="67px"
-						onClick={() => swapCall?.callback}
+						onClick={swapCall?.callback}
 						bgColor={theme.bg.button.connectWalletSwap}
 						color={theme.text.cyan}
 						fontSize="lg"
