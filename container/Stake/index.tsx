@@ -2,135 +2,239 @@ import { Button, Flex, Img, Text } from "@chakra-ui/react";
 import { DefaultTemplate } from "container";
 import { usePicasso } from "hooks";
 import { NextPage } from "next";
+import { MdOutlineCallMade } from "react-icons/md";
 
 export const StakeContainer: NextPage = () => {
 	const theme = usePicasso();
 
 	return (
-		<DefaultTemplate>
-			<Flex
-				w="100%"
-				h="100%"
-				alignItems="flex-start"
-				justifyContent="center"
-				pt="24"
-			>
-				<Flex flexDirection="column" maxW="xl" h="100%" gap="5">
-					<Flex
-						flexDirection="column"
-						zIndex="docked"
-						position="relative"
+		<Flex
+			w="100%"
+			h="100%"
+			alignItems="flex-start"
+			justifyContent="center"
+			pt="20"
+		>
+			<Flex flexDirection="column" w="2xl">
+				<Flex
+					flexDirection="column"
+					zIndex="docked"
+					position="relative"
+					borderRadius="xl"
+					backgroundColor="blue.700"
+				>
+					<Img
 						borderRadius="xl"
-						minW="xl"
-						h="81px"
+						src="images/backgrounds/BannerStake.png"
+						position="absolute"
+						zIndex="base"
+						w="100%"
+						h="85%"
+					/>
+					<Flex
+						zIndex="docked"
+						flexDirection="column"
+						px="1.625rem"
+						py="1.375rem"
+						gap="3"
 					>
-						<Img
-							borderRadius="xl"
-							src="images/backgrounds/2.png"
-							position="absolute"
-							zIndex="base"
-							w="100%"
-							h="100%"
-							objectFit="none"
-							opacity="0.9"
-							objectPosition="10% 1%"
-						/>
-						<Flex zIndex="docked" flexDirection="column" px="4" py="4" gap="1">
-							<Text fontWeight="medium" color="white">
-								Pegasys PSYS staking
-							</Text>
-							<Text fontWeight="medium" fontSize="sm" color="white">
-								Deposit and stake your PSYS tokens to earn more tokens.
-							</Text>
+						<Text fontWeight="bold" color="white" fontSize="md">
+							Pegasys PSYS Staking
+						</Text>
+						<Text
+							fontWeight="semibold"
+							fontSize="sm"
+							lineHeight="shorter"
+							w="50%"
+						>
+							Deposit and stake your PSYS tokens to earn more tokens.
+						</Text>
+					</Flex>
+					<Flex
+						alignItems="center"
+						justifyContent="center"
+						flexDirection="row"
+						bgColor={theme.bg.whiteGray}
+						zIndex="docked"
+						borderBottomRadius="xl"
+						py="0.531rem"
+						gap="2.5"
+					>
+						<Text fontWeight="semibold" fontSize="xs">
+							ReaD more about PSYS
+						</Text>
+						<MdOutlineCallMade size={20} />
+					</Flex>
+				</Flex>
+				<Flex
+					alignItems="center"
+					my="8"
+					justifyContent="flex-start"
+					w="100%"
+					flexDirection="row"
+					zIndex="docked"
+				>
+					<Flex
+						mt="4"
+						flexDirection="row"
+						justifyContent="space-between"
+						w="100%"
+						zIndex="docked"
+					>
+						<Text fontSize="2xl" fontWeight="semibold">
+							Current Opportunities
+						</Text>
+						<Flex gap="1">
+							<Button
+								color={theme.bg.blue900}
+								bgColor={theme.bg.blue100}
+								borderRadius="full"
+								w="max-content"
+								h="max-content"
+								py="2"
+								px="6"
+								fontWeight="semibold"
+							>
+								PSYS
+							</Button>
+							<Button
+								color={theme.text.gray600}
+								bgColor="transparent"
+								borderRadius="full"
+								w="max-content"
+								h="max-content"
+								py="2"
+								px="6"
+								fontWeight="semibold"
+							>
+								PSYS
+							</Button>
 						</Flex>
 					</Flex>
-
-					<Flex flexDirection="column" fontSize="xl" gap="3">
-						<Text fontWeight="medium">Current opportunities</Text>
-
-						<Flex flexDirection="column" gap="3">
-							<Flex
-								flexDirection="column"
-								zIndex="docked"
-								position="relative"
-								borderRadius="xl"
-								h="147px"
-								background="linear-gradient(160deg, rgba(0, 147, 233, 0.8) 0%, rgba(128, 208, 199, 0.8) 100%)"
+				</Flex>
+				<Flex>
+					<Flex
+						zIndex="1"
+						flexDirection="column"
+						w="2xl"
+						h="max-content"
+						gap="8"
+						borderRadius="2xl"
+						border="1px solid transparent;"
+						background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+					>
+						<Flex
+							id="header"
+							bg="rgba(255, 255, 255, 0.04)"
+							justifyContent="center"
+							flexDirection="row"
+							pt="3"
+							pb="2"
+							px="6"
+							alignItems="center"
+							borderBottomRadius="2xl"
+							w="max-content"
+							margin="0 auto"
+							gap="2"
+						>
+							<Img src="icons/pegasys.png" w="6" h="6" />
+							<Text>Earn PSYS</Text>
+							<Button
+								border="1px solid"
+								borderColor={theme.text.cyan}
+								borderRadius="full"
+								w="max-content"
+								h="max-content"
+								bgColor="transparent"
+								py="1"
+								fontSize="xs"
+								ml="1"
 							>
-								<Img
-									borderRadius="xl"
-									src="images/backgrounds/stakeImageCard.png"
-									position="absolute"
-									zIndex="base"
-									w="100%"
-									h="100%"
-									objectFit="none"
-									opacity="0.6"
-									objectPosition="20% 5%"
-								/>
-								<Flex
-									zIndex="docked"
-									flexDirection="column"
-									px="4"
-									py="4"
-									gap="3"
-								>
-									<Flex
-										w="100%"
-										justifyContent="space-between"
-										alignItems="center"
-									>
-										<Flex alignItems="center">
-											<Img src="icons/pegasys.png" w="24px" h="24px" />
-											<Text
-												ml="2"
-												color="white"
-												fontWeight={600}
-												fontSize="2xl"
-											>
-												Earn PSYS
-											</Text>
-										</Flex>
-										<Button
-											backgroundColor={theme.bg.button.primary}
-											color="white"
-										>
-											Deposit
-										</Button>
-									</Flex>
-									<Flex flexDirection="column" w="100%" gap="3">
-										<Flex
-											w="100%"
-											justifyContent="space-between"
-											alignItems="center"
-										>
-											<Text fontSize="md" color="white">
-												Total staked
-											</Text>
-											<Text fontSize="md" color="white">
-												$1,422,000
-											</Text>
-										</Flex>
-
-										<Flex
-											w="100%"
-											justifyContent="space-between"
-											alignItems="center"
-										>
-											<Text fontSize="md" color="white">
-												APR
-											</Text>
-											<Text fontSize="md" color="white">
-												10%
-											</Text>
-										</Flex>
-									</Flex>
-								</Flex>
+								Claim
+							</Button>
+						</Flex>
+						<Flex flexDirection="row" flexWrap="wrap" gap="4">
+							<Flex flexDirection="column" mr="40" ml="7">
+								<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
+									APR
+								</Text>
+								<Text fontWeight="medium" fontSize="md">
+									191%
+								</Text>
 							</Flex>
+							<Flex flexDirection="column" mr="24">
+								<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
+									Total staked (PSYS)
+								</Text>
+								<Text fontWeight="medium" fontSize="md">
+									3,142,00
+								</Text>
+							</Flex>
+							<Flex flexDirection="column">
+								<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
+									Your rate (PSYS/Week)
+								</Text>
+								<Text fontWeight="medium" fontSize="md">
+									0.0003659
+								</Text>
+							</Flex>
+							<Flex flexDirection="column" ml="7" mr="7.4rem">
+								<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
+									Deposit Fee
+								</Text>
+								<Text fontWeight="medium" fontSize="md">
+									1%
+								</Text>
+							</Flex>
+							<Flex flexDirection="column" mr="6.7rem">
+								<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
+									Your Staked PSYS
+								</Text>
+								<Text fontWeight="medium" fontSize="md">
+									0,3
+								</Text>
+							</Flex>
+							<Flex flexDirection="column">
+								<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
+									Your unclaimed PSYS
+								</Text>
+								<Text fontWeight="medium" fontSize="md">
+									0,1
+								</Text>
+							</Flex>
+						</Flex>
+						<Flex justifyContent="center" gap="6" mb="6">
+							<Button
+								width="11.5rem"
+								height="2rem"
+								bgColor="transparent"
+								border="1px solid"
+								borderColor={theme.text.cyan}
+								borderRadius="full"
+								py="2"
+								px="0.75rem"
+								fontSize="sm"
+								fontWeight="semibold"
+							>
+								Unstake
+							</Button>
+							<Button
+								width="11.5rem"
+								height="2rem"
+								bgColor={theme.bg.blueNavyLightness}
+								color={theme.text.cyan}
+								borderRadius="full"
+								py="2"
+								px="0.75rem"
+								fontSize="sm"
+								fontWeight="semibold"
+							>
+								Stake
+							</Button>
 						</Flex>
 					</Flex>
 				</Flex>
 			</Flex>
-		</DefaultTemplate>
+		</Flex>
 	);
 };
