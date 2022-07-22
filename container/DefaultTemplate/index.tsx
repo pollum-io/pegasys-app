@@ -33,7 +33,7 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 							left="37rem"
 							position="absolute"
 							background="#56BED8;"
-							opacity="0.7"
+							opacity="1"
 							filter="blur(275px)"
 						/>
 						<div id="starsLightMode" />

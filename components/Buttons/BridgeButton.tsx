@@ -24,14 +24,18 @@ export const BridgeButton: FunctionComponent<IButtonProps> = props => {
 			<Menu>
 				<MenuButton
 					as={Button}
-					rightIcon={<MdExpandMore />}
+					rightIcon={<MdExpandMore color={theme.text.header} />}
 					_active={{}}
-					_hover={{ bgColor: "#0B172C", opacity: 1, borderRadius: "70px" }}
-					color={theme.text.mono}
+					_hover={{
+						bgColor: theme.bg.whiteGray,
+						opacity: 1,
+						borderRadius: "70px",
+					}}
+					color={theme.text.header}
 					fontSize="md"
 					fontWeight="semibold"
 					bgColor="transparent"
-					opacity="0.75"
+					opacity="1"
 					pl="6"
 					display="flex"
 					justifyContent="center"
