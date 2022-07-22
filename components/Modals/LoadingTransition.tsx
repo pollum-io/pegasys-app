@@ -27,12 +27,14 @@ export const LoadingTransition: React.FC<IModal> = props => {
 				borderRadius="3xl"
 				bgColor={theme.bg.blueNavy}
 				p="6"
-				border="1px solid transparent;"
+				border="1px solid transparent"
 				background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<Flex
+					bgColor="transparent"
 					_hover={{ cursor: "pointer" }}
 					onClick={onClose}
+					p="0"
 					justifyContent="flex-end"
 				>
 					<AiOutlineClose size={24} />
@@ -43,7 +45,7 @@ export const LoadingTransition: React.FC<IModal> = props => {
 					align="center"
 					gap="4"
 				>
-					<Img src="icons/pegasys.png" w="105px" h="105px" />
+					<Img src="icons/pegasys.png" w="35%" h="35%" />
 					<Flex flexDirection="row">
 						<Text fontSize="2xl" fontWeight="semibold">
 							Waiting for confirmation
