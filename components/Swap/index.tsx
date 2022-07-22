@@ -88,22 +88,22 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				inputFrom:
 					typedInput === "inputFrom"
 						? {
-								token: userTokensBalance[0],
+								token: selectedToken[0],
 								value: inputValue,
 						  }
 						: {
-								token: userTokensBalance[0],
+								token: selectedToken[0],
 								value: "",
 						  },
 
 				inputTo:
 					typedInput === "inputTo"
 						? {
-								token: userTokensBalance[1],
+								token: selectedToken[1],
 								value: inputValue,
 						  }
 						: {
-								token: userTokensBalance[1],
+								token: selectedToken[1],
 								value: "",
 						  },
 

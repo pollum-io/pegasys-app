@@ -40,6 +40,8 @@ export async function UseDerivedSwapInfo(
 		walletInfos
 	);
 
+	console.log("inputs", inputs);
+
 	const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut;
 
 	let deadline = useTransactionDeadline();
