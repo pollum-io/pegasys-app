@@ -1,7 +1,10 @@
 import { Button, Flex, Img, Text } from "@chakra-ui/react";
+import { StakeActions } from "components/Modals/StakeActions";
+import { StakeCards } from "components/Stake/StakeCard";
 import { DefaultTemplate } from "container";
 import { usePicasso } from "hooks";
 import { NextPage } from "next";
+import { useState } from "react";
 import { MdOutlineCallMade } from "react-icons/md";
 
 export const StakeContainer: NextPage = () => {
@@ -61,7 +64,7 @@ export const StakeContainer: NextPage = () => {
 						gap="2.5"
 					>
 						<Text fontWeight="semibold" fontSize="xs">
-							ReaD more about PSYS
+							Read more about PSYS
 						</Text>
 						<MdOutlineCallMade size={20} />
 					</Flex>
@@ -107,132 +110,14 @@ export const StakeContainer: NextPage = () => {
 								px="6"
 								fontWeight="semibold"
 							>
-								PSYS
+								USDT
 							</Button>
 						</Flex>
 					</Flex>
 				</Flex>
-				<Flex>
-					<Flex
-						zIndex="1"
-						flexDirection="column"
-						w="2xl"
-						h="max-content"
-						gap="8"
-						borderRadius="2xl"
-						border="1px solid transparent;"
-						background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
-					>
-						<Flex
-							id="header"
-							bg="rgba(255, 255, 255, 0.04)"
-							justifyContent="center"
-							flexDirection="row"
-							pt="3"
-							pb="2"
-							px="6"
-							alignItems="center"
-							borderBottomRadius="2xl"
-							w="max-content"
-							margin="0 auto"
-							gap="2"
-						>
-							<Img src="icons/pegasys.png" w="6" h="6" />
-							<Text>Earn PSYS</Text>
-							<Button
-								border="1px solid"
-								borderColor={theme.text.cyan}
-								borderRadius="full"
-								w="max-content"
-								h="max-content"
-								bgColor="transparent"
-								py="1"
-								fontSize="xs"
-								ml="1"
-							>
-								Claim
-							</Button>
-						</Flex>
-						<Flex flexDirection="row" flexWrap="wrap" gap="4">
-							<Flex flexDirection="column" mr="40" ml="7">
-								<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
-									APR
-								</Text>
-								<Text fontWeight="medium" fontSize="md">
-									191%
-								</Text>
-							</Flex>
-							<Flex flexDirection="column" mr="24">
-								<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
-									Total staked (PSYS)
-								</Text>
-								<Text fontWeight="medium" fontSize="md">
-									3,142,00
-								</Text>
-							</Flex>
-							<Flex flexDirection="column">
-								<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
-									Your rate (PSYS/Week)
-								</Text>
-								<Text fontWeight="medium" fontSize="md">
-									0.0003659
-								</Text>
-							</Flex>
-							<Flex flexDirection="column" ml="7" mr="7.4rem">
-								<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
-									Deposit Fee
-								</Text>
-								<Text fontWeight="medium" fontSize="md">
-									1%
-								</Text>
-							</Flex>
-							<Flex flexDirection="column" mr="6.7rem">
-								<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
-									Your Staked PSYS
-								</Text>
-								<Text fontWeight="medium" fontSize="md">
-									0,3
-								</Text>
-							</Flex>
-							<Flex flexDirection="column">
-								<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
-									Your unclaimed PSYS
-								</Text>
-								<Text fontWeight="medium" fontSize="md">
-									0,1
-								</Text>
-							</Flex>
-						</Flex>
-						<Flex justifyContent="center" gap="6" mb="6">
-							<Button
-								width="11.5rem"
-								height="2rem"
-								bgColor="transparent"
-								border="1px solid"
-								borderColor={theme.text.cyan}
-								borderRadius="full"
-								py="2"
-								px="0.75rem"
-								fontSize="sm"
-								fontWeight="semibold"
-							>
-								Unstake
-							</Button>
-							<Button
-								width="11.5rem"
-								height="2rem"
-								bgColor={theme.bg.blueNavyLightness}
-								color={theme.text.cyan}
-								borderRadius="full"
-								py="2"
-								px="0.75rem"
-								fontSize="sm"
-								fontWeight="semibold"
-							>
-								Stake
-							</Button>
-						</Flex>
-					</Flex>
+				<Flex flexDirection="column" gap="8" mb="24">
+					<StakeCards />
+					<StakeCards />
 				</Flex>
 			</Flex>
 		</Flex>
