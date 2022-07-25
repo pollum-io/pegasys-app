@@ -1,11 +1,14 @@
 import { BigNumber, ethers, Signer } from "ethers";
 // import pegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
 import pairPegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/PegasysPair.sol/PegasysPair.json";
+import { Interface } from "@ethersproject/abi";
 import abi20 from "./abis/erc20.json";
 import { createContractUsingAbi } from "./contractInstance";
 import { singleCall } from "./singleCall";
 import { multiCall } from "./multiCall";
 import { formatBigNumberValues } from "./formatBigNumberValues";
+
+const PAIR_INTERFACE = new Interface(pairPegasysAbi.abi);
 
 export const getBalanceOfSingleCall = async (
 	tokenAddress: string,
@@ -97,12 +100,13 @@ export const getMultiCall = async (
 	if (!signerOrProvider) return [];
 	try {
 		const contracts = tokenAddress.map((address: string) =>
-			createContractUsingAbi(address, pairPegasysAbi.abi, signerOrProvider)
+			createContractUsingAbi(address, PAIR_INTERFACE, signerOrProvider)
 		);
 		const contractCall = await multiCall(contracts, method as string);
 
 		return contractCall;
 	} catch (error) {
+		console.log("error", error);
 		return [];
 	}
 };

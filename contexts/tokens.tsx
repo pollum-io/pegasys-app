@@ -78,8 +78,6 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			token => new WrappedTokenInfo(token)
 		);
 
-		console.log("convertTokens", convertTokens);
-
 		setUserTokensBalance(convertTokens);
 
 		return {};

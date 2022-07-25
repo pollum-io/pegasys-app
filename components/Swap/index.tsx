@@ -58,11 +58,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const [tokenInputValue, setTokenInputValue] = useState<ISwapTokenInputValue>({
 		inputFrom: {
-			token: userTokensBalance[0],
+			token: selectedToken[0],
 			value: "",
 		},
 		inputTo: {
-			token: userTokensBalance[1],
+			token: selectedToken[1],
 			value: "",
 		},
 		typedValue: "",
@@ -111,10 +111,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			});
 		}
 	};
-
-	useEffect(() => {
-		console.log(selectedToken);
-	}, [selectedToken]);
 
 	const switchTokensPosition = () =>
 		setSelectedToken(prevState => [...prevState]?.reverse());
@@ -187,7 +183,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				? trade?.outputAmount?.toSignificant(6)
 				: "";
 		}
-	}, [isConnected, trade]);
+	}, [isConnected, trade, selectedToken]);
 
 	return (
 		<Flex

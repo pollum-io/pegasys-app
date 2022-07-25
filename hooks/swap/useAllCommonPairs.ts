@@ -2,6 +2,7 @@ import { Currency, Pair, Token, ChainId } from "@pollum-io/pegasys-sdk";
 import flatMap from "lodash.flatmap";
 import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from "helpers/consts";
 import { IWalletHookInfos } from "types";
+import { wrappedCurrency } from "utils";
 import { PairState, usePairs } from "./usePair";
 
 export async function useAllCommonPairs(
@@ -9,28 +10,18 @@ export async function useAllCommonPairs(
 	currencyB: Currency,
 	walletInfos: IWalletHookInfos
 ): Promise<Pair[]> {
-	const bases: Token[] = walletInfos.chainId
-		? BASES_TO_CHECK_TRADES_AGAINST[ChainId.TANENBAUM]
+	const { chainId } = walletInfos;
+
+	const bases: Token[] = chainId
+		? BASES_TO_CHECK_TRADES_AGAINST[chainId as ChainId]
 		: [];
 
-	const [tokenA, tokenB] = [
-		currencyA &&
-			new Token(
-				ChainId.TANENBAUM,
-				currencyA?.address,
-				currencyA?.decimals,
-				currencyA?.symbol,
-				currencyA?.name
-			),
-		currencyB &&
-			new Token(
-				ChainId.TANENBAUM,
-				currencyB?.address,
-				currencyB?.decimals,
-				currencyB?.symbol,
-				currencyB?.name
-			),
-	];
+	const [tokenA, tokenB] = chainId
+		? [
+				wrappedCurrency(currencyA, chainId as ChainId),
+				wrappedCurrency(currencyB, chainId as ChainId),
+		  ]
+		: [undefined, undefined];
 
 	const basePairs: [Token, Token][] = flatMap(bases, (base): [Token, Token][] =>
 		bases.map(otherBase => [base, otherBase])
@@ -54,7 +45,7 @@ export async function useAllCommonPairs(
 					.filter(([t0, t1]) => t0.address !== t1.address)
 					.filter(([tokenA, tokenB]) => {
 						// if (!walletInfos.chainId) return true;
-						const customBases = CUSTOM_BASES[ChainId.TANENBAUM];
+						const customBases = CUSTOM_BASES[chainId as ChainId];
 						if (!customBases) return true;
 
 						const customBasesA: Token[] | undefined =

@@ -9,7 +9,10 @@ import {
 } from "@pollum-io/pegasys-sdk";
 
 export function wrappedCurrency(currency: Currency, chainId: ChainId) {
-	return chainId && currency?.name?.includes("Syscoin")
+	return chainId &&
+		(currency?.symbol === "SYS" ||
+			currency?.symbol === "TSYS" ||
+			currency?.symbol === "WSYS")
 		? WSYS[chainId]
 		: currency instanceof Token
 		? currency
