@@ -8,7 +8,7 @@ interface IButtonProps {
 }
 
 export const TokenButton: FunctionComponent<IButtonProps> = props => {
-	const { children } = props;
+	const { children, ...rest } = props;
 	const theme = usePicasso();
 	const token = "PSYS";
 
@@ -22,7 +22,7 @@ export const TokenButton: FunctionComponent<IButtonProps> = props => {
 			_hover={{ cursor: "pointer", fontWeight: "700" }}
 			_active={{}}
 			className="textAnimation"
-			{...props}
+			{...rest}
 		>
 			{children}
 			{token}
