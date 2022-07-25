@@ -112,6 +112,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		}
 	};
 
+	useEffect(() => {
+		console.log(selectedToken);
+	}, [selectedToken]);
+
 	const switchTokensPosition = () =>
 		setSelectedToken(prevState => [...prevState]?.reverse());
 
@@ -426,7 +430,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						py="6"
 						px="6"
 						borderRadius="67px"
-						onClick={swapCall?.callback}
+						onClick={() => swapCall?.callback && swapCall.callback()}
 						bgColor={theme.bg.button.connectWalletSwap}
 						color={theme.text.cyan}
 						fontSize="lg"

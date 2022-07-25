@@ -116,12 +116,14 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 		(id: number, token: WrappedTokenInfo) => {
 			if (!selectedToken) return;
 
+			console.log('token: ', token)
+
 			const actualTokens = [...selectedToken];
 
-			actualTokens[id] = {
+			actualTokens[id] = new WrappedTokenInfo({
 				...selectedToken[id],
 				...token,
-			} as WrappedTokenInfo;
+			}) as WrappedTokenInfo;
 
 			setSelectedToken(actualTokens);
 		},
