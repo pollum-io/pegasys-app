@@ -50,25 +50,33 @@ export const Header: React.FC = () => {
 				position="absolute"
 				left="0"
 			/>
-			<Flex gap="1" bgColor="rgb(0, 0, 0)" borderRadius="20">
+			<Flex gap="1" bgColor={theme.bg.topHeader} borderRadius="20">
 				{links.map((item, index) => (
 					<NavButton key={item.name + Number(index)} href={item.url}>
 						{item.name}
 					</NavButton>
 				))}
 
-				<NavButton href="/">
-					Charts <Icon as={MdOutlineCallMade} w="5" h="5" ml="2" />
+				<NavButton href="/" color={theme.text.header}>
+					Charts{" "}
+					<Icon
+						as={MdOutlineCallMade}
+						w="5"
+						h="5"
+						ml="2"
+						color={theme.text.header}
+					/>
 				</NavButton>
 				<BridgeButton />
 			</Flex>
 			<Flex
 				w="32rem"
 				h="max-content"
-				backgroundColor="#081120"
+				backgroundColor={theme.bg.blackAlpha}
 				mt="60"
 				borderRadius="46px 46px 0px 0px"
-				border="1px solid rgba(86, 190, 216, 0.26)"
+				border={theme.border.headerBorder}
+				boxShadow={theme.border.headerBorderShadow}
 				position="fixed"
 				bottom="0"
 				zIndex="2"

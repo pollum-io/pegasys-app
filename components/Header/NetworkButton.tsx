@@ -1,5 +1,6 @@
 import { Text } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
+import { usePicasso, useTokens, useWallet } from "hooks";
 
 interface IButtonProps {
 	children?: ReactNode;
@@ -8,10 +9,12 @@ interface IButtonProps {
 export const NetworkButton: FunctionComponent<IButtonProps> = props => {
 	const { children } = props;
 	const connectedNetwork = "NEVM";
+	const theme = usePicasso();
+
 	return (
 		<Text
 			h="max-content"
-			bg="white"
+			bg={theme.text.navItem}
 			bgClip="text"
 			fontWeight="normal"
 			fontSize="md"
