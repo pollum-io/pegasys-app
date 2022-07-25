@@ -29,6 +29,8 @@ export async function UseDerivedSwapInfo(
 		(isExactIn ? inputs.inputFrom.token : inputs.inputTo.token) ?? undefined
 	);
 
+	console.log({ inputs });
+
 	const bestTradeExactIn = await useTradeExactIn(
 		isExactIn ? parsedAmount : undefined,
 		inputs.inputTo.token ?? undefined,
@@ -41,6 +43,8 @@ export async function UseDerivedSwapInfo(
 	);
 
 	const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut;
+
+	console.log("v2trade: ", v2Trade);
 
 	let deadline = useTransactionDeadline();
 

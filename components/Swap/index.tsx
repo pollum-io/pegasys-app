@@ -112,6 +112,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		}
 	};
 
+	useEffect(() => {
+		console.log(selectedToken);
+	}, [selectedToken]);
+
 	const switchTokensPosition = () =>
 		setSelectedToken(prevState => [...prevState]?.reverse());
 

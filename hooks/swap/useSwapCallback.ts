@@ -126,7 +126,7 @@ export function UseSwapCallback(
 		};
 	}
 	if (!recipient) {
-		if (recipientAddressOrName !== null) {
+		if (recipient !== null) {
 			return {
 				state: SwapCallbackState.INVALID,
 				callback: null,
@@ -236,9 +236,9 @@ export function UseSwapCallback(
 						recipient === walletAddress
 							? base
 							: `${base} to ${
-									recipientAddressOrName && isAddress(recipientAddressOrName)
-										? shortAddress(recipientAddressOrName)
-										: recipientAddressOrName
+									recipient && isAddress(recipient)
+										? shortAddress(recipient)
+										: recipient
 							  }`;
 
 					const withVersion =
