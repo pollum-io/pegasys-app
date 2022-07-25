@@ -38,7 +38,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 		},
 		{
 			name: "Airdrop",
-			link: "https://pegasys.finance/",
+			link: "/airdrop",
 			icon: <FaParachuteBox />,
 		},
 		{

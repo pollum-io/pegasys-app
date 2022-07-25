@@ -1,59 +1,173 @@
 import { DefaultTemplate } from "container";
 import { NextPage } from "next";
-import { Button, Flex, Img, Text } from "@chakra-ui/react";
+import { Button, Flex, Icon, Img, Text } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
+import { SiDiscord, SiTwitter } from "react-icons/si";
+import { FaTelegramPlane } from "react-icons/fa";
+import { useState } from "react";
+import { MdOutlineCallMade } from "react-icons/md";
 
 export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
 
-	return (
-		<DefaultTemplate>
-			<Flex pt="24" zIndex="1">
-				<Flex
-					width="17%"
-					height="380px"
-					bgColor={theme.bg.whiteGray}
-					margin="0 auto"
-					position="relative"
-					justifyContent="space-between"
-					borderRadius={30}
-					p="5"
-					flexDirection="column"
-				>
-					<Flex alignItems="center" justifyContent="center">
-						<Img
-							width="150px"
-							height="150px"
-							src="icons/logo_pegasys.svg"
-							className="token"
-						/>
-					</Flex>
+	const [conditional, setConditional] = useState();
+	const [conditional1, setConditional1] = useState();
+	const [conditional2, setConditional2] = useState();
+	const [conditional3, setConditional3] = useState();
 
-					<Flex alignItems="center" justifyContent="center">
+	return (
+		<Flex alignItems="flex-start" justifyContent="center" pt="20" mb="6.2rem">
+			<Flex flexDirection="column" w="2xl">
+				<Flex
+					flexDirection="column"
+					zIndex="docked"
+					position="relative"
+					borderTopRadius="xl"
+					backgroundColor={theme.bg.blueNavy}
+					w="2xl"
+				>
+					<Img
+						src="images/backgrounds/PsysReward.png"
+						position="absolute"
+						zIndex="base"
+						w="100%"
+						h="100%"
+					/>
+					<Flex
+						zIndex="docked"
+						flexDirection="column"
+						px="1.625rem"
+						py="1.375rem"
+						gap="3"
+					>
+						<Text fontWeight="bold" color="white" fontSize="md">
+							It’s airdrop time!
+						</Text>
 						<Text
-							background=" -webkit-linear-gradient(160deg, #0093e9 0%, #80d0c7 100%)"
-							backgroundClip="text"
-							TextFillColor="transparent"
-							fontSize="5xl"
-							fontWeight="bold"
+							color="white"
+							fontWeight="semibold"
+							fontSize="sm"
+							lineHeight="shorter"
+							w="60%"
 						>
-							1 $PSYS
+							If you have taken the steps to qualify for the PSYS airdrop, this
+							is the place to check how much you earned and claim your tokens.
 						</Text>
 					</Flex>
-
-					<Flex>
-						<Button
-							w="100%"
-							p="8"
-							backgroundColor={theme.text.cyan}
-							borderRadius="12"
-							fontSize="lg"
-						>
-							Get Airdrop
-						</Button>
-					</Flex>
+				</Flex>
+				<Flex
+					zIndex="docked"
+					w="100%"
+					py="12"
+					gap="2.5"
+					className="gradientBorder"
+					bgColor={theme.bg.whiteGray}
+					justifyContent="center"
+				>
+					{conditional && (
+						<Flex>
+							<Text color="white">
+								Please connect your wallet in the button bellow to check your
+								eligibility.
+							</Text>
+						</Flex>
+					)}
+					{conditional1 && (
+						<Flex gap="40" flexDirection="row">
+							<Flex>
+								<Text color="white">You have no available PSYS to claim.</Text>
+							</Flex>
+							<Flex
+								align="center"
+								gap="2"
+								_hover={{
+									textDecoration: "underline",
+									cursor: "pointer",
+									color: "cyan",
+								}}
+							>
+								<Text color={theme.text.cyan} fontSize="sm" fontWeight="medium">
+									Read more about PSYS
+								</Text>
+								<MdOutlineCallMade size={15} color="cyan" />
+							</Flex>
+						</Flex>
+					)}
+					{conditional2 && (
+						<Flex gap="28" flexDirection="row" alignItems="center">
+							<Flex align="center" gap="2">
+								<Img
+									src="icons/pegasys.png"
+									w="14"
+									h="14"
+									filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
+								/>
+								<Flex alignItems="baseline">
+									<Text fontSize="4xl" fontWeight="semibold" ml="2">
+										234.32
+									</Text>
+									<Text fontSize="xl" pl="2">
+										$PSYS
+									</Text>
+								</Flex>
+							</Flex>
+							<Flex align="center" gap="2">
+								<Button
+									fontSize="sm"
+									fontWeight="semibold"
+									py="0.625rem"
+									w="3xs"
+									h="max-content"
+									bgColor={theme.bg.blueNavyLightness}
+									color={theme.text.cyanWhite}
+									_hover={{ opacity: "1" }}
+									_active={{}}
+									borderRadius="full"
+								>
+									Claim now
+								</Button>
+							</Flex>
+						</Flex>
+					)}
+					{!conditional3 && (
+						<Flex gap="8" flexDirection="column" alignItems="center">
+							<Flex align="center" gap="2" flexDirection="row">
+								<Img
+									src="icons/pegasys.png"
+									w="14"
+									h="14"
+									filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
+								/>
+								<Flex alignItems="baseline">
+									<Text fontSize="3xl" fontWeight="semibold" ml="2">
+										Welcome to the Pegasys DAO{" "}
+									</Text>
+								</Flex>
+							</Flex>
+							<Flex align="center" gap="10" flexDirection="row">
+								<Icon
+									as={SiDiscord}
+									w="10"
+									h="10"
+									color={theme.text.greenSocial}
+								/>
+								<Icon
+									as={SiTwitter}
+									w="10"
+									h="10"
+									color={theme.text.greenSocial}
+								/>
+								<Icon
+									as={FaTelegramPlane}
+									w="10"
+									h="10"
+									color={theme.text.greenSocial}
+								/>
+							</Flex>
+						</Flex>
+					)}
 				</Flex>
 			</Flex>
-		</DefaultTemplate>
+		</Flex>
 	);
 };

@@ -1,0 +1,20 @@
+.gradientBorder {
+	--angle: 0deg;
+	border: 2px solid;
+	border-top: none;
+	border-image: linear-gradient(var(--angle), #12c2e9, #8700ca, #1639ff) 1;
+	border-bottom-left-radius: 25px;
+	border-bottom-right-radius: 25px;
+	animation: 10s rotate linear infinite;
+}
+
+@keyframes rotate {
+	to {
+		--angle: 360deg;
+	}
+}
+@property --angle {
+	syntax: "<angle>";
+	initial-value: 0deg;
+	inherits: false;
+}

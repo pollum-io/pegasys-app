@@ -22,6 +22,7 @@ const usePicasso = () => {
 			gray500: useColorModeValue("gray.500", "gray.500"),
 			gray300: useColorModeValue("gray.300", "gray.300"),
 			green400: useColorModeValue("green.400", "green.400"),
+			greenSocial: useColorModeValue("#67DBD8", "#67DBD8"),
 			psysBalance: useColorModeValue(
 				"linear-gradient(90deg, #19EBCE 0%, #8A15E6 84.28%);",
 				"linear-gradient(90deg, #19EBCE 0%, #8A15E6 84.28%);"
