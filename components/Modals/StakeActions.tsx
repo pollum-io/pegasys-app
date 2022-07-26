@@ -35,7 +35,7 @@ export const StakeActions: React.FC<IModal> = props => {
 	const [confirmStake, setConfirmStake] = useState(false);
 	const [inputValue, setInputValue] = useState("");
 	const [isAprroving, setIsAprroving] = useState("");
-	const [isAprrove, setIsAprrove] = useState("");
+	const [isApproved, setIsAprrove] = useState("");
 
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
@@ -50,10 +50,10 @@ export const StakeActions: React.FC<IModal> = props => {
 		if (isAprroving) {
 			return "Aprroving...";
 		}
-		if (isAprrove) {
+		if (isApproved) {
 			return "Confirm Stake";
 		}
-		return "Aprrove";
+		return "Approve";
 	}, []);
 
 	return (
