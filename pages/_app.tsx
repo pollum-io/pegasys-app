@@ -4,6 +4,7 @@ import { ColorHandler } from "utils";
 import "../styles/backgroundStars.css";
 import "styles/style.css";
 import "styles/psysAnimation.css";
+import "styles/loadingDotsAnimation.css";
 
 const MyApp = ({ Component, pageProps }: AppProps) => (
 	<>
