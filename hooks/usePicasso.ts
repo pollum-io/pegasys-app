@@ -27,6 +27,7 @@ const usePicasso = () => {
 				"linear-gradient(90deg, #19EBCE 0%, #8A15E6 84.28%);"
 			),
 			red400: useColorModeValue("red.400", "red.400"),
+			red500: useColorModeValue("red.500", "red.500"),
 		},
 		icon: {
 			theme: useColorModeValue(BsFillSunFill, BsFillMoonFill),
