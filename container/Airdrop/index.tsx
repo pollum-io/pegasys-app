@@ -20,7 +20,7 @@ export const AirdropContainer: NextPage = () => {
 			<Flex flexDirection="column" w="2xl">
 				<Flex
 					flexDirection="column"
-					zIndex="docked"
+					zIndex="99"
 					position="relative"
 					borderTopRadius="xl"
 					backgroundColor={theme.bg.blueNavy}
@@ -55,117 +55,127 @@ export const AirdropContainer: NextPage = () => {
 						</Text>
 					</Flex>
 				</Flex>
+				<Flex className="gradientBorder" position="absolute" />
 				<Flex
-					zIndex="docked"
-					w="100%"
+					zIndex="99"
+					w="99%"
+					h="3xs"
 					py="12"
+					ml="1"
 					gap="2.5"
-					className="gradientBorder"
 					bgColor={theme.bg.whiteGray}
 					justifyContent="center"
+					borderRadius="xl"
 				>
-					{conditional && (
-						<Flex>
-							<Text color="white">
-								Please connect your wallet in the button bellow to check your
-								eligibility.
-							</Text>
-						</Flex>
-					)}
-					{conditional1 && (
-						<Flex gap="40" flexDirection="row">
+					<Flex>
+						{conditional && (
 							<Flex>
-								<Text color="white">You have no available PSYS to claim.</Text>
-							</Flex>
-							<Flex
-								align="center"
-								gap="2"
-								_hover={{
-									textDecoration: "underline",
-									cursor: "pointer",
-									color: "cyan",
-								}}
-							>
-								<Text color={theme.text.cyan} fontSize="sm" fontWeight="medium">
-									Read more about PSYS
+								<Text color="white">
+									Please connect your wallet in the button bellow to check your
+									eligibility.
 								</Text>
-								<MdOutlineCallMade size={15} color="cyan" />
 							</Flex>
-						</Flex>
-					)}
-					{conditional2 && (
-						<Flex gap="28" flexDirection="row" alignItems="center">
-							<Flex align="center" gap="2">
-								<Img
-									src="icons/pegasys.png"
-									w="14"
-									h="14"
-									filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
-								/>
-								<Flex alignItems="baseline">
-									<Text fontSize="4xl" fontWeight="semibold" ml="2">
-										234.32
-									</Text>
-									<Text fontSize="xl" pl="2">
-										$PSYS
+						)}
+						{!conditional1 && (
+							<Flex gap="40" flexDirection="row" align="center">
+								<Flex>
+									<Text color="white">
+										You have no available PSYS to claim.
 									</Text>
 								</Flex>
-							</Flex>
-							<Flex align="center" gap="2">
-								<Button
-									fontSize="sm"
-									fontWeight="semibold"
-									py="0.625rem"
-									w="3xs"
-									h="max-content"
-									bgColor={theme.bg.blueNavyLightness}
-									color={theme.text.cyanWhite}
-									_hover={{ opacity: "1" }}
-									_active={{}}
-									borderRadius="full"
+								<Flex
+									gap="2"
+									_hover={{
+										textDecoration: "underline",
+										cursor: "pointer",
+										color: "cyan",
+									}}
 								>
-									Claim now
-								</Button>
-							</Flex>
-						</Flex>
-					)}
-					{!conditional3 && (
-						<Flex gap="8" flexDirection="column" alignItems="center">
-							<Flex align="center" gap="2" flexDirection="row">
-								<Img
-									src="icons/pegasys.png"
-									w="14"
-									h="14"
-									filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
-								/>
-								<Flex alignItems="baseline">
-									<Text fontSize="3xl" fontWeight="semibold" ml="2">
-										Welcome to the Pegasys DAO{" "}
+									<Text
+										color={theme.text.cyan}
+										fontSize="sm"
+										fontWeight="medium"
+									>
+										Read more about PSYS
 									</Text>
+									<MdOutlineCallMade size={15} color="cyan" />
 								</Flex>
 							</Flex>
-							<Flex align="center" gap="10" flexDirection="row">
-								<Icon
-									as={SiDiscord}
-									w="10"
-									h="10"
-									color={theme.text.greenSocial}
-								/>
-								<Icon
-									as={SiTwitter}
-									w="10"
-									h="10"
-									color={theme.text.greenSocial}
-								/>
-								<Icon
-									as={FaTelegramPlane}
-									w="10"
-									h="10"
-									color={theme.text.greenSocial}
-								/>
+						)}
+						{conditional2 && (
+							<Flex gap="28" flexDirection="row" alignItems="center">
+								<Flex align="center" gap="2">
+									<Img
+										src="icons/pegasys.png"
+										w="14"
+										h="14"
+										filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
+									/>
+									<Flex alignItems="baseline">
+										<Text fontSize="4xl" fontWeight="semibold" ml="2">
+											234.32
+										</Text>
+										<Text fontSize="xl" pl="2">
+											$PSYS
+										</Text>
+									</Flex>
+								</Flex>
+								<Flex align="center" gap="2">
+									<Button
+										fontSize="sm"
+										fontWeight="semibold"
+										py="0.625rem"
+										w="3xs"
+										h="max-content"
+										bgColor={theme.bg.blueNavyLightness}
+										color={theme.text.cyanWhite}
+										_hover={{ opacity: "1" }}
+										_active={{}}
+										borderRadius="full"
+									>
+										Claim now
+									</Button>
+								</Flex>
 							</Flex>
-						</Flex>
-					)}
+						)}
+						{conditional3 && (
+							<Flex gap="8" flexDirection="column" alignItems="center">
+								<Flex align="center" gap="2" flexDirection="row">
+									<Img
+										src="icons/pegasys.png"
+										w="14"
+										h="14"
+										filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
+									/>
+									<Flex alignItems="baseline">
+										<Text fontSize="3xl" fontWeight="semibold" ml="2">
+											Welcome to the Pegasys DAO{" "}
+										</Text>
+									</Flex>
+								</Flex>
+								<Flex align="center" gap="10" flexDirection="row">
+									<Icon
+										as={SiDiscord}
+										w="10"
+										h="10"
+										color={theme.text.greenSocial}
+									/>
+									<Icon
+										as={SiTwitter}
+										w="10"
+										h="10"
+										color={theme.text.greenSocial}
+									/>
+									<Icon
+										as={FaTelegramPlane}
+										w="10"
+										h="10"
+										color={theme.text.greenSocial}
+									/>
+								</Flex>
+							</Flex>
+						)}
+					</Flex>
 				</Flex>
 			</Flex>
 		</Flex>

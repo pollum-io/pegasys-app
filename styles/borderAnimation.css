@@ -1,11 +1,11 @@
-.gradientBorder {
+/* .gradientBorder {
 	--angle: 0deg;
-	border: 2px solid;
+	border: 4px solid;
 	border-top: none;
 	border-image: linear-gradient(var(--angle), #12c2e9, #8700ca, #1639ff) 1;
-	border-bottom-left-radius: 25px;
-	border-bottom-right-radius: 25px;
 	animation: 10s rotate linear infinite;
+	border-radius: initial;
+	border-radius: 0;
 }
 
 @keyframes rotate {
@@ -17,4 +17,142 @@
 	syntax: "<angle>";
 	initial-value: 0deg;
 	inherits: false;
+} */
+
+/* .gradientBorder {
+	border: 4px solid transparent;
+	border-top: none;
+	box-sizing: border-box;
+	border-bottom-left-radius: 20px;
+}
+
+.gradientBorder {
+	background-image: linear-gradient(rgba(8, 17, 32, 1), rgba(8, 17, 32, 1)),
+		linear-gradient(
+			180deg,
+			rgb(55, 192, 255) 25%,
+			rgb(68, 255, 224) 50%,
+			rgb(138, 5, 247)
+		);
+
+	background-repeat: no-repeat;
+	background-size: 100% 100%, 100% 200%;
+	background-position: 0 0, 0 10%;
+	background-origin: padding-box, border-box;
+	animation: highlight 6s infinite alternate;
+}
+
+@keyframes highlight {
+	100% {
+		background-position: 0 0, 0 0;
+	}
+} */
+
+/* .gradientBorder {
+	background: #000;
+	width: 1%;
+	border: none;
+	border-radius: 0;
+	transform: translate(0%, -50%);
+	border-radius: 3px;
+	position: relative;
+	top: 6.5rem;
+}
+.gradientBorder:before,
+.gradientBorder:after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: auto;
+	width: auto;
+	z-index: -1;
+	border-radius: inherit;
+	background: inherit;
+}
+.gradientBorder:before {
+	background: linear-gradient(
+		90deg,
+		#0ebeff,
+		#ffdd40,
+		#ae63e4,
+		#47cf73,
+		#0ebeff,
+		#ffdd40,
+		#ae63e4,
+		#47cf73
+	);
+	background-size: 200% 200%;
+}
+.gradientBorder:after {
+	margin: 3px;
+}
+.gradientBorder:hover:before,
+.gradientBorder:focus:before {
+	animation: rainbow-border 1.5s linear infinite;
+}
+@keyframes rainbow-border {
+	0% {
+		background-position: 0% 50%;
+	}
+	100% {
+		background-position: 200% 50%;
+	}
+} */
+
+/* .gradientBorder {
+	position: relative;
+	background: linear-gradient(0deg, #000, #272727);
+}
+
+.gradientBorder:before,
+.gradientBorder:after {
+	content: "";
+	position: absolute;
+	left: -2px;
+	top: -2px;
+	background: linear-gradient(
+		45deg,
+		#fb0094,
+		#0000ff,
+		#00ff00,
+		#ffff00,
+		#ff0000,
+		#fb0094,
+		#0000ff,
+		#00ff00,
+		#ffff00,
+		#ff0000
+	);
+	background-size: 400%;
+	width: calc(100% + 4px);
+	height: calc(100% + 4px);
+	z-index: -1;
+	animation: steam 20s linear infinite;
+}
+
+@keyframes steam {
+	0% {
+		background-position: 0 0;
+	}
+	50% {
+		background-position: 400% 0;
+	}
+	100% {
+		background-position: 0 0;
+	}
+}
+
+.gradientBorder:after {
+	filter: blur(50px);
+} */
+
+.gradientBorder {
+	width: 42rem;
+	height: 22.5rem;
+	background-color: aqua;
+	border-radius: 15px;
+	z-index: 0;
 }
