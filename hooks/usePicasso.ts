@@ -37,7 +37,7 @@ const usePicasso = () => {
 			primary: useColorModeValue("#EDF2F7", "#000913"),
 			secondary: useColorModeValue("gray.300", "gray.800"),
 			bgPrimary: useColorModeValue("#f7f8fa", "#2c2f36"),
-			whiteGray: useColorModeValue("#665EE1", "rgba(8, 17, 32, 1)"),
+			whiteGray: useColorModeValue("#ffffff", "rgba(8, 17, 32, 1)"),
 			iceGray: useColorModeValue("#f7f8fa", "#2c2f36"),
 			blackAlpha: useColorModeValue("#ffffff", "#081120"),
 			blueNavy: useColorModeValue("#F7FAFC", "rgba(11, 23, 44, 1)"),
