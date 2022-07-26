@@ -22,7 +22,7 @@ export async function usePairs(
 
 	const pairAddresses = tokens.map(([tokenA, tokenB]) =>
 		tokenA && tokenB && !tokenA.equals(tokenB)
-			? Pair.getAddress(tokenA, tokenB, chainId || ChainId.NEVM)
+			? Pair.getAddress(tokenA, tokenB, (chainId as ChainId) || ChainId.NEVM)
 			: undefined
 	);
 

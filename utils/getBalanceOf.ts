@@ -98,8 +98,17 @@ export const getMultiCall = async (
 	method?: string
 ) => {
 	if (!signerOrProvider) return [];
+
+	const getTokensCode = await Promise.all(
+		tokenAddress.map(token => signerOrProvider.getCode(token))
+	);
+
+	const filterTokensValid = tokenAddress.filter(
+		(token, tokenIndex) => getTokensCode[tokenIndex] !== "0x" && token
+	);
+
 	try {
-		const contracts = tokenAddress.map((address: string) =>
+		const contracts = filterTokensValid.map((address: string) =>
 			createContractUsingAbi(address, PAIR_INTERFACE, signerOrProvider)
 		);
 		const contractCall = await multiCall(contracts, method as string);
