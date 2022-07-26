@@ -37,6 +37,7 @@ const usePicasso = () => {
 			secondary: useColorModeValue("gray.300", "gray.800"),
 			bgPrimary: useColorModeValue("#f7f8fa", "#2c2f36"),
 			whiteGray: useColorModeValue("#665EE1", "rgba(8, 17, 32, 1)"),
+			expertMode: useColorModeValue("#FFFFFF", "#081120"),
 			iceGray: useColorModeValue("#f7f8fa", "#2c2f36"),
 			blackAlpha: useColorModeValue("#ffffff", "#081120"),
 			blueNavy: useColorModeValue("#F7FAFC", "rgba(11, 23, 44, 1)"),
@@ -80,6 +81,10 @@ const usePicasso = () => {
 			headerBorder: useColorModeValue(
 				"1px solid rgba(102, 94, 225, 0.25);",
 				"1px solid rgba(86, 190, 216, 0.15);"
+			),
+			expertMode: useColorModeValue(
+				"linear-gradient(90deg, #665EE1 9.38%, rgba(0, 184, 255, 0.3) 128.42%);",
+				"linear-gradient(32deg, rgb(86 190 216 / 97%) 30.76%, rgb(86 190 216 / 6%) 97.76%);"
 			),
 			connectWallet: useColorModeValue("#04d3c0", "#153d6f70"),
 			borderSettings: useColorModeValue("#edeef2", "#40444f"),

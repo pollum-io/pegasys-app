@@ -47,7 +47,8 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						w="max-content"
 						h="max-content"
 						py="2"
-						px="8"
+						px="1.2rem"
+						ml="4"
 						bottom="8"
 						onClick={onOpenSelectWalletModal}
 						{...rest}
