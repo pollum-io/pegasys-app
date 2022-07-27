@@ -1,7 +1,7 @@
 import { DefaultTemplate } from "container";
 import { NextPage } from "next";
-import { Button, Flex, Icon, Img, Text } from "@chakra-ui/react";
-import { usePicasso } from "hooks";
+import { Button, Flex, Icon, Img, Link, Text } from "@chakra-ui/react";
+import { usePicasso, useWallet } from "hooks";
 import { SiDiscord, SiTwitter } from "react-icons/si";
 import { FaTelegramPlane } from "react-icons/fa";
 import { useState } from "react";
@@ -11,10 +11,12 @@ import { BorderAnimation } from "components/Airdrop/BorderAnimation";
 export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
 
-	const [conditional, setConditional] = useState();
-	const [conditional1, setConditional1] = useState();
-	const [conditional2, setConditional2] = useState();
-	const [conditional3, setConditional3] = useState();
+	const { isConnected } = useWallet();
+
+	const [isNotAvailable, setIsNotAvailable] = useState();
+	const [isClaim, setIsClaim] = useState();
+	const [isClaiming, setIsClaiming] = useState();
+	const [isClaimed, setIsClaimed] = useState();
 
 	return (
 		<Flex alignItems="flex-start" justifyContent="center" pt="20" mb="6.2rem">
@@ -30,8 +32,8 @@ export const AirdropContainer: NextPage = () => {
 					filter="drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.2)) drop-shadow(0px 15px 40px rgba(0, 0, 0, 0.4))"
 				>
 					<Img
-						borderRadius="xl"
-						src="images/backgrounds/PsysAirdropCard.png"
+						borderTopRadius="xl"
+						src="images/backgrounds/PsysAirdrop.png"
 						position="absolute"
 						zIndex="base"
 						w="100%"
@@ -58,11 +60,19 @@ export const AirdropContainer: NextPage = () => {
 							is the place to check how much you earned and claim your tokens.
 						</Text>
 					</Flex>
+					<Flex
+						w="65%"
+						h="100%"
+						borderTopLeftRadius="2xl"
+						zIndex="base"
+						position="absolute"
+						background="linear-gradient(89.54deg, rgba(8, 17, 32, 0.9) 44.27%, rgba(8, 17, 32, 0) 100.3%)"
+					/>
 				</Flex>
 				<Flex>
-					{conditional && (
+					{!isConnected ? (
 						<BorderAnimation>
-							<Flex>
+							<Flex py="4">
 								<Flex>
 									<Text color="white">
 										Please connect your wallet in the button bellow to check
@@ -71,111 +81,145 @@ export const AirdropContainer: NextPage = () => {
 								</Flex>
 							</Flex>
 						</BorderAnimation>
-					)}
-					{conditional1 && (
-						<BorderAnimation>
-							<Flex gap="40" flexDirection="row" align="center">
-								<Flex>
-									<Text color="white">
-										You have no available PSYS to claim.
-									</Text>
-								</Flex>
-								<Flex
-									gap="2"
-									_hover={{
-										textDecoration: "underline",
-										cursor: "pointer",
-										color: "cyan",
-									}}
-								>
-									<Text
-										color={theme.text.cyan}
-										fontSize="sm"
-										fontWeight="medium"
-									>
-										Read more about PSYS
-									</Text>
-									<MdOutlineCallMade size={15} color="cyan" />
-								</Flex>
-							</Flex>
-						</BorderAnimation>
-					)}
-					{conditional2 && (
-						<BorderAnimation>
-							<Flex gap="28" flexDirection="row" alignItems="center">
-								<Flex align="center" gap="2">
-									<Img
-										src="icons/pegasys.png"
-										w="14"
-										h="14"
-										filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
-									/>
-									<Flex alignItems="baseline">
-										<Text fontSize="4xl" fontWeight="semibold" ml="2">
-											234.32
-										</Text>
-										<Text fontSize="xl" pl="2">
-											$PSYS
-										</Text>
+					) : (
+						<Flex w="100%">
+							{isNotAvailable && (
+								<BorderAnimation>
+									<Flex gap="40" flexDirection="row" align="center">
+										<Flex>
+											<Text color="white">
+												You have no available PSYS to claim.
+											</Text>
+										</Flex>
+										<Flex
+											gap="2"
+											_hover={{
+												textDecoration: "underline",
+												cursor: "pointer",
+												color: "cyan",
+											}}
+										>
+											<Text
+												color={theme.text.cyan}
+												fontSize="sm"
+												fontWeight="medium"
+											>
+												Read more about PSYS
+											</Text>
+											<MdOutlineCallMade size={15} color="cyan" />
+										</Flex>
 									</Flex>
-								</Flex>
-								<Flex align="center" gap="2">
-									<Button
-										fontSize="sm"
-										fontWeight="semibold"
-										py="0.625rem"
-										w="3xs"
-										h="max-content"
-										bgColor={theme.bg.blueNavyLightness}
-										color={theme.text.cyanWhite}
-										_hover={{ opacity: "1" }}
-										_active={{}}
-										borderRadius="full"
-									>
-										Claim now
-									</Button>
-								</Flex>
-							</Flex>
-						</BorderAnimation>
-					)}
-					{!conditional3 && (
-						<BorderAnimation>
-							<Flex gap="8" flexDirection="column" alignItems="center">
-								<Flex align="center" gap="2" flexDirection="row">
-									<Img
-										src="icons/pegasys.png"
-										w="14"
-										h="14"
-										filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
-									/>
-									<Flex alignItems="baseline">
-										<Text fontSize="3xl" fontWeight="semibold" ml="2">
-											Welcome to the Pegasys DAO{" "}
-										</Text>
+								</BorderAnimation>
+							)}
+							{isClaim && (
+								<BorderAnimation>
+									<Flex gap="28" flexDirection="row" alignItems="center">
+										<Flex align="center" gap="2">
+											<Img
+												src="icons/pegasys.png"
+												w="14"
+												h="14"
+												filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
+											/>
+											<Flex alignItems="baseline">
+												<Text fontSize="4xl" fontWeight="semibold" ml="2">
+													234.32
+												</Text>
+												<Text fontSize="xl" pl="2">
+													$PSYS
+												</Text>
+											</Flex>
+										</Flex>
+										<Flex align="center" gap="2">
+											{!isClaiming ? (
+												<Button
+													fontSize="sm"
+													fontWeight="semibold"
+													py="0.625rem"
+													w="3xs"
+													h="max-content"
+													bgColor={theme.bg.blueNavyLightness}
+													color={theme.text.cyanWhite}
+													_hover={{ opacity: "1" }}
+													_active={{}}
+													borderRadius="full"
+												>
+													Claim now
+												</Button>
+											) : (
+												<Button
+													fontSize="sm"
+													fontWeight="semibold"
+													py="0.625rem"
+													pr="1"
+													w="3xs"
+													h="max-content"
+													bgColor={theme.bg.blueNavyLightness}
+													color={theme.text.cyanWhite}
+													_hover={{ opacity: "1" }}
+													_active={{}}
+													borderRadius="full"
+												>
+													<Flex className="circleLoading" />
+													Claiming...
+												</Button>
+											)}
+										</Flex>
 									</Flex>
-								</Flex>
-								<Flex align="center" gap="10" flexDirection="row">
-									<Icon
-										as={SiDiscord}
-										w="10"
-										h="10"
-										color={theme.text.greenSocial}
-									/>
-									<Icon
-										as={SiTwitter}
-										w="10"
-										h="10"
-										color={theme.text.greenSocial}
-									/>
-									<Icon
-										as={FaTelegramPlane}
-										w="10"
-										h="10"
-										color={theme.text.greenSocial}
-									/>
-								</Flex>
-							</Flex>
-						</BorderAnimation>
+								</BorderAnimation>
+							)}
+							{isClaimed && (
+								<BorderAnimation>
+									<Flex gap="8" flexDirection="column" alignItems="center">
+										<Flex align="center" gap="2" flexDirection="row">
+											<Img
+												src="icons/pegasys.png"
+												w="14"
+												h="14"
+												filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
+											/>
+											<Flex alignItems="baseline">
+												<Text fontSize="3xl" fontWeight="semibold" ml="2">
+													Welcome to the Pegasys DAO{" "}
+												</Text>
+											</Flex>
+										</Flex>
+										<Flex align="center" gap="10" flexDirection="row">
+											<Link
+												href="https://discord.com/invite/UzjWbWWERz"
+												isExternal
+											>
+												<Icon
+													as={SiDiscord}
+													w="10"
+													h="10"
+													color={theme.text.greenSocial}
+												/>
+											</Link>
+											<Link href="https://twitter.com/PegasysDEX" isExternal>
+												<Icon
+													as={SiTwitter}
+													w="10"
+													h="10"
+													color={theme.text.greenSocial}
+												/>
+											</Link>
+											<Link
+												href="https://t.me/joinchat/GNosBd1_76E5MTVh"
+												isExternal
+											>
+												<Icon
+													as={FaTelegramPlane}
+													w="10"
+													h="10"
+													color={theme.text.greenSocial}
+												/>
+											</Link>
+										</Flex>
+									</Flex>
+								</BorderAnimation>
+							)}
+						</Flex>
 					)}
 				</Flex>
 			</Flex>

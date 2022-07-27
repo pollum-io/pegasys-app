@@ -3,10 +3,9 @@
 	border-radius: 0;
 	position: relative;
 	border-radius: 3px;
-	cursor: pointer;
 	overflow: hidden;
 	z-index: 1;
-	bottom: 10px;
+	bottom: 15px;
 }
 .gradientBorder:focus,
 .gradientBorder:active {
@@ -47,9 +46,12 @@
 .gradientBorder:after {
 	margin: 3px;
 }
-.gradientBorder:hover:before,
+/* TODO: Apply fast animarion on hover  */
+/* .gradientBorder:hover:before,
 .gradientBorder:focus:before {
-}
+	animation: rainbow-border 5s linear infinite;
+} */
+
 @keyframes rainbow-border {
 	0% {
 		background-position: 0% 50%;
