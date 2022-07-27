@@ -45,7 +45,7 @@ export const LoadingTransition: React.FC<IModal> = props => {
 					align="center"
 					gap="4"
 				>
-					<Img src="icons/loading (2).gif" w="35%" h="35%" />
+					<Img src="icons/loading (3).gif" w="35%" h="35%" />
 					<Flex flexDirection="row">
 						<Text fontSize="2xl" fontWeight="semibold">
 							Waiting for confirmation

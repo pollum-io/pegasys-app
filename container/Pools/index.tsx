@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/react";
 import { AddLiquidityModal, RemoveLiquidity } from "components";
 import { ImportPoolModal } from "components/Modals/ImportPool";
-import { LoadingTransition } from "components/Modals/LoadingTransition";
 import { PoolCards } from "components/Pools/PoolCards";
 import { usePicasso, useWallet } from "hooks";
 import { NextPage } from "next";
@@ -59,7 +58,6 @@ export const PoolsContainer: NextPage = () => {
 				isCreate={isCreate}
 				haveValue={haveValue}
 			/>
-			<LoadingTransition isOpen={isOpen} onClose={onClose} />
 			<Flex alignItems="flex-start" justifyContent="center" pt="20" mb="6.2rem">
 				<Flex flexDirection="column" w="2xl">
 					<Flex
