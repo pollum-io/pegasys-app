@@ -20,7 +20,7 @@ import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
 import { SettingsButton } from "components/Header/SettingsButton";
-import { Trade } from "@pollum-io/pegasys-sdk";
+import { ChainId, Trade } from "@pollum-io/pegasys-sdk";
 import {
 	ISwapTokenInputValue,
 	IWalletHookInfos,
@@ -144,7 +144,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const canSubmit = submitValidation.every(validation => validation === true);
 
 	const walletInfos: IWalletHookInfos = {
-		chainId: currentNetworkChainId,
+		chainId: currentNetworkChainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
 		walletAddress,
 		provider,
 	};

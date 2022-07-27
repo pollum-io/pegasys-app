@@ -16,13 +16,13 @@ export async function usePairs(
 	const { chainId, walletAddress, provider } = walletInfos;
 
 	const tokens = currencies.map(([currencyA, currencyB]) => [
-		wrappedCurrency(currencyA, chainId as ChainId),
-		wrappedCurrency(currencyB, chainId as ChainId),
+		wrappedCurrency(currencyA, chainId),
+		wrappedCurrency(currencyB, chainId),
 	]);
 
 	const pairAddresses = tokens.map(([tokenA, tokenB]) =>
 		tokenA && tokenB && !tokenA.equals(tokenB)
-			? Pair.getAddress(tokenA, tokenB, (chainId as ChainId) || ChainId.NEVM)
+			? Pair.getAddress(tokenA, tokenB, chainId)
 			: undefined
 	);
 
@@ -50,7 +50,7 @@ export async function usePairs(
 			new Pair(
 				new TokenAmount(token0, _reserve0?.toString()),
 				new TokenAmount(token1, _reserve1?.toString()),
-				chainId ? (chainId as ChainId) : ChainId.NEVM
+				chainId
 			),
 		];
 	});

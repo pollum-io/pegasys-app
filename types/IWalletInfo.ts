@@ -1,3 +1,4 @@
+import { ChainId } from "@pollum-io/pegasys-sdk";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ethers, Signer } from "ethers";
 
@@ -14,7 +15,7 @@ export interface IWalletInfo {
 }
 
 export interface IWalletHookInfos {
-	chainId: number | null;
+	chainId: ChainId;
 	walletAddress: string;
 	provider:
 		| ethers.providers.Provider
