@@ -1,5 +1,6 @@
 import { Button, ButtonProps, Link } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
+import { usePicasso } from "hooks";
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
@@ -8,17 +9,19 @@ interface IButtonProps extends ButtonProps {
 
 export const NavButton: FunctionComponent<IButtonProps> = props => {
 	const { href, children, ...rest } = props;
+	const theme = usePicasso();
 	return (
 		<Link href={href} _hover={{ textDecoration: "none" }}>
 			<Button
+				color={theme.text.header}
 				fontSize="md"
 				fontWeight="semibold"
 				bgColor="transparent"
-				opacity="0.75"
+				opacity="1"
 				borderRadius="70px"
 				transition="0.4s"
 				_hover={{
-					bgColor: "#0B172C",
+					bgColor: theme.bg.whiteGray,
 					opacity: 1,
 					borderRadius: "70px",
 				}}

@@ -25,15 +25,18 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 					<Flex
 						bgColor={theme.bg.primary}
 						flexDirection={["column"]}
-						style={{ minHeight: heightValue, width: widthValue }}
+						style={{
+							minHeight: heightValue,
+							width: widthValue,
+						}}
+						alignItems="center"
 					>
 						<Flex
-							width="30%"
+							width="30rem"
 							height="lg"
-							left="37rem"
-							position="absolute"
+							position="fixed"
 							background="#56BED8;"
-							opacity="0.7"
+							opacity="1"
 							filter="blur(275px)"
 						/>
 						<div id="starsLightMode" />

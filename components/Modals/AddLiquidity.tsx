@@ -12,9 +12,14 @@ import {
 	Tooltip,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { usePicasso, useTokens } from "hooks";
-import React, { useEffect, useState } from "react";
-import { MdHelpOutline, MdArrowBack, MdAdd } from "react-icons/md";
+import { usePicasso } from "hooks";
+import React, { useState } from "react";
+import {
+	MdHelpOutline,
+	MdArrowBack,
+	MdAdd,
+	MdOutlineInfo,
+} from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { SelectCoinModal } from "components";
 import { WrappedTokenInfo } from "types";
@@ -24,6 +29,15 @@ interface IModal {
 	onModalClose: () => void;
 	isCreate?: boolean;
 	haveValue?: boolean;
+}
+interface IToken {
+	logoURI: string;
+	symbol: string;
+	id?: number;
+}
+interface ITokenInputValue {
+	inputFrom: string;
+	inputTo: string;
 }
 
 export const AddLiquidityModal: React.FC<IModal> = props => {
@@ -35,6 +49,25 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const { onOpen, isOpen, onClose } = useDisclosure();
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
+	const [tokenInputValue, setTokenInputValue] = useState<ITokenInputValue>({
+		inputFrom: "",
+		inputTo: "",
+	});
+
+	const handleOnChangeTokenInputs = (
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		const regexPreventLetters = /^(?!,$)[\d,.]+$/;
+
+		const inputValue = event?.target?.value;
+
+		if (inputValue === "" || regexPreventLetters.test(inputValue)) {
+			setTokenInputValue(prevState => ({
+				...prevState,
+				[event.target.name]: inputValue,
+			}));
+		}
+	};
 
 	useEffect(() => {
 		setSelectedToken([userTokensBalance[0], userTokensBalance[1]]);
@@ -151,53 +184,90 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							px="4"
 							py="2"
 							bgColor={theme.bg.blueNavy}
-							flexDirection="column"
+							flexDirection="row"
+							justifyContent="space-between"
+							border="1px solid"
+							borderColor={
+								tokenInputValue.inputFrom > selectedToken[0]?.balance
+									? theme.text.red400
+									: "#ff000000"
+							}
 						>
-							<Flex
-								flexDirection="row"
-								justifyContent="space-between"
-								color={theme.text.swapInfo}
-							/>
-							<Flex alignItems="center" justifyContent="space-around">
-								<Flex alignItems="center">
-									<Flex
-										alignItems="center"
-										justifyContent="center"
-										px="5"
-										py="1"
-										id="0"
-										w="max-content"
-										onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-											onOpen();
-											setButtonId(Number(event.currentTarget.id));
-										}}
-										borderRadius="2xl"
-										cursor="pointer"
-										_hover={{
-											bgColor: theme.bg.button.swapTokenCurrency,
-										}}
-									>
-										<Img src={selectedToken[0].logoURI} w="6" h="6" />
-										<Text fontSize="xl" fontWeight="500" px="3">
-											{selectedToken[0].symbol}
-										</Text>
-										<Icon as={IoIosArrowDown} />
-									</Flex>
-									<Input
+							<Flex flexDirection="column" color={theme.text.swapInfo}>
+								<Text fontSize="sm">Input</Text>
+								<Flex
+									alignItems="center"
+									justifyContent="center"
+									py="1"
+									mt="1"
+									id="0"
+									w="max-content"
+									onClick={event => {
+										onOpen();
+										setButtonId(Number(event.currentTarget.id));
+									}}
+									borderRadius="2xl"
+									cursor="pointer"
+									_hover={{}}
+								>
+									<Img src={selectedToken[0].logoURI} w="6" h="6" />
+									<Text
 										fontSize="xl"
-										border="none"
-										placeholder="0.00"
-										textAlign="right"
-										mt="2"
-										px="1.5"
-										ml="50"
-										type="number"
-										_placeholder={{ color: "white" }}
-										_active={{ border: "none" }}
-									/>
+										fontWeight="500"
+										px="3"
+										_hover={{ opacity: "0.9" }}
+									>
+										{selectedToken[0].symbol}
+									</Text>
+									<Icon as={IoIosArrowDown} />
 								</Flex>
 							</Flex>
+							<Flex
+								flexDirection="column"
+								color={theme.text.swapInfo}
+								alignItems="flex-end"
+							>
+								<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
+									Balance: {selectedToken[0]?.balance}
+								</Text>
+								<Input
+									fontSize="xl"
+									border="none"
+									w="85%"
+									placeholder="0.00"
+									textAlign="right"
+									mt="2"
+									px="1.5"
+									type="number"
+									_placeholder={{ color: "white" }}
+									_active={{ border: "none" }}
+									name="inputFrom"
+									onChange={handleOnChangeTokenInputs}
+									value={tokenInputValue.inputFrom}
+								/>
+							</Flex>
 						</Flex>
+						{tokenInputValue.inputFrom > selectedToken[0]?.balance && (
+							<Flex flexDirection="row" gap="1" justifyContent="center">
+								<Text
+									fontSize="sm"
+									pt="2"
+									textAlign="center"
+									color={theme.text.red400}
+									fontWeight="semibold"
+								>
+									Insufficient {selectedToken[0]?.symbol} balance.
+								</Text>
+								<Text
+									fontSize="sm"
+									pt="2"
+									textAlign="center"
+									color={theme.text.red400}
+								>
+									Please insert a valid amount.
+								</Text>
+							</Flex>
+						)}
 						<Flex justifyContent="center" my="4">
 							<MdAdd size={24} color={theme.text.cyan} />
 						</Flex>
@@ -208,53 +278,91 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							px="4"
 							py="2"
 							bgColor={theme.bg.blueNavy}
-							flexDirection="column"
+							flexDirection="row"
+							justifyContent="space-between"
+							border="1px solid"
+							borderColor={
+								tokenInputValue.inputTo > selectedToken[1]?.balance
+									? theme.text.red400
+									: "#ff000000"
+							}
 						>
-							<Flex
-								flexDirection="row"
-								justifyContent="space-between"
-								color={theme.text.swapInfo}
-							/>
-							<Flex alignItems="center" justifyContent="space-around">
-								<Flex alignItems="center">
-									<Flex
-										alignItems="center"
-										justifyContent="center"
-										px="5"
-										py="1"
-										id="1"
-										w="max-content"
-										onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-											onOpen();
-											setButtonId(Number(event.currentTarget.id));
-										}}
-										borderRadius="2xl"
-										cursor="pointer"
-										_hover={{
-											bgColor: theme.bg.button.swapTokenCurrency,
-										}}
-									>
-										<Img src={selectedToken[1].logoURI} w="6" h="6" />
-										<Text fontSize="xl" fontWeight="500" px="3">
-											{selectedToken[1].symbol}
-										</Text>
-										<Icon as={IoIosArrowDown} />
-									</Flex>
-									<Input
+							<Flex flexDirection="column" color={theme.text.swapInfo}>
+								<Text fontSize="sm">Input</Text>
+								<Flex
+									alignItems="center"
+									justifyContent="center"
+									py="1"
+									mt="1"
+									id="1"
+									w="max-content"
+									onClick={event => {
+										onOpen();
+										setButtonId(Number(event.currentTarget.id));
+									}}
+									borderRadius="2xl"
+									cursor="pointer"
+									_hover={{}}
+								>
+									<Img src={selectedToken[1].logoURI} w="6" h="6" />
+									<Text
 										fontSize="xl"
-										border="none"
-										placeholder="0.00"
-										textAlign="right"
-										mt="2"
-										px="1.5"
-										ml="50"
-										type="number"
-										_placeholder={{ color: "white" }}
-									/>
+										fontWeight="500"
+										px="3"
+										_hover={{ opacity: "0.9" }}
+									>
+										{selectedToken[1].symbol}
+									</Text>
+									<Icon as={IoIosArrowDown} />
 								</Flex>
 							</Flex>
+							<Flex
+								flexDirection="column"
+								color={theme.text.swapInfo}
+								alignItems="flex-end"
+							>
+								<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
+									Balance: {selectedToken[1]?.balance}
+								</Text>
+								<Input
+									fontSize="xl"
+									border="none"
+									w="85%"
+									placeholder="0.00"
+									textAlign="right"
+									mt="2"
+									px="1.5"
+									type="number"
+									_placeholder={{ color: "white" }}
+									_active={{ border: "none" }}
+									name="inputTo"
+									value={tokenInputValue.inputTo}
+									onChange={handleOnChangeTokenInputs}
+								/>
+							</Flex>
 						</Flex>
-						{!haveValue && (
+						{tokenInputValue.inputTo > selectedToken[1]?.balance && (
+							<Flex flexDirection="row" gap="1" justifyContent="center">
+								<Text
+									fontSize="sm"
+									pt="2"
+									textAlign="center"
+									color={theme.text.red400}
+									fontWeight="semibold"
+								>
+									Insufficient {selectedToken[1]?.symbol} balance.
+								</Text>
+								<Text
+									fontSize="sm"
+									pt="2"
+									textAlign="center"
+									color={theme.text.red400}
+								>
+									Please insert a valid amount.
+								</Text>
+							</Flex>
+						)}
+						{tokenInputValue.inputTo && tokenInputValue.inputFrom && (
 							<Flex
 								flexDirection="column"
 								borderRadius="2xl"
@@ -277,16 +385,20 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									bgColor={theme.bg.blueNavy}
 								>
 									<Flex fontSize="sm" flexDirection="column" textAlign="center">
-										<Text fontWeight="semibold">1.80806</Text>
-										<Text fontWeight="normal">SYS per USDT</Text>
+										<Text fontWeight="semibold">-</Text>
+										<Text fontWeight="normal">
+											{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}{" "}
+										</Text>
 									</Flex>
 									<Flex fontSize="sm" flexDirection="column" textAlign="center">
-										<Text fontWeight="semibold">0.553078</Text>
-										<Text fontWeight="normal">USDT per SYS</Text>
+										<Text fontWeight="semibold">-</Text>
+										<Text fontWeight="normal">
+											{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
+										</Text>
 									</Flex>
 									<Flex fontSize="sm" flexDirection="column" textAlign="center">
-										<Text fontWeight="semibold">1.80806</Text>
-										<Text fontWeight="normal">SYS per USDT</Text>
+										<Text fontWeight="semibold">-</Text>
+										<Text fontWeight="normal">Share of Pool</Text>
 									</Flex>
 								</Flex>
 							</Flex>
@@ -308,55 +420,85 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						</Flex>
 					</Flex>
 				</Flex>
-				<Flex
-					flexDirection="column"
-					p="1.5rem"
-					background={theme.bg.blueNavy}
-					position="absolute"
-					w="100%"
-					bottom="-280"
-					borderRadius="xl"
-				>
-					<Text fontWeight="bold" fontSize="lg">
-						Your position
-					</Text>
+				{tokenInputValue.inputTo && tokenInputValue.inputFrom ? (
+					<Flex
+						flexDirection="column"
+						p="1.5rem"
+						background={theme.bg.blueNavy}
+						position="absolute"
+						w="100%"
+						bottom="-280"
+						borderRadius="xl"
+					>
+						<Text fontWeight="bold" fontSize="lg">
+							Your position
+						</Text>
+						<Flex
+							flexDirection="row"
+							justifyContent="space-between"
+							py="1.563rem"
+						>
+							<Flex fontSize="lg" fontWeight="bold" align="center">
+								<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
+								<Img src={selectedToken[1]?.logoURI} w="6" h="6" />
+								<Text pl="2">
+									{selectedToken[0]?.symbol}/{selectedToken[1]?.symbol}
+								</Text>
+							</Flex>
+							<Text fontSize="lg" fontWeight="bold">
+								-
+							</Text>
+						</Flex>
+						<Flex flexDirection="column">
+							<Flex flexDirection="row" justifyContent="space-between">
+								<Text fontWeight="semibold">Your pool share:</Text>
+								<Text fontWeight="normal">-%</Text>
+							</Flex>
+							<Flex
+								flexDirection="row"
+								justifyContent="space-between"
+								pt="0.75rem"
+							>
+								<Text fontWeight="semibold">{selectedToken[0]?.symbol}</Text>
+								<Text fontWeight="normal">-</Text>
+							</Flex>
+							<Flex
+								flexDirection="row"
+								justifyContent="space-between"
+								pt="0.75rem"
+							>
+								<Text fontWeight="semibold">{selectedToken[1]?.symbol}</Text>
+								<Text fontWeight="normal">-</Text>
+							</Flex>
+						</Flex>
+					</Flex>
+				) : (
 					<Flex
 						flexDirection="row"
-						justifyContent="space-between"
-						py="1.563rem"
+						p="1.5rem"
+						background={theme.bg.blueNavy}
+						position="absolute"
+						w="100%"
+						bottom="-250"
+						borderRadius="xl"
+						alignItems="flex-start"
+						gap="2"
 					>
-						<Flex fontSize="lg" fontWeight="bold" align="center">
-							<Img src="icons/syscoin-logo.png" w="6" h="6" />
-							<Img src="icons/pegasys.png" w="6" h="6" />
-							<Text pl="2">USDT/SYS</Text>
+						<Flex>
+							<Icon as={MdOutlineInfo} w="6" h="6" color={theme.text.cyan} />
 						</Flex>
-						<Text fontSize="lg" fontWeight="bold">
-							0.0000005
-						</Text>
-					</Flex>
-					<Flex flexDirection="column">
-						<Flex flexDirection="row" justifyContent="space-between">
-							<Text fontWeight="semibold">Your pool share:</Text>
-							<Text fontWeight="normal">33.480024%</Text>
-						</Flex>
-						<Flex
-							flexDirection="row"
-							justifyContent="space-between"
-							pt="0.75rem"
-						>
-							<Text fontWeight="semibold">SYS</Text>
-							<Text fontWeight="normal">0.2145005</Text>
-						</Flex>
-						<Flex
-							flexDirection="row"
-							justifyContent="space-between"
-							pt="0.75rem"
-						>
-							<Text fontWeight="semibold">PSYS</Text>
-							<Text fontWeight="normal">0.9475005</Text>
+						<Flex flexDirection="column" gap="6">
+							<Text>
+								By adding liquidity you’ll earn 0.25% of all trades on this pair
+								proportional to your share of the pool.
+							</Text>
+							<Text>
+								Fees are added to the pool, accrue in real time and can be
+								claimed by withdrawing your liquidity.
+							</Text>
 						</Flex>
 					</Flex>
-				</Flex>
+				)}
 			</ModalContent>
 		</Modal>
 	);
