@@ -31,7 +31,7 @@ export const SelectWallets: React.FC<IModal> = props => {
 			>
 				<Flex flexDirection="column" justifyContent="center">
 					<Flex justifyContent="space-between" align="center" pb="5">
-						<Text fontSize="xl" fontWeight="semibold">
+						<Text fontSize="xl" fontWeight="semibold" color={theme.text.mono}>
 							Connect to a Wallet
 						</Text>
 						<Flex _hover={{ cursor: "pointer" }}>
@@ -41,11 +41,15 @@ export const SelectWallets: React.FC<IModal> = props => {
 					<Flex flexDirection="column" pb="5">
 						<WalletOptions />
 					</Flex>
-					<Flex flexDirection="column" fontSize="sm	">
-						<Text textAlign="center" fontWeight="normal">
+					<Flex flexDirection="column" fontSize="sm">
+						<Text
+							textAlign="center"
+							fontWeight="normal"
+							color={theme.text.mono}
+						>
 							New to Syscoin?{" "}
 						</Text>
-						<Text textColor={theme.text.cyan} fontWeight="semibold">
+						<Text textColor={theme.text.cyanPurple} fontWeight="semibold">
 							Learn more about setting up a wallet
 						</Text>
 					</Flex>

@@ -16,6 +16,11 @@ export const Wallets = ({ id, header, icon, onClick }: IWalletProps) => {
 
 	return (
 		<Button
+			color={theme.text.mono}
+			_hover={{
+				bgColor: theme.bg.button.connectToWallet,
+				borderColor: theme.bg.button.connectToWallet,
+			}}
 			onClick={() => onClick()}
 			px="0"
 			py="0"
@@ -31,7 +36,6 @@ export const Wallets = ({ id, header, icon, onClick }: IWalletProps) => {
 			borderRadius="full"
 			fontSize="md"
 			borderColor={theme.border.wallets}
-			_hover={{ borderColor: theme.text.cyan }}
 			fontWeight={500}
 			id={id}
 			fontFamily="inter"

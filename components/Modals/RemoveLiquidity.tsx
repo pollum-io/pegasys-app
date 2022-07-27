@@ -66,7 +66,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 				p="1.5rem"
 				borderRadius="3xl"
 				border="1px solid transparent;"
-				background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				background={theme.bg.blackAlpha}
 			>
 				<ModalHeader
 					display="flex"
@@ -77,9 +77,15 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 				>
 					<Flex alignItems="center">
 						<Flex _hover={{ cursor: "pointer" }} onClick={onModalClose}>
-							<MdArrowBack size={24} />
+							<MdArrowBack size={24} color={theme.icon.whiteGray} />
 						</Flex>
-						<Text fontSize="2xl" fontWeight="medium" textAlign="center" px="4">
+						<Text
+							fontSize="2xl"
+							fontWeight="medium"
+							textAlign="center"
+							px="4"
+							color={theme.text.mono}
+						>
 							Remove Liquidity
 						</Text>
 					</Flex>
@@ -97,22 +103,22 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						<Text as="span" _hover={{ opacity: 0.8 }}>
 							<Icon
 								as={MdHelpOutline}
-								h="4"
-								w="4"
-								color="white"
-								backgroundColor="gray.800"
+								h="5"
+								w="5"
+								color={theme.icon.whiteGray}
 								borderRadius="full"
 							/>
 						</Text>
 					</Tooltip>
 				</ModalHeader>
 				<Flex
-					flexDirection="column"
 					bgColor={theme.bg.blueNavy}
+					flexDirection="column"
 					borderRadius="2xl"
 					mt="4"
 					px="5"
 					py="5"
+					color={theme.text.mono}
 				>
 					<Flex
 						flexDirection="row"
@@ -121,7 +127,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						fontWeight="medium"
 					>
 						<Text>Amount</Text>
-						<Text color={theme.text.cyan}>Detailed</Text>
+						<Text color={theme.text.cyanPurple}>Detailed</Text>
 					</Flex>
 					<Flex
 						flexDirection="row"
@@ -154,6 +160,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						</Flex>
 					</Flex>
 					<Slider
+						color={theme.text.transactionsItems}
 						id="slider"
 						mt="9"
 						defaultValue={5}

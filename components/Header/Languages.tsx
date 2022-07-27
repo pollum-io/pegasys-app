@@ -25,6 +25,9 @@ export const Languages: FunctionComponent<IButtonProps> = props => {
 			<PopoverTrigger {...props}>
 				<IconButton
 					aria-label="Popover"
+					_hover={{
+						background: theme.bg.iconBg,
+					}}
 					icon={
 						<ReactCountryFlag
 							countryCode="US"
@@ -37,7 +40,6 @@ export const Languages: FunctionComponent<IButtonProps> = props => {
 					}
 					transition="0.4s"
 					bg="transparent"
-					_hover={{ background: "rgba(255, 255, 255, 0.08)" }}
 				/>
 			</PopoverTrigger>
 			<PopoverContent w="max-content">
@@ -56,7 +58,7 @@ export const Languages: FunctionComponent<IButtonProps> = props => {
 							/>
 							<Text
 								paddingLeft="0.5rem"
-								_hover={{ cursor: "pointer", color: theme.text.cyan }}
+								_hover={{ cursor: "pointer", color: theme.text.cyanPurple }}
 							>
 								{country}
 							</Text>

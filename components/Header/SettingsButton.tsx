@@ -29,7 +29,9 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 			<PopoverTrigger {...props}>
 				<IconButton
 					bgColor="transparent"
-					_hover={{ background: "rgba(255, 255, 255, 0.08)" }}
+					_hover={{
+						background: theme.bg.iconBg,
+					}}
 					aria-label="Popover"
 					icon={<MdSettings size={25} />}
 				/>
@@ -43,33 +45,34 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 				h="max-content"
 			>
 				<Flex
-					bgColor={theme.bg.whiteGray}
+					bgColor={theme.bg.transactionSettings}
 					borderRadius="7rem"
 					py="2"
 					justifyContent="center"
 					alignItems="center"
 				>
-					<Text fontSize="md" fontWeight="semibold">
+					<Text fontSize="md" fontWeight="semibold" color={theme.text.mono}>
 						Transaction Settings
 					</Text>
 				</Flex>
 				<PopoverBody>
 					<Flex flexDirection="column" mt="4">
 						<Flex alignItems="center" flexDirection="row">
-							<Text fontSize="md" pr="1" fontWeight="medium">
+							<Text
+								fontSize="md"
+								pr="1"
+								fontWeight="medium"
+								color={theme.text.mono}
+							>
 								Slippage tolerance
 							</Text>
-							<Icon as={MdHelpOutline} />
+							<Icon as={MdHelpOutline} color={theme.icon.whiteGray} />
 						</Flex>
 						<Flex flexDirection="row" py="0.5rem">
 							<SlippageButton aria-label="Slip" mr="3">
 								0.1%
 							</SlippageButton>
-							<SlippageButton
-								aria-label="Slip"
-								mr="3"
-								bgColor="rgba(21, 61, 111, 1)"
-							>
+							<SlippageButton aria-label="Slip" mr="3">
 								0.5%
 							</SlippageButton>
 							<SlippageButton aria-label="Slip" mr="3" py="0.5rem" px="1rem">
@@ -90,10 +93,15 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							/>
 						</Flex>
 						<Flex alignItems="center" flexDirection="row" pt="0.1rem" mt="4">
-							<Text fontSize="md" pr="1" fontWeight="medium">
+							<Text
+								fontSize="md"
+								pr="1"
+								fontWeight="medium"
+								color={theme.text.mono}
+							>
 								Transaction tolerance
 							</Text>
-							<Icon as={MdHelpOutline} />
+							<Icon as={MdHelpOutline} color={theme.icon.whiteGray} />
 						</Flex>
 						<Flex flexDirection="row" py="0.5rem" alignItems="center">
 							<Input
@@ -110,18 +118,23 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								border="1px solid"
 								borderColor={theme.border.borderSettings}
 							/>
-							<Text>Minutes</Text>
+							<Text color={theme.text.mono}>Minutes</Text>
 						</Flex>
 						<Flex alignItems="center" flexDirection="row" mt="4">
-							<Text fontSize="md" pr="1" fontWeight="medium">
+							<Text
+								fontSize="md"
+								pr="1"
+								fontWeight="medium"
+								color={theme.text.mono}
+							>
 								Toggle Expert Mode
 							</Text>
 							<Icon as={MdHelpOutline} />
 							<Flex flexDirection="row" ml="12">
 								<Stack align="center" direction="row">
-									<Text>Off</Text>
+									<Text color={theme.text.mono}>Off</Text>
 									<Switch size="md" colorScheme="teal" />
-									<Text>On</Text>
+									<Text color={theme.text.mono}>On</Text>
 								</Stack>
 							</Flex>
 						</Flex>

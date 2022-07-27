@@ -82,6 +82,10 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					fontSize="sm"
 					fontWeight="semibold"
 					onClick={onOpen}
+					_hover={{
+						borderColor: theme.text.cyanLightPurple,
+						color: theme.text.cyanLightPurple,
+					}}
 				>
 					Remove
 				</Button>
@@ -90,11 +94,12 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					py="2"
 					px="6"
 					borderRadius="67px"
-					bgColor={theme.bg.button.connectWalletSwap}
+					bgColor={theme.bg.blueNavyLightness}
 					color={theme.text.cyan}
 					fontSize="sm"
 					fontWeight="semibold"
 					onClick={onOpenAdd}
+					_hover={{ bgColor: theme.bg.bluePurple }}
 				>
 					Add Liquidity
 				</Button>

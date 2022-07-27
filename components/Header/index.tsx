@@ -96,6 +96,9 @@ export const Header: React.FC = () => {
 					<Languages />
 					<MenuLinks />
 					<IconButton
+						_hover={{
+							background: theme.bg.iconBg,
+						}}
 						aria-label="Theme"
 						icon={<theme.icon.theme />}
 						onClick={() => toggleColorMode()}

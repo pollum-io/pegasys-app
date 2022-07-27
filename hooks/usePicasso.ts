@@ -4,8 +4,14 @@ import { BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
 const usePicasso = () => {
 	const theme = {
 		text: {
+			whiteGray: useColorModeValue("rgba(0, 0, 0, 0.24)", "white"),
+			transactionsItems: useColorModeValue(
+				"#A0AEC0",
+				"rgb(255, 255, 255, 0.64)"
+			),
+			cyanLightPurple: useColorModeValue("#8C15E8", "#00d9ef"),
 			header: useColorModeValue("#A0AEC0", "white"),
-			whitePurple: useColorModeValue("#665EE1", "whitw"),
+			whitePurple: useColorModeValue("#665EE1", "white"),
 			cyanWhite: useColorModeValue("white", "#00d9ef"),
 			topHeaderButton: useColorModeValue("#665EE1", "#081120"),
 			cyanPurple: useColorModeValue("#665EE1", "#00d9ef"),
@@ -30,9 +36,19 @@ const usePicasso = () => {
 			red500: useColorModeValue("red.500", "red.500"),
 		},
 		icon: {
+			whiteGray: useColorModeValue("#A0AEC0", "white"),
 			theme: useColorModeValue(BsFillSunFill, BsFillMoonFill),
 		},
 		bg: {
+			connectToWallet: useColorModeValue("#EEEAF4", "#153D6F"),
+			settings: useColorModeValue("white", "#0B172C"),
+			slippage: useColorModeValue("#D6BCFA", "#153D6F"),
+			transactionSettings: useColorModeValue("rgb(0, 0, 0, 0.04)", "#081120"),
+			iconBg: useColorModeValue(
+				"rgb(222,225,226, 0.4)",
+				"rgba(255, 255, 255, 0.08)"
+			),
+			bluePurple: useColorModeValue("#8C15E8", "#0753B2"),
 			topHeader: useColorModeValue("#FFFFFF", "#000000"),
 			primary: useColorModeValue("#EDF2F7", "#000913"),
 			secondary: useColorModeValue("gray.300", "gray.800"),
@@ -42,7 +58,12 @@ const usePicasso = () => {
 			blackAlpha: useColorModeValue("#ffffff", "#081120"),
 			blueNavy: useColorModeValue("#F7FAFC", "rgba(11, 23, 44, 1)"),
 			blueNavyLightness: useColorModeValue("#665EE1", "rgba(21, 61, 111, 1);"),
+			blueNavyLightnessOp: useColorModeValue(
+				"rgb(102,94,225, 0.8)",
+				"rgba(21, 61, 111, 1);"
+			),
 			button: {
+				connectToWallet: useColorModeValue("#EEEAF4", "#153D6F"),
 				primary: useColorModeValue("blue.500", "blue.600"),
 				secondary: useColorModeValue("purple.700", "purple.600"),
 				tertiary: useColorModeValue("green.600", "blue.800"),
@@ -70,6 +91,7 @@ const usePicasso = () => {
 			},
 		},
 		border: {
+			cyanPurple: useColorModeValue("#8C15E8", "#0753B2"),
 			modalBorderShadow: useColorModeValue(
 				"0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.2);",
 				"0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4);"

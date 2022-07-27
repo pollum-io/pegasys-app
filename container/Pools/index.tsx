@@ -11,6 +11,7 @@ import {
 	MenuList,
 	Text,
 	useDisclosure,
+	useColorModeValue,
 } from "@chakra-ui/react";
 import { AddLiquidityModal, RemoveLiquidity } from "components";
 import { ImportPoolModal } from "components/Modals/ImportPool";
@@ -174,7 +175,10 @@ export const PoolsContainer: NextPage = () => {
 									borderColor={theme.text.cyanPurple}
 									color={theme.text.whitePurple}
 									borderRadius="full"
-									_hover={{ opacity: "1" }}
+									_hover={{
+										borderColor: theme.text.cyanLightPurple,
+										color: theme.text.cyanLightPurple,
+									}}
 									_active={{}}
 									onClick={() => {
 										setIsCreate(true);
@@ -217,7 +221,9 @@ export const PoolsContainer: NextPage = () => {
 												h="max-content"
 												bgColor={theme.bg.blueNavyLightness}
 												color="white"
-												_hover={{ opacity: "1" }}
+												_hover={{
+													bgColor: theme.bg.bluePurple,
+												}}
 												_active={{}}
 												borderRadius="full"
 												rightIcon={<MdExpandMore size={20} />}
@@ -231,11 +237,36 @@ export const PoolsContainer: NextPage = () => {
 												p="4"
 												fontSize="sm"
 											>
-												<MenuItem>Pool Weight</MenuItem>
-												<MenuItem>Name</MenuItem>
-												<MenuItem>Claudio</MenuItem>
-												<MenuItem>Thom</MenuItem>
-												<MenuItem>Kaue</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Pool Weight
+												</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Name
+												</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Claudio
+												</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Thom
+												</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Kaue
+												</MenuItem>
 											</MenuList>
 										</Menu>
 									)}
