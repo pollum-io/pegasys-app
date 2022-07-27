@@ -6,6 +6,7 @@ import { SiDiscord, SiTwitter } from "react-icons/si";
 import { FaTelegramPlane } from "react-icons/fa";
 import { useState } from "react";
 import { MdOutlineCallMade } from "react-icons/md";
+import { BorderAnimation } from "components/Airdrop/BorderAnimation";
 
 export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
@@ -22,12 +23,15 @@ export const AirdropContainer: NextPage = () => {
 					flexDirection="column"
 					zIndex="99"
 					position="relative"
-					borderTopRadius="xl"
+					borderTopRadius="2xl"
 					backgroundColor={theme.bg.blueNavy}
 					w="2xl"
+					box-shadow="0px 0px 0px 1px rgba(0, 0, 0, 0.1)"
+					filter="drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.2)) drop-shadow(0px 15px 40px rgba(0, 0, 0, 0.4))"
 				>
 					<Img
-						src="images/backgrounds/PsysReward.png"
+						borderRadius="xl"
+						src="images/backgrounds/PsysAirdropCard.png"
 						position="absolute"
 						zIndex="base"
 						w="100%"
@@ -55,28 +59,21 @@ export const AirdropContainer: NextPage = () => {
 						</Text>
 					</Flex>
 				</Flex>
-				<Flex className="gradientBorder" position="absolute" />
-				<Flex
-					zIndex="99"
-					w="99%"
-					h="3xs"
-					py="12"
-					ml="1"
-					gap="2.5"
-					bgColor={theme.bg.whiteGray}
-					justifyContent="center"
-					borderRadius="xl"
-				>
-					<Flex>
-						{conditional && (
+				<Flex>
+					{conditional && (
+						<BorderAnimation>
 							<Flex>
-								<Text color="white">
-									Please connect your wallet in the button bellow to check your
-									eligibility.
-								</Text>
+								<Flex>
+									<Text color="white">
+										Please connect your wallet in the button bellow to check
+										your eligibility.
+									</Text>
+								</Flex>
 							</Flex>
-						)}
-						{!conditional1 && (
+						</BorderAnimation>
+					)}
+					{conditional1 && (
+						<BorderAnimation>
 							<Flex gap="40" flexDirection="row" align="center">
 								<Flex>
 									<Text color="white">
@@ -101,8 +98,10 @@ export const AirdropContainer: NextPage = () => {
 									<MdOutlineCallMade size={15} color="cyan" />
 								</Flex>
 							</Flex>
-						)}
-						{conditional2 && (
+						</BorderAnimation>
+					)}
+					{conditional2 && (
+						<BorderAnimation>
 							<Flex gap="28" flexDirection="row" alignItems="center">
 								<Flex align="center" gap="2">
 									<Img
@@ -137,8 +136,10 @@ export const AirdropContainer: NextPage = () => {
 									</Button>
 								</Flex>
 							</Flex>
-						)}
-						{conditional3 && (
+						</BorderAnimation>
+					)}
+					{!conditional3 && (
+						<BorderAnimation>
 							<Flex gap="8" flexDirection="column" alignItems="center">
 								<Flex align="center" gap="2" flexDirection="row">
 									<Img
@@ -174,8 +175,8 @@ export const AirdropContainer: NextPage = () => {
 									/>
 								</Flex>
 							</Flex>
-						)}
-					</Flex>
+						</BorderAnimation>
+					)}
 				</Flex>
 			</Flex>
 		</Flex>
