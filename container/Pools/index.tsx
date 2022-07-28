@@ -70,11 +70,11 @@ export const PoolsContainer: NextPage = () => {
 						backgroundColor="blue.700"
 					>
 						<Img
-							src="images/backgrounds/PsysAirdrop2.png"
+							src="images/backgrounds/BannerPools.png"
 							position="absolute"
 							zIndex="base"
 							w="100%"
-							h="100%"
+							h="85%"
 						/>
 						<Flex
 							zIndex="docked"
