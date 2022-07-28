@@ -70,7 +70,6 @@ const ChartComponent = (props: any) => {
 			wickDownColor: "transparent",
 		});
 		newSeries.setData(data);
-
 		window.addEventListener("resize", handleResize);
 
 		return () => {
