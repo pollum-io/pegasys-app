@@ -51,7 +51,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const [currentInput, setCurrentInput] = useState<string>("");
 	const [trade, setTrade] = useState<Trade | undefined>();
 	const [buttonId, setButtonId] = useState<number>(0);
-
+	const [route, setRoute] = useState<WrappedTokenInfo[]>([]);
 	const [tokenInputValue, setTokenInputValue] = useState<ISwapTokenInputValue>({
 		inputFrom: {
 			token: selectedToken[0],
@@ -180,6 +180,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				: "";
 		}
 	}, [isConnected, trade, selectedToken]);
+
+	useMemo(() => {
+		if (trade) {
+			setRoute(trade.route.path);
+		}
+	}, [trade]);
 
 	return (
 		<Flex
@@ -468,8 +474,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								</Text>
 								<Text fontWeight="medium">-</Text>
 							</Flex>
-							{tokenInputValue.inputFrom.value < selectedToken[0]?.balance &&
-								tokenInputValue.inputTo.value < selectedToken[1]?.balance && (
+							{tokenInputValue.inputFrom.value &&
+								tokenInputValue.inputTo.value &&
+								route && (
 									<Flex flexDirection="column">
 										<Flex
 											flexDirection="row"
@@ -489,13 +496,29 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 											flexWrap="wrap"
 											mt="2"
 										>
-											<Flex gap="2">
-												<Img src={selectedToken[1]?.logoURI} w="5" h="5" />
-												<Text fontSize="sm">WSYS</Text>
-											</Flex>
-											<Flex mx="3" my="2">
-												<Icon as={IoIosArrowForward} />
-											</Flex>
+											{route.map((token, index) => (
+												<>
+													<Flex gap="2">
+														<Img
+															src={
+																token.symbol === "WSYS"
+																	? userTokensBalance[0]?.tokenInfo?.logoURI
+																	: token.symbol === "PSYS"
+																	? userTokensBalance[1]?.tokenInfo?.logoURI
+																	: token?.tokenInfo?.logoURI
+															}
+															w="5"
+															h="5"
+														/>
+														<Text fontSize="sm">{token.symbol}</Text>
+													</Flex>
+													{index !== route.length - 1 && (
+														<Flex mx="3" my="2">
+															<Icon as={IoIosArrowForward} />
+														</Flex>
+													)}
+												</>
+											))}
 										</Flex>
 									</Flex>
 								)}
