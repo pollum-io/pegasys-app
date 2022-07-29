@@ -112,7 +112,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setSelectedToken(prevState => [...prevState]?.reverse());
 
 	useEffect(() => {
-		if (!isConnected || !userTokensBalance) return;
+		if (!userTokensBalance) return;
 
 		const getTokensBySymbol = userTokensBalance?.filter(
 			token =>
@@ -127,7 +127,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		})) as WrappedTokenInfo[];
 
 		setSelectedToken(setIdToTokens);
-	}, [isConnected, userTokensBalance]);
+	}, [userTokensBalance]);
 
 	const submitValidation = [
 		isConnected && tokenInputValue.lastInputTyped === 0
