@@ -452,7 +452,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								<Text fontWeight="normal">
 									Minmum Received <Icon as={MdHelpOutline} />
 								</Text>
-								<Text fontWeight="medium">-</Text>
+								<Text fontWeight="medium">
+									{trade
+										? `${trade?.outputAmount.toSignificant(4)} ${
+												trade?.outputAmount?.currency.symbol
+										  }`
+										: "-"}
+								</Text>
 							</Flex>
 							<Flex
 								flexDirection="row"
@@ -462,7 +468,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								<Text fontWeight="normal">
 									Price Impact <Icon as={MdHelpOutline} />
 								</Text>
-								<Text fontWeight="medium">-</Text>
+								<Text fontWeight="medium">
+									{trade ? `${trade?.priceImpact?.toSignificant(4)}%` : "-"}
+								</Text>
 							</Flex>
 							<Flex
 								flexDirection="row"
