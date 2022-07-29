@@ -1,4 +1,4 @@
-import { BigNumber, ethers, Signer } from "ethers";
+import { BigNumber, Contract, ethers, Signer } from "ethers";
 // import pegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
 import pairPegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/PegasysPair.sol/PegasysPair.json";
 import { Interface } from "@ethersproject/abi";
@@ -99,23 +99,24 @@ export const getMultiCall = async (
 ) => {
 	if (!signerOrProvider) return [];
 
-	const getTokensCode = await Promise.all(
-		tokenAddress.map(token => signerOrProvider.getCode(token))
-	);
-
-	const filterTokensValid = tokenAddress.filter(
-		(token, tokenIndex) => getTokensCode[tokenIndex] !== "0x" && token
-	);
-
 	try {
-		const contracts = filterTokensValid.map((address: string) =>
-			createContractUsingAbi(address, PAIR_INTERFACE, signerOrProvider)
+		const getTokensCode = await Promise.all(
+			tokenAddress.map(token => signerOrProvider.getCode(token))
 		);
-		const contractCall = await multiCall(contracts, method as string);
 
-		return contractCall;
+		const contractsVeryfied = tokenAddress.map((token, index: number) => {
+			if (getTokensCode[index] === "0x") return [];
+
+			return createContractUsingAbi(token, PAIR_INTERFACE, signerOrProvider);
+		});
+
+		const contractsCalls = await multiCall(
+			contractsVeryfied as Contract[],
+			method as string
+		);
+
+		return contractsCalls;
 	} catch (error) {
-		console.log("error", error);
 		return [];
 	}
 };

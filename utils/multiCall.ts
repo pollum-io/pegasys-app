@@ -6,9 +6,16 @@ export const multiCall = async (
 	parameters?: string
 ) => {
 	try {
-		const contractCalls = Promise.all(
-			contract.map(call => call[methodName](parameters ?? null))
+		const contractCalls = await Promise.all(
+			contract.map((call: Contract) => {
+				if (call instanceof Contract) {
+					return call[methodName](parameters ?? null);
+				}
+
+				return undefined;
+			})
 		);
+
 		return contractCalls;
 	} catch (error) {
 		return error;

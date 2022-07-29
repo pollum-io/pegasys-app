@@ -32,11 +32,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const { userTokensBalance } = useTokens();
 
-	const {
-		onOpen: onOpenWallet,
-		isOpen: isOpenWallet,
-		onClose: onCloseWallet,
-	} = useDisclosure();
+	const { isOpen: isOpenWallet, onClose: onCloseWallet } = useDisclosure();
 	const {
 		onOpen: onOpenCoin,
 		isOpen: isOpenCoin,

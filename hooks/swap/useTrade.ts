@@ -1,4 +1,4 @@
-import { Currency, Trade, CurrencyAmount, Pair } from "@pollum-io/pegasys-sdk";
+import { Currency, Trade, CurrencyAmount } from "@pollum-io/pegasys-sdk";
 import { IWalletHookInfos } from "types";
 import { useAllCommonPairs } from "./useAllCommonPairs";
 

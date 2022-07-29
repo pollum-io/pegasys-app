@@ -1,4 +1,4 @@
-import { TokenAmount, Pair, ChainId, Token } from "@pollum-io/pegasys-sdk";
+import { TokenAmount, Pair, Token } from "@pollum-io/pegasys-sdk";
 import { getMultiCall, wrappedCurrency } from "utils";
 import { IWalletHookInfos } from "types";
 
@@ -33,9 +33,10 @@ export async function usePairs(
 		"getReserves"
 	);
 
-	console.log("results", results);
-
 	return results.map((result: any, i: number) => {
+		if (!tokens[i]) return [PairState.INVALID, null];
+		if (!result) return [PairState.NOT_EXISTS, null];
+
 		const { _reserve0, _reserve1 } = result;
 
 		const tokenA: Token = tokens[i][0] as Token;

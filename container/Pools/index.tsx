@@ -14,8 +14,6 @@ import {
 } from "@chakra-ui/react";
 import { AddLiquidityModal, RemoveLiquidity } from "components";
 import { ImportPoolModal } from "components/Modals/ImportPool";
-import { TokenImported } from "components/Modals/TokenImported";
-import { TurnExportMode } from "components/Modals/TurnExportMode";
 import { PoolCards } from "components/Pools/PoolCards";
 import { usePicasso, useWallet } from "hooks";
 import { NextPage } from "next";
@@ -25,25 +23,16 @@ import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
 export const PoolsContainer: NextPage = () => {
 	const theme = usePicasso();
 	const { onOpen, isOpen, onClose } = useDisclosure();
-	const {
-		onOpen: onOpenPool,
-		isOpen: isOpenPool,
-		onClose: onClosePool,
-	} = useDisclosure();
+	const { isOpen: isOpenPool, onClose: onClosePool } = useDisclosure();
 	const {
 		onOpen: onOpenRemoveLiquidity,
 		isOpen: isOpenRemoveLiquidity,
 		onClose: onCloseRemoveLiquidity,
 	} = useDisclosure();
-	const {
-		onOpen: onOpenTokenImported,
-		isOpen: isOpenTokenImported,
-		onClose: onCloseTokenImported,
-	} = useDisclosure();
 	const [isCreate, setIsCreate] = useState(false);
-	const [haveValue, setHaveValue] = useState(false);
+	const [haveValue] = useState(false);
 	const { isConnected } = useWallet();
-	const [userHavePool, setUserHavePool] = useState(true);
+	const [userHavePool] = useState(true);
 
 	return (
 		<Flex justifyContent="center" alignItems="center">

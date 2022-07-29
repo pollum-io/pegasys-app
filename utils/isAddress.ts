@@ -1,9 +1,3 @@
 import { getAddress } from "@ethersproject/address";
 
-export function isAddress(value: string): string | false {
-	try {
-		return getAddress(value);
-	} catch {
-		return false;
-	}
-}
+export const isAddress = (value: string) => getAddress(value);
