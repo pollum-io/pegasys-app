@@ -36,6 +36,8 @@ export const LoadingTransition: React.FC<IModal> = props => {
 					onClick={onClose}
 					p="0"
 					justifyContent="flex-end"
+					flexDirection="row"
+					alignItems="center"
 				>
 					<AiOutlineClose size={24} />
 				</Flex>
@@ -43,9 +45,9 @@ export const LoadingTransition: React.FC<IModal> = props => {
 					flexDirection="column"
 					justifyContent="center"
 					align="center"
-					gap="4"
+					gap="3"
 				>
-					<Img src="icons/loading (3).gif" w="35%" h="35%" />
+					<Img src="icons/loading.gif" w="35%" h="35%" />
 					<Flex flexDirection="row">
 						<Text fontSize="2xl" fontWeight="semibold">
 							Waiting for confirmation
