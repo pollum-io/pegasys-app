@@ -19,6 +19,7 @@ const usePicasso = () => {
 			cyan: useColorModeValue("#ffffff", "#00d9ef"),
 			redError: useColorModeValue("#ff2532a3", "#ff2532a3"),
 			gray: useColorModeValue("gray.400", "gray.400"),
+			gray600: useColorModeValue("gray.600", "gray.600"),
 			gray500: useColorModeValue("gray.500", "gray.500"),
 			gray300: useColorModeValue("gray.300", "gray.300"),
 			green400: useColorModeValue("green.400", "green.400"),
@@ -41,6 +42,8 @@ const usePicasso = () => {
 			iceGray: useColorModeValue("#f7f8fa", "#2c2f36"),
 			blackAlpha: useColorModeValue("#ffffff", "#081120"),
 			blueNavy: useColorModeValue("#F7FAFC", "rgba(11, 23, 44, 1)"),
+			blue100: useColorModeValue("blue.100", "blue.100"),
+			blue900: useColorModeValue("blue.900", "blue.900"),
 			blueNavyLightness: useColorModeValue("#665EE1", "rgba(21, 61, 111, 1);"),
 			button: {
 				primary: useColorModeValue("blue.500", "blue.600"),
