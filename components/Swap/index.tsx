@@ -13,7 +13,6 @@ import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
-import { SettingsButton } from "components/Header/SettingsButton";
 import { ITokenBalance, ITokenBalanceWithId } from "types";
 import { TOKENS_INITIAL_STATE } from "helpers/consts";
 import { ConfirmSwap } from "components/Modals/ConfirmSwap";
@@ -148,7 +147,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						<Text fontWeight="semibold" fontSize="2xl">
 							Swap
 						</Text>
-						<SettingsButton />
 					</Flex>
 					<Flex
 						borderRadius="2xl"
