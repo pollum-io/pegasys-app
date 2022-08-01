@@ -21,7 +21,8 @@ export const NavButton: FunctionComponent<IButtonProps> = props => {
 				borderRadius="70px"
 				transition="0.4s"
 				_hover={{
-					bgColor: theme.bg.whiteGray,
+					bgColor: theme.text.topHeaderButton,
+					color: "white",
 					opacity: 1,
 					borderRadius: "70px",
 				}}

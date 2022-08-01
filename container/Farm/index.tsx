@@ -51,6 +51,7 @@ export const FarmContainer: NextPage = () => {
 						px="1.625rem"
 						py="1.375rem"
 						gap="3"
+						color="white"
 					>
 						<Text fontWeight="bold" color="white" fontSize="md">
 							Pegasys Liquidity Mining
@@ -69,11 +70,12 @@ export const FarmContainer: NextPage = () => {
 						alignItems="center"
 						justifyContent="center"
 						flexDirection="row"
-						bgColor={theme.bg.whiteGray}
+						bgColor={theme.text.topHeaderButton}
 						zIndex="docked"
 						borderBottomRadius="xl"
 						py="0.531rem"
 						gap="2.5"
+						color="white"
 					>
 						<Text fontWeight="semibold" fontSize="xs">
 							View Your Staked Liquidity
@@ -105,14 +107,20 @@ export const FarmContainer: NextPage = () => {
 							<InputLeftElement
 								pointerEvents="none"
 								// eslint-disable-next-line react/no-children-prop
-								children={<MdSearch color="cyan" size={20} />}
+								children={<MdSearch size={20} color={theme.icon.searchIcon} />}
 							/>
 							<Input
 								placeholder="Search by token name"
-								_placeholder={{ opacity: 1, color: theme.text.cyan }}
-								borderColor="#153D6F"
+								_placeholder={{ opacity: 1, color: theme.text.input }}
+								borderColor={theme.bg.blueNavyLightness}
 								borderRadius="full"
 								w="15rem"
+								_hover={{
+									borderColor: theme.bg.blueNavyLightness,
+								}}
+								_focus={{
+									borderColor: theme.bg.blueNavyLightness,
+								}}
 							/>
 						</InputGroup>
 						<Flex
@@ -121,7 +129,7 @@ export const FarmContainer: NextPage = () => {
 							justifyContent="flex-start"
 						>
 							<Menu>
-								<Text fontSize="sm" pb="2">
+								<Text fontSize="sm" pb="2" color={theme.text.mono}>
 									Sort by
 								</Text>
 								<MenuButton
@@ -137,11 +145,14 @@ export const FarmContainer: NextPage = () => {
 									h="max-content"
 									bgColor={theme.bg.blueNavyLightness}
 									color={theme.text.mono}
-									_hover={{ opacity: "1" }}
+									_hover={{
+										opacity: "1",
+										bgColor: theme.bg.bluePurple,
+									}}
 									_active={{}}
 									borderRadius="full"
 								>
-									<Flex alignItems="center">
+									<Flex alignItems="center" color="white">
 										APR
 										<Icon as={MdExpandMore} w="5" h="5" ml="10" />
 									</Flex>

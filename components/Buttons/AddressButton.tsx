@@ -15,7 +15,8 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 
 	return (
 		<Button
-			bg={walletError ? theme.text.redError : theme.bg.button.userAddress}
+			bg={walletError ? theme.text.redError : theme.bg.button.connectWallet}
+			borderColor={theme.border.connectWallet}
 			justifyContent="space-arround"
 			w="max-content"
 			h="max-content"
@@ -27,8 +28,9 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 			fontWeight={500}
 			bottom="8"
 			overflow="hidden"
+			opacity="0.85"
 			_hover={{
-				borderColor: walletError ? theme.text.redError : theme.text.cyan,
+				opacity: "1",
 			}}
 			_active={{}}
 			{...rest}

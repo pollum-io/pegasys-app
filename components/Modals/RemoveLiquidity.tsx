@@ -75,7 +75,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 					px="0"
 					py="0"
 				>
-					<Flex alignItems="center">
+					<Flex alignItems="center" color={theme.text.mono}>
 						<Flex _hover={{ cursor: "pointer" }} onClick={onModalClose}>
 							<MdArrowBack size={24} color={theme.icon.whiteGray} />
 						</Flex>
@@ -202,7 +202,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 					</Slider>
 				</Flex>
 
-				<Flex flexDirection="column" py="6">
+				<Flex flexDirection="column" py="6" color={theme.text.mono}>
 					<Flex flexDirection="row" justifyContent="space-between">
 						<Text fontWeight="medium" fontSize="md">
 							Recive

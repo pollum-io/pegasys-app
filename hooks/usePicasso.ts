@@ -4,6 +4,10 @@ import { BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
 const usePicasso = () => {
 	const theme = {
 		text: {
+			farmActionsTop: useColorModeValue("#A0AEC0", "rgba(255, 255, 255, 0.36)"),
+			farmActionsHover: useColorModeValue("#3B3693", "#1A365D"),
+			max: useColorModeValue("#2D3748", "#00D9EF"),
+			input: useColorModeValue("#9F7AEA", "#36B4D4"),
 			whiteGray: useColorModeValue("rgba(0, 0, 0, 0.24)", "white"),
 			transactionsItems: useColorModeValue(
 				"#A0AEC0",
@@ -36,10 +40,22 @@ const usePicasso = () => {
 			red500: useColorModeValue("red.500", "red.500"),
 		},
 		icon: {
+			searchIcon: useColorModeValue("#9F7AEA", "rgba(54, 180, 212, 0.5)"),
 			whiteGray: useColorModeValue("#A0AEC0", "white"),
 			theme: useColorModeValue(BsFillSunFill, BsFillMoonFill),
 		},
 		bg: {
+			farmActions: useColorModeValue("white", "#0B172C"),
+			max: useColorModeValue("#EDF2F7", "#081120"),
+			farmActionsHover: useColorModeValue("rgba(102, 94, 225, 0.3)", "#BEE3F8"),
+			farmRate: useColorModeValue(
+				"rgb(222,225,226, 0.25)",
+				"rgba(255, 255, 255, 0.04)"
+			),
+			iconTicket: useColorModeValue(
+				"rgba(0, 0, 0, 0.06)",
+				"rgba(255, 255, 255, 0.06)"
+			),
 			connectToWallet: useColorModeValue("#EEEAF4", "#153D6F"),
 			settings: useColorModeValue("white", "#0B172C"),
 			slippage: useColorModeValue("#D6BCFA", "#153D6F"),
@@ -91,6 +107,7 @@ const usePicasso = () => {
 			},
 		},
 		border: {
+			farmInput: useColorModeValue("#CBD5E0", "rgba(0, 217, 239, 0.2)"),
 			cyanPurple: useColorModeValue("#8C15E8", "#0753B2"),
 			modalBorderShadow: useColorModeValue(
 				"0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.2);",

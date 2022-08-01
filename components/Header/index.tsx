@@ -58,14 +58,7 @@ export const Header: React.FC = () => {
 				))}
 
 				<NavButton href="/" color={theme.text.header}>
-					Charts{" "}
-					<Icon
-						as={MdOutlineCallMade}
-						w="5"
-						h="5"
-						ml="2"
-						color={theme.text.header}
-					/>
+					Charts <Icon as={MdOutlineCallMade} w="5" h="5" ml="2" />
 				</NavButton>
 				<BridgeButton />
 			</Flex>

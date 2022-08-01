@@ -84,12 +84,12 @@ export const PoolsContainer: NextPage = () => {
 							px="1.625rem"
 							py="1.375rem"
 							gap="3"
+							color="white"
 						>
-							<Text fontWeight="bold" color="white" fontSize="md">
+							<Text fontWeight="bold" fontSize="md">
 								Liquidity Provider Rewards
 							</Text>
 							<Text
-								color="white"
 								fontWeight="semibold"
 								fontSize="sm"
 								lineHeight="shorter"
@@ -104,7 +104,7 @@ export const PoolsContainer: NextPage = () => {
 							alignItems="center"
 							justifyContent="center"
 							flexDirection="row"
-							bgColor={theme.bg.whiteGray}
+							bgColor={theme.text.topHeaderButton}
 							zIndex="docked"
 							borderBottomRadius="xl"
 							py="0.531rem"
@@ -152,14 +152,22 @@ export const PoolsContainer: NextPage = () => {
 									<InputLeftElement
 										pointerEvents="none"
 										// eslint-disable-next-line react/no-children-prop
-										children={<MdSearch color={theme.text.cyanPurple} />}
+										children={
+											<MdSearch color={theme.icon.searchIcon} size={20} />
+										}
 									/>
 									<Input
 										borderColor={theme.bg.blueNavyLightness}
 										placeholder="Search by token name"
-										_placeholder={{ opacity: 1, color: theme.text.cyanPurple }}
+										_placeholder={{ opacity: 1, color: theme.text.input }}
 										borderRadius="full"
 										w="20rem"
+										_hover={{
+											borderColor: theme.bg.blueNavyLightness,
+										}}
+										_focus={{
+											borderColor: theme.bg.blueNavyLightness,
+										}}
 									/>
 								</InputGroup>
 							</Flex>
@@ -283,23 +291,28 @@ export const PoolsContainer: NextPage = () => {
 							justifyContent="center"
 							gap="16"
 						>
-							<Text w="max-content" fontSize="md" fontWeight="normal">
+							<Text
+								w="max-content"
+								fontSize="md"
+								fontWeight="normal"
+								color={theme.text.mono}
+							>
 								Please connect your wallet in the button bellow to be able to
 								view your liquidity.
 							</Text>
 							<Flex flexDirection="row" gap="1">
 								<Text
-									color="white"
 									fontSize="md"
 									fontWeight="normal"
 									w="max-content"
+									color={theme.text.mono}
 								>
 									Don&apos;t see a pool you joined?{" "}
 								</Text>
 								<Text
 									fontWeight="semibold"
 									onClick={onOpenRemoveLiquidity}
-									color={theme.text.cyanWhite}
+									color={theme.text.cyanPurple}
 									textDecoration="underline"
 									_hover={{ cursor: "pointer" }}
 								>

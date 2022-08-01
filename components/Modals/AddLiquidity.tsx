@@ -235,7 +235,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									mt="2"
 									px="1.5"
 									type="number"
-									_placeholder={{ color: "white" }}
+									_placeholder={{ color: theme.text.whiteGray }}
 									_active={{ border: "none" }}
 									name="inputFrom"
 									onChange={handleOnChangeTokenInputs}
@@ -329,7 +329,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									mt="2"
 									px="1.5"
 									type="number"
-									_placeholder={{ color: "white" }}
+									_placeholder={{ color: theme.text.whiteGray }}
 									_active={{ border: "none" }}
 									name="inputTo"
 									value={tokenInputValue.inputTo}

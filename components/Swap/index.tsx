@@ -188,7 +188,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								<Text fontSize="xl" fontWeight="500" px="3">
 									{selectedToken[0]?.symbol}
 								</Text>
-								<Icon as={IoIosArrowDown} />
+								<Icon as={IoIosArrowDown} color={theme.text.mono} />
 							</Flex>
 							<Input
 								fontSize="2xl"
@@ -232,7 +232,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						onClick={switchTokensPosition}
 						_hover={{ cursor: "pointer" }}
 					>
-						<MdWifiProtectedSetup size={25} color="cyan" />
+						<MdWifiProtectedSetup size={25} color={theme.text.cyanPurple} />
 					</Flex>
 					<Flex
 						borderRadius="2xl"
@@ -360,6 +360,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							fontSize="lg"
 							fontWeight="semibold"
 							disabled={!canSubmit}
+							_hover={{
+								opacity: 0.3,
+							}}
 						>
 							{buttonName}
 						</Button>

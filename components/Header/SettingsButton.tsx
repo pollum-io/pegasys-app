@@ -90,6 +90,12 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								border="1px solid"
 								borderColor={theme.border.borderSettings}
 								textAlign="center"
+								_focus={{
+									borderColor: theme.border.borderSettings,
+								}}
+								_hover={{
+									borderColor: theme.border.borderSettings,
+								}}
 							/>
 						</Flex>
 						<Flex alignItems="center" flexDirection="row" pt="0.1rem" mt="4">
@@ -117,6 +123,12 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								fontSize="md"
 								border="1px solid"
 								borderColor={theme.border.borderSettings}
+								_focus={{
+									borderColor: theme.border.borderSettings,
+								}}
+								_hover={{
+									borderColor: theme.border.borderSettings,
+								}}
 							/>
 							<Text color={theme.text.mono}>Minutes</Text>
 						</Flex>
