@@ -1,6 +1,7 @@
 import { injected, walletlink } from "utils/connectors";
 import { IWalletInfo } from "types";
 import { ChainId, Token, WSYS, Percent, JSBI } from "@pollum-io/pegasys-sdk";
+import { ethers } from "ethers";
 
 type ChainTokenList = {
 	readonly [chainId in ChainId]: Token[];
@@ -63,7 +64,7 @@ export const PSYS: { [chainId in ChainId]: Token } = {
 	),
 	[ChainId.NEVM]: new Token(
 		ChainId.NEVM,
-		"0xe18c200a70908c89ffa18c628fe1b83ac0065ea4",
+		ethers.utils.getAddress("0xe18c200a70908c89ffa18c628fe1b83ac0065ea4"),
 		18,
 		"PSYS",
 		"Pegasys"
@@ -162,14 +163,14 @@ export const WBTC: { [chainId in ChainId]: Token } = {
 export const LUXY: { [chainId in ChainId]: Token } = {
 	[ChainId.TANENBAUM]: new Token(
 		ChainId.TANENBAUM,
-		"0x6b7a87899490ece95443e979ca9485cbe7e71522",
+		ethers.utils.getAddress("0x6b7a87899490ece95443e979ca9485cbe7e71522"),
 		18,
 		"LUXY",
 		"LUXY"
 	),
 	[ChainId.NEVM]: new Token(
 		ChainId.NEVM,
-		"0x6b7a87899490ece95443e979ca9485cbe7e71522",
+		ethers.utils.getAddress("0x6b7a87899490ece95443e979ca9485cbe7e71522"),
 		18,
 		"LUXY",
 		"LUXY"
