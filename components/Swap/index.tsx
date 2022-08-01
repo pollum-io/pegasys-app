@@ -116,12 +116,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	return (
 		<Flex
-			pt="24"
+			pt={["20", "24"]}
 			justifyContent="center"
 			fontFamily="inter"
 			fontStyle="normal"
 			alignItems="flex-start"
 			flexDirection="row"
+			mb={["6rem", "0"]}
+			px={["4", "0", "0", "0"]}
 		>
 			<SelectWallets isOpen={isOpenWallet} onClose={onCloseWallet} />
 			<ConfirmSwap isOpen={isOpenConfirmSwap} onClose={onCloseConfirmSwap} />
@@ -135,7 +137,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			<Flex alignItems="center" flexDirection="column">
 				<Flex
 					h="max-content"
-					w="md"
+					// w={{ base: "sm", md: "md" }}
+					width={[
+						"100%", // 0-30em
+						"md", // 30em-48em
+						"md", // 48em-62em
+						"md", // 62em+
+					]}
 					p="1.5rem"
 					flexDirection="column"
 					zIndex="1"
@@ -145,10 +153,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					<Flex flexDirection="row" justifyContent="space-between" pb="1.5rem">
-						<Text fontWeight="semibold" fontSize="2xl">
+						<Text fontWeight="semibold" fontSize={["xl", "2xl", "2xl", "2xl"]}>
 							Swap
 						</Text>
-						<SettingsButton />
 					</Flex>
 					<Flex
 						borderRadius="2xl"
