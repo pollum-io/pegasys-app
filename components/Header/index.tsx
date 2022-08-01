@@ -1,6 +1,13 @@
-import { Flex, Icon, Img, useColorMode, useDisclosure } from "@chakra-ui/react";
+import {
+	Flex,
+	Icon,
+	Img,
+	Text,
+	useColorMode,
+	useDisclosure,
+} from "@chakra-ui/react";
 import { WalletButton } from "components";
-import { BridgeButton, IconButton } from "components/Buttons";
+import { IconButton } from "components/Buttons";
 import { usePicasso } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
@@ -8,7 +15,8 @@ import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
 import { MenuLinks } from "./MenuLink";
-import { Languages } from "./Languages";
+import { SettingsButton } from "./SettingsButton";
+import { ExpertMode } from "./ExpertMode";
 
 export const Header: React.FC = () => {
 	const { toggleColorMode } = useColorMode();
@@ -67,10 +75,9 @@ export const Header: React.FC = () => {
 						color={theme.text.header}
 					/>
 				</NavButton>
-				<BridgeButton />
 			</Flex>
 			<Flex
-				w="32rem"
+				w="31rem"
 				h="max-content"
 				backgroundColor={theme.bg.blackAlpha}
 				mt="60"
@@ -89,17 +96,18 @@ export const Header: React.FC = () => {
 					<TokenButton onClick={onOpen} />
 					<NetworkButton />
 				</Flex>
-				<Flex>
+				<Flex flexDirection="column">
 					<WalletButton />
+					<ExpertMode />
 				</Flex>
 				<Flex>
-					<Languages />
-					<MenuLinks />
 					<IconButton
 						aria-label="Theme"
 						icon={<theme.icon.theme />}
 						onClick={() => toggleColorMode()}
 					/>
+					<MenuLinks />
+					<SettingsButton />
 				</Flex>
 			</Flex>
 		</Flex>

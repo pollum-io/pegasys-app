@@ -59,7 +59,6 @@ export const PoolsContainer: NextPage = () => {
 						backgroundColor="blue.700"
 					>
 						<Img
-							borderRadius="xl"
 							src="images/backgrounds/BannerPools.png"
 							position="absolute"
 							zIndex="base"

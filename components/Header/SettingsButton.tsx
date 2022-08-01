@@ -16,6 +16,7 @@ import { MdSettings, MdHelpOutline } from "react-icons/md";
 import { usePicasso } from "hooks";
 import { IconButton } from "../Buttons/IconButton";
 import { SlippageButton } from "../Buttons/SlippageButton";
+import { Languages } from "./Languages";
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
@@ -25,7 +26,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 
 	return (
-		<Popover>
+		<Popover placement="right">
 			<PopoverTrigger {...props}>
 				<IconButton
 					bgColor="transparent"
@@ -35,12 +36,13 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 				/>
 			</PopoverTrigger>
 			<PopoverContent
-				left="74rem"
-				top="11rem"
 				bgColor={theme.bg.blueNavy}
-				p="1rem 1.5rem 1.5rem"
+				p="1rem 1.5rem 0.5rem"
 				w="24.563rem"
 				h="max-content"
+				bottom="16"
+				mx="56"
+				position="fixed"
 			>
 				<Flex
 					bgColor={theme.bg.whiteGray}
@@ -125,6 +127,21 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								</Stack>
 							</Flex>
 						</Flex>
+					</Flex>
+					<Flex
+						bgColor={theme.bg.whiteGray}
+						borderRadius="7rem"
+						py="2"
+						mt="8"
+						justifyContent="center"
+						alignItems="center"
+					>
+						<Text fontSize="md" fontWeight="semibold">
+							Select Language
+						</Text>
+					</Flex>
+					<Flex justifyContent="center" alignItems="center">
+						<Languages />
 					</Flex>
 				</PopoverBody>
 			</PopoverContent>
