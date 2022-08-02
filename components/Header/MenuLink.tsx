@@ -10,12 +10,12 @@ import {
 } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
 import { BsThreeDots } from "react-icons/bs";
-import { FiTwitter } from "react-icons/fi";
-import { FaDiscord, FaParachuteBox, FaTelegramPlane } from "react-icons/fa";
+import { FaParachuteBox } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { usePicasso } from "hooks";
 import { MdOutlineCheckBox, MdOutlineContentCopy } from "react-icons/md";
 import { RiGithubLine } from "react-icons/ri";
+import { InfoDropdown } from "components/Buttons";
 import { InfoLinks } from "./InfoLinks";
 
 interface IButtonProps extends ButtonProps {
@@ -38,7 +38,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 		},
 		{
 			name: "Airdrop",
-			link: "https://pegasys.finance/",
+			link: "/airdrop",
 			icon: <FaParachuteBox />,
 		},
 		{
@@ -50,21 +50,6 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 			name: "Github",
 			link: "https://pegasys.finance/",
 			icon: <RiGithubLine />,
-		},
-		{
-			name: "Discord",
-			link: "https://discord.com/invite/UzjWbWWERz",
-			icon: <FaDiscord />,
-		},
-		{
-			name: "Telegram",
-			link: "https://t.me/joinchat/GNosBd1_76E5MTVh",
-			icon: <FaTelegramPlane />,
-		},
-		{
-			name: "Twitter",
-			link: "https://twitter.com/PegasysDEX",
-			icon: <FiTwitter />,
 		},
 	];
 
@@ -80,15 +65,26 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 				/>
 			</PopoverTrigger>
 			<PopoverContent
+				_focus={{
+					outline: "none",
+				}}
 				w="max-content"
 				bgColor={theme.bg.blueNavy}
 				borderRadius="xl"
-				px="0.938rem"
-				py="0.938rem"
+				p="0"
 			>
 				<PopoverArrow bgColor={theme.bg.blueNavy} />
-				<PopoverBody display="flex" flexDirection="column" zIndex="99">
+				<PopoverBody
+					display="flex"
+					flexDirection="column"
+					zIndex="99"
+					py="2"
+					px="0"
+				>
 					<Flex flexDirection="column">
+						<InfoDropdown />
+					</Flex>
+					<Flex flexDirection="column" pl="4">
 						{infos.map((links, index) => (
 							<Flex
 								alignItems="center"

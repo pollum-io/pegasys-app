@@ -12,58 +12,24 @@ import { usePicasso } from "hooks";
 import { FunctionComponent, ReactNode } from "react";
 import ReactCountryFlag from "react-country-flag";
 
-interface IButtonProps extends ButtonProps {
-	children?: ReactNode;
-}
-
-export const Languages: FunctionComponent<IButtonProps> = props => {
+export const Languages: FunctionComponent = () => {
 	const array = ["US", "BR", "ES", "DE", "FR", "TR", "VN", "CN"];
 	const theme = usePicasso();
 
 	return (
-		<Popover>
-			<PopoverTrigger {...props}>
-				<IconButton
-					aria-label="Popover"
-					icon={
-						<ReactCountryFlag
-							countryCode="US"
-							svg
-							style={{
-								width: "1.313rem",
-								height: "0.938rem",
-							}}
-						/>
-					}
-					transition="0.4s"
-					bg="transparent"
-					_hover={{ background: "rgba(255, 255, 255, 0.08)" }}
-				/>
-			</PopoverTrigger>
-			<PopoverContent w="max-content">
-				<PopoverBody
-					display="flex"
-					flexDirection="column"
-					p="1rem"
-					bgColor={theme.bg.blueNavy}
-				>
-					{array.map((country, index) => (
-						<Flex p="0.5rem" key={country + Number(index)}>
-							<ReactCountryFlag
-								countryCode={country}
-								svg
-								style={{ fontSize: "1.5em" }}
-							/>
-							<Text
-								paddingLeft="0.5rem"
-								_hover={{ cursor: "pointer", color: theme.text.cyan }}
-							>
-								{country}
-							</Text>
-						</Flex>
-					))}
-				</PopoverBody>
-			</PopoverContent>
-		</Popover>
+		<Flex flexWrap="wrap" ml="2" mt="2">
+			{array.map((country, index) => (
+				<Flex p="0.5rem" key={country + Number(index)} gap="2">
+					<ReactCountryFlag
+						countryCode={country}
+						svg
+						style={{ fontSize: "1.5em" }}
+					/>
+					<Text _hover={{ cursor: "pointer", color: theme.text.cyan }}>
+						{country}
+					</Text>
+				</Flex>
+			))}
+		</Flex>
 	);
 };
