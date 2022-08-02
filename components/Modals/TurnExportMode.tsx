@@ -32,7 +32,7 @@ export const TurnExportMode: React.FC<IModal> = props => {
 				mt="10rem"
 				borderRadius="3xl"
 				bgColor={theme.bg.blueNavy}
-				border="1px solid transparent;"
+				border="1px solid transparent"
 				background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
@@ -78,7 +78,7 @@ export const TurnExportMode: React.FC<IModal> = props => {
 						w="100%"
 						py="2"
 						px="2"
-						borderRadius="67px"
+						borderRadius="full"
 						bgColor={theme.text.red500}
 						color={theme.text.mono}
 						fontWeight="semibold"

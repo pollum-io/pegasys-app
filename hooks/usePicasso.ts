@@ -19,9 +19,11 @@ const usePicasso = () => {
 			cyan: useColorModeValue("#ffffff", "#00d9ef"),
 			redError: useColorModeValue("#ff2532a3", "#ff2532a3"),
 			gray: useColorModeValue("gray.400", "gray.400"),
+			gray600: useColorModeValue("gray.600", "gray.600"),
 			gray500: useColorModeValue("gray.500", "gray.500"),
 			gray300: useColorModeValue("gray.300", "gray.300"),
 			green400: useColorModeValue("green.400", "green.400"),
+			greenSocial: useColorModeValue("#67DBD8", "#67DBD8"),
 			psysBalance: useColorModeValue(
 				"linear-gradient(90deg, #19EBCE 0%, #8A15E6 84.28%);",
 				"linear-gradient(90deg, #19EBCE 0%, #8A15E6 84.28%);"
@@ -37,10 +39,13 @@ const usePicasso = () => {
 			primary: useColorModeValue("#EDF2F7", "#000913"),
 			secondary: useColorModeValue("gray.300", "gray.800"),
 			bgPrimary: useColorModeValue("#f7f8fa", "#2c2f36"),
-			whiteGray: useColorModeValue("#ffffff", "rgba(8, 17, 32, 1)"),
+			whiteGray: useColorModeValue("#665EE1", "rgba(8, 17, 32, 1)"),
+			expertMode: useColorModeValue("#FFFFFF", "#081120"),
 			iceGray: useColorModeValue("#f7f8fa", "#2c2f36"),
 			blackAlpha: useColorModeValue("#ffffff", "#081120"),
 			blueNavy: useColorModeValue("#F7FAFC", "rgba(11, 23, 44, 1)"),
+			blue100: useColorModeValue("blue.100", "blue.100"),
+			blue900: useColorModeValue("blue.900", "blue.900"),
 			blueNavyLightness: useColorModeValue("#665EE1", "rgba(21, 61, 111, 1);"),
 			button: {
 				primary: useColorModeValue("blue.500", "blue.600"),
@@ -81,6 +86,10 @@ const usePicasso = () => {
 			headerBorder: useColorModeValue(
 				"1px solid rgba(102, 94, 225, 0.25);",
 				"1px solid rgba(86, 190, 216, 0.15);"
+			),
+			expertMode: useColorModeValue(
+				"linear-gradient(90deg, #665EE1 9.38%, rgba(0, 184, 255, 0.3) 128.42%);",
+				"linear-gradient(32deg, rgb(86 190 216 / 97%) 30.76%, rgb(86 190 216 / 6%) 97.76%);"
 			),
 			connectWallet: useColorModeValue("#04d3c0", "#153d6f70"),
 			borderSettings: useColorModeValue("#edeef2", "#40444f"),
