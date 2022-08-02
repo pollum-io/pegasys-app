@@ -16,6 +16,7 @@ import { AddLiquidityModal, RemoveLiquidity } from "components";
 import { ImportPoolModal } from "components/Modals/ImportPool";
 import { TokenImported } from "components/Modals/TokenImported";
 import { TurnExportMode } from "components/Modals/TurnExportMode";
+import { ToastNotification } from "components/Modals/ToastNotification";
 import { PoolCards } from "components/Pools/PoolCards";
 import { usePicasso, useWallet } from "hooks";
 import { NextPage } from "next";
@@ -283,6 +284,7 @@ export const PoolsContainer: NextPage = () => {
 							<PoolCards />
 						</Flex>
 					)}
+					<ToastNotification />
 				</Flex>
 			</Flex>
 		</Flex>
