@@ -72,7 +72,30 @@ function getSwapArguments(
 		return [];
 	}
 
-	return [];
+	const swapMethods = [];
+
+	if (trade.tradeType === TradeType.EXACT_INPUT && recipient) {
+		swapMethods.push(
+			Router.swapCallParameters(trade, {
+				feeOnTransfer: true,
+				allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+				recipient,
+				deadline: deadline.toNumber(),
+			})
+		);
+		return swapMethods.map(parameters => ({ parameters, contract }));
+	}
+
+	recipient &&
+		swapMethods.push(
+			Router.swapCallParameters(trade, {
+				feeOnTransfer: false,
+				allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+				recipient,
+				deadline: deadline.toNumber(),
+			})
+		);
+	return swapMethods.map(parameters => ({ parameters, contract }));
 }
 
 export function UseSwapCallback(
