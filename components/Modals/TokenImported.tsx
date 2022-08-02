@@ -33,7 +33,7 @@ export const TokenImported: React.FC<IModal> = props => {
 				mt="10rem"
 				borderRadius="3xl"
 				bgColor={theme.bg.blueNavy}
-				border="1px solid transparent;"
+				border="1px solid transparent"
 				background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
@@ -41,13 +41,22 @@ export const TokenImported: React.FC<IModal> = props => {
 					borderTopRadius="3xl"
 					alignItems="baseline"
 				>
-					<Flex flexDirection="row" justifyContent="space-between">
+					<Flex
+						flexDirection="row"
+						justifyContent="space-between"
+						alignItems="center"
+					>
 						<Text fontSize="lg" fontWeight="semibold">
 							Token Imported
 						</Text>
-						<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
+						<Button
+							bgColor="transparent"
+							_hover={{ cursor: "pointer" }}
+							onClick={onClose}
+							p="0"
+						>
 							<AiOutlineClose size={24} />
-						</Flex>
+						</Button>
 					</Flex>
 				</ModalHeader>
 				<ModalBody>
@@ -108,7 +117,7 @@ export const TokenImported: React.FC<IModal> = props => {
 						w="40%"
 						py="2"
 						px="2"
-						borderRadius="67px"
+						borderRadius="full"
 						bgColor={theme.bg.button.connectWalletSwap}
 						color={theme.text.cyan}
 						fontWeight="semibold"

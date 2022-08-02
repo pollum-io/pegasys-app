@@ -14,8 +14,6 @@ import {
 } from "@chakra-ui/react";
 import { AddLiquidityModal, RemoveLiquidity } from "components";
 import { ImportPoolModal } from "components/Modals/ImportPool";
-import { TokenImported } from "components/Modals/TokenImported";
-import { TurnExportMode } from "components/Modals/TurnExportMode";
 import { PoolCards } from "components/Pools/PoolCards";
 import { usePicasso, useWallet } from "hooks";
 import { NextPage } from "next";
@@ -183,13 +181,14 @@ export const PoolsContainer: NextPage = () => {
 									Create a Pair
 								</Button>
 								<Flex flexDirection="column">
-									{!userHavePool ? (
+									{!isConnected ? (
 										<Button
 											fontSize="sm"
 											fontWeight="semibold"
 											py="0.625rem"
 											px="1.5rem"
 											h="max-content"
+											mt="2rem"
 											bgColor={theme.bg.blueNavyLightness}
 											color={theme.text.cyanWhite}
 											_hover={{ opacity: "1" }}
