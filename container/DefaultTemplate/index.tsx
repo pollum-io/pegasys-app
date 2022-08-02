@@ -32,7 +32,7 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 						alignItems="center"
 					>
 						<Flex
-							width="30rem"
+							width="lg"
 							height="lg"
 							position="fixed"
 							background="#56BED8;"
