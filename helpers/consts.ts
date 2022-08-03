@@ -10,6 +10,11 @@ type ChainTokenList = {
 // default allowed slippage, in bips
 export const INITIAL_ALLOWED_SLIPPAGE = 50;
 
+export const ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
+	[ChainId.TANENBAUM]: "0xE18c200A70908c89fFA18C628fE1B83aC0065EA4",
+	[ChainId.NEVM]: "0x017dAd2578372CAEE5c6CddfE35eEDB3728544C4",
+};
+
 // 60 minutes, denominated in seconds
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 60;
 

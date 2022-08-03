@@ -14,3 +14,6 @@ export * from "./isZero";
 export * from "./calculateGasMargin";
 export * from "./tryParseAmout";
 export * from "./wrappedCurrency";
+export * from "./basisPointsToPercent";
+export * from "./computeSlippageAdjustedAmounts";
+export * from "./getContract";

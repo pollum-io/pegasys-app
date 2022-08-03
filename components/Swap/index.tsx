@@ -14,6 +14,7 @@ import {
 	useWallet,
 	UseDerivedSwapInfo,
 	UseSwapCallback,
+	useApproveCallbackFromTrade,
 } from "hooks";
 import React, { FunctionComponent, useEffect, useState, useMemo } from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
@@ -72,6 +73,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		provider,
 		signer,
 		walletAddress,
+		chainId,
+		userSlippageTolerance,
 	} = useWallet();
 
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
@@ -213,6 +216,18 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			setRoute(trade.route.path);
 		}
 	}, [trade]);
+
+	const approve = useApproveCallbackFromTrade(
+		trade,
+		{
+			chainId,
+			provider,
+			walletAddress,
+		},
+		signer,
+		tokenInputValue,
+		userSlippageTolerance
+	);
 
 	return (
 		<Flex
@@ -446,8 +461,31 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						</Flex>
 					)}
 					<Flex>
+						{selectedToken[0]?.symbol !== "WSYS" &&
+							selectedToken[0]?.symbol !== "PSYS" && (
+								<Button
+									w="50%"
+									mt="2rem"
+									py="6"
+									px="6"
+									borderRadius="67px"
+									onClick={() => approve()}
+									bgColor={theme.bg.button.connectWalletSwap}
+									color={theme.text.cyan}
+									fontSize="lg"
+									fontWeight="semibold"
+									disabled={!canSubmit}
+								>
+									Approve
+								</Button>
+							)}
 						<Button
-							w="100%"
+							w={
+								selectedToken[0]?.symbol === "WSYS" ||
+								selectedToken[0]?.symbol === "PSYS"
+									? "100%"
+									: "50%"
+							}
 							mt="2rem"
 							py="6"
 							px="6"

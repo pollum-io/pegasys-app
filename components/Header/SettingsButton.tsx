@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
-import { usePicasso } from "hooks";
+import { usePicasso, useWallet } from "hooks";
 import { IconButton } from "../Buttons/IconButton";
 import { SlippageButton } from "../Buttons/SlippageButton";
 import { Languages } from "./Languages";
@@ -24,6 +24,7 @@ interface IButtonProps extends ButtonProps {
 
 export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
+	const { userSlippageTolerance, setUserSlippageTolerance } = useWallet();
 
 	return (
 		<Popover placement="right">
@@ -64,17 +65,36 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							<Icon as={MdHelpOutline} />
 						</Flex>
 						<Flex flexDirection="row" py="0.5rem">
-							<SlippageButton aria-label="Slip" mr="3">
+							<SlippageButton
+								aria-label="Slip"
+								mr="3"
+								bgColor={
+									userSlippageTolerance === 10 ? "rgba(21, 61, 111, 1)" : ""
+								}
+								onClick={() => setUserSlippageTolerance(10)}
+							>
 								0.1%
 							</SlippageButton>
 							<SlippageButton
 								aria-label="Slip"
 								mr="3"
-								bgColor="rgba(21, 61, 111, 1)"
+								bgColor={
+									userSlippageTolerance === 50 ? "rgba(21, 61, 111, 1)" : ""
+								}
+								onClick={() => setUserSlippageTolerance(50)}
 							>
 								0.5%
 							</SlippageButton>
-							<SlippageButton aria-label="Slip" mr="3" py="0.5rem" px="1rem">
+							<SlippageButton
+								aria-label="Slip"
+								mr="3"
+								py="0.5rem"
+								px="1rem"
+								bgColor={
+									userSlippageTolerance === 100 ? "rgba(21, 61, 111, 1)" : ""
+								}
+								onClick={() => setUserSlippageTolerance(100)}
+							>
 								1%
 							</SlippageButton>
 							<Input
