@@ -142,12 +142,17 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	return (
 		<Flex
-			pt={["20", "24"]}
+			pt={["6", "6", "20", "24"]}
 			justifyContent="center"
 			fontFamily="inter"
 			fontStyle="normal"
-			alignItems="flex-start"
-			flexDirection="row"
+			alignItems={{
+				base: "center",
+				sm: "center",
+				md: "center",
+				lg: "flex-start",
+			}}
+			flexDirection={{ base: "column", sm: "column", md: "column", lg: "row" }}
 			mb={["6rem", "0"]}
 			px={["4", "0", "0", "0"]}
 		>
@@ -163,7 +168,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			<Flex alignItems="center" flexDirection="column">
 				<Flex
 					h="max-content"
-					// w={{ base: "sm", md: "md" }}
 					width={[
 						"100%", // 0-30em
 						"md", // 30em-48em
@@ -406,7 +410,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						w="90%"
 						borderRadius="xl"
 						mt="7"
-						mb="10rem"
+						mb={["2", "2", "2", "10rem"]}
+						zIndex="1"
 					>
 						<Flex flexDirection="column">
 							<Flex flexDirection="row" justifyContent="space-between">
@@ -472,9 +477,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			</Flex>
 			<Flex
 				h="max-content"
-				w="2xl"
+				w={["85%", "sm", "100%", "xl"]}
 				p="1.5rem"
-				ml="10"
+				ml={["0", "0", "0", "10"]}
+				mt={["8", "8", "8", "0"]}
+				mb={["24", "24", "24", "0"]}
 				flexDirection="column"
 				zIndex="1"
 				borderRadius={30}

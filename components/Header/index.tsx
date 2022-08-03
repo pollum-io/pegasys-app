@@ -62,16 +62,35 @@ export const Header: React.FC = () => {
 				gap="1"
 				bgColor={theme.bg.topHeader}
 				borderRadius="20"
-				ml={["10", "0", "0", "0"]}
+				ml={["8", "0", "0", "0"]}
 			>
 				{links.map((item, index) => (
 					<NavButton key={item.name + Number(index)} href={item.url}>
 						{item.name}
 					</NavButton>
 				))}
+				<NavButton
+					href="/"
+					color={theme.text.header}
+					display={{
+						base: "none",
+						sm: "none",
+						md: "block",
+						lg: "block",
+					}}
+				>
+					Charts{" "}
+					<Icon
+						as={MdOutlineCallMade}
+						w="5"
+						h="5"
+						ml="2"
+						color={theme.text.header}
+					/>
+				</NavButton>
 			</Flex>
 			<Flex
-				w={["100%", "32rem", "32rem", "32rem"]}
+				w={["90%", "32rem", "32rem", "32rem"]}
 				h="max-content"
 				backgroundColor={theme.bg.blackAlpha}
 				borderRadius="46px 46px 0px 0px"
@@ -82,6 +101,7 @@ export const Header: React.FC = () => {
 				zIndex="2"
 				alignItems="center"
 				px={["0", "10"]}
+				pl={["2", "10"]}
 				py="2"
 				justifyContent={["space-around", "space-between"]}
 			>

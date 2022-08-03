@@ -26,7 +26,7 @@ export const NavButton: FunctionComponent<IButtonProps> = props => {
 					borderRadius: "70px",
 				}}
 				_active={{}}
-				px={[4, 6, 6, 6]}
+				px={[3.5, 6, 6, 6]}
 				py="2"
 				{...rest}
 			>
