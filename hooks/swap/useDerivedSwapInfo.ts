@@ -1,28 +1,59 @@
 import {
 	CurrencyAmount,
 	Trade,
-	JSBI,
-	Percent,
-	Router,
-	TradeType,
+	ChainId,
+	FACTORY_ADDRESS,
 } from "@pollum-io/pegasys-sdk";
+import { ROUTER_ADDRESS } from "helpers/consts";
+import { TFunction } from "react-i18next";
 
 import { ISwapTokenInputValue, IWalletHookInfos } from "types";
-import { tryParseAmount } from "utils";
+import {
+	computeSlippageAdjustedAmounts,
+	isAddress,
+	tryParseAmount,
+	Field,
+} from "utils";
+import { involvesAddress } from "utils/involvesAddress";
 
-import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from "helpers/consts";
-import { BigNumber } from "@ethersproject/bignumber";
+import { UseBestSwapMethod } from "./useBestSwapMethod";
 import { useTradeExactIn, useTradeExactOut } from "./useTrade";
-import { useTransactionDeadline } from "./useTransactionDeadline";
+
+const BAD_RECIPIENT_ADDRESSES: string[] = [
+	FACTORY_ADDRESS[ChainId.NEVM], // v2 factory
+	ROUTER_ADDRESS[ChainId.NEVM], // v2 router 02
+];
 
 export async function UseDerivedSwapInfo(
 	inputs: ISwapTokenInputValue,
-	walletInfos: IWalletHookInfos
+	walletInfos: IWalletHookInfos,
+	translation: TFunction<"translation", undefined>,
+	userAllowedSlippage: number,
+	recipient?: string
 ): Promise<{
 	parsedAmount: CurrencyAmount | undefined;
 	v2Trade: Trade | undefined;
+	bestSwapMethods: string[];
+	inputErrors: string | undefined;
 }> {
 	const isExactIn: boolean = inputs.lastInputTyped === 0;
+
+	const recipientAddress: string | undefined =
+		recipient && isAddress(recipient as string);
+	const to: string | null =
+		(recipientAddress || walletInfos.walletAddress) ?? null;
+	const formattedTo = isAddress(to);
+
+	const currencyBalances: { [field in Field]?: CurrencyAmount } = {
+		[Field.INPUT]: tryParseAmount(
+			inputs?.inputFrom?.token?.balance,
+			inputs?.inputFrom?.token
+		) as CurrencyAmount,
+		[Field.OUTPUT]: tryParseAmount(
+			inputs?.inputTo?.token?.balance,
+			inputs?.inputTo?.token
+		) as CurrencyAmount,
+	};
 
 	const parsedAmount = tryParseAmount(
 		inputs.typedValue,
@@ -42,46 +73,52 @@ export async function UseDerivedSwapInfo(
 
 	const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut;
 
-	let deadline = useTransactionDeadline();
+	let inputError: string | undefined;
 
-	const currentTime = BigNumber.from(new Date().getTime());
-
-	if (deadline && deadline < currentTime.add(10)) {
-		deadline = currentTime.add(10);
+	if (!parsedAmount) {
+		inputError = inputError ?? translation("swapHooks.enterAmount");
 	}
 
-	const swapMethods = [] as any;
-
-	if (v2Trade?.tradeType === TradeType.EXACT_INPUT) {
-		swapMethods.push(
-			Router.swapCallParameters(v2Trade, {
-				feeOnTransfer: true,
-				allowedSlippage: new Percent(
-					JSBI.BigInt(INITIAL_ALLOWED_SLIPPAGE),
-					BIPS_BASE
-				),
-				recipient: walletInfos.walletAddress,
-				deadline: deadline?.toNumber() as number,
-			})
-		);
+	if (!to || !formattedTo) {
+		inputError = inputError ?? translation("swapHooks.enterRecipient");
 	}
 
-	if (v2Trade) {
-		swapMethods.push(
-			Router.swapCallParameters(v2Trade as Trade, {
-				feeOnTransfer: false,
-				allowedSlippage: new Percent(
-					JSBI.BigInt(INITIAL_ALLOWED_SLIPPAGE),
-					BIPS_BASE
-				),
-				recipient: walletInfos.walletAddress,
-				deadline: deadline?.toNumber() as number,
-			})
-		);
+	if (
+		BAD_RECIPIENT_ADDRESSES.indexOf(formattedTo) !== -1 ||
+		(bestTradeExactIn && involvesAddress(bestTradeExactIn, formattedTo)) ||
+		(bestTradeExactOut && involvesAddress(bestTradeExactOut, formattedTo))
+	) {
+		inputError = inputError ?? translation("swapHooks.invalidRecipient");
 	}
+
+	const slippageAdjustedAmounts =
+		v2Trade &&
+		userAllowedSlippage &&
+		computeSlippageAdjustedAmounts(v2Trade, userAllowedSlippage);
+
+	const [balanceIn, amountIn] = [
+		currencyBalances[Field.INPUT] as CurrencyAmount,
+		slippageAdjustedAmounts
+			? (slippageAdjustedAmounts[Field.INPUT] as CurrencyAmount)
+			: null,
+	];
+
+	if (balanceIn && amountIn && balanceIn?.lessThan(amountIn)) {
+		inputError =
+			translation("swapHooks.insufficient") +
+			amountIn.currency.symbol +
+			translation("swapHooks.balance");
+	}
+
+	const bestSwapMethods = UseBestSwapMethod(
+		v2Trade as Trade,
+		walletInfos.walletAddress
+	);
 
 	return {
 		parsedAmount,
 		v2Trade: v2Trade ?? undefined,
+		bestSwapMethods,
+		inputErrors: inputError ?? undefined,
 	};
 }

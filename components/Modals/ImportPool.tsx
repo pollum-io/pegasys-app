@@ -119,7 +119,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								bgColor: theme.bg.button.swapTokenCurrency,
 							}}
 						>
-							<Img src={selectedToken[0].logoURI} w="6" h="6" />
+							<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
 							<Text
 								fontSize="xl"
 								fontWeight="500"
@@ -127,7 +127,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								px="3"
 								textAlign="start"
 							>
-								{selectedToken[0].symbol}
+								{selectedToken[0]?.symbol}
 							</Text>
 							<IoIosArrowDown />
 						</Flex>
@@ -161,7 +161,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 									bgColor: theme.bg.button.swapTokenCurrency,
 								}}
 							>
-								<Img src={selectedToken[1].logoURI} w="6" h="6" />
+								<Img src={selectedToken[1]?.logoURI} w="6" h="6" />
 								<Text
 									fontSize="xl"
 									fontWeight="500"
@@ -169,7 +169,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 									px="3"
 									textAlign="start"
 								>
-									{selectedToken[1].symbol}
+									{selectedToken[1]?.symbol}
 								</Text>
 								<IoIosArrowDown />
 							</Flex>

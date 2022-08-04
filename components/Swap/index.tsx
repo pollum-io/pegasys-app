@@ -20,13 +20,15 @@ import React, { FunctionComponent, useEffect, useState, useMemo } from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
-import { ChainId, Trade } from "@pollum-io/pegasys-sdk";
+import { ChainId, Token, Trade } from "@pollum-io/pegasys-sdk";
 import {
 	ISwapTokenInputValue,
 	IWalletHookInfos,
 	WrappedTokenInfo,
 } from "types";
 import dynamic from "next/dynamic";
+import { useTranslation } from "react-i18next";
+import { Signer } from "ethers";
 
 const ChartComponent = dynamic(() => import("./ChartComponent"), {
 	ssr: false,
@@ -58,6 +60,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const theme = usePicasso();
 
+	const { t: translation } = useTranslation();
+
 	const { userTokensBalance } = useTokens();
 
 	const { isOpen: isOpenWallet, onClose: onCloseWallet } = useDisclosure();
@@ -73,7 +77,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		provider,
 		signer,
 		walletAddress,
-		chainId,
 		userSlippageTolerance,
 	} = useWallet();
 
@@ -81,7 +84,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const [currentInput, setCurrentInput] = useState<string>("");
 	const [trade, setTrade] = useState<Trade | undefined>();
 	const [buttonId, setButtonId] = useState<number>(0);
-	const [route, setRoute] = useState<WrappedTokenInfo[]>([]);
+	const [route, setRoute] = useState<Token[] | undefined>([]);
 	const [tokenInputValue, setTokenInputValue] = useState<ISwapTokenInputValue>({
 		inputFrom: {
 			token: selectedToken[0],
@@ -179,8 +182,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		trade && signer && UseSwapCallback(trade, 50, walletInfos, signer);
 
 	const handleSwapInfo = async () => {
-		const { v2Trade } = await UseDerivedSwapInfo(tokenInputValue, walletInfos);
+		const { v2Trade } = await UseDerivedSwapInfo(
+			tokenInputValue,
+			walletInfos,
+			translation,
+			userSlippageTolerance
+		);
 		setTrade(v2Trade);
+		setRoute(v2Trade?.route?.path);
 	};
 
 	useEffect(() => {
@@ -211,20 +220,15 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		}
 	}, [isConnected, trade, selectedToken]);
 
-	useMemo(() => {
-		if (trade) {
-			setRoute(trade.route.path);
-		}
-	}, [trade]);
-
 	const approve = useApproveCallbackFromTrade(
-		trade,
+		trade as Trade,
 		{
-			chainId,
+			chainId:
+				currentNetworkChainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
 			provider,
 			walletAddress,
 		},
-		signer,
+		signer as Signer,
 		tokenInputValue,
 		userSlippageTolerance
 	);

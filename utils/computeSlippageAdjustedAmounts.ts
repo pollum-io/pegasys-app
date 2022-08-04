@@ -1,5 +1,10 @@
-import { Trade } from "@pollum-io/pegasys-sdk";
+import { CurrencyAmount, Trade } from "@pollum-io/pegasys-sdk";
 import { basisPointsToPercent } from "./basisPointsToPercent";
+
+export enum Field {
+	INPUT = "INPUT",
+	OUTPUT = "OUTPUT",
+}
 
 // computes the minimum amount out and maximum amount in for a trade given a user specified allowed slippage in bips
 export function computeSlippageAdjustedAmounts(
@@ -8,7 +13,7 @@ export function computeSlippageAdjustedAmounts(
 ): { [field in Field]?: CurrencyAmount } {
 	const pct = basisPointsToPercent(allowedSlippage);
 	return {
-		input: trade?.maximumAmountIn(pct),
-		output: trade?.minimumAmountOut(pct),
+		[Field.INPUT]: trade?.maximumAmountIn(pct),
+		[Field.OUTPUT]: trade?.minimumAmountOut(pct),
 	};
 }
