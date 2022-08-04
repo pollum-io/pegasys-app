@@ -8,9 +8,10 @@ import {
 } from "@chakra-ui/react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
-import { usePicasso } from "hooks";
+import { usePicasso, useWallet } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
+import React, { useMemo } from "react";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";

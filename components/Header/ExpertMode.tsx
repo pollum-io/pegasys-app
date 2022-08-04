@@ -1,14 +1,14 @@
 import { Flex, Link, LinkProps, Text } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode, useState } from "react";
-import { usePicasso } from "hooks";
+import { usePicasso, useWallet } from "hooks";
 
 export const ExpertMode: FunctionComponent = () => {
 	const theme = usePicasso();
-	const [isExpertMode, setIsExportMode] = useState();
+	const { expert } = useWallet();
 
 	return (
 		<Flex>
-			{isExpertMode && (
+			{expert && (
 				<Flex
 					position="fixed"
 					zIndex="-1"
@@ -20,7 +20,8 @@ export const ExpertMode: FunctionComponent = () => {
 					px="2.5rem"
 					pt="4"
 					ml="1rem"
-					bottom="1.5rem"
+					mr="1rem"
+					bottom="1.45rem"
 					color={theme.text.mono}
 				>
 					<Text fontWeight="light" fontSize="xs">

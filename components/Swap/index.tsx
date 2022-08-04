@@ -10,13 +10,21 @@ import {
 } from "@chakra-ui/react";
 import { usePicasso, useTokens, useWallet } from "hooks";
 import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
-import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
+import {
+	MdWifiProtectedSetup,
+	MdHelpOutline,
+	MdOutlineArrowDownward,
+} from "react-icons/md";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
+import { BiTrashAlt } from "react-icons/bi";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
 import { ITokenBalance, ITokenBalanceWithId } from "types";
 import { TOKENS_INITIAL_STATE } from "helpers/consts";
 import { ConfirmSwap } from "components/Modals/ConfirmSwap";
 import dynamic from "next/dynamic";
+import { BsHandThumbsUp } from "react-icons/bs";
+import { SwapExpertMode } from "./SwapExpertMode";
+import { OtherWallet } from "./OtherWallet";
 
 const ChartComponent = dynamic(() => import("./ChartComponent"), {
 	ssr: false,
@@ -139,6 +147,22 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		parseFloat(tokenInputValue?.inputFrom) > 0 &&
 		parseFloat(selectedToken[0]?.balance) >
 			parseFloat(tokenInputValue?.inputFrom);
+
+	const { expert } = useWallet();
+	const { otherWallet } = useWallet();
+	const isOtherWallet = useMemo(() => {
+		if (otherWallet) {
+			return <OtherWallet />;
+		}
+		return null;
+	}, [otherWallet]);
+
+	const isExpert = useMemo(() => {
+		if (expert) {
+			return <SwapExpertMode />;
+		}
+		return null;
+	}, [expert]);
 
 	return (
 		<Flex
@@ -281,6 +305,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								Balance: {selectedToken[1]?.balance}
 							</Text>
 						</Flex>
+
 						<Flex alignItems="center" justifyContent="space-between">
 							<Flex
 								alignItems="center"
@@ -372,10 +397,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Flex>
 						</Flex>
 					)}
+					{isExpert}
+					{isExpert && isOtherWallet}
 					<Flex>
 						<Button
 							w="100%"
-							mt="2rem"
+							mt={isExpert ? "1rem" : "2rem"}
 							py="6"
 							px="6"
 							borderRadius="67px"
@@ -477,6 +504,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						<Img src={selectedToken[0]?.logoURI} w="7" h="7" />
 						<Img src={selectedToken[1]?.logoURI} w="7" h="7" />
 					</Flex>
+					{}
 					<Text fontWeight="bold" fontSize="xl">
 						TSYS/PSYS
 					</Text>

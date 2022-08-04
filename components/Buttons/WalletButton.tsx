@@ -1,7 +1,7 @@
-import { Button, ButtonProps, useDisclosure } from "@chakra-ui/react";
+import { Button, ButtonProps, useDisclosure, Flex } from "@chakra-ui/react";
 import { SelectSyscoin, SelectWallets } from "components/Modals";
 import { usePicasso, useWallet } from "hooks";
-import { FunctionComponent } from "react";
+import React, { useMemo, FunctionComponent } from "react";
 import { AddressInfoButton } from "components/Buttons";
 import { shortAddress } from "utils";
 import { AddressButton } from "./AddressButton";
@@ -24,6 +24,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 		onOpen: onOpenAddress,
 		onClose: onCloseAddress,
 	} = useDisclosure();
+
 	const { isConnected, walletAddress, walletError } = useWallet();
 
 	return (
