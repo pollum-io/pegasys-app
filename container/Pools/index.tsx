@@ -46,6 +46,8 @@ export const PoolsContainer: NextPage = () => {
 
 	return (
 		<Flex justifyContent="center" alignItems="center">
+			<ToastNotification showToast />
+
 			<AddLiquidityModal
 				isModalOpen={isOpen}
 				onModalClose={onClose}
@@ -282,7 +284,6 @@ export const PoolsContainer: NextPage = () => {
 							<PoolCards />
 						</Flex>
 					)}
-					<ToastNotification />
 				</Flex>
 			</Flex>
 		</Flex>
