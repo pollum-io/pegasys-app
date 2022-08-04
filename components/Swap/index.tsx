@@ -29,6 +29,7 @@ import {
 import dynamic from "next/dynamic";
 import { useTranslation } from "react-i18next";
 import { Signer } from "ethers";
+import { TradeRouteComponent } from "./TradeRouteComponent";
 
 const ChartComponent = dynamic(() => import("./ChartComponent"), {
 	ssr: false,
@@ -182,7 +183,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		trade && signer && UseSwapCallback(trade, 50, walletInfos, signer);
 
 	const handleSwapInfo = async () => {
-		const { v2Trade } = await UseDerivedSwapInfo(
+		const { v2Trade, bestSwapMethods, inputErrors } = await UseDerivedSwapInfo(
 			tokenInputValue,
 			walletInfos,
 			translation,
@@ -467,8 +468,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					<Flex>
 						{selectedToken[0]?.symbol !== "WSYS" &&
 							selectedToken[0]?.symbol !== "PSYS" &&
-							isConnected &&
-							(
+							isConnected && (
 								<Button
 									w="50%"
 									mt="2rem"
@@ -574,29 +574,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 											flexWrap="wrap"
 											mt="2"
 										>
-											{route.map((token, index) => (
-												<>
-													<Flex gap="2">
-														<Img
-															src={
-																token.symbol === "WSYS"
-																	? userTokensBalance[0]?.tokenInfo?.logoURI
-																	: token.symbol === "PSYS"
-																	? userTokensBalance[1]?.tokenInfo?.logoURI
-																	: token?.tokenInfo?.logoURI
-															}
-															w="5"
-															h="5"
-														/>
-														<Text fontSize="sm">{token.symbol}</Text>
-													</Flex>
-													{index !== route.length - 1 && (
-														<Flex mx="3" my="2">
-															<Icon as={IoIosArrowForward} />
-														</Flex>
-													)}
-												</>
-											))}
+											<TradeRouteComponent transactionRoute={route} />
 										</Flex>
 									</Flex>
 								)}

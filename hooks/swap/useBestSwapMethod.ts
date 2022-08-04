@@ -16,6 +16,8 @@ export function UseBestSwapMethod(
 ): string[] {
 	let deadline = useTransactionDeadline();
 
+	if (!v2Trade || !walletAddress) return [];
+
 	const currentTime = BigNumber.from(new Date().getTime());
 
 	if (deadline && deadline < currentTime.add(10)) {

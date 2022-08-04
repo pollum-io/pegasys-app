@@ -1,6 +1,6 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers, Signer } from "ethers";
-import { convertHexToNumber } from "utils";
+import { convertHexToNumber, isAddress } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import {
 	INITIAL_ALLOWED_SLIPPAGE,
@@ -82,7 +82,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			.then(() => {
 				if (Number(window?.ethereum?.networkVersion) === 5700) {
 					setIsConnected(!!window?.ethereum?.selectedAddress);
-					setAddress(window?.ethereum?.selectedAddress);
+					setAddress(isAddress(window?.ethereum?.selectedAddress));
 					getSignerIfConnected();
 					setWalletError(false);
 					setCurrentNetworkChainId(Number(window?.ethereum?.networkVersion));
@@ -127,7 +127,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setIsConnected(
 				verifySysNetwork ? !!window?.ethereum?.selectedAddress : false
 			);
-			setAddress(verifySysNetwork ? window?.ethereum?.selectedAddress : "");
+			setAddress(
+				verifySysNetwork ? isAddress(window?.ethereum?.selectedAddress) : ""
+			);
 			setWalletError(!verifySysNetwork);
 		}
 

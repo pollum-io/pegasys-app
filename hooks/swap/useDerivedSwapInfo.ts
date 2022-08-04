@@ -115,6 +115,8 @@ export async function UseDerivedSwapInfo(
 		walletInfos.walletAddress
 	);
 
+	console.log("errors", inputError);
+
 	return {
 		parsedAmount,
 		v2Trade: v2Trade ?? undefined,
