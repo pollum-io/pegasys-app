@@ -34,13 +34,19 @@ interface ISymbol extends ITokenBalance {
 	id?: number;
 }
 
+interface IToken extends ITokenBalance {
+	logoURI: string;
+	symbol: string;
+	id?: number;
+}
+
 interface IModal {
 	isOpen: boolean;
 	onClose: () => void;
 	selectedToken?: ISymbol[];
-	buttonId?: number;
+	buttonId: number;
 	setSelectedToken: React.Dispatch<
-		React.SetStateAction<ITokenBalance[] | ITokenBalanceWithId[]>
+		React.SetStateAction<ITokenBalance[] | ITokenBalanceWithId[] | IToken[]>
 	>;
 }
 
