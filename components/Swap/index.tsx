@@ -466,7 +466,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					)}
 					<Flex>
 						{selectedToken[0]?.symbol !== "WSYS" &&
-							selectedToken[0]?.symbol !== "PSYS" && (
+							selectedToken[0]?.symbol !== "PSYS" &&
+							isConnected &&
+							(
 								<Button
 									w="50%"
 									mt="2rem"
