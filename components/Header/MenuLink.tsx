@@ -5,15 +5,20 @@ import {
 	Popover,
 	PopoverArrow,
 	PopoverBody,
+	PopoverCloseButton,
 	PopoverContent,
 	PopoverTrigger,
 } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { FaParachuteBox } from "react-icons/fa";
-import { AiOutlineInfoCircle } from "react-icons/ai";
+import { AiOutlineClose, AiOutlineInfoCircle } from "react-icons/ai";
 import { usePicasso } from "hooks";
-import { MdOutlineCheckBox, MdOutlineContentCopy } from "react-icons/md";
+import {
+	MdOutlineCallMade,
+	MdOutlineCheckBox,
+	MdOutlineContentCopy,
+} from "react-icons/md";
 import { RiGithubLine } from "react-icons/ri";
 import { InfoDropdown } from "components/Buttons";
 import { InfoLinks } from "./InfoLinks";
@@ -26,6 +31,11 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 
 	const infos = [
+		{
+			name: "Charts",
+			link: "/",
+			icon: <MdOutlineCallMade />,
+		},
 		{
 			name: "About",
 			link: "https://pegasys.finance/",
@@ -68,23 +78,28 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 				_focus={{
 					outline: "none",
 				}}
-				w="max-content"
+				w={["100vw", "100vw", "max-content", "max-content"]}
 				bgColor={theme.bg.blueNavy}
-				borderRadius="xl"
+				borderBottomRadius={["none", "none", "xl", "xl"]}
+				borderTopRadius={["2xl", "2xl", "xl", "xl"]}
 				p="0"
+				top={["3.5rem", "3.3rem", "0", "0"]}
 			>
-				<PopoverArrow bgColor={theme.bg.blueNavy} />
 				<PopoverBody
 					display="flex"
 					flexDirection="column"
 					zIndex="99"
-					py="2"
+					py={["10", "10", "2", "2"]}
 					px="0"
 				>
 					<Flex flexDirection="column">
 						<InfoDropdown />
 					</Flex>
-					<Flex flexDirection="column" pl="4">
+					<Flex
+						flexDirection="column"
+						pl={["24", "36", "4", "4"]}
+						pr={["24", "36", "4", "4"]}
+					>
 						{infos.map((links, index) => (
 							<Flex
 								alignItems="center"

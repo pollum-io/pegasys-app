@@ -38,10 +38,11 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 			<PopoverContent
 				bgColor={theme.bg.blueNavy}
 				p="1rem 1.5rem 0.5rem"
-				w="24.563rem"
+				w={["100vw", "100vw", "24.563rem", "24.563rem"]}
 				h="max-content"
-				bottom="16"
-				mx="56"
+				bottom={["0rem", "0rem", "3.8rem", "3.8rem"]}
+				right={["0", "0", "", ""]}
+				mx={["0", "0", "20", "56"]}
 				position="fixed"
 			>
 				<Flex
