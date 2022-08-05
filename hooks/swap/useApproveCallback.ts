@@ -26,8 +26,8 @@ export function useApproveCallback(
 ): () => Promise<void> {
 	const token =
 		userInput.lastInputTyped === 0
-			? amountToApprove?.input?.token
-			: amountToApprove?.output?.token;
+			? amountToApprove?.INPUT?.token
+			: amountToApprove?.OUTPUT?.token;
 
 	const approve = async (): Promise<void> => {
 		const tokenContract = await getContract(token?.address, signer);
