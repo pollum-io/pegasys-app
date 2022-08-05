@@ -132,20 +132,19 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					</Tooltip>
 				</ModalHeader>
 				{isCreate && (
-					<Flex alignItems="center" width="100%" justifyContent="center">
+					<Flex alignItems="center" w="100%" justifyContent="center">
 						<Flex
-							height="20%"
-							width="90%"
+							w={["90%", "90%", "90%", "90%"]}
+							h={["100%", "max-content", "90%", "100%"]}
 							borderRadius="2xl"
 							bgColor={theme.bg.blueNavyLightness}
 							color={theme.text.cyan}
-							textAlign="left"
 							p="1.5rem"
 							flexDirection="column"
 							gap={3}
 						>
 							<Text
-								fontSize="md"
+								fontSize={["sm", "sm", "md", "md"]}
 								fontWeight="semibold"
 								textAlign="left"
 								color={theme.text.cyan}
@@ -153,7 +152,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								You are the first liquidity provider.
 							</Text>
 							<Text
-								fontSize="md"
+								fontSize={["sm", "sm", "md", "md"]}
 								fontWeight="normal"
 								textAlign="left"
 								lineHeight="base"
@@ -377,7 +376,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									Prices and pool share
 								</Text>
 								<Flex
-									flexDirection="row"
+									flexDirection={["column", "row", "row", "row"]}
 									justifyContent="space-between"
 									py="1rem"
 									px="1rem"
@@ -386,19 +385,34 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									borderColor={theme.text.cyan}
 									bgColor={theme.bg.blueNavy}
 								>
-									<Flex fontSize="sm" flexDirection="column" textAlign="center">
+									<Flex
+										fontSize="sm"
+										flexDirection={["row", "column", "column", "column"]}
+										gap={["2", "0", "0", "0"]}
+										textAlign="center"
+									>
 										<Text fontWeight="semibold">-</Text>
 										<Text fontWeight="normal">
 											{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}{" "}
 										</Text>
 									</Flex>
-									<Flex fontSize="sm" flexDirection="column" textAlign="center">
+									<Flex
+										fontSize="sm"
+										flexDirection={["row", "column", "column", "column"]}
+										gap={["2", "0", "0", "0"]}
+										textAlign="center"
+									>
 										<Text fontWeight="semibold">-</Text>
 										<Text fontWeight="normal">
 											{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
 										</Text>
 									</Flex>
-									<Flex fontSize="sm" flexDirection="column" textAlign="center">
+									<Flex
+										fontSize="sm"
+										gap={["2", "0", "0", "0"]}
+										flexDirection={["row", "column", "column", "column"]}
+										textAlign="center"
+									>
 										<Text fontWeight="semibold">-</Text>
 										<Text fontWeight="normal">Share of Pool</Text>
 									</Flex>
