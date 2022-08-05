@@ -495,13 +495,25 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								bgColor={theme.bg.blueNavy}
 							>
 								<Flex fontSize="sm" flexDirection="column" textAlign="center">
-									<Text fontWeight="semibold">-</Text>
+									<Text fontWeight="semibold">
+										{returnedTradeValue?.v2Trade
+											? returnedTradeValue?.v2Trade?.executionPrice?.toSignificant(
+													6
+											  )
+											: "-"}
+									</Text>
 									<Text fontWeight="normal">
 										{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
 									</Text>
 								</Flex>
 								<Flex fontSize="sm" flexDirection="column" textAlign="center">
-									<Text fontWeight="semibold">-</Text>
+									<Text fontWeight="semibold">
+										{returnedTradeValue?.v2Trade
+											? returnedTradeValue?.v2Trade?.executionPrice
+													?.invert()
+													.toSignificant(6)
+											: "-"}
+									</Text>
 									<Text fontWeight="normal">
 										{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
 									</Text>
