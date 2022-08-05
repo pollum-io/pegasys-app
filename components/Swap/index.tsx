@@ -142,12 +142,19 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	return (
 		<Flex
-			pt="24"
+			pt={["6", "6", "20", "24"]}
 			justifyContent="center"
 			fontFamily="inter"
 			fontStyle="normal"
-			alignItems="flex-start"
-			flexDirection="row"
+			alignItems={{
+				base: "center",
+				sm: "center",
+				md: "center",
+				lg: "flex-start",
+			}}
+			flexDirection={{ base: "column", sm: "column", md: "column", lg: "row" }}
+			mb={["6rem", "0"]}
+			px={["4", "0", "0", "0"]}
 		>
 			<SelectWallets isOpen={isOpenWallet} onClose={onCloseWallet} />
 			<ConfirmSwap isOpen={isOpenConfirmSwap} onClose={onCloseConfirmSwap} />
@@ -161,7 +168,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			<Flex alignItems="center" flexDirection="column">
 				<Flex
 					h="max-content"
-					w="md"
+					width={[
+						"100%", // 0-30em
+						"md", // 30em-48em
+						"md", // 48em-62em
+						"md", // 62em+
+					]}
 					p="1.5rem"
 					flexDirection="column"
 					zIndex="1"
@@ -171,7 +183,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					<Flex flexDirection="row" justifyContent="space-between" pb="1.5rem">
-						<Text fontWeight="semibold" fontSize="2xl">
+						<Text fontWeight="semibold" fontSize={["xl", "2xl", "2xl", "2xl"]}>
 							Swap
 						</Text>
 					</Flex>
@@ -398,7 +410,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						w="90%"
 						borderRadius="xl"
 						mt="7"
-						mb="10rem"
+						mb={["2", "2", "2", "10rem"]}
+						zIndex="1"
 					>
 						<Flex flexDirection="column">
 							<Flex flexDirection="row" justifyContent="space-between">
@@ -464,9 +477,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			</Flex>
 			<Flex
 				h="max-content"
-				w="2xl"
+				w={["85%", "sm", "100%", "xl"]}
 				p="1.5rem"
-				ml="10"
+				ml={["0", "0", "0", "10"]}
+				mt={["8", "8", "8", "0"]}
+				mb={["24", "24", "24", "0"]}
 				flexDirection="column"
 				zIndex="1"
 				borderRadius={30}
