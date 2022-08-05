@@ -202,3 +202,28 @@ export const CUSTOM_BASES: {
 } = {
 	[ChainId.NEVM]: {},
 };
+
+// Helper consts for Trade price calculation
+const BASE_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000));
+export const ONE_HUNDRED_PERCENT = new Percent(
+	JSBI.BigInt(10000),
+	JSBI.BigInt(10000)
+);
+export const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(BASE_FEE);
+
+export const ALLOWED_PRICE_IMPACT_LOW: Percent = new Percent(
+	JSBI.BigInt(100),
+	BIPS_BASE
+); // 1%
+export const ALLOWED_PRICE_IMPACT_MEDIUM: Percent = new Percent(
+	JSBI.BigInt(300),
+	BIPS_BASE
+); // 3%
+export const ALLOWED_PRICE_IMPACT_HIGH: Percent = new Percent(
+	JSBI.BigInt(500),
+	BIPS_BASE
+); // 5%
+export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(
+	JSBI.BigInt(1500),
+	BIPS_BASE
+); // 15%

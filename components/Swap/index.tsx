@@ -20,7 +20,13 @@ import React, { FunctionComponent, useEffect, useState, useMemo } from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
-import { ChainId, Token, Trade } from "@pollum-io/pegasys-sdk";
+import {
+	ChainId,
+	CurrencyAmount,
+	JSBI,
+	Token,
+	Trade,
+} from "@pollum-io/pegasys-sdk";
 import {
 	ISwapTokenInputValue,
 	IWalletHookInfos,
@@ -29,7 +35,16 @@ import {
 import dynamic from "next/dynamic";
 import { useTranslation } from "react-i18next";
 import { Signer } from "ethers";
+import { computeTradePriceBreakdown } from "utils";
 import { TradeRouteComponent } from "./TradeRouteComponent";
+
+interface IReturnedTradeValue {
+	parsedAmount: CurrencyAmount | undefined;
+	v2Trade: Trade | undefined;
+	bestSwapMethods: string[];
+	inputErrors: string | undefined;
+	v2TradeRoute: Token[] | undefined;
+}
 
 const ChartComponent = dynamic(() => import("./ChartComponent"), {
 	ssr: false,
@@ -83,9 +98,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [currentInput, setCurrentInput] = useState<string>("");
-	const [trade, setTrade] = useState<Trade | undefined>();
 	const [buttonId, setButtonId] = useState<number>(0);
-	const [route, setRoute] = useState<Token[] | undefined>([]);
 	const [tokenInputValue, setTokenInputValue] = useState<ISwapTokenInputValue>({
 		inputFrom: {
 			token: selectedToken[0],
@@ -98,6 +111,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		typedValue: "",
 		lastInputTyped: undefined,
 	});
+	const [returnedTradeValue, setReturnedTradeValue] = useState<
+		IReturnedTradeValue | undefined
+	>(undefined);
 
 	const handleOnChangeTokenInputs = (
 		event: React.ChangeEvent<HTMLInputElement>
@@ -180,17 +196,45 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	};
 
 	const swapCall =
-		trade && signer && UseSwapCallback(trade, 50, walletInfos, signer);
+		returnedTradeValue?.v2Trade &&
+		signer &&
+		UseSwapCallback(returnedTradeValue?.v2Trade, 50, walletInfos, signer);
+
+	const userHasSpecifiedInputOutput = Boolean(
+		tokenInputValue.inputFrom.token &&
+			tokenInputValue.inputTo.token &&
+			returnedTradeValue?.parsedAmount?.greaterThan(JSBI.BigInt(0))
+	);
+
+	const verifyIfHaveInsufficientLiquidity = Boolean(
+		!returnedTradeValue?.v2TradeRoute && userHasSpecifiedInputOutput
+	);
+
+	const swapButtonValidation = !isConnected
+		? "Connect Wallet"
+		: isConnected && verifyIfHaveInsufficientLiquidity
+		? translation("swapPage.insufficientLiquidity")
+		: "Swap";
+
+	const { priceImpactWithoutFee, priceImpactSeverity } =
+		computeTradePriceBreakdown(returnedTradeValue?.v2Trade as Trade);
 
 	const handleSwapInfo = async () => {
-		const { v2Trade, bestSwapMethods, inputErrors } = await UseDerivedSwapInfo(
-			tokenInputValue,
-			walletInfos,
-			translation,
-			userSlippageTolerance
-		);
-		setTrade(v2Trade);
-		setRoute(v2Trade?.route?.path);
+		const { v2Trade, bestSwapMethods, inputErrors, parsedAmount } =
+			await UseDerivedSwapInfo(
+				tokenInputValue,
+				walletInfos,
+				translation,
+				userSlippageTolerance
+			);
+
+		setReturnedTradeValue({
+			parsedAmount,
+			v2Trade,
+			bestSwapMethods,
+			inputErrors,
+			v2TradeRoute: v2Trade?.route?.path,
+		});
 	};
 
 	useEffect(() => {
@@ -204,25 +248,25 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	}, [userTokensBalance]);
 
 	useMemo(() => {
-		if (!isConnected || !trade) return;
+		if (!isConnected || !returnedTradeValue?.v2Trade) return;
 
 		const { inputTo, inputFrom } = tokenInputValue;
 
 		if (currentInput === "inputTo") {
 			tokenInputValue.inputFrom.value = inputTo?.value
-				? trade?.inputAmount?.toSignificant(6)
+				? returnedTradeValue?.v2Trade?.inputAmount?.toSignificant(6)
 				: "";
 		}
 
 		if (currentInput === "inputFrom") {
 			tokenInputValue.inputTo.value = inputFrom?.value
-				? trade?.outputAmount?.toSignificant(6)
+				? returnedTradeValue?.v2Trade?.outputAmount?.toSignificant(6)
 				: "";
 		}
-	}, [isConnected, trade, selectedToken]);
+	}, [isConnected, returnedTradeValue?.v2Trade, selectedToken]);
 
 	const approve = useApproveCallbackFromTrade(
-		trade as Trade,
+		returnedTradeValue?.v2Trade as Trade,
 		{
 			chainId:
 				currentNetworkChainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
@@ -503,7 +547,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							fontWeight="semibold"
 							disabled={!canSubmit}
 						>
-							{isConnected ? "Swap" : "Connect Wallet"}
+							{swapButtonValidation}
 						</Button>
 					</Flex>
 				</Flex>
@@ -523,9 +567,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									Minmum Received <Icon as={MdHelpOutline} />
 								</Text>
 								<Text fontWeight="medium">
-									{trade
-										? `${trade?.outputAmount.toSignificant(4)} ${
-												trade?.outputAmount?.currency.symbol
+									{returnedTradeValue?.v2Trade
+										? `${returnedTradeValue?.v2Trade?.outputAmount.toSignificant(
+												4
+										  )} ${
+												returnedTradeValue?.v2Trade?.outputAmount?.currency
+													.symbol
 										  }`
 										: "-"}
 								</Text>
@@ -539,7 +586,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									Price Impact <Icon as={MdHelpOutline} />
 								</Text>
 								<Text fontWeight="medium">
-									{trade ? `${trade?.priceImpact?.toSignificant(4)}%` : "-"}
+									{returnedTradeValue?.v2Trade
+										? `${returnedTradeValue?.v2Trade?.priceImpact?.toSignificant(
+												4
+										  )}%`
+										: "-"}
 								</Text>
 							</Flex>
 							<Flex
@@ -554,7 +605,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Flex>
 							{tokenInputValue.inputFrom.value &&
 								tokenInputValue.inputTo.value &&
-								route && (
+								returnedTradeValue?.v2TradeRoute && (
 									<Flex flexDirection="column">
 										<Flex
 											flexDirection="row"
@@ -574,7 +625,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 											flexWrap="wrap"
 											mt="2"
 										>
-											<TradeRouteComponent transactionRoute={route} />
+											<TradeRouteComponent
+												transactionRoute={returnedTradeValue?.v2TradeRoute}
+											/>
 										</Flex>
 									</Flex>
 								)}

@@ -12,8 +12,8 @@ import {
 	Tooltip,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { usePicasso } from "hooks";
-import React, { useState } from "react";
+import { usePicasso, useTokens } from "hooks";
+import React, { useEffect, useState } from "react";
 import {
 	MdHelpOutline,
 	MdArrowBack,
@@ -202,7 +202,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									mt="1"
 									id="0"
 									w="max-content"
-									onClick={event => {
+									onClick={(event: React.MouseEvent<HTMLInputElement>) => {
 										onOpen();
 										setButtonId(Number(event.currentTarget.id));
 									}}
@@ -210,14 +210,14 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									cursor="pointer"
 									_hover={{}}
 								>
-									<Img src={selectedToken[0].logoURI} w="6" h="6" />
+									<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
 									<Text
 										fontSize="xl"
 										fontWeight="500"
 										px="3"
 										_hover={{ opacity: "0.9" }}
 									>
-										{selectedToken[0].symbol}
+										{selectedToken[0]?.symbol}
 									</Text>
 									<Icon as={IoIosArrowDown} />
 								</Flex>
@@ -296,7 +296,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									mt="1"
 									id="1"
 									w="max-content"
-									onClick={event => {
+									onClick={(event: React.MouseEvent<HTMLInputElement>) => {
 										onOpen();
 										setButtonId(Number(event.currentTarget.id));
 									}}
@@ -304,14 +304,14 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									cursor="pointer"
 									_hover={{}}
 								>
-									<Img src={selectedToken[1].logoURI} w="6" h="6" />
+									<Img src={selectedToken[1]?.logoURI} w="6" h="6" />
 									<Text
 										fontSize="xl"
 										fontWeight="500"
 										px="3"
 										_hover={{ opacity: "0.9" }}
 									>
-										{selectedToken[1].symbol}
+										{selectedToken[1]?.symbol}
 									</Text>
 									<Icon as={IoIosArrowDown} />
 								</Flex>
