@@ -257,7 +257,7 @@ export const PoolsContainer: NextPage = () => {
 							</Flex>
 						</Flex>
 					</Flex>
-					{isConnected ? (
+					{!isConnected ? (
 						<Flex
 							w="100%"
 							mt={["1rem", "1rem", "4rem", "4rem"]}
