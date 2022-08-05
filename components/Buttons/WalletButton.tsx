@@ -4,6 +4,7 @@ import { usePicasso, useWallet } from "hooks";
 import { FunctionComponent } from "react";
 import { AddressInfoButton } from "components/Buttons";
 import { shortAddress } from "utils";
+import { ExpertMode } from "components/Header/ExpertMode";
 import { AddressButton } from "./AddressButton";
 
 export const WalletButton: FunctionComponent<ButtonProps> = props => {
@@ -46,8 +47,8 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						_active={{}}
 						w="max-content"
 						h="max-content"
-						py="2"
-						px="8"
+						py={["2", "2", "2", "2"]}
+						px={["6", "6", "8", "8"]}
 						position={["absolute", "relative"]}
 						bottom={["12", "10"]}
 						left={["25%", "0", "0", "0"]}
@@ -79,6 +80,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 					>
 						{shortAddress(walletAddress)}
 					</AddressButton>
+					<ExpertMode />
 				</>
 			)}
 		</>

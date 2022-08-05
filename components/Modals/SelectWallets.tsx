@@ -43,7 +43,7 @@ export const SelectWallets: React.FC<IModal> = props => {
 					</Flex>
 					<Flex flexDirection="column" fontSize="sm	">
 						<Text textAlign="center" fontWeight="normal">
-							New to Syscoin?{" "}
+							New to Syscoin?
 						</Text>
 						<Text textColor={theme.text.cyan} fontWeight="semibold">
 							Learn more about setting up a wallet

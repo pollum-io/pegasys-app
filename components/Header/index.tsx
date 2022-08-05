@@ -51,15 +51,15 @@ export const Header: React.FC = () => {
 		>
 			<PsysBreakdown isOpen={isOpen} onClose={onClose} />
 			<Img
-				w={["8", "8", "6", "6"]}
-				h={["8", "8", "6", "6"]}
+				w={["7", "8", "6", "6"]}
+				h={["7", "8", "6", "6"]}
 				src="icons/pegasys.png"
 				ml={["2", "4", "4", "4"]}
 				position="absolute"
 				left="0"
 			/>
 			<Flex
-				gap="1"
+				gap={["0", "1", "1", "1"]}
 				bgColor={theme.bg.topHeader}
 				borderRadius="20"
 				ml={["8", "0", "0", "0"]}
@@ -98,10 +98,10 @@ export const Header: React.FC = () => {
 				boxShadow={theme.border.headerBorderShadow}
 				position="fixed"
 				bottom="0"
-				zIndex="2"
+				zIndex="99"
 				alignItems="center"
 				px={["0", "10"]}
-				pl={["2", "10"]}
+				pl={["4", "10"]}
 				py="2"
 				justifyContent={["space-around", "space-between"]}
 			>
@@ -115,7 +115,6 @@ export const Header: React.FC = () => {
 				</Flex>
 				<Flex flexDirection="column">
 					<WalletButton />
-					<ExpertMode />
 				</Flex>
 				<Flex>
 					<IconButton
