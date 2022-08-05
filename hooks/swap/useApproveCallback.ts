@@ -19,10 +19,10 @@ export enum ApprovalState {
 
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
 export function useApproveCallback(
+	userInput: ISwapTokenInputValue,
 	amountToApprove?: CurrencyAmount,
 	spender?: string,
-	signer?: Signer,
-	userInput: ISwapTokenInputValue
+	signer?: Signer
 ): () => Promise<void> {
 	const token =
 		userInput.lastInputTyped === 0
@@ -30,7 +30,7 @@ export function useApproveCallback(
 			: amountToApprove?.OUTPUT?.token;
 
 	const approve = async (): Promise<void> => {
-		const tokenContract = await getContract(token?.address, signer);
+		const tokenContract = await getContract(token?.address, signer as Signer);
 		if (!token) {
 			console.error("no token");
 			return;
@@ -96,9 +96,9 @@ export function useApproveCallbackFromTrade(
 		: undefined;
 
 	return useApproveCallback(
-		amountToApprove,
+		userInput,
+		amountToApprove as CurrencyAmount,
 		chainId ? ROUTER_ADDRESS[chainId] : ROUTER_ADDRESS[ChainId.NEVM],
-		signer,
-		userInput
+		signer
 	);
 }

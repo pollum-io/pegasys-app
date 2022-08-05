@@ -7,7 +7,11 @@ import {
 import { ROUTER_ADDRESS } from "helpers/consts";
 import { TFunction } from "react-i18next";
 
-import { ISwapTokenInputValue, IWalletHookInfos } from "types";
+import {
+	ISwapTokenInputValue,
+	IWalletHookInfos,
+	WrappedTokenInfo,
+} from "types";
 import {
 	computeSlippageAdjustedAmounts,
 	isAddress,
@@ -25,7 +29,8 @@ const BAD_RECIPIENT_ADDRESSES: string[] = [
 ];
 
 export async function UseDerivedSwapInfo(
-	inputs: ISwapTokenInputValue,
+	tradeTokens: WrappedTokenInfo[],
+	inputValues: ISwapTokenInputValue,
 	walletInfos: IWalletHookInfos,
 	translation: TFunction<"translation", undefined>,
 	userAllowedSlippage: number,
@@ -36,7 +41,7 @@ export async function UseDerivedSwapInfo(
 	bestSwapMethods: string[];
 	inputErrors: string | undefined;
 }> {
-	const isExactIn: boolean = inputs.lastInputTyped === 0;
+	const isExactIn: boolean = inputValues.lastInputTyped === 0;
 
 	const recipientAddress: string | undefined =
 		recipient && isAddress(recipient as string);
@@ -46,27 +51,27 @@ export async function UseDerivedSwapInfo(
 
 	const currencyBalances: { [field in Field]?: CurrencyAmount } = {
 		[Field.INPUT]: tryParseAmount(
-			inputs?.inputFrom?.token?.balance,
-			inputs?.inputFrom?.token
+			tradeTokens[0]?.balance,
+			tradeTokens[0]
 		) as CurrencyAmount,
 		[Field.OUTPUT]: tryParseAmount(
-			inputs?.inputTo?.token?.balance,
-			inputs?.inputTo?.token
+			tradeTokens[1]?.balance,
+			tradeTokens[1]
 		) as CurrencyAmount,
 	};
 
 	const parsedAmount = tryParseAmount(
-		inputs.typedValue,
-		(isExactIn ? inputs.inputFrom.token : inputs.inputTo.token) ?? undefined
+		inputValues.typedValue,
+		(isExactIn ? tradeTokens[0] : tradeTokens[1]) ?? undefined
 	);
 
 	const bestTradeExactIn = await useTradeExactIn(
 		isExactIn ? parsedAmount : undefined,
-		inputs.inputTo.token ?? undefined,
+		tradeTokens[1] ?? undefined,
 		walletInfos
 	);
 	const bestTradeExactOut = await useTradeExactOut(
-		inputs.inputFrom.token ?? undefined,
+		tradeTokens[0] ?? undefined,
 		!isExactIn ? parsedAmount : undefined,
 		walletInfos
 	);
