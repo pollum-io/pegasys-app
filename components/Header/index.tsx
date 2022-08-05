@@ -51,21 +51,34 @@ export const Header: React.FC = () => {
 		>
 			<PsysBreakdown isOpen={isOpen} onClose={onClose} />
 			<Img
-				w="6"
-				h="6"
+				w={["8", "8", "6", "6"]}
+				h={["8", "8", "6", "6"]}
 				src="icons/pegasys.png"
-				ml="4"
+				ml={["2", "4", "4", "4"]}
 				position="absolute"
 				left="0"
 			/>
-			<Flex gap="1" bgColor={theme.bg.topHeader} borderRadius="20">
+			<Flex
+				gap="1"
+				bgColor={theme.bg.topHeader}
+				borderRadius="20"
+				ml={["8", "0", "0", "0"]}
+			>
 				{links.map((item, index) => (
 					<NavButton key={item.name + Number(index)} href={item.url}>
 						{item.name}
 					</NavButton>
 				))}
-
-				<NavButton href="/" color={theme.text.header}>
+				<NavButton
+					href="/"
+					color={theme.text.header}
+					display={{
+						base: "none",
+						sm: "none",
+						md: "block",
+						lg: "block",
+					}}
+				>
 					Charts{" "}
 					<Icon
 						as={MdOutlineCallMade}
@@ -77,22 +90,26 @@ export const Header: React.FC = () => {
 				</NavButton>
 			</Flex>
 			<Flex
-				w="31rem"
+				w={["90%", "32rem", "32rem", "32rem"]}
 				h="max-content"
 				backgroundColor={theme.bg.blackAlpha}
-				mt="60"
 				borderRadius="46px 46px 0px 0px"
 				border={theme.border.headerBorder}
 				boxShadow={theme.border.headerBorderShadow}
 				position="fixed"
 				bottom="0"
-				zIndex="2"
+				zIndex="99"
 				alignItems="center"
-				px="10"
+				px={["0", "10"]}
+				pl={["2", "10"]}
 				py="2"
-				justifyContent="space-between"
+				justifyContent={["space-around", "space-between"]}
 			>
-				<Flex w="25%" justifyContent="space-between">
+				<Flex
+					w="25%"
+					gap={["2", "0"]}
+					justifyContent={["space-around", "space-between"]}
+				>
 					<TokenButton onClick={onOpen} />
 					<NetworkButton />
 				</Flex>
