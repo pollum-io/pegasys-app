@@ -17,10 +17,15 @@ export enum ApprovalState {
 	APPROVED,
 }
 
+export enum Field {
+	INPUT = "INPUT",
+	OUTPUT = "OUTPUT",
+}
+
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
 export function useApproveCallback(
 	userInput: ISwapTokenInputValue,
-	amountToApprove?: CurrencyAmount,
+	amountToApprove?: { [field in Field]?: CurrencyAmount },
 	spender?: string,
 	signer?: Signer
 ): () => Promise<void> {
@@ -97,7 +102,7 @@ export function useApproveCallbackFromTrade(
 
 	return useApproveCallback(
 		userInput,
-		amountToApprove as CurrencyAmount,
+		amountToApprove,
 		chainId ? ROUTER_ADDRESS[chainId] : ROUTER_ADDRESS[ChainId.NEVM],
 		signer
 	);
