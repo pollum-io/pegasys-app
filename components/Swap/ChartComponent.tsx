@@ -2,7 +2,29 @@ import { Flex } from "@chakra-ui/react";
 import { createChart, ColorType } from "lightweight-charts";
 import React, { useEffect, useRef } from "react";
 
-const ChartComponent = (props: any) => {
+interface IChartComponentData {
+	open: number;
+	high: number;
+	low: number;
+	close: number;
+	time: number;
+}
+
+interface IChartComponentColors {
+	backgroundColor: string;
+	textColor: string;
+	upColor: string;
+	downColor: string;
+	borderVisible: boolean;
+	wickUpColor: string;
+	wickDownColor: string;
+}
+interface IChartComponentProps {
+	data: IChartComponentData[];
+	colors: IChartComponentColors;
+}
+
+const ChartComponent = (props: IChartComponentProps) => {
 	const {
 		data,
 		colors: {
