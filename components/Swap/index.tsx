@@ -18,7 +18,7 @@ import {
 } from "hooks";
 import React, { FunctionComponent, useEffect, useState, useMemo } from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
-import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowDown } from "react-icons/io";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
 import {
 	ChainId,
@@ -31,6 +31,7 @@ import {
 	ISwapTokenInputValue,
 	IWalletHookInfos,
 	WrappedTokenInfo,
+	IInputValues,
 } from "types";
 import dynamic from "next/dynamic";
 import { useTranslation } from "react-i18next";
@@ -99,87 +100,24 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	} = useWallet();
 
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
-	const [currentInput, setCurrentInput] = useState<string>("");
 	const [buttonId, setButtonId] = useState<number>(0);
 	const [tokenInputValue, setTokenInputValue] = useState<ISwapTokenInputValue>({
 		inputFrom: {
-			token: selectedToken[0],
 			value: "",
 		},
 		inputTo: {
-			token: selectedToken[1],
 			value: "",
 		},
 		typedValue: "",
+		currentInputTyped: "",
 		lastInputTyped: undefined,
 	});
 	const [returnedTradeValue, setReturnedTradeValue] = useState<
 		IReturnedTradeValue | undefined
 	>(undefined);
 
-	const handleOnChangeTokenInputs = (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
-		if (!isConnected) return;
-
-		const regexPreventLetters = /^(?!,$)[\d,.]+$/;
-
-		const inputValue = event?.currentTarget?.value;
-
-		const typedInput = event?.currentTarget.name;
-
-		setCurrentInput(typedInput);
-
-		if (inputValue === "" || regexPreventLetters.test(inputValue)) {
-			setTokenInputValue({
-				inputFrom:
-					typedInput === "inputFrom"
-						? {
-								token: selectedToken[0],
-								value: inputValue,
-						  }
-						: {
-								token: selectedToken[0],
-								value: "",
-						  },
-
-				inputTo:
-					typedInput === "inputTo"
-						? {
-								token: selectedToken[1],
-								value: inputValue,
-						  }
-						: {
-								token: selectedToken[1],
-								value: "",
-						  },
-
-				typedValue: inputValue,
-				lastInputTyped: typedInput === "inputFrom" ? 0 : 1,
-			});
-		}
-	};
-
 	const switchTokensPosition = () =>
 		setSelectedToken(prevState => [...prevState]?.reverse());
-
-	useEffect(() => {
-		if (!userTokensBalance) return;
-
-		const getTokensBySymbol = userTokensBalance?.filter(
-			token =>
-				token?.symbol === "WSYS" ||
-				token?.symbol === "SYS" ||
-				token?.symbol === "PSYS"
-		);
-
-		const setIdToTokens = getTokensBySymbol.map((token, index: number) => ({
-			...token,
-			id: index,
-		})) as WrappedTokenInfo[];
-
-		setSelectedToken(setIdToTokens);
-	}, [userTokensBalance]);
 
 	const submitValidation = [
 		isConnected && tokenInputValue.lastInputTyped === 0
@@ -210,8 +148,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		);
 
 	const userHasSpecifiedInputOutput = Boolean(
-		tokenInputValue.inputFrom.token &&
-			tokenInputValue.inputTo.token &&
+		selectedToken[0] &&
+			selectedToken[1] &&
 			returnedTradeValue?.parsedAmount?.greaterThan(JSBI.BigInt(0))
 	);
 
@@ -231,6 +169,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const handleSwapInfo = async () => {
 		const { v2Trade, bestSwapMethods, inputErrors, parsedAmount } =
 			await UseDerivedSwapInfo(
+				selectedToken,
 				tokenInputValue,
 				walletInfos,
 				translation,
@@ -250,29 +189,90 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		if (!isConnected) return;
 
 		handleSwapInfo();
-	}, [isConnected, tokenInputValue, selectedToken]);
+	}, [
+		isConnected,
+		tokenInputValue,
+		selectedToken[0]?.address,
+		selectedToken[1]?.address,
+	]);
+
+	useEffect(() => {
+		if (!userTokensBalance) return;
+
+		const getTokensBySymbol = userTokensBalance?.filter(
+			token =>
+				token?.symbol === "WSYS" ||
+				token?.symbol === "SYS" ||
+				token?.symbol === "PSYS"
+		);
+
+		const setIdToTokens = getTokensBySymbol.map((token, index: number) => ({
+			...token,
+			id: index,
+		})) as WrappedTokenInfo[];
+
+		setSelectedToken(setIdToTokens);
+	}, [userTokensBalance]);
 
 	useEffect(() => {
 		setSelectedToken([userTokensBalance[0], userTokensBalance[1]]);
 	}, [userTokensBalance]);
 
+	const handleOnChangeTokenInputs = (
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		if (!isConnected) return;
+
+		const regexPreventLetters = /^(?!,$)[\d,.]+$/;
+
+		const inputValue = event?.currentTarget?.value;
+
+		const typedInput = event?.currentTarget.name;
+
+		if (inputValue === "" || regexPreventLetters.test(inputValue)) {
+			const inputFrom: IInputValues = {
+				value: typedInput === "inputFrom" ? inputValue : "",
+			};
+
+			const inputTo: IInputValues = {
+				value: typedInput === "inputTo" ? inputValue : "",
+			};
+
+			setTokenInputValue({
+				inputFrom,
+				inputTo,
+				typedValue: inputValue,
+				currentInputTyped: typedInput,
+				lastInputTyped: typedInput === "inputFrom" ? 0 : 1,
+			});
+		}
+	};
+
 	useMemo(() => {
 		if (!isConnected || !returnedTradeValue?.v2Trade) return;
 
-		const { inputTo, inputFrom } = tokenInputValue;
+		const {
+			inputTo: { value: inputToValue },
+			inputFrom: { value: inputFromValue },
+			currentInputTyped,
+		} = tokenInputValue;
 
-		if (currentInput === "inputTo") {
-			tokenInputValue.inputFrom.value = inputTo?.value
-				? returnedTradeValue?.v2Trade?.inputAmount?.toSignificant(6)
+		const {
+			v2Trade: { outputAmount, inputAmount },
+		} = returnedTradeValue;
+
+		if (currentInputTyped === "inputFrom") {
+			tokenInputValue.inputTo.value = inputFromValue
+				? outputAmount?.toSignificant(6)
 				: "";
 		}
 
-		if (currentInput === "inputFrom") {
-			tokenInputValue.inputTo.value = inputFrom?.value
-				? returnedTradeValue?.v2Trade?.outputAmount?.toSignificant(6)
+		if (currentInputTyped === "inputTo") {
+			tokenInputValue.inputFrom.value = inputToValue
+				? inputAmount?.toSignificant(6)
 				: "";
 		}
-	}, [isConnected, returnedTradeValue?.v2Trade, selectedToken]);
+	}, [isConnected, returnedTradeValue?.v2Trade]);
 
 	const approve = useApproveCallbackFromTrade(
 		returnedTradeValue?.v2Trade as Trade,
