@@ -28,6 +28,8 @@ interface IWeb3 {
 	>;
 	userSlippageTolerance: number;
 	setUserSlippageTolerance: React.Dispatch<React.SetStateAction<number>>;
+	setTransactions: React.Dispatch<React.SetStateAction<object>>;
+	transactions: object;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -53,6 +55,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [userSlippageTolerance, setUserSlippageTolerance] = useState<number>(
 		INITIAL_ALLOWED_SLIPPAGE
 	);
+	const [transactions, setTransactions] = useState<object>({});
 
 	const connectToSysRpcIfNotConnected = () => {
 		const rpcProvider = new ethers.providers.JsonRpcProvider(
@@ -153,6 +156,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setCurrentNetworkChainId,
 			userSlippageTolerance,
 			setUserSlippageTolerance,
+			transactions,
+			setTransactions,
 		}),
 		[
 			isConnected,

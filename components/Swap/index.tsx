@@ -13,8 +13,8 @@ import {
 	useTokens,
 	useWallet,
 	UseDerivedSwapInfo,
-	UseSwapCallback,
 	useApproveCallbackFromTrade,
+	UseSwapCallback,
 } from "hooks";
 import React, { FunctionComponent, useEffect, useState, useMemo } from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
@@ -94,6 +94,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		signer,
 		walletAddress,
 		userSlippageTolerance,
+		setTransactions,
+		transactions,
 	} = useWallet();
 
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
@@ -198,7 +200,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const swapCall =
 		returnedTradeValue?.v2Trade &&
 		signer &&
-		UseSwapCallback(returnedTradeValue?.v2Trade, 50, walletInfos, signer);
+		UseSwapCallback(
+			returnedTradeValue?.v2Trade,
+			50,
+			walletInfos,
+			signer,
+			setTransactions,
+			transactions
+		);
 
 	const userHasSpecifiedInputOutput = Boolean(
 		tokenInputValue.inputFrom.token &&

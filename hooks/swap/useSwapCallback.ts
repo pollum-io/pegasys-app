@@ -21,6 +21,7 @@ import {
 	shortAddress,
 } from "utils";
 import { IWalletHookInfos } from "types";
+import { addTransaction } from "utils/addTransaction";
 
 interface SwapCall {
 	contract: Contract;
@@ -102,7 +103,9 @@ export function UseSwapCallback(
 	trade: Trade | undefined, // trade to execute, required
 	allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
 	walletInfos: IWalletHookInfos,
-	signer: Signer
+	signer: Signer,
+	setTransactions: React.Dispatch<React.SetStateAction<object>>,
+	transactions: object
 ) {
 	const { walletAddress, chainId: chain } = walletInfos;
 
@@ -244,6 +247,8 @@ export function UseSwapCallback(
 						tradeVersion === "v2"
 							? withRecipient
 							: `${withRecipient} on ${tradeVersion.toUpperCase()}`;
+
+					addTransaction(response, withVersion, walletInfos, setTransactions, transactions);
 
 					return response.hash;
 				})

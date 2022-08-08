@@ -9,5 +9,5 @@ export * from "./swap/useENS";
 export * from "./swap/useCurrency";
 export * from "./swap/useDerivedSwapInfo";
 export * from "./swap/useAllCommonPairs";
-export * from "./swap/useTransactionDeadline";
 export * from "./swap/useApproveCallback";
+export * from "./swap/useTransactionDeadline";
