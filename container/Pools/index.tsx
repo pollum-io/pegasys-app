@@ -14,9 +14,8 @@ import {
 } from "@chakra-ui/react";
 import { AddLiquidityModal, RemoveLiquidity } from "components";
 import { ImportPoolModal } from "components/Modals/ImportPool";
-import { ToastNotification } from "components/Modals/ToastNotification";
 import { PoolCards } from "components/Pools/PoolCards";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso, useWallet, useToasty } from "hooks";
 import { NextPage } from "next";
 import { useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
@@ -44,10 +43,18 @@ export const PoolsContainer: NextPage = () => {
 	const { isConnected } = useWallet();
 	const [userHavePool, setUserHavePool] = useState(true);
 
+	const { toast } = useToasty();
+
+	const showToast = () => {
+		toast({
+			title: "Title",
+			description: "Something happend!",
+			status: "success",
+		});
+	};
+
 	return (
 		<Flex justifyContent="center" alignItems="center">
-			<ToastNotification showToast />
-
 			<AddLiquidityModal
 				isModalOpen={isOpen}
 				onModalClose={onClose}
@@ -282,6 +289,13 @@ export const PoolsContainer: NextPage = () => {
 							<PoolCards />
 							<PoolCards />
 							<PoolCards />
+							<Button
+								onClick={() => {
+									showToast();
+								}}
+							>
+								show toast
+							</Button>
 						</Flex>
 					)}
 				</Flex>
