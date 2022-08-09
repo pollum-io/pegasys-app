@@ -79,7 +79,7 @@ export const AirdropContainer: NextPage = () => {
 					/>
 				</Flex>
 				<Flex>
-					{isConnected ? (
+					{!isConnected ? (
 						<BorderAnimation>
 							<Flex py="4">
 								<Flex>
@@ -194,7 +194,7 @@ export const AirdropContainer: NextPage = () => {
 									</Flex>
 								</BorderAnimation>
 							)}
-							{!isClaimed && (
+							{isClaimed && (
 								<BorderAnimation>
 									<Flex gap="8" flexDirection="column" alignItems="center">
 										<Flex
