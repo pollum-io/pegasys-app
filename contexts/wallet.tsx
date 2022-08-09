@@ -9,6 +9,13 @@ import {
 	SUPPORTED_NETWORK_CHAINS,
 } from "../helpers/consts";
 
+export enum ApprovalState {
+	UNKNOWN,
+	NOT_APPROVED,
+	PENDING,
+	APPROVED,
+}
+
 interface IWeb3 {
 	isConnected: boolean;
 	currentNetworkChainId: number | null;
@@ -33,6 +40,8 @@ interface IWeb3 {
 	setTransactions: React.Dispatch<React.SetStateAction<object>>;
 	transactions: object;
 	wssProvider: ethers.providers.WebSocketProvider;
+	setApprovalState: React.Dispatch<React.SetStateAction<ApprovalState>>;
+	approvalState: ApprovalState;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -44,36 +53,35 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [isConnected, setIsConnected] = useState(false);
-
 	const [currentNetworkChainId, setCurrentNetworkChainId] = useState<
 		number | null
 	>(null);
-
 	const [walletAddress, setAddress] = useState("");
 	const [walletError, setWalletError] = useState<boolean>(false);
-
 	const [signer, setSigner] = useState<Signer | undefined>();
 	const [provider, setProvider] = useState<
 		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
 	>();
-
 	const [connectorSelected, setConnectorSelected] =
 		useState<AbstractConnector>();
-
 	const [userSlippageTolerance, setUserSlippageTolerance] = useState<number>(
 		INITIAL_ALLOWED_SLIPPAGE
 	);
-
 	const [transactions, setTransactions] = useState<object>({
 		57: {},
 		5700: {},
 	});
 
-	const [approvalState, setApprovalState] = useState();
-
-	const wssProvider = new ethers.providers.WebSocketProvider(
-		"wss://rpc.tanenbaum.io/wss"
+	const [approvalState, setApprovalState] = useState<ApprovalState>(
+		ApprovalState.UNKNOWN
 	);
+
+	const RPC_WSS =
+		currentNetworkChainId === 5700
+			? "wss://rpc.tanenbaum.io/wss"
+			: "wss://rpc.syscoin.org/wss";
+
+	const wssProvider = new ethers.providers.WebSocketProvider(RPC_WSS);
 
 	const connectToSysRpcIfNotConnected = () => {
 		const rpcProvider = new ethers.providers.JsonRpcProvider(
@@ -128,9 +136,25 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			});
 	};
 
-	// wssProvider
-	// 	.waitForTransaction()
-	// 	.then(result => console.log("TX info: ", result));
+	wssProvider?.on("pending", hash => {
+		wssProvider.waitForTransaction(hash).then(result => {
+			if (result.from.toLowerCase() === walletAddress.toLowerCase()) {
+				setTransactions({
+					...transactions,
+					[currentNetworkChainId]: {
+						...transactions[currentNetworkChainId],
+						[result.transactionHash]: {
+							...result,
+							hash: result.transactionHash,
+						},
+					},
+				});
+				setApprovalState(ApprovalState.APPROVED);
+				// eslint-disable-next-line
+				return;
+			}
+		});
+	});
 
 	useMemo(async () => {
 		const getCurrentConnectorProvider = await connectorSelected?.getProvider();
@@ -192,6 +216,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			transactions,
 			setTransactions,
 			wssProvider,
+			approvalState,
+			setApprovalState,
 		}),
 		[
 			isConnected,

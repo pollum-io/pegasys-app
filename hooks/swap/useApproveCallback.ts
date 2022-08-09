@@ -7,11 +7,9 @@ import {
 	computeSlippageAdjustedAmounts,
 	getContract,
 	addTransaction,
-	getTokenAllowance,
 } from "utils";
 import { IWalletHookInfos, ISwapTokenInputValue } from "types";
 import { Signer } from "ethers";
-import { hasPendingApproval } from "utils/hasPendingApproval";
 
 export enum ApprovalState {
 	UNKNOWN,
@@ -33,9 +31,9 @@ export function useApproveCallback(
 	signer?: Signer,
 	setTransactions?: React.Dispatch<React.SetStateAction<object>>,
 	transactions?: object,
+	setApprovalState: React.Dispatch<React.SetStateAction<ApprovalState>>,
 	walletInfos: IWalletHookInfos
 ): () => Promise<void> {
-	const { walletAddress, chainId } = walletInfos;
 	const token =
 		userInput.lastInputTyped === 0
 			? amountToApprove?.INPUT?.token
@@ -78,33 +76,6 @@ export function useApproveCallback(
 					currentAmountToApprove?.raw.toString()
 				);
 			});
-		const currentAllowance = await getTokenAllowance(
-			token,
-			walletAddress ?? undefined,
-			spender,
-			signer
-		);
-
-		const pending = hasPendingApproval(
-			token?.address,
-			spender,
-			transactions,
-			chainId
-		);
-
-		const approvalState: ApprovalState = () => {
-			if (!amountToApprove || !spender) return ApprovalState.UNKNOWN;
-			if (amountToApprove.currency === NSYS) return ApprovalState.APPROVED;
-			// we might not have enough data to know whether or not we need to approve
-			if (!currentAllowance) return ApprovalState.UNKNOWN;
-
-			// amountToApprove will be defined if currentAllowance is
-			return currentAllowance.lessThan(amountToApprove)
-				? pending
-					? ApprovalState.PENDING
-					: ApprovalState.NOT_APPROVED
-				: ApprovalState.APPROVED;
-		};
 		// eslint-disable-next-line
 		return tokenContract
 			.approve(
@@ -125,6 +96,7 @@ export function useApproveCallback(
 					setTransactions,
 					transactions
 				);
+				setApprovalState(ApprovalState.PENDING);
 			})
 			.catch((error: Error) => {
 				console.debug("Failed to approve token", error);
@@ -143,6 +115,7 @@ export function useApproveCallbackFromTrade(
 	userInput: ISwapTokenInputValue,
 	setTransactions: React.Dispatch<React.SetStateAction<object>>,
 	transactions: object,
+	setApprovalState: React.Dispatch<React.SetStateAction<ApprovalState>>,
 	allowedSlippage = 0
 ) {
 	const { chainId } = walletInfos;
@@ -157,6 +130,7 @@ export function useApproveCallbackFromTrade(
 		signer,
 		setTransactions,
 		transactions,
+		setApprovalState,
 		walletInfos
 	);
 }
