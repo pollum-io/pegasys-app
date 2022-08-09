@@ -72,7 +72,7 @@ export const PoolsContainer: NextPage = () => {
 					>
 						<Img
 							borderRadius="xl"
-							src="images/backgrounds/BannerPools.png"
+							src={theme.bg.poolsBanner}
 							position="absolute"
 							zIndex="base"
 							w="100%"

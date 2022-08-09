@@ -22,13 +22,7 @@ export const FarmContainer: NextPage = () => {
 	const theme = usePicasso();
 
 	return (
-		<Flex
-			w="100%"
-			h="100%"
-			alignItems="flex-start"
-			justifyContent="center"
-			pt="20"
-		>
+		<Flex h="100%" alignItems="flex-start" justifyContent="center" pt="20">
 			<Flex flexDirection="column" w="2xl">
 				<Flex
 					flexDirection="column"
@@ -39,7 +33,7 @@ export const FarmContainer: NextPage = () => {
 				>
 					<Img
 						borderRadius="xl"
-						src="images/backgrounds/BannerFarm.png"
+						src={theme.bg.farmBanner}
 						position="absolute"
 						zIndex="base"
 						w="100%"

@@ -40,11 +40,23 @@ const usePicasso = () => {
 			red500: useColorModeValue("red.500", "red.500"),
 		},
 		icon: {
+			pegasysLogo: useColorModeValue(
+				"icons/LightPegasysLogo.png",
+				"icons/pegasys.png"
+			),
 			searchIcon: useColorModeValue("#9F7AEA", "rgba(54, 180, 212, 0.5)"),
 			whiteGray: useColorModeValue("#A0AEC0", "white"),
 			theme: useColorModeValue(BsFillSunFill, BsFillMoonFill),
 		},
 		bg: {
+			farmBanner: useColorModeValue(
+				"/images/backgrounds/LightFarmBanner.png",
+				"/images/backgrounds/BannerFarm.png"
+			),
+			poolsBanner: useColorModeValue(
+				"images/backgrounds/LightPoolsBanner.png",
+				"images/backgrounds/BannerPools.png"
+			),
 			farmActions: useColorModeValue("white", "#0B172C"),
 			max: useColorModeValue("#EDF2F7", "#081120"),
 			farmActionsHover: useColorModeValue("rgba(102, 94, 225, 0.3)", "#BEE3F8"),
