@@ -30,6 +30,7 @@ interface IWeb3 {
 	setUserSlippageTolerance: React.Dispatch<React.SetStateAction<number>>;
 	setTransactions: React.Dispatch<React.SetStateAction<object>>;
 	transactions: object;
+	wssProvider: ethers.providers.WebSocketProvider;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -55,7 +56,16 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [userSlippageTolerance, setUserSlippageTolerance] = useState<number>(
 		INITIAL_ALLOWED_SLIPPAGE
 	);
-	const [transactions, setTransactions] = useState<object>({});
+	const [transactions, setTransactions] = useState<object>({
+		57: {},
+		5700: {},
+	});
+
+	const [approvalState, setApprovalState] = useState();
+
+	const wssProvider = new ethers.providers.WebSocketProvider(
+		"wss://rpc.tanenbaum.io/wss"
+	);
 
 	const connectToSysRpcIfNotConnected = () => {
 		const rpcProvider = new ethers.providers.JsonRpcProvider(
@@ -109,6 +119,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		setIsConnected(!!window?.ethereum?.selectedAddress)
 	);
 
+	wssProvider
+		.waitForTransaction()
+		.then(result => console.log("TX info: ", result));
+
 	useMemo(async () => {
 		const getCurrentConnectorProvider = await connectorSelected?.getProvider();
 
@@ -158,6 +172,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setUserSlippageTolerance,
 			transactions,
 			setTransactions,
+			wssProvider,
 		}),
 		[
 			isConnected,

@@ -23,6 +23,7 @@ export const addTransaction = (
 	setTransaction({
 		...transactions,
 		[chainId]: {
+			...transactions[chainId],
 			[hash]: { ...response, ...customData },
 		},
 	});

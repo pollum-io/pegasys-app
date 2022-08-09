@@ -6,9 +6,12 @@ import {
 	calculateGasMargin,
 	computeSlippageAdjustedAmounts,
 	getContract,
+	addTransaction,
+	getTokenAllowance,
 } from "utils";
 import { IWalletHookInfos, ISwapTokenInputValue } from "types";
 import { Signer } from "ethers";
+import { hasPendingApproval } from "utils/hasPendingApproval";
 
 export enum ApprovalState {
 	UNKNOWN,
@@ -27,12 +30,21 @@ export function useApproveCallback(
 	userInput: ISwapTokenInputValue,
 	amountToApprove?: { [field in Field]?: CurrencyAmount },
 	spender?: string,
-	signer?: Signer
+	signer?: Signer,
+	setTransactions?: React.Dispatch<React.SetStateAction<object>>,
+	transactions?: object,
+	walletInfos: IWalletHookInfos
 ): () => Promise<void> {
+	const { walletAddress, chainId } = walletInfos;
 	const token =
 		userInput.lastInputTyped === 0
 			? amountToApprove?.INPUT?.token
 			: amountToApprove?.OUTPUT?.token;
+
+	const currentAmountToApprove =
+		userInput.lastInputTyped === 0
+			? amountToApprove?.INPUT
+			: amountToApprove?.OUTPUT;
 
 	const approve = async (): Promise<void> => {
 		const tokenContract = await getContract(token?.address, signer as Signer);
@@ -63,20 +75,56 @@ export function useApproveCallback(
 				useExact = true;
 				return tokenContract.estimateGas.approve(
 					spender,
-					amountToApprove.raw.toString()
+					currentAmountToApprove?.raw.toString()
 				);
 			});
+		const currentAllowance = await getTokenAllowance(
+			token,
+			walletAddress ?? undefined,
+			spender,
+			signer
+		);
+
+		const pending = hasPendingApproval(
+			token?.address,
+			spender,
+			transactions,
+			chainId
+		);
+
+		const approvalState: ApprovalState = () => {
+			if (!amountToApprove || !spender) return ApprovalState.UNKNOWN;
+			if (amountToApprove.currency === NSYS) return ApprovalState.APPROVED;
+			// we might not have enough data to know whether or not we need to approve
+			if (!currentAllowance) return ApprovalState.UNKNOWN;
+
+			// amountToApprove will be defined if currentAllowance is
+			return currentAllowance.lessThan(amountToApprove)
+				? pending
+					? ApprovalState.PENDING
+					: ApprovalState.NOT_APPROVED
+				: ApprovalState.APPROVED;
+		};
 		// eslint-disable-next-line
 		return tokenContract
 			.approve(
 				spender,
-				useExact ? amountToApprove.raw.toString() : MaxUint256,
+				useExact ? currentAmountToApprove?.raw.toString() : MaxUint256,
 				{
 					gasLimit: calculateGasMargin(estimatedGas),
 				}
 			)
 			.then((response: TransactionResponse) => {
-				console.log(response);
+				addTransaction(
+					response,
+					{
+						summary: `Approve ${currentAmountToApprove.currency.symbol}`,
+						approval: { tokenAddress: token?.address, spender },
+					},
+					walletInfos,
+					setTransactions,
+					transactions
+				);
 			})
 			.catch((error: Error) => {
 				console.debug("Failed to approve token", error);
@@ -93,6 +141,8 @@ export function useApproveCallbackFromTrade(
 	walletInfos: IWalletHookInfos,
 	signer: Signer,
 	userInput: ISwapTokenInputValue,
+	setTransactions: React.Dispatch<React.SetStateAction<object>>,
+	transactions: object,
 	allowedSlippage = 0
 ) {
 	const { chainId } = walletInfos;
@@ -104,6 +154,9 @@ export function useApproveCallbackFromTrade(
 		userInput,
 		amountToApprove,
 		chainId ? ROUTER_ADDRESS[chainId] : ROUTER_ADDRESS[ChainId.NEVM],
-		signer
+		signer,
+		setTransactions,
+		transactions,
+		walletInfos
 	);
 }

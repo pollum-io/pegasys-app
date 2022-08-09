@@ -19,3 +19,5 @@ export * from "./computeSlippageAdjustedAmounts";
 export * from "./getContract";
 export * from "./computeTradePriceBreakdown";
 export * from "./singleCall";
+export * from "./addTransaction";
+export * from "./getTokenAllowance";
