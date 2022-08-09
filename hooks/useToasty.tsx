@@ -18,55 +18,57 @@ const useToasty = () => {
 	const theme = usePicasso();
 
 	const toastStatus = useMemo(() => {
-		if (state.status === "success") {
-			console.log("success");
-			return "#38A169";
+		switch (state.status) {
+			case "success":
+				return "#38A169";
+
+			case "error":
+				return "#E53E3E";
+
+			case "warning":
+				return "yellow";
+
+			case "info":
+				return "#2B6CB0";
+
+			default:
+				return "white";
 		}
-		if (state.status === "error") {
-			console.log("error");
-			return "#E53E3E";
-		}
-		if (state.status === "warning") {
-			console.log("warning");
-			return "yellow";
-		}
-		if (state.status === "info") {
-			console.log("info");
-			return "#2B6CB0";
-		}
-		return "white";
 	}, [state.status]);
 
 	const toastIcon = useMemo(() => {
-		if (state.status === "success") {
-			return (
-				<Flex pt="0.12rem">
-					<RiCheckboxCircleFill color={toastStatus} size={19} />
-				</Flex>
-			);
+		switch (state.status) {
+			case "success":
+				return (
+					<Flex pt="0.12rem">
+						<RiCheckboxCircleFill color={toastStatus} size={19} />
+					</Flex>
+				);
+
+			case "error":
+				return (
+					<Flex pt="0.12">
+						<AiFillExclamationCircle color={toastStatus} size={18} />
+					</Flex>
+				);
+
+			case "warning":
+				return (
+					<Flex pt="0.12">
+						<AiFillExclamationCircle color={toastStatus} size={18} />
+					</Flex>
+				);
+
+			case "info":
+				return (
+					<Flex pt="0.12">
+						<IoIosInformationCircle color={toastStatus} size={20} />
+					</Flex>
+				);
+
+			default:
+				return <Flex />;
 		}
-		if (state.status === "error") {
-			return (
-				<Flex pt="0.12">
-					<AiFillExclamationCircle color={toastStatus} size={18} />
-				</Flex>
-			);
-		}
-		if (state.status === "warning") {
-			return (
-				<Flex pt="0.12">
-					<AiFillExclamationCircle color={toastStatus} size={18} />
-				</Flex>
-			);
-		}
-		if (state.status === "info") {
-			return (
-				<Flex pt="0.12">
-					<IoIosInformationCircle color={toastStatus} size={20} />
-				</Flex>
-			);
-		}
-		return <Flex />;
 	}, [state.status]);
 
 	useEffect(() => {
@@ -79,7 +81,7 @@ const useToasty = () => {
 				(state?.position as ToastPositionWithLogical) || "top-right"
 			}`,
 			isClosable: true,
-			status: `${(state?.status as AlertStatus) || ("success" as AlertStatus)}`,
+			status: `${state?.status as AlertStatus}`,
 			title: `${state?.title as React.ReactNode}`,
 			description: `${state?.description as React.ReactNode}`,
 
