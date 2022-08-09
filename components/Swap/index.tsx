@@ -108,6 +108,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		userSlippageTolerance,
 		setTransactions,
 		transactions,
+		setApprovalState,
 	} = useWallet();
 
 	const [tokensGraphCandlePeriod, setTokensGraphCandlePeriod] =
@@ -299,6 +300,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		tokenInputValue,
 		setTransactions,
 		transactions,
+		setApprovalState,
 		userSlippageTolerance
 	);
 

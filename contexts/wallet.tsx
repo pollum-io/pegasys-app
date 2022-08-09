@@ -7,6 +7,13 @@ import {
 	SYS_TESTNET_CHAIN_PARAMS,
 } from "../helpers/consts";
 
+export enum ApprovalState {
+	UNKNOWN,
+	NOT_APPROVED,
+	PENDING,
+	APPROVED,
+}
+
 interface IWeb3 {
 	isConnected: boolean;
 	currentNetworkChainId: number | null;
@@ -31,6 +38,8 @@ interface IWeb3 {
 	setTransactions: React.Dispatch<React.SetStateAction<object>>;
 	transactions: object;
 	wssProvider: ethers.providers.WebSocketProvider;
+	setApprovalState: React.Dispatch<React.SetStateAction<ApprovalState>>;
+	approvalState: ApprovalState;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -61,11 +70,16 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		5700: {},
 	});
 
-	const [approvalState, setApprovalState] = useState();
-
-	const wssProvider = new ethers.providers.WebSocketProvider(
-		"wss://rpc.tanenbaum.io/wss"
+	const [approvalState, setApprovalState] = useState<ApprovalState>(
+		ApprovalState.UNKNOWN
 	);
+
+	const RPC_WSS =
+		currentNetworkChainId === 5700
+			? "wss://rpc.tanenbaum.io/wss"
+			: "wss://rpc.syscoin.org/wss";
+
+	const wssProvider = new ethers.providers.WebSocketProvider(RPC_WSS);
 
 	const connectToSysRpcIfNotConnected = () => {
 		const rpcProvider = new ethers.providers.JsonRpcProvider(
@@ -119,9 +133,25 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		setIsConnected(!!window?.ethereum?.selectedAddress)
 	);
 
-	wssProvider
-		.waitForTransaction()
-		.then(result => console.log("TX info: ", result));
+	wssProvider?.on("pending", hash => {
+		wssProvider.waitForTransaction(hash).then(result => {
+			if (result.from.toLowerCase() === walletAddress.toLowerCase()) {
+				setTransactions({
+					...transactions,
+					[currentNetworkChainId]: {
+						...transactions[currentNetworkChainId],
+						[result.transactionHash]: {
+							...result,
+							hash: result.transactionHash,
+						},
+					},
+				});
+				setApprovalState(ApprovalState.APPROVED);
+				// eslint-disable-next-line
+				return;
+			}
+		});
+	});
 
 	useMemo(async () => {
 		const getCurrentConnectorProvider = await connectorSelected?.getProvider();
@@ -173,6 +203,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			transactions,
 			setTransactions,
 			wssProvider,
+			approvalState,
+			setApprovalState,
 		}),
 		[
 			isConnected,
