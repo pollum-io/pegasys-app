@@ -248,7 +248,13 @@ export function UseSwapCallback(
 							? withRecipient
 							: `${withRecipient} on ${tradeVersion.toUpperCase()}`;
 
-					addTransaction(response, withVersion, walletInfos, setTransactions, transactions);
+					addTransaction(
+						response,
+						withVersion,
+						walletInfos,
+						setTransactions,
+						transactions
+					);
 
 					return response.hash;
 				})

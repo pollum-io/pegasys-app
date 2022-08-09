@@ -5,6 +5,8 @@ import {
 	Icon,
 	Img,
 	Input,
+	List,
+	ListItem,
 	Text,
 	useDisclosure,
 } from "@chakra-ui/react";
@@ -37,6 +39,15 @@ import dynamic from "next/dynamic";
 import { useTranslation } from "react-i18next";
 import { Signer } from "ethers";
 import { computeTradePriceBreakdown } from "utils";
+import { getTokensGraphCandle } from "services/index";
+
+import {
+	ONE_HOUR_IN_SECONDS,
+	ONE_DAY_IN_SECONDS,
+	THREE_DAYS_IN_SECONDS,
+	SEVEN_DAYS_IN_SECONDS,
+	ONE_MONTH_IN_SECONDS,
+} from "helpers/consts";
 import { TradeRouteComponent } from "./TradeRouteComponent";
 
 interface IReturnedTradeValue {
@@ -99,6 +110,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		transactions,
 	} = useWallet();
 
+	const [tokensGraphCandlePeriod, setTokensGraphCandlePeriod] =
+		useState<number>(900);
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
 	const [tokenInputValue, setTokenInputValue] = useState<ISwapTokenInputValue>({
@@ -288,6 +301,26 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		transactions,
 		userSlippageTolerance
 	);
+
+	const getTokensGraph = async () => {
+		const request = await getTokensGraphCandle(
+			selectedToken[0]?.address,
+			selectedToken[1]?.address,
+			tokensGraphCandlePeriod
+		);
+
+		return request;
+	};
+
+	useEffect(() => {
+		if (!selectedToken[0]?.address || !selectedToken[1]?.address) return;
+
+		getTokensGraph();
+	}, [
+		selectedToken[0]?.address,
+		selectedToken[1]?.address,
+		tokensGraphCandlePeriod,
+	]);
 
 	return (
 		<Flex
@@ -672,13 +705,32 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					<Flex>
 						<Img src={selectedToken[0]?.logoURI} w="7" h="7" />
 						<Img src={selectedToken[1]?.logoURI} w="7" h="7" />
+						<Text fontWeight="bold" fontSize="xl" ml="2.5">
+							{selectedToken[0]?.symbol} / {selectedToken[1]?.symbol}
+						</Text>
 					</Flex>
-					<Text fontWeight="bold" fontSize="xl">
-						TSYS/PSYS
-					</Text>
 					<Text pl="2" fontSize="lg">
 						$15.56
 					</Text>
+				</Flex>
+
+				<Flex>
+					<List
+						w="100%"
+						onClick={(
+							event: React.MouseEvent<HTMLInputElement | HTMLUListElement>
+						) => setTokensGraphCandlePeriod(event?.target?.value)}
+						display="flex"
+						alignItems="center"
+						flexWrap="nowrap"
+						justifyContent="space-evenly"
+					>
+						<ListItem value={ONE_HOUR_IN_SECONDS}>1H</ListItem>
+						<ListItem value={ONE_DAY_IN_SECONDS}>1D</ListItem>
+						<ListItem value={THREE_DAYS_IN_SECONDS}>3D</ListItem>
+						<ListItem value={SEVEN_DAYS_IN_SECONDS}>7D</ListItem>
+						<ListItem value={ONE_MONTH_IN_SECONDS}>1M</ListItem>
+					</List>
 				</Flex>
 				<ChartComponent data={initialData} colors={colors} />
 			</Flex>

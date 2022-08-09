@@ -7,20 +7,10 @@ type ChainTokenList = {
 	readonly [chainId in ChainId]: Token[];
 };
 
-// default allowed slippage, in bips
-export const INITIAL_ALLOWED_SLIPPAGE = 50;
-
 export const ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
 	[ChainId.TANENBAUM]: "0xE18c200A70908c89fFA18C628fE1B83aC0065EA4",
 	[ChainId.NEVM]: "0x017dAd2578372CAEE5c6CddfE35eEDB3728544C4",
 };
-
-// 60 minutes, denominated in seconds
-export const DEFAULT_DEADLINE_FROM_NOW = 60 * 60;
-
-// one basis point
-export const ONE_BIPS = new Percent(JSBI.BigInt(1), JSBI.BigInt(10000));
-export const BIPS_BASE = JSBI.BigInt(10000);
 
 export const NEVM_CHAIN_PARAMS = {
 	chainId: "0x39", // A 0x-prefixed hexadecimal chainId
@@ -203,6 +193,16 @@ export const CUSTOM_BASES: {
 	[ChainId.NEVM]: {},
 };
 
+// default allowed slippage, in bips
+export const INITIAL_ALLOWED_SLIPPAGE = 50;
+
+// 60 minutes, denominated in seconds
+export const DEFAULT_DEADLINE_FROM_NOW = 60 * 60;
+
+// one basis point
+export const ONE_BIPS = new Percent(JSBI.BigInt(1), JSBI.BigInt(10000));
+export const BIPS_BASE = JSBI.BigInt(10000);
+
 // Helper consts for Trade price calculation
 const BASE_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000));
 export const ONE_HUNDRED_PERCENT = new Percent(
@@ -227,3 +227,9 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(
 	JSBI.BigInt(1500),
 	BIPS_BASE
 ); // 15%
+
+export const ONE_HOUR_IN_SECONDS = 3600;
+export const ONE_DAY_IN_SECONDS = 86400;
+export const THREE_DAYS_IN_SECONDS = 259200;
+export const SEVEN_DAYS_IN_SECONDS = 604800;
+export const ONE_MONTH_IN_SECONDS = 2629800;
