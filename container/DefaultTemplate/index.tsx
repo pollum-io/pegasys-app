@@ -32,12 +32,13 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 						alignItems="center"
 					>
 						<Flex
-							width="lg"
-							height="lg"
-							position="fixed"
-							background="#56BED8;"
-							opacity="1"
-							filter="blur(275px)"
+							width="100%"
+							height="40%"
+							margin="0 auto"
+							top={["-22rem", "-20rem", "-5rem", "-5rem"]}
+							position="absolute"
+							background="radial-gradient(ellipse at center, #56BED8, #010101)"
+							filter="blur(175px)"
 						/>
 						<div id="starsLightMode" />
 						<div id="starsLightMode2" />
