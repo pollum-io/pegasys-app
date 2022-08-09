@@ -20,14 +20,20 @@ export const AirdropContainer: NextPage = () => {
 
 	return (
 		<Flex alignItems="flex-start" justifyContent="center" pt="20" mb="6.2rem">
-			<Flex flexDirection="column" w="2xl">
+			<Flex
+				flexDirection="column"
+				w={["xs", "md", "2xl", "2xl"]}
+				id="a"
+				alignItems="center"
+			>
 				<Flex
+					id="b"
 					flexDirection="column"
 					zIndex="99"
 					position="relative"
 					borderTopRadius="2xl"
 					backgroundColor={theme.bg.blueNavy}
-					w="2xl"
+					w={["xs", "md", "2xl", "2xl"]}
 					box-shadow="0px 0px 0px 1px rgba(0, 0, 0, 0.1)"
 					filter="drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.2)) drop-shadow(0px 15px 40px rgba(0, 0, 0, 0.4))"
 				>
@@ -69,7 +75,7 @@ export const AirdropContainer: NextPage = () => {
 						background="linear-gradient(89.54deg, rgba(8, 17, 32, 0.9) 44.27%, rgba(8, 17, 32, 0) 100.3%)"
 					/>
 				</Flex>
-				<Flex>
+				<Flex id="c">
 					{!isConnected ? (
 						<BorderAnimation>
 							<Flex py="4">

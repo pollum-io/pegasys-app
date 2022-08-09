@@ -14,7 +14,7 @@ export const BorderAnimation: FunctionComponent<ILinkProps> = props => {
 		<Flex
 			className="gradientBorder"
 			zIndex="9"
-			w="100%"
+			w={["xs", "md", "2xl", "2xl"]}
 			py="12"
 			gap="2.5"
 			bgColor={theme.bg.whiteGray}
