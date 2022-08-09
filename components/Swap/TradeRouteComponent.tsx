@@ -6,7 +6,7 @@ import { useTokens } from "hooks";
 import { Token } from "@pollum-io/pegasys-sdk";
 
 interface ITransactionRoute {
-	transactionRoute: Token[] | WrappedTokenInfo[] | undefined;
+	transactionRoute: WrappedTokenInfo[] | Token[] | undefined;
 }
 
 export const TradeRouteComponent: FunctionComponent<

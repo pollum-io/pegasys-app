@@ -5,6 +5,8 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import {
 	INITIAL_ALLOWED_SLIPPAGE,
 	SYS_TESTNET_CHAIN_PARAMS,
+	NEVM_CHAIN_PARAMS,
+	SUPPORTED_NETWORK_CHAINS,
 } from "../helpers/consts";
 
 interface IWeb3 {
@@ -42,20 +44,26 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [isConnected, setIsConnected] = useState(false);
+
 	const [currentNetworkChainId, setCurrentNetworkChainId] = useState<
 		number | null
 	>(null);
+
 	const [walletAddress, setAddress] = useState("");
 	const [walletError, setWalletError] = useState<boolean>(false);
+
 	const [signer, setSigner] = useState<Signer | undefined>();
 	const [provider, setProvider] = useState<
 		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
 	>();
+
 	const [connectorSelected, setConnectorSelected] =
 		useState<AbstractConnector>();
+
 	const [userSlippageTolerance, setUserSlippageTolerance] = useState<number>(
 		INITIAL_ALLOWED_SLIPPAGE
 	);
+
 	const [transactions, setTransactions] = useState<object>({
 		57: {},
 		5700: {},
@@ -69,7 +77,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const connectToSysRpcIfNotConnected = () => {
 		const rpcProvider = new ethers.providers.JsonRpcProvider(
-			SYS_TESTNET_CHAIN_PARAMS.rpcUrls[0]
+			Number(window?.ethereum?.networkVersion) === 57
+				? NEVM_CHAIN_PARAMS.rpcUrls[0]
+				: SYS_TESTNET_CHAIN_PARAMS.rpcUrls[0]
 		);
 		setProvider(rpcProvider);
 
@@ -79,7 +89,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	};
 
 	const getSignerIfConnected = async () => {
-		const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+		const web3Provider = new ethers.providers.Web3Provider(
+			window.ethereum,
+			"any"
+		);
 
 		await web3Provider.send("eth_requestAccounts", []);
 
@@ -93,7 +106,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		connector
 			.activate()
 			.then(() => {
-				if (Number(window?.ethereum?.networkVersion) === 5700) {
+				if (
+					SUPPORTED_NETWORK_CHAINS.includes(
+						Number(window?.ethereum?.networkVersion)
+					)
+				) {
 					setIsConnected(!!window?.ethereum?.selectedAddress);
 					setAddress(isAddress(window?.ethereum?.selectedAddress));
 					getSignerIfConnected();
@@ -106,35 +123,37 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			.catch((errorMessage: Error) => {
 				if (errorMessage) {
 					// eslint-disable-next-line no-console
-					console.log(errorMessage, "errorMessage");
+					console.log("errorMessage", errorMessage);
 				}
 			});
 	};
 
-	provider?.on("chainChanged", () => {
-		setWalletError(Number(window?.ethereum?.networkVersion) === 5700);
-	});
-
-	provider?.on("accountsChanged", () =>
-		setIsConnected(!!window?.ethereum?.selectedAddress)
-	);
-
-	wssProvider
-		.waitForTransaction()
-		.then(result => console.log("TX info: ", result));
+	// wssProvider
+	// 	.waitForTransaction()
+	// 	.then(result => console.log("TX info: ", result));
 
 	useMemo(async () => {
 		const getCurrentConnectorProvider = await connectorSelected?.getProvider();
 
 		getCurrentConnectorProvider?.on("chainChanged", (chainId: string) => {
-			setCurrentNetworkChainId(convertHexToNumber(chainId));
+			const convertedChainId = convertHexToNumber(chainId);
+			setCurrentNetworkChainId(convertedChainId);
+			setWalletError(
+				Boolean(SUPPORTED_NETWORK_CHAINS.includes(convertedChainId))
+			);
 		});
+
+		getCurrentConnectorProvider?.on("accountsChanged", () =>
+			setIsConnected(!!window?.ethereum?.selectedAddress)
+		);
 	}, [connectorSelected]);
 
 	useEffect(() => {
 		const verifySysNetwork =
 			window?.ethereum?.selectedAddress &&
-			Number(window?.ethereum?.networkVersion) === 5700;
+			SUPPORTED_NETWORK_CHAINS.includes(
+				Number(window?.ethereum?.networkVersion)
+			);
 
 		if (!isConnected) {
 			connectToSysRpcIfNotConnected();

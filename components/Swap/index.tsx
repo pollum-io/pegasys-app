@@ -34,6 +34,7 @@ import {
 	IWalletHookInfos,
 	WrappedTokenInfo,
 	IInputValues,
+	IChartComponentData,
 } from "types";
 import dynamic from "next/dynamic";
 import { useTranslation } from "react-i18next";
@@ -63,29 +64,6 @@ const ChartComponent = dynamic(() => import("./ChartComponent"), {
 });
 
 export const Swap: FunctionComponent<ButtonProps> = () => {
-	const initialData = [
-		{ open: 10, high: 10.63, low: 9.49, close: 9.55, time: 1642427876 },
-		{ open: 9.55, high: 10.3, low: 9.42, close: 9.94, time: 1642514276 },
-		{ open: 9.94, high: 10.17, low: 9.92, close: 9.78, time: 1642600676 },
-		{ open: 9.78, high: 10.59, low: 9.18, close: 9.51, time: 1642687076 },
-		{ open: 9.51, high: 10.46, low: 9.1, close: 10.17, time: 1642773476 },
-		{ open: 10.17, high: 10.96, low: 10.16, close: 10.47, time: 1642859876 },
-		{ open: 10.47, high: 11.39, low: 10.4, close: 10.81, time: 1642946276 },
-		{ open: 10.81, high: 11.6, low: 10.3, close: 10.75, time: 1643032676 },
-		{ open: 10.75, high: 11.6, low: 10.49, close: 10.93, time: 1643119076 },
-		{ open: 10.93, high: 11.53, low: 10.76, close: 10.96, time: 1643205476 },
-	];
-
-	const colors = {
-		backgroundColor: "transparent",
-		textColor: "#718096",
-		upColor: "#25855A",
-		downColor: "#C53030",
-		borderVisible: false,
-		wickUpColor: "#25855A",
-		wickDownColor: "#C53030",
-	};
-
 	const theme = usePicasso();
 
 	const { t: translation } = useTranslation();
@@ -110,6 +88,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		transactions,
 	} = useWallet();
 
+	const [tokensGraphCandleData, setTokensGraphCandleData] = useState<
+		IChartComponentData[]
+	>([]);
 	const [tokensGraphCandlePeriod, setTokensGraphCandlePeriod] =
 		useState<number>(900);
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
@@ -128,19 +109,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const [returnedTradeValue, setReturnedTradeValue] = useState<
 		IReturnedTradeValue | undefined
 	>(undefined);
-
-	const switchTokensPosition = () =>
-		setSelectedToken(prevState => [...prevState]?.reverse());
-
-	const submitValidation = [
-		isConnected && tokenInputValue.lastInputTyped === 0
-			? parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
-			  parseFloat(tokenInputValue?.inputFrom?.value)
-			: parseFloat(selectedToken[1]?.tokenInfo?.balance) >=
-			  parseFloat(tokenInputValue?.inputTo?.value),
-	];
-
-	const canSubmit = submitValidation.every(validation => validation === true);
 
 	const walletInfos: IWalletHookInfos = {
 		chainId: currentNetworkChainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
@@ -198,6 +166,65 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		});
 	};
 
+	const handleOnChangeTokenInputs = (
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		if (!isConnected) return;
+
+		const regexPreventLetters = /^(?!,$)[\d,.]+$/;
+
+		const inputValue = event?.currentTarget?.value;
+
+		const typedInput = event?.currentTarget.name;
+
+		if (inputValue === "" || regexPreventLetters.test(inputValue)) {
+			const inputFrom: IInputValues = {
+				value: typedInput === "inputFrom" ? inputValue : "",
+			};
+
+			const inputTo: IInputValues = {
+				value: typedInput === "inputTo" ? inputValue : "",
+			};
+
+			setTokenInputValue({
+				inputFrom,
+				inputTo,
+				typedValue: inputValue,
+				currentInputTyped: typedInput,
+				lastInputTyped: typedInput === "inputFrom" ? 0 : 1,
+			});
+		}
+	};
+
+	const switchTokensPosition = () =>
+		setSelectedToken(prevState => [...prevState]?.reverse());
+
+	useMemo(() => {
+		if (!isConnected || !returnedTradeValue?.v2Trade) return;
+
+		const {
+			inputTo: { value: inputToValue },
+			inputFrom: { value: inputFromValue },
+			currentInputTyped,
+		} = tokenInputValue;
+
+		const {
+			v2Trade: { outputAmount, inputAmount },
+		} = returnedTradeValue;
+
+		if (currentInputTyped === "inputFrom") {
+			tokenInputValue.inputTo.value = inputFromValue
+				? outputAmount?.toSignificant(6)
+				: "";
+		}
+
+		if (currentInputTyped === "inputTo") {
+			tokenInputValue.inputFrom.value = inputToValue
+				? inputAmount?.toSignificant(6)
+				: "";
+		}
+	}, [isConnected, returnedTradeValue?.v2Trade]);
+
 	useEffect(() => {
 		if (!isConnected) return;
 
@@ -231,62 +258,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setSelectedToken([userTokensBalance[0], userTokensBalance[1]]);
 	}, [userTokensBalance]);
 
-	const handleOnChangeTokenInputs = (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
-		if (!isConnected) return;
-
-		const regexPreventLetters = /^(?!,$)[\d,.]+$/;
-
-		const inputValue = event?.currentTarget?.value;
-
-		const typedInput = event?.currentTarget.name;
-
-		if (inputValue === "" || regexPreventLetters.test(inputValue)) {
-			const inputFrom: IInputValues = {
-				value: typedInput === "inputFrom" ? inputValue : "",
-			};
-
-			const inputTo: IInputValues = {
-				value: typedInput === "inputTo" ? inputValue : "",
-			};
-
-			setTokenInputValue({
-				inputFrom,
-				inputTo,
-				typedValue: inputValue,
-				currentInputTyped: typedInput,
-				lastInputTyped: typedInput === "inputFrom" ? 0 : 1,
-			});
-		}
-	};
-
-	useMemo(() => {
-		if (!isConnected || !returnedTradeValue?.v2Trade) return;
-
-		const {
-			inputTo: { value: inputToValue },
-			inputFrom: { value: inputFromValue },
-			currentInputTyped,
-		} = tokenInputValue;
-
-		const {
-			v2Trade: { outputAmount, inputAmount },
-		} = returnedTradeValue;
-
-		if (currentInputTyped === "inputFrom") {
-			tokenInputValue.inputTo.value = inputFromValue
-				? outputAmount?.toSignificant(6)
-				: "";
-		}
-
-		if (currentInputTyped === "inputTo") {
-			tokenInputValue.inputFrom.value = inputToValue
-				? inputAmount?.toSignificant(6)
-				: "";
-		}
-	}, [isConnected, returnedTradeValue?.v2Trade]);
-
 	const approve = useApproveCallbackFromTrade(
 		returnedTradeValue?.v2Trade as Trade,
 		{
@@ -303,13 +274,24 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	);
 
 	const getTokensGraph = async () => {
-		const request = await getTokensGraphCandle(
-			selectedToken[0]?.address,
-			selectedToken[1]?.address,
+		const [tokenA, tokenB]: Token[] = [
+			selectedToken[0],
+			selectedToken[1],
+		] as Token[];
+
+		const [token0, token1] = tokenA?.sortsBefore(tokenB)
+			? [tokenA, tokenB]
+			: [tokenB, tokenA];
+
+		const requestTokensCandle = await getTokensGraphCandle(
+			token0,
+			token1,
 			tokensGraphCandlePeriod
 		);
 
-		return request;
+		setTokensGraphCandleData(requestTokensCandle);
+
+		return requestTokensCandle;
 	};
 
 	useEffect(() => {
@@ -321,6 +303,15 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		selectedToken[1]?.address,
 		tokensGraphCandlePeriod,
 	]);
+
+	const submitValidation = [
+		isConnected && tokenInputValue.lastInputTyped === 0
+			? parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
+			  parseFloat(tokenInputValue?.inputFrom?.value)
+			: parseFloat(selectedToken[1]?.tokenInfo?.balance) >=
+			  parseFloat(tokenInputValue?.inputTo?.value),
+	];
+	const canSubmit = submitValidation.every(validation => validation === true);
 
 	return (
 		<Flex
@@ -732,7 +723,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						<ListItem value={ONE_MONTH_IN_SECONDS}>1M</ListItem>
 					</List>
 				</Flex>
-				<ChartComponent data={initialData} colors={colors} />
+				<ChartComponent data={tokensGraphCandleData} />
 			</Flex>
 		</Flex>
 	);

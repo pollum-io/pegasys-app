@@ -47,7 +47,7 @@ export async function UseDerivedSwapInfo(
 		recipient && isAddress(recipient as string);
 	const to: string | null =
 		(recipientAddress || walletInfos.walletAddress) ?? null;
-	const formattedTo = isAddress(to);
+	const formattedTo = isAddress(to) ?? null;
 
 	const currencyBalances: { [field in Field]?: CurrencyAmount } = {
 		[Field.INPUT]: tryParseAmount(

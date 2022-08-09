@@ -22,7 +22,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		useWallet();
 
 	const getDefaultListToken = async () => {
-		const { tokens } = await getDefaultTokens();
+		const { tokens } = await getDefaultTokens(currentNetworkChainId as number);
 
 		if (!isConnected || !provider) {
 			const tokensWithBalance = tokens.map(token => ({

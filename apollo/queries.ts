@@ -7,9 +7,7 @@ export const GET_TOKENS_GRAPH_CANDLE = gql`
 			orderDirection: desc
 			where: { token0: $token0, token1: $token1, period: $period }
 		) {
-			id
 			time
-			period
 			open
 			high
 			low

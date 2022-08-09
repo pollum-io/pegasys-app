@@ -1,10 +1,14 @@
 import { TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
 
-const getDefaultTokens = (): Promise<TokenList> =>
-	fetch(
-		process.env.NEXT_PUBLIC_ENV === "production"
-			? "https://raw.githubusercontent.com/Pollum-io/pegasys-tokenlists/master/pegasys.tokenlist.json"
-			: "https://raw.githubusercontent.com/Pollum-io/pegasys-tokenlists/master/tanembaum.tokenlist.json"
-	).then(res => res.json());
+const getDefaultTokens = (
+	currentNetworkConnected: number
+): Promise<TokenList> => {
+	const isSyscoinTestnet = currentNetworkConnected === 5700;
 
+	return fetch(
+		isSyscoinTestnet
+			? "https://raw.githubusercontent.com/Pollum-io/pegasys-tokenlists/master/tanembaum.tokenlist.json"
+			: "https://raw.githubusercontent.com/Pollum-io/pegasys-tokenlists/master/pegasys.tokenlist.json"
+	).then(res => res.json());
+};
 export { getDefaultTokens };
