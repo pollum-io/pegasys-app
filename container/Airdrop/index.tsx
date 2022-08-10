@@ -19,30 +19,39 @@ export const AirdropContainer: NextPage = () => {
 	const [isClaimed, setIsClaimed] = useState();
 
 	return (
-		<Flex alignItems="flex-start" justifyContent="center" pt="20" mb="6.2rem">
-			<Flex flexDirection="column" w="2xl">
+		<Flex
+			alignItems="flex-start"
+			justifyContent="center"
+			pt={["8", "8", "20", "20"]}
+			mb="6.2rem"
+		>
+			<Flex
+				flexDirection="column"
+				w={["18rem", "md", "2xl", "2xl"]}
+				alignItems="center"
+			>
 				<Flex
 					flexDirection="column"
 					zIndex="99"
 					position="relative"
 					borderTopRadius="2xl"
 					backgroundColor={theme.bg.blueNavy}
-					w="2xl"
+					w={["18rem", "md", "2xl", "2xl"]}
 					box-shadow="0px 0px 0px 1px rgba(0, 0, 0, 0.1)"
 					filter="drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.2)) drop-shadow(0px 15px 40px rgba(0, 0, 0, 0.4))"
 				>
 					<Img
-						borderTopRadius="xl"
 						src="images/backgrounds/PsysAirdrop.png"
 						position="absolute"
 						zIndex="base"
 						w="100%"
-						h="100%"
+						h={["100%", "100%", "100%", "100%"]}
 					/>
 					<Flex
 						zIndex="docked"
 						flexDirection="column"
 						px="1.625rem"
+						h={["10rem", "10rem", "10rem", "10rem"]}
 						py="1.375rem"
 						gap="3"
 					>
@@ -54,7 +63,7 @@ export const AirdropContainer: NextPage = () => {
 							fontWeight="semibold"
 							fontSize="sm"
 							lineHeight="shorter"
-							w="60%"
+							w={["100%", "90%", "60%", "60%"]}
 						>
 							If you have taken the steps to qualify for the PSYS airdrop, this
 							is the place to check how much you earned and claim your tokens.
@@ -74,7 +83,12 @@ export const AirdropContainer: NextPage = () => {
 						<BorderAnimation>
 							<Flex py="4">
 								<Flex>
-									<Text color="white">
+									<Text
+										textAlign="center"
+										color="white"
+										px={["4", "2", "2", "2"]}
+										fontSize={["sm", "sm", "md", "md"]}
+									>
 										Please connect your wallet in the button bellow to check
 										your eligibility.
 									</Text>
@@ -85,9 +99,12 @@ export const AirdropContainer: NextPage = () => {
 						<Flex w="100%">
 							{isNotAvailable && (
 								<BorderAnimation>
-									<Flex gap="40" flexDirection="row" align="center">
+									<Flex
+										gap={["4", "4", "40", "40"]}
+										flexDirection={["column", "column", "row", "row"]}
+									>
 										<Flex>
-											<Text color="white">
+											<Text color="white" fontSize={["sm", "sm", "md", "md"]}>
 												You have no available PSYS to claim.
 											</Text>
 										</Flex>
@@ -103,6 +120,7 @@ export const AirdropContainer: NextPage = () => {
 												color={theme.text.cyan}
 												fontSize="sm"
 												fontWeight="medium"
+												textAlign="center"
 											>
 												Read more about PSYS
 											</Text>
@@ -113,8 +131,16 @@ export const AirdropContainer: NextPage = () => {
 							)}
 							{isClaim && (
 								<BorderAnimation>
-									<Flex gap="28" flexDirection="row" alignItems="center">
-										<Flex align="center" gap="2">
+									<Flex
+										gap={["5", "5", "28", "28"]}
+										flexDirection={["column", "column", "row", "row"]}
+										alignItems="center"
+									>
+										<Flex
+											align="center"
+											gap="2"
+											flexDirection={["column", "column", "row", "row"]}
+										>
 											<Img
 												src="icons/pegasys.png"
 												w="14"
@@ -171,7 +197,11 @@ export const AirdropContainer: NextPage = () => {
 							{isClaimed && (
 								<BorderAnimation>
 									<Flex gap="8" flexDirection="column" alignItems="center">
-										<Flex align="center" gap="2" flexDirection="row">
+										<Flex
+											align="center"
+											gap="2"
+											flexDirection={["column", "column", "row", "row"]}
+										>
 											<Img
 												src="icons/pegasys.png"
 												w="14"
@@ -179,8 +209,13 @@ export const AirdropContainer: NextPage = () => {
 												filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
 											/>
 											<Flex alignItems="baseline">
-												<Text fontSize="3xl" fontWeight="semibold" ml="2">
-													Welcome to the Pegasys DAO{" "}
+												<Text
+													fontSize={["xl", "2xl", "3xl", "3xl"]}
+													fontWeight="semibold"
+													textAlign="center"
+													ml="2"
+												>
+													Welcome to the Pegasys DAO
 												</Text>
 											</Flex>
 										</Flex>
@@ -191,16 +226,16 @@ export const AirdropContainer: NextPage = () => {
 											>
 												<Icon
 													as={SiDiscord}
-													w="10"
-													h="10"
+													w={["8", "10", "10", "10"]}
+													h={["8", "10", "10", "10"]}
 													color={theme.text.greenSocial}
 												/>
 											</Link>
 											<Link href="https://twitter.com/PegasysDEX" isExternal>
 												<Icon
 													as={SiTwitter}
-													w="10"
-													h="10"
+													w={["8", "10", "10", "10"]}
+													h={["8", "10", "10", "10"]}
 													color={theme.text.greenSocial}
 												/>
 											</Link>
@@ -210,8 +245,8 @@ export const AirdropContainer: NextPage = () => {
 											>
 												<Icon
 													as={FaTelegramPlane}
-													w="10"
-													h="10"
+													w={["8", "10", "10", "10"]}
+													h={["8", "10", "10", "10"]}
 													color={theme.text.greenSocial}
 												/>
 											</Link>

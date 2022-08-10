@@ -11,9 +11,8 @@ import {
 	ModalOverlay,
 	Switch,
 	Text,
-	useDisclosure,
 } from "@chakra-ui/react";
-import { usePicasso } from "hooks";
+import { useModal, usePicasso } from "hooks";
 import { MdArrowBack, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { ConfirmList } from "./ConfirmList";
 
@@ -25,15 +24,12 @@ interface IModal {
 export const ManageToken: React.FC<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
-	const {
-		onOpen: onOpenConfirm,
-		isOpen: isOpenConfirm,
-		onClose: onCloseConfirm,
-	} = useDisclosure();
+	const { onOpenConfirmList, isOpenConfirmList, onCloseConfirmList } =
+		useModal();
 
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
-			<ConfirmList isOpen={isOpenConfirm} onClose={onCloseConfirm} />
+			<ConfirmList isOpen={isOpenConfirmList} onClose={onCloseConfirmList} />
 			<ModalOverlay />
 			<ModalContent
 				borderRadius="3xl"
@@ -72,7 +68,7 @@ export const ManageToken: React.FC<IModal> = props => {
 							color={theme.text.cyan}
 							fontSize="sm"
 							fontWeight="semibold"
-							onClick={onOpenConfirm}
+							onClick={onOpenConfirmList}
 						>
 							Add
 						</Button>

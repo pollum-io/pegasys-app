@@ -7,7 +7,6 @@ import {
 	Modal,
 	ModalBody,
 	ModalContent,
-	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
 	Slider,
@@ -19,8 +18,9 @@ import {
 	Tooltip,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
+import { MdArrowBack, MdOutlineInfo } from "react-icons/md";
 
 interface IModal {
 	isOpen: boolean;
@@ -40,33 +40,43 @@ export const FarmActions: React.FC<IModal> = props => {
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				mt="10rem"
+				mt={["8rem", "8", "10rem", "10rem"]}
+				mb={["0", "0", "10rem", "10rem"]}
+				position={["absolute", "absolute", "relative", "relative"]}
+				bottom="0"
 				maxWidth="max-content"
-				w="max-content"
-				h="max-content"
-				borderRadius="3xl"
+				w={["100vw", "100vw", "max-content", "max-content"]}
+				h={["max-content", "100vh", "max-content", "max-content"]}
+				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
+				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
 				bgColor={theme.bg.blueNavy}
-				border="1px solid transparent;"
-				background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				border={["none", "1px solid transparent"]}
 			>
 				<ModalHeader
 					backgroundColor={theme.bg.blueNavy}
 					borderTopRadius="3xl"
 					alignItems="baseline"
 					justifyContent="space-between"
-					pl="20"
+					pl={["5", "5", "20", "20"]}
+					background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					<Flex
-						flexDirection="row"
+						flexDirection={["column-reverse", "column-reverse", "row", "row"]}
 						justifyContent="space-between"
-						alignItems="center"
+						alignItems={["flex-start", "flex-start", "center", "center"]}
 					>
-						<Flex pr="7" gap="2">
+						<Flex
+							pr={["0", "0", "7", "7"]}
+							pl={["0", "16", "0", "0"]}
+							gap="2"
+							flexDirection="row"
+							mt={["6", "6", "0", "0"]}
+						>
 							<Button
 								w="max-content"
 								h="max-content"
 								py="3"
-								px="8"
+								px={["6", "6", "8", "8"]}
 								borderRadius="full"
 								onClick={() => setButtonId("deposit")}
 								bgColor={
@@ -85,7 +95,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								w="max-content"
 								h="max-content"
 								py="3"
-								px="8"
+								px={["6", "6", "8", "8"]}
 								borderRadius="full"
 								onClick={() => setButtonId("withdraw")}
 								bgColor={
@@ -105,7 +115,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								w="max-content"
 								h="max-content"
 								py="3"
-								px="8"
+								px={["6", "6", "8", "8"]}
 								borderRadius="full"
 								onClick={() => setButtonId("claim")}
 								bgColor={
@@ -120,12 +130,51 @@ export const FarmActions: React.FC<IModal> = props => {
 								Claim
 							</Button>
 						</Flex>
-						<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
-							<AiOutlineClose size={20} />
+						<Flex
+							_hover={{ cursor: "pointer" }}
+							onClick={onClose}
+							alignItems="center"
+							gap="2"
+						>
+							<Flex
+								display={{
+									base: "none",
+									sm: "none",
+									md: "block",
+									lg: "block",
+								}}
+							>
+								<AiOutlineClose size={20} />
+							</Flex>
+							<Flex
+								display={{
+									base: "block",
+									sm: "block",
+									md: "none",
+									lg: "none",
+								}}
+							>
+								<MdArrowBack size={24} color={theme.text.gray} />
+							</Flex>
+							<Text
+								display={{
+									base: "block",
+									sm: "block",
+									md: "none",
+									lg: "none",
+								}}
+								color={theme.text.gray}
+							>
+								Farms
+							</Text>
 						</Flex>
 					</Flex>
 				</ModalHeader>
-				<ModalBody>
+				<ModalBody
+					mb="2	"
+					borderBottomRadius={["0", "0", "3xl", "3xl"]}
+					background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				>
 					{buttonId === "deposit" && (
 						<Flex flexDirection="column">
 							<Flex gap="2">
@@ -374,6 +423,58 @@ export const FarmActions: React.FC<IModal> = props => {
 						</Flex>
 					)}
 				</ModalBody>
+				<Flex>
+					{!buttonId === "withdraw" && (
+						<Flex
+							flexDirection="row"
+							p="1.5rem"
+							background={theme.text.gray600}
+							position={["relative", "relative", "absolute", "absolute"]}
+							w="100%"
+							top={["unset", "unset", "24rem", "24rem"]}
+							borderTopRadius={["0", "0", "3xl", "3xl"]}
+							borderBottomRadius={["0", "0", "3xl", "3xl"]}
+							alignItems="flex-start"
+							gap="2"
+						>
+							<Flex>
+								<Icon as={MdOutlineInfo} w="6" h="6" color={theme.text.cyan} />
+							</Flex>
+							<Flex flexDirection="column" gap="6">
+								<Text>
+									Here the text would change explaining the “Exit” mode I
+									think... Need to confirm the warning content.
+								</Text>
+							</Flex>
+						</Flex>
+					)}
+					{!buttonId === "claim" && (
+						<Flex
+							flexDirection="row"
+							p="1.5rem"
+							background={theme.text.gray600}
+							position={["relative", "relative", "absolute", "absolute"]}
+							w="100%"
+							top={["unset", "unset", "20rem", "20rem"]}
+							borderTopRadius={["0", "0", "3xl", "3xl"]}
+							borderBottomRadius={["0", "0", "3xl", "3xl"]}
+							alignItems="flex-start"
+							gap="2"
+						>
+							<Flex>
+								<Icon as={MdOutlineInfo} w="6" h="6" color={theme.text.cyan} />
+							</Flex>
+							<Flex flexDirection="column" gap="6">
+								<Text>
+									When you withdraw, your PSYS is claimed and your Pegasys
+									Liquidity tokens, PLP, are returned to you. You will no longer
+									earn PSYS rewards on this liquidity. Your original token
+									liquidity will remain in its liquidity pool.
+								</Text>
+							</Flex>
+						</Flex>
+					)}
+				</Flex>
 			</ModalContent>
 		</Modal>
 	);

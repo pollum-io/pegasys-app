@@ -10,14 +10,11 @@ import {
 	Link,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent } from "react";
 import { MdOutlineCallMade, MdOutlineModeComment } from "react-icons/md";
 
 export const InfoDropdown: FunctionComponent = () => {
 	const theme = usePicasso();
-
-	const [isOpenBridge, setIsOpenBridge] = useState<boolean>(false);
-	const [isOpenSocial, setIsOpenSocial] = useState<boolean>(false);
 
 	const socialInfos = [
 		{
@@ -49,7 +46,9 @@ export const InfoDropdown: FunctionComponent = () => {
 		<Accordion allowMultiple>
 			<AccordionItem border="none">
 				<AccordionButton
-					pl="4"
+					pl={["24", "36", "4", "4"]}
+					pr={["24", "36", "4", "4"]}
+					py={["3", "3", "2", "2"]}
 					_expanded={{ bg: theme.bg.whiteGray }}
 					_focus={{
 						outline: "none",
@@ -95,7 +94,7 @@ export const InfoDropdown: FunctionComponent = () => {
 							>
 								<Link
 									position="relative"
-									left="6"
+									left={["6.5rem", "9.5rem", "6", "6"]}
 									href={links.href}
 									target="_blank"
 									_hover={{ textDecoration: "none", bgColor: "transparent" }}
@@ -111,7 +110,9 @@ export const InfoDropdown: FunctionComponent = () => {
 			</AccordionItem>
 			<AccordionItem border="none">
 				<AccordionButton
-					pl="4"
+					pl={["24", "36", "4", "4"]}
+					pr={["24", "36", "4", "4"]}
+					py={["3", "3", "2", "2"]}
 					_expanded={{ bg: theme.bg.whiteGray }}
 					_focus={{
 						outline: "none",
@@ -159,7 +160,7 @@ export const InfoDropdown: FunctionComponent = () => {
 									href="https://app.multichain.org/#/router"
 									target="_blank"
 									position="relative"
-									left="6"
+									left={["6.5rem", "9.5rem", "6", "6"]}
 									_hover={{ textDecoration: "none", bgColor: "transparent" }}
 									_active={{ bgColor: "transparent" }}
 									py="1"
