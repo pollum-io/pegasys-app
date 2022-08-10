@@ -15,7 +15,7 @@ import {
 import { AddLiquidityModal, RemoveLiquidity } from "components";
 import { ImportPoolModal } from "components/Modals/ImportPool";
 import { PoolCards } from "components/Pools/PoolCards";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso, useWallet, useToasty } from "hooks";
 import { NextPage } from "next";
 import { useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
@@ -43,6 +43,16 @@ export const PoolsContainer: NextPage = () => {
 	const { isConnected } = useWallet();
 	const [userHavePool, setUserHavePool] = useState(true);
 
+	const { toast } = useToasty();
+
+	const showToast = () => {
+		toast({
+			title: "Title",
+			description: "Something happend!",
+			status: "success",
+		});
+	};
+
 	return (
 		<Flex justifyContent="center" alignItems="center">
 			<AddLiquidityModal
@@ -58,8 +68,13 @@ export const PoolsContainer: NextPage = () => {
 				isCreate={isCreate}
 				haveValue={haveValue}
 			/>
-			<Flex alignItems="flex-start" justifyContent="center" pt="20" mb="6.2rem">
-				<Flex flexDirection="column" w="2xl">
+			<Flex
+				alignItems="flex-start"
+				justifyContent="center"
+				pt={["10", "10", "20", "20"]}
+				mb="6.2rem"
+			>
+				<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
 					<Flex
 						flexDirection="column"
 						zIndex="docked"
@@ -68,6 +83,7 @@ export const PoolsContainer: NextPage = () => {
 						backgroundColor="blue.700"
 					>
 						<Img
+							borderRadius="xl"
 							src="images/backgrounds/BannerPools.png"
 							position="absolute"
 							zIndex="base"
@@ -78,8 +94,9 @@ export const PoolsContainer: NextPage = () => {
 							zIndex="docked"
 							flexDirection="column"
 							px="1.625rem"
-							py="1.375rem"
+							py={["0.8rem", "1.375rem", "1.375rem", "1.375rem"]}
 							gap="3"
+							h={["9rem", "10rem", "10rem", "10rem"]}
 						>
 							<Text fontWeight="bold" color="white" fontSize="md">
 								Liquidity Provider Rewards
@@ -89,7 +106,7 @@ export const PoolsContainer: NextPage = () => {
 								fontWeight="semibold"
 								fontSize="sm"
 								lineHeight="shorter"
-								w="60%"
+								w={["100%", "70%", "60%", "60%"]}
 							>
 								Liquidity providers earn a 0.25% fee on all trades proportional
 								to their share of the pool. Fees are added to the pool, accrue
@@ -114,7 +131,7 @@ export const PoolsContainer: NextPage = () => {
 					</Flex>
 					<Flex
 						alignItems="flex-start"
-						my="8"
+						my={["1", "4", "8", "8"]}
 						justifyContent="flex-start"
 						w="100%"
 						flexDirection="column"
@@ -137,26 +154,36 @@ export const PoolsContainer: NextPage = () => {
 						</Flex>
 						<Flex
 							justifyContent="space-between"
-							flexDirection="row"
+							flexDirection={["column-reverse", "column-reverse", "row", "row"]}
 							zIndex="docked"
 							w="100%"
-							mt="2"
-							alignItems="flex-end"
+							mt={["0", "0", "2", "2"]}
+							alignItems={["center", "center", "flex-end", "flex-end"]}
+							gap="5"
 						>
 							<Flex visibility={userHavePool ? "visible" : "hidden"}>
 								<InputGroup>
-									<InputLeftElement
-										pointerEvents="none"
-										// eslint-disable-next-line react/no-children-prop
-										children={<MdSearch color={theme.text.cyanPurple} />}
-									/>
 									<Input
 										borderColor={theme.bg.blueNavyLightness}
 										placeholder="Search by token name"
-										_placeholder={{ opacity: 1, color: theme.text.cyanPurple }}
+										_placeholder={{
+											fontSize: "14px",
+											opacity: 1,
+											color: theme.text.cyanPurple,
+										}}
 										borderRadius="full"
-										w="20rem"
+										w={["18rem", "18rem", "20rem", "20rem"]}
+										h="max-content"
+										py={["0.1rem", "0.1rem", "1", "1"]}
+										pl="6"
 									/>
+									<Flex
+										position="absolute"
+										left="0.5rem"
+										bottom={["0.3rem", "0.3rem", "0.5rem", "0.5rem"]}
+									>
+										<MdSearch color={theme.text.cyanPurple} />
+									</Flex>
 								</InputGroup>
 							</Flex>
 							<Flex gap="4" alignItems="flex-end">
@@ -181,14 +208,13 @@ export const PoolsContainer: NextPage = () => {
 									Create a Pair
 								</Button>
 								<Flex flexDirection="column">
-									{!isConnected ? (
+									{!userHavePool ? (
 										<Button
 											fontSize="sm"
 											fontWeight="semibold"
 											py="0.625rem"
 											px="1.5rem"
 											h="max-content"
-											mt="2rem"
 											bgColor={theme.bg.blueNavyLightness}
 											color={theme.text.cyanWhite}
 											_hover={{ opacity: "1" }}
@@ -244,13 +270,13 @@ export const PoolsContainer: NextPage = () => {
 					{!isConnected ? (
 						<Flex
 							w="100%"
-							mt="4rem"
+							mt={["1rem", "1rem", "4rem", "4rem"]}
 							flexDirection="column"
 							alignItems="center"
 							justifyContent="center"
 							gap="16"
 						>
-							<Text w="max-content" fontSize="md" fontWeight="normal">
+							<Text fontSize={["sm", "sm", "md", "md"]} fontWeight="normal">
 								Please connect your wallet in the button bellow to be able to
 								view your liquidity.
 							</Text>
@@ -275,10 +301,23 @@ export const PoolsContainer: NextPage = () => {
 							</Flex>
 						</Flex>
 					) : (
-						<Flex flexWrap="wrap" gap="7" zIndex="1">
+						<Flex
+							flexWrap="wrap"
+							gap="7"
+							zIndex="1"
+							mt="10"
+							justifyContent={["center", "center", "unset", "unset"]}
+						>
 							<PoolCards />
 							<PoolCards />
 							<PoolCards />
+							<Button
+								onClick={() => {
+									showToast();
+								}}
+							>
+								show toast
+							</Button>
 						</Flex>
 					)}
 				</Flex>
