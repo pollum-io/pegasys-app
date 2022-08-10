@@ -1,6 +1,6 @@
-import { Button, ButtonProps, useDisclosure } from "@chakra-ui/react";
+import { Button, ButtonProps } from "@chakra-ui/react";
 import { SelectSyscoin, SelectWallets } from "components/Modals";
-import { usePicasso, useWallet } from "hooks";
+import { useModal, usePicasso, useWallet } from "hooks";
 import { FunctionComponent } from "react";
 import { AddressInfoButton } from "components/Buttons";
 import { shortAddress } from "utils";
@@ -11,20 +11,17 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 	const { ...rest } = props;
 	const theme = usePicasso();
 	const {
-		onOpen: onOpenSelectWalletModal,
-		isOpen: isOpenSelectWalletModal,
-		onClose: onCloseSelectWalletModal,
-	} = useDisclosure();
-	const {
-		isOpen: isOpenSelectSyscoin,
-		onOpen: onOpenSelectSyscoin,
-		onClose: onCloseSelectSyscoin,
-	} = useDisclosure();
-	const {
-		isOpen: isOpenAddress,
-		onOpen: onOpenAddress,
-		onClose: onCloseAddress,
-	} = useDisclosure();
+		onOpenSelectWalletModal,
+		isOpenSelectWalletModal,
+		onCloseSelectWalletModal,
+		isOpenSelectSyscoin,
+		onOpenSelectSyscoin,
+		onCloseSelectSyscoin,
+		isOpenAddress,
+		onOpenAddress,
+		onCloseAddress,
+	} = useModal();
+
 	const { isConnected, walletAddress, walletError } = useWallet();
 
 	return (

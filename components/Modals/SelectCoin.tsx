@@ -1,6 +1,5 @@
 import {
 	Button,
-	Divider,
 	Flex,
 	Icon,
 	IconButton,
@@ -15,9 +14,8 @@ import {
 	ModalOverlay,
 	Text,
 	Tooltip,
-	useDisclosure,
 } from "@chakra-ui/react";
-import { usePicasso, useTokens } from "hooks";
+import { useModal, usePicasso, useTokens } from "hooks";
 import React, {
 	ChangeEvent,
 	useMemo,
@@ -53,6 +51,8 @@ interface IModal {
 export const SelectCoinModal: React.FC<IModal> = props => {
 	const { selectedToken, buttonId, setSelectedToken } = props;
 	const { isOpen, onClose } = props;
+	const { onOpenManageToken, isOpenManageToken, onCloseManageToken } =
+		useModal();
 	const theme = usePicasso();
 	const [defaultTokens, setDefaultTokens] = useState<
 		ITokenBalance[] | ITokenBalanceWithId[]
@@ -65,11 +65,6 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const [tokenError, setTokenError] = useState<
 		ISymbol[] | ITokenBalanceWithId[]
 	>([]);
-	const {
-		onOpen: onOpenManage,
-		isOpen: isOpenManage,
-		onClose: onCloseManage,
-	} = useDisclosure();
 
 	const { userTokensBalance } = useTokens();
 
@@ -160,9 +155,20 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
-			<ManageToken isOpen={isOpenManage} onClose={onCloseManage} />
+			<ManageToken isOpen={isOpenManageToken} onClose={onCloseManageToken} />
 			<ModalOverlay />
-			<ModalContent borderRadius="3xl" bgColor={theme.bg.blueNavy}>
+			<ModalContent
+				borderRadius="3xl"
+				bgColor={theme.bg.blueNavy}
+				bottom="0"
+				mt="16"
+				mb="0"
+				border={["none", "1px solid transparent"]}
+				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
+				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
+				position="relative"
+				h="max-content"
+			>
 				<ModalHeader display="flex" alignItems="baseline" gap="3">
 					<Text fontSize="lg" fontWeight="semibold">
 						Select a token
@@ -250,7 +256,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					py="0"
 					bgColor={theme.bg.whiteGray}
 					alignItems="center"
-					borderBottomRadius="3xl"
+					borderBottomRadius={["0px", "0", "3xl", "3xl"]}
 				>
 					<Flex pt="8" py="5">
 						<Text
@@ -261,7 +267,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							mb="0"
 							w="100%"
 							fontWeight="semibold"
-							onClick={onOpenManage}
+							onClick={onOpenManageToken}
 						>
 							Manage Token Lists
 						</Text>
