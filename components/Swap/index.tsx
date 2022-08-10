@@ -6,7 +6,6 @@ import {
 	Img,
 	Input,
 	List,
-	ListItem,
 	Text,
 	useDisclosure,
 } from "@chakra-ui/react";
@@ -40,15 +39,9 @@ import {
 } from "utils";
 import { getTokensGraphCandle } from "services/index";
 
-import {
-	ONE_HOUR_IN_SECONDS,
-	ONE_DAY_IN_SECONDS,
-	FIVE_MINUTES_IN_SECONDS,
-	FIFTEEN_MINUTES_IN_SECONDS,
-	FOUR_HOURS_IN_SECONDS,
-	ONE_WEEK_IN_SECONDS,
-} from "helpers/consts";
+import { FIFTEEN_MINUTES_IN_SECONDS } from "helpers/consts";
 import { TradeRouteComponent } from "./TradeRouteComponent";
+import { FilterButton } from "./FilterButton";
 
 const ChartComponent = dynamic(() => import("./ChartComponent"), {
 	ssr: false,
@@ -58,7 +51,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const theme = usePicasso();
 
 	const { t: translation } = useTranslation();
-
 	const { userTokensBalance } = useTokens();
 
 	const { isOpen: isOpenWallet, onClose: onCloseWallet } = useDisclosure();
@@ -714,7 +706,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							)}
 					</Text>
 				</Flex>
-
 				<Flex>
 					<List
 						w="100%"
@@ -727,14 +718,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						display="flex"
 						alignItems="center"
 						flexWrap="nowrap"
-						justifyContent="space-evenly"
+						justifyContent="center"
+						gap="5"
 					>
-						<ListItem value={FIVE_MINUTES_IN_SECONDS}>5m</ListItem>
-						<ListItem value={FIFTEEN_MINUTES_IN_SECONDS}>15m</ListItem>
-						<ListItem value={ONE_HOUR_IN_SECONDS}>1H</ListItem>
-						<ListItem value={FOUR_HOURS_IN_SECONDS}>4H</ListItem>
-						<ListItem value={ONE_DAY_IN_SECONDS}>1D</ListItem>
-						<ListItem value={ONE_WEEK_IN_SECONDS}>1W</ListItem>
+						<FilterButton />
 					</List>
 				</Flex>
 				<ChartComponent data={tokensGraphCandleData} />
