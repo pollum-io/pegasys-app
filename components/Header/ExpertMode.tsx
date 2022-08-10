@@ -12,15 +12,19 @@ export const ExpertMode: FunctionComponent = () => {
 				<Flex
 					position="fixed"
 					zIndex="-1"
-					background={`linear-gradient(${theme.bg.expertMode}, ${theme.bg.expertMode}) padding-box, linear-gradient(32deg, rgb(86 190 216 / 97%) 30.76%, rgb(86 190 216 / 6%) 97.76%) border-box`}
+					background={[
+						`linear-gradient(transparent, #0000005) padding-box, linear-gradient(32deg, rgb(86 190 216 / 97%) 30.76%, rgb(86 190 216 / 6%) 97.76%) border-box`,
+						`linear-gradient(${theme.bg.expertMode}, ${theme.bg.expertMode}) padding-box, linear-gradient(32deg, rgb(86 190 216 / 97%) 30.76%, rgb(86 190 216 / 6%) 97.76%) border-box`,
+					]}
 					border="1px solid transparent"
-					borderTop="none"
-					borderBottomRadius="2xl"
+					borderTop={["1px solid transparent", "none", "none", "none"]}
+					borderBottomRadius={["2xl", "2xl", "2xl", "2xl"]}
+					borderTopRadius={["2xl", "unset", "unset", "unset"]}
 					w="max-content"
 					px="2.5rem"
 					pt="4"
-					ml="1rem"
-					bottom="1.5rem"
+					ml={["0rem", "1.1rem", "1.1rem", "1.1rem"]}
+					bottom={["3rem", "1.5rem", "1.5rem", "1.5rem"]}
 					color={theme.text.mono}
 				>
 					<Text fontWeight="light" fontSize="xs">
