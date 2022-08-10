@@ -15,7 +15,7 @@ import {
 import { AddLiquidityModal, RemoveLiquidity } from "components";
 import { ImportPoolModal } from "components/Modals/ImportPool";
 import { PoolCards } from "components/Pools/PoolCards";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso, useWallet, useToasty } from "hooks";
 import { NextPage } from "next";
 import { useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
@@ -42,6 +42,16 @@ export const PoolsContainer: NextPage = () => {
 	const [haveValue, setHaveValue] = useState(false);
 	const { isConnected } = useWallet();
 	const [userHavePool, setUserHavePool] = useState(true);
+
+	const { toast } = useToasty();
+
+	const showToast = () => {
+		toast({
+			title: "Title",
+			description: "Something happend!",
+			status: "success",
+		});
+	};
 
 	return (
 		<Flex justifyContent="center" alignItems="center">
@@ -73,6 +83,7 @@ export const PoolsContainer: NextPage = () => {
 						backgroundColor="blue.700"
 					>
 						<Img
+							borderRadius="xl"
 							src="images/backgrounds/BannerPools.png"
 							position="absolute"
 							zIndex="base"
@@ -197,14 +208,13 @@ export const PoolsContainer: NextPage = () => {
 									Create a Pair
 								</Button>
 								<Flex flexDirection="column">
-									{!isConnected ? (
+									{!userHavePool ? (
 										<Button
 											fontSize="sm"
 											fontWeight="semibold"
 											py="0.625rem"
 											px="1.5rem"
 											h="max-content"
-											mt="2rem"
 											bgColor={theme.bg.blueNavyLightness}
 											color={theme.text.cyanWhite}
 											_hover={{ opacity: "1" }}
@@ -301,6 +311,13 @@ export const PoolsContainer: NextPage = () => {
 							<PoolCards />
 							<PoolCards />
 							<PoolCards />
+							<Button
+								onClick={() => {
+									showToast();
+								}}
+							>
+								show toast
+							</Button>
 						</Flex>
 					)}
 				</Flex>
