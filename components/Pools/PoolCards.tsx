@@ -1,6 +1,6 @@
-import { Button, Flex, Img, Text, useDisclosure } from "@chakra-ui/react";
+import { Button, Flex, Img, Text } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
-import { usePicasso } from "hooks";
+import { useModal, usePicasso } from "hooks";
 import { AddLiquidityModal, RemoveLiquidity } from "components/Modals";
 
 interface IPoolCards {
@@ -16,12 +16,14 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	const { poolOf, poolLiquidity, poolVolume, poolApr, poolShare, poolTokens } =
 		props;
 	const theme = usePicasso();
-	const { onOpen, isOpen, onClose } = useDisclosure();
 	const {
-		onOpen: onOpenAdd,
-		isOpen: isOpenAdd,
-		onClose: onCloseAdd,
-	} = useDisclosure();
+		onOpenRemoveLiquidity,
+		isOpenRemoveLiquidity,
+		onCloseRemoveLiquidity,
+		onOpenAddLiquidity,
+		isOpenAddLiquidity,
+		onCloseAddLiquidity,
+	} = useModal();
 
 	return (
 		<Flex
@@ -32,8 +34,14 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			border="1px solid rgb(86,190,216, 0.4) "
 			background={theme.bg.blackAlpha}
 		>
-			<RemoveLiquidity isModalOpen={isOpen} onModalClose={onClose} />
-			<AddLiquidityModal isModalOpen={isOpenAdd} onModalClose={onCloseAdd} />
+			<RemoveLiquidity
+				isModalOpen={isOpenRemoveLiquidity}
+				onModalClose={onCloseRemoveLiquidity}
+			/>
+			<AddLiquidityModal
+				isModalOpen={isOpenAddLiquidity}
+				onModalClose={onCloseAddLiquidity}
+			/>
 			<Flex gap="2">
 				<Flex>
 					<Img src="icons/syscoin-logo.png" w="6" h="6" />
@@ -81,7 +89,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					color={theme.text.whitePurple}
 					fontSize="sm"
 					fontWeight="semibold"
-					onClick={onOpen}
+					onClick={onOpenRemoveLiquidity}
 				>
 					Remove
 				</Button>
@@ -94,7 +102,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					color={theme.text.cyan}
 					fontSize="sm"
 					fontWeight="semibold"
-					onClick={onOpenAdd}
+					onClick={onOpenAddLiquidity}
 				>
 					Add Liquidity
 				</Button>

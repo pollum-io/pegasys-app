@@ -10,9 +10,8 @@ import {
 	ModalOverlay,
 	Text,
 	Tooltip,
-	useDisclosure,
 } from "@chakra-ui/react";
-import { usePicasso } from "hooks";
+import { useModal, usePicasso } from "hooks";
 import React, { useState } from "react";
 import {
 	MdHelpOutline,
@@ -44,8 +43,7 @@ interface ITokenInputValue {
 export const AddLiquidityModal: React.FC<IModal> = props => {
 	const { isModalOpen, onModalClose, isCreate, haveValue } = props;
 	const theme = usePicasso();
-	const { onOpen, isOpen, onClose } = useDisclosure();
-
+	const { onOpenCoin, isOpenCoin, onCloseCoin } = useModal();
 	const [buttonId, setButtonId] = useState<number>(0);
 	const [tokenInputValue, setTokenInputValue] = useState<ITokenInputValue>({
 		inputFrom: "",
@@ -77,8 +75,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			onClose={onModalClose}
 		>
 			<SelectCoinModal
-				isOpen={isOpen}
-				onClose={onClose}
+				isOpen={isOpenCoin}
+				onClose={onCloseCoin}
 				selectedToken={selectedToken}
 				buttonId={buttonId}
 				setSelectedToken={setSelectedToken}
@@ -200,7 +198,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									id="0"
 									w="max-content"
 									onClick={event => {
-										onOpen();
+										onOpenCoin();
 										setButtonId(Number(event.currentTarget.id));
 									}}
 									borderRadius="2xl"
@@ -294,7 +292,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									id="1"
 									w="max-content"
 									onClick={event => {
-										onOpen();
+										onOpenCoin();
 										setButtonId(Number(event.currentTarget.id));
 									}}
 									borderRadius="2xl"

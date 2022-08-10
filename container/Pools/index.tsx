@@ -10,34 +10,29 @@ import {
 	MenuItem,
 	MenuList,
 	Text,
-	useDisclosure,
 } from "@chakra-ui/react";
 import { AddLiquidityModal, RemoveLiquidity } from "components";
 import { ImportPoolModal } from "components/Modals/ImportPool";
 import { PoolCards } from "components/Pools/PoolCards";
-import { usePicasso, useWallet } from "hooks";
+import { useModal, usePicasso, useWallet } from "hooks";
 import { NextPage } from "next";
 import { useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
 
 export const PoolsContainer: NextPage = () => {
 	const theme = usePicasso();
-	const { onOpen, isOpen, onClose } = useDisclosure();
 	const {
-		onOpen: onOpenPool,
-		isOpen: isOpenPool,
-		onClose: onClosePool,
-	} = useDisclosure();
-	const {
-		onOpen: onOpenRemoveLiquidity,
-		isOpen: isOpenRemoveLiquidity,
-		onClose: onCloseRemoveLiquidity,
-	} = useDisclosure();
-	const {
-		onOpen: onOpenTokenImported,
-		isOpen: isOpenTokenImported,
-		onClose: onCloseTokenImported,
-	} = useDisclosure();
+		onOpenPool,
+		isOpenPool,
+		onClosePool,
+		onOpenRemoveLiquidity,
+		isOpenRemoveLiquidity,
+		onCloseRemoveLiquidity,
+		onOpenAddLiquidity,
+		isOpenAddLiquidity,
+		onCloseAddLiquidity,
+	} = useModal();
+
 	const [isCreate, setIsCreate] = useState(false);
 	const [haveValue, setHaveValue] = useState(false);
 	const { isConnected } = useWallet();
@@ -46,18 +41,18 @@ export const PoolsContainer: NextPage = () => {
 	return (
 		<Flex justifyContent="center" alignItems="center">
 			<AddLiquidityModal
-				isModalOpen={isOpen}
-				onModalClose={onClose}
+				isModalOpen={isOpenAddLiquidity}
+				onModalClose={onCloseAddLiquidity}
 				isCreate={isCreate}
 				haveValue={haveValue}
 			/>
-			<ImportPoolModal isModalOpen={isOpenPool} onModalClose={onClosePool} />
 			<RemoveLiquidity
 				isModalOpen={isOpenRemoveLiquidity}
 				onModalClose={onCloseRemoveLiquidity}
 				isCreate={isCreate}
 				haveValue={haveValue}
 			/>
+			<ImportPoolModal isModalOpen={isOpenPool} onModalClose={onClosePool} />
 			<Flex alignItems="flex-start" justifyContent="center" pt="20" mb="6.2rem">
 				<Flex flexDirection="column" w="2xl">
 					<Flex
@@ -175,7 +170,7 @@ export const PoolsContainer: NextPage = () => {
 									_active={{}}
 									onClick={() => {
 										setIsCreate(true);
-										onOpen();
+										onOpenAddLiquidity();
 									}}
 								>
 									Create a Pair
@@ -195,7 +190,7 @@ export const PoolsContainer: NextPage = () => {
 											_active={{}}
 											onClick={() => {
 												setIsCreate(false);
-												onOpen();
+												onOpenAddLiquidity();
 											}}
 											borderRadius="full"
 										>
@@ -265,8 +260,8 @@ export const PoolsContainer: NextPage = () => {
 								</Text>
 								<Text
 									fontWeight="semibold"
-									onClick={onOpenRemoveLiquidity}
 									color={theme.text.cyanWhite}
+									onClick={onOpenPool}
 									textDecoration="underline"
 									_hover={{ cursor: "pointer" }}
 								>
