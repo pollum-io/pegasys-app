@@ -21,6 +21,7 @@ import {
 import { usePicasso } from "hooks";
 import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
+import { MdArrowBack, MdOutlineInfo } from "react-icons/md";
 
 interface IModal {
 	isOpen: boolean;
@@ -61,12 +62,16 @@ export const StakeActions: React.FC<IModal> = props => {
 			<ModalOverlay />
 			<ModalContent
 				mt="10rem"
-				maxWidth="max-content"
-				w="max-content"
-				h="max-content"
+				mb="0"
+				position={["absolute", "absolute", "relative", "relative"]}
+				bottom="0"
+				maxHeight="90%"
+				w={["100vw", "100vw", "max-content", "max-content"]}
+				h={["max-content", "max-content", "max-content", "max-content"]}
 				borderRadius="3xl"
 				bgColor={theme.bg.blueNavy}
-				border="1px solid transparent;"
+				border="1px solid transparent"
+				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
 				background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
@@ -74,19 +79,18 @@ export const StakeActions: React.FC<IModal> = props => {
 					borderTopRadius="3xl"
 					alignItems="baseline"
 					justifyContent="space-between"
-					pl="20"
 				>
 					<Flex
-						flexDirection="row"
+						flexDirection={["column-reverse", "column-reverse", "row", "row"]}
 						justifyContent="space-between"
-						alignItems="center"
+						alignItems={["flex-start", "flex-start", "center", "center"]}
 					>
-						<Flex pr="7" gap="2">
+						<Flex pr="7" gap="2" mt={["6", "6", "0", "0"]}>
 							<Button
 								w="max-content"
 								h="max-content"
 								py="3"
-								px="8"
+								px={["6", "6", "8", "8"]}
 								borderRadius="full"
 								onClick={() => setButtonId("stake")}
 								bgColor={
@@ -105,7 +109,7 @@ export const StakeActions: React.FC<IModal> = props => {
 								w="max-content"
 								h="max-content"
 								py="3"
-								px="8"
+								px={["6", "6", "8", "8"]}
 								borderRadius="full"
 								onClick={() => setButtonId("unstake")}
 								bgColor={
@@ -123,7 +127,7 @@ export const StakeActions: React.FC<IModal> = props => {
 								w="max-content"
 								h="max-content"
 								py="3"
-								px="8"
+								px={["6", "6", "8", "8"]}
 								borderRadius="full"
 								onClick={() => setButtonId("claim")}
 								bgColor={
@@ -138,8 +142,43 @@ export const StakeActions: React.FC<IModal> = props => {
 								Claim
 							</Button>
 						</Flex>
-						<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
-							<AiOutlineClose size={20} />
+						<Flex
+							_hover={{ cursor: "pointer" }}
+							onClick={onClose}
+							alignItems="center"
+							gap="2"
+						>
+							<Flex
+								display={{
+									base: "none",
+									sm: "none",
+									md: "block",
+									lg: "block",
+								}}
+							>
+								<AiOutlineClose size={20} />
+							</Flex>
+							<Flex
+								display={{
+									base: "block",
+									sm: "block",
+									md: "none",
+									lg: "none",
+								}}
+							>
+								<MdArrowBack size={24} color={theme.text.gray} />
+							</Flex>
+							<Text
+								display={{
+									base: "block",
+									sm: "block",
+									md: "none",
+									lg: "none",
+								}}
+								color={theme.text.gray}
+							>
+								Farms
+							</Text>
 						</Flex>
 					</Flex>
 				</ModalHeader>
@@ -381,6 +420,57 @@ export const StakeActions: React.FC<IModal> = props => {
 						</Flex>
 					)}
 				</ModalBody>
+				<Flex>
+					{buttonId === "unstake" && (
+						<Flex
+							flexDirection="row"
+							p="1.5rem"
+							background={theme.text.gray600}
+							position={["relative", "relative", "absolute", "absolute"]}
+							w="100%"
+							top={["unset", "unset", "24rem", "24rem"]}
+							borderTopRadius={["0", "0", "3xl", "3xl"]}
+							borderBottomRadius={["0", "0", "3xl", "3xl"]}
+							alignItems="flex-start"
+							gap="2"
+						>
+							<Flex>
+								<Icon as={MdOutlineInfo} w="6" h="6" color={theme.text.cyan} />
+							</Flex>
+							<Flex flexDirection="column" gap="6">
+								<Text>
+									When you partially unstake your deposits, you will keep
+									earning rewards from this staking pool proportionally to your
+									remaining staked balance.
+								</Text>
+							</Flex>
+						</Flex>
+					)}
+					{buttonId === "stake" && (
+						<Flex
+							flexDirection="row"
+							p="1.5rem"
+							background={theme.text.gray600}
+							position={["relative", "relative", "absolute", "absolute"]}
+							w="100%"
+							top={["unset", "unset", "24rem", "24rem"]}
+							borderTopRadius={["0", "0", "3xl", "3xl"]}
+							borderBottomRadius={["0", "0", "3xl", "3xl"]}
+							alignItems="flex-start"
+							gap="2"
+						>
+							<Flex>
+								<Icon as={MdOutlineInfo} w="6" h="6" color={theme.text.cyan} />
+							</Flex>
+							<Flex flexDirection="column" gap="6">
+								<Text>
+									Please note that when you claim without withdrawing your
+									liquidity remains in the staking pool.
+								</Text>
+							</Flex>
+						</Flex>
+					)}
+				</Flex>
 			</ModalContent>
 		</Modal>
 	);

@@ -44,6 +44,7 @@ const usePicasso = () => {
 			iceGray: useColorModeValue("#f7f8fa", "#2c2f36"),
 			blackAlpha: useColorModeValue("#ffffff", "#081120"),
 			blueNavy: useColorModeValue("#F7FAFC", "rgba(11, 23, 44, 1)"),
+			blueGray: useColorModeValue("#171F2D", "#171F2D"),
 			blue100: useColorModeValue("blue.100", "blue.100"),
 			blue900: useColorModeValue("blue.900", "blue.900"),
 			blueNavyLightness: useColorModeValue("#665EE1", "rgba(21, 61, 111, 1);"),

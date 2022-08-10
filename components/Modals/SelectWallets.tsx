@@ -23,11 +23,13 @@ export const SelectWallets: React.FC<IModal> = props => {
 			<ModalOverlay />
 			<ModalContent
 				borderRadius="1.875rem"
-				my="40"
+				my={["0", "0", "40", "40"]}
 				bgColor={theme.bg.blueNavy}
-				w="max-content"
+				w={["100vw", "100vw", "max-content", "max-content"]}
 				h="max-content"
 				p="8"
+				position={["absolute", "absolute", "unset", "unset"]}
+				bottom={["0", "0", "unset", "unset"]}
 			>
 				<Flex flexDirection="column" justifyContent="center">
 					<Flex justifyContent="space-between" align="center" pb="5">
