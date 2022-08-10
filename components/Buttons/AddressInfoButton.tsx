@@ -42,7 +42,13 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
-			<ModalContent borderRadius={18} my="40">
+			<ModalContent
+				borderRadius={18}
+				my={["0", "40", "40", "40"]}
+				h="max-content"
+				position="absolute"
+				bottom={["0", "0", "none", "none"]}
+			>
 				<ModalHeader bgColor={theme.bg.blueNavy} borderTopRadius={18}>
 					<Flex alignItems="center" justifyContent="space-between">
 						<Text fontSize="lg" fontWeight="semibold">
