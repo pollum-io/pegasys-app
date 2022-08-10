@@ -22,8 +22,14 @@ export const FarmContainer: NextPage = () => {
 	const theme = usePicasso();
 
 	return (
-		<Flex h="100%" alignItems="flex-start" justifyContent="center" pt="20">
-			<Flex flexDirection="column" w="2xl">
+		<Flex
+			w="100%"
+			h="100%"
+			alignItems="flex-start"
+			justifyContent="center"
+			pt={["10", "10", "20", "20"]}
+		>
+			<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
 				<Flex
 					flexDirection="column"
 					zIndex="docked"
@@ -45,7 +51,7 @@ export const FarmContainer: NextPage = () => {
 						px="1.625rem"
 						py="1.375rem"
 						gap="3"
-						color="white"
+						h={["9rem", "10rem", "10rem", "10rem"]}
 					>
 						<Text fontWeight="bold" color="white" fontSize="md">
 							Pegasys Liquidity Mining
@@ -54,7 +60,7 @@ export const FarmContainer: NextPage = () => {
 							fontWeight="semibold"
 							fontSize="sm"
 							lineHeight="shorter"
-							w="50%"
+							w={["100%", "70%", "50%", "50%"]}
 						>
 							Deposit your Pegasys Liquidity Provider PLP tokens to receive
 							PSYS, the Pegasys protocol governance token.
@@ -78,52 +84,62 @@ export const FarmContainer: NextPage = () => {
 					</Flex>
 				</Flex>
 				<Flex
-					alignItems="center"
+					id="a"
+					alignItems={["flex-start", "flex-start", "baseline", "baseline"]}
 					my="8"
 					justifyContent="flex-start"
 					w="100%"
-					flexDirection="row"
+					flexDirection={["initial", "initial", "row", "row"]}
 					zIndex="docked"
 				>
 					<Flex
-						mt="4"
-						flexDirection="row"
+						id="b"
+						mt={["0", "0", "2", "2"]}
+						alignItems={["flex-start", "center", "flex-end", "flex-end"]}
 						justifyContent="space-between"
 						w="100%"
 						zIndex="docked"
+						flexDirection={["column-reverse", "unset"]}
 					>
 						<Text fontSize="2xl" fontWeight="semibold">
 							Farms
 						</Text>
 					</Flex>
-					<Flex flexDirection="row" alignItems="flex-end" gap="4">
-						<InputGroup>
-							<InputLeftElement
-								pointerEvents="none"
-								// eslint-disable-next-line react/no-children-prop
-								children={<MdSearch size={20} color={theme.icon.searchIcon} />}
-							/>
+					<Flex
+						flexDirection={["column-reverse", "column-reverse", "row", "row"]}
+						alignItems="flex-end"
+						gap="4"
+						id="c"
+						w="max-content"
+						position={["absolute", "absolute", "relative", "relative"]}
+					>
+						<InputGroup right="0rem">
 							<Input
 								placeholder="Search by token name"
 								_placeholder={{ opacity: 1, color: theme.text.input }}
 								borderColor={theme.bg.blueNavyLightness}
 								borderRadius="full"
-								w="15rem"
-								_hover={{
-									borderColor: theme.bg.blueNavyLightness,
-								}}
-								_focus={{
-									borderColor: theme.bg.blueNavyLightness,
-								}}
+								w={["20rem", "28rem", "20rem", "20rem"]}
+								h="max-content"
+								py={["0.1rem", "0.1rem", "1", "1"]}
+								pl="8"
 							/>
+							<Flex
+								position="absolute"
+								left="0.5rem"
+								bottom={["0.3rem", "0.3rem", "0.5rem", "0.5rem"]}
+							>
+								<MdSearch color={theme.text.cyanPurple} />
+							</Flex>
 						</InputGroup>
 						<Flex
-							flexDirection="column"
-							alignItems="flex-start"
+							id="d"
+							flexDirection={["initial", "initial", "column", "column"]}
+							alignItems={["baseline", "baseline", "flex-start", "flex-start"]}
 							justifyContent="flex-start"
 						>
 							<Menu>
-								<Text fontSize="sm" pb="2" color={theme.text.mono}>
+								<Text fontSize="sm" pb="2" pr={["2", "2", "0", "0"]}>
 									Sort by
 								</Text>
 								<MenuButton
@@ -132,9 +148,9 @@ export const FarmContainer: NextPage = () => {
 									fontWeight="semibold"
 									alignItems="center"
 									justifyContent="justify-content"
-									py="2"
-									pl="5"
-									pr="5"
+									py="1.5"
+									pl="4"
+									pr="4"
 									w="max-content"
 									h="max-content"
 									bgColor={theme.bg.blueNavyLightness}
@@ -148,7 +164,7 @@ export const FarmContainer: NextPage = () => {
 								>
 									<Flex alignItems="center" color="white">
 										APR
-										<Icon as={MdExpandMore} w="5" h="5" ml="10" />
+										<Icon as={MdExpandMore} w="5" h="5" ml="8" />
 									</Flex>
 								</MenuButton>
 								<MenuList
@@ -173,11 +189,14 @@ export const FarmContainer: NextPage = () => {
 					maxW="900px"
 					zIndex="1"
 					justifyContent="space-between"
+					mt={["10", "10", "0", "0"]}
 					mr="1"
 					ml="1"
 					mb="10rem"
-					sx={{ columnCount: [1, 2], columnGap: "18px" }}
+					sx={{ columnCount: [1, 1, 2, 2], columnGap: "18px" }}
 				>
+					<FarmCards />
+					<FarmCards />
 					<FarmCards />
 				</Box>
 			</Flex>

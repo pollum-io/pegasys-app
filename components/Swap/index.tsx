@@ -6,46 +6,73 @@ import {
 	Img,
 	Input,
 	Text,
-	useDisclosure,
 } from "@chakra-ui/react";
-import { usePicasso, useTokens, useWallet } from "hooks";
+import { useModal, usePicasso, useTokens, useWallet } from "hooks";
 import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
-import { SettingsButton } from "components/Header/SettingsButton";
 import { ITokenBalance, ITokenBalanceWithId } from "types";
 import { TOKENS_INITIAL_STATE } from "helpers/consts";
 import { ConfirmSwap } from "components/Modals/ConfirmSwap";
+import dynamic from "next/dynamic";
 
+const ChartComponent = dynamic(() => import("./ChartComponent"), {
+	ssr: false,
+});
 interface ITokenInputValue {
 	inputFrom: string;
 	inputTo: string;
 }
 
+interface IToken extends ITokenBalance {
+	logoURI: string;
+	symbol: string;
+	id?: number;
+}
+
 export const Swap: FunctionComponent<ButtonProps> = () => {
+	const initialData = [
+		{ open: 10, high: 10.63, low: 9.49, close: 9.55, time: 1642427876 },
+		{ open: 9.55, high: 10.3, low: 9.42, close: 9.94, time: 1642514276 },
+		{ open: 9.94, high: 10.17, low: 9.92, close: 9.78, time: 1642600676 },
+		{ open: 9.78, high: 10.59, low: 9.18, close: 9.51, time: 1642687076 },
+		{ open: 9.51, high: 10.46, low: 9.1, close: 10.17, time: 1642773476 },
+		{ open: 10.17, high: 10.96, low: 10.16, close: 10.47, time: 1642859876 },
+		{ open: 10.47, high: 11.39, low: 10.4, close: 10.81, time: 1642946276 },
+		{ open: 10.81, high: 11.6, low: 10.3, close: 10.75, time: 1643032676 },
+		{ open: 10.75, high: 11.6, low: 10.49, close: 10.93, time: 1643119076 },
+		{ open: 10.93, high: 11.53, low: 10.76, close: 10.96, time: 1643205476 },
+	];
+
+	const colors = {
+		backgroundColor: "transparent",
+		textColor: "#718096",
+		upColor: "#25855A",
+		downColor: "#C53030",
+		borderVisible: false,
+		wickUpColor: "#25855A",
+		wickDownColor: "#C53030",
+	};
+
 	const theme = usePicasso();
 
 	const { userTokensBalance } = useTokens();
+	const {
+		onOpenWallet,
+		isOpenWallet,
+		onCloseWallet,
+		onOpenCoin,
+		isOpenCoin,
+		onCloseCoin,
+		onOpenConfirmSwap,
+		isOpenConfirmSwap,
+		onCloseConfirmSwap,
+	} = useModal();
 
-	const {
-		onOpen: onOpenWallet,
-		isOpen: isOpenWallet,
-		onClose: onCloseWallet,
-	} = useDisclosure();
-	const {
-		onOpen: onOpenCoin,
-		isOpen: isOpenCoin,
-		onClose: onCloseCoin,
-	} = useDisclosure();
-	const {
-		onOpen: onOpenConfirmSwap,
-		isOpen: isOpenConfirmSwap,
-		onClose: onCloseConfirmSwap,
-	} = useDisclosure();
 	const { isConnected } = useWallet();
 	const [selectedToken, setSelectedToken] = useState<
-		ITokenBalanceWithId[] | ITokenBalance[]
+		ITokenBalanceWithId[] | ITokenBalance[] | IToken[]
 	>(TOKENS_INITIAL_STATE);
 
 	const [tokenInputValue, setTokenInputValue] = useState<ITokenInputValue>({
@@ -116,12 +143,19 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	return (
 		<Flex
-			pt="24"
+			pt={["6", "6", "20", "24"]}
 			justifyContent="center"
 			fontFamily="inter"
 			fontStyle="normal"
-			alignItems="flex-start"
-			flexDirection="row"
+			alignItems={{
+				base: "center",
+				sm: "center",
+				md: "center",
+				lg: "flex-start",
+			}}
+			flexDirection={{ base: "column", sm: "column", md: "column", lg: "row" }}
+			mb={["6rem", "0"]}
+			px={["4", "0", "0", "0"]}
 		>
 			<SelectWallets isOpen={isOpenWallet} onClose={onCloseWallet} />
 			<ConfirmSwap isOpen={isOpenConfirmSwap} onClose={onCloseConfirmSwap} />
@@ -135,7 +169,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			<Flex alignItems="center" flexDirection="column">
 				<Flex
 					h="max-content"
-					w="md"
+					width={[
+						"100%", // 0-30em
+						"md", // 30em-48em
+						"md", // 48em-62em
+						"md", // 62em+
+					]}
 					p="1.5rem"
 					flexDirection="column"
 					zIndex="1"
@@ -145,10 +184,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					<Flex flexDirection="row" justifyContent="space-between" pb="1.5rem">
-						<Text fontWeight="semibold" fontSize="2xl">
+						<Text fontWeight="semibold" fontSize={["xl", "2xl", "2xl", "2xl"]}>
 							Swap
 						</Text>
-						<SettingsButton />
 					</Flex>
 					<Flex
 						borderRadius="2xl"
@@ -196,8 +234,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								placeholder="0.00"
 								textAlign="right"
 								mt="2"
-								px="1.5"
-								ml="50"
+								px={["0.1rem", "1.5", "1.5", "1.5"]}
+								ml={["10", "50", "50", "50"]}
 								type="text"
 								onChange={handleOnChangeTokenInputs}
 								name="inputFrom"
@@ -280,8 +318,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								placeholder="0.00"
 								textAlign="right"
 								mt="2"
-								px="1.5"
-								ml="50"
+								px={["0.1rem", "1.5", "1.5", "1.5"]}
+								ml={["50", "50", "50", "50"]}
 								type="text"
 								onChange={handleOnChangeTokenInputs}
 								name="inputTo"
@@ -376,7 +414,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						w="90%"
 						borderRadius="xl"
 						mt="7"
-						mb="10rem"
+						mb={["2", "2", "2", "10rem"]}
+						zIndex="1"
 					>
 						<Flex flexDirection="column">
 							<Flex flexDirection="row" justifyContent="space-between">
@@ -439,6 +478,39 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						</Flex>
 					</Flex>
 				)}
+			</Flex>
+			<Flex
+				h="max-content"
+				w={["18rem", "sm", "100%", "xl"]}
+				p="1.5rem"
+				ml={["0", "0", "0", "10"]}
+				mt={["8", "8", "8", "0"]}
+				mb={["24", "24", "24", "0"]}
+				flexDirection="column"
+				zIndex="1"
+				borderRadius={30}
+				border="1px solid transparent;"
+			>
+				<Flex
+					gap="2"
+					justifyContent="center"
+					mb="8"
+					flexDirection={["column", "row", "row", "row"]}
+				>
+					<Flex>
+						<Img src={selectedToken[0]?.logoURI} w="7" h="7" />
+						<Img src={selectedToken[1]?.logoURI} w="7" h="7" />
+					</Flex>
+					<Flex align="center">
+						<Text fontWeight="bold" fontSize="xl">
+							TSYS/PSYS
+						</Text>
+						<Text pl="2" fontSize="lg">
+							$15.56
+						</Text>
+					</Flex>
+				</Flex>
+				<ChartComponent data={initialData} colors={colors} />
 			</Flex>
 		</Flex>
 	);

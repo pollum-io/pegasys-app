@@ -10,12 +10,12 @@ import {
 	ModalOverlay,
 	Text,
 	Tooltip,
-	useDisclosure,
 } from "@chakra-ui/react";
-import { usePicasso } from "hooks";
+import { useModal, usePicasso } from "hooks";
 import React, { useState } from "react";
 import { MdArrowBack, MdHelpOutline, MdAdd } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
+import { ITokenBalance, ITokenBalanceWithId } from "types";
 import { SelectCoinModal } from "components";
 
 interface IModal {
@@ -23,7 +23,7 @@ interface IModal {
 	onModalClose: () => void;
 }
 
-interface IToken {
+interface IToken extends ITokenBalance {
 	logoURI: string;
 	symbol: string;
 	id?: number;
@@ -32,10 +32,34 @@ interface IToken {
 export const ImportPoolModal: React.FC<IModal> = props => {
 	const { isModalOpen, onModalClose } = props;
 	const theme = usePicasso();
-	const { onOpen, isOpen, onClose } = useDisclosure();
-	const [selectedToken] = useState<IToken[]>([
-		{ logoURI: "icons/syscoin-logo.png", symbol: "SYS", id: 0 },
-		{ logoURI: "icons/pegasys.png", symbol: "PSYS", id: 1 },
+	const { onOpenCoin, isOpenCoin, onCloseCoin } = useModal();
+	const [selectedToken, setSelectedToken] = useState<
+		IToken[] | ITokenBalance[] | ITokenBalanceWithId[]
+	>([
+		{
+			logoURI: "icons/syscoin-logo.png",
+			symbol: "SYS",
+			id: 0,
+			balance: "0",
+			chainId: 0,
+			address: "",
+			decimals: 0,
+			name: "Syscoin",
+			extensions: {},
+			tags: [],
+		},
+		{
+			logoURI: "icons/pegasys.png",
+			symbol: "PSYS",
+			id: 1,
+			balance: "0",
+			chainId: 0,
+			address: "",
+			decimals: 0,
+			name: "Pegasys",
+			extensions: {},
+			tags: [],
+		},
 	]);
 	const [buttonId, setButtonId] = useState<number>(0);
 
@@ -46,10 +70,11 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 			onClose={onModalClose}
 		>
 			<SelectCoinModal
-				isOpen={isOpen}
-				onClose={onClose}
+				isOpen={isOpenCoin}
+				onClose={onCloseCoin}
 				buttonId={buttonId}
 				selectedToken={selectedToken}
+				setSelectedToken={setSelectedToken}
 			/>
 			<ModalOverlay />
 			<ModalContent
@@ -110,7 +135,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 							id="0"
 							width="100%"
 							onClick={event => {
-								onOpen();
+								onOpenCoin();
 								setButtonId(Number(event.currentTarget.id));
 							}}
 							p="4"
@@ -152,7 +177,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								id="1"
 								width="100%"
 								onClick={event => {
-									onOpen();
+									onOpenCoin();
 									setButtonId(Number(event.currentTarget.id));
 								}}
 								p="4"

@@ -9,7 +9,6 @@ import {
 	ModalOverlay,
 	Text,
 	Tooltip,
-	useDisclosure,
 	Stack,
 	Switch,
 	Slider,
@@ -18,10 +17,11 @@ import {
 	SliderFilledTrack,
 	SliderThumb,
 } from "@chakra-ui/react";
-import { usePicasso } from "hooks";
+import { useModal, usePicasso } from "hooks";
 import React, { useState } from "react";
 import { MdHelpOutline, MdArrowBack } from "react-icons/md";
 import { SelectCoinModal } from "components";
+import { ITokenBalance, ITokenBalanceWithId } from "types";
 
 interface IModal {
 	isModalOpen: boolean;
@@ -29,7 +29,7 @@ interface IModal {
 	isCreate?: boolean;
 	haveValue?: boolean;
 }
-interface IToken {
+interface IToken extends ITokenBalance {
 	logoURI: string;
 	symbol: string;
 	id?: number;
@@ -38,10 +38,34 @@ interface IToken {
 export const RemoveLiquidity: React.FC<IModal> = props => {
 	const { isModalOpen, onModalClose, isCreate, haveValue } = props;
 	const theme = usePicasso();
-	const { onOpen, isOpen, onClose } = useDisclosure();
-	const [selectedToken] = useState<IToken[]>([
-		{ logoURI: "icons/syscoin-logo.png", symbol: "SYS", id: 0 },
-		{ logoURI: "icons/pegasys.png", symbol: "PSYS", id: 1 },
+	const { onOpenCoin, isOpenCoin, onCloseCoin } = useModal();
+	const [selectedToken, setSelectedToken] = useState<
+		ITokenBalance[] | ITokenBalanceWithId[] | IToken[]
+	>([
+		{
+			logoURI: "icons/syscoin-logo.png",
+			symbol: "SYS",
+			id: 0,
+			address: "",
+			balance: "",
+			chainId: 0,
+			decimals: 0,
+			name: "Syscoin",
+			extensions: {},
+			tags: [],
+		},
+		{
+			logoURI: "icons/pegasys.png",
+			symbol: "PSYS",
+			id: 1,
+			address: "",
+			balance: "",
+			chainId: 0,
+			decimals: 0,
+			name: "Pegasys",
+			extensions: {},
+			tags: [],
+		},
 	]);
 	const [buttonId, setButtonId] = useState<number>(0);
 	const [sliderValue, setSliderValue] = React.useState(5);
@@ -54,19 +78,20 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 			onClose={onModalClose}
 		>
 			<SelectCoinModal
-				isOpen={isOpen}
-				onClose={onClose}
+				isOpen={isOpenCoin}
+				onClose={onCloseCoin}
 				selectedToken={selectedToken}
+				setSelectedToken={setSelectedToken}
 				buttonId={buttonId}
 			/>
 			<ModalOverlay />
 			<ModalContent
-				mb="20rem"
-				h="max-content"
+				h={["100%", "100%", "max-content", "max-content"]}
 				p="1.5rem"
-				borderRadius="3xl"
-				border="1px solid transparent;"
-				background={theme.bg.blackAlpha}
+				border={["none", "1px solid transparent"]}
+				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
+				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
+				background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
 					display="flex"
@@ -246,11 +271,13 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 				<Flex
 					flexDirection="column"
 					p="1.5rem"
-					background={theme.bg.blueNavy}
-					position="absolute"
-					w="90%"
-					bottom="-280"
-					borderRadius="xl"
+					background={theme.bg.blueGray}
+					position={["absolute", "absolute", "absolute", "absolute"]}
+					bottom={["-245", "-245", "-280", "-280"]}
+					left={["0", "0", "0", "0"]}
+					w="100%"
+					borderTopRadius={["0", "0", "3xl", "3xl"]}
+					borderBottomRadius={["0", "0", "3xl", "3xl"]}
 				>
 					<Text fontWeight="bold" fontSize="lg">
 						Your position

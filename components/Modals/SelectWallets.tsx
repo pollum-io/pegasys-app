@@ -23,11 +23,13 @@ export const SelectWallets: React.FC<IModal> = props => {
 			<ModalOverlay />
 			<ModalContent
 				borderRadius="1.875rem"
-				my="40"
+				my={["0", "0", "40", "40"]}
 				bgColor={theme.bg.blueNavy}
-				w="max-content"
+				w={["100vw", "100vw", "max-content", "max-content"]}
 				h="max-content"
 				p="8"
+				position={["absolute", "absolute", "unset", "unset"]}
+				bottom={["0", "0", "unset", "unset"]}
 			>
 				<Flex flexDirection="column" justifyContent="center">
 					<Flex justifyContent="space-between" align="center" pb="5">
@@ -41,13 +43,9 @@ export const SelectWallets: React.FC<IModal> = props => {
 					<Flex flexDirection="column" pb="5">
 						<WalletOptions />
 					</Flex>
-					<Flex flexDirection="column" fontSize="sm">
-						<Text
-							textAlign="center"
-							fontWeight="normal"
-							color={theme.text.mono}
-						>
-							New to Syscoin?{" "}
+					<Flex flexDirection="column" fontSize="sm	">
+						<Text textAlign="center" fontWeight="normal">
+							New to Syscoin?
 						</Text>
 						<Text textColor={theme.text.cyanPurple} fontWeight="semibold">
 							Learn more about setting up a wallet

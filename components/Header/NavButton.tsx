@@ -14,7 +14,7 @@ export const NavButton: FunctionComponent<IButtonProps> = props => {
 		<Link href={href} _hover={{ textDecoration: "none" }}>
 			<Button
 				color={theme.text.header}
-				fontSize="md"
+				fontSize={["0.938rem", "md", "md", "md"]}
 				fontWeight="semibold"
 				bgColor="transparent"
 				opacity="1"
@@ -27,7 +27,7 @@ export const NavButton: FunctionComponent<IButtonProps> = props => {
 					borderRadius: "70px",
 				}}
 				_active={{}}
-				px="6"
+				px={[3, 6, 6, 6]}
 				py="2"
 				{...rest}
 			>

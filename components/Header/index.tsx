@@ -1,19 +1,21 @@
-import { Flex, Icon, Img, useColorMode, useDisclosure } from "@chakra-ui/react";
+import { Flex, Icon, Img, Text, useColorMode } from "@chakra-ui/react";
 import { WalletButton } from "components";
-import { BridgeButton, IconButton } from "components/Buttons";
-import { usePicasso } from "hooks";
+import { IconButton } from "components/Buttons";
+import { useModal, usePicasso } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
 import { MenuLinks } from "./MenuLink";
-import { Languages } from "./Languages";
+import { SettingsButton } from "./SettingsButton";
+import { ExpertMode } from "./ExpertMode";
 
 export const Header: React.FC = () => {
 	const { toggleColorMode } = useColorMode();
 	const theme = usePicasso();
-	const { onOpen, isOpen, onClose } = useDisclosure();
+	const { isOpenPsysBreakdown, onOpenPsysBreakdown, onClosePsysBreakdown } =
+		useModal();
 	const links = [
 		{
 			name: "Swap",
@@ -41,53 +43,78 @@ export const Header: React.FC = () => {
 			justifyContent="center"
 			flexDirection="column"
 		>
-			<PsysBreakdown isOpen={isOpen} onClose={onClose} />
+			<PsysBreakdown
+				isOpen={isOpenPsysBreakdown}
+				onClose={onClosePsysBreakdown}
+			/>
 			<Img
-				w="6"
-				h="6"
-				src={theme.icon.pegasysLogo}
-				ml="4"
+				w={["7", "8", "6", "6"]}
+				h={["7", "8", "6", "6"]}
+				src="icons/pegasys.png"
+				ml={["2", "4", "4", "4"]}
 				position="absolute"
 				left="0"
 			/>
-			<Flex gap="1" bgColor={theme.bg.topHeader} borderRadius="20">
+			<Flex
+				gap={["0", "1", "1", "1"]}
+				bgColor={theme.bg.topHeader}
+				borderRadius="20"
+				ml={["7", "0", "0", "0"]}
+			>
 				{links.map((item, index) => (
 					<NavButton key={item.name + Number(index)} href={item.url}>
 						{item.name}
 					</NavButton>
 				))}
 
-				<NavButton href="/" color={theme.text.header}>
-					Charts <Icon as={MdOutlineCallMade} w="5" h="5" ml="2" />
+				<NavButton
+					href="/"
+					color={theme.text.header}
+					display={{
+						base: "none",
+						sm: "none",
+						md: "block",
+						lg: "block",
+					}}
+				>
+					Charts
+					<Icon
+						as={MdOutlineCallMade}
+						w="5"
+						h="5"
+						ml="2"
+						color={theme.text.header}
+					/>
 				</NavButton>
-				<BridgeButton />
 			</Flex>
 			<Flex
-				w="32rem"
+				w={["90%", "32rem", "32rem", "32rem"]}
 				h="max-content"
 				backgroundColor={theme.bg.blackAlpha}
-				mt="60"
 				borderRadius="46px 46px 0px 0px"
 				border={theme.border.headerBorder}
 				boxShadow={theme.border.headerBorderShadow}
 				position="fixed"
 				bottom="0"
-				zIndex="2"
+				zIndex="99"
 				alignItems="center"
-				px="10"
+				px={["0", "10"]}
+				pl={["4", "10"]}
 				py="2"
-				justifyContent="space-between"
+				justifyContent={["space-around", "space-between"]}
 			>
-				<Flex w="25%" justifyContent="space-between">
-					<TokenButton onClick={onOpen} />
+				<Flex
+					w="25%"
+					gap={["2", "0"]}
+					justifyContent={["space-around", "space-between"]}
+				>
+					<TokenButton onClick={onOpenPsysBreakdown} />
 					<NetworkButton />
 				</Flex>
-				<Flex>
+				<Flex flexDirection="column">
 					<WalletButton />
 				</Flex>
 				<Flex>
-					<Languages />
-					<MenuLinks />
 					<IconButton
 						_hover={{
 							background: theme.bg.iconBg,
@@ -96,6 +123,8 @@ export const Header: React.FC = () => {
 						icon={<theme.icon.theme />}
 						onClick={() => toggleColorMode()}
 					/>
+					<MenuLinks />
+					<SettingsButton />
 				</Flex>
 			</Flex>
 		</Flex>

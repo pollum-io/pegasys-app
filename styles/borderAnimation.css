@@ -1,0 +1,62 @@
+.gradientBorder {
+	border: none;
+	border-radius: 0;
+	position: relative;
+	border-radius: 3px;
+	overflow: hidden;
+	z-index: 1;
+	bottom: 15px;
+}
+.gradientBorder:focus,
+.gradientBorder:active {
+	outline: none;
+}
+.gradientBorder:before,
+.gradientBorder:after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: auto;
+	width: auto;
+	z-index: -1;
+	animation: rainbow-border 6s linear infinite;
+	border-radius: inherit;
+	border-top-right-radius: 0;
+	border-top-left-radius: 0;
+	background: inherit;
+}
+
+.gradientBorder:before {
+	background: linear-gradient(
+		90deg,
+		#19edd0,
+		#8c12e8,
+		#665ee1,
+		#3c8bdd,
+		#56c0da,
+		#67dbd8,
+		#9719eb,
+		#19edd0
+	);
+	background-size: 200% 200%;
+}
+.gradientBorder:after {
+	margin: 3px;
+}
+/* TODO: Apply fast animarion on hover  */
+/* .gradientBorder:hover:before,
+.gradientBorder:focus:before {
+	animation: rainbow-border 5s linear infinite;
+} */
+
+@keyframes rainbow-border {
+	0% {
+		background-position: 0% 50%;
+	}
+	100% {
+		background-position: 200% 50%;
+	}
+}

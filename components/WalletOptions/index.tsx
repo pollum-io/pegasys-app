@@ -24,25 +24,23 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 			const isMetamask = window.ethereum && window.ethereum.isMetaMask;
 			const option = SUPPORTED_WALLETS[key];
 			// check for mobile options
-			if (isMobile) {
-				if (!window.web3 && !window.ethereum && option.mobile) {
-					return (
-						<Wallets
-							onClick={() =>
-								option.connector !== injected &&
-								!option.href &&
-								option.connector &&
-								setConnectorValues(option.connector)
-							}
-							id={`connect-${key}`}
-							key={key}
-							header={option.name}
-							icon={`icons/${option.iconName}`}
-						/>
-					);
-				}
-				return null;
+			if (!window.web3 && !window.ethereum) {
+				return (
+					<Wallets
+						onClick={() =>
+							option.connector !== injected &&
+							!option.href &&
+							option.connector &&
+							setConnectorValues(option.connector)
+						}
+						id={`connect-${key}`}
+						key={key}
+						header={option.name}
+						icon={`icons/${option.iconName}`}
+					/>
+				);
 			}
+
 			// overwrite injected when needed
 			if (option.connector === injected) {
 				// don't show injected if there's no injected provider
@@ -71,19 +69,16 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 			}
 			// return rest of options
 			return (
-				!isMobile &&
-				!option.mobileOnly && (
-					<Wallets
-						id={`connect-${key}`}
-						onClick={() => {
-							if (option.connector) setConnectorValues(option.connector);
-						}}
-						key={key}
-						// href={option.href || "/"}
-						header={option.name}
-						icon={`icons/${option.iconName}`}
-					/>
-				)
+				<Wallets
+					id={`connect-${key}`}
+					onClick={() => {
+						if (option.connector) setConnectorValues(option.connector);
+					}}
+					key={key}
+					// href={option.href || "/"}
+					header={option.name}
+					icon={`icons/${option.iconName}`}
+				/>
 			);
 		});
 

@@ -7,6 +7,7 @@ import {
 	Modal,
 	ModalBody,
 	ModalContent,
+	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
 	Slider,
@@ -18,7 +19,7 @@ import {
 	Tooltip,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { MdArrowBack, MdOutlineInfo } from "react-icons/md";
 
@@ -29,70 +30,79 @@ interface IModal {
 	setButtonId: Dispatch<SetStateAction<string>>;
 }
 
-export const FarmActions: React.FC<IModal> = props => {
+export const StakeActions: React.FC<IModal> = props => {
 	const { isOpen, onClose, buttonId, setButtonId } = props;
 	const theme = usePicasso();
-	const [confirmDepoist, setConfirmDepoist] = useState(false);
+	const [confirmStake, setConfirmStake] = useState(false);
+	const [inputValue, setInputValue] = useState("");
+	const [isAprroving, setIsAprroving] = useState("");
+	const [isApproved, setIsAprrove] = useState("");
+
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
+
+	const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const value = event?.target?.value;
+
+		setInputValue(value);
+	};
+
+	const changeStakeButtonState = useMemo(() => {
+		if (isAprroving) {
+			return "Aprroving...";
+		}
+		if (isApproved) {
+			return "Confirm Stake";
+		}
+		return "Approve";
+	}, []);
 
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				mt={["8rem", "8", "10rem", "10rem"]}
-				mb={["0", "0", "10rem", "10rem"]}
+				mt="10rem"
+				mb="0"
 				position={["absolute", "absolute", "relative", "relative"]}
 				bottom="0"
-				maxWidth="max-content"
+				maxHeight="90%"
 				w={["100vw", "100vw", "max-content", "max-content"]}
-				h={["max-content", "100vh", "max-content", "max-content"]}
-				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
-				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
+				h={["max-content", "max-content", "max-content", "max-content"]}
+				borderRadius="3xl"
 				bgColor={theme.bg.blueNavy}
-				border={["none", "1px solid transparent"]}
+				border="1px solid transparent"
+				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
+				background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
 					backgroundColor={theme.bg.blueNavy}
 					borderTopRadius="3xl"
 					alignItems="baseline"
 					justifyContent="space-between"
-					pl={["5", "5", "20", "20"]}
-					background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					<Flex
 						flexDirection={["column-reverse", "column-reverse", "row", "row"]}
 						justifyContent="space-between"
 						alignItems={["flex-start", "flex-start", "center", "center"]}
 					>
-						<Flex
-							pr={["0", "0", "7", "7"]}
-							pl={["0", "16", "0", "0"]}
-							gap="2"
-							flexDirection="row"
-							mt={["6", "6", "0", "0"]}
-						>
+						<Flex pr="7" gap="2" mt={["6", "6", "0", "0"]}>
 							<Button
 								w="max-content"
 								h="max-content"
 								py="3"
 								px={["6", "6", "8", "8"]}
 								borderRadius="full"
-								onClick={() => setButtonId("deposit")}
+								onClick={() => setButtonId("stake")}
 								bgColor={
-									buttonId === "deposit"
-										? theme.bg.farmActionsHover
-										: "transparent"
+									buttonId === "stake" ? theme.bg.blue100 : "transparent"
 								}
 								color={
-									buttonId === "deposit"
-										? theme.text.farmActionsHover
-										: theme.text.farmActionsTop
+									buttonId === "stake" ? "black" : "rgba(255, 255, 255, 0.36)"
 								}
 								fontWeight="semibold"
 								_hover={{ opacity: "0.9" }}
 							>
-								Deposit
+								Stake
 							</Button>
 							<Button
 								id="1"
@@ -101,21 +111,17 @@ export const FarmActions: React.FC<IModal> = props => {
 								py="3"
 								px={["6", "6", "8", "8"]}
 								borderRadius="full"
-								onClick={() => setButtonId("withdraw")}
+								onClick={() => setButtonId("unstake")}
 								bgColor={
-									buttonId === "withdraw"
-										? theme.bg.farmActionsHover
-										: "transparent"
+									buttonId === "unstake" ? theme.bg.blue100 : "transparent"
 								}
 								color={
-									buttonId === "withdraw"
-										? theme.text.farmActionsHover
-										: theme.text.farmActionsTop
+									buttonId === "unstake" ? "black" : "rgba(255, 255, 255, 0.36)"
 								}
 								fontWeight="semibold"
 								_hover={{ opacity: "0.9" }}
 							>
-								Withdraw
+								Unstake
 							</Button>
 							<Button
 								w="max-content"
@@ -125,14 +131,10 @@ export const FarmActions: React.FC<IModal> = props => {
 								borderRadius="full"
 								onClick={() => setButtonId("claim")}
 								bgColor={
-									buttonId === "claim"
-										? theme.bg.farmActionsHover
-										: "transparent"
+									buttonId === "claim" ? theme.bg.blue100 : "transparent"
 								}
 								color={
-									buttonId === "claim"
-										? theme.text.farmActionsHover
-										: theme.text.farmActionsTop
+									buttonId === "claim" ? "black" : "rgba(255, 255, 255, 0.36)"
 								}
 								fontWeight="semibold"
 								_hover={{ opacity: "0.9" }}
@@ -180,62 +182,44 @@ export const FarmActions: React.FC<IModal> = props => {
 						</Flex>
 					</Flex>
 				</ModalHeader>
-				<ModalBody
-					mb="2	"
-					borderBottomRadius={["0", "0", "3xl", "3xl"]}
-					background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
-				>
-					{buttonId === "deposit" && (
+				<ModalBody>
+					{buttonId === "stake" && (
 						<Flex flexDirection="column">
 							<Flex gap="2">
 								<Flex>
 									<Img src="icons/syscoin-logo.png" w="6" h="6" />
-									<Img src="icons/pegasys.png" w="6" h="6" />
 								</Flex>
 								<Flex>
 									<Text fontSize="lg" fontWeight="bold">
 										SYS
 									</Text>
-									<Text fontSize="lg" fontWeight="bold">
-										:
-									</Text>
-									<Text fontSize="lg" fontWeight="bold">
-										PSYS
-									</Text>
 								</Flex>
 							</Flex>
 							<Flex flexDirection="column" gap="2" mt="6">
-								<Text fontWeight="normal">
-									Available to deposit: 0.00000000001
-								</Text>
-								{!confirmDepoist ? (
+								<Text fontWeight="normal">Available to deposit: 1</Text>
+								{!confirmStake ? (
 									<Flex>
 										<Input
 											placeholder="0.0"
 											border="1px solid"
-											borderColor={theme.border.farmInput}
+											borderColor="rgba(1, 219, 243, 0.2)"
 											bgColor={theme.bg.whiteGray}
 											borderLeftRadius="full"
 											p="5"
 											w="25rem"
-											_hover={{
-												borderColor: theme.border.farmInput,
-											}}
-											_focus={{
-												borderColor: theme.border.farmInput,
-											}}
+											_hover={{}}
+											onChange={handleInput}
 										/>
 										<Button
-											border="1px solid "
-											borderColor={theme.border.farmInput}
+											border="1px solid rgba(0, 217, 239, 0.2)"
 											borderRightRadius="full"
-											bgColor={theme.bg.max}
-											color={theme.text.max}
+											bgColor={theme.bg.whiteGray}
+											color={theme.text.cyan}
 											fontSize="lg"
 											fontWeight="normal"
 											px="4"
 											py="5"
-											_hover={{ backgroundColor: theme.bg.max, opacity: 0.9 }}
+											_hover={{ backgroundColor: theme.bg.blueNavyLightness }}
 										>
 											max
 										</Button>
@@ -252,20 +236,16 @@ export const FarmActions: React.FC<IModal> = props => {
 									>
 										<Flex flexDirection="row" alignItems="center">
 											<Img src="icons/syscoin-logo.png" w="6" h="6" />
-											<Img src="icons/pegasys.png" w="6" h="6" />
 											<Text fontSize="2xl" fontWeight="semibold" pl="2">
 												1
 											</Text>
 										</Flex>
 										<Flex flexDirection="row">
-											<Text>SYS</Text>
-											<Text>:</Text>
-											<Text>PSYS</Text>
+											<Text>USDT</Text>
 										</Flex>
 									</Flex>
 								)}
 								<Text fontWeight="normal">Weekly Rewards: 0 PSYS / Week</Text>
-								<Text fontWeight="normal">Extra Reward: 0 PSYS / Week</Text>
 							</Flex>
 							<Button
 								fontSize="lg"
@@ -277,18 +257,16 @@ export const FarmActions: React.FC<IModal> = props => {
 								h="max-content"
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
-								_hover={{
-									opacity: "1",
-									bgColor: theme.bg.bluePurple,
-								}}
+								_hover={{ opacity: "1" }}
 								_active={{}}
 								borderRadius="full"
+								disabled={!inputValue}
 							>
-								Approve
+								{changeStakeButtonState}
 							</Button>
 						</Flex>
 					)}
-					{buttonId === "withdraw" && (
+					{buttonId === "unstake" && (
 						<Flex flexDirection="column">
 							<Text fontWeight="normal" mb="2">
 								Deposited PLP Liquidity: 0.000001
@@ -297,32 +275,23 @@ export const FarmActions: React.FC<IModal> = props => {
 								<Input
 									placeholder="0.0"
 									border="1px solid"
-									borderColor={theme.border.farmInput}
-									bgColor={theme.bg.blackAlpha}
+									borderColor="rgba(1, 219, 243, 0.2)"
+									bgColor={theme.bg.whiteGray}
 									borderLeftRadius="full"
 									p="5"
 									w="25rem"
-									_hover={{
-										borderColor: theme.border.farmInput,
-									}}
-									_focus={{
-										borderColor: theme.border.farmInput,
-									}}
+									_hover={{}}
 								/>
 								<Button
-									border="1px solid"
-									borderColor={theme.border.farmInput}
+									border="1px solid rgba(0, 217, 239, 0.2)"
 									borderRightRadius="full"
-									bgColor={theme.bg.max}
-									color={theme.text.max}
+									bgColor={theme.bg.whiteGray}
+									color={theme.text.cyan}
 									fontSize="lg"
 									fontWeight="normal"
 									px="4"
 									py="5"
-									_hover={{
-										borderColor: theme.border.farmInput,
-										opacity: 0.9,
-									}}
+									_hover={{ backgroundColor: theme.bg.blueNavyLightness }}
 								>
 									max
 								</Button>
@@ -383,13 +352,10 @@ export const FarmActions: React.FC<IModal> = props => {
 									w="100%"
 									h="max-content"
 									border="1px solid"
-									borderColor={theme.text.cyanPurple}
+									borderColor={theme.text.cyan}
 									bgColor="transparent"
-									color={theme.text.whitePurple}
-									_hover={{
-										borderColor: theme.text.cyanLightPurple,
-										color: theme.text.cyanLightPurple,
-									}}
+									color="white"
+									_hover={{ opacity: "1" }}
 									_active={{}}
 									borderRadius="full"
 								>
@@ -404,11 +370,11 @@ export const FarmActions: React.FC<IModal> = props => {
 									h="max-content"
 									bgColor={theme.bg.blueNavyLightness}
 									color={theme.text.cyan}
-									_hover={{ opacity: "1", bgColor: theme.bg.bluePurple }}
+									_hover={{ opacity: "1" }}
 									_active={{}}
 									borderRadius="full"
 								>
-									Withdraw
+									Unstake
 								</Button>
 							</Flex>
 						</Flex>
@@ -416,7 +382,7 @@ export const FarmActions: React.FC<IModal> = props => {
 					{buttonId === "claim" && (
 						<Flex flexDirection="column" gap="6">
 							<Flex
-								bgColor={theme.bg.max}
+								bgColor={theme.bg.whiteGray}
 								flexDirection="column"
 								justifyContent="center"
 								alignItems="center"
@@ -445,7 +411,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								h="max-content"
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
-								_hover={{ opacity: "1", bgColor: theme.bg.bluePurple }}
+								_hover={{ opacity: "1" }}
 								_active={{}}
 								borderRadius="full"
 							>
@@ -455,7 +421,7 @@ export const FarmActions: React.FC<IModal> = props => {
 					)}
 				</ModalBody>
 				<Flex>
-					{buttonId === "withdraw" && (
+					{buttonId === "unstake" && (
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
@@ -473,20 +439,21 @@ export const FarmActions: React.FC<IModal> = props => {
 							</Flex>
 							<Flex flexDirection="column" gap="6">
 								<Text>
-									Here the text would change explaining the “Exit” mode I
-									think... Need to confirm the warning content.
+									When you partially unstake your deposits, you will keep
+									earning rewards from this staking pool proportionally to your
+									remaining staked balance.
 								</Text>
 							</Flex>
 						</Flex>
 					)}
-					{buttonId === "claim" && (
+					{buttonId === "stake" && (
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
 							background={theme.text.gray600}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
-							top={["unset", "unset", "20rem", "20rem"]}
+							top={["unset", "unset", "24rem", "24rem"]}
 							borderTopRadius={["0", "0", "3xl", "3xl"]}
 							borderBottomRadius={["0", "0", "3xl", "3xl"]}
 							alignItems="flex-start"
@@ -497,10 +464,8 @@ export const FarmActions: React.FC<IModal> = props => {
 							</Flex>
 							<Flex flexDirection="column" gap="6">
 								<Text>
-									When you withdraw, your PSYS is claimed and your Pegasys
-									Liquidity tokens, PLP, are returned to you. You will no longer
-									earn PSYS rewards on this liquidity. Your original token
-									liquidity will remain in its liquidity pool.
+									Please note that when you claim without withdrawing your
+									liquidity remains in the staking pool.
 								</Text>
 							</Flex>
 						</Flex>
