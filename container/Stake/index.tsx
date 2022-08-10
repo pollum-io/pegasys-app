@@ -16,9 +16,9 @@ export const StakeContainer: NextPage = () => {
 			h="100%"
 			alignItems="flex-start"
 			justifyContent="center"
-			pt="20"
+			pt={["10", "10", "20", "20"]}
 		>
-			<Flex flexDirection="column" w="2xl">
+			<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
 				<Flex
 					flexDirection="column"
 					zIndex="docked"
@@ -40,6 +40,7 @@ export const StakeContainer: NextPage = () => {
 						px="1.625rem"
 						py="1.375rem"
 						gap="3"
+						h={["7.5rem", "8rem", "10rem", "10rem"]}
 					>
 						<Text fontWeight="bold" color="white" fontSize="md">
 							Pegasys PSYS Staking
@@ -48,7 +49,7 @@ export const StakeContainer: NextPage = () => {
 							fontWeight="semibold"
 							fontSize="sm"
 							lineHeight="shorter"
-							w="50%"
+							w={["70%", "50%", "50%", "50%"]}
 						>
 							Deposit and stake your PSYS tokens to earn more tokens.
 						</Text>
@@ -78,8 +79,8 @@ export const StakeContainer: NextPage = () => {
 					zIndex="docked"
 				>
 					<Flex
-						mt="4"
-						flexDirection="row"
+						mt={["4"]}
+						flexDirection={["column", "column", "row", "row"]}
 						justifyContent="space-between"
 						w="100%"
 						zIndex="docked"
@@ -87,7 +88,16 @@ export const StakeContainer: NextPage = () => {
 						<Text fontSize="2xl" fontWeight="semibold">
 							Current Opportunities
 						</Text>
-						<Flex gap="1">
+						<Flex
+							gap="1"
+							mt={["4", "4", "0", "0"]}
+							justifyContent={[
+								"center",
+								"center",
+								"space-between",
+								"space-between",
+							]}
+						>
 							<Button
 								color={theme.bg.blue900}
 								bgColor={theme.bg.blue100}
@@ -115,7 +125,12 @@ export const StakeContainer: NextPage = () => {
 						</Flex>
 					</Flex>
 				</Flex>
-				<Flex flexDirection="column" gap="8" mb="24">
+				<Flex
+					flexDirection="column"
+					gap="8"
+					mb="24"
+					alignItems={["center", "center", "center", "center"]}
+				>
 					<StakeCards />
 					<StakeCards />
 				</Flex>

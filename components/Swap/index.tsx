@@ -228,8 +228,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								placeholder="0.00"
 								textAlign="right"
 								mt="2"
-								px="1.5"
-								ml="50"
+								px={["0.1rem", "1.5", "1.5", "1.5"]}
+								ml={["10", "50", "50", "50"]}
 								type="text"
 								onChange={handleOnChangeTokenInputs}
 								name="inputFrom"
@@ -312,8 +312,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								placeholder="0.00"
 								textAlign="right"
 								mt="2"
-								px="1.5"
-								ml="50"
+								px={["0.1rem", "1.5", "1.5", "1.5"]}
+								ml={["50", "50", "50", "50"]}
 								type="text"
 								onChange={handleOnChangeTokenInputs}
 								name="inputTo"
@@ -472,7 +472,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			</Flex>
 			<Flex
 				h="max-content"
-				w={["85%", "sm", "100%", "xl"]}
+				w={["18rem", "sm", "100%", "xl"]}
 				p="1.5rem"
 				ml={["0", "0", "0", "10"]}
 				mt={["8", "8", "8", "0"]}
@@ -482,17 +482,24 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				borderRadius={30}
 				border="1px solid transparent;"
 			>
-				<Flex gap="2" justifyContent="center" mb="8" align="center">
+				<Flex
+					gap="2"
+					justifyContent="center"
+					mb="8"
+					flexDirection={["column", "row", "row", "row"]}
+				>
 					<Flex>
 						<Img src={selectedToken[0]?.logoURI} w="7" h="7" />
 						<Img src={selectedToken[1]?.logoURI} w="7" h="7" />
 					</Flex>
-					<Text fontWeight="bold" fontSize="xl">
-						TSYS/PSYS
-					</Text>
-					<Text pl="2" fontSize="lg">
-						$15.56
-					</Text>
+					<Flex align="center">
+						<Text fontWeight="bold" fontSize="xl">
+							TSYS/PSYS
+						</Text>
+						<Text pl="2" fontSize="lg">
+							$15.56
+						</Text>
+					</Flex>
 				</Flex>
 				<ChartComponent data={initialData} colors={colors} />
 			</Flex>

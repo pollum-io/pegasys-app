@@ -157,7 +157,18 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
 			<ManageToken isOpen={isOpenManageToken} onClose={onCloseManageToken} />
 			<ModalOverlay />
-			<ModalContent borderRadius="3xl" bgColor={theme.bg.blueNavy}>
+			<ModalContent
+				borderRadius="3xl"
+				bgColor={theme.bg.blueNavy}
+				bottom="0"
+				mt="16"
+				mb="0"
+				border={["none", "1px solid transparent"]}
+				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
+				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
+				position="relative"
+				h="max-content"
+			>
 				<ModalHeader display="flex" alignItems="baseline" gap="3">
 					<Text fontSize="lg" fontWeight="semibold">
 						Select a token
@@ -245,7 +256,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					py="0"
 					bgColor={theme.bg.whiteGray}
 					alignItems="center"
-					borderBottomRadius="3xl"
+					borderBottomRadius={["0px", "0", "3xl", "3xl"]}
 				>
 					<Flex pt="8" py="5">
 						<Text

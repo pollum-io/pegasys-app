@@ -60,11 +60,11 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 			/>
 			<ModalOverlay />
 			<ModalContent
-				mb="20rem"
-				h="max-content"
+				h={["100%", "100%", "max-content", "max-content"]}
 				p="1.5rem"
-				borderRadius="3xl"
-				border="1px solid transparent;"
+				border={["none", "1px solid transparent"]}
+				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
+				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
 				background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
@@ -238,11 +238,13 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 				<Flex
 					flexDirection="column"
 					p="1.5rem"
-					background={theme.bg.blueNavy}
-					position="absolute"
-					w="90%"
-					bottom="-280"
-					borderRadius="xl"
+					background={theme.bg.blueGray}
+					position={["absolute", "absolute", "absolute", "absolute"]}
+					bottom={["-245", "-245", "-280", "-280"]}
+					left={["0", "0", "0", "0"]}
+					w="100%"
+					borderTopRadius={["0", "0", "3xl", "3xl"]}
+					borderBottomRadius={["0", "0", "3xl", "3xl"]}
 				>
 					<Text fontWeight="bold" fontSize="lg">
 						Your position

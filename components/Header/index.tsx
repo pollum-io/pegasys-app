@@ -59,7 +59,7 @@ export const Header: React.FC = () => {
 				gap={["0", "1", "1", "1"]}
 				bgColor={theme.bg.topHeader}
 				borderRadius="20"
-				ml={["8", "0", "0", "0"]}
+				ml={["7", "0", "0", "0"]}
 			>
 				{links.map((item, index) => (
 					<NavButton key={item.name + Number(index)} href={item.url}>
@@ -76,7 +76,7 @@ export const Header: React.FC = () => {
 						lg: "block",
 					}}
 				>
-					Charts{" "}
+					Charts
 					<Icon
 						as={MdOutlineCallMade}
 						w="5"
