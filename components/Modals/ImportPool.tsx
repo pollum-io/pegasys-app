@@ -10,9 +10,8 @@ import {
 	ModalOverlay,
 	Text,
 	Tooltip,
-	useDisclosure,
 } from "@chakra-ui/react";
-import { usePicasso } from "hooks";
+import { useModal, usePicasso } from "hooks";
 import React, { useState } from "react";
 import { MdArrowBack, MdHelpOutline, MdAdd } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
@@ -33,7 +32,7 @@ interface IToken extends ITokenBalance {
 export const ImportPoolModal: React.FC<IModal> = props => {
 	const { isModalOpen, onModalClose } = props;
 	const theme = usePicasso();
-	const { onOpen, isOpen, onClose } = useDisclosure();
+	const { onOpenCoin, isOpenCoin, onCloseCoin } = useModal();
 	const [selectedToken, setSelectedToken] = useState<
 		IToken[] | ITokenBalance[] | ITokenBalanceWithId[]
 	>([
@@ -71,8 +70,8 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 			onClose={onModalClose}
 		>
 			<SelectCoinModal
-				isOpen={isOpen}
-				onClose={onClose}
+				isOpen={isOpenCoin}
+				onClose={onCloseCoin}
 				buttonId={buttonId}
 				selectedToken={selectedToken}
 				setSelectedToken={setSelectedToken}
@@ -136,7 +135,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 							id="0"
 							width="100%"
 							onClick={event => {
-								onOpen();
+								onOpenCoin();
 								setButtonId(Number(event.currentTarget.id));
 							}}
 							p="4"
@@ -178,7 +177,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								id="1"
 								width="100%"
 								onClick={event => {
-									onOpen();
+									onOpenCoin();
 									setButtonId(Number(event.currentTarget.id));
 								}}
 								p="4"

@@ -1,14 +1,7 @@
-import {
-	Flex,
-	Icon,
-	Img,
-	Text,
-	useColorMode,
-	useDisclosure,
-} from "@chakra-ui/react";
+import { Flex, Icon, Img, Text, useColorMode } from "@chakra-ui/react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
-import { usePicasso } from "hooks";
+import { useModal, usePicasso } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
 import { NavButton } from "./NavButton";
@@ -21,7 +14,8 @@ import { ExpertMode } from "./ExpertMode";
 export const Header: React.FC = () => {
 	const { toggleColorMode } = useColorMode();
 	const theme = usePicasso();
-	const { onOpen, isOpen, onClose } = useDisclosure();
+	const { isOpenPsysBreakdown, onOpenPsysBreakdown, onClosePsysBreakdown } =
+		useModal();
 	const links = [
 		{
 			name: "Swap",
@@ -49,7 +43,10 @@ export const Header: React.FC = () => {
 			justifyContent="center"
 			flexDirection="column"
 		>
-			<PsysBreakdown isOpen={isOpen} onClose={onClose} />
+			<PsysBreakdown
+				isOpen={isOpenPsysBreakdown}
+				onClose={onClosePsysBreakdown}
+			/>
 			<Img
 				w={["7", "8", "6", "6"]}
 				h={["7", "8", "6", "6"]}
@@ -110,7 +107,7 @@ export const Header: React.FC = () => {
 					gap={["2", "0"]}
 					justifyContent={["space-around", "space-between"]}
 				>
-					<TokenButton onClick={onOpen} />
+					<TokenButton onClick={onOpenPsysBreakdown} />
 					<NetworkButton />
 				</Flex>
 				<Flex flexDirection="column">

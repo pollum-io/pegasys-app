@@ -8,7 +8,7 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import { FunctionComponent, useState } from "react";
-import { usePicasso } from "hooks";
+import { useModal, usePicasso } from "hooks";
 import { AddLiquidityModal, RemoveLiquidity } from "components/Modals";
 import { StakeActions } from "components/Modals/StakeActions";
 
@@ -35,7 +35,8 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 		stakeYourUnclaimed,
 	} = props;
 	const theme = usePicasso();
-	const { onOpen, isOpen, onClose } = useDisclosure();
+	const { isOpenStakeActions, onOpenStakeActions, onCloseStakeActions } =
+		useModal();
 	const [buttonId, setButtonId] = useState<string>("");
 
 	return (
@@ -51,8 +52,8 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 			background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 		>
 			<StakeActions
-				isOpen={isOpen}
-				onClose={onClose}
+				isOpen={isOpenStakeActions}
+				onClose={onCloseStakeActions}
 				buttonId={buttonId}
 				setButtonId={setButtonId}
 			/>
@@ -85,7 +86,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					ml="1"
 					onClick={(event: any) => {
 						setButtonId(event?.currentTarget?.id);
-						onOpen();
+						onOpenStakeActions();
 					}}
 				>
 					Claim
@@ -172,7 +173,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					fontWeight="semibold"
 					onClick={(event: any) => {
 						setButtonId(event?.currentTarget?.id);
-						onOpen();
+						onOpenStakeActions();
 					}}
 				>
 					Unstake
@@ -190,7 +191,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					fontWeight="semibold"
 					onClick={(event: any) => {
 						setButtonId(event?.currentTarget?.id);
-						onOpen();
+						onOpenStakeActions();
 					}}
 				>
 					Stake

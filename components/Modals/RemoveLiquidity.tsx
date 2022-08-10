@@ -9,7 +9,6 @@ import {
 	ModalOverlay,
 	Text,
 	Tooltip,
-	useDisclosure,
 	Stack,
 	Switch,
 	Slider,
@@ -18,7 +17,7 @@ import {
 	SliderFilledTrack,
 	SliderThumb,
 } from "@chakra-ui/react";
-import { usePicasso } from "hooks";
+import { useModal, usePicasso } from "hooks";
 import React, { useState } from "react";
 import { MdHelpOutline, MdArrowBack } from "react-icons/md";
 import { SelectCoinModal } from "components";
@@ -38,7 +37,7 @@ interface IToken {
 export const RemoveLiquidity: React.FC<IModal> = props => {
 	const { isModalOpen, onModalClose, isCreate, haveValue } = props;
 	const theme = usePicasso();
-	const { onOpen, isOpen, onClose } = useDisclosure();
+	const { onOpenCoin, isOpenCoin, onCloseCoin } = useModal();
 	const [selectedToken] = useState<IToken[]>([
 		{ logoURI: "icons/syscoin-logo.png", symbol: "SYS", id: 0 },
 		{ logoURI: "icons/pegasys.png", symbol: "PSYS", id: 1 },
@@ -54,8 +53,8 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 			onClose={onModalClose}
 		>
 			<SelectCoinModal
-				isOpen={isOpen}
-				onClose={onClose}
+				isOpen={isOpenCoin}
+				onClose={onCloseCoin}
 				selectedToken={selectedToken}
 				buttonId={buttonId}
 			/>

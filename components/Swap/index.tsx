@@ -6,9 +6,8 @@ import {
 	Img,
 	Input,
 	Text,
-	useDisclosure,
 } from "@chakra-ui/react";
-import { usePicasso, useTokens, useWallet } from "hooks";
+import { useModal, usePicasso, useTokens, useWallet } from "hooks";
 import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
@@ -53,22 +52,18 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const theme = usePicasso();
 
 	const { userTokensBalance } = useTokens();
+	const {
+		onOpenWallet,
+		isOpenWallet,
+		onCloseWallet,
+		onOpenCoin,
+		isOpenCoin,
+		onCloseCoin,
+		onOpenConfirmSwap,
+		isOpenConfirmSwap,
+		onCloseConfirmSwap,
+	} = useModal();
 
-	const {
-		onOpen: onOpenWallet,
-		isOpen: isOpenWallet,
-		onClose: onCloseWallet,
-	} = useDisclosure();
-	const {
-		onOpen: onOpenCoin,
-		isOpen: isOpenCoin,
-		onClose: onCloseCoin,
-	} = useDisclosure();
-	const {
-		onOpen: onOpenConfirmSwap,
-		isOpen: isOpenConfirmSwap,
-		onClose: onCloseConfirmSwap,
-	} = useDisclosure();
 	const { isConnected } = useWallet();
 	const [selectedToken, setSelectedToken] = useState<
 		ITokenBalanceWithId[] | ITokenBalance[]
