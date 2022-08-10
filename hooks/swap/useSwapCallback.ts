@@ -1,32 +1,11 @@
 /* eslint-disable */
-import {
-	JSBI,
-	Percent,
-	Router,
-	SwapParameters,
-	Trade,
-	TradeType,
-} from "@pollum-io/pegasys-sdk";
+import { Trade } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
-import { Contract } from "@ethersproject/contracts";
-import { useMemo, useEffect } from "react";
-import { BigNumber } from "@ethersproject/bignumber";
-import pegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
-import { useWallet, useENS } from "hooks";
-import erc20ABI from "utils/abis/erc20.json";
-import {
-	calculateGasMargin,
-	createContractUsingAbi,
-	isZero,
-	shortAddress,
-} from "utils";
+import { useENS } from "hooks";
+import { calculateGasMargin, isZero, shortAddress, isAddress } from "utils";
 import { IWalletHookInfos } from "types";
 import { addTransaction } from "utils/addTransaction";
-
-interface SwapCall {
-	contract: Contract;
-	parameters: SwapParameters;
-}
+import { UseBestSwapMethod } from "./useBestSwapMethod";
 
 export enum SwapCallbackState {
 	INVALID,
@@ -34,74 +13,9 @@ export enum SwapCallbackState {
 	VALID,
 }
 
-const INITIAL_ALLOWED_SLIPPAGE = 50;
-
-const BIPS_BASE = JSBI.BigInt(10000);
-
-/**
- * Returns the swap calls that can be used to make the trade
- * @param trade trade to execute
- * @param allowedSlippage user allowed slippage
- * @param recipientAddressOrName
- */
-function getSwapArguments(
-	trade: Trade | undefined, // trade to execute, required  // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-	allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
-	walletInfos: IWalletHookInfos,
-	signer: Signer
-): SwapCall[] {
-	const { walletAddress, chainId: chain } = walletInfos;
-
-	const { address: recipientAddress } = useENS(walletAddress);
-
-	const recipient =
-		recipientAddress === null ? walletAddress : recipientAddress;
-	let deadline: any;
-
-	const currentTime = BigNumber.from(new Date().getTime());
-
-	deadline = currentTime.add(10);
-	const tradeVersion = "v2";
-
-	const contract: Contract | null = createContractUsingAbi(
-		walletAddress,
-		pegasysAbi.abi,
-		signer
-	);
-
-	if (!contract) {
-		return [];
-	}
-
-	const swapMethods = [];
-
-	if (trade.tradeType === TradeType.EXACT_INPUT && recipient) {
-		swapMethods.push(
-			Router.swapCallParameters(trade, {
-				feeOnTransfer: true,
-				allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-				recipient,
-				deadline: deadline.toNumber(),
-			})
-		);
-		return swapMethods.map(parameters => ({ parameters, contract }));
-	}
-
-	recipient &&
-		swapMethods.push(
-			Router.swapCallParameters(trade, {
-				feeOnTransfer: false,
-				allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-				recipient,
-				deadline: deadline.toNumber(),
-			})
-		);
-	return swapMethods.map(parameters => ({ parameters, contract }));
-}
-
 export function UseSwapCallback(
 	trade: Trade | undefined, // trade to execute, required
-	allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
+	allowedSlippage: number, // in bips
 	walletInfos: IWalletHookInfos,
 	signer: Signer,
 	setTransactions: React.Dispatch<React.SetStateAction<object>>,
@@ -109,10 +23,9 @@ export function UseSwapCallback(
 ) {
 	const { walletAddress, chainId: chain } = walletInfos;
 
-	const swapCalls = getSwapArguments(
-		trade,
-		allowedSlippage,
-		walletInfos,
+	const swapCalls = UseBestSwapMethod(
+		trade as Trade,
+		walletInfos.walletAddress,
 		signer
 	);
 
@@ -143,7 +56,7 @@ export function UseSwapCallback(
 	return {
 		state: SwapCallbackState.VALID,
 		callback: async function onSwap(): Promise<string> {
-			const estimatedCalls: EstimatedSwapCall[] = await Promise.all(
+			const estimatedCalls = await Promise.all(
 				swapCalls.map(call => {
 					const {
 						parameters: { methodName, args, value },
@@ -197,17 +110,16 @@ export function UseSwapCallback(
 
 			// a successful estimation is a bignumber gas estimate and the next call is also a bignumber gas estimate
 			const successfulEstimation = estimatedCalls.find(
-				(el, ix, list): el is SuccessfulCall =>
+				(el, ix, list) =>
 					"gasEstimate" in el &&
 					(ix === list.length - 1 || "gasEstimate" in list[ix + 1])
 			);
 
 			if (!successfulEstimation) {
-				const errorCalls = estimatedCalls.filter(
-					(call): call is FailedCall => "error" in call
-				);
+				const errorCalls = estimatedCalls.filter(call => "error" in call);
 				if (errorCalls.length > 0)
-					throw errorCalls[errorCalls.length - 1].error;
+					// @ts-ignore
+					throw errorCalls[errorCalls.length - 1]?.error;
 				throw new Error(
 					"Unexpected error. Please contact support: none of the calls threw an error"
 				);
@@ -218,6 +130,7 @@ export function UseSwapCallback(
 					contract,
 					parameters: { methodName, args, value },
 				},
+				// @ts-ignore
 				gasEstimate,
 			} = successfulEstimation;
 
@@ -250,7 +163,9 @@ export function UseSwapCallback(
 
 					addTransaction(
 						response,
-						withVersion,
+						{
+							summary: withVersion,
+						},
 						walletInfos,
 						setTransactions,
 						transactions

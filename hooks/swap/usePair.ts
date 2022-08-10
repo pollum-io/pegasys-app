@@ -26,6 +26,7 @@ export async function usePairs(
 			: undefined
 	);
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const results: any = await getMultiCall(
 		pairAddresses as string[],
 		walletAddress,
@@ -33,6 +34,7 @@ export async function usePairs(
 		"getReserves"
 	);
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	return results.map((result: any, i: number) => {
 		if (!tokens[i]) return [PairState.INVALID, null];
 		if (!result) return [PairState.NOT_EXISTS, null];

@@ -8,12 +8,17 @@ import {
 	TradeType,
 	SwapParameters,
 } from "@pollum-io/pegasys-sdk";
+import { Signer } from "ethers";
+import pegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
+import { createContractUsingAbi } from "utils";
+import { ISwapCall } from "types/ISwapCall";
 import { useTransactionDeadline } from "./useTransactionDeadline";
 
 export function UseBestSwapMethod(
 	v2Trade: Trade,
-	walletAddress: string
-): string[] {
+	walletAddress: string,
+	signer: Signer
+): ISwapCall[] {
 	let deadline = useTransactionDeadline();
 
 	if (!v2Trade || !walletAddress) return [];
@@ -24,7 +29,17 @@ export function UseBestSwapMethod(
 		deadline = currentTime.add(10);
 	}
 
-	const bestSwapMethods = [] as SwapParameters[];
+	const contract = createContractUsingAbi(
+		walletAddress,
+		pegasysAbi.abi,
+		signer as Signer
+	);
+
+	if (!contract) {
+		return [];
+	}
+
+	const bestSwapMethods: SwapParameters[] = [];
 
 	bestSwapMethods.push(
 		Router.swapCallParameters(v2Trade as Trade, {
@@ -52,5 +67,5 @@ export function UseBestSwapMethod(
 		);
 	}
 
-	return bestSwapMethods.map((method: SwapParameters) => method.methodName);
+	return bestSwapMethods.map(parameters => ({ parameters, contract }));
 }

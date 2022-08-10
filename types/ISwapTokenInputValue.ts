@@ -1,5 +1,3 @@
-import { WrappedTokenInfo } from "./index";
-
 export interface IInputValues {
 	value: string;
 }

@@ -21,3 +21,4 @@ export * from "./computeTradePriceBreakdown";
 export * from "./singleCall";
 export * from "./addTransaction";
 export * from "./getTokenAllowance";
+export * from "./truncateNumberDecimalsPlaces";

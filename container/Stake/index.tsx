@@ -1,10 +1,7 @@
 import { Button, Flex, Img, Text } from "@chakra-ui/react";
-import { StakeActions } from "components/Modals/StakeActions";
 import { StakeCards } from "components/Stake/StakeCard";
-import { DefaultTemplate } from "container";
 import { usePicasso } from "hooks";
 import { NextPage } from "next";
-import { useState } from "react";
 import { MdOutlineCallMade } from "react-icons/md";
 
 export const StakeContainer: NextPage = () => {

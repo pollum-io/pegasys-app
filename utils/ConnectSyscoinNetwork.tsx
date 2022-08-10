@@ -1,10 +1,5 @@
-import {
-	SYS_TESTNET_CHAIN_PARAMS,
-	NEVM_CHAIN_PARAMS,
-	SUPPORTED_NETWORK_CHAINS,
-} from "helpers/consts";
+import { NEVM_CHAIN_PARAMS, SUPPORTED_NETWORK_CHAINS } from "helpers/consts";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { convertHexToNumber } from "./index";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let window: any;

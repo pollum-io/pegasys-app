@@ -26,13 +26,13 @@ export enum Field {
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
 export function useApproveCallback(
 	userInput: ISwapTokenInputValue,
+	setApprovalState: React.Dispatch<React.SetStateAction<ApprovalState>>,
+	walletInfos: IWalletHookInfos,
+	setTransactions: React.Dispatch<React.SetStateAction<object>>,
 	amountToApprove?: { [field in Field]?: CurrencyAmount },
 	spender?: string,
 	signer?: Signer,
-	setTransactions?: React.Dispatch<React.SetStateAction<object>>,
-	transactions?: object,
-	setApprovalState: React.Dispatch<React.SetStateAction<ApprovalState>>,
-	walletInfos: IWalletHookInfos
+	transactions?: object
 ): () => Promise<void> {
 	const token =
 		userInput.lastInputTyped === 0
@@ -88,12 +88,12 @@ export function useApproveCallback(
 			.then((response: TransactionResponse) => {
 				addTransaction(
 					response,
-					{
-						summary: `Approve ${currentAmountToApprove.currency.symbol}`,
-						approval: { tokenAddress: token?.address, spender },
-					},
 					walletInfos,
 					setTransactions,
+					{
+						summary: `Approve ${currentAmountToApprove?.currency?.symbol}`,
+						approval: { tokenAddress: token?.address, spender },
+					},
 					transactions
 				);
 				setApprovalState(ApprovalState.PENDING);
@@ -125,12 +125,12 @@ export function useApproveCallbackFromTrade(
 
 	return useApproveCallback(
 		userInput,
+		setApprovalState,
+		walletInfos,
+		setTransactions,
 		amountToApprove,
 		chainId ? ROUTER_ADDRESS[chainId] : ROUTER_ADDRESS[ChainId.NEVM],
 		signer,
-		setTransactions,
-		transactions,
-		setApprovalState,
-		walletInfos
+		transactions
 	);
 }

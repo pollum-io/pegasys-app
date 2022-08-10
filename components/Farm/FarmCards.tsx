@@ -127,7 +127,7 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 					_hover={{ opacity: "1" }}
 					_active={{}}
 					borderRadius="full"
-					onClick={(event: any) => {
+					onClick={(event: React.ChangeEvent<HTMLInputElement>) => {
 						setButtonId(event?.currentTarget?.id);
 						onOpen();
 					}}
@@ -147,7 +147,7 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 					_hover={{ opacity: "1" }}
 					_active={{}}
 					borderRadius="full"
-					onClick={(event: any) => {
+					onClick={(event: React.ChangeEvent<HTMLInputElement>) => {
 						setButtonId(event?.currentTarget?.id);
 						onOpen();
 					}}
@@ -167,7 +167,7 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 				borderColor={theme.text.cyan}
 				fontSize="sm"
 				fontWeight="semibold"
-				onClick={(event: any) => {
+				onClick={(event: React.ChangeEvent<HTMLInputElement>) => {
 					setButtonId(event?.currentTarget?.id);
 					onOpen();
 				}}

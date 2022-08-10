@@ -1,6 +1,5 @@
 import {
 	Button,
-	Divider,
 	Flex,
 	Modal,
 	ModalBody,

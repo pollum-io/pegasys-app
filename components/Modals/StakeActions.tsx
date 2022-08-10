@@ -1,13 +1,11 @@
 import {
 	Button,
 	Flex,
-	Icon,
 	Img,
 	Input,
 	Modal,
 	ModalBody,
 	ModalContent,
-	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
 	Slider,
@@ -32,10 +30,10 @@ interface IModal {
 export const StakeActions: React.FC<IModal> = props => {
 	const { isOpen, onClose, buttonId, setButtonId } = props;
 	const theme = usePicasso();
-	const [confirmStake, setConfirmStake] = useState(false);
+	const [confirmStake] = useState(false);
 	const [inputValue, setInputValue] = useState("");
-	const [isAprroving, setIsAprroving] = useState("");
-	const [isApproved, setIsAprrove] = useState("");
+	const [isAprroving] = useState("");
+	const [isApproved] = useState("");
 
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);

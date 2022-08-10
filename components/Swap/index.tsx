@@ -22,42 +22,33 @@ import React, { FunctionComponent, useEffect, useState, useMemo } from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
-import {
-	ChainId,
-	CurrencyAmount,
-	JSBI,
-	Token,
-	Trade,
-} from "@pollum-io/pegasys-sdk";
+import { ChainId, JSBI, Token, Trade } from "@pollum-io/pegasys-sdk";
 import {
 	ISwapTokenInputValue,
 	IWalletHookInfos,
 	WrappedTokenInfo,
 	IInputValues,
 	IChartComponentData,
+	IReturnedTradeValues,
 } from "types";
 import dynamic from "next/dynamic";
 import { useTranslation } from "react-i18next";
 import { Signer } from "ethers";
-import { computeTradePriceBreakdown } from "utils";
+import {
+	computeTradePriceBreakdown,
+	truncateNumberDecimalsPlaces,
+} from "utils";
 import { getTokensGraphCandle } from "services/index";
 
 import {
 	ONE_HOUR_IN_SECONDS,
 	ONE_DAY_IN_SECONDS,
-	THREE_DAYS_IN_SECONDS,
-	SEVEN_DAYS_IN_SECONDS,
-	ONE_MONTH_IN_SECONDS,
+	FIVE_MINUTES_IN_SECONDS,
+	FIFTEEN_MINUTES_IN_SECONDS,
+	FOUR_HOURS_IN_SECONDS,
+	ONE_WEEK_IN_SECONDS,
 } from "helpers/consts";
 import { TradeRouteComponent } from "./TradeRouteComponent";
-
-interface IReturnedTradeValue {
-	parsedAmount: CurrencyAmount | undefined;
-	v2Trade: Trade | undefined;
-	bestSwapMethods: string[];
-	inputErrors: string | undefined;
-	v2TradeRoute: Token[] | undefined;
-}
 
 const ChartComponent = dynamic(() => import("./ChartComponent"), {
 	ssr: false,
@@ -93,7 +84,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		IChartComponentData[]
 	>([]);
 	const [tokensGraphCandlePeriod, setTokensGraphCandlePeriod] =
-		useState<number>(900);
+		useState<number>(FIFTEEN_MINUTES_IN_SECONDS);
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
 	const [tokenInputValue, setTokenInputValue] = useState<ISwapTokenInputValue>({
@@ -108,7 +99,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		lastInputTyped: undefined,
 	});
 	const [returnedTradeValue, setReturnedTradeValue] = useState<
-		IReturnedTradeValue | undefined
+		IReturnedTradeValues | undefined
 	>(undefined);
 
 	const walletInfos: IWalletHookInfos = {
@@ -122,7 +113,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		signer &&
 		UseSwapCallback(
 			returnedTradeValue?.v2Trade,
-			50,
+			userSlippageTolerance,
 			walletInfos,
 			signer,
 			setTransactions,
@@ -147,25 +138,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const { priceImpactWithoutFee, priceImpactSeverity } =
 		computeTradePriceBreakdown(returnedTradeValue?.v2Trade as Trade);
-
-	const handleSwapInfo = async () => {
-		const { v2Trade, bestSwapMethods, inputErrors, parsedAmount } =
-			await UseDerivedSwapInfo(
-				selectedToken,
-				tokenInputValue,
-				walletInfos,
-				translation,
-				userSlippageTolerance
-			);
-
-		setReturnedTradeValue({
-			parsedAmount,
-			v2Trade,
-			bestSwapMethods,
-			inputErrors,
-			v2TradeRoute: v2Trade?.route?.path,
-		});
-	};
 
 	const handleOnChangeTokenInputs = (
 		event: React.ChangeEvent<HTMLInputElement>
@@ -199,6 +171,26 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const switchTokensPosition = () =>
 		setSelectedToken(prevState => [...prevState]?.reverse());
+
+	const handleSwapInfo = async () => {
+		const { v2Trade, bestSwapMethods, inputErrors, parsedAmount } =
+			await UseDerivedSwapInfo(
+				selectedToken,
+				tokenInputValue,
+				walletInfos,
+				translation,
+				userSlippageTolerance,
+				signer as Signer
+			);
+
+		setReturnedTradeValue({
+			parsedAmount,
+			v2Trade,
+			bestSwapMethods,
+			inputErrors,
+			v2TradeRoute: v2Trade?.route?.path,
+		});
+	};
 
 	useMemo(() => {
 		if (!isConnected || !returnedTradeValue?.v2Trade) return;
@@ -256,7 +248,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	}, [userTokensBalance]);
 
 	useEffect(() => {
-		setSelectedToken([userTokensBalance[0], userTokensBalance[1]]);
+		const defaultTokenValues = userTokensBalance.filter(
+			tokens =>
+				tokens.symbol === "WSYS" ||
+				tokens.symbol === "SYS" ||
+				tokens.symbol === "PSYS"
+		);
+
+		setSelectedToken([defaultTokenValues[0], defaultTokenValues[1]]);
 	}, [userTokensBalance]);
 
 	const approve = useApproveCallbackFromTrade(
@@ -297,7 +296,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	};
 
 	useEffect(() => {
-		if (!selectedToken[0]?.address || !selectedToken[1]?.address) return;
+		if (
+			!selectedToken[0]?.address ||
+			!selectedToken[1]?.address ||
+			!tokensGraphCandlePeriod
+		)
+			return;
 
 		getTokensGraph();
 	}, [
@@ -703,7 +707,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						</Text>
 					</Flex>
 					<Text pl="2" fontSize="lg">
-						$15.56
+						$
+						{tokensGraphCandleData &&
+							truncateNumberDecimalsPlaces(
+								parseFloat(tokensGraphCandleData[0]?.close)
+							)}
 					</Text>
 				</Flex>
 
@@ -712,17 +720,21 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						w="100%"
 						onClick={(
 							event: React.MouseEvent<HTMLInputElement | HTMLUListElement>
-						) => setTokensGraphCandlePeriod(event?.target?.value)}
+						) => {
+							event.preventDefault();
+							setTokensGraphCandlePeriod(event?.target?.value);
+						}}
 						display="flex"
 						alignItems="center"
 						flexWrap="nowrap"
 						justifyContent="space-evenly"
 					>
+						<ListItem value={FIVE_MINUTES_IN_SECONDS}>5m</ListItem>
+						<ListItem value={FIFTEEN_MINUTES_IN_SECONDS}>15m</ListItem>
 						<ListItem value={ONE_HOUR_IN_SECONDS}>1H</ListItem>
+						<ListItem value={FOUR_HOURS_IN_SECONDS}>4H</ListItem>
 						<ListItem value={ONE_DAY_IN_SECONDS}>1D</ListItem>
-						<ListItem value={THREE_DAYS_IN_SECONDS}>3D</ListItem>
-						<ListItem value={SEVEN_DAYS_IN_SECONDS}>7D</ListItem>
-						<ListItem value={ONE_MONTH_IN_SECONDS}>1M</ListItem>
+						<ListItem value={ONE_WEEK_IN_SECONDS}>1W</ListItem>
 					</List>
 				</Flex>
 				<ChartComponent data={tokensGraphCandleData} />

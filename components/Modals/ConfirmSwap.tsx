@@ -11,7 +11,7 @@ import {
 	ModalBody,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import React, { useState } from "react";
+import React from "react";
 import { MdArrowDownward } from "react-icons/md";
 import { AiOutlineClose } from "react-icons/ai";
 

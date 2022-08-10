@@ -4,7 +4,7 @@ import { Token } from "@pollum-io/pegasys-sdk";
 export async function getTokensGraphCandle(
 	token0: Token,
 	token1: Token,
-	period: number
+	period = 900
 ) {
 	const result = await apolloClient.query({
 		query: GET_TOKENS_GRAPH_CANDLE,

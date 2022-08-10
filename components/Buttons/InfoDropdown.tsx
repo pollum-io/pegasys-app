@@ -10,14 +10,11 @@ import {
 	Link,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent } from "react";
 import { MdOutlineCallMade, MdOutlineModeComment } from "react-icons/md";
 
 export const InfoDropdown: FunctionComponent = () => {
 	const theme = usePicasso();
-
-	const [isOpenBridge, setIsOpenBridge] = useState<boolean>(false);
-	const [isOpenSocial, setIsOpenSocial] = useState<boolean>(false);
 
 	const socialInfos = [
 		{

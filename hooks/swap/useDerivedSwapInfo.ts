@@ -4,6 +4,7 @@ import {
 	ChainId,
 	FACTORY_ADDRESS,
 } from "@pollum-io/pegasys-sdk";
+import { Signer } from "ethers";
 import { ROUTER_ADDRESS } from "helpers/consts";
 import { TFunction } from "react-i18next";
 
@@ -11,6 +12,7 @@ import {
 	ISwapTokenInputValue,
 	IWalletHookInfos,
 	WrappedTokenInfo,
+	ISwapCall,
 } from "types";
 import {
 	computeSlippageAdjustedAmounts,
@@ -34,11 +36,12 @@ export async function UseDerivedSwapInfo(
 	walletInfos: IWalletHookInfos,
 	translation: TFunction<"translation", undefined>,
 	userAllowedSlippage: number,
+	signer: Signer,
 	recipient?: string
 ): Promise<{
 	parsedAmount: CurrencyAmount | undefined;
 	v2Trade: Trade | undefined;
-	bestSwapMethods: string[];
+	bestSwapMethods: ISwapCall[];
 	inputErrors: string | undefined;
 }> {
 	const isExactIn: boolean = inputValues.lastInputTyped === 0;
@@ -117,7 +120,8 @@ export async function UseDerivedSwapInfo(
 
 	const bestSwapMethods = UseBestSwapMethod(
 		v2Trade as Trade,
-		walletInfos.walletAddress
+		walletInfos.walletAddress,
+		signer as Signer
 	);
 
 	return {

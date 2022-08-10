@@ -1,5 +1,5 @@
-import { Flex, Link, LinkProps, Text } from "@chakra-ui/react";
-import { FunctionComponent, ReactNode, useState } from "react";
+import { Flex, Text } from "@chakra-ui/react";
+import { FunctionComponent, useState } from "react";
 import { usePicasso } from "hooks";
 
 export const ExpertMode: FunctionComponent = () => {

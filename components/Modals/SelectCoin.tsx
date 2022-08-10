@@ -1,6 +1,5 @@
 import {
 	Button,
-	Divider,
 	Flex,
 	Icon,
 	IconButton,
@@ -26,7 +25,6 @@ import React, {
 	useCallback,
 } from "react";
 import { MdHelpOutline, MdArrowDownward, MdArrowUpward } from "react-icons/md";
-import { BsArrowDownShort } from "react-icons/bs";
 import { WrappedTokenInfo } from "types";
 import BigNumber from "bignumber.js";
 import { ManageToken } from "./ManageToken";
@@ -115,8 +113,6 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const handleSelectToken = useCallback(
 		(id: number, token: WrappedTokenInfo) => {
 			if (!selectedToken) return;
-
-			// console.log("id:", id, 'token: ', token)
 
 			setSelectedToken((prevState: WrappedTokenInfo[]) => {
 				prevState[id] = new WrappedTokenInfo(token.tokenInfo);

@@ -1,11 +1,4 @@
-import {
-	Flex,
-	Icon,
-	Img,
-	Text,
-	useColorMode,
-	useDisclosure,
-} from "@chakra-ui/react";
+import { Flex, Icon, Img, useColorMode, useDisclosure } from "@chakra-ui/react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
 import { usePicasso } from "hooks";

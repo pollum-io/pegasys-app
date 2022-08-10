@@ -1,13 +1,11 @@
 import {
 	Button,
 	Flex,
-	Icon,
 	Img,
 	Input,
 	Modal,
 	ModalBody,
 	ModalContent,
-	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
 	Slider,
@@ -19,7 +17,7 @@ import {
 	Tooltip,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
 interface IModal {
@@ -32,7 +30,7 @@ interface IModal {
 export const FarmActions: React.FC<IModal> = props => {
 	const { isOpen, onClose, buttonId, setButtonId } = props;
 	const theme = usePicasso();
-	const [confirmDepoist, setConfirmDepoist] = useState(false);
+	const [confirmDepoist] = useState(false);
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
 

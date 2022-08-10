@@ -30,11 +30,6 @@ interface IModal {
 	isCreate?: boolean;
 	haveValue?: boolean;
 }
-interface IToken {
-	logoURI: string;
-	symbol: string;
-	id?: number;
-}
 interface ITokenInputValue {
 	inputFrom: string;
 	inputTo: string;

@@ -1,4 +1,3 @@
-import { DefaultTemplate } from "container";
 import { NextPage } from "next";
 import { Button, Flex, Icon, Img, Link, Text } from "@chakra-ui/react";
 import { usePicasso, useWallet } from "hooks";
@@ -13,10 +12,10 @@ export const AirdropContainer: NextPage = () => {
 
 	const { isConnected } = useWallet();
 
-	const [isNotAvailable, setIsNotAvailable] = useState();
-	const [isClaim, setIsClaim] = useState();
-	const [isClaiming, setIsClaiming] = useState();
-	const [isClaimed, setIsClaimed] = useState();
+	const [isNotAvailable] = useState();
+	const [isClaim] = useState();
+	const [isClaiming] = useState();
+	const [isClaimed] = useState();
 
 	return (
 		<Flex alignItems="flex-start" justifyContent="center" pt="20" mb="6.2rem">

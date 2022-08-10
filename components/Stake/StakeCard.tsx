@@ -1,7 +1,6 @@
 import { Button, Flex, Img, Text, useDisclosure } from "@chakra-ui/react";
 import { FunctionComponent, useState } from "react";
 import { usePicasso } from "hooks";
-import { AddLiquidityModal, RemoveLiquidity } from "components/Modals";
 import { StakeActions } from "components/Modals/StakeActions";
 
 interface IPoolCards {
@@ -74,7 +73,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					py="1"
 					fontSize="xs"
 					ml="1"
-					onClick={(event: any) => {
+					onClick={(event: React.MouseEvent<HTMLInputElement>) => {
 						setButtonId(event?.currentTarget?.id);
 						onOpen();
 					}}
@@ -145,7 +144,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					px="0.75rem"
 					fontSize="sm"
 					fontWeight="semibold"
-					onClick={(event: any) => {
+					onClick={(event: React.MouseEvent<HTMLInputElement>) => {
 						setButtonId(event?.currentTarget?.id);
 						onOpen();
 					}}
@@ -163,7 +162,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					px="0.75rem"
 					fontSize="sm"
 					fontWeight="semibold"
-					onClick={(event: any) => {
+					onClick={(event: React.MouseEvent<HTMLInputElement>) => {
 						setButtonId(event?.currentTarget?.id);
 						onOpen();
 					}}

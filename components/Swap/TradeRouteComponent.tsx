@@ -19,7 +19,7 @@ export const TradeRouteComponent: FunctionComponent<
 		<Flex>
 			{transactionRoute &&
 				transactionRoute.map((token, index: number) => (
-					<Flex key={index} alignItems="center">
+					<Flex key={token.address} alignItems="center">
 						<Flex gap="2">
 							<Img
 								src={
