@@ -1,21 +1,25 @@
-import { ButtonProps } from "@chakra-ui/react";
+import { ButtonProps, Flex, Text } from "@chakra-ui/react";
 import { SUPPORTED_WALLETS } from "helpers/consts";
 import { FunctionComponent } from "react";
 import { isMobile } from "react-device-detect";
 import { useWallet } from "hooks";
 import { injected } from "utils/connectors";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { IWalletInfo } from "types/index";
 import { Wallets } from "./Wallets";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let window: any;
 
 export const WalletOptions: FunctionComponent<ButtonProps> = () => {
-	const { connectWallet, setConnectorSelected } = useWallet();
+	const { connectWallet, setConnectorSelected, connectorSelected, connecting } =
+		useWallet();
 
-	const setConnectorValues = (connector: AbstractConnector) => {
-		connectWallet(connector);
-		setConnectorSelected(connector);
+	const setConnectorValues = (connectorOptionsSelected: IWalletInfo) => {
+		const { connector } = connectorOptionsSelected;
+
+		connectWallet(connector as AbstractConnector);
+		setConnectorSelected(connectorOptionsSelected);
 	};
 
 	const listWallets = () =>
@@ -23,25 +27,23 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 			const isMetamask = window.ethereum && window.ethereum.isMetaMask;
 			const option = SUPPORTED_WALLETS[key];
 			// check for mobile options
-			if (isMobile) {
-				if (!window.web3 && !window.ethereum && option.mobile) {
-					return (
-						<Wallets
-							onClick={() =>
-								option.connector !== injected &&
-								!option.href &&
-								option.connector &&
-								setConnectorValues(option.connector)
-							}
-							id={`connect-${key}`}
-							key={key}
-							header={option.name}
-							icon={`icons/${option.iconName}`}
-						/>
-					);
-				}
-				return null;
+			if (!window.web3 && !window.ethereum) {
+				return (
+					<Wallets
+						onClick={() =>
+							option.connector !== injected &&
+							!option.href &&
+							option.connector &&
+							setConnectorValues(option)
+						}
+						id={`connect-${key}`}
+						key={key}
+						header={option.name}
+						icon={`icons/${option.iconName}`}
+					/>
+				);
 			}
+
 			// overwrite injected when needed
 			if (option.connector === injected) {
 				// don't show injected if there's no injected provider
@@ -70,19 +72,16 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 			}
 			// return rest of options
 			return (
-				!isMobile &&
-				!option.mobileOnly && (
-					<Wallets
-						id={`connect-${key}`}
-						onClick={() => {
-							if (option.connector) setConnectorValues(option.connector);
-						}}
-						key={key}
-						// href={option.href || "/"}
-						header={option.name}
-						icon={`icons/${option.iconName}`}
-					/>
-				)
+				<Wallets
+					id={`connect-${key}`}
+					onClick={() => {
+						if (option.connector) setConnectorValues(option);
+					}}
+					key={key}
+					// href={option.href || "/"}
+					header={option.name}
+					icon={`icons/${option.iconName}`}
+				/>
 			);
 		});
 

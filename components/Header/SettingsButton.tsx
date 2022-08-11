@@ -11,7 +11,12 @@ import {
 	Switch,
 	Icon,
 } from "@chakra-ui/react";
-import { FunctionComponent, ReactNode } from "react";
+import React, {
+	FunctionComponent,
+	ReactNode,
+	useEffect,
+	useState,
+} from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
 import { usePicasso, useWallet } from "hooks";
 import { IconButton } from "../Buttons/IconButton";
@@ -24,7 +29,13 @@ interface IButtonProps extends ButtonProps {
 
 export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
+	// const [expert, setExpert] = useState(false)
 	const { userSlippageTolerance, setUserSlippageTolerance } = useWallet();
+	const { setExpert, expert } = useWallet();
+
+	useEffect(() => {
+		console.log("expert: ", expert);
+	}, [expert]);
 
 	return (
 		<Popover placement="right">
@@ -39,10 +50,11 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 			<PopoverContent
 				bgColor={theme.bg.blueNavy}
 				p="1rem 1.5rem 0.5rem"
-				w="24.563rem"
+				w={["100vw", "100vw", "24.563rem", "24.563rem"]}
 				h="max-content"
-				bottom="16"
-				mx="56"
+				bottom={["0rem", "0rem", "3.8rem", "3.8rem"]}
+				right={["0", "0", "", ""]}
+				mx={["0", "0", "20", "56"]}
 				position="fixed"
 			>
 				<Flex
@@ -142,7 +154,11 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							<Flex flexDirection="row" ml="12">
 								<Stack align="center" direction="row">
 									<Text>Off</Text>
-									<Switch size="md" colorScheme="teal" />
+									<Switch
+										size="md"
+										colorScheme="teal"
+										onChange={() => setExpert(!expert)}
+									/>
 									<Text>On</Text>
 								</Stack>
 							</Flex>

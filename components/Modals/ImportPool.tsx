@@ -9,18 +9,23 @@ import {
 	ModalOverlay,
 	Text,
 	Tooltip,
-	useDisclosure,
 } from "@chakra-ui/react";
 import { usePicasso, useTokens } from "hooks";
 import React, { useEffect, useState } from "react";
 import { MdArrowBack, MdHelpOutline, MdAdd } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
+import { ITokenBalance, ITokenBalanceWithId } from "types";
 import { SelectCoinModal } from "components";
-import { WrappedTokenInfo } from "types";
 
 interface IModal {
 	isModalOpen: boolean;
 	onModalClose: () => void;
+}
+
+interface IToken extends ITokenBalance {
+	logoURI: string;
+	symbol: string;
+	id?: number;
 }
 
 export const ImportPoolModal: React.FC<IModal> = props => {
@@ -29,8 +34,35 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 	const { userTokensBalance } = useTokens();
 
 	const theme = usePicasso();
-	const { onOpen, isOpen, onClose } = useDisclosure();
-	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
+	const { onOpenCoin, isOpenCoin, onCloseCoin } = useModal();
+	const [selectedToken, setSelectedToken] = useState<
+		IToken[] | ITokenBalance[] | ITokenBalanceWithId[]
+	>([
+		{
+			logoURI: "icons/syscoin-logo.png",
+			symbol: "SYS",
+			id: 0,
+			balance: "0",
+			chainId: 0,
+			address: "",
+			decimals: 0,
+			name: "Syscoin",
+			extensions: {},
+			tags: [],
+		},
+		{
+			logoURI: "icons/pegasys.png",
+			symbol: "PSYS",
+			id: 1,
+			balance: "0",
+			chainId: 0,
+			address: "",
+			decimals: 0,
+			name: "Pegasys",
+			extensions: {},
+			tags: [],
+		},
+	]);
 	const [buttonId, setButtonId] = useState<number>(0);
 
 	useEffect(() => {
@@ -44,8 +76,8 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 			onClose={onModalClose}
 		>
 			<SelectCoinModal
-				isOpen={isOpen}
-				onClose={onClose}
+				isOpen={isOpenCoin}
+				onClose={onCloseCoin}
 				buttonId={buttonId}
 				selectedToken={selectedToken}
 				setSelectedToken={setSelectedToken}

@@ -39,18 +39,39 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
-			<ModalContent borderRadius={18} my="40" w="xs" h="md">
-				<ModalHeader
-					borderTopRadius={18}
-					bgRepeat="no-repeat"
+			<ModalContent
+				borderTopRadius="3xl"
+				borderBottomRadius={["none", "none", "3xl", "3xl"]}
+				bgColor={theme.bg.blueNavy}
+				my={["0", "0", "40", "40"]}
+				w={["100vw", "100vw", "xs", "xs"]}
+				h="md"
+				position={["absolute", "absolute", "unset", "unset"]}
+				bottom={["0.8rem", "2.9rem", "", ""]}
+			>
+				<Flex
 					w="100%"
-					p="8"
-					bgImage="linear-gradient(to bottom, transparent 0%, rgba(11, 23, 44, 1) 99%), url('images/backgrounds/PsysReward.png')"
+					px="8"
+					py="10"
+					flexDirection="column"
+					zIndex="docked"
+					position="relative"
+					bgColor="#0B172C"
 				>
+					<Img
+						src="images/backgrounds/PsysReward.png"
+						position="absolute"
+						zIndex="base"
+						w="100%"
+						h="100%"
+						right="0"
+						top="0"
+					/>
 					<Flex
 						flexDirection="row"
 						alignItems="baseline"
 						justifyContent="space-between"
+						zIndex="docked"
 					>
 						<Text textAlign="left" w="60%" fontSize="2xl">
 							Your PSYS Breakdown
@@ -59,7 +80,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 							<AiOutlineClose size={22} />
 						</Flex>
 					</Flex>
-				</ModalHeader>
+				</Flex>
 				<ModalBody bgColor={theme.bg.blueNavy}>
 					<Flex alignItems="center" justifyContent="center">
 						<Img
@@ -115,7 +136,13 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 						</Flex>
 					</Flex>
 				</ModalBody>
-				<ModalFooter bgColor={theme.bg.blueNavy} justifyContent="flex-start">
+				<ModalFooter
+					bgColor={theme.bg.blueNavy}
+					justifyContent="flex-start"
+					pb={["2rem", "2rem", "6", "6"]}
+					mt={["2", "10", "0", "0"]}
+					borderBottomRadius={["none", "none", "3xl", "2xl"]}
+				>
 					<Button
 						w="100%"
 						py="2"

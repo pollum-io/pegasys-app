@@ -7,9 +7,9 @@ import {
 	Input,
 	List,
 	Text,
-	useDisclosure,
 } from "@chakra-ui/react";
 import {
+	useModal,
 	usePicasso,
 	useTokens,
 	useWallet,
@@ -19,8 +19,13 @@ import {
 	useToasty,
 } from "hooks";
 import React, { FunctionComponent, useEffect, useState, useMemo } from "react";
-import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
+import {
+	MdWifiProtectedSetup,
+	MdHelpOutline,
+	MdOutlineArrowDownward,
+} from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
+import { BiTrashAlt } from "react-icons/bi";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
 import { ChainId, JSBI, Token, Trade } from "@pollum-io/pegasys-sdk";
 import {
@@ -32,6 +37,7 @@ import {
 	IReturnedTradeValues,
 } from "types";
 import dynamic from "next/dynamic";
+import { BsHandThumbsUp } from "react-icons/bs";
 import { useTranslation } from "react-i18next";
 import { Signer } from "ethers";
 import {
@@ -41,6 +47,8 @@ import {
 import { getTokensGraphCandle } from "services/index";
 
 import { FIFTEEN_MINUTES_IN_SECONDS } from "helpers/consts";
+import { OtherWallet } from "./OtherWallet";
+import { SwapExpertMode } from "./SwapExpertMode";
 import { TradeRouteComponent } from "./TradeRouteComponent";
 import { FilterButton } from "./FilterButton";
 
@@ -53,13 +61,17 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const { t: translation } = useTranslation();
 	const { userTokensBalance } = useTokens();
-
-	const { isOpen: isOpenWallet, onClose: onCloseWallet } = useDisclosure();
 	const {
-		onOpen: onOpenCoin,
-		isOpen: isOpenCoin,
-		onClose: onCloseCoin,
-	} = useDisclosure();
+		onOpenWallet,
+		isOpenWallet,
+		onCloseWallet,
+		onOpenCoin,
+		isOpenCoin,
+		onCloseCoin,
+		onOpenConfirmSwap,
+		isOpenConfirmSwap,
+		onCloseConfirmSwap,
+	} = useModal();
 
 	const {
 		isConnected,
@@ -315,14 +327,37 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	];
 	const canSubmit = submitValidation.every(validation => validation === true);
 
+	const { expert } = useWallet();
+	const { otherWallet } = useWallet();
+	const isOtherWallet = useMemo(() => {
+		if (otherWallet) {
+			return <OtherWallet />;
+		}
+		return null;
+	}, [otherWallet]);
+
+	const isExpert = useMemo(() => {
+		if (expert && isConnected) {
+			return <SwapExpertMode />;
+		}
+		return null;
+	}, [expert]);
+
 	return (
 		<Flex
-			pt="24"
+			pt={["6", "6", "20", "24"]}
 			justifyContent="center"
 			fontFamily="inter"
 			fontStyle="normal"
-			alignItems="flex-start"
-			flexDirection="row"
+			alignItems={{
+				base: "center",
+				sm: "center",
+				md: "center",
+				lg: "flex-start",
+			}}
+			flexDirection={{ base: "column", sm: "column", md: "column", lg: "row" }}
+			mb={["6rem", "0"]}
+			px={["4", "0", "0", "0"]}
 		>
 			<SelectWallets isOpen={isOpenWallet} onClose={onCloseWallet} />
 			<SelectCoinModal
@@ -335,7 +370,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			<Flex alignItems="center" flexDirection="column">
 				<Flex
 					h="max-content"
-					w="md"
+					width={[
+						"100%", // 0-30em
+						"md", // 30em-48em
+						"md", // 48em-62em
+						"md", // 62em+
+					]}
 					p="1.5rem"
 					flexDirection="column"
 					zIndex="1"
@@ -345,7 +385,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					<Flex flexDirection="row" justifyContent="space-between" pb="1.5rem">
-						<Text fontWeight="semibold" fontSize="2xl">
+						<Text fontWeight="semibold" fontSize={["xl", "2xl", "2xl", "2xl"]}>
 							Swap
 						</Text>
 					</Flex>
@@ -396,8 +436,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								placeholder="0.00"
 								textAlign="right"
 								mt="2"
-								px="1.5"
-								ml="50"
+								px={["0.1rem", "1.5", "1.5", "1.5"]}
+								ml={["10", "50", "50", "50"]}
 								type="text"
 								onChange={handleOnChangeTokenInputs}
 								name="inputFrom"
@@ -458,6 +498,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								Balance: {selectedToken[1]?.balance}
 							</Text>
 						</Flex>
+
 						<Flex alignItems="center" justifyContent="space-between">
 							<Flex
 								alignItems="center"
@@ -482,8 +523,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								placeholder="0.00"
 								textAlign="right"
 								mt="2"
-								px="1.5"
-								ml="50"
+								px={["0.1rem", "1.5", "1.5", "1.5"]}
+								ml={["50", "50", "50", "50"]}
 								type="text"
 								onChange={handleOnChangeTokenInputs}
 								name="inputTo"
@@ -562,6 +603,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Flex>
 						</Flex>
 					)}
+					{isExpert}
+					{isExpert && isOtherWallet}
 					<Flex>
 						{selectedToken[0]?.symbol !== "WSYS" &&
 							selectedToken[0]?.symbol !== "PSYS" &&
@@ -612,7 +655,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						w="90%"
 						borderRadius="xl"
 						mt="7"
-						mb="10rem"
+						mb={["2", "2", "2", "10rem"]}
+						zIndex="1"
 					>
 						<Flex flexDirection="column">
 							<Flex flexDirection="row" justifyContent="space-between">
@@ -690,15 +734,22 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			</Flex>
 			<Flex
 				h="max-content"
-				w="2xl"
+				w={["18rem", "sm", "100%", "xl"]}
 				p="1.5rem"
-				ml="10"
+				ml={["0", "0", "0", "10"]}
+				mt={["8", "8", "8", "0"]}
+				mb={["24", "24", "24", "0"]}
 				flexDirection="column"
 				zIndex="1"
 				borderRadius={30}
 				border="1px solid transparent;"
 			>
-				<Flex gap="2" justifyContent="center" mb="8" align="center">
+				<Flex
+					gap="2"
+					justifyContent="center"
+					mb="8"
+					flexDirection={["column", "row", "row", "row"]}
+				>
 					<Flex>
 						<Img src={selectedToken[0]?.logoURI} w="7" h="7" />
 						<Img src={selectedToken[1]?.logoURI} w="7" h="7" />
@@ -713,24 +764,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								parseFloat(tokensGraphCandleData[0]?.close)
 							)}
 					</Text>
-				</Flex>
-				<Flex>
-					<List
-						w="100%"
-						onClick={(
-							event: React.MouseEvent<HTMLInputElement | HTMLUListElement>
-						) => {
-							event.preventDefault();
-							setTokensGraphCandlePeriod(event?.target?.value);
-						}}
-						display="flex"
-						alignItems="center"
-						flexWrap="nowrap"
-						justifyContent="center"
-						gap="5"
-					>
-						<FilterButton />
-					</List>
 				</Flex>
 				<ChartComponent data={tokensGraphCandleData} />
 			</Flex>

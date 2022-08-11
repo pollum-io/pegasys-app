@@ -10,10 +10,9 @@ import {
 	ModalOverlay,
 	Text,
 	Tooltip,
-	useDisclosure,
 } from "@chakra-ui/react";
-import { usePicasso, useTokens } from "hooks";
-import React, { useEffect, useState } from "react";
+import { useModal, usePicasso } from "hooks";
+import React, { useState } from "react";
 import {
 	MdHelpOutline,
 	MdArrowBack,
@@ -41,7 +40,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const { userTokensBalance } = useTokens();
 
 	const theme = usePicasso();
-	const { onOpen, isOpen, onClose } = useDisclosure();
+	const { onOpenCoin, isOpenCoin, onCloseCoin } = useModal();
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
 	const [tokenInputValue, setTokenInputValue] = useState<ITokenInputValue>({
@@ -75,18 +74,21 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			onClose={onModalClose}
 		>
 			<SelectCoinModal
-				isOpen={isOpen}
-				onClose={onClose}
+				isOpen={isOpenCoin}
+				onClose={onCloseCoin}
 				selectedToken={selectedToken}
 				setSelectedToken={setSelectedToken}
 				buttonId={buttonId}
 			/>
 			<ModalOverlay />
 			<ModalContent
-				mb="20rem"
-				h="max-content"
-				borderRadius="3xl"
-				border="1px solid transparent;"
+				mb={["0", "0", "20rem", "20rem"]}
+				top={["1rem", "2rem", "0", "0"]}
+				position={["absolute", "absolute", "relative", "relative"]}
+				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
+				h={["100%", "100%", "max-content", "max-content"]}
+				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
+				border={["none", "1px solid transparent"]}
 				background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
@@ -127,20 +129,19 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					</Tooltip>
 				</ModalHeader>
 				{isCreate && (
-					<Flex alignItems="center" width="100%" justifyContent="center">
+					<Flex alignItems="center" w="100%" justifyContent="center">
 						<Flex
-							height="20%"
-							width="90%"
+							w={["90%", "90%", "90%", "90%"]}
+							h={["100%", "max-content", "90%", "100%"]}
 							borderRadius="2xl"
 							bgColor={theme.bg.blueNavyLightness}
 							color={theme.text.cyan}
-							textAlign="left"
 							p="1.5rem"
 							flexDirection="column"
 							gap={3}
 						>
 							<Text
-								fontSize="md"
+								fontSize={["sm", "sm", "md", "md"]}
 								fontWeight="semibold"
 								textAlign="left"
 								color={theme.text.cyan}
@@ -148,7 +149,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								You are the first liquidity provider.
 							</Text>
 							<Text
-								fontSize="md"
+								fontSize={["sm", "sm", "md", "md"]}
 								fontWeight="normal"
 								textAlign="left"
 								lineHeight="base"
@@ -168,7 +169,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						bgColor={theme.bg.whiteGray}
 						margin="0 auto"
 						position="relative"
-						borderRadius={30}
+						borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
+						h="100%"
+						borderBottomRadius={["0px", "0", "3xl", "3xl"]}
 						p="5"
 						flexDirection="column"
 					>
@@ -370,7 +373,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									Prices and pool share
 								</Text>
 								<Flex
-									flexDirection="row"
+									flexDirection={["column", "row", "row", "row"]}
 									justifyContent="space-between"
 									py="1rem"
 									px="1rem"
@@ -379,19 +382,34 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									borderColor={theme.text.cyan}
 									bgColor={theme.bg.blueNavy}
 								>
-									<Flex fontSize="sm" flexDirection="column" textAlign="center">
+									<Flex
+										fontSize="sm"
+										flexDirection={["row", "column", "column", "column"]}
+										gap={["2", "0", "0", "0"]}
+										textAlign="center"
+									>
 										<Text fontWeight="semibold">-</Text>
 										<Text fontWeight="normal">
 											{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}{" "}
 										</Text>
 									</Flex>
-									<Flex fontSize="sm" flexDirection="column" textAlign="center">
+									<Flex
+										fontSize="sm"
+										flexDirection={["row", "column", "column", "column"]}
+										gap={["2", "0", "0", "0"]}
+										textAlign="center"
+									>
 										<Text fontWeight="semibold">-</Text>
 										<Text fontWeight="normal">
 											{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
 										</Text>
 									</Flex>
-									<Flex fontSize="sm" flexDirection="column" textAlign="center">
+									<Flex
+										fontSize="sm"
+										gap={["2", "0", "0", "0"]}
+										flexDirection={["row", "column", "column", "column"]}
+										textAlign="center"
+									>
 										<Text fontWeight="semibold">-</Text>
 										<Text fontWeight="normal">Share of Pool</Text>
 									</Flex>
@@ -419,11 +437,12 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					<Flex
 						flexDirection="column"
 						p="1.5rem"
-						background={theme.bg.blueNavy}
-						position="absolute"
+						background={theme.bg.blueGray}
+						position={["relative", "relative", "absolute", "absolute"]}
+						bottom={["0", "0", "-280", "-280"]}
 						w="100%"
-						bottom="-280"
-						borderRadius="xl"
+						borderTopRadius={["0", "0", "3xl", "3xl"]}
+						borderBottomRadius={["0", "0", "3xl", "3xl"]}
 					>
 						<Text fontWeight="bold" fontSize="lg">
 							Your position
@@ -471,11 +490,12 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					<Flex
 						flexDirection="row"
 						p="1.5rem"
-						background={theme.bg.blueNavy}
-						position="absolute"
+						background={theme.bg.blueGray}
+						position={["relative", "relative", "absolute", "absolute"]}
 						w="100%"
-						bottom="-250"
-						borderRadius="xl"
+						bottom={["0", "0", "-250", "-250"]}
+						borderTopRadius={["0", "0", "3xl", "3xl"]}
+						borderBottomRadius={["0", "0", "3xl", "3xl"]}
 						alignItems="flex-start"
 						gap="2"
 					>

@@ -1,4 +1,10 @@
-import React, { useEffect, createContext, useState, useMemo } from "react";
+import React, {
+	useEffect,
+	createContext,
+	useState,
+	useMemo,
+	ReactNode,
+} from "react";
 import { ethers, Signer } from "ethers";
 import { convertHexToNumber, isAddress } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -31,10 +37,16 @@ interface IWeb3 {
 	connectWallet: (connector: AbstractConnector) => Promise<void>;
 	walletError: boolean;
 	setWalletError: React.Dispatch<React.SetStateAction<boolean>>;
-	connectorSelected: AbstractConnector | undefined;
+	connectorSelected: IWalletInfo | undefined;
 	setConnectorSelected: React.Dispatch<
-		React.SetStateAction<AbstractConnector | undefined>
+		React.SetStateAction<IWalletInfo | undefined>
 	>;
+	connecting: boolean;
+	setConnecting: React.Dispatch<React.SetStateAction<boolean>>;
+	expert: boolean;
+	setExpert: React.Dispatch<React.SetStateAction<boolean>>;
+	otherWallet: boolean;
+	setOtherWallet: React.Dispatch<React.SetStateAction<boolean>>;
 	userSlippageTolerance: number;
 	setUserSlippageTolerance: React.Dispatch<React.SetStateAction<number>>;
 	setTransactions: React.Dispatch<React.SetStateAction<object>>;
@@ -58,12 +70,14 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	>(null);
 	const [walletAddress, setAddress] = useState("");
 	const [walletError, setWalletError] = useState<boolean>(false);
-	const [signer, setSigner] = useState<Signer | undefined>();
+	const [signer, setSigner] = useState<Signer>();
+	const [connecting, setConnecting] = useState<boolean>(false);
 	const [provider, setProvider] = useState<
 		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
 	>();
-	const [connectorSelected, setConnectorSelected] =
-		useState<AbstractConnector>();
+	const [connectorSelected, setConnectorSelected] = useState<IWalletInfo>();
+	const [expert, setExpert] = useState<boolean>(false);
+	const [otherWallet, setOtherWallet] = useState<boolean>(false);
 	const [userSlippageTolerance, setUserSlippageTolerance] = useState<number>(
 		INITIAL_ALLOWED_SLIPPAGE
 	);
@@ -157,7 +171,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	});
 
 	useMemo(async () => {
-		const getCurrentConnectorProvider = await connectorSelected?.getProvider();
+		if (!connectorSelected) return;
+
+		const getCurrentConnectorProvider =
+			await connectorSelected?.connector?.getProvider();
 
 		getCurrentConnectorProvider?.on("chainChanged", (chainId: string) => {
 			const convertedChainId = convertHexToNumber(chainId);
@@ -171,6 +188,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setIsConnected(!!window?.ethereum?.selectedAddress)
 		);
 	}, [connectorSelected]);
+
+	console.log("connector", connectorSelected);
 
 	useEffect(() => {
 		const verifySysNetwork =
@@ -211,6 +230,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			connectorSelected,
 			currentNetworkChainId,
 			setCurrentNetworkChainId,
+			connecting,
+			setConnecting,
+			setExpert,
+			expert,
+			otherWallet,
+			setOtherWallet,
 			userSlippageTolerance,
 			setUserSlippageTolerance,
 			transactions,
