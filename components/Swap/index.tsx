@@ -109,6 +109,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			walletInfos,
 			signer,
 			setTransactions,
+			setApprovalState,
 			transactions
 		);
 

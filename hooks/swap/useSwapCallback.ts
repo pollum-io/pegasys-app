@@ -6,6 +6,7 @@ import { calculateGasMargin, isZero, shortAddress, isAddress } from "utils";
 import { IWalletHookInfos } from "types";
 import { addTransaction } from "utils/addTransaction";
 import { UseBestSwapMethod } from "./useBestSwapMethod";
+import { ApprovalState } from "./useApproveCallback";
 
 export enum SwapCallbackState {
 	INVALID,
@@ -19,6 +20,7 @@ export function UseSwapCallback(
 	walletInfos: IWalletHookInfos,
 	signer: Signer,
 	setTransactions: React.Dispatch<React.SetStateAction<object>>,
+	setApprovalState: React.Dispatch<React.SetStateAction<ApprovalState>>,
 	transactions: object
 ) {
 	const { walletAddress, chainId: chain } = walletInfos;
@@ -170,6 +172,8 @@ export function UseSwapCallback(
 						setTransactions,
 						transactions
 					);
+
+					setApprovalState(ApprovalState.PENDING);
 
 					return response.hash;
 				})
