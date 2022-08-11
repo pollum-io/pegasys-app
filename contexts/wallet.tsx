@@ -31,6 +31,10 @@ interface IWeb3 {
 	>;
 	connecting: boolean;
 	setConnecting: React.Dispatch<React.SetStateAction<boolean>>;
+	expert: boolean;
+	setExpert: React.Dispatch<React.SetStateAction<boolean>>;
+	otherWallet: boolean;
+	setOtherWallet: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -53,6 +57,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
 	>();
 	const [connectorSelected, setConnectorSelected] = useState<IWalletInfo>();
+	const [expert, setExpert] = useState<boolean>(false);
+	const [otherWallet, setOtherWallet] = useState<boolean>(false);
+
 	const connectToSysRpcIfNotConnected = () => {
 		const rpcProvider = new ethers.providers.JsonRpcProvider(
 			SYS_TESTNET_CHAIN_PARAMS.rpcUrls[0]
@@ -153,6 +160,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setCurrentNetworkChainId,
 			connecting,
 			setConnecting,
+			setExpert,
+			expert,
+			otherWallet,
+			setOtherWallet,
 		}),
 		[
 			isConnected,

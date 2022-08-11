@@ -4,6 +4,7 @@ import { IconButton } from "components/Buttons";
 import { useModal, usePicasso } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
+import React, { useMemo } from "react";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
