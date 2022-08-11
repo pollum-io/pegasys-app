@@ -6,6 +6,7 @@ import { calculateGasMargin, isZero, shortAddress, isAddress } from "utils";
 import { IWalletHookInfos } from "types";
 import { addTransaction } from "utils/addTransaction";
 import { UseBestSwapMethod } from "./useBestSwapMethod";
+import { UseToastOptions } from "@chakra-ui/react";
 import { ApprovalState } from "./useApproveCallback";
 
 export enum SwapCallbackState {
@@ -21,6 +22,7 @@ export function UseSwapCallback(
 	signer: Signer,
 	setTransactions: React.Dispatch<React.SetStateAction<object>>,
 	setApprovalState: React.Dispatch<React.SetStateAction<ApprovalState>>,
+	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
 	transactions: object
 ) {
 	const { walletAddress, chainId: chain } = walletInfos;
@@ -122,6 +124,11 @@ export function UseSwapCallback(
 				if (errorCalls.length > 0)
 					// @ts-ignore
 					throw errorCalls[errorCalls.length - 1]?.error;
+					toast({
+						status: "error",
+						title: "Unexpected error",
+						description: "Unexpected error. Please contact support: none of the calls threw an error",
+					});
 				throw new Error(
 					"Unexpected error. Please contact support: none of the calls threw an error"
 				);
@@ -181,10 +188,19 @@ export function UseSwapCallback(
 					// if the user rejected the tx, pass this along
 					if (error?.code === 4001) {
 						// throw new Error("Transaction rejected.");
-						console.log("transaction rejected");
+						toast({
+							status: "error",
+							title: "Transaction rejected by user.",
+							description: `Transaction rejected. Code: ${error?.code}`,
+						});
 					} else {
 						// otherwise, the error was unexpected and we need to convey that
 						console.error(`Swap failed`, error, methodName, args, value);
+						toast({
+							status: "error",
+							title: "Swap failed.",
+							description: `Error: ${error.message}`,
+						});
 						throw new Error(`Swap failed: ${error.message}`);
 					}
 				});

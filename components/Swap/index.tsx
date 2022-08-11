@@ -16,6 +16,7 @@ import {
 	UseDerivedSwapInfo,
 	useApproveCallbackFromTrade,
 	UseSwapCallback,
+	useToasty,
 } from "hooks";
 import React, { FunctionComponent, useEffect, useState, useMemo } from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
@@ -93,6 +94,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const [returnedTradeValue, setReturnedTradeValue] = useState<
 		IReturnedTradeValues | undefined
 	>(undefined);
+	const { toast } = useToasty();
 
 	const walletInfos: IWalletHookInfos = {
 		chainId: currentNetworkChainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
@@ -110,6 +112,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			signer,
 			setTransactions,
 			setApprovalState,
+			toast,
 			transactions
 		);
 
@@ -354,7 +357,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						px="1.25rem"
 						border="1px solid"
 						borderColor={
-							tokenInputValue.inputFrom.value > selectedToken[0]?.balance
+							tokenInputValue.inputFrom.value > selectedToken[0]?.balance &&
+							tokenInputValue.currentInputTyped !== "inputTo"
 								? theme.text.red400
 								: "#ff000000"
 						}
@@ -401,27 +405,28 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							/>
 						</Flex>
 					</Flex>
-					{tokenInputValue.inputFrom.value > selectedToken[0]?.balance && (
-						<Flex flexDirection="row" gap="1" justifyContent="center">
-							<Text
-								fontSize="sm"
-								pt="2"
-								textAlign="center"
-								color={theme.text.red400}
-								fontWeight="semibold"
-							>
-								Insufficient {selectedToken[0]?.symbol} balance.
-							</Text>
-							<Text
-								fontSize="sm"
-								pt="2"
-								textAlign="center"
-								color={theme.text.red400}
-							>
-								Please insert a valid amount.
-							</Text>
-						</Flex>
-					)}
+					{tokenInputValue.inputFrom.value > selectedToken[0]?.balance &&
+						tokenInputValue.currentInputTyped !== "inputTo" && (
+							<Flex flexDirection="row" gap="1" justifyContent="center">
+								<Text
+									fontSize="sm"
+									pt="2"
+									textAlign="center"
+									color={theme.text.red400}
+									fontWeight="semibold"
+								>
+									Insufficient {selectedToken[0]?.symbol} balance.
+								</Text>
+								<Text
+									fontSize="sm"
+									pt="2"
+									textAlign="center"
+									color={theme.text.red400}
+								>
+									Please insert a valid amount.
+								</Text>
+							</Flex>
+						)}
 					<Flex
 						margin="0 auto"
 						py="4"
@@ -438,7 +443,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						px="1.25rem"
 						border="1px solid"
 						borderColor={
-							tokenInputValue.inputTo.value > selectedToken[1]?.balance
+							tokenInputValue.inputTo.value > selectedToken[1]?.balance &&
+							tokenInputValue.currentInputTyped !== "inputFrom"
 								? theme.text.red400
 								: "#ff000000"
 						}
@@ -485,27 +491,28 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							/>
 						</Flex>
 					</Flex>
-					{tokenInputValue.inputTo.value > selectedToken[1]?.balance && (
-						<Flex flexDirection="row" gap="1" justifyContent="center">
-							<Text
-								fontSize="sm"
-								pt="2"
-								textAlign="center"
-								color={theme.text.red400}
-								fontWeight="semibold"
-							>
-								Insufficient {selectedToken[1]?.symbol} balance.
-							</Text>
-							<Text
-								fontSize="sm"
-								pt="2"
-								textAlign="center"
-								color={theme.text.red400}
-							>
-								Please insert a valid amount.
-							</Text>
-						</Flex>
-					)}
+					{tokenInputValue.inputTo.value > selectedToken[1]?.balance &&
+						tokenInputValue.currentInputTyped !== "inputFrom" && (
+							<Flex flexDirection="row" gap="1" justifyContent="center">
+								<Text
+									fontSize="sm"
+									pt="2"
+									textAlign="center"
+									color={theme.text.red400}
+									fontWeight="semibold"
+								>
+									Insufficient {selectedToken[1]?.symbol} balance.
+								</Text>
+								<Text
+									fontSize="sm"
+									pt="2"
+									textAlign="center"
+									color={theme.text.red400}
+								>
+									Please insert a valid amount.
+								</Text>
+							</Flex>
+						)}
 					{tokenInputValue.inputTo.value && tokenInputValue.inputFrom.value && (
 						<Flex
 							flexDirection="column"
