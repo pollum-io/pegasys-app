@@ -31,7 +31,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			p="6"
 			w="xs"
 			borderRadius="xl"
-			border="1px solid rgb(86,190,216, 0.4) "
+			border="1px solid rgb(86,190,216, 0.4)"
 			background={theme.bg.blackAlpha}
 		>
 			<RemoveLiquidity
@@ -90,6 +90,10 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					fontSize="sm"
 					fontWeight="semibold"
 					onClick={onOpenRemoveLiquidity}
+					_hover={{
+						borderColor: theme.text.cyanLightPurple,
+						color: theme.text.cyanLightPurple,
+					}}
 				>
 					Remove
 				</Button>
@@ -103,6 +107,9 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					fontSize="sm"
 					fontWeight="semibold"
 					onClick={onOpenAddLiquidity}
+					_hover={{
+						bgColor: theme.bg.bluePurple,
+					}}
 				>
 					Add Liquidity
 				</Button>

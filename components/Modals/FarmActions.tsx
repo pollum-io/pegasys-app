@@ -214,7 +214,7 @@ export const FarmActions: React.FC<IModal> = props => {
 											placeholder="0.0"
 											border="1px solid"
 											borderColor={theme.border.farmInput}
-											bgColor={theme.bg.whiteGray}
+											bgColor={theme.bg.blackAlpha}
 											borderLeftRadius="full"
 											p="5"
 											w="25rem"

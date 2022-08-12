@@ -181,10 +181,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					borderRadius={30}
 					border="1px solid transparent;"
 					boxShadow=" 0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4);"
-					background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+					background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					<Flex flexDirection="row" justifyContent="space-between" pb="1.5rem">
-						<Text fontWeight="semibold" fontSize={["xl", "2xl", "2xl", "2xl"]}>
+						<Text
+							color={theme.text.mono}
+							fontWeight="semibold"
+							fontSize={["xl", "2xl", "2xl", "2xl"]}
+						>
 							Swap
 						</Text>
 					</Flex>
@@ -223,7 +227,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								}}
 							>
 								<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
-								<Text fontSize="xl" fontWeight="500" px="3">
+								<Text
+									fontSize="xl"
+									fontWeight="500"
+									px="3"
+									color={theme.text.mono}
+								>
 									{selectedToken[0]?.symbol}
 								</Text>
 								<Icon as={IoIosArrowDown} color={theme.text.mono} />

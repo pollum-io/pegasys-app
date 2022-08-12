@@ -91,7 +91,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 				border={["none", "1px solid transparent"]}
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
 				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
-				background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
 					display="flex"
@@ -264,6 +264,9 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						color={theme.text.cyan}
 						fontSize="lg"
 						fontWeight="semibold"
+						_hover={{
+							bgColor: theme.bg.bluePurple,
+						}}
 					>
 						{isCreate ? "Create a pair" : "Add Liquidity"}
 					</Button>
@@ -271,7 +274,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 				<Flex
 					flexDirection="column"
 					p="1.5rem"
-					background={theme.bg.blueGray}
+					background={theme.bg.subModal}
 					position={["absolute", "absolute", "absolute", "absolute"]}
 					bottom={["-245", "-245", "-280", "-280"]}
 					left={["0", "0", "0", "0"]}

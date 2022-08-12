@@ -49,7 +49,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 				position="absolute"
 				bottom={["0", "0", "none", "none"]}
 			>
-				<ModalHeader bgColor={theme.bg.blueNavy} borderTopRadius={18}>
+				<ModalHeader borderTopRadius={18} bgColor={theme.bg.blueNavyLight}>
 					<Flex alignItems="center" justifyContent="space-between">
 						<Text fontSize="lg" fontWeight="semibold">
 							Account
@@ -59,10 +59,10 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 						</Flex>
 					</Flex>
 				</ModalHeader>
-				<ModalBody bgColor={theme.bg.blueNavy} pb="6">
+				<ModalBody bgColor={theme.bg.blueNavyLight} pb="6">
 					<Flex
 						borderRadius={18}
-						bgColor={theme.bg.blackAlpha}
+						bgColor={theme.bg.blackLightness}
 						py="4"
 						px="4"
 						flexDirection="column"
@@ -76,7 +76,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								<Text
 									fontSize="md"
 									fontWeight="semibold"
-									color={theme.text.cyan}
+									color={theme.text.cyanPurple}
 								>
 									Connected with
 								</Text>
@@ -85,16 +85,20 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								<Button
 									borderRadius="full"
 									border="1px solid"
-									borderColor={theme.text.cyan}
+									borderColor={theme.text.cyanPurple}
 									px="2"
 									py="0.5"
 									w="max-content"
 									h="max-content"
-									color={theme.text.gray300}
+									color={theme.text.whitePurple}
 									fontSize="sm"
 									fontWeight="bold"
 									alignItems="center"
 									bgColor="transparent"
+									_hover={{
+										borderColor: theme.text.cyanLightPurple,
+										color: theme.text.cyanLightPurple,
+									}}
 								>
 									CHANGE
 								</Button>
@@ -123,7 +127,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								onClick={() => handleCopyToClipboard()}
 								mr="4"
 							>
-								<Icon as={MdContentCopy} />
+								<Icon as={MdContentCopy} color={theme.text.gray300} />
 								<Text
 									_hover={{ textDecoration: "underline" }}
 									color={theme.text.gray300}
@@ -141,7 +145,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								cursor="pointer"
 								onClick={() => openWalletOnExplorer(walletAddress)}
 							>
-								<Icon as={MdOutlineCallMade} />
+								<Icon as={MdOutlineCallMade} color={theme.text.gray300} />
 								<Text
 									_hover={{ textDecoration: "underline" }}
 									fontSize="sm"
@@ -154,8 +158,13 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 						</Flex>
 					</Flex>
 				</ModalBody>
-				<ModalFooter bgColor={theme.bg.blackAlpha} justifyContent="flex-start">
-					<Text fontSize="sm" fontWeight="semibold">
+				<ModalFooter
+					bgColor={theme.bg.blackGray}
+					justifyContent="flex-start"
+					borderBottomRadius={18}
+					h="4.313rem"
+				>
+					<Text fontSize="sm" fontWeight="semibold" color={theme.text.mono}>
 						Your transactions will appear here...
 					</Text>
 				</ModalFooter>

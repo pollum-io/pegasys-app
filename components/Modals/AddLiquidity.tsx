@@ -90,7 +90,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 				h={["100%", "100%", "max-content", "max-content"]}
 				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
 				border={["none", "1px solid transparent"]}
-				background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
 					display="flex"
@@ -140,8 +140,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							w={["90%", "90%", "90%", "90%"]}
 							h={["100%", "max-content", "90%", "100%"]}
 							borderRadius="2xl"
-							bgColor={theme.bg.blueNavyLightness}
-							color={theme.text.cyan}
+							bgColor={theme.bg.blueNavyLightnessOp}
+							color={theme.text.cyanWhite}
 							p="1.5rem"
 							flexDirection="column"
 							gap={3}
@@ -150,7 +150,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								fontSize={["sm", "sm", "md", "md"]}
 								fontWeight="semibold"
 								textAlign="left"
-								color={theme.text.cyan}
 							>
 								You are the first liquidity provider.
 							</Text>
@@ -196,7 +195,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									: "#ff000000"
 							}
 						>
-							<Flex flexDirection="column" color={theme.text.swapInfo}>
+							<Flex flexDirection="column" color={theme.text.mono}>
 								<Text fontSize="sm">Input</Text>
 								<Flex
 									alignItems="center"
@@ -290,7 +289,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									: "#ff000000"
 							}
 						>
-							<Flex flexDirection="column" color={theme.text.swapInfo}>
+							<Flex flexDirection="column" color={theme.text.mono}>
 								<Text fontSize="sm">Input</Text>
 								<Flex
 									alignItems="center"
@@ -502,7 +501,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					<Flex
 						flexDirection="row"
 						p="1.5rem"
-						background={theme.bg.blueGray}
+						bgColor={theme.bg.subModal}
 						position={["relative", "relative", "absolute", "absolute"]}
 						w="100%"
 						bottom={["0", "0", "-250", "-250"]}
@@ -512,7 +511,12 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						gap="2"
 					>
 						<Flex>
-							<Icon as={MdOutlineInfo} w="6" h="6" color={theme.text.cyan} />
+							<Icon
+								as={MdOutlineInfo}
+								w="6"
+								h="6"
+								color={theme.text.cyanPurple}
+							/>
 						</Flex>
 						<Flex flexDirection="column" gap="6">
 							<Text>

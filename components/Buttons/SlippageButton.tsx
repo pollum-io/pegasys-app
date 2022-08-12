@@ -21,10 +21,6 @@ export const SlippageButton: FunctionComponent<IButtonProps> = props => {
 			fontSize="md"
 			fontWeight="semibold"
 			bgColor="transparent"
-			_focus={{
-				color: theme.text.mono,
-				bgColor: theme.bg.slippage,
-			}}
 			_hover={{
 				background: theme.bg.slippage,
 				color: theme.text.mono,

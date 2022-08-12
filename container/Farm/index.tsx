@@ -52,8 +52,9 @@ export const FarmContainer: NextPage = () => {
 						py="1.375rem"
 						gap="3"
 						h={["9rem", "10rem", "10rem", "10rem"]}
+						color="white"
 					>
-						<Text fontWeight="bold" color="white" fontSize="md">
+						<Text fontWeight="bold" fontSize="md">
 							Pegasys Liquidity Mining
 						</Text>
 						<Text
@@ -120,16 +121,16 @@ export const FarmContainer: NextPage = () => {
 								borderColor={theme.bg.blueNavyLightness}
 								borderRadius="full"
 								w={["20rem", "28rem", "20rem", "20rem"]}
-								h="max-content"
+								h="2.2rem"
 								py={["0.1rem", "0.1rem", "1", "1"]}
-								pl="8"
+								pl="10"
 							/>
 							<Flex
 								position="absolute"
-								left="0.5rem"
+								pl="0.9rem"
 								bottom={["0.3rem", "0.3rem", "0.5rem", "0.5rem"]}
 							>
-								<MdSearch color={theme.text.cyanPurple} />
+								<MdSearch color={theme.icon.searchIcon} size={20} />
 							</Flex>
 						</InputGroup>
 						<Flex
@@ -152,7 +153,7 @@ export const FarmContainer: NextPage = () => {
 									pl="4"
 									pr="4"
 									w="max-content"
-									h="max-content"
+									h="2.2rem"
 									bgColor={theme.bg.blueNavyLightness}
 									color={theme.text.mono}
 									_hover={{

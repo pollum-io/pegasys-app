@@ -11,7 +11,7 @@ import {
 	Switch,
 	Icon,
 } from "@chakra-ui/react";
-import { FunctionComponent, ReactNode } from "react";
+import { FunctionComponent, ReactNode, useState } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
 import { usePicasso } from "hooks";
 import { IconButton } from "../Buttons/IconButton";
@@ -24,6 +24,7 @@ interface IButtonProps extends ButtonProps {
 
 export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
+	const [slippage, setSlippage] = useState<string>("");
 
 	return (
 		<Popover placement="right">
@@ -72,13 +73,45 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							<Icon as={MdHelpOutline} color={theme.icon.whiteGray} />
 						</Flex>
 						<Flex flexDirection="row" py="0.5rem">
-							<SlippageButton aria-label="Slip" mr="3">
+							<SlippageButton
+								aria-label="Slip"
+								mr="3"
+								onClick={() => setSlippage("1")}
+								bgColor={slippage === "1" ? theme.bg.slippage : "transparent"}
+								color={
+									slippage === "1"
+										? theme.text.mono
+										: theme.text.transactionsItems
+								}
+							>
 								0.1%
 							</SlippageButton>
-							<SlippageButton aria-label="Slip" mr="3">
+							<SlippageButton
+								aria-label="Slip"
+								mr="3"
+								onClick={() => setSlippage("2")}
+								bgColor={slippage === "2" ? theme.bg.slippage : "transparent"}
+								color={
+									slippage === "2"
+										? theme.text.mono
+										: theme.text.transactionsItems
+								}
+							>
 								0.5%
 							</SlippageButton>
-							<SlippageButton aria-label="Slip" mr="3" py="0.5rem" px="1rem">
+							<SlippageButton
+								aria-label="Slip"
+								mr="3"
+								py="0.5rem"
+								px="1rem"
+								onClick={() => setSlippage("3")}
+								bgColor={slippage === "3" ? theme.bg.slippage : "transparent"}
+								color={
+									slippage === "3"
+										? theme.text.mono
+										: theme.text.transactionsItems
+								}
+							>
 								1%
 							</SlippageButton>
 							<Input
@@ -144,7 +177,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							>
 								Toggle Expert Mode
 							</Text>
-							<Icon as={MdHelpOutline} />
+							<Icon as={MdHelpOutline} color={theme.icon.whiteGray} />
 							<Flex flexDirection="row" ml="12">
 								<Stack align="center" direction="row">
 									<Text color={theme.text.mono}>Off</Text>
@@ -155,14 +188,14 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 						</Flex>
 					</Flex>
 					<Flex
-						bgColor={theme.bg.whiteGray}
+						bgColor={theme.bg.transactionSettings}
 						borderRadius="7rem"
 						py="2"
 						mt="8"
 						justifyContent="center"
 						alignItems="center"
 					>
-						<Text fontSize="md" fontWeight="semibold">
+						<Text fontSize="md" fontWeight="semibold" color={theme.text.mono}>
 							Select Language
 						</Text>
 					</Flex>
