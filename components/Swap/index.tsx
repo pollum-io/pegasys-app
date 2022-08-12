@@ -5,7 +5,6 @@ import {
 	Icon,
 	Img,
 	Input,
-	List,
 	Text,
 } from "@chakra-ui/react";
 import {
@@ -19,13 +18,8 @@ import {
 	useToasty,
 } from "hooks";
 import React, { FunctionComponent, useEffect, useState, useMemo } from "react";
-import {
-	MdWifiProtectedSetup,
-	MdHelpOutline,
-	MdOutlineArrowDownward,
-} from "react-icons/md";
+import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
-import { BiTrashAlt } from "react-icons/bi";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
 import { ChainId, JSBI, Token, Trade } from "@pollum-io/pegasys-sdk";
 import {
@@ -35,9 +29,9 @@ import {
 	IInputValues,
 	IChartComponentData,
 	IReturnedTradeValues,
+	IChartComponentPeriod,
 } from "types";
 import dynamic from "next/dynamic";
-import { BsHandThumbsUp } from "react-icons/bs";
 import { useTranslation } from "react-i18next";
 import { Signer } from "ethers";
 import {
@@ -61,17 +55,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const { t: translation } = useTranslation();
 	const { userTokensBalance } = useTokens();
-	const {
-		onOpenWallet,
-		isOpenWallet,
-		onCloseWallet,
-		onOpenCoin,
-		isOpenCoin,
-		onCloseCoin,
-		onOpenConfirmSwap,
-		isOpenConfirmSwap,
-		onCloseConfirmSwap,
-	} = useModal();
+	const { isOpenWallet, onCloseWallet, onOpenCoin, isOpenCoin, onCloseCoin } =
+		useModal();
 
 	const {
 		isConnected,
@@ -89,7 +74,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		IChartComponentData[]
 	>([]);
 	const [tokensGraphCandlePeriod, setTokensGraphCandlePeriod] =
-		useState<number>(FIFTEEN_MINUTES_IN_SECONDS);
+		useState<IChartComponentPeriod>({
+			id: 2,
+			period: FIFTEEN_MINUTES_IN_SECONDS,
+		});
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
 	const [tokenInputValue, setTokenInputValue] = useState<ISwapTokenInputValue>({
@@ -295,7 +283,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		const requestTokensCandle = await getTokensGraphCandle(
 			token0,
 			token1,
-			tokensGraphCandlePeriod
+			tokensGraphCandlePeriod.period
 		);
 
 		setTokensGraphCandleData(requestTokensCandle);
@@ -307,7 +295,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		if (
 			!selectedToken[0]?.address ||
 			!selectedToken[1]?.address ||
-			!tokensGraphCandlePeriod
+			!tokensGraphCandlePeriod.period
 		)
 			return;
 
@@ -315,7 +303,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	}, [
 		selectedToken[0]?.address,
 		selectedToken[1]?.address,
-		tokensGraphCandlePeriod,
+		tokensGraphCandlePeriod.period,
 	]);
 
 	const submitValidation = [
@@ -749,6 +737,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					justifyContent="center"
 					mb="8"
 					flexDirection={["column", "row", "row", "row"]}
+					alignItems="center"
 				>
 					<Flex>
 						<Img src={selectedToken[0]?.logoURI} w="7" h="7" />
@@ -758,14 +747,26 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						</Text>
 					</Flex>
 					<Text pl="2" fontSize="lg">
-						$
-						{tokensGraphCandleData &&
+						${" "}
+						{`${
 							truncateNumberDecimalsPlaces(
 								parseFloat(tokensGraphCandleData[0]?.close)
-							)}
+							) || "0.00"
+						}`}
 					</Text>
 				</Flex>
-				<ChartComponent data={tokensGraphCandleData} />
+				<FilterButton
+					periodStateValue={tokensGraphCandlePeriod}
+					setPeriod={setTokensGraphCandlePeriod}
+				/>
+				{tokensGraphCandleData.length === 0 ? (
+					<Text>
+						Candle data not found to this token pair, please try again with
+						another tokens.
+					</Text>
+				) : (
+					<ChartComponent data={tokensGraphCandleData} />
+				)}
 			</Flex>
 		</Flex>
 	);

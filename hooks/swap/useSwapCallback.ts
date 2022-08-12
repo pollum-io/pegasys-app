@@ -124,11 +124,12 @@ export function UseSwapCallback(
 				if (errorCalls.length > 0)
 					// @ts-ignore
 					throw errorCalls[errorCalls.length - 1]?.error;
-					toast({
-						status: "error",
-						title: "Unexpected error",
-						description: "Unexpected error. Please contact support: none of the calls threw an error",
-					});
+				toast({
+					status: "error",
+					title: "Unexpected error",
+					description:
+						"Unexpected error. Please contact support: none of the calls threw an error",
+				});
 				throw new Error(
 					"Unexpected error. Please contact support: none of the calls threw an error"
 				);

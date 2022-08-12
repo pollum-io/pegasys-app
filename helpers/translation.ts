@@ -10,7 +10,7 @@ export const availableLanguages = [
 	"zh",
 	"es",
 	"fr",
-	"pt-br",
+	"pt",
 	"vn",
 ];
 export const defaultLocale = "en";

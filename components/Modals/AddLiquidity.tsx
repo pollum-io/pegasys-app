@@ -11,8 +11,8 @@ import {
 	Text,
 	Tooltip,
 } from "@chakra-ui/react";
-import { useModal, usePicasso } from "hooks";
-import React, { useState } from "react";
+import { useModal, usePicasso, useTokens } from "hooks";
+import React, { useEffect, useState } from "react";
 import {
 	MdHelpOutline,
 	MdArrowBack,
@@ -40,7 +40,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const { userTokensBalance } = useTokens();
 
 	const theme = usePicasso();
-	const { onOpenCoin, isOpenCoin, onCloseCoin } = useModal();
+	const { isOpenCoin, onCloseCoin } = useModal();
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
 	const [tokenInputValue, setTokenInputValue] = useState<ITokenInputValue>({
@@ -64,7 +64,14 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	};
 
 	useEffect(() => {
-		setSelectedToken([userTokensBalance[0], userTokensBalance[1]]);
+		const defaultTokenValues = userTokensBalance.filter(
+			tokens =>
+				tokens.symbol === "WSYS" ||
+				tokens.symbol === "SYS" ||
+				tokens.symbol === "PSYS"
+		);
+
+		setSelectedToken([defaultTokenValues[0], defaultTokenValues[1]]);
 	}, [userTokensBalance]);
 
 	return (

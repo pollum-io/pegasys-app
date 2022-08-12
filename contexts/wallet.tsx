@@ -1,13 +1,8 @@
-import React, {
-	useEffect,
-	createContext,
-	useState,
-	useMemo,
-	ReactNode,
-} from "react";
+import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers, Signer } from "ethers";
 import { convertHexToNumber, isAddress } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { IWalletInfo } from "types";
 import {
 	INITIAL_ALLOWED_SLIPPAGE,
 	SYS_TESTNET_CHAIN_PARAMS,
@@ -153,16 +148,16 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	wssProvider?.on("pending", hash => {
 		wssProvider.waitForTransaction(hash).then(result => {
 			if (result.from.toLowerCase() === walletAddress.toLowerCase()) {
-				setTransactions({
+				setTransactions(transactions => ({
 					...transactions,
-					[currentNetworkChainId]: {
+					[currentNetworkChainId as number]: {
 						...transactions[currentNetworkChainId],
 						[result.transactionHash]: {
 							...result,
 							hash: result.transactionHash,
 						},
 					},
-				});
+				}));
 				setApprovalState(ApprovalState.APPROVED);
 				// eslint-disable-next-line
 				return;
@@ -188,8 +183,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setIsConnected(!!window?.ethereum?.selectedAddress)
 		);
 	}, [connectorSelected]);
-
-	console.log("connector", connectorSelected);
 
 	useEffect(() => {
 		const verifySysNetwork =

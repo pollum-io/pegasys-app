@@ -24,28 +24,16 @@ import React, {
 	useCallback,
 } from "react";
 import { MdHelpOutline, MdArrowDownward, MdArrowUpward } from "react-icons/md";
-import { WrappedTokenInfo, ITokenBalance, ITokenBalanceWithId  } from "types";
+import { WrappedTokenInfo } from "types";
 import BigNumber from "bignumber.js";
 import { ManageToken } from "./ManageToken";
-
-interface ISymbol extends ITokenBalance {
-	id?: number;
-}
-
-interface IToken extends ITokenBalance {
-	logoURI: string;
-	symbol: string;
-	id?: number;
-}
 
 interface IModal {
 	isOpen: boolean;
 	onClose: () => void;
-	selectedToken?: ISymbol[];
+	selectedToken?: WrappedTokenInfo[];
 	buttonId: number;
-	setSelectedToken: React.Dispatch<
-		React.SetStateAction<ITokenBalance[] | ITokenBalanceWithId[] | IToken[]>
-	>;
+	setSelectedToken: React.Dispatch<React.SetStateAction<WrappedTokenInfo[]>>;
 }
 
 export const SelectCoinModal: React.FC<IModal> = props => {

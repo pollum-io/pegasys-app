@@ -7,6 +7,11 @@ export interface IChartComponentData {
 	period: number;
 }
 
+export interface IChartComponentPeriod {
+	id: number;
+	period: number;
+}
+
 export interface IChartComponentColors {
 	backgroundColor: string;
 	textColor: string;

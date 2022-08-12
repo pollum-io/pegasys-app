@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { WrappedTokenInfo } from "types";
 import { useWallet } from "hooks";
 import { getDefaultTokens } from "networks";
-import { getBalanceOfMultiCall } from "utils";
+import { getBalanceOfMultiCall, truncateNumberDecimalsPlaces } from "utils";
 
 interface ITokensContext {
 	userTokensBalance: WrappedTokenInfo[];
@@ -48,6 +48,9 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		if (!providerTokenBalance) return "0";
 
 		const formattedValue = ethers.utils.formatEther(providerTokenBalance);
+		const truncatedValue = String(
+			truncateNumberDecimalsPlaces(parseFloat(formattedValue), 3)
+		);
 
 		const contractBalances = await getBalanceOfMultiCall(
 			tokensAddress,
@@ -64,13 +67,19 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			if (token.symbol === "WSYS" || token.symbol === "SYS") {
 				return {
 					...token,
-					balance: formattedValue as string,
+					balance: truncatedValue as string,
 				};
 			}
 
+			const truncatedBalance =
+				balanceItems &&
+				String(
+					truncateNumberDecimalsPlaces(parseFloat(balanceItems.balance), 3)
+				);
+
 			return {
 				...token,
-				balance: balanceItems?.balance as string,
+				balance: truncatedBalance as string,
 			};
 		});
 

@@ -1,6 +1,7 @@
 import {
 	Button,
 	Flex,
+	Icon,
 	Img,
 	Input,
 	Modal,
@@ -312,7 +313,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									mb="4"
 									w="85%"
 									colorScheme="teal"
-									onChange={value => setSliderValue(value)}
+									onChange={(value: number) => setSliderValue(value)}
 									onMouseEnter={() => setShowTooltip(true)}
 									onMouseLeave={() => setShowTooltip(false)}
 								>
@@ -423,7 +424,7 @@ export const FarmActions: React.FC<IModal> = props => {
 					)}
 				</ModalBody>
 				<Flex>
-					{!buttonId === "withdraw" && (
+					{buttonId === "withdraw" && (
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
@@ -447,7 +448,7 @@ export const FarmActions: React.FC<IModal> = props => {
 							</Flex>
 						</Flex>
 					)}
-					{!buttonId === "claim" && (
+					{buttonId !== "claim" && (
 						<Flex
 							flexDirection="row"
 							p="1.5rem"

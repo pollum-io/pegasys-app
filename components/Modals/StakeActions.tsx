@@ -1,6 +1,7 @@
 import {
 	Button,
 	Flex,
+	Icon,
 	Img,
 	Input,
 	Modal,
@@ -308,7 +309,7 @@ export const StakeActions: React.FC<IModal> = props => {
 									mb="4"
 									w="85%"
 									colorScheme="teal"
-									onChange={value => setSliderValue(value)}
+									onChange={(value: number) => setSliderValue(value)}
 									onMouseEnter={() => setShowTooltip(true)}
 									onMouseLeave={() => setShowTooltip(false)}
 								>

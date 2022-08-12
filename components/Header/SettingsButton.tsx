@@ -11,12 +11,7 @@ import {
 	Switch,
 	Icon,
 } from "@chakra-ui/react";
-import React, {
-	FunctionComponent,
-	ReactNode,
-	useEffect,
-	useState,
-} from "react";
+import React, { FunctionComponent, ReactNode } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
 import { usePicasso, useWallet } from "hooks";
 import { IconButton } from "../Buttons/IconButton";
@@ -32,10 +27,6 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	// const [expert, setExpert] = useState(false)
 	const { userSlippageTolerance, setUserSlippageTolerance } = useWallet();
 	const { setExpert, expert } = useWallet();
-
-	useEffect(() => {
-		console.log("expert: ", expert);
-	}, [expert]);
 
 	return (
 		<Popover placement="right">
