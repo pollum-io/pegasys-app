@@ -32,6 +32,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 		copyToClipboard(walletAddress);
 
 		toast({
+			id: "toas",
 			position: "top",
 			status: "success",
 			title: "Successfully copied",
