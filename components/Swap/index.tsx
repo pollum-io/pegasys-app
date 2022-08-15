@@ -773,12 +773,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						</Text>
 					</Flex>
 					<Text pl="2" fontSize="lg">
-						${" "}
 						{`${
 							truncateNumberDecimalsPlaces(
 								parseFloat(tokensGraphCandleData[0]?.close)
 							) || "0.00"
 						}`}
+						{` ${selectedToken[1]?.symbol}`}
 					</Text>
 				</Flex>
 				<FilterButton
