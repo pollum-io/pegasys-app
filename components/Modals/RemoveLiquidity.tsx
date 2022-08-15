@@ -18,7 +18,7 @@ import {
 	SliderThumb,
 } from "@chakra-ui/react";
 import { useModal, usePicasso, useTokens } from "hooks";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MdHelpOutline, MdArrowBack } from "react-icons/md";
 import { SelectCoinModal } from "components";
 import { WrappedTokenInfo } from "types";
@@ -42,14 +42,16 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
 
-	const defaultTokenValues = userTokensBalance.filter(
-		tokens =>
-			tokens.symbol === "WSYS" ||
-			tokens.symbol === "SYS" ||
-			tokens.symbol === "PSYS"
-	);
+	useEffect(() => {
+		const defaultTokenValues = userTokensBalance.filter(
+			tokens =>
+				tokens.symbol === "WSYS" ||
+				tokens.symbol === "SYS" ||
+				tokens.symbol === "PSYS"
+		);
 
-	setSelectedToken([defaultTokenValues[2], defaultTokenValues[1]]);
+		setSelectedToken([defaultTokenValues[2], defaultTokenValues[1]]);
+	}, [userTokensBalance]);
 
 	return (
 		<Modal
