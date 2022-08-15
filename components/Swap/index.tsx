@@ -126,11 +126,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		!returnedTradeValue?.v2TradeRoute && userHasSpecifiedInputOutput
 	);
 
-	const swapButtonValidation = !isConnected
-		? "Connect Wallet"
-		: isConnected && verifyIfHaveInsufficientLiquidity
-		? translation("swapPage.insufficientLiquidity")
-		: "Swap";
+	const swapButtonValidation = !isConnected ? "Connect Wallet" : "Swap";
 
 	const { priceImpactWithoutFee, priceImpactSeverity } =
 		computeTradePriceBreakdown(returnedTradeValue?.v2Trade as Trade);
@@ -385,8 +381,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						px="1.25rem"
 						border="1px solid"
 						borderColor={
-							tokenInputValue.inputFrom.value > selectedToken[0]?.balance &&
-							tokenInputValue.currentInputTyped !== "inputTo"
+							(tokenInputValue.inputFrom.value > selectedToken[0]?.balance &&
+								tokenInputValue.currentInputTyped !== "inputTo") ||
+							(isConnected && verifyIfHaveInsufficientLiquidity)
 								? theme.text.red400
 								: "#ff000000"
 						}
@@ -455,6 +452,19 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								</Text>
 							</Flex>
 						)}
+					{isConnected && verifyIfHaveInsufficientLiquidity && (
+						<Flex flexDirection="row" gap="1" justifyContent="center">
+							<Text
+								fontSize="sm"
+								pt="2"
+								textAlign="center"
+								color={theme.text.red400}
+								fontWeight="semibold"
+							>
+								Insufficient liquidity for this trade.
+							</Text>
+						</Flex>
+					)}
 					<Flex
 						margin="0 auto"
 						py="4"
@@ -471,8 +481,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						px="1.25rem"
 						border="1px solid"
 						borderColor={
-							tokenInputValue.inputTo.value > selectedToken[1]?.balance &&
-							tokenInputValue.currentInputTyped !== "inputFrom"
+							(tokenInputValue.inputTo.value > selectedToken[1]?.balance &&
+								tokenInputValue.currentInputTyped !== "inputFrom") ||
+							(isConnected && verifyIfHaveInsufficientLiquidity)
 								? theme.text.red400
 								: "#ff000000"
 						}
@@ -542,6 +553,19 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								</Text>
 							</Flex>
 						)}
+					{isConnected && verifyIfHaveInsufficientLiquidity && (
+						<Flex flexDirection="row" gap="1" justifyContent="center">
+							<Text
+								fontSize="sm"
+								pt="2"
+								textAlign="center"
+								color={theme.text.red400}
+								fontWeight="semibold"
+							>
+								Insufficient liquidity for this trade.
+							</Text>
+						</Flex>
+					)}
 					{tokenInputValue.inputTo.value && tokenInputValue.inputFrom.value && (
 						<Flex
 							flexDirection="column"
