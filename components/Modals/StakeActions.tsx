@@ -7,7 +7,6 @@ import {
 	Modal,
 	ModalBody,
 	ModalContent,
-	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
 	Slider,
@@ -33,10 +32,10 @@ interface IModal {
 export const StakeActions: React.FC<IModal> = props => {
 	const { isOpen, onClose, buttonId, setButtonId } = props;
 	const theme = usePicasso();
-	const [confirmStake, setConfirmStake] = useState(false);
+	const [confirmStake] = useState(false);
 	const [inputValue, setInputValue] = useState("");
-	const [isAprroving, setIsAprroving] = useState("");
-	const [isApproved, setIsAprrove] = useState("");
+	const [isAprroving] = useState("");
+	const [isApproved] = useState("");
 
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
@@ -310,7 +309,7 @@ export const StakeActions: React.FC<IModal> = props => {
 									mb="4"
 									w="85%"
 									colorScheme="teal"
-									onChange={value => setSliderValue(value)}
+									onChange={(value: number) => setSliderValue(value)}
 									onMouseEnter={() => setShowTooltip(true)}
 									onMouseLeave={() => setShowTooltip(false)}
 								>

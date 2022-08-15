@@ -1,12 +1,13 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers } from "ethers";
-import { ITokenBalance, ITokenBalanceWithId } from "types";
+import { WrappedTokenInfo } from "types";
 import { useWallet } from "hooks";
 import { getDefaultTokens } from "networks";
-import { getBalanceOfMultiCall } from "utils";
+import { getBalanceOfMultiCall, truncateNumberDecimalsPlaces } from "utils";
+import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
 
 interface ITokensContext {
-	userTokensBalance: ITokenBalance[];
+	userTokensBalance: WrappedTokenInfo[];
 }
 
 export const TokensContext = createContext({} as ITokensContext);
@@ -15,73 +16,98 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [userTokensBalance, setUserTokensBalance] = useState<
-		ITokenBalance[] | ITokenBalanceWithId[]
+		WrappedTokenInfo[]
 	>([]);
 
-	const { isConnected, provider, walletAddress } = useWallet();
+	const { isConnected, provider, walletAddress, currentNetworkChainId } =
+		useWallet();
 
-	const getProviderTokenBalance = async () => {
-		const value = await provider
+	const getDefaultListToken = async () => {
+		const { tokens } = await getDefaultTokens(currentNetworkChainId as number);
+
+		const WSYS = tokens.filter(token => token.symbol === "WSYS")[0];
+
+		const SYS: TokenInfo = {
+			...WSYS,
+			name: "Syscoin",
+			symbol: "SYS",
+			logoURI:
+				"https://app.pegasys.finance/static/media/syscoin_token_round.f5e7de99.png",
+		};
+
+		const allTokens = [...tokens, SYS];
+
+		if (!isConnected || !provider) {
+			const tokensWithBalance = allTokens.map(token => ({
+				...token,
+				balance: "0",
+			}));
+
+			const convertTokens = tokensWithBalance.map(
+				token => new WrappedTokenInfo(token)
+			);
+
+			setUserTokensBalance(convertTokens);
+		}
+
+		const tokensAddress = allTokens.map(token => token.address);
+
+		const tokensDecimals = allTokens.map(token => token.decimals);
+
+		const providerTokenBalance = await provider
 			?.getBalance(walletAddress)
 			.then(result => result.toString());
 
-		if (!value) return "0";
+		if (!providerTokenBalance) return "0";
 
-		const formattedValue = ethers.utils.formatEther(value);
-		// eslint-disable-next-line
-		setUserTokensBalance(previous => [
-			{
-				address: "",
-				chainId: 5700,
-				name: "Testnet Syscoin",
-				symbol: "TSYS",
-				decimals: 18,
-				balance: formattedValue,
-				logoURI: "https://cryptologos.cc/logos/syscoin-sys-logo.png?v=022",
-			},
-			...previous,
-		]);
+		const formattedValue = ethers.utils.formatEther(providerTokenBalance);
+		const truncatedValue = String(
+			truncateNumberDecimalsPlaces(parseFloat(formattedValue), 3)
+		);
 
-		return formattedValue;
-	};
-
-	const getDefaultListToken = async () => {
-		const { tokens } = await getDefaultTokens();
-
-		const tokensAddress = tokens.map(token => token.address);
-
-		const tokensDecimals = tokens.map(token => token.decimals);
-
-		const balances = await getBalanceOfMultiCall(
+		const contractBalances = await getBalanceOfMultiCall(
 			tokensAddress,
 			walletAddress,
 			provider,
 			tokensDecimals
 		);
 
-		const tokensWithBalance = tokens.map(token => {
-			const balanceItems = balances.find(
+		const tokensWithBalance = allTokens.map(token => {
+			const balanceItems = contractBalances.find(
 				balance => balance.address === token.address
 			);
 
+			if (token.symbol === "SYS") {
+				return {
+					...token,
+					balance: truncatedValue as string,
+				};
+			}
+
+			const truncatedBalance =
+				balanceItems &&
+				String(
+					truncateNumberDecimalsPlaces(parseFloat(balanceItems.balance), 3)
+				);
+
 			return {
 				...token,
-				balance: balanceItems?.balance as string,
+				balance: truncatedBalance as string,
 			};
 		});
 
-		setUserTokensBalance(tokensWithBalance);
+		const convertTokens = tokensWithBalance.map(
+			token => new WrappedTokenInfo(token)
+		);
 
-		if (!userTokensBalance) return;
+		setUserTokensBalance(convertTokens);
 
-		getProviderTokenBalance();
+		return {};
 	};
 
 	useEffect(() => {
-		if (!isConnected) return;
-
 		getDefaultListToken();
-	}, [isConnected]);
+	}, [isConnected, currentNetworkChainId]);
 
 	const tokensProviderValue = useMemo(
 		() => ({

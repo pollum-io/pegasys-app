@@ -17,10 +17,11 @@ import {
 	SliderFilledTrack,
 	SliderThumb,
 } from "@chakra-ui/react";
-import { useModal, usePicasso } from "hooks";
-import React, { useState } from "react";
+import { useModal, usePicasso, useTokens } from "hooks";
+import React, { useState, useEffect } from "react";
 import { MdHelpOutline, MdArrowBack } from "react-icons/md";
 import { SelectCoinModal } from "components";
+import { WrappedTokenInfo } from "types";
 
 interface IModal {
 	isModalOpen: boolean;
@@ -28,23 +29,29 @@ interface IModal {
 	isCreate?: boolean;
 	haveValue?: boolean;
 }
-interface IToken {
-	logoURI: string;
-	symbol: string;
-	id?: number;
-}
 
 export const RemoveLiquidity: React.FC<IModal> = props => {
 	const { isModalOpen, onModalClose, isCreate, haveValue } = props;
+
+	const { userTokensBalance } = useTokens();
+
 	const theme = usePicasso();
-	const { onOpenCoin, isOpenCoin, onCloseCoin } = useModal();
-	const [selectedToken] = useState<IToken[]>([
-		{ logoURI: "icons/syscoin-logo.png", symbol: "SYS", id: 0 },
-		{ logoURI: "icons/pegasys.png", symbol: "PSYS", id: 1 },
-	]);
+	const { isOpenCoin, onCloseCoin } = useModal();
+	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
+
+	useEffect(() => {
+		const defaultTokenValues = userTokensBalance.filter(
+			tokens =>
+				tokens.symbol === "WSYS" ||
+				tokens.symbol === "SYS" ||
+				tokens.symbol === "PSYS"
+		);
+
+		setSelectedToken([defaultTokenValues[2], defaultTokenValues[1]]);
+	}, [userTokensBalance]);
 
 	return (
 		<Modal
@@ -57,6 +64,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 				onClose={onCloseCoin}
 				selectedToken={selectedToken}
 				buttonId={buttonId}
+				setSelectedToken={setSelectedToken}
 			/>
 			<ModalOverlay />
 			<ModalContent
@@ -160,7 +168,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						max={100}
 						mb="4"
 						colorScheme="teal"
-						onChange={value => setSliderValue(value)}
+						onChange={(value: number) => setSliderValue(value)}
 						onMouseEnter={() => setShowTooltip(true)}
 						onMouseLeave={() => setShowTooltip(false)}
 					>

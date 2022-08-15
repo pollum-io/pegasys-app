@@ -1,5 +1,4 @@
 import { DefaultTemplate, PoolsContainer } from "container";
-import { WalletProvider } from "contexts";
 import type { NextPage } from "next";
 
 const Pools: NextPage = () => (

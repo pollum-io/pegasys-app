@@ -24,28 +24,16 @@ import React, {
 	useCallback,
 } from "react";
 import { MdHelpOutline, MdArrowDownward, MdArrowUpward } from "react-icons/md";
-import { ITokenBalance, ITokenBalanceWithId } from "types";
+import { WrappedTokenInfo } from "types";
 import BigNumber from "bignumber.js";
 import { ManageToken } from "./ManageToken";
-
-interface ISymbol extends ITokenBalance {
-	id?: number;
-}
-
-interface IToken extends ITokenBalance {
-	logoURI: string;
-	symbol: string;
-	id?: number;
-}
 
 interface IModal {
 	isOpen: boolean;
 	onClose: () => void;
-	selectedToken?: ISymbol[];
+	selectedToken?: WrappedTokenInfo[];
 	buttonId: number;
-	setSelectedToken: React.Dispatch<
-		React.SetStateAction<ITokenBalance[] | ITokenBalanceWithId[] | IToken[]>
-	>;
+	setSelectedToken: React.Dispatch<React.SetStateAction<WrappedTokenInfo[]>>;
 }
 
 export const SelectCoinModal: React.FC<IModal> = props => {
@@ -54,17 +42,11 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const { onOpenManageToken, isOpenManageToken, onCloseManageToken } =
 		useModal();
 	const theme = usePicasso();
-	const [defaultTokens, setDefaultTokens] = useState<
-		ITokenBalance[] | ITokenBalanceWithId[]
-	>([]);
+	const [defaultTokens, setDefaultTokens] = useState<WrappedTokenInfo[]>([]);
 	const [order, setOrder] = useState<"asc" | "desc">("desc");
+	const [filter, setFilter] = useState<WrappedTokenInfo[]>([]);
+	const [tokenError, setTokenError] = useState<WrappedTokenInfo[]>([]);
 	const [arrowOrder, setArrowOrder] = useState(false);
-	const [filter, setFilter] = useState<ITokenBalance[] | ITokenBalanceWithId[]>(
-		[]
-	);
-	const [tokenError, setTokenError] = useState<
-		ISymbol[] | ITokenBalanceWithId[]
-	>([]);
 
 	const { userTokensBalance } = useTokens();
 
@@ -73,7 +55,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 
 		if (inputValue !== "") {
 			const results = defaultTokens.filter(token =>
-				token.symbol.toLowerCase().startsWith(inputValue.toLowerCase())
+				token?.symbol?.toLowerCase().startsWith(inputValue.toLowerCase())
 			);
 			setFilter(results);
 		} else {
@@ -81,10 +63,10 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 		}
 	};
 
-	const orderList = (array: ITokenBalance[]) => {
-		const orderedList: ITokenBalance[] = [];
+	const orderList = (array: WrappedTokenInfo[]) => {
+		const orderedList: WrappedTokenInfo[] = [];
 		if (order === "desc") {
-			array?.forEach((token: ITokenBalance) => {
+			array?.forEach((token: WrappedTokenInfo) => {
 				const firstToken = new BigNumber(array[0]?.balance);
 				const tokenBalance = new BigNumber(token.balance);
 				if (!array[0] || firstToken.isLessThanOrEqualTo(tokenBalance))
@@ -92,7 +74,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				return orderedList.push(token);
 			});
 		} else {
-			array.forEach((token: ITokenBalance) => {
+			array.forEach((token: WrappedTokenInfo) => {
 				const firstToken = new BigNumber(array[0].balance);
 				const tokenBalance = new BigNumber(token.balance);
 				if (
@@ -125,17 +107,14 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	}, [userTokensBalance]);
 
 	const handleSelectToken = useCallback(
-		(id: number, token: ISymbol) => {
+		(id: number, token: WrappedTokenInfo) => {
 			if (!selectedToken) return;
 
-			const actualTokens = [...selectedToken];
+			setSelectedToken((prevState: WrappedTokenInfo[]) => {
+				prevState[id] = new WrappedTokenInfo(token.tokenInfo);
 
-			actualTokens[id] = {
-				...selectedToken[id],
-				...token,
-			};
-
-			setSelectedToken(actualTokens);
+				return prevState as WrappedTokenInfo[];
+			});
 		},
 		[selectedToken]
 	);
@@ -143,9 +122,9 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	useEffect(() => {
 		if (!selectedToken) return;
 
-		const verify = selectedToken?.filter((currentToken: ISymbol) =>
+		const verify = selectedToken?.filter((currentToken: WrappedTokenInfo) =>
 			filter?.some(
-				(filteredValue: ISymbol) =>
+				(filteredValue: WrappedTokenInfo) =>
 					filteredValue?.symbol === currentToken.symbol
 			)
 		);
@@ -214,22 +193,29 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							onClick={() => orderList(filter)}
 						/>
 					</Flex>
-					<Flex flexDirection="column" w="100%" my="5">
-						{filter?.map((token: ITokenBalance, index: number) => (
-							<Button
-								bg="transparent"
-								px="2"
-								py="6"
-								justifyContent="space-between"
-								key={token.address + Number(index)}
-								disabled={
-									token.symbol === tokenError[0]?.symbol ||
-									token.symbol === tokenError[1]?.symbol
-								}
-								onClick={() => {
-									handleSelectToken(buttonId, token);
-									onClose();
-								}}
+				</ModalBody>
+				<Flex flexDirection="column">
+					{filter?.map((token: WrappedTokenInfo, index: number) => (
+						<Button
+							bg="transparent"
+							px="10"
+							py="6"
+							justifyContent="space-between"
+							key={token.address + Number(index)}
+							disabled={
+								token.symbol === tokenError[0]?.symbol ||
+								token.symbol === tokenError[1]?.symbol
+							}
+							onClick={() => {
+								handleSelectToken(buttonId as number, token);
+								onClose();
+							}}
+						>
+							<Flex
+								gap="4"
+								alignItems="center"
+								justifyContent="flex-start"
+								w="100%"
 							>
 								<Flex
 									gap="4"
@@ -243,10 +229,10 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 								<Text fontFamily="mono" fontWeight="normal">
 									{token.balance}
 								</Text>
-							</Button>
-						))}
-					</Flex>
-				</ModalBody>
+							</Flex>
+						</Button>
+					))}
+				</Flex>
 
 				<ModalFooter
 					alignContent="center"

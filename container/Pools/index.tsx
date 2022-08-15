@@ -4,7 +4,6 @@ import {
 	Img,
 	Input,
 	InputGroup,
-	InputLeftElement,
 	Menu,
 	MenuButton,
 	MenuItem,
@@ -12,7 +11,6 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { AddLiquidityModal, RemoveLiquidity } from "components";
-import { ImportPoolModal } from "components/Modals/ImportPool";
 import { PoolCards } from "components/Pools/PoolCards";
 import { usePicasso, useWallet, useToasty, useModal } from "hooks";
 import { NextPage } from "next";
@@ -31,7 +29,7 @@ export const PoolsContainer: NextPage = () => {
 	} = useModal();
 
 	const [isCreate, setIsCreate] = useState(false);
-	const [haveValue, setHaveValue] = useState(false);
+	const [haveValue] = useState(false);
 	const { isConnected } = useWallet();
 	const [userHavePool, setUserHavePool] = useState(true);
 

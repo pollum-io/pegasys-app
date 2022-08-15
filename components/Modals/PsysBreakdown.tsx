@@ -1,17 +1,15 @@
 import {
 	Button,
 	Flex,
-	Icon,
 	Img,
 	Modal,
 	ModalBody,
 	ModalContent,
 	ModalFooter,
-	ModalHeader,
 	ModalOverlay,
 	Text,
 } from "@chakra-ui/react";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso } from "hooks";
 import { FunctionComponent } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
