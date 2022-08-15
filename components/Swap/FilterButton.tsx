@@ -1,6 +1,6 @@
-import { ListItem, Flex } from "@chakra-ui/react";
+import { ListItem, List } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import { FunctionComponent, ReactNode, useState } from "react";
+import { FunctionComponent } from "react";
 import {
 	ONE_HOUR_IN_SECONDS,
 	ONE_DAY_IN_SECONDS,
@@ -9,17 +9,59 @@ import {
 	FOUR_HOURS_IN_SECONDS,
 	ONE_WEEK_IN_SECONDS,
 } from "helpers/consts";
+import { IChartComponentPeriod } from "types";
 
-interface IFilterPorps {
-	children?: ReactNode;
+interface IPeriodsMockedData extends IChartComponentPeriod {
+	inputValue: string;
 }
 
-export const FilterButton: FunctionComponent<IFilterPorps> = () => {
+const periodsMockedData: IPeriodsMockedData[] = [
+	{
+		id: 1,
+		inputValue: "5m",
+		period: FIVE_MINUTES_IN_SECONDS,
+	},
+	{
+		id: 2,
+		inputValue: "15m",
+		period: FIFTEEN_MINUTES_IN_SECONDS,
+	},
+	{
+		id: 3,
+		inputValue: "1h",
+		period: ONE_HOUR_IN_SECONDS,
+	},
+	{
+		id: 4,
+		inputValue: "4h",
+		period: FOUR_HOURS_IN_SECONDS,
+	},
+	{
+		id: 5,
+		inputValue: "1d",
+		period: ONE_DAY_IN_SECONDS,
+	},
+	{
+		id: 6,
+		inputValue: "1w",
+		period: ONE_WEEK_IN_SECONDS,
+	},
+];
+
+interface IFilterPorps {
+	periodStateValue: IChartComponentPeriod;
+	setPeriod: React.Dispatch<React.SetStateAction<IChartComponentPeriod>>;
+}
+
+export const FilterButton: FunctionComponent<IFilterPorps> = ({
+	periodStateValue,
+	setPeriod,
+}) => {
+	const { id } = periodStateValue;
 	const theme = usePicasso();
-	const [filter, setFilter] = useState<string>("");
 
 	return (
-		<Flex
+		<List
 			flexDirection="row"
 			w="100%"
 			display="flex"
@@ -28,89 +70,27 @@ export const FilterButton: FunctionComponent<IFilterPorps> = () => {
 			justifyContent="center"
 			gap="5"
 		>
-			<ListItem
-				bgColor={filter === "1" ? theme.bg.blueNavy : "transparent"}
-				color={filter === "1" ? theme.text.mono : "#7a8dae"}
-				w="8%"
-				px="3"
-				py="3"
-				fontWeight="semibold"
-				borderRadius="full"
-				_hover={{ cursor: "pointer", background: theme.bg.blueNavy }}
-				value={FIVE_MINUTES_IN_SECONDS}
-				onClick={() => setFilter("1")}
-			>
-				5m
-			</ListItem>
-			<ListItem
-				bgColor={filter === "2" ? theme.bg.blueNavy : "transparent"}
-				color={filter === "2" ? theme.text.mono : "#7a8dae"}
-				px="3"
-				py="3"
-				fontWeight="semibold"
-				borderRadius="full"
-				_hover={{ cursor: "pointer", background: theme.bg.blueNavy }}
-				value={FIFTEEN_MINUTES_IN_SECONDS}
-				onClick={() => setFilter("2")}
-			>
-				15m
-			</ListItem>
-			<ListItem
-				bgColor={filter === "3" ? theme.bg.blueNavy : "transparent"}
-				color={filter === "3" ? theme.text.mono : "#7a8dae"}
-				w="8%"
-				textAlign="center"
-				py="3"
-				fontWeight="semibold"
-				borderRadius="full"
-				_hover={{ cursor: "pointer", background: theme.bg.blueNavy }}
-				value={ONE_HOUR_IN_SECONDS}
-				onClick={() => setFilter("3")}
-			>
-				1h
-			</ListItem>
-			<ListItem
-				bgColor={filter === "4" ? theme.bg.blueNavy : "transparent"}
-				color={filter === "4" ? theme.text.mono : "#7a8dae"}
-				w="8%"
-				textAlign="center"
-				py="3"
-				fontWeight="semibold"
-				borderRadius="full"
-				_hover={{ cursor: "pointer", background: theme.bg.blueNavy }}
-				value={FOUR_HOURS_IN_SECONDS}
-				onClick={() => setFilter("4")}
-			>
-				4h
-			</ListItem>
-			<ListItem
-				bgColor={filter === "5" ? theme.bg.blueNavy : "transparent"}
-				color={filter === "5" ? theme.text.mono : "#7a8dae"}
-				w="8%"
-				textAlign="center"
-				py="3"
-				fontWeight="semibold"
-				borderRadius="full"
-				_hover={{ cursor: "pointer", background: theme.bg.blueNavy }}
-				value={ONE_DAY_IN_SECONDS}
-				onClick={() => setFilter("5")}
-			>
-				1d
-			</ListItem>
-			<ListItem
-				bgColor={filter === "6" ? theme.bg.blueNavy : "transparent"}
-				color={filter === "6" ? theme.text.mono : "#7a8dae"}
-				w="8%"
-				textAlign="center"
-				py="3"
-				fontWeight="semibold"
-				borderRadius="full"
-				_hover={{ cursor: "pointer", background: theme.bg.blueNavy }}
-				value={ONE_WEEK_IN_SECONDS}
-				onClick={() => setFilter("6")}
-			>
-				1w
-			</ListItem>
-		</Flex>
+			{periodsMockedData.map(periods => (
+				<ListItem
+					key={periods.id}
+					bgColor={id === periods.id ? theme.bg.blueNavy : "transparent"}
+					color={id === periods.id ? theme.text.mono : "#7a8dae"}
+					px="3"
+					py="3"
+					fontWeight="semibold"
+					borderRadius="full"
+					_hover={{ cursor: "pointer", background: theme.bg.blueNavy }}
+					value={periods.period}
+					onClick={() =>
+						setPeriod({
+							id: periods.id,
+							period: periods.period,
+						})
+					}
+				>
+					{periods.inputValue}
+				</ListItem>
+			))}
+		</List>
 	);
 };

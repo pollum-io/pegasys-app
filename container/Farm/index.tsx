@@ -5,7 +5,6 @@ import {
 	Text,
 	Input,
 	InputGroup,
-	InputLeftElement,
 	Menu,
 	MenuItem,
 	MenuList,

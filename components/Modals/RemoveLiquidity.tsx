@@ -18,9 +18,10 @@ import {
 	SliderThumb,
 } from "@chakra-ui/react";
 import { useModal, usePicasso, useTokens } from "hooks";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { MdHelpOutline, MdArrowBack } from "react-icons/md";
 import { SelectCoinModal } from "components";
+import { WrappedTokenInfo } from "types";
 
 interface IModal {
 	isModalOpen: boolean;
@@ -35,18 +36,20 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	const { userTokensBalance } = useTokens();
 
 	const theme = usePicasso();
-	const { onOpenCoin, isOpenCoin, onCloseCoin } = useModal();
-	const [selectedToken, setSelectedToken] = useState<IToken[]>([
-		{ logoURI: "icons/syscoin-logo.png", symbol: "SYS", id: 0 },
-		{ logoURI: "icons/pegasys.png", symbol: "PSYS", id: 1 },
-	]);
+	const { isOpenCoin, onCloseCoin } = useModal();
+	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
 
-	useEffect(() => {
-		setSelectedToken([userTokensBalance[0], userTokensBalance[1]]);
-	}, [userTokensBalance]);
+	const defaultTokenValues = userTokensBalance.filter(
+		tokens =>
+			tokens.symbol === "WSYS" ||
+			tokens.symbol === "SYS" ||
+			tokens.symbol === "PSYS"
+	);
+
+	setSelectedToken([defaultTokenValues[2], defaultTokenValues[1]]);
 
 	return (
 		<Modal

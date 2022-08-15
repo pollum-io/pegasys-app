@@ -1,16 +1,15 @@
-import { Flex, Icon, Img, Text, useColorMode } from "@chakra-ui/react";
+import { Flex, Icon, Img, useColorMode } from "@chakra-ui/react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
 import { useModal, usePicasso } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
-import React, { useMemo } from "react";
+import React from "react";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
 import { MenuLinks } from "./MenuLink";
 import { SettingsButton } from "./SettingsButton";
-import { ExpertMode } from "./ExpertMode";
 
 export const Header: React.FC = () => {
 	const { toggleColorMode } = useColorMode();

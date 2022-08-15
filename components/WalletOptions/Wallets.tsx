@@ -1,6 +1,6 @@
 import { Button, Flex, Img } from "@chakra-ui/react";
 import { usePicasso, useWallet } from "hooks";
-import React, { useEffect } from "react";
+import React from "react";
 
 interface IWalletProps {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -14,10 +14,6 @@ interface IWalletProps {
 export const Wallets = ({ id, header, icon, onClick }: IWalletProps) => {
 	const theme = usePicasso();
 	const { connecting, setConnecting } = useWallet();
-
-	useEffect(() => {
-		console.log(connecting);
-	}, [connecting]);
 
 	return (
 		<Button

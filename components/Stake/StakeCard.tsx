@@ -1,15 +1,6 @@
-import {
-	Button,
-	Flex,
-	Grid,
-	GridItem,
-	Img,
-	Text,
-	useDisclosure,
-} from "@chakra-ui/react";
+import { Button, Flex, Grid, GridItem, Img, Text } from "@chakra-ui/react";
 import { FunctionComponent, useState } from "react";
 import { useModal, usePicasso } from "hooks";
-import { AddLiquidityModal, RemoveLiquidity } from "components/Modals";
 import { StakeActions } from "components/Modals/StakeActions";
 
 interface IPoolCards {
