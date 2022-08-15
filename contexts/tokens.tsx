@@ -4,6 +4,7 @@ import { WrappedTokenInfo } from "types";
 import { useWallet } from "hooks";
 import { getDefaultTokens } from "networks";
 import { getBalanceOfMultiCall } from "utils";
+import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
 
 interface ITokensContext {
 	userTokensBalance: WrappedTokenInfo[];
@@ -24,8 +25,20 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 	const getDefaultListToken = async () => {
 		const { tokens } = await getDefaultTokens(currentNetworkChainId as number);
 
+		const WSYS = tokens.filter(token => token.symbol === "WSYS")[0];
+
+		const SYS: TokenInfo = {
+			...WSYS,
+			name: "Syscoin",
+			symbol: "SYS",
+			logoURI:
+				"https://app.pegasys.finance/static/media/syscoin_token_round.f5e7de99.png",
+		};
+
+		const allTokens = [...tokens, SYS];
+
 		if (!isConnected || !provider) {
-			const tokensWithBalance = tokens.map(token => ({
+			const tokensWithBalance = allTokens.map(token => ({
 				...token,
 				balance: "0",
 			}));
@@ -37,9 +50,9 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			setUserTokensBalance(convertTokens);
 		}
 
-		const tokensAddress = tokens.map(token => token.address);
+		const tokensAddress = allTokens.map(token => token.address);
 
-		const tokensDecimals = tokens.map(token => token.decimals);
+		const tokensDecimals = allTokens.map(token => token.decimals);
 
 		const providerTokenBalance = await provider
 			?.getBalance(walletAddress)
@@ -56,12 +69,12 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			tokensDecimals
 		);
 
-		const tokensWithBalance = tokens.map(token => {
+		const tokensWithBalance = allTokens.map(token => {
 			const balanceItems = contractBalances.find(
 				balance => balance.address === token.address
 			);
 
-			if (token.symbol === "WSYS" || token.symbol === "SYS") {
+			if (token.symbol === "SYS") {
 				return {
 					...token,
 					balance: formattedValue as string,

@@ -11,8 +11,8 @@ import {
 	Text,
 	Tooltip,
 } from "@chakra-ui/react";
-import { useModal, usePicasso } from "hooks";
-import React, { useState } from "react";
+import { useModal, usePicasso, useTokens } from "hooks";
+import React, { useState, useEffect } from "react";
 import {
 	MdHelpOutline,
 	MdArrowBack,

@@ -263,7 +263,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				tokens.symbol === "PSYS"
 		);
 
-		setSelectedToken([defaultTokenValues[0], defaultTokenValues[1]]);
+		setSelectedToken([defaultTokenValues[2], defaultTokenValues[1]]);
 	}, [userTokensBalance]);
 
 	const approve = useApproveCallbackFromTrade(
@@ -607,6 +607,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					{isExpert && isOtherWallet}
 					<Flex>
 						{selectedToken[0]?.symbol !== "WSYS" &&
+							selectedToken[0]?.symbol !== "SYS" &&
 							selectedToken[0]?.symbol !== "PSYS" &&
 							isConnected && (
 								<Button
@@ -628,6 +629,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						<Button
 							w={
 								selectedToken[0]?.symbol === "WSYS" ||
+								selectedToken[0]?.symbol === "SYS" ||
 								selectedToken[0]?.symbol === "PSYS"
 									? "100%"
 									: "50%"

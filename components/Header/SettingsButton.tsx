@@ -30,8 +30,8 @@ interface IButtonProps extends ButtonProps {
 export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	// const [expert, setExpert] = useState(false)
-	const { userSlippageTolerance, setUserSlippageTolerance } = useWallet();
-	const { setExpert, expert } = useWallet();
+	const { userSlippageTolerance, setUserSlippageTolerance, setExpert, expert } =
+		useWallet();
 
 	useEffect(() => {
 		console.log("expert: ", expert);

@@ -21,7 +21,6 @@ import { useModal, usePicasso, useTokens } from "hooks";
 import React, { useEffect, useState } from "react";
 import { MdHelpOutline, MdArrowBack } from "react-icons/md";
 import { SelectCoinModal } from "components";
-import { WrappedTokenInfo } from "types";
 
 interface IModal {
 	isModalOpen: boolean;
@@ -33,9 +32,11 @@ interface IModal {
 export const RemoveLiquidity: React.FC<IModal> = props => {
 	const { isModalOpen, onModalClose, isCreate, haveValue } = props;
 
+	const { userTokensBalance } = useTokens();
+
 	const theme = usePicasso();
 	const { onOpenCoin, isOpenCoin, onCloseCoin } = useModal();
-	const [selectedToken] = useState<IToken[]>([
+	const [selectedToken, setSelectedToken] = useState<IToken[]>([
 		{ logoURI: "icons/syscoin-logo.png", symbol: "SYS", id: 0 },
 		{ logoURI: "icons/pegasys.png", symbol: "PSYS", id: 1 },
 	]);
