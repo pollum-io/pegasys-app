@@ -21,7 +21,17 @@ interface IModal {
 export const SelectWallets: React.FC<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
-	const { connecting, connectorSelected } = useWallet();
+	const { connecting, connectorSelected, setConnecting, provider } =
+		useWallet();
+
+	const closing = () => {
+		setConnecting(!connecting);
+
+		if (connecting === false) {
+			return { onClose };
+		}
+		return null;
+	};
 
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
@@ -64,12 +74,16 @@ export const SelectWallets: React.FC<IModal> = props => {
 					<Flex flexDirection="column" justifyContent="center">
 						<Flex justifyContent="flex-end" gap="3" align="center" pb="5">
 							<Flex _hover={{ cursor: "pointer" }}>
-								<AiOutlineClose size={22} onClick={onClose} />
+								<AiOutlineClose size={22} onClick={closing} />
 							</Flex>
 						</Flex>
 						<Flex justifyContent="center" flexDirection="row">
-							<Flex className="circleLoading" id="walletLoading" />
-							<Text pb="2" pl="10" fontSize="20px" fontWeight="600">
+							<Flex
+								className="circleLoading"
+								id="walletLoading"
+								position="relative"
+							/>
+							<Text pb="2" pl="7" fontSize="20px" fontWeight="600">
 								Initializing...
 							</Text>
 						</Flex>

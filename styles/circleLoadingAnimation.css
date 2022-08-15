@@ -1,6 +1,6 @@
 .circleLoading {
 	display: inline-block;
-	position: relative;
+	position: fixed;
 	width: 20px;
 	height: 20px;
 	bottom: 10px;
@@ -9,7 +9,7 @@
 .circleLoading {
 	box-sizing: border-box;
 	display: block;
-	position: absolute;
+	position: fixed;
 	width: 22px;
 	height: 22px;
 	border: 2px solid #fff;
