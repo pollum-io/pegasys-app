@@ -120,7 +120,7 @@ const useToasty = () => {
 				</Flex>
 			),
 		});
-	}, [state, toast]);
+	}, [state]);
 
 	return { toastState: state, toast: setState };
 };
