@@ -32,16 +32,6 @@ export const PoolsContainer: NextPage = () => {
 	const [haveValue] = useState(false);
 	const { isConnected } = useWallet();
 	const [userHavePool, setUserHavePool] = useState(true);
-	const { toast } = useToasty();
-
-	const showToast = () => {
-		toast({
-			id: "toast",
-			title: "Title",
-			description: "Something happend!",
-			status: "success",
-		});
-	};
 
 	return (
 		<Flex justifyContent="center" alignItems="center">
