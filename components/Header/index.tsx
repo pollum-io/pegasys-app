@@ -4,7 +4,7 @@ import { IconButton } from "components/Buttons";
 import { useModal, usePicasso } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
@@ -13,8 +13,10 @@ import { SettingsButton } from "./SettingsButton";
 import { ExpertMode } from "./ExpertMode";
 
 export const Header: React.FC = () => {
-	const { toggleColorMode } = useColorMode();
+	const { colorMode, toggleColorMode } = useColorMode();
 	const theme = usePicasso();
+	const [buttonId, setButtonId] = useState<any>();
+
 	const { isOpenPsysBreakdown, onOpenPsysBreakdown, onClosePsysBreakdown } =
 		useModal();
 	const links = [
@@ -35,6 +37,8 @@ export const Header: React.FC = () => {
 			url: "/stake",
 		},
 	];
+
+	console.log(buttonId, "asdasd");
 
 	return (
 		<Flex
@@ -63,7 +67,11 @@ export const Header: React.FC = () => {
 				ml={["7", "0", "0", "0"]}
 			>
 				{links.map((item, index) => (
-					<NavButton key={item.name + Number(index)} href={item.url}>
+					<NavButton
+						key={item.name + Number(index)}
+						href={item.url}
+						onClick={() => setButtonId(item.name)}
+					>
 						{item.name}
 					</NavButton>
 				))}
