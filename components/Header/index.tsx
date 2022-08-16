@@ -14,6 +14,7 @@ import { SettingsButton } from "./SettingsButton";
 export const Header: React.FC = () => {
 	const { toggleColorMode } = useColorMode();
 	const theme = usePicasso();
+
 	const { isOpenPsysBreakdown, onOpenPsysBreakdown, onClosePsysBreakdown } =
 		useModal();
 	const links = [
@@ -72,8 +73,8 @@ export const Header: React.FC = () => {
 					display={{
 						base: "none",
 						sm: "none",
-						md: "block",
-						lg: "block",
+						md: "flex",
+						lg: "flex",
 					}}
 				>
 					Charts
@@ -82,6 +83,7 @@ export const Header: React.FC = () => {
 						w="5"
 						h="5"
 						ml="2"
+						mb="1"
 						color={theme.text.header}
 					/>
 				</NavButton>
