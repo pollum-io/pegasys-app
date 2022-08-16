@@ -4,7 +4,7 @@ import { IconButton } from "components/Buttons";
 import { useModal, usePicasso } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
-import React, { useMemo } from "react";
+import React from "react";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
@@ -15,6 +15,7 @@ import { ExpertMode } from "./ExpertMode";
 export const Header: React.FC = () => {
 	const { toggleColorMode } = useColorMode();
 	const theme = usePicasso();
+
 	const { isOpenPsysBreakdown, onOpenPsysBreakdown, onClosePsysBreakdown } =
 		useModal();
 	const links = [
