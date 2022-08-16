@@ -104,7 +104,7 @@ export const Header: React.FC = () => {
 				zIndex="99"
 				alignItems="center"
 				px={["0", "10"]}
-				pl={["0", "6", "6", "10"]}
+				pl={["1", "6", "6", "10"]}
 				pr={["0", "4", "6", "10"]}
 				py="2"
 				justifyContent={["space-around", "space-between"]}

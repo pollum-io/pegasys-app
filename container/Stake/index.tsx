@@ -46,7 +46,7 @@ export const StakeContainer: NextPage = () => {
 							Pegasys PSYS Staking
 						</Text>
 						<Text
-							fontWeight="semibold"
+							fontWeight="medium"
 							fontSize="sm"
 							lineHeight="shorter"
 							w={["70%", "50%", "50%", "50%"]}
@@ -64,7 +64,7 @@ export const StakeContainer: NextPage = () => {
 						py="0.531rem"
 						gap="2.5"
 					>
-						<Text fontWeight="semibold" fontSize="xs">
+						<Text fontWeight="medium" fontSize="xs">
 							Read more about PSYS
 						</Text>
 						<MdOutlineCallMade size={20} />

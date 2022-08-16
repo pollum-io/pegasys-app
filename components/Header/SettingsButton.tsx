@@ -53,7 +53,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 				w={["100vw", "100vw", "24.563rem", "24.563rem"]}
 				h="max-content"
 				bottom={["0rem", "0rem", "3.8rem", "3.8rem"]}
-				right={["0", "0", "", ""]}
+				right={["0", "unset", "unset", "unset"]}
 				mx={["0", "0", "20", "56"]}
 				position="fixed"
 			>

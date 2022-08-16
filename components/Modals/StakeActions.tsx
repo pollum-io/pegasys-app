@@ -85,7 +85,7 @@ export const StakeActions: React.FC<IModal> = props => {
 						justifyContent="space-between"
 						alignItems={["flex-start", "flex-start", "center", "center"]}
 					>
-						<Flex pr="7" gap="2" mt={["6", "6", "0", "0"]}>
+						<Flex pr="7" gap="2" mt={["6", "6", "2", "2"]}>
 							<Button
 								w="max-content"
 								h="max-content"
@@ -256,7 +256,8 @@ export const StakeActions: React.FC<IModal> = props => {
 								py="3"
 								px="1.5rem"
 								w="100%"
-								my="4"
+								mt="1.5rem"
+								mb="1rem"
 								h="max-content"
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
@@ -349,7 +350,7 @@ export const StakeActions: React.FC<IModal> = props => {
 									</Tooltip>
 								</Slider>
 							</Flex>
-							<Flex mt="7" mb="2" gap="4">
+							<Flex mt="1.5rem" mb="1rem" gap="4">
 								<Button
 									fontSize="lg"
 									fontWeight="semibold"
@@ -388,7 +389,7 @@ export const StakeActions: React.FC<IModal> = props => {
 					{buttonId === "claim" && (
 						<Flex flexDirection="column" gap="6">
 							<Flex
-								bgColor={theme.bg.whiteGray}
+								bgColor={theme.bg.blueNavy}
 								flexDirection="column"
 								justifyContent="center"
 								alignItems="center"
@@ -431,7 +432,7 @@ export const StakeActions: React.FC<IModal> = props => {
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
-							background={theme.text.gray600}
+							background={theme.bg.blueNavy}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
 							top={["unset", "unset", "24rem", "24rem"]}
@@ -456,10 +457,10 @@ export const StakeActions: React.FC<IModal> = props => {
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
-							background={theme.text.gray600}
+							background={theme.bg.blueNavy}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
-							top={["unset", "unset", "24rem", "24rem"]}
+							top={["unset", "unset", "24rem", "22.5rem"]}
 							borderTopRadius={["0", "0", "3xl", "3xl"]}
 							borderBottomRadius={["0", "0", "3xl", "3xl"]}
 							alignItems="flex-start"

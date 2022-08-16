@@ -70,7 +70,7 @@ export const FarmActions: React.FC<IModal> = props => {
 							pl={["0", "16", "0", "0"]}
 							gap="2"
 							flexDirection="row"
-							mt={["6", "6", "0", "0"]}
+							mt={["6", "6", "2", "2"]}
 						>
 							<Button
 								w="max-content"
@@ -251,7 +251,9 @@ export const FarmActions: React.FC<IModal> = props => {
 										</Flex>
 									</Flex>
 								)}
-								<Text fontWeight="normal">Weekly Rewards: 0 PSYS / Week</Text>
+								<Text fontWeight="normal" pt="1.5rem">
+									Weekly Rewards: 0 PSYS / Week
+								</Text>
 								<Text fontWeight="normal">Extra Reward: 0 PSYS / Week</Text>
 							</Flex>
 							<Button
@@ -260,7 +262,8 @@ export const FarmActions: React.FC<IModal> = props => {
 								py="3"
 								px="1.5rem"
 								w="100%"
-								mt="1.25rem"
+								mt="1.5rem"
+								mb="1rem"
 								h="max-content"
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
@@ -352,7 +355,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									</Tooltip>
 								</Slider>
 							</Flex>
-							<Flex mt="7" mb="2" gap="4">
+							<Flex mt="1.5rem" mb="1rem" gap="4">
 								<Button
 									fontSize="lg"
 									fontWeight="semibold"
@@ -430,11 +433,11 @@ export const FarmActions: React.FC<IModal> = props => {
 					)}
 				</ModalBody>
 				<Flex>
-					{!buttonId === "withdraw" && (
+					{buttonId === "withdraw" && (
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
-							background={theme.text.gray600}
+							background={theme.bg.blueNavy}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
 							top={["unset", "unset", "24rem", "24rem"]}
@@ -454,11 +457,11 @@ export const FarmActions: React.FC<IModal> = props => {
 							</Flex>
 						</Flex>
 					)}
-					{!buttonId === "claim" && (
+					{buttonId === "claim" && (
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
-							background={theme.text.gray600}
+							background={theme.bg.blueNavy}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
 							top={["unset", "unset", "20rem", "20rem"]}

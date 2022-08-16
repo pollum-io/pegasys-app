@@ -985,8 +985,8 @@
 
 #stars,
 #stars:after {
-	height: 1px;
-	width: 1px;
+	height: 2px;
+	width: 2px;
 	position: absolute;
 	left: 0px;
 }

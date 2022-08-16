@@ -60,7 +60,7 @@ export const AirdropContainer: NextPage = () => {
 						</Text>
 						<Text
 							color="white"
-							fontWeight="semibold"
+							fontWeight="medium"
 							fontSize="sm"
 							lineHeight="shorter"
 							w={["100%", "90%", "60%", "60%"]}
