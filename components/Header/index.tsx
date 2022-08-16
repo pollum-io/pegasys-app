@@ -74,8 +74,8 @@ export const Header: React.FC = () => {
 					display={{
 						base: "none",
 						sm: "none",
-						md: "block",
-						lg: "block",
+						md: "flex",
+						lg: "flex",
 					}}
 				>
 					Charts
@@ -84,6 +84,7 @@ export const Header: React.FC = () => {
 						w="5"
 						h="5"
 						ml="2"
+						mb="1"
 						color={theme.text.header}
 					/>
 				</NavButton>
