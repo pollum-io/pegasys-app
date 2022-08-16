@@ -1,12 +1,11 @@
 import { MaxUint256 } from "@ethersproject/constants";
-import { TransactionResponse } from "@ethersproject/providers";
 import { Trade, CurrencyAmount, ChainId } from "@pollum-io/pegasys-sdk";
+import { UseToastOptions } from "@chakra-ui/react";
 import { ROUTER_ADDRESS } from "helpers/consts";
 import {
 	calculateGasMargin,
 	computeSlippageAdjustedAmounts,
 	getContract,
-	addTransaction,
 } from "utils";
 import { IWalletHookInfos, ISwapTokenInputValue } from "types";
 import { Signer } from "ethers";
@@ -28,11 +27,10 @@ export function useApproveCallback(
 	userInput: ISwapTokenInputValue,
 	setApprovalState: React.Dispatch<React.SetStateAction<ApprovalState>>,
 	walletInfos: IWalletHookInfos,
-	setTransactions: React.Dispatch<React.SetStateAction<object>>,
+	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
 	amountToApprove?: { [field in Field]?: CurrencyAmount },
 	spender?: string,
-	signer?: Signer,
-	transactions?: object
+	signer?: Signer
 ): () => Promise<void> {
 	const token =
 		userInput.lastInputTyped === 0
@@ -85,21 +83,17 @@ export function useApproveCallback(
 					gasLimit: calculateGasMargin(estimatedGas),
 				}
 			)
-			.then((response: TransactionResponse) => {
-				addTransaction(
-					response,
-					walletInfos,
-					setTransactions,
-					{
-						summary: `Approve ${currentAmountToApprove?.currency?.symbol}`,
-						approval: { tokenAddress: token?.address, spender },
-					},
-					transactions
-				);
+			.then(() => {
 				setApprovalState(ApprovalState.PENDING);
 			})
-			.catch((error: Error) => {
-				console.debug("Failed to approve token", error);
+			.catch(error => {
+				if (error?.code === 4001) {
+					toast({
+						status: "error",
+						title: "Transaction rejected by user.",
+						description: `Transaction rejected. Code: ${error?.code}`,
+					});
+				}
 				throw error;
 			});
 	};
@@ -113,9 +107,8 @@ export function useApproveCallbackFromTrade(
 	walletInfos: IWalletHookInfos,
 	signer: Signer,
 	userInput: ISwapTokenInputValue,
-	setTransactions: React.Dispatch<React.SetStateAction<object>>,
-	transactions: object,
 	setApprovalState: React.Dispatch<React.SetStateAction<ApprovalState>>,
+	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
 	allowedSlippage = 0
 ) {
 	const { chainId } = walletInfos;
@@ -127,10 +120,9 @@ export function useApproveCallbackFromTrade(
 		userInput,
 		setApprovalState,
 		walletInfos,
-		setTransactions,
+		toast,
 		amountToApprove,
 		chainId ? ROUTER_ADDRESS[chainId] : ROUTER_ADDRESS[ChainId.NEVM],
-		signer,
-		transactions
+		signer
 	);
 }

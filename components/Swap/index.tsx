@@ -16,6 +16,7 @@ import {
 	useApproveCallbackFromTrade,
 	UseSwapCallback,
 	useToasty,
+	ApprovalState,
 } from "hooks";
 import React, { FunctionComponent, useEffect, useState, useMemo } from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
@@ -68,6 +69,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setTransactions,
 		transactions,
 		setApprovalState,
+		approvalState,
 	} = useWallet();
 
 	const [tokensGraphCandleData, setTokensGraphCandleData] = useState<
@@ -260,9 +262,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		},
 		signer as Signer,
 		tokenInputValue,
-		setTransactions,
-		transactions,
 		setApprovalState,
+		toast,
 		userSlippageTolerance
 	);
 
@@ -326,6 +327,17 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		}
 		return null;
 	}, [expert]);
+
+	const isERC20 =
+		selectedToken[0]?.symbol !== "WSYS" &&
+		selectedToken[0]?.symbol !== "SYS" &&
+		selectedToken[0]?.symbol !== "PSYS";
+
+	const approveValidation =
+		(isERC20 && approvalState === ApprovalState.UNKNOWN) ||
+		(isERC20 && approvalState === ApprovalState.PENDING);
+
+	const isPending = approvalState === ApprovalState.PENDING;
 
 	return (
 		<Flex
@@ -618,47 +630,44 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					{isExpert}
 					{isExpert && isOtherWallet}
 					<Flex>
-						{selectedToken[0]?.symbol !== "WSYS" &&
-							selectedToken[0]?.symbol !== "SYS" &&
-							selectedToken[0]?.symbol !== "PSYS" &&
-							isConnected && (
-								<Button
-									w="50%"
-									mt="2rem"
-									py="6"
-									px="6"
-									borderRadius="67px"
-									onClick={() => approve()}
-									bgColor={theme.bg.button.connectWalletSwap}
-									color={theme.text.cyan}
-									fontSize="lg"
-									fontWeight="semibold"
-									disabled={!canSubmit}
-								>
-									Approve
-								</Button>
-							)}
-						<Button
-							w={
-								selectedToken[0]?.symbol === "WSYS" ||
-								selectedToken[0]?.symbol === "SYS" ||
-								selectedToken[0]?.symbol === "PSYS"
-									? "100%"
-									: "50%"
-							}
-							mt="2rem"
-							py="6"
-							px="6"
-							borderRadius="67px"
-							onClick={() => swapCall?.callback && swapCall.callback()}
-							bgColor={theme.bg.button.connectWalletSwap}
-							color={theme.text.cyan}
-							fontSize="lg"
-							fontWeight="semibold"
-							disabled={!canSubmit}
-						>
-							{swapButtonValidation}
-						</Button>
+						{isERC20 && isConnected && (
+							<Button
+								w="100%"
+								mt="2rem"
+								py="6"
+								px="6"
+								borderRadius="67px"
+								onClick={
+									approveValidation
+										? () => approve()
+										: () => swapCall?.callback && swapCall.callback()
+								}
+								bgColor={theme.bg.button.connectWalletSwap}
+								color={theme.text.cyan}
+								fontSize="lg"
+								fontWeight="semibold"
+								disabled={!canSubmit || isPending}
+							>
+								{approveValidation ? "Approve" : "Swap"}
+							</Button>
+						)}
+						{!isERC20 && (
+							<Button
+								w="100%"
+								mt="2rem"
+								py="6"
+								px="6"
+								borderRadius="67px"
+								onClick={() => swapCall?.callback && swapCall.callback()}
+								bgColor={theme.bg.button.connectWalletSwap}
+								color={theme.text.cyan}
+								fontSize="lg"
+								fontWeight="semibold"
+								disabled={!canSubmit}
+							>
+								{swapButtonValidation}
+							</Button>
+						)}
 					</Flex>
 				</Flex>
 				{tokenInputValue.inputTo.value && tokenInputValue.inputFrom.value && (

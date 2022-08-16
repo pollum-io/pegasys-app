@@ -3,6 +3,7 @@ import { ethers, Signer } from "ethers";
 import { convertHexToNumber, isAddress } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { IWalletInfo } from "types";
+import { useToasty } from "hooks";
 import {
 	INITIAL_ALLOWED_SLIPPAGE,
 	SYS_TESTNET_CHAIN_PARAMS,
@@ -46,7 +47,6 @@ interface IWeb3 {
 	setUserSlippageTolerance: React.Dispatch<React.SetStateAction<number>>;
 	setTransactions: React.Dispatch<React.SetStateAction<object>>;
 	transactions: object;
-	wssProvider: ethers.providers.WebSocketProvider;
 	setApprovalState: React.Dispatch<React.SetStateAction<ApprovalState>>;
 	approvalState: ApprovalState;
 }
@@ -84,13 +84,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [approvalState, setApprovalState] = useState<ApprovalState>(
 		ApprovalState.UNKNOWN
 	);
-
-	const RPC_WSS =
-		currentNetworkChainId === 5700
-			? "wss://rpc.tanenbaum.io/wss"
-			: "wss://rpc.syscoin.org/wss";
-
-	const wssProvider = new ethers.providers.WebSocketProvider(RPC_WSS);
+	const { toast } = useToasty();
 
 	const connectToSysRpcIfNotConnected = () => {
 		const rpcProvider = new ethers.providers.JsonRpcProvider(
@@ -145,25 +139,48 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			});
 	};
 
-	wssProvider?.on("pending", hash => {
-		wssProvider.waitForTransaction(hash).then(result => {
-			if (result.from.toLowerCase() === walletAddress.toLowerCase()) {
-				setTransactions(transactions => ({
-					...transactions,
-					[currentNetworkChainId as number]: {
-						...transactions[currentNetworkChainId],
-						[result.transactionHash]: {
-							...result,
-							hash: result.transactionHash,
-						},
-					},
-				}));
-				setApprovalState(ApprovalState.APPROVED);
-				// eslint-disable-next-line
-				return;
-			}
-		});
-	});
+	useMemo(() => {
+		if (approvalState === ApprovalState.PENDING) {
+			const timer = setInterval(async () => {
+				const result = await fetch(
+					`https://tanenbaum.io/api?module=account&action=pendingtxlist&address=${walletAddress}`
+				).then(result => result.json());
+				if (result?.result[0]) {
+					const hash: string = result?.result[0]?.hash;
+					provider?.getTransaction(hash).then(result => {
+						if (
+							result.from.toLowerCase() === walletAddress.toLowerCase() &&
+							result.confirmations !== 0
+						) {
+							setTransactions({
+								...transactions,
+								[currentNetworkChainId]: {
+									...transactions[currentNetworkChainId],
+									[hash]: {
+										...result,
+										hash,
+									},
+								},
+							});
+							setApprovalState(ApprovalState.APPROVED);
+							clearInterval(timer);
+							// eslint-disable-next-line
+							return;
+						}
+					});
+				}
+			}, 10000);
+		}
+	}, [approvalState]);
+
+	useEffect(() => {
+		if (approvalState === ApprovalState.APPROVED) {
+			toast({
+				title: "Transaction completed successfully.",
+				status: "success",
+			});
+		}
+	}, [approvalState]);
 
 	useMemo(async () => {
 		if (!connectorSelected) return;
@@ -233,7 +250,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setUserSlippageTolerance,
 			transactions,
 			setTransactions,
-			wssProvider,
 			approvalState,
 			setApprovalState,
 		}),

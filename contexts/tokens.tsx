@@ -25,7 +25,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 	const getDefaultListToken = async () => {
 		const { tokens } = await getDefaultTokens(currentNetworkChainId as number);
 
-		const WSYS = tokens.filter(token => token.symbol === "WSYS")[0];
+		const WSYS = tokens.find(token => token.symbol === "WSYS");
 
 		const SYS: TokenInfo = {
 			...WSYS,
