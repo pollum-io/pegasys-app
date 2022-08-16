@@ -26,7 +26,7 @@ const useToasty = () => {
 				return "#E53E3E";
 
 			case "warning":
-				return "yellow";
+				return "#DD6B20";
 
 			case "info":
 				return "#2B6CB0";
