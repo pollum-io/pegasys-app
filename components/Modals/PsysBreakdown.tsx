@@ -57,7 +57,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 					flexDirection="column"
 					zIndex="docked"
 					position="relative"
-					bgColor="#0B172C"
+					bgColor="transparent"
 				>
 					<Img
 						src={theme.bg.psysReward}

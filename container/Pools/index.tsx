@@ -155,11 +155,11 @@ export const PoolsContainer: NextPage = () => {
 							gap="5"
 						>
 							<Flex visibility={userHavePool ? "visible" : "hidden"}>
-								<InputGroup>
+								<InputGroup alignItems="center">
 									<InputLeftElement
 										pl="0.625rem"
 										pointerEvents="none"
-										pb="1.5"
+										pb="0.3rem"
 										// eslint-disable-next-line react/no-children-prop
 										children={
 											<MdSearch color={theme.icon.searchIcon} size={20} />
@@ -169,7 +169,6 @@ export const PoolsContainer: NextPage = () => {
 										borderColor={theme.bg.blueNavyLightness}
 										placeholder="Search by token name"
 										_placeholder={{
-											fontSize: "sm",
 											opacity: 1,
 											color: theme.text.input,
 										}}
@@ -178,6 +177,8 @@ export const PoolsContainer: NextPage = () => {
 										h="2.2rem"
 										py={["0.1rem", "0.1rem", "1", "1"]}
 										pl="10"
+										_hover={{ border: "1px solid #3182CE" }}
+										_focus={{ border: "1px solid #3182CE" }}
 									/>
 									<Flex
 										position="absolute"

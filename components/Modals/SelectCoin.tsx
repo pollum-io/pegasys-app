@@ -215,6 +215,8 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							onChange={handleInput}
 							py={["0.1rem", "0.1rem", "1", "1"]}
 							pl="10"
+							_hover={{ border: "1px solid #3182CE" }}
+							_focus={{ border: "1px solid #3182CE" }}
 						/>
 						<Flex
 							position="absolute"

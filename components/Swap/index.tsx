@@ -249,6 +249,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								onChange={handleOnChangeTokenInputs}
 								name="inputFrom"
 								value={tokenInputValue.inputFrom}
+								_hover={{ border: "1px solid #3182CE" }}
+								_focus={{ border: "1px solid #3182CE" }}
 							/>
 						</Flex>
 					</Flex>
@@ -333,6 +335,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								onChange={handleOnChangeTokenInputs}
 								name="inputTo"
 								value={tokenInputValue.inputTo}
+								_hover={{ border: "1px solid #3182CE" }}
+								_focus={{ border: "1px solid #3182CE" }}
 							/>
 						</Flex>
 					</Flex>

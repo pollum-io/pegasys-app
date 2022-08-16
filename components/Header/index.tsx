@@ -1,4 +1,5 @@
 import { Flex, Icon, Img, Text, useColorMode } from "@chakra-ui/react";
+import React, { useState } from "react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
 import { useModal, usePicasso } from "hooks";
@@ -16,6 +17,14 @@ export const Header: React.FC = () => {
 	const theme = usePicasso();
 	const { isOpenPsysBreakdown, onOpenPsysBreakdown, onClosePsysBreakdown } =
 		useModal();
+	const [nav, setNav] = useState(false);
+	const isNav = () => {
+		if (nav) {
+			return "white";
+		}
+
+		return null;
+	};
 	const links = [
 		{
 			name: "Swap",
@@ -66,7 +75,6 @@ export const Header: React.FC = () => {
 						{item.name}
 					</NavButton>
 				))}
-
 				<NavButton
 					href="/"
 					color={theme.text.header}
@@ -78,13 +86,7 @@ export const Header: React.FC = () => {
 					}}
 				>
 					Charts
-					<Icon
-						as={MdOutlineCallMade}
-						w="5"
-						h="5"
-						ml="2"
-						color={theme.text.header}
-					/>
+					<Icon as={MdOutlineCallMade} w="5" h="5" ml="2" />
 				</NavButton>
 			</Flex>
 			<Flex
