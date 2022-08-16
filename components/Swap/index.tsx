@@ -1,11 +1,14 @@
 import {
 	Button,
 	ButtonProps,
+	Collapse,
+	Fade,
 	Flex,
 	Icon,
 	Img,
 	Input,
 	Text,
+	useDisclosure,
 } from "@chakra-ui/react";
 import { useModal, usePicasso, useTokens, useWallet } from "hooks";
 import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
@@ -50,6 +53,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	};
 
 	const theme = usePicasso();
+
+	const { isOpen, onToggle } = useDisclosure();
+	const [show, setShow] = React.useState(false);
 
 	const { userTokensBalance } = useTokens();
 	const {
@@ -137,7 +143,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	return (
 		<Flex
-			pt={["6", "6", "20", "24"]}
+			pt={["6", "6", "16", "16"]}
 			justifyContent="center"
 			fontFamily="inter"
 			fontStyle="normal"
@@ -234,6 +240,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								onChange={handleOnChangeTokenInputs}
 								name="inputFrom"
 								value={tokenInputValue.inputFrom}
+								_focus={{
+									outline: "none",
+								}}
 							/>
 						</Flex>
 					</Flex>
@@ -318,6 +327,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								onChange={handleOnChangeTokenInputs}
 								name="inputTo"
 								value={tokenInputValue.inputTo}
+								_focus={{
+									outline: "none",
+								}}
 							/>
 						</Flex>
 					</Flex>
@@ -343,41 +355,46 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						</Flex>
 					)}
 					{tokenInputValue.inputTo && tokenInputValue.inputFrom && (
-						<Flex
-							flexDirection="column"
-							borderRadius="2xl"
-							bgColor="transparent"
-							borderWidth="1px"
-							borderColor={theme.text.cyan}
-							mt="1.5rem"
-						>
-							<Text fontSize="md" fontWeight="medium" px="1.375rem" py="1rem">
-								Price
-							</Text>
+						<Collapse in={show} animateOpacity>
 							<Flex
-								flexDirection="row"
-								justifyContent="space-around"
-								py="1rem"
-								px="1rem"
+								flexDirection="column"
 								borderRadius="2xl"
-								borderWidth="1px"
+								bgColor="transparent"
+								border="1px solid "
 								borderColor={theme.text.cyan}
-								bgColor={theme.bg.blueNavy}
+								mt="1.5rem"
 							>
-								<Flex fontSize="sm" flexDirection="column" textAlign="center">
-									<Text fontWeight="semibold">-</Text>
-									<Text fontWeight="normal">
-										{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
-									</Text>
-								</Flex>
-								<Flex fontSize="sm" flexDirection="column" textAlign="center">
-									<Text fontWeight="semibold">-</Text>
-									<Text fontWeight="normal">
-										{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
-									</Text>
+								<Text fontSize="md" fontWeight="medium" px="1.375rem" py="1rem">
+									Price
+								</Text>
+								<Flex
+									flexDirection="row"
+									justifyContent="space-around"
+									py="1rem"
+									px="1rem"
+									borderRadius="2xl"
+									borderRight="none"
+									borderLeft="none"
+									borderBottom="none"
+									borderWidth="1px"
+									borderColor={theme.text.cyan}
+									bgColor={theme.bg.blueNavy}
+								>
+									<Flex fontSize="sm" flexDirection="column" textAlign="center">
+										<Text fontWeight="semibold">-</Text>
+										<Text fontWeight="normal">
+											{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
+										</Text>
+									</Flex>
+									<Flex fontSize="sm" flexDirection="column" textAlign="center">
+										<Text fontWeight="semibold">-</Text>
+										<Text fontWeight="normal">
+											{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
+										</Text>
+									</Flex>
 								</Flex>
 							</Flex>
-						</Flex>
+						</Collapse>
 					)}
 					<Flex>
 						<Button
@@ -386,7 +403,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							py="6"
 							px="6"
 							borderRadius="67px"
-							onClick={swapButton}
+							onClick={onToggle}
 							bgColor={theme.bg.button.connectWalletSwap}
 							color={theme.text.cyan}
 							fontSize="lg"

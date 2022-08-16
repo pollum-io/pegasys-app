@@ -165,7 +165,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				mb="0"
 				border={["none", "1px solid transparent"]}
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
-				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
+				borderBottomRadius={["0", "0", "3xl", "3xl"]}
 				position="relative"
 				h="max-content"
 			>
@@ -183,8 +183,8 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 						<Text as="span" _hover={{ opacity: 0.8 }}>
 							<Icon
 								as={MdHelpOutline}
-								h="4"
-								w="4"
+								h="5"
+								w="5"
 								color="white"
 								backgroundColor="gray.800"
 								borderRadius="full"
@@ -200,6 +200,9 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 						_placeholder={{ color: theme.text.cyan, opacity: "0.6" }}
 						placeholder="Search name or paste address"
 						onChange={handleInput}
+						_focus={{
+							outline: "none",
+						}}
 					/>
 					<Flex my="5" gap="2">
 						<Text fontSize="md">Token name</Text>
@@ -214,11 +217,31 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							onClick={() => orderList(filter)}
 						/>
 					</Flex>
-					<Flex flexDirection="column" w="100%" my="5">
+					<Flex
+						flexDirection="column"
+						w="100%"
+						my="5"
+						h="2xs"
+						overflow="auto"
+						css={{
+							"&::-webkit-scrollbar": {
+								width: "6px",
+							},
+							"&::-webkit-scrollbar-track": {
+								width: "6px",
+								scrollbarColor: " #0b172c",
+							},
+							"&::-webkit-scrollbar-thumb": {
+								background: "rgba(21, 61, 111, 1)",
+								borderRadius: "24px",
+							},
+						}}
+					>
 						{filter?.map((token: ITokenBalance, index: number) => (
 							<Button
 								bg="transparent"
 								px="2"
+								mr="2"
 								py="6"
 								justifyContent="space-between"
 								key={token.address + Number(index)}
@@ -240,9 +263,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 									<Img src={token.logoURI} borderRadius="full" w="6" h="6" />
 									{token.symbol}
 								</Flex>
-								<Text fontFamily="mono" fontWeight="normal">
-									{token.balance}
-								</Text>
+								<Text fontWeight="normal">{token.balance}</Text>
 							</Button>
 						))}
 					</Flex>

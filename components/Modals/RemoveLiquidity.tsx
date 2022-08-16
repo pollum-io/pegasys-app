@@ -96,8 +96,8 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						<Text as="span" _hover={{ opacity: 0.8 }}>
 							<Icon
 								as={MdHelpOutline}
-								h="4"
-								w="4"
+								h="5"
+								w="5"
 								color="white"
 								backgroundColor="gray.800"
 								borderRadius="full"
@@ -158,25 +158,26 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						defaultValue={5}
 						min={0}
 						max={100}
-						mb="4"
-						colorScheme="teal"
+						mb="6"
+						size="lg"
+						colorScheme="red"
 						onChange={value => setSliderValue(value)}
 						onMouseEnter={() => setShowTooltip(true)}
 						onMouseLeave={() => setShowTooltip(false)}
 					>
-						<SliderMark value={0} mt="1" ml="1.5" fontSize="sm">
+						<SliderMark value={0} mt="1rem" ml="1.5" fontSize="sm">
 							0%
 						</SliderMark>
-						<SliderMark value={25} mt="1" ml="-2.5" fontSize="sm">
+						<SliderMark value={25} mt="1rem" ml="-2.5" fontSize="sm">
 							25%
 						</SliderMark>
-						<SliderMark value={50} mt="1" ml="-2.5" fontSize="sm">
+						<SliderMark value={50} mt="1rem" ml="-2.5" fontSize="sm">
 							50%
 						</SliderMark>
-						<SliderMark value={75} mt="1" ml="-2.5" fontSize="sm">
+						<SliderMark value={75} mt="1rem" ml="-2.5" fontSize="sm">
 							75%
 						</SliderMark>
-						<SliderMark value={100} mt="1" ml="-8" fontSize="sm">
+						<SliderMark value={100} mt="1rem" ml="-8" fontSize="sm">
 							100%
 						</SliderMark>
 						<SliderTrack>

@@ -206,9 +206,12 @@ export const FarmActions: React.FC<IModal> = props => {
 											borderColor="rgba(1, 219, 243, 0.2)"
 											bgColor={theme.bg.whiteGray}
 											borderLeftRadius="full"
-											p="5"
+											size="lg"
 											w="25rem"
 											_hover={{}}
+											_focus={{
+												outline: "none",
+											}}
 										/>
 										<Button
 											border="1px solid rgba(0, 217, 239, 0.2)"
@@ -257,7 +260,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								py="3"
 								px="1.5rem"
 								w="100%"
-								my="4"
+								mt="1.25rem"
 								h="max-content"
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
@@ -284,6 +287,9 @@ export const FarmActions: React.FC<IModal> = props => {
 									p="5"
 									w="25rem"
 									_hover={{}}
+									_focus={{
+										outline: "none",
+									}}
 								/>
 								<Button
 									border="1px solid rgba(0, 217, 239, 0.2)"

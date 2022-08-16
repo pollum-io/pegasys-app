@@ -78,19 +78,35 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 				_focus={{
 					outline: "none",
 				}}
-				w={["100vw", "100vw", "max-content", "max-content"]}
+				w={["100%", "100vw", "max-content", "max-content"]}
 				bgColor={theme.bg.blueNavy}
 				borderBottomRadius={["none", "none", "xl", "xl"]}
 				borderTopRadius={["2xl", "2xl", "xl", "xl"]}
 				p="0"
 				top={["3.5rem", "3.3rem", "0", "0"]}
+				position="relative"
+				right="0"
+				border={["none", "1px solid transparent"]}
 			>
+				<Flex
+					justifyContent="flex-end"
+					zIndex="99"
+					pr="0rem"
+					display={{
+						base: "flex",
+						sm: "flex",
+						md: "none",
+						lg: "none",
+					}}
+				>
+					<PopoverCloseButton position="relative" size="md" />
+				</Flex>
 				<PopoverBody
 					display="flex"
 					flexDirection="column"
 					zIndex="99"
-					py={["10", "10", "2", "2"]}
 					px="0"
+					py={["0", "0", "1", "1"]}
 				>
 					<Flex flexDirection="column">
 						<InfoDropdown />
@@ -104,15 +120,12 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 							<Flex
 								alignItems="center"
 								flexDirection="row"
+								pb="1"
 								key={links.name + Number(index)}
 								_hover={{ color: theme.text.cyan }}
 							>
-								<Flex>{links.icon}</Flex>
-								<InfoLinks
-									pb="1"
-									isVote={links.name === "Vote"}
-									href={links.link}
-								>
+								<Flex pr="0.5rem">{links.icon}</Flex>
+								<InfoLinks isVote={links.name === "Vote"} href={links.link}>
 									{links.name}
 								</InfoLinks>
 							</Flex>

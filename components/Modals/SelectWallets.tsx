@@ -25,9 +25,11 @@ export const SelectWallets: React.FC<IModal> = props => {
 				borderRadius="1.875rem"
 				my={["0", "0", "40", "40"]}
 				bgColor={theme.bg.blueNavy}
-				w={["100vw", "100vw", "max-content", "max-content"]}
+				w={["100vw", "100vw", "50%", "md"]}
 				h="max-content"
 				p="8"
+				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
+				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
 				position={["absolute", "absolute", "unset", "unset"]}
 				bottom={["0", "0", "unset", "unset"]}
 			>
@@ -47,7 +49,11 @@ export const SelectWallets: React.FC<IModal> = props => {
 						<Text textAlign="center" fontWeight="normal">
 							New to Syscoin?
 						</Text>
-						<Text textColor={theme.text.cyan} fontWeight="semibold">
+						<Text
+							textColor={theme.text.cyan}
+							fontWeight="semibold"
+							textAlign="center"
+						>
 							Learn more about setting up a wallet
 						</Text>
 					</Flex>

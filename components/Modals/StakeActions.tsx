@@ -209,6 +209,9 @@ export const StakeActions: React.FC<IModal> = props => {
 											w="25rem"
 											_hover={{}}
 											onChange={handleInput}
+											_focus={{
+												outline: "none",
+											}}
 										/>
 										<Button
 											border="1px solid rgba(0, 217, 239, 0.2)"
@@ -281,6 +284,9 @@ export const StakeActions: React.FC<IModal> = props => {
 									p="5"
 									w="25rem"
 									_hover={{}}
+									_focus={{
+										outline: "none",
+									}}
 								/>
 								<Button
 									border="1px solid rgba(0, 217, 239, 0.2)"

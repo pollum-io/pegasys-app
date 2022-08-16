@@ -120,8 +120,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						<Text as="span" _hover={{ opacity: 0.8 }}>
 							<Icon
 								as={MdHelpOutline}
-								h="4"
-								w="4"
+								h="5"
+								w="5"
 								color="white"
 								backgroundColor="gray.800"
 								borderRadius="full"
@@ -243,6 +243,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									name="inputFrom"
 									onChange={handleOnChangeTokenInputs}
 									value={tokenInputValue.inputFrom}
+									_focus={{
+										outline: "none",
+									}}
 								/>
 							</Flex>
 						</Flex>
@@ -334,6 +337,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									type="number"
 									_placeholder={{ color: "white" }}
 									_active={{ border: "none" }}
+									_focus={{
+										outline: "none",
+									}}
 									name="inputTo"
 									value={tokenInputValue.inputTo}
 									onChange={handleOnChangeTokenInputs}

@@ -58,6 +58,9 @@ export const ManageToken: React.FC<IModal> = props => {
 							h="max-content"
 							py="1"
 							px="6"
+							_focus={{
+								outline: "none",
+							}}
 						/>
 						<Button
 							py="2"

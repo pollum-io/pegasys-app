@@ -57,7 +57,7 @@ export const FarmContainer: NextPage = () => {
 							Pegasys Liquidity Mining
 						</Text>
 						<Text
-							fontWeight="semibold"
+							fontWeight="medium"
 							fontSize="sm"
 							lineHeight="shorter"
 							w={["100%", "70%", "50%", "50%"]}
@@ -76,7 +76,7 @@ export const FarmContainer: NextPage = () => {
 						py="0.531rem"
 						gap="2.5"
 					>
-						<Text fontWeight="semibold" fontSize="xs">
+						<Text fontWeight="medium" fontSize="xs">
 							View Your Staked Liquidity
 						</Text>
 						<MdOutlineCallMade size={20} />
@@ -122,6 +122,9 @@ export const FarmContainer: NextPage = () => {
 								h="max-content"
 								py={["0.1rem", "0.1rem", "1", "1"]}
 								pl="8"
+								_focus={{
+									outline: "none",
+								}}
 							/>
 							<Flex
 								position="absolute"
@@ -186,10 +189,8 @@ export const FarmContainer: NextPage = () => {
 					zIndex="1"
 					justifyContent="space-between"
 					mt={["10", "10", "0", "0"]}
-					mr="1"
-					ml="1"
 					mb="10rem"
-					sx={{ columnCount: [1, 1, 2, 2], columnGap: "18px" }}
+					sx={{ columnCount: [1, 1, 2, 2], columnGap: "35px" }}
 				>
 					<FarmCards />
 					<FarmCards />

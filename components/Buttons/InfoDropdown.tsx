@@ -44,11 +44,10 @@ export const InfoDropdown: FunctionComponent = () => {
 
 	return (
 		<Accordion allowMultiple>
-			<AccordionItem border="none">
+			<AccordionItem border="none" pb="2">
 				<AccordionButton
 					pl={["24", "36", "4", "4"]}
 					pr={["24", "36", "4", "4"]}
-					py={["3", "3", "2", "2"]}
 					_expanded={{ bg: theme.bg.whiteGray }}
 					_focus={{
 						outline: "none",
@@ -61,7 +60,7 @@ export const InfoDropdown: FunctionComponent = () => {
 					<Icon as={MdOutlineCallMade} />
 					<Box
 						flex="1"
-						pl="2"
+						pl="1rem"
 						pr="10"
 						textAlign="left"
 						fontSize="md"
@@ -108,11 +107,10 @@ export const InfoDropdown: FunctionComponent = () => {
 					</AccordionPanel>
 				</Flex>
 			</AccordionItem>
-			<AccordionItem border="none">
+			<AccordionItem border="none" mb="2">
 				<AccordionButton
 					pl={["24", "36", "4", "4"]}
 					pr={["24", "36", "4", "4"]}
-					py={["3", "3", "2", "2"]}
 					_expanded={{ bg: theme.bg.whiteGray }}
 					_focus={{
 						outline: "none",
@@ -125,7 +123,7 @@ export const InfoDropdown: FunctionComponent = () => {
 					<Icon as={MdOutlineModeComment} />
 					<Box
 						flex="1"
-						pl="2"
+						pl="1rem"
 						pr="10"
 						textAlign="left"
 						fontSize="md"

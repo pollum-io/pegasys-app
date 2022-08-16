@@ -74,7 +74,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 						justifyContent="space-between"
 						zIndex="docked"
 					>
-						<Text textAlign="left" w="60%" fontSize="2xl">
+						<Text textAlign="left" w="60%" fontSize="2xl" fontWeight="semibold">
 							Your PSYS Breakdown
 						</Text>
 						<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>

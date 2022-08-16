@@ -1,4 +1,4 @@
-import { Flex, Icon, Img, Text, useColorMode } from "@chakra-ui/react";
+import { Flex, Icon, Img, Link, Text, useColorMode } from "@chakra-ui/react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
 import { useModal, usePicasso } from "hooks";
@@ -47,14 +47,17 @@ export const Header: React.FC = () => {
 				isOpen={isOpenPsysBreakdown}
 				onClose={onClosePsysBreakdown}
 			/>
-			<Img
-				w={["7", "8", "6", "6"]}
-				h={["7", "8", "6", "6"]}
-				src="icons/pegasys.png"
-				ml={["2", "4", "4", "4"]}
-				position="absolute"
-				left="0"
-			/>
+			<Link href="/">
+				<Img
+					w={["7", "8", "6", "6"]}
+					h={["7", "8", "6", "6"]}
+					src="icons/pegasys.png"
+					ml={["2", "4", "4", "4"]}
+					mt={["1.5", "1", "2", "1.5"]}
+					position="absolute"
+					left="0"
+				/>
+			</Link>
 			<Flex
 				gap={["0", "1", "1", "1"]}
 				bgColor={theme.bg.topHeader}
@@ -98,7 +101,8 @@ export const Header: React.FC = () => {
 				zIndex="99"
 				alignItems="center"
 				px={["0", "10"]}
-				pl={["4", "10"]}
+				pl={["0", "6", "6", "10"]}
+				pr={["0", "4", "6", "10"]}
 				py="2"
 				justifyContent={["space-around", "space-between"]}
 			>

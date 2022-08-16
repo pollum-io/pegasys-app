@@ -10,6 +10,7 @@ import {
 	Stack,
 	Switch,
 	Icon,
+	PopoverCloseButton,
 } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
@@ -45,6 +46,19 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 				mx={["0", "0", "20", "56"]}
 				position="fixed"
 			>
+				<Flex
+					justifyContent="flex-end"
+					zIndex="99"
+					pb={["1", "5", "0", "0"]}
+					display={{
+						base: "flex",
+						sm: "flex",
+						md: "none",
+						lg: "none",
+					}}
+				>
+					<PopoverCloseButton position="relative" size="md" />
+				</Flex>
 				<Flex
 					bgColor={theme.bg.whiteGray}
 					borderRadius="7rem"
@@ -90,6 +104,9 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								border="1px solid"
 								borderColor={theme.border.borderSettings}
 								textAlign="center"
+								_focus={{
+									outline: "none",
+								}}
 							/>
 						</Flex>
 						<Flex alignItems="center" flexDirection="row" pt="0.1rem" mt="4">
@@ -112,15 +129,31 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								fontSize="md"
 								border="1px solid"
 								borderColor={theme.border.borderSettings}
+								_focus={{
+									outline: "none",
+								}}
 							/>
 							<Text>Minutes</Text>
 						</Flex>
-						<Flex alignItems="center" flexDirection="row" mt="4">
-							<Text fontSize="md" pr="1" fontWeight="medium">
-								Toggle Expert Mode
-							</Text>
-							<Icon as={MdHelpOutline} />
-							<Flex flexDirection="row" ml="12">
+						<Flex
+							alignItems={["flex-start", "center", "center", "center"]}
+							flexDirection={["column", "row", "row", "row"]}
+							mt="4"
+						>
+							<Flex
+								flexDirection={["row", "row", "row", "row"]}
+								pb={["2", "2", "0", "0"]}
+							>
+								<Text
+									fontSize={["sm", "md", "md", "md"]}
+									pr={["1", "1", "1", "1"]}
+									fontWeight="medium"
+								>
+									Toggle Expert Mode
+								</Text>
+								<Icon as={MdHelpOutline} />
+							</Flex>
+							<Flex flexDirection="row" ml={["2", "12", "12", "12"]}>
 								<Stack align="center" direction="row">
 									<Text>Off</Text>
 									<Switch size="md" colorScheme="teal" />
@@ -133,7 +166,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 						bgColor={theme.bg.whiteGray}
 						borderRadius="7rem"
 						py="2"
-						mt="8"
+						mt={["4", "8", "8", "8"]}
 						justifyContent="center"
 						alignItems="center"
 					>

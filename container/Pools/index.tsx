@@ -23,6 +23,8 @@ export const PoolsContainer: NextPage = () => {
 	const theme = usePicasso();
 	const {
 		onOpenPool,
+		isOpenPool,
+		onClosePool,
 		isOpenRemoveLiquidity,
 		onCloseRemoveLiquidity,
 		onOpenAddLiquidity,
@@ -59,6 +61,7 @@ export const PoolsContainer: NextPage = () => {
 				isCreate={isCreate}
 				haveValue={haveValue}
 			/>
+			<ImportPoolModal isModalOpen={isOpenPool} onModalClose={onClosePool} />
 			<Flex
 				alignItems="flex-start"
 				justifyContent="center"
@@ -94,7 +97,7 @@ export const PoolsContainer: NextPage = () => {
 							</Text>
 							<Text
 								color="white"
-								fontWeight="semibold"
+								fontWeight="medium"
 								fontSize="sm"
 								lineHeight="shorter"
 								w={["100%", "70%", "60%", "60%"]}
@@ -114,7 +117,7 @@ export const PoolsContainer: NextPage = () => {
 							py="0.531rem"
 							gap="2.5"
 						>
-							<Text fontWeight="semibold" fontSize="xs" color="white">
+							<Text fontWeight="medium" fontSize="xs" color="white">
 								View Your Staked Liquidity
 							</Text>
 							<MdOutlineCallMade size={20} color="white" />
@@ -148,7 +151,7 @@ export const PoolsContainer: NextPage = () => {
 							flexDirection={["column-reverse", "column-reverse", "row", "row"]}
 							zIndex="docked"
 							w="100%"
-							mt={["0", "0", "2", "2"]}
+							mt={["4", "0", "2", "2"]}
 							alignItems={["center", "center", "flex-end", "flex-end"]}
 							gap="5"
 						>
@@ -163,15 +166,18 @@ export const PoolsContainer: NextPage = () => {
 											color: theme.text.cyanPurple,
 										}}
 										borderRadius="full"
-										w={["18rem", "18rem", "20rem", "20rem"]}
+										w={["19.5rem", "18rem", "20rem", "20rem"]}
 										h="max-content"
-										py={["0.1rem", "0.1rem", "1", "1"]}
-										pl="6"
+										py={["0.2rem", "0.2rem", "1", "1"]}
+										pl="7"
+										_focus={{
+											outline: "none",
+										}}
 									/>
 									<Flex
 										position="absolute"
 										left="0.5rem"
-										bottom={["0.3rem", "0.3rem", "0.5rem", "0.5rem"]}
+										bottom={["0.4rem", "0.4rem", "0.5rem", "0.5rem"]}
 									>
 										<MdSearch color={theme.text.cyanPurple} />
 									</Flex>
@@ -181,7 +187,7 @@ export const PoolsContainer: NextPage = () => {
 								<Button
 									fontSize="sm"
 									fontWeight="semibold"
-									py="0.562rem"
+									py="0.5rem"
 									px="1.5rem"
 									h="max-content"
 									bgColor="transparent"
@@ -227,8 +233,8 @@ export const PoolsContainer: NextPage = () => {
 												as={Button}
 												fontSize="sm"
 												fontWeight="semibold"
-												py="0.625rem"
-												px="1.5rem"
+												py="0.5rem"
+												px="1rem"
 												h="max-content"
 												bgColor={theme.bg.blueNavyLightness}
 												color="white"
@@ -261,35 +267,20 @@ export const PoolsContainer: NextPage = () => {
 					{!isConnected ? (
 						<Flex
 							w="100%"
-							mt={["1rem", "1rem", "4rem", "4rem"]}
+							mt={["3rem", "3rem", "4rem", "4rem"]}
 							flexDirection="column"
 							alignItems="center"
 							justifyContent="center"
 							gap="16"
 						>
-							<Text fontSize={["sm", "sm", "md", "md"]} fontWeight="normal">
+							<Text
+								fontSize={["sm", "sm", "md", "md"]}
+								fontWeight="normal"
+								textAlign="center"
+							>
 								Please connect your wallet in the button bellow to be able to
 								view your liquidity.
 							</Text>
-							<Flex flexDirection="row" gap="1">
-								<Text
-									color="white"
-									fontSize="md"
-									fontWeight="normal"
-									w="max-content"
-								>
-									Don&apos;t see a pool you joined?{" "}
-								</Text>
-								<Text
-									fontWeight="semibold"
-									color={theme.text.cyanWhite}
-									onClick={onOpenPool}
-									textDecoration="underline"
-									_hover={{ cursor: "pointer" }}
-								>
-									Import it.
-								</Text>
-							</Flex>
 						</Flex>
 					) : (
 						<Flex

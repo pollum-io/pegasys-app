@@ -1,4 +1,4 @@
-import { Button, Flex, Img, Text } from "@chakra-ui/react";
+import { Button, Flex, Img, Text, useDisclosure } from "@chakra-ui/react";
 import { FunctionComponent, useState } from "react";
 import { useModal, usePicasso } from "hooks";
 import { FarmActions } from "components/Modals/FarmActions";
@@ -26,8 +26,13 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 		yourUnclaimed,
 	} = props;
 	const theme = usePicasso();
-	const { isOpenFarmActions, onOpenFarmActions, onCloseFarmActions } =
-		useModal();
+
+	const {
+		onOpen: onOpenPool,
+		isOpen: isOpenPool,
+		onClose: onClosePool,
+	} = useDisclosure();
+
 	const [buttonId, setButtonId] = useState<string>("");
 
 	return (
@@ -45,8 +50,8 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 			background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 		>
 			<FarmActions
-				isOpen={isOpenFarmActions}
-				onClose={onCloseFarmActions}
+				isOpen={isOpenPool}
+				onClose={onClosePool}
 				buttonId={buttonId}
 				setButtonId={setButtonId}
 			/>
@@ -100,16 +105,16 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 				flexDirection="column"
 				backgroundColor="rgba(255, 255, 255, 0.04);"
 				borderRadius="0.375rem"
-				py="0.438rem"
-				px="0.625rem"
+				py="0.5rem"
+				px="1rem"
 				mt="0.688rem"
 				mb="1.5rem"
 			>
-				<Flex justifyContent="space-between" pb="1" fontSize="sm">
+				<Flex justifyContent="space-between" pb="0.75rem" fontSize="sm">
 					<Text fontWeight="semibold">Your Rate</Text>
 					<Text>{yourRate} PSYS/Week</Text>
 				</Flex>
-				<Flex justifyContent="space-between" pb="1" fontSize="sm">
+				<Flex justifyContent="space-between" fontSize="sm">
 					<Text fontWeight="semibold">Your Unclaimed PSYS</Text>
 					<Text>{yourUnclaimed}</Text>
 				</Flex>
@@ -130,7 +135,7 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 					borderRadius="full"
 					onClick={(event: any) => {
 						setButtonId(event?.currentTarget?.id);
-						onOpenFarmActions();
+						onOpenPool();
 					}}
 				>
 					Withdraw
@@ -150,7 +155,7 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 					borderRadius="full"
 					onClick={(event: any) => {
 						setButtonId(event?.currentTarget?.id);
-						onOpenFarmActions();
+						onOpenPool();
 					}}
 				>
 					Deposit
@@ -170,7 +175,7 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 				fontWeight="semibold"
 				onClick={(event: any) => {
 					setButtonId(event?.currentTarget?.id);
-					onOpenFarmActions();
+					onOpenPool();
 				}}
 			>
 				Claim
