@@ -15,7 +15,13 @@ import {
 	Text,
 	Tooltip,
 } from "@chakra-ui/react";
-import { useModal, usePicasso, useTokens } from "hooks";
+import {
+	ApprovalState,
+	useModal,
+	usePicasso,
+	useTokens,
+	useWallet,
+} from "hooks";
 import React, {
 	ChangeEvent,
 	useMemo,
@@ -47,6 +53,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const [filter, setFilter] = useState<WrappedTokenInfo[]>([]);
 	const [tokenError, setTokenError] = useState<WrappedTokenInfo[]>([]);
 	const [arrowOrder, setArrowOrder] = useState(false);
+	const { setApprovalState } = useWallet();
 
 	const { userTokensBalance } = useTokens();
 
@@ -109,7 +116,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const handleSelectToken = useCallback(
 		(id: number, token: WrappedTokenInfo) => {
 			if (!selectedToken) return;
-
+			setApprovalState(ApprovalState.UNKNOWN);
 			setSelectedToken((prevState: WrappedTokenInfo[]) => {
 				prevState[id] = new WrappedTokenInfo(token.tokenInfo);
 
