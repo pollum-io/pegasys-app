@@ -4,6 +4,7 @@ import { IconButton } from "components/Buttons";
 import { useModal, usePicasso } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
+import React from "react";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
@@ -14,6 +15,7 @@ import { ExpertMode } from "./ExpertMode";
 export const Header: React.FC = () => {
 	const { toggleColorMode } = useColorMode();
 	const theme = usePicasso();
+
 	const { isOpenPsysBreakdown, onOpenPsysBreakdown, onClosePsysBreakdown } =
 		useModal();
 	const links = [
@@ -75,8 +77,8 @@ export const Header: React.FC = () => {
 					display={{
 						base: "none",
 						sm: "none",
-						md: "block",
-						lg: "block",
+						md: "flex",
+						lg: "flex",
 					}}
 				>
 					Charts
@@ -85,6 +87,7 @@ export const Header: React.FC = () => {
 						w="5"
 						h="5"
 						ml="2"
+						mb="1"
 						color={theme.text.header}
 					/>
 				</NavButton>

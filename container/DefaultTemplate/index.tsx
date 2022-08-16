@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, useColorMode } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Header } from "components";
@@ -19,6 +19,10 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 	widthValue,
 }) => {
 	const theme = usePicasso();
+	const { colorMode } = useColorMode();
+
+	console.log(colorMode, "colorr");
+
 	return (
 		<Web3ReactProvider getLibrary={getLibrary}>
 			<WalletProvider>
@@ -39,12 +43,27 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 								margin="0 auto"
 								top={["-10rem", "-10rem", "-5rem", "-5rem"]}
 								position="fixed"
-								background="radial-gradient(ellipse at center, #56BED8, #010101)"
+								background={
+									colorMode === "dark"
+										? "radial-gradient(ellipse at center, #56BED8, #010101)"
+										: "radial-gradient(ellipse at center, #68e1ffbe, #e6faff)"
+								}
 								filter="blur(175px)"
 							/>
-							<div id="starsLightMode" />
-							<div id="starsLightMode2" />
-							<div id="starsLightMode3" />
+							{colorMode === "dark" ? (
+								<Flex>
+									<div id="starsLightMode" />
+									<div id="starsLightMode2" />
+									<div id="starsLightMode3" />
+								</Flex>
+							) : (
+								<Flex>
+									<div id="stars" />
+									<div id="stars2" />
+									<div id="stars3" />
+								</Flex>
+							)}
+
 							<Header />
 							{children}
 						</Flex>
