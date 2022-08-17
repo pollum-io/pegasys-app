@@ -1,4 +1,8 @@
-import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from "helpers/consts";
+import {
+	BIPS_BASE,
+	INITIAL_ALLOWED_SLIPPAGE,
+	ROUTER_ADDRESS,
+} from "helpers/consts";
 import { BigNumber } from "@ethersproject/bignumber";
 import {
 	Trade,
@@ -30,7 +34,7 @@ export function UseBestSwapMethod(
 	}
 
 	const contract = createContractUsingAbi(
-		walletAddress,
+		ROUTER_ADDRESS[5700],
 		pegasysAbi.abi,
 		signer as Signer
 	);
