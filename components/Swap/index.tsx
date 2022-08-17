@@ -382,9 +382,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	}, [expert]);
 
 	const isERC20 =
-		selectedToken[0]?.symbol !== "WSYS" &&
-		selectedToken[0]?.symbol !== "SYS" &&
-		selectedToken[0]?.symbol !== "PSYS";
+		selectedToken[0]?.symbol !== "SYS" && selectedToken[0]?.symbol !== "PSYS";
 
 	const approveValidation =
 		(isERC20 && approvalState === ApprovalState.UNKNOWN) ||
