@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
 	Button,
 	ButtonProps,
@@ -395,7 +396,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						px="1.25rem"
 						border="1px solid"
 						borderColor={
-							(tokenInputValue.inputFrom.value > selectedToken[0]?.balance &&
+							(parseInt(tokenInputValue.inputFrom.value) >
+								parseInt(selectedToken[0]?.balance) &&
 								tokenInputValue.currentInputTyped !== "inputTo") ||
 							(isConnected && verifyIfHaveInsufficientLiquidity)
 								? theme.text.red400
@@ -444,7 +446,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							/>
 						</Flex>
 					</Flex>
-					{tokenInputValue.inputFrom.value > selectedToken[0]?.balance &&
+					{parseInt(tokenInputValue.inputFrom.value) >
+						parseInt(selectedToken[0]?.balance) &&
 						tokenInputValue.currentInputTyped !== "inputTo" && (
 							<Flex flexDirection="row" gap="1" justifyContent="center">
 								<Text
@@ -495,7 +498,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						px="1.25rem"
 						border="1px solid"
 						borderColor={
-							(tokenInputValue.inputTo.value > selectedToken[1]?.balance &&
+							(parseInt(tokenInputValue.inputTo.value) >
+								parseInt(selectedToken[1]?.balance) &&
 								tokenInputValue.currentInputTyped !== "inputFrom") ||
 							(isConnected && verifyIfHaveInsufficientLiquidity)
 								? theme.text.red400
@@ -545,7 +549,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							/>
 						</Flex>
 					</Flex>
-					{tokenInputValue.inputTo.value > selectedToken[1]?.balance &&
+					{parseInt(tokenInputValue.inputTo.value) >
+						parseInt(selectedToken[1]?.balance) &&
 						tokenInputValue.currentInputTyped !== "inputFrom" && (
 							<Flex flexDirection="row" gap="1" justifyContent="center">
 								<Text
