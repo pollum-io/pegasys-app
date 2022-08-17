@@ -33,17 +33,6 @@ export const PoolsContainer: NextPage = () => {
 	const { isConnected } = useWallet();
 	const [userHavePool, setUserHavePool] = useState(true);
 
-	const { toast } = useToasty();
-
-	const showToast = () => {
-		toast({
-			id: "toast2",
-			title: "Title",
-			description: "Something happend!",
-			status: "success",
-		});
-	};
-
 	return (
 		<Flex justifyContent="center" alignItems="center">
 			<AddLiquidityModal
@@ -301,13 +290,6 @@ export const PoolsContainer: NextPage = () => {
 							<PoolCards />
 							<PoolCards />
 							<PoolCards />
-							<Button
-								onClick={() => {
-									showToast();
-								}}
-							>
-								show toast
-							</Button>
 						</Flex>
 					)}
 				</Flex>
