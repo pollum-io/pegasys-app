@@ -31,7 +31,8 @@ export function UseSwapCallback(
 	const swapCalls = UseBestSwapMethod(
 		trade as Trade,
 		walletInfos.walletAddress,
-		signer
+		signer,
+		walletInfos
 	);
 
 	const { address: recipientAddress } = useENS(walletAddress);

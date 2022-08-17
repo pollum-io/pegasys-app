@@ -12,3 +12,4 @@ export * from "./swap/useDerivedSwapInfo";
 export * from "./swap/useAllCommonPairs";
 export * from "./swap/useApproveCallback";
 export * from "./swap/useTransactionDeadline";
+export * from "./swap/useWrapCallback";

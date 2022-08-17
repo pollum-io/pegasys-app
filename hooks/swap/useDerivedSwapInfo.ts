@@ -53,8 +53,8 @@ export async function UseDerivedSwapInfo(
 		(recipientAddress || walletInfos.walletAddress) ?? null;
 	const formattedTo = to && isAddress(to);
 
-	const tradeToken1 = tradeTokens[1].symbol === "SYS" ? NSYS : tradeTokens[1];
-	const tradeToken0 = tradeTokens[0].symbol === "SYS" ? NSYS : tradeTokens[0];
+	const tradeToken1 = tradeTokens[1]?.symbol === "SYS" ? NSYS : tradeTokens[1];
+	const tradeToken0 = tradeTokens[0]?.symbol === "SYS" ? NSYS : tradeTokens[0];
 
 	const currencyBalances: { [field in Field]?: CurrencyAmount } = {
 		[Field.INPUT]: tryParseAmount(

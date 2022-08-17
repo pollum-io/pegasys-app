@@ -16,14 +16,17 @@ import { Signer } from "ethers";
 import pegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
 import { createContractUsingAbi } from "utils";
 import { ISwapCall } from "types/ISwapCall";
+import { IWalletHookInfos } from "types";
 import { useTransactionDeadline } from "./useTransactionDeadline";
 
 export function UseBestSwapMethod(
 	v2Trade: Trade,
 	walletAddress: string,
-	signer: Signer
+	signer: Signer,
+	walletInfos: IWalletHookInfos
 ): ISwapCall[] {
 	let deadline = useTransactionDeadline();
+	const chainId = walletInfos?.chainId;
 
 	if (!v2Trade || !walletAddress) return [];
 
@@ -33,11 +36,13 @@ export function UseBestSwapMethod(
 		deadline = currentTime.add(10);
 	}
 
-	const contract = createContractUsingAbi(
-		ROUTER_ADDRESS[5700],
-		pegasysAbi.abi,
-		signer as Signer
-	);
+	const contract =
+		chainId &&
+		createContractUsingAbi(
+			ROUTER_ADDRESS[chainId],
+			pegasysAbi.abi,
+			signer as Signer
+		);
 
 	if (!contract) {
 		return [];
