@@ -131,10 +131,20 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 					setWalletError(true);
 				}
 			})
-			.catch((errorMessage: Error) => {
-				if (errorMessage) {
-					// eslint-disable-next-line no-console
-					console.log("errorMessage", errorMessage);
+			.catch(error => {
+				if (
+					String(error).includes("The user rejected the request.") ||
+					String(error).includes("Metamask not installed")
+				) {
+					setConnecting(false);
+				}
+				if (
+					String(error).includes("accounts received is empty") ||
+					String(error).includes("User denied account authorization")
+				) {
+					setConnecting(false);
+				} else {
+					console.log(error);
 				}
 			});
 	};
