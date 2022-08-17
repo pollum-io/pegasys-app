@@ -43,7 +43,7 @@ interface IModal {
 }
 
 export const SelectCoinModal: React.FC<IModal> = props => {
-	const { selectedToken, buttonId, setSelectedToken } = props;
+	const { selectedToken, buttonId, setSelectedToken, approvalState } = props;
 	const { isOpen, onClose } = props;
 	const { onOpenManageToken, isOpenManageToken, onCloseManageToken } =
 		useModal();
@@ -116,7 +116,9 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const handleSelectToken = useCallback(
 		(id: number, token: WrappedTokenInfo) => {
 			if (!selectedToken) return;
-			setApprovalState(ApprovalState.UNKNOWN);
+			if (approvalState === ApprovalState.APPROVED) {
+				setApprovalState(ApprovalState.UNKNOWN);
+			}
 			setSelectedToken((prevState: WrappedTokenInfo[]) => {
 				prevState[id] = new WrappedTokenInfo(token.tokenInfo);
 

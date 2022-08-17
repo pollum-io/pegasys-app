@@ -265,6 +265,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		signer as Signer,
 		tokenInputValue,
 		setApprovalState,
+		setTransactions,
+		transactions,
 		toast,
 		userSlippageTolerance
 	);
@@ -663,7 +665,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"
-								disabled={!canSubmit}
+								disabled={!canSubmit || isPending}
 							>
 								{swapButtonValidation}
 							</Button>

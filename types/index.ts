@@ -4,3 +4,4 @@ export * from "./ISwapTokenInputValue";
 export * from "./IChartComponent";
 export * from "./ISwapCall";
 export * from "./IReturnedTradeValues";
+export * from "./ITransactionResponse";

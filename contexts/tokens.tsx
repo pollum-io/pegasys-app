@@ -1,7 +1,7 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers } from "ethers";
 import { WrappedTokenInfo } from "types";
-import { useWallet } from "hooks";
+import { useWallet, ApprovalState } from "hooks";
 import { getDefaultTokens } from "networks";
 import { getBalanceOfMultiCall, truncateNumberDecimalsPlaces } from "utils";
 import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
@@ -19,8 +19,13 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		WrappedTokenInfo[]
 	>([]);
 
-	const { isConnected, provider, walletAddress, currentNetworkChainId } =
-		useWallet();
+	const {
+		isConnected,
+		provider,
+		walletAddress,
+		currentNetworkChainId,
+		approvalState,
+	} = useWallet();
 
 	const getDefaultListToken = async () => {
 		const { tokens } = await getDefaultTokens(currentNetworkChainId as number);
@@ -108,6 +113,12 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 	useEffect(() => {
 		getDefaultListToken();
 	}, [isConnected, currentNetworkChainId]);
+
+	useEffect(() => {
+		if (approvalState === ApprovalState.APPROVED) {
+			getDefaultListToken();
+		}
+	}, [approvalState]);
 
 	const tokensProviderValue = useMemo(
 		() => ({

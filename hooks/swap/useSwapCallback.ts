@@ -8,6 +8,7 @@ import { addTransaction } from "utils/addTransaction";
 import { UseBestSwapMethod } from "./useBestSwapMethod";
 import { UseToastOptions } from "@chakra-ui/react";
 import { ApprovalState } from "./useApproveCallback";
+import { TransactionResponse } from '@ethersproject/providers';
 
 export enum SwapCallbackState {
 	INVALID,
@@ -150,7 +151,7 @@ export function UseSwapCallback(
 					? { value, from: walletAddress }
 					: { from: walletAddress }),
 			})
-				.then((response: any) => {
+				.then((response: TransactionResponse) => {
 					const inputSymbol = trade.inputAmount.currency.symbol;
 					const outputSymbol = trade.outputAmount.currency.symbol;
 					const inputAmount = trade.inputAmount.toSignificant(3);
@@ -173,12 +174,12 @@ export function UseSwapCallback(
 
 					addTransaction(
 						response,
+						walletInfos,
+						setTransactions,
+						transactions,
 						{
 							summary: withVersion,
 						},
-						walletInfos,
-						setTransactions,
-						transactions
 					);
 
 					setApprovalState(ApprovalState.PENDING);

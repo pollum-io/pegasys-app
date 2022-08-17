@@ -11,11 +11,12 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { usePicasso, useWallet, useToasty } from "hooks";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState, useEffect } from "react";
 import Jazzicon from "react-jazzicon";
 import { MdContentCopy, MdOutlineCallMade } from "react-icons/md";
 import { shortAddress, copyToClipboard, openWalletOnExplorer } from "utils";
 import { AiOutlineClose } from "react-icons/ai";
+import { ITransactionResponse } from "types";
 
 interface IModal {
 	isOpen: boolean;
@@ -25,19 +26,40 @@ interface IModal {
 export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
-	const { walletAddress } = useWallet();
+	const { walletAddress, transactions, currentNetworkChainId } = useWallet();
 	const { toast } = useToasty();
+	const [txs, setTxs] = useState<[]>([]);
 
 	const handleCopyToClipboard = () => {
 		copyToClipboard(walletAddress);
 
 		toast({
+			id: "toast1",
 			position: "top",
 			status: "success",
 			title: "Successfully copied",
 			description: "Address sucessfully copied to clipboard!",
 		});
 	};
+	const isEmpty =
+		Object.keys(transactions[57]).length === 0 &&
+		Object.keys(transactions[5700]).length === 0;
+
+	const explorerURL =
+		currentNetworkChainId === 5700
+			? "https://tanenbaum.io/tx"
+			: "https://explorer.syscoin.org/tx";
+
+	useEffect(() => {
+		if (!isEmpty) {
+			// eslint-disable-next-line
+			const currentTxs: ITransactionResponse[] | any[] = [
+				...Object.values(transactions[5700]),
+				...Object.values(transactions[57]),
+			];
+			setTxs(currentTxs);
+		}
+	}, [transactions]);
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -155,9 +177,24 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 					</Flex>
 				</ModalBody>
 				<ModalFooter bgColor={theme.bg.blackAlpha} justifyContent="flex-start">
-					<Text fontSize="sm" fontWeight="semibold">
-						Your transactions will appear here...
-					</Text>
+					{isEmpty && txs.length === 0 ? (
+						<Text fontSize="sm" fontWeight="semibold">
+							Your transactions will appear here...
+						</Text>
+					) : (
+						<Flex flexDirection="column" gap={2}>
+							{txs.map((item: ITransactionResponse) => (
+								// eslint-disable-next-line
+								<a
+									href={`${explorerURL}/${item?.hash}`}
+									target="_blank"
+									rel="noreferrer"
+								>
+									{item?.summary}
+								</a>
+							))}
+						</Flex>
+					)}
 				</ModalFooter>
 			</ModalContent>
 		</Modal>
