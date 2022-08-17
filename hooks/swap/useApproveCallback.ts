@@ -3,6 +3,7 @@ import { Trade, CurrencyAmount, ChainId } from "@pollum-io/pegasys-sdk";
 import { UseToastOptions } from "@chakra-ui/react";
 import { ROUTER_ADDRESS } from "helpers/consts";
 import {
+	addTransaction,
 	calculateGasMargin,
 	computeSlippageAdjustedAmounts,
 	getContract,
@@ -28,6 +29,8 @@ export function useApproveCallback(
 	setApprovalState: React.Dispatch<React.SetStateAction<ApprovalState>>,
 	walletInfos: IWalletHookInfos,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
+	setTransactions: React.Dispatch<React.SetStateAction<object>>,
+	transactions: object,
 	amountToApprove?: { [field in Field]?: CurrencyAmount },
 	spender?: string,
 	signer?: Signer
@@ -83,7 +86,11 @@ export function useApproveCallback(
 					gasLimit: calculateGasMargin(estimatedGas),
 				}
 			)
-			.then(() => {
+			.then((response: TransactionResponse) => {
+				addTransaction(response, walletInfos, setTransactions, transactions, {
+					summary: `Approve ${currentAmountToApprove?.currency?.symbol}`,
+					approval: { tokenAddress: token?.address, spender },
+				});
 				setApprovalState(ApprovalState.PENDING);
 			})
 			.catch(error => {
@@ -108,6 +115,8 @@ export function useApproveCallbackFromTrade(
 	signer: Signer,
 	userInput: ISwapTokenInputValue,
 	setApprovalState: React.Dispatch<React.SetStateAction<ApprovalState>>,
+	setTransactions: React.Dispatch<React.SetStateAction<object>>,
+	transactions: object,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
 	allowedSlippage = 0
 ) {
@@ -121,6 +130,8 @@ export function useApproveCallbackFromTrade(
 		setApprovalState,
 		walletInfos,
 		toast,
+		setTransactions,
+		transactions,
 		amountToApprove,
 		chainId ? ROUTER_ADDRESS[chainId] : ROUTER_ADDRESS[ChainId.NEVM],
 		signer

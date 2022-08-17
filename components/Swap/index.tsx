@@ -263,6 +263,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		signer as Signer,
 		tokenInputValue,
 		setApprovalState,
+		setTransactions,
+		transactions,
 		toast,
 		userSlippageTolerance
 	);

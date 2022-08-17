@@ -167,6 +167,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 								[currentNetworkChainId]: {
 									...transactions[currentNetworkChainId],
 									[hash]: {
+										...transactions[currentNetworkChainId][hash],
 										...result,
 										hash,
 									},
