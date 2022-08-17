@@ -1,22 +1,26 @@
-import { ButtonProps } from "@chakra-ui/react";
+import { ButtonProps, Flex, Text } from "@chakra-ui/react";
 import { SUPPORTED_WALLETS } from "helpers/consts";
 import { FunctionComponent } from "react";
 import { isMobile } from "react-device-detect";
 import { useWallet, usePicasso } from "hooks";
 import { injected } from "utils/connectors";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { IWalletInfo } from "types/index";
 import { Wallets } from "./Wallets";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let window: any;
 
 export const WalletOptions: FunctionComponent<ButtonProps> = () => {
-	const { connectWallet, setConnectorSelected } = useWallet();
+	const { connectWallet, setConnectorSelected, connectorSelected, connecting } =
+		useWallet();
 	const theme = usePicasso();
 
-	const setConnectorValues = (connector: AbstractConnector) => {
-		connectWallet(connector);
-		setConnectorSelected(connector);
+	const setConnectorValues = (connectorOptionsSelected: IWalletInfo) => {
+		const { connector } = connectorOptionsSelected;
+
+		connectWallet(connector as AbstractConnector);
+		setConnectorSelected(connectorOptionsSelected);
 	};
 
 	const listWallets = () =>
@@ -31,7 +35,7 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 							option.connector !== injected &&
 							!option.href &&
 							option.connector &&
-							setConnectorValues(option.connector)
+							setConnectorValues(option)
 						}
 						id={`connect-${key}`}
 						key={key}
@@ -72,7 +76,7 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 				<Wallets
 					id={`connect-${key}`}
 					onClick={() => {
-						if (option.connector) setConnectorValues(option.connector);
+						if (option.connector) setConnectorValues(option);
 					}}
 					key={key}
 					// href={option.href || "/"}

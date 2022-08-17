@@ -15,6 +15,7 @@ import { ExpertMode } from "./ExpertMode";
 export const Header: React.FC = () => {
 	const { toggleColorMode } = useColorMode();
 	const theme = usePicasso();
+
 	const { isOpenPsysBreakdown, onOpenPsysBreakdown, onClosePsysBreakdown } =
 		useModal();
 	const [nav, setNav] = useState(false);
@@ -81,8 +82,8 @@ export const Header: React.FC = () => {
 					display={{
 						base: "none",
 						sm: "none",
-						md: "block",
-						lg: "block",
+						md: "flex",
+						lg: "flex",
 					}}
 				>
 					Charts

@@ -71,7 +71,7 @@ const usePicasso = () => {
 				"rgba(11, 23, 44, 0.8)"
 			),
 			farmBanner: useColorModeValue(
-				"/images/backgrounds/LightFarmBanner.png",
+				"/images/backgrounds/LightBannerFarm.png",
 				"/images/backgrounds/BannerFarm.png"
 			),
 			poolsBanner: useColorModeValue(

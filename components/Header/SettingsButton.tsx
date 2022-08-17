@@ -11,9 +11,14 @@ import {
 	Switch,
 	Icon,
 } from "@chakra-ui/react";
-import { FunctionComponent, ReactNode, useState } from "react";
+import React, {
+	FunctionComponent,
+	ReactNode,
+	useEffect,
+	useState,
+} from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
-import { usePicasso } from "hooks";
+import { usePicasso, useWallet } from "hooks";
 import { IconButton } from "../Buttons/IconButton";
 import { SlippageButton } from "../Buttons/SlippageButton";
 import { Languages } from "./Languages";
@@ -24,6 +29,12 @@ interface IButtonProps extends ButtonProps {
 
 export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
+	// const [expert, setExpert] = useState(false)
+	const { setExpert, expert } = useWallet();
+
+	useEffect(() => {
+		console.log("expert: ", expert);
+	}, [expert]);
 	const [slippage, setSlippage] = useState<string>("");
 
 	return (
@@ -181,7 +192,11 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							<Flex flexDirection="row" ml="12">
 								<Stack align="center" direction="row">
 									<Text color={theme.text.mono}>Off</Text>
-									<Switch size="md" colorScheme="teal" />
+									<Switch
+										size="md"
+										colorScheme="teal"
+										onChange={() => setExpert(!expert)}
+									/>
 									<Text color={theme.text.mono}>On</Text>
 								</Stack>
 							</Flex>

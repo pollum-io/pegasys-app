@@ -43,7 +43,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 			<ModalContent
 				borderTopRadius="3xl"
 				borderBottomRadius={["none", "none", "3xl", "3xl"]}
-				bgColor={theme.bg.blueNavy}
+				bgColor={theme.bg.blueNavyLight}
 				my={["0", "0", "40", "40"]}
 				w={["100vw", "100vw", "xs", "xs"]}
 				h="md"
@@ -82,7 +82,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 						</Flex>
 					</Flex>
 				</Flex>
-				<ModalBody bgColor={theme.bg.blueNavy}>
+				<ModalBody bgColor={theme.bg.blueNavyLight}>
 					<Flex alignItems="center" justifyContent="center">
 						<Img
 							src={theme.icon.pegasysLogo}
@@ -143,7 +143,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 					</Flex>
 				</ModalBody>
 				<ModalFooter
-					bgColor={theme.bg.blueNavy}
+					bgColor={theme.bg.blueNavyLight}
 					justifyContent="flex-start"
 					pb={["2rem", "2rem", "6", "6"]}
 					mt={["2", "10", "0", "0"]}

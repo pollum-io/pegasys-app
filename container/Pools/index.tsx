@@ -41,6 +41,7 @@ export const PoolsContainer: NextPage = () => {
 
 	const showToast = () => {
 		toast({
+			id: "toast2",
 			title: "Title",
 			description: "Something happend!",
 			status: "success",

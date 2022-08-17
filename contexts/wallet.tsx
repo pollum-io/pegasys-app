@@ -1,7 +1,14 @@
-import React, { useEffect, createContext, useState, useMemo } from "react";
+import React, {
+	useEffect,
+	createContext,
+	useState,
+	useMemo,
+	ReactNode,
+} from "react";
 import { ethers, Signer } from "ethers";
 import { convertHexToNumber } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { IWalletInfo } from "types/index";
 import { SYS_TESTNET_CHAIN_PARAMS } from "../helpers/consts";
 
 interface IWeb3 {
@@ -18,10 +25,16 @@ interface IWeb3 {
 	connectWallet: (connector: AbstractConnector) => Promise<void>;
 	walletError: boolean;
 	setWalletError: React.Dispatch<React.SetStateAction<boolean>>;
-	connectorSelected: AbstractConnector | undefined;
+	connectorSelected: IWalletInfo | undefined;
 	setConnectorSelected: React.Dispatch<
-		React.SetStateAction<AbstractConnector | undefined>
+		React.SetStateAction<IWalletInfo | undefined>
 	>;
+	connecting: boolean;
+	setConnecting: React.Dispatch<React.SetStateAction<boolean>>;
+	expert: boolean;
+	setExpert: React.Dispatch<React.SetStateAction<boolean>>;
+	otherWallet: boolean;
+	setOtherWallet: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -39,11 +52,13 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [walletAddress, setAddress] = useState("");
 	const [walletError, setWalletError] = useState<boolean>(false);
 	const [signer, setSigner] = useState<Signer>();
+	const [connecting, setConnecting] = useState<boolean>(false);
 	const [provider, setProvider] = useState<
 		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
 	>();
-	const [connectorSelected, setConnectorSelected] =
-		useState<AbstractConnector>();
+	const [connectorSelected, setConnectorSelected] = useState<IWalletInfo>();
+	const [expert, setExpert] = useState<boolean>(false);
+	const [otherWallet, setOtherWallet] = useState<boolean>(false);
 
 	const connectToSysRpcIfNotConnected = () => {
 		const rpcProvider = new ethers.providers.JsonRpcProvider(
@@ -80,10 +95,20 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 					setWalletError(true);
 				}
 			})
-			.catch((errorMessage: Error) => {
-				if (errorMessage) {
-					// eslint-disable-next-line no-console
-					console.log(errorMessage, "errorMessage");
+			.catch(error => {
+				if (
+					String(error).includes("The user rejected the request.") ||
+					String(error).includes("Metamask not installed")
+				) {
+					setConnecting(false);
+				}
+				if (
+					String(error).includes("accounts received is empty") ||
+					String(error).includes("User denied account authorization")
+				) {
+					setConnecting(false);
+				} else {
+					console.log(error);
 				}
 			});
 	};
@@ -97,12 +122,17 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	);
 
 	useMemo(async () => {
-		const getCurrentConnectorProvider = await connectorSelected?.getProvider();
+		if (!connectorSelected) return;
+
+		const getCurrentConnectorProvider =
+			await connectorSelected?.connector?.getProvider();
 
 		getCurrentConnectorProvider?.on("chainChanged", (chainId: string) => {
 			setCurrentNetworkChainId(convertHexToNumber(chainId));
 		});
 	}, [connectorSelected]);
+
+	console.log("connector", connectorSelected);
 
 	useEffect(() => {
 		const verifySysNetwork =
@@ -138,6 +168,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			connectorSelected,
 			currentNetworkChainId,
 			setCurrentNetworkChainId,
+			connecting,
+			setConnecting,
+			setExpert,
+			expert,
+			otherWallet,
+			setOtherWallet,
 		}),
 		[
 			isConnected,
