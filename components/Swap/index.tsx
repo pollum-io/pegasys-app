@@ -70,6 +70,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		transactions,
 		setApprovalState,
 		approvalState,
+		expert,
+		otherWallet,
 	} = useWallet();
 
 	const [tokensGraphCandleData, setTokensGraphCandleData] = useState<
@@ -312,8 +314,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	];
 	const canSubmit = submitValidation.every(validation => validation === true);
 
-	const { expert } = useWallet();
-	const { otherWallet } = useWallet();
 	const isOtherWallet = useMemo(() => {
 		if (otherWallet) {
 			return <OtherWallet />;
