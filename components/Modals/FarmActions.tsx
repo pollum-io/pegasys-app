@@ -32,7 +32,7 @@ interface IModal {
 export const FarmActions: React.FC<IModal> = props => {
 	const { isOpen, onClose, buttonId, setButtonId } = props;
 	const theme = usePicasso();
-	const [confirmDepoist, setConfirmDepoist] = useState(false);
+	const [confirmDepoist] = useState(false);
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
 
@@ -80,10 +80,14 @@ export const FarmActions: React.FC<IModal> = props => {
 								borderRadius="full"
 								onClick={() => setButtonId("deposit")}
 								bgColor={
-									buttonId === "deposit" ? theme.bg.blue100 : "transparent"
+									buttonId === "deposit"
+										? theme.bg.farmActionsHover
+										: "transparent"
 								}
 								color={
-									buttonId === "deposit" ? "black" : "rgba(255, 255, 255, 0.36)"
+									buttonId === "deposit"
+										? theme.text.farmActionsHover
+										: theme.text.farmActionsTop
 								}
 								fontWeight="semibold"
 								_hover={{ opacity: "0.9" }}
@@ -99,12 +103,14 @@ export const FarmActions: React.FC<IModal> = props => {
 								borderRadius="full"
 								onClick={() => setButtonId("withdraw")}
 								bgColor={
-									buttonId === "withdraw" ? theme.bg.blue100 : "transparent"
+									buttonId === "withdraw"
+										? theme.bg.farmActionsHover
+										: "transparent"
 								}
 								color={
 									buttonId === "withdraw"
-										? "black"
-										: "rgba(255, 255, 255, 0.36)"
+										? theme.text.farmActionsHover
+										: theme.text.farmActionsTop
 								}
 								fontWeight="semibold"
 								_hover={{ opacity: "0.9" }}
@@ -119,10 +125,14 @@ export const FarmActions: React.FC<IModal> = props => {
 								borderRadius="full"
 								onClick={() => setButtonId("claim")}
 								bgColor={
-									buttonId === "claim" ? theme.bg.blue100 : "transparent"
+									buttonId === "claim"
+										? theme.bg.farmActionsHover
+										: "transparent"
 								}
 								color={
-									buttonId === "claim" ? "black" : "rgba(255, 255, 255, 0.36)"
+									buttonId === "claim"
+										? theme.text.farmActionsHover
+										: theme.text.farmActionsTop
 								}
 								fontWeight="semibold"
 								_hover={{ opacity: "0.9" }}
@@ -203,23 +213,29 @@ export const FarmActions: React.FC<IModal> = props => {
 										<Input
 											placeholder="0.0"
 											border="1px solid"
-											borderColor="rgba(1, 219, 243, 0.2)"
-											bgColor={theme.bg.whiteGray}
+											borderColor={theme.border.farmInput}
+											bgColor={theme.bg.blackAlpha}
 											borderLeftRadius="full"
 											p="5"
 											w="25rem"
-											_hover={{}}
+											_hover={{
+												borderColor: theme.border.farmInput,
+											}}
+											_focus={{
+												borderColor: theme.border.farmInput,
+											}}
 										/>
 										<Button
-											border="1px solid rgba(0, 217, 239, 0.2)"
+											border="1px solid "
+											borderColor={theme.border.farmInput}
 											borderRightRadius="full"
-											bgColor={theme.bg.whiteGray}
-											color={theme.text.cyan}
+											bgColor={theme.bg.max}
+											color={theme.text.max}
 											fontSize="lg"
 											fontWeight="normal"
 											px="4"
 											py="5"
-											_hover={{ backgroundColor: theme.bg.blueNavyLightness }}
+											_hover={{ backgroundColor: theme.bg.max, opacity: 0.9 }}
 										>
 											max
 										</Button>
@@ -261,7 +277,10 @@ export const FarmActions: React.FC<IModal> = props => {
 								h="max-content"
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
-								_hover={{ opacity: "1" }}
+								_hover={{
+									opacity: "1",
+									bgColor: theme.bg.bluePurple,
+								}}
 								_active={{}}
 								borderRadius="full"
 							>
@@ -278,23 +297,32 @@ export const FarmActions: React.FC<IModal> = props => {
 								<Input
 									placeholder="0.0"
 									border="1px solid"
-									borderColor="rgba(1, 219, 243, 0.2)"
-									bgColor={theme.bg.whiteGray}
+									borderColor={theme.border.farmInput}
+									bgColor={theme.bg.blackAlpha}
 									borderLeftRadius="full"
 									p="5"
 									w="25rem"
-									_hover={{}}
+									_hover={{
+										borderColor: theme.border.farmInput,
+									}}
+									_focus={{
+										borderColor: theme.border.farmInput,
+									}}
 								/>
 								<Button
-									border="1px solid rgba(0, 217, 239, 0.2)"
+									border="1px solid"
+									borderColor={theme.border.farmInput}
 									borderRightRadius="full"
-									bgColor={theme.bg.whiteGray}
-									color={theme.text.cyan}
+									bgColor={theme.bg.max}
+									color={theme.text.max}
 									fontSize="lg"
 									fontWeight="normal"
 									px="4"
 									py="5"
-									_hover={{ backgroundColor: theme.bg.blueNavyLightness }}
+									_hover={{
+										borderColor: theme.border.farmInput,
+										opacity: 0.9,
+									}}
 								>
 									max
 								</Button>
@@ -313,7 +341,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									mb="4"
 									w="85%"
 									colorScheme="teal"
-									onChange={value => setSliderValue(value)}
+									onChange={(value: number) => setSliderValue(value)}
 									onMouseEnter={() => setShowTooltip(true)}
 									onMouseLeave={() => setShowTooltip(false)}
 								>
@@ -355,10 +383,13 @@ export const FarmActions: React.FC<IModal> = props => {
 									w="100%"
 									h="max-content"
 									border="1px solid"
-									borderColor={theme.text.cyan}
+									borderColor={theme.text.cyanPurple}
 									bgColor="transparent"
-									color="white"
-									_hover={{ opacity: "1" }}
+									color={theme.text.whitePurple}
+									_hover={{
+										borderColor: theme.text.cyanLightPurple,
+										color: theme.text.cyanLightPurple,
+									}}
 									_active={{}}
 									borderRadius="full"
 								>
@@ -373,7 +404,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									h="max-content"
 									bgColor={theme.bg.blueNavyLightness}
 									color={theme.text.cyan}
-									_hover={{ opacity: "1" }}
+									_hover={{ opacity: "1", bgColor: theme.bg.bluePurple }}
 									_active={{}}
 									borderRadius="full"
 								>
@@ -385,7 +416,7 @@ export const FarmActions: React.FC<IModal> = props => {
 					{buttonId === "claim" && (
 						<Flex flexDirection="column" gap="6">
 							<Flex
-								bgColor={theme.bg.whiteGray}
+								bgColor={theme.bg.max}
 								flexDirection="column"
 								justifyContent="center"
 								alignItems="center"
@@ -414,7 +445,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								h="max-content"
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
-								_hover={{ opacity: "1" }}
+								_hover={{ opacity: "1", bgColor: theme.bg.bluePurple }}
 								_active={{}}
 								borderRadius="full"
 							>

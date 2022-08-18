@@ -1,6 +1,6 @@
 import { Text } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
-import { usePicasso, useTokens, useWallet } from "hooks";
+import { usePicasso } from "hooks";
 
 interface IButtonProps {
 	children?: ReactNode;

@@ -6,16 +6,19 @@ import Jazzicon from "react-jazzicon";
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
 	onClick?: () => void;
+	pending?: boolean;
 }
 
 export const AddressButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
-	const { children, ...rest } = props;
+	const { children, pending, ...rest } = props;
 	const { walletError } = useWallet();
 
 	return (
 		<Button
-			bg={walletError ? theme.text.redError : theme.bg.button.userAddress}
+			color="white"
+			bg={walletError ? theme.text.redError : theme.bg.button.connectWallet}
+			borderColor={theme.border.connectWallet}
 			justifyContent="space-arround"
 			w="max-content"
 			h="max-content"
@@ -30,8 +33,9 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 			left={["20%", "0", "0", "0"]}
 			textTransform="uppercase"
 			overflow="hidden"
+			opacity="0.85"
 			_hover={{
-				borderColor: walletError ? theme.text.redError : theme.text.cyan,
+				opacity: "1",
 			}}
 			_active={{}}
 			{...rest}
@@ -41,12 +45,14 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 			) : (
 				<>
 					{" "}
-					<Flex pr="2" textTransform="uppercase">
-						<Jazzicon
-							diameter={18}
-							seed={Math.round(Math.random() * 10000000)}
-						/>
-					</Flex>
+					{!pending && (
+						<Flex pr="2" textTransform="uppercase">
+							<Jazzicon
+								diameter={18}
+								seed={Math.round(Math.random() * 10000000)}
+							/>
+						</Flex>
+					)}
 					{children}
 				</>
 			)}

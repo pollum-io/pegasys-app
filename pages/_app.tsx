@@ -7,6 +7,7 @@ import "styles/psysAnimation.css";
 import "styles/borderAnimation.css";
 import "styles/circleLoadingAnimation.css";
 import "styles/loadingDotsAnimation.css";
+import "helpers/translation";
 
 const MyApp = ({ Component, pageProps }: AppProps) => (
 	<>

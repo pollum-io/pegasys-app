@@ -12,12 +12,7 @@ import {
 	Icon,
 	Tooltip,
 } from "@chakra-ui/react";
-import React, {
-	FunctionComponent,
-	ReactNode,
-	useEffect,
-	useState,
-} from "react";
+import React, { FunctionComponent, ReactNode } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
 import { usePicasso, useWallet } from "hooks";
 import { IconButton } from "../Buttons/IconButton";
@@ -31,22 +26,17 @@ interface IButtonProps extends ButtonProps {
 export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	// const [expert, setExpert] = useState(false)
-	const { setExpert, expert } = useWallet();
-
-	useEffect(() => {
-		console.log(theme.text.cyanPurple);
-	}, []);
-
-	useEffect(() => {
-		console.log("expert: ", expert);
-	}, [expert]);
+	const { userSlippageTolerance, setUserSlippageTolerance, setExpert, expert } =
+		useWallet();
 
 	return (
 		<Popover placement="right">
 			<PopoverTrigger {...props}>
 				<IconButton
 					bgColor="transparent"
-					_hover={{ background: "rgba(255, 255, 255, 0.08)" }}
+					_hover={{
+						background: theme.bg.iconBg,
+					}}
 					aria-label="Popover"
 					icon={<MdSettings size={25} />}
 				/>
@@ -62,20 +52,25 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 				position="fixed"
 			>
 				<Flex
-					bgColor={theme.bg.whiteGray}
+					bgColor={theme.bg.transactionSettings}
 					borderRadius="7rem"
 					py="2"
 					justifyContent="center"
 					alignItems="center"
 				>
-					<Text fontSize="md" fontWeight="semibold">
+					<Text fontSize="md" fontWeight="semibold" color={theme.text.mono}>
 						Transaction Settings
 					</Text>
 				</Flex>
 				<PopoverBody>
 					<Flex flexDirection="column" mt="4">
 						<Flex alignItems="center" flexDirection="row">
-							<Text fontSize="md" pr="1" fontWeight="medium">
+							<Text
+								fontSize="md"
+								pr="1"
+								fontWeight="medium"
+								color={theme.text.mono}
+							>
 								Slippage tolerance
 							</Text>
 							<Flex>
@@ -103,17 +98,57 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							</Flex>
 						</Flex>
 						<Flex flexDirection="row" py="0.5rem">
-							<SlippageButton aria-label="Slip" mr="3">
+							<SlippageButton
+								aria-label="Slip"
+								mr="3"
+								onClick={() => setUserSlippageTolerance(10)}
+								bgColor={
+									userSlippageTolerance === 10
+										? theme.bg.slippage
+										: "transparent"
+								}
+								color={
+									userSlippageTolerance === 10
+										? theme.text.mono
+										: theme.text.transactionsItems
+								}
+							>
 								0.1%
 							</SlippageButton>
 							<SlippageButton
 								aria-label="Slip"
 								mr="3"
-								bgColor="rgba(21, 61, 111, 1)"
+								onClick={() => setUserSlippageTolerance(50)}
+								bgColor={
+									userSlippageTolerance === 50
+										? theme.bg.slippage
+										: "transparent"
+								}
+								color={
+									userSlippageTolerance === 50
+										? theme.text.mono
+										: theme.text.transactionsItems
+								}
 							>
 								0.5%
 							</SlippageButton>
-							<SlippageButton aria-label="Slip" mr="3" py="0.5rem" px="1rem">
+							<SlippageButton
+								aria-label="Slip"
+								mr="3"
+								py="0.5rem"
+								px="1rem"
+								onClick={() => setUserSlippageTolerance(100)}
+								bgColor={
+									userSlippageTolerance === 100
+										? theme.bg.slippage
+										: "transparent"
+								}
+								color={
+									userSlippageTolerance === 100
+										? theme.text.mono
+										: theme.text.transactionsItems
+								}
+							>
 								1%
 							</SlippageButton>
 							<Input
@@ -128,10 +163,21 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								border="1px solid"
 								borderColor={theme.border.borderSettings}
 								textAlign="center"
+								_focus={{
+									borderColor: theme.border.borderSettings,
+								}}
+								_hover={{
+									borderColor: theme.border.borderSettings,
+								}}
 							/>
 						</Flex>
 						<Flex alignItems="center" flexDirection="row" pt="0.1rem" mt="4">
-							<Text fontSize="md" pr="1" fontWeight="medium">
+							<Text
+								fontSize="md"
+								pr="1"
+								fontWeight="medium"
+								color={theme.text.mono}
+							>
 								Transaction tolerance
 							</Text>
 							<Tooltip
@@ -170,11 +216,22 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								fontSize="md"
 								border="1px solid"
 								borderColor={theme.border.borderSettings}
+								_focus={{
+									borderColor: theme.border.borderSettings,
+								}}
+								_hover={{
+									borderColor: theme.border.borderSettings,
+								}}
 							/>
-							<Text>Minutes</Text>
+							<Text color={theme.text.mono}>Minutes</Text>
 						</Flex>
 						<Flex alignItems="center" flexDirection="row" mt="4">
-							<Text fontSize="md" pr="1" fontWeight="medium">
+							<Text
+								fontSize="md"
+								pr="1"
+								fontWeight="medium"
+								color={theme.text.mono}
+							>
 								Toggle Expert Mode
 							</Text>
 							<Tooltip
@@ -200,27 +257,26 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							</Tooltip>
 							<Flex flexDirection="row" ml="12">
 								<Stack align="center" direction="row">
-									<Text>Off</Text>
+									<Text color={theme.text.mono}>Off</Text>
 									<Switch
 										size="md"
 										onChange={() => setExpert(!expert)}
 										// colorScheme="lightPurple"
 									/>
-
-									<Text>On</Text>
+									<Text color={theme.text.mono}>On</Text>
 								</Stack>
 							</Flex>
 						</Flex>
 					</Flex>
 					<Flex
-						bgColor={theme.bg.whiteGray}
+						bgColor={theme.bg.transactionSettings}
 						borderRadius="7rem"
 						py="2"
 						mt="8"
 						justifyContent="center"
 						alignItems="center"
 					>
-						<Text fontSize="md" fontWeight="semibold">
+						<Text fontSize="md" fontWeight="semibold" color={theme.text.mono}>
 							Select Language
 						</Text>
 					</Flex>
