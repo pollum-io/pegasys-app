@@ -4,6 +4,7 @@ import {
 	Img,
 	Input,
 	InputGroup,
+	InputLeftElement,
 	Menu,
 	MenuButton,
 	MenuItem,
