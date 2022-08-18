@@ -37,9 +37,13 @@ export const ConfirmList: React.FC<IModal> = props => {
 				>
 					<Flex gap="3">
 						<Flex _hover={{ cursor: "pointer" }}>
-							<RiInformationFill size={24} />
+							<RiInformationFill size={24} color={theme.icon.infoWhiteRed} />
 						</Flex>
-						<Text fontSize="lg" fontWeight="semibold">
+						<Text
+							fontSize="lg"
+							fontWeight="semibold"
+							color={theme.icon.infoWhiteRed}
+						>
 							Confirm List
 						</Text>
 					</Flex>
@@ -47,7 +51,7 @@ export const ConfirmList: React.FC<IModal> = props => {
 						<AiOutlineClose size={22} onClick={onClose} />
 					</Flex>
 				</ModalHeader>
-				<ModalBody py="6">
+				<ModalBody py="6" bgColor={theme.bg.blueNavyLight}>
 					<Flex gap="5" flexDirection="column">
 						<Text>Please be careful when adding custom token lists.</Text>
 						<Text>
@@ -78,6 +82,9 @@ export const ConfirmList: React.FC<IModal> = props => {
 						color={theme.text.cyan}
 						fontSize="md"
 						fontWeight="semibold"
+						_hover={{
+							bgColor: theme.bg.bluePurple,
+						}}
 					>
 						Add List
 					</Button>

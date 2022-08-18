@@ -1,10 +1,10 @@
 import { Flex, Icon, Img, Text, useColorMode } from "@chakra-ui/react";
+import React, { useState } from "react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
 import { useModal, usePicasso } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
-import React from "react";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
@@ -18,6 +18,14 @@ export const Header: React.FC = () => {
 
 	const { isOpenPsysBreakdown, onOpenPsysBreakdown, onClosePsysBreakdown } =
 		useModal();
+	const [nav, setNav] = useState(false);
+	const isNav = () => {
+		if (nav) {
+			return "white";
+		}
+
+		return null;
+	};
 	const links = [
 		{
 			name: "Swap",
@@ -52,7 +60,7 @@ export const Header: React.FC = () => {
 			<Img
 				w={["7", "8", "6", "6"]}
 				h={["7", "8", "6", "6"]}
-				src="icons/pegasys.png"
+				src={theme.icon.pegasysLogo}
 				ml={["2", "4", "4", "4"]}
 				position="absolute"
 				left="0"
@@ -79,14 +87,7 @@ export const Header: React.FC = () => {
 					}}
 				>
 					Charts
-					<Icon
-						as={MdOutlineCallMade}
-						w="5"
-						h="5"
-						ml="2"
-						mb="1"
-						color={theme.text.header}
-					/>
+					<Icon as={MdOutlineCallMade} w="5" h="5" ml="2" />
 				</NavButton>
 			</Flex>
 			<Flex
@@ -118,6 +119,9 @@ export const Header: React.FC = () => {
 				</Flex>
 				<Flex>
 					<IconButton
+						_hover={{
+							background: theme.bg.iconBg,
+						}}
 						aria-label="Theme"
 						icon={<theme.icon.theme />}
 						onClick={() => toggleColorMode()}

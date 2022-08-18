@@ -10,6 +10,8 @@ import {
 	MenuItem,
 	MenuList,
 	Text,
+	useDisclosure,
+	useColorModeValue,
 } from "@chakra-ui/react";
 import { AddLiquidityModal, RemoveLiquidity } from "components";
 import { ImportPoolModal } from "components/Modals/ImportPool";
@@ -65,7 +67,7 @@ export const PoolsContainer: NextPage = () => {
 					>
 						<Img
 							borderRadius="xl"
-							src="images/backgrounds/BannerPools.png"
+							src={theme.bg.poolsBanner}
 							position="absolute"
 							zIndex="base"
 							w="100%"
@@ -78,12 +80,12 @@ export const PoolsContainer: NextPage = () => {
 							py={["0.8rem", "1.375rem", "1.375rem", "1.375rem"]}
 							gap="3"
 							h={["9rem", "10rem", "10rem", "10rem"]}
+							color="white"
 						>
-							<Text fontWeight="bold" color="white" fontSize="md">
+							<Text fontWeight="bold" fontSize="md">
 								Liquidity Provider Rewards
 							</Text>
 							<Text
-								color="white"
 								fontWeight="semibold"
 								fontSize="sm"
 								lineHeight="shorter"
@@ -98,16 +100,16 @@ export const PoolsContainer: NextPage = () => {
 							alignItems="center"
 							justifyContent="center"
 							flexDirection="row"
-							bgColor={theme.bg.whiteGray}
+							bgColor={theme.text.topHeaderButton}
 							zIndex="docked"
 							borderBottomRadius="xl"
 							py="0.531rem"
 							gap="2.5"
 						>
-							<Text fontWeight="semibold" fontSize="xs" color="white">
+							<Text fontWeight="medium" fontSize="xs" color="white">
 								View Your Staked Liquidity
 							</Text>
-							<MdOutlineCallMade size={20} color="white" />
+							<MdOutlineCallMade size={18} color="white" />
 						</Flex>
 					</Flex>
 					<Flex
@@ -143,28 +145,36 @@ export const PoolsContainer: NextPage = () => {
 							gap="5"
 						>
 							<Flex visibility={userHavePool ? "visible" : "hidden"}>
-								<InputGroup>
+								<InputGroup alignItems="center">
+									<InputLeftElement
+										pl="0.625rem"
+										pointerEvents="none"
+										pb="0.3rem"
+										// eslint-disable-next-line react/no-children-prop
+										children={
+											<MdSearch color={theme.icon.searchIcon} size={20} />
+										}
+									/>
 									<Input
 										borderColor={theme.bg.blueNavyLightness}
 										placeholder="Search by token name"
 										_placeholder={{
-											fontSize: "14px",
 											opacity: 1,
-											color: theme.text.cyanPurple,
+											color: theme.text.input,
 										}}
 										borderRadius="full"
 										w={["18rem", "18rem", "20rem", "20rem"]}
-										h="max-content"
+										h="2.2rem"
 										py={["0.1rem", "0.1rem", "1", "1"]}
-										pl="6"
+										pl="10"
+										_hover={{ border: "1px solid #3182CE" }}
+										_focus={{ border: "1px solid #3182CE" }}
 									/>
 									<Flex
 										position="absolute"
 										left="0.5rem"
 										bottom={["0.3rem", "0.3rem", "0.5rem", "0.5rem"]}
-									>
-										<MdSearch color={theme.text.cyanPurple} />
-									</Flex>
+									/>
 								</InputGroup>
 							</Flex>
 							<Flex gap="4" alignItems="flex-end">
@@ -173,13 +183,16 @@ export const PoolsContainer: NextPage = () => {
 									fontWeight="semibold"
 									py="0.562rem"
 									px="1.5rem"
-									h="max-content"
+									h="2.2rem"
 									bgColor="transparent"
 									borderWidth="1px"
 									borderColor={theme.text.cyanPurple}
 									color={theme.text.whitePurple}
 									borderRadius="full"
-									_hover={{ opacity: "1" }}
+									_hover={{
+										borderColor: theme.text.cyanLightPurple,
+										color: theme.text.cyanLightPurple,
+									}}
 									_active={{}}
 									onClick={() => {
 										setIsCreate(true);
@@ -219,10 +232,12 @@ export const PoolsContainer: NextPage = () => {
 												fontWeight="semibold"
 												py="0.625rem"
 												px="1.5rem"
-												h="max-content"
+												h="2.2rem"
 												bgColor={theme.bg.blueNavyLightness}
 												color="white"
-												_hover={{ opacity: "1" }}
+												_hover={{
+													bgColor: theme.bg.bluePurple,
+												}}
 												_active={{}}
 												borderRadius="full"
 												rightIcon={<MdExpandMore size={20} />}
@@ -236,11 +251,36 @@ export const PoolsContainer: NextPage = () => {
 												p="4"
 												fontSize="sm"
 											>
-												<MenuItem>Pool Weight</MenuItem>
-												<MenuItem>Name</MenuItem>
-												<MenuItem>Claudio</MenuItem>
-												<MenuItem>Thom</MenuItem>
-												<MenuItem>Kaue</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Pool Weight
+												</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Name
+												</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Claudio
+												</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Thom
+												</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Kaue
+												</MenuItem>
 											</MenuList>
 										</Menu>
 									)}
@@ -263,16 +303,16 @@ export const PoolsContainer: NextPage = () => {
 							</Text>
 							<Flex flexDirection="row" gap="1">
 								<Text
-									color="white"
 									fontSize="md"
 									fontWeight="normal"
 									w="max-content"
+									color={theme.text.mono}
 								>
 									Don&apos;t see a pool you joined?{" "}
 								</Text>
 								<Text
 									fontWeight="semibold"
-									color={theme.text.cyanWhite}
+									color={theme.text.cyanPurple}
 									onClick={onOpenPool}
 									textDecoration="underline"
 									_hover={{ cursor: "pointer" }}

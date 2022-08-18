@@ -57,7 +57,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 						<Icon
 							as={MdArrowDownward}
 							bg="transparent"
-							color={theme.text.cyan}
+							color={theme.text.cyanPurple}
 							w="6"
 							h="6"
 							borderRadius="full"
@@ -74,7 +74,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 					</Text>
 				</ModalBody>
 				<Flex
-					bgColor={theme.bg.whiteGray}
+					bgColor={theme.bg.blackLightness}
 					borderBottomRadius="3xl"
 					flexDirection="column"
 					p="1.5rem"
@@ -107,7 +107,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 							px="6"
 							borderRadius="67px"
 							bgColor={theme.bg.button.connectWalletSwap}
-							color={theme.text.cyan}
+							color={theme.text.cyanWhite}
 							fontSize="lg"
 							fontWeight="semibold"
 						>
