@@ -1,6 +1,7 @@
 import { TokenAmount, Pair, Token } from "@pollum-io/pegasys-sdk";
 import { getMultiCall, wrappedCurrency } from "utils";
 import { IWalletHookInfos } from "types";
+import { UseTokensPairSorted } from "./useTokensPairSorted";
 
 export enum PairState {
 	LOADING,
@@ -41,12 +42,10 @@ export async function usePairs(
 
 		const { _reserve0, _reserve1 } = result;
 
-		const tokenA: Token = tokens[i][0] as Token;
-		const tokenB: Token = tokens[i][1] as Token;
-
-		const [token0, token1] = tokenA?.sortsBefore(tokenB)
-			? [tokenA, tokenB]
-			: [tokenB, tokenA];
+		const [token0, token1] = UseTokensPairSorted([
+			tokens[i][0] as Token,
+			tokens[i][1] as Token,
+		]);
 
 		return [
 			PairState.EXISTS,

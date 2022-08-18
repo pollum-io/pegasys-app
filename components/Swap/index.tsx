@@ -17,6 +17,7 @@ import {
 	UseSwapCallback,
 	useToasty,
 	ApprovalState,
+	UseTokensPairSorted,
 } from "hooks";
 import React, { FunctionComponent, useEffect, useState, useMemo } from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
@@ -41,7 +42,7 @@ import {
 } from "utils";
 import { getTokensGraphCandle } from "services/index";
 
-import { FIFTEEN_MINUTES_IN_SECONDS } from "helpers/consts";
+import { ONE_DAY_IN_SECONDS } from "helpers/consts";
 import { OtherWallet } from "./OtherWallet";
 import { SwapExpertMode } from "./SwapExpertMode";
 import { TradeRouteComponent } from "./TradeRouteComponent";
@@ -79,10 +80,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	>([]);
 	const [tokensGraphCandlePeriod, setTokensGraphCandlePeriod] =
 		useState<IChartComponentPeriod>({
-			id: 2,
-			period: FIFTEEN_MINUTES_IN_SECONDS,
+			id: 5,
+			period: ONE_DAY_IN_SECONDS,
 		});
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
+	const [tokensPairPosition, setTokensPairPosition] = useState<
+		WrappedTokenInfo[]
+	>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
 	const [tokenInputValue, setTokenInputValue] = useState<ISwapTokenInputValue>({
 		inputFrom: {
@@ -272,14 +276,15 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	);
 
 	const getTokensGraph = async () => {
-		const [tokenA, tokenB]: Token[] = [
+		const [token0, token1] = UseTokensPairSorted([
 			selectedToken[0],
 			selectedToken[1],
-		] as Token[];
+		]);
 
-		const [token0, token1] = tokenA?.sortsBefore(tokenB)
-			? [tokenA, tokenB]
-			: [tokenB, tokenA];
+		setTokensPairPosition([
+			token0 as WrappedTokenInfo,
+			token1 as WrappedTokenInfo,
+		]);
 
 		const requestTokensCandle = await getTokensGraphCandle(
 			token0,
@@ -340,6 +345,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		(isERC20 && approvalState === ApprovalState.PENDING);
 
 	const isPending = approvalState === ApprovalState.PENDING;
+
+	console.log(tokensPairPosition);
 
 	return (
 		<Flex
@@ -772,38 +779,47 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				<Flex
 					gap="2"
 					justifyContent="center"
-					mb="8"
 					flexDirection={["column", "row", "row", "row"]}
 					alignItems="center"
 				>
 					<Flex>
-						<Img src={selectedToken[0]?.logoURI} w="7" h="7" />
-						<Img src={selectedToken[1]?.logoURI} w="7" h="7" />
-						<Text fontWeight="bold" fontSize="xl" ml="2.5">
-							{selectedToken[0]?.symbol} / {selectedToken[1]?.symbol}
+						<Img src={tokensPairPosition[0]?.logoURI} w="7" h="7" />
+						<Img src={tokensPairPosition[1]?.logoURI} w="7" h="7" />
+						<Text fontWeight="700" fontSize="xl" ml="2.5">
+							{tokensPairPosition[0]?.symbol} / {tokensPairPosition[1]?.symbol}
 						</Text>
 					</Flex>
-					<Text pl="2" fontSize="lg">
+					<Text pl="2" fontSize="lg" fontWeight="400">
 						{`${
 							truncateNumberDecimalsPlaces(
 								parseFloat(tokensGraphCandleData[0]?.close)
 							) || "0.00"
 						}`}
-						{` ${selectedToken[1]?.symbol}`}
+						{` ${tokensPairPosition[1]?.symbol}`}
 					</Text>
 				</Flex>
-				<FilterButton
-					periodStateValue={tokensGraphCandlePeriod}
-					setPeriod={setTokensGraphCandlePeriod}
-				/>
-				{tokensGraphCandleData.length === 0 ? (
-					<Text>
-						Candle data not found to this token pair, please try again with
-						another tokens.
-					</Text>
-				) : (
-					<ChartComponent data={tokensGraphCandleData} />
+				{tokensGraphCandleData.length !== 0 && (
+					<Flex my="6">
+						<FilterButton
+							periodStateValue={tokensGraphCandlePeriod}
+							setPeriod={setTokensGraphCandlePeriod}
+						/>
+					</Flex>
 				)}
+
+				<Flex direction="column" justifyContent="center">
+					<ChartComponent data={tokensGraphCandleData} />
+					{tokensGraphCandleData.length === 0 && (
+						<Text
+							textAlign="center"
+							color="#fff"
+							fontWeight="400"
+							fontSize="sm"
+						>
+							Candle data not available to this token pair.
+						</Text>
+					)}
+				</Flex>
 			</Flex>
 		</Flex>
 	);
