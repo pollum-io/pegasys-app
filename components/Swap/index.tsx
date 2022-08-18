@@ -48,18 +48,32 @@ import { OtherWallet } from "./OtherWallet";
 import { SwapExpertMode } from "./SwapExpertMode";
 import { TradeRouteComponent } from "./TradeRouteComponent";
 import { FilterButton } from "./FilterButton";
+import { ConfirmSwap } from "components/Modals/ConfirmSwap";
 
 const ChartComponent = dynamic(() => import("./ChartComponent"), {
 	ssr: false,
 });
+interface ITokenInputValue {
+	inputFrom: string;
+	inputTo: string;
+}
 
 export const Swap: FunctionComponent<ButtonProps> = () => {
 	const theme = usePicasso();
 
 	const { t: translation } = useTranslation();
 	const { userTokensBalance } = useTokens();
-	const { isOpenWallet, onCloseWallet, onOpenCoin, isOpenCoin, onCloseCoin } =
-		useModal();
+	const {
+		onOpenWallet,
+		isOpenWallet,
+		onCloseWallet,
+		onOpenCoin,
+		isOpenCoin,
+		onCloseCoin,
+		onOpenConfirmSwap,
+		isOpenConfirmSwap,
+		onCloseConfirmSwap,
+	} = useModal();
 
 	const {
 		isConnected,
@@ -97,6 +111,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		currentInputTyped: "",
 		lastInputTyped: undefined,
 	});
+	const [txType, setTxType] = useState<string>("");
 	const [returnedTradeValue, setReturnedTradeValue] = useState<
 		IReturnedTradeValues | undefined
 	>(undefined);
@@ -404,7 +419,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				md: "center",
 				lg: "flex-start",
 			}}
-			flexDirection={{ base: "column", sm: "column", md: "column", lg: "row" }}
+			flexDirection={{
+				base: "column",
+				sm: "column",
+				md: "column",
+				lg: "row",
+			}}
 			mb={["6rem", "0"]}
 			px={["4", "0", "0", "0"]}
 		>
@@ -415,6 +435,25 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				selectedToken={selectedToken}
 				buttonId={buttonId}
 				setSelectedToken={setSelectedToken}
+			/>
+			<ConfirmSwap
+				isOpen={isOpenConfirmSwap}
+				onOpen={onOpenConfirmSwap}
+				onClose={onCloseConfirmSwap}
+				selectedTokens={selectedToken}
+				txType={txType}
+				onTx={
+					txType === "swap"
+						? swapCall?.callback
+						: txType === "approve"
+						? approve
+						: txType === "wrap"
+						? onWrap
+						: swapCall?.callback
+				}
+				trade={returnedTradeValue?.v2Trade}
+				isWrap={isWrap}
+				tokenInputValue={tokenInputValue}
 			/>
 			<Flex alignItems="center" flexDirection="column">
 				<Flex
@@ -431,10 +470,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					borderRadius={30}
 					border="1px solid transparent;"
 					boxShadow=" 0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4);"
-					background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+					background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					<Flex flexDirection="row" justifyContent="space-between" pb="1.5rem">
-						<Text fontWeight="semibold" fontSize={["xl", "2xl", "2xl", "2xl"]}>
+						<Text
+							color={theme.text.mono}
+							fontWeight="semibold"
+							fontSize={["xl", "2xl", "2xl", "2xl"]}
+						>
 							Swap
 						</Text>
 					</Flex>
@@ -476,10 +519,15 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								}}
 							>
 								<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
-								<Text fontSize="xl" fontWeight="500" px="3">
+								<Text
+									fontSize="xl"
+									fontWeight="500"
+									px="3"
+									color={theme.text.mono}
+								>
 									{selectedToken[0]?.symbol}
 								</Text>
-								<Icon as={IoIosArrowDown} />
+								<Icon as={IoIosArrowDown} color={theme.text.mono} />
 							</Flex>
 							<Input
 								fontSize="2xl"
@@ -493,6 +541,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								onChange={handleOnChangeTokenInputs}
 								name="inputFrom"
 								value={tokenInputValue?.inputFrom?.value}
+								_hover={{ border: "1px solid #3182CE" }}
+								_focus={{ border: "1px solid #3182CE" }}
 							/>
 						</Flex>
 					</Flex>
@@ -538,7 +588,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						onClick={switchTokensPosition}
 						_hover={{ cursor: "pointer" }}
 					>
-						<MdWifiProtectedSetup size={25} color="cyan" />
+						<MdWifiProtectedSetup size={25} color={theme.text.cyanPurple} />
 					</Flex>
 					<Flex
 						borderRadius="2xl"
@@ -596,6 +646,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								onChange={handleOnChangeTokenInputs}
 								name="inputTo"
 								value={tokenInputValue?.inputTo?.value}
+								_hover={{ border: "1px solid #3182CE" }}
+								_focus={{ border: "1px solid #3182CE" }}
 							/>
 						</Flex>
 					</Flex>
@@ -635,55 +687,55 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Text>
 						</Flex>
 					)}
-					{tokenInputValue.inputTo.value && tokenInputValue.inputFrom.value && (
-						<Flex
-							flexDirection="column"
-							borderRadius="2xl"
-							bgColor="transparent"
-							borderWidth="1px"
-							borderColor={theme.text.cyan}
-							mt="1.5rem"
-						>
-							<Text fontSize="md" fontWeight="medium" px="1.375rem" py="1rem">
-								Price
-							</Text>
+											{tokenInputValue.inputTo.value && tokenInputValue.inputFrom.value && (
 							<Flex
-								flexDirection="row"
-								justifyContent="space-around"
-								py="1rem"
-								px="1rem"
+								flexDirection="column"
 								borderRadius="2xl"
+								bgColor="transparent"
 								borderWidth="1px"
 								borderColor={theme.text.cyan}
-								bgColor={theme.bg.blueNavy}
+								mt="1.5rem"
 							>
-								<Flex fontSize="sm" flexDirection="column" textAlign="center">
-									<Text fontWeight="semibold">
-										{returnedTradeValue?.v2Trade
-											? returnedTradeValue?.v2Trade?.executionPrice?.toSignificant(
-													6
-											  )
-											: "-"}
-									</Text>
-									<Text fontWeight="normal">
-										{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
-									</Text>
-								</Flex>
-								<Flex fontSize="sm" flexDirection="column" textAlign="center">
-									<Text fontWeight="semibold">
-										{returnedTradeValue?.v2Trade
-											? returnedTradeValue?.v2Trade?.executionPrice
-													?.invert()
-													.toSignificant(6)
-											: "-"}
-									</Text>
-									<Text fontWeight="normal">
-										{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
-									</Text>
+								<Text fontSize="md" fontWeight="medium" px="1.375rem" py="1rem">
+									Price
+								</Text>
+								<Flex
+									flexDirection="row"
+									justifyContent="space-around"
+									py="1rem"
+									px="1rem"
+									borderRadius="2xl"
+									borderWidth="1px"
+									borderColor={theme.text.cyan}
+									bgColor={theme.bg.blueNavy}
+								>
+									<Flex fontSize="sm" flexDirection="column" textAlign="center">
+										<Text fontWeight="semibold">
+											{returnedTradeValue?.v2Trade
+												? returnedTradeValue?.v2Trade?.executionPrice?.toSignificant(
+														6
+												  )
+												: "-"}
+										</Text>
+										<Text fontWeight="normal">
+											{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
+										</Text>
+									</Flex>
+									<Flex fontSize="sm" flexDirection="column" textAlign="center">
+										<Text fontWeight="semibold">
+											{returnedTradeValue?.v2Trade
+												? returnedTradeValue?.v2Trade?.executionPrice
+														?.invert()
+														.toSignificant(6)
+												: "-"}
+										</Text>
+										<Text fontWeight="normal">
+											{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
+										</Text>
+									</Flex>
 								</Flex>
 							</Flex>
-						</Flex>
-					)}
+						)}
 					{isExpert}
 					{isExpert && isOtherWallet}
 					<Flex>
@@ -696,14 +748,23 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								borderRadius="67px"
 								onClick={
 									approveValidation
-										? () => approve()
-										: () => swapCall?.callback && swapCall.callback()
+										? () => {
+												onOpenConfirmSwap();
+												setTxType("approve");
+										  }
+										: () => {
+												onOpenConfirmSwap();
+												setTxType("swap");
+										  }
 								}
 								bgColor={theme.bg.button.connectWalletSwap}
 								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"
 								disabled={!canSubmit || isPending}
+								_hover={{
+									opacity: 0.3,
+								}}
 							>
 								{approveValidation ? "Approve" : "Swap"}
 							</Button>
@@ -715,7 +776,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								py="6"
 								px="6"
 								borderRadius="67px"
-								onClick={() => swapCall?.callback && swapCall.callback()}
+								onClick={() => {
+									onOpenConfirmSwap();
+									setTxType("swap");
+								}}
 								bgColor={theme.bg.button.connectWalletSwap}
 								color={theme.text.cyan}
 								fontSize="lg"
@@ -732,7 +796,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								py="6"
 								px="6"
 								borderRadius="67px"
-								onClick={() => onWrap()}
+								onClick={() => {
+									onOpenConfirmSwap();
+									setTxType("wrap");
+								}}
 								bgColor={theme.bg.button.connectWalletSwap}
 								color={theme.text.cyan}
 								fontSize="lg"
@@ -745,89 +812,89 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					</Flex>
 				</Flex>
 				{tokenInputValue.inputTo.value && tokenInputValue.inputFrom.value && (
-					<Flex
-						flexDirection="column"
-						p="1.5rem"
-						background={theme.bg.blueNavy}
-						w="90%"
-						borderRadius="xl"
-						mt="7"
-						mb={["2", "2", "2", "10rem"]}
-						zIndex="1"
-					>
-						<Flex flexDirection="column">
-							<Flex flexDirection="row" justifyContent="space-between">
-								<Text fontWeight="normal">
-									Minmum Received <Icon as={MdHelpOutline} />
-								</Text>
-								<Text fontWeight="medium">
-									{returnedTradeValue?.v2Trade
-										? `${returnedTradeValue?.v2Trade?.outputAmount.toSignificant(
-												4
-										  )} ${
-												returnedTradeValue?.v2Trade?.outputAmount?.currency
-													.symbol
-										  }`
-										: "-"}
-								</Text>
-							</Flex>
-							<Flex
-								flexDirection="row"
-								justifyContent="space-between"
-								pt="0.75rem"
-							>
-								<Text fontWeight="normal">
-									Price Impact <Icon as={MdHelpOutline} />
-								</Text>
-								<Text fontWeight="medium">
-									{returnedTradeValue?.v2Trade
-										? `${returnedTradeValue?.v2Trade?.priceImpact?.toSignificant(
-												4
-										  )}%`
-										: "-"}
-								</Text>
-							</Flex>
-							<Flex
-								flexDirection="row"
-								justifyContent="space-between"
-								pt="0.75rem"
-							>
-								<Text fontWeight="normal">
-									Liquidity Provider Fee <Icon as={MdHelpOutline} />
-								</Text>
-								<Text fontWeight="medium">-</Text>
-							</Flex>
-							{tokenInputValue.inputFrom.value &&
-								tokenInputValue.inputTo.value &&
-								returnedTradeValue?.v2TradeRoute && (
-									<Flex flexDirection="column">
-										<Flex
-											flexDirection="row"
-											justifyContent="space-between"
-											pt="2rem"
-										>
-											<Text fontWeight="normal">
-												Route <Icon as={MdHelpOutline} />
-											</Text>
+						<Flex
+							flexDirection="column"
+							p="1.5rem"
+							background={theme.bg.blueNavy}
+							w="90%"
+							borderRadius="xl"
+							mt="7"
+							mb={["2", "2", "2", "10rem"]}
+							zIndex="1"
+						>
+							<Flex flexDirection="column">
+								<Flex flexDirection="row" justifyContent="space-between">
+									<Text fontWeight="normal">
+										Minmum Received <Icon as={MdHelpOutline} />
+									</Text>
+									<Text fontWeight="medium">
+										{returnedTradeValue?.v2Trade
+											? `${returnedTradeValue?.v2Trade?.outputAmount.toSignificant(
+													4
+											  )} ${
+													returnedTradeValue?.v2Trade?.outputAmount?.currency
+														.symbol
+											  }`
+											: "-"}
+									</Text>
+								</Flex>
+								<Flex
+									flexDirection="row"
+									justifyContent="space-between"
+									pt="0.75rem"
+								>
+									<Text fontWeight="normal">
+										Price Impact <Icon as={MdHelpOutline} />
+									</Text>
+									<Text fontWeight="medium">
+										{returnedTradeValue?.v2Trade
+											? `${returnedTradeValue?.v2Trade?.priceImpact?.toSignificant(
+													4
+											  )}%`
+											: "-"}
+									</Text>
+								</Flex>
+								<Flex
+									flexDirection="row"
+									justifyContent="space-between"
+									pt="0.75rem"
+								>
+									<Text fontWeight="normal">
+										Liquidity Provider Fee <Icon as={MdHelpOutline} />
+									</Text>
+									<Text fontWeight="medium">-</Text>
+								</Flex>
+								{tokenInputValue.inputFrom.value &&
+									tokenInputValue.inputTo.value &&
+									returnedTradeValue?.v2TradeRoute && (
+										<Flex flexDirection="column">
+											<Flex
+												flexDirection="row"
+												justifyContent="space-between"
+												pt="2rem"
+											>
+												<Text fontWeight="normal">
+													Route <Icon as={MdHelpOutline} />
+												</Text>
+											</Flex>
+											<Flex
+												border="1px solid rgba(160, 174, 192, 1)"
+												py="2.5"
+												px="4"
+												borderRadius="xl"
+												alignItems="center"
+												flexWrap="wrap"
+												mt="2"
+											>
+												<TradeRouteComponent
+													transactionRoute={returnedTradeValue?.v2TradeRoute}
+												/>
+											</Flex>
 										</Flex>
-										<Flex
-											border="1px solid rgba(160, 174, 192, 1)"
-											py="2.5"
-											px="4"
-											borderRadius="xl"
-											alignItems="center"
-											flexWrap="wrap"
-											mt="2"
-										>
-											<TradeRouteComponent
-												transactionRoute={returnedTradeValue?.v2TradeRoute}
-											/>
-										</Flex>
-									</Flex>
-								)}
+									)}
+							</Flex>
 						</Flex>
-					</Flex>
-				)}
+					)}
 			</Flex>
 			<Flex
 				h="max-content"

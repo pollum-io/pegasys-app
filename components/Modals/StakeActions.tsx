@@ -206,7 +206,8 @@ export const StakeActions: React.FC<IModal> = props => {
 											borderLeftRadius="full"
 											p="5"
 											w="25rem"
-											_hover={{}}
+											_hover={{ border: "1px solid #3182CE" }}
+											_focus={{ border: "1px solid #3182CE" }}
 											onChange={handleInput}
 										/>
 										<Button
