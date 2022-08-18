@@ -36,7 +36,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	const { userTokensBalance } = useTokens();
 
 	const theme = usePicasso();
-	const { isOpenCoin, onCloseCoin } = useModal();
+	const { onOpenCoin, isOpenCoin, onCloseCoin } = useModal();
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
 	const [sliderValue, setSliderValue] = React.useState(5);
@@ -63,8 +63,8 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 				isOpen={isOpenCoin}
 				onClose={onCloseCoin}
 				selectedToken={selectedToken}
-				buttonId={buttonId}
 				setSelectedToken={setSelectedToken}
+				buttonId={buttonId}
 			/>
 			<ModalOverlay />
 			<ModalContent
@@ -73,7 +73,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 				border={["none", "1px solid transparent"]}
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
 				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
-				background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
 					display="flex"
@@ -82,11 +82,17 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 					px="0"
 					py="0"
 				>
-					<Flex alignItems="center">
+					<Flex alignItems="center" color={theme.text.mono}>
 						<Flex _hover={{ cursor: "pointer" }} onClick={onModalClose}>
-							<MdArrowBack size={24} />
+							<MdArrowBack size={24} color={theme.icon.whiteGray} />
 						</Flex>
-						<Text fontSize="2xl" fontWeight="medium" textAlign="center" px="4">
+						<Text
+							fontSize="2xl"
+							fontWeight="medium"
+							textAlign="center"
+							px="4"
+							color={theme.text.mono}
+						>
 							Remove Liquidity
 						</Text>
 					</Flex>
@@ -104,22 +110,22 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						<Text as="span" _hover={{ opacity: 0.8 }}>
 							<Icon
 								as={MdHelpOutline}
-								h="4"
-								w="4"
-								color="white"
-								backgroundColor="gray.800"
+								h="5"
+								w="5"
+								color={theme.icon.whiteGray}
 								borderRadius="full"
 							/>
 						</Text>
 					</Tooltip>
 				</ModalHeader>
 				<Flex
-					flexDirection="column"
 					bgColor={theme.bg.blueNavy}
+					flexDirection="column"
 					borderRadius="2xl"
 					mt="4"
 					px="5"
 					py="5"
+					color={theme.text.mono}
 				>
 					<Flex
 						flexDirection="row"
@@ -128,7 +134,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						fontWeight="medium"
 					>
 						<Text>Amount</Text>
-						<Text color={theme.text.cyan}>Detailed</Text>
+						<Text color={theme.text.cyanPurple}>Detailed</Text>
 					</Flex>
 					<Flex
 						flexDirection="row"
@@ -161,6 +167,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						</Flex>
 					</Flex>
 					<Slider
+						color={theme.text.transactionsItems}
 						id="slider"
 						mt="9"
 						defaultValue={5}
@@ -202,7 +209,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 					</Slider>
 				</Flex>
 
-				<Flex flexDirection="column" py="6">
+				<Flex flexDirection="column" py="6" color={theme.text.mono}>
 					<Flex flexDirection="row" justifyContent="space-between">
 						<Text fontWeight="medium" fontSize="md">
 							Recive
@@ -239,6 +246,9 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						color={theme.text.cyan}
 						fontSize="lg"
 						fontWeight="semibold"
+						_hover={{
+							bgColor: theme.bg.bluePurple,
+						}}
 					>
 						{isCreate ? "Create a pair" : "Add Liquidity"}
 					</Button>
@@ -246,7 +256,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 				<Flex
 					flexDirection="column"
 					p="1.5rem"
-					background={theme.bg.blueGray}
+					background={theme.bg.subModal}
 					position={["absolute", "absolute", "absolute", "absolute"]}
 					bottom={["-245", "-245", "-280", "-280"]}
 					left={["0", "0", "0", "0"]}

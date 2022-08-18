@@ -4,13 +4,31 @@ import { BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
 const usePicasso = () => {
 	const theme = {
 		text: {
+			manageInput: useColorModeValue(
+				"rgba(0, 0, 0, 0.36)",
+				"rgba(255, 255, 255, 0.36)"
+			),
+			inputValue: useColorModeValue(
+				"rgba(0, 0, 0, 0.24)",
+				"rgba(255, 255, 255, 0.36"
+			),
+			farmActionsTop: useColorModeValue("#A0AEC0", "rgba(255, 255, 255, 0.36)"),
+			farmActionsHover: useColorModeValue("#3B3693", "#1A365D"),
+			max: useColorModeValue("#2D3748", "#00D9EF"),
+			input: useColorModeValue("#9F7AEA", "#36B4D4"),
+			whiteGray: useColorModeValue("rgba(0, 0, 0, 0.24)", "white"),
+			transactionsItems: useColorModeValue(
+				"#A0AEC0",
+				"rgb(255, 255, 255, 0.64)"
+			),
+			cyanLightPurple: useColorModeValue("#8C15E8", "#00d9ef"),
 			header: useColorModeValue("#A0AEC0", "white"),
-			whitePurple: useColorModeValue("#665EE1", "whitw"),
+			whitePurple: useColorModeValue("#665EE1", "white"),
 			cyanWhite: useColorModeValue("white", "#00d9ef"),
 			topHeaderButton: useColorModeValue("#665EE1", "#081120"),
 			cyanPurple: useColorModeValue("#665EE1", "#00d9ef"),
-			mono: useColorModeValue("#1A202C", "white"),
-			navItem: useColorModeValue("#4A5568", "#EDF2F7"),
+			mono: useColorModeValue("#1A202C", "white"), // text black and white
+			navItem: useColorModeValue("#4A5568", "#EDF2F7"), // bottom header icons color
 			blue: useColorModeValue("white", "cyan.300"),
 			infoLink: useColorModeValue("#565a69", "#c3c5cb"),
 			connectWallet: useColorModeValue("#665EE1", "#00d9ef"),
@@ -20,8 +38,8 @@ const usePicasso = () => {
 			redError: useColorModeValue("#ff2532a3", "#ff2532a3"),
 			gray: useColorModeValue("gray.400", "gray.400"),
 			gray600: useColorModeValue("gray.600", "gray.600"),
-			gray500: useColorModeValue("gray.500", "gray.500"),
-			gray300: useColorModeValue("gray.300", "gray.300"),
+			gray500: useColorModeValue("gray.500", "gray.500"), // balance text color
+			gray300: useColorModeValue("#718096", "#CBD5E0"),
 			green400: useColorModeValue("green.400", "green.400"),
 			greenSocial: useColorModeValue("#67DBD8", "#67DBD8"),
 			psysBalance: useColorModeValue(
@@ -37,24 +55,77 @@ const usePicasso = () => {
 			),
 		},
 		icon: {
+			infoWhiteRed: useColorModeValue("#E53E3E", "#ffffff"),
+			closeWhiteGray: useColorModeValue("#718096", "#ffffff"),
+			helpIcon: useColorModeValue("#A0AEC0", "rgba(255, 255, 255, 0.64)"),
+			pegasysLogo: useColorModeValue(
+				"icons/LightPegasysLogo.png",
+				"icons/pegasys.png"
+			),
+			searchIcon: useColorModeValue("#9F7AEA", "rgba(54, 180, 212, 0.5)"),
+			whiteGray: useColorModeValue("#A0AEC0", "white"),
 			theme: useColorModeValue(BsFillSunFill, BsFillMoonFill),
 		},
 		bg: {
+			psysReward: useColorModeValue(
+				"/images/backgrounds/LightPsysReward.png",
+				"/images/backgrounds/PsysReward.png"
+			),
+			subModal: useColorModeValue(
+				"rgba(255, 255, 255, 0.92)",
+				"rgba(11, 23, 44, 0.8)"
+			),
+			farmBanner: useColorModeValue(
+				"/images/backgrounds/LightBannerFarm.png",
+				"/images/backgrounds/BannerFarm.png"
+			),
+			poolsBanner: useColorModeValue(
+				"images/backgrounds/LightPoolsBanner.png",
+				"images/backgrounds/BannerPools.png"
+			),
+			farmActions: useColorModeValue("white", "#0B172C"),
+			max: useColorModeValue("#EDF2F7", "#081120"),
+			farmActionsHover: useColorModeValue("rgba(102, 94, 225, 0.3)", "#BEE3F8"),
+			farmRate: useColorModeValue(
+				"rgb(222,225,226, 0.25)",
+				"rgba(255, 255, 255, 0.04)"
+			),
+			iconTicket: useColorModeValue(
+				"rgba(0, 0, 0, 0.06)",
+				"rgba(255, 255, 255, 0.06)"
+			),
+			connectToWallet: useColorModeValue("#EEEAF4", "#153D6F"),
+			settings: useColorModeValue("white", "#0B172C"),
+			slippage: useColorModeValue("#D6BCFA", "#153D6F"),
+			transactionSettings: useColorModeValue("rgb(0, 0, 0, 0.04)", "#081120"),
+			iconBg: useColorModeValue(
+				"rgb(222,225,226, 0.4)",
+				"rgba(255, 255, 255, 0.08)"
+			),
+			bluePurple: useColorModeValue("#8C15E8", "#0753B2"),
 			topHeader: useColorModeValue("#FFFFFF", "#000000"),
 			primary: useColorModeValue("#EDF2F7", "#000913"),
-			secondary: useColorModeValue("gray.300", "gray.800"),
+			secondary: useColorModeValue("gray.300", "gray.800"), // tooltip background
 			bgPrimary: useColorModeValue("#f7f8fa", "#2c2f36"),
-			whiteGray: useColorModeValue("#665EE1", "rgba(8, 17, 32, 1)"),
-			expertMode: useColorModeValue("#FFFFFF", "#081120"),
-			iceGray: useColorModeValue("#f7f8fa", "#2c2f36"),
-			blackAlpha: useColorModeValue("#ffffff", "#081120"),
-			blueNavy: useColorModeValue("#F7FAFC", "rgba(11, 23, 44, 1)"),
+			whiteGray: useColorModeValue("#665EE1", "rgba(8, 17, 32, 1)"), //
+			expertMode: useColorModeValue("#FFFFFF", "#081120"), //
+			iceGray: useColorModeValue("#f7f8fa", "#2c2f36"), //
+			blackAlpha: useColorModeValue("#ffffff", "#081120"), // modal bg
+			blackLightness: useColorModeValue("#F7FAFC", "#081120"),
+			blackGray: useColorModeValue("#EDF2F7", "#081120"),
+			blueNavy: useColorModeValue("#F7FAFC", "#0B172C"), // intern modal flexes
+			blueNavyLight: useColorModeValue("#ffffff", "#0B172C"),
 			blueGray: useColorModeValue("#171F2D", "#171F2D"),
 			blue100: useColorModeValue("blue.100", "blue.100"),
 			blue600: useColorModeValue("#2B6CB0", "#2B6CB0"),
 			blue900: useColorModeValue("blue.900", "blue.900"),
-			blueNavyLightness: useColorModeValue("#665EE1", "rgba(21, 61, 111, 1);"),
+			blueNavyLightness: useColorModeValue("#665EE1", "rgba(21, 61, 111, 1)"),
+			blueNavyLightnessOp: useColorModeValue(
+				"rgb(102,94,225, 0.8)",
+				"rgba(21, 61, 111, 1);"
+			),
 			button: {
+				connectToWallet: useColorModeValue("#EEEAF4", "#153D6F"),
 				primary: useColorModeValue("blue.500", "blue.600"),
 				secondary: useColorModeValue("purple.700", "purple.600"),
 				tertiary: useColorModeValue("green.600", "blue.800"),
@@ -82,6 +153,9 @@ const usePicasso = () => {
 			},
 		},
 		border: {
+			manageInput: useColorModeValue("#E2E8F0", "rgba(255, 255, 255, 0.24)"),
+			farmInput: useColorModeValue("#CBD5E0", "rgba(0, 217, 239, 0.2)"),
+			cyanPurple: useColorModeValue("#8C15E8", "#0753B2"),
 			modalBorderShadow: useColorModeValue(
 				"0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.2);",
 				"0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4);"
@@ -99,7 +173,7 @@ const usePicasso = () => {
 				"linear-gradient(32deg, rgb(86 190 216 / 97%) 30.76%, rgb(86 190 216 / 6%) 97.76%);"
 			),
 			connectWallet: useColorModeValue("#04d3c0", "#153d6f70"),
-			borderSettings: useColorModeValue("#edeef2", "#40444f"),
+			borderSettings: useColorModeValue("#A0AEC0", "rgba(255, 255, 255, 0.36)"),
 			blueSys: useColorModeValue("#315df6", "#315df6"),
 			swapInput: useColorModeValue("#f7f8fa", "#2c2f36"),
 			wallets: useColorModeValue("#edeef2", "#40444f"),

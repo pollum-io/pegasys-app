@@ -14,6 +14,8 @@ import {
 	ModalOverlay,
 	Text,
 	Tooltip,
+	InputGroup,
+	InputLeftElement,
 } from "@chakra-ui/react";
 import {
 	ApprovalState,
@@ -29,7 +31,12 @@ import React, {
 	useEffect,
 	useCallback,
 } from "react";
-import { MdHelpOutline, MdArrowDownward, MdArrowUpward } from "react-icons/md";
+import {
+	MdHelpOutline,
+	MdArrowDownward,
+	MdArrowUpward,
+	MdSearch,
+} from "react-icons/md";
 import { WrappedTokenInfo } from "types";
 import BigNumber from "bignumber.js";
 import { ManageToken } from "./ManageToken";
@@ -147,7 +154,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 			<ModalOverlay />
 			<ModalContent
 				borderRadius="3xl"
-				bgColor={theme.bg.blueNavy}
+				bgColor={theme.bg.blueNavyLight}
 				bottom="0"
 				mt="16"
 				mb="0"
@@ -157,7 +164,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				position="relative"
 				h="max-content"
 			>
-				<ModalHeader display="flex" alignItems="baseline" gap="3">
+				<ModalHeader display="flex" alignItems="center" gap="3">
 					<Text fontSize="lg" fontWeight="semibold">
 						Select a token
 					</Text>
@@ -170,33 +177,54 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					>
 						<Text as="span" _hover={{ opacity: 0.8 }}>
 							<Icon
+								mt="2"
 								as={MdHelpOutline}
-								h="4"
-								w="4"
-								color="white"
-								backgroundColor="gray.800"
+								h="5"
+								w="5"
+								color={theme.icon.helpIcon}
 								borderRadius="full"
 							/>
 						</Text>
 					</Tooltip>
 				</ModalHeader>
-				<ModalCloseButton top="4" size="md" _focus={{}} />
+				<ModalCloseButton
+					color={theme.icon.closeWhiteGray}
+					top="4"
+					size="md"
+					_focus={{}}
+				/>
 				<ModalBody>
-					<Input
-						borderRadius="full"
-						borderColor="rgba(21, 61, 111, 1)"
-						_placeholder={{ color: theme.text.cyan, opacity: "0.6" }}
-						placeholder="Search name or paste address"
-						onChange={handleInput}
-					/>
+					<InputGroup>
+						<Input
+							borderRadius="full"
+							borderColor="rgba(21, 61, 111, 1)"
+							_placeholder={{ color: theme.text.input, opacity: "0.6" }}
+							placeholder="Search, name or paste address"
+							onChange={handleInput}
+							py={["0.1rem", "0.1rem", "1", "1"]}
+							pl="10"
+							_hover={{ border: "1px solid #3182CE" }}
+							_focus={{ border: "1px solid #3182CE" }}
+						/>
+						<Flex
+							position="absolute"
+							pl="1rem"
+							pb="0.5"
+							bottom={["0.3rem", "0.3rem", "0.5rem", "0.5rem"]}
+						>
+							<MdSearch color={theme.icon.searchIcon} size={20} />
+						</Flex>
+					</InputGroup>
 					<Flex my="5" gap="2">
-						<Text fontSize="md">Token name</Text>
+						<Text fontSize="md" color={theme.text.cyanPurple}>
+							Token name
+						</Text>
 						<IconButton
 							as={arrowOrder ? MdArrowUpward : MdArrowDownward}
 							aria-label="Order"
 							minW="none"
 							bg="transparent"
-							color={theme.text.cyan}
+							color={theme.text.cyanPurple}
 							w="6"
 							h="6"
 							onClick={() => orderList(filter)}
@@ -249,14 +277,14 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					flexDirection="column"
 					px="0"
 					py="0"
-					bgColor={theme.bg.whiteGray}
+					bgColor={theme.bg.blackAlpha}
 					alignItems="center"
 					borderBottomRadius={["0px", "0", "3xl", "3xl"]}
 				>
 					<Flex pt="8" py="5">
 						<Text
 							bg="transparent"
-							color={theme.text.cyan}
+							color={theme.text.cyanPurple}
 							_hover={{ opacity: "0.9", cursor: "pointer" }}
 							_active={{}}
 							mb="0"

@@ -98,6 +98,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		setSigner(rpcSigner);
 	};
+	const rpcUrl =
+		currentNetworkChainId === 5700
+			? "https://tanenbaum.io/api"
+			: "https://explorer.syscoin.org/api";
 
 	const getSignerIfConnected = async () => {
 		const web3Provider = new ethers.providers.Web3Provider(
@@ -153,7 +157,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		if (approvalState === ApprovalState.PENDING) {
 			const timer = setInterval(async () => {
 				const result = await fetch(
-					`https://tanenbaum.io/api?module=account&action=pendingtxlist&address=${walletAddress}`
+					`${rpcUrl}?module=account&action=pendingtxlist&address=${walletAddress}`
 				).then(result => result.json());
 				if (result?.result[0]) {
 					const hash: string = result?.result[0]?.hash;

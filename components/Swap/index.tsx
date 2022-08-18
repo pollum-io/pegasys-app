@@ -17,13 +17,14 @@ import {
 	UseSwapCallback,
 	useToasty,
 	ApprovalState,
+	UseWrapCallback,
 	UseTokensPairSorted,
 } from "hooks";
 import React, { FunctionComponent, useEffect, useState, useMemo } from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
-import { ChainId, JSBI, Token, Trade } from "@pollum-io/pegasys-sdk";
+import { ChainId, JSBI, Trade } from "@pollum-io/pegasys-sdk";
 import {
 	ISwapTokenInputValue,
 	IWalletHookInfos,
@@ -43,6 +44,7 @@ import {
 import { getTokensGraphCandle } from "services/index";
 
 import { ONE_DAY_IN_SECONDS } from "helpers/consts";
+import { ConfirmSwap } from "components/Modals/ConfirmSwap";
 import { OtherWallet } from "./OtherWallet";
 import { SwapExpertMode } from "./SwapExpertMode";
 import { TradeRouteComponent } from "./TradeRouteComponent";
@@ -57,8 +59,16 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const { t: translation } = useTranslation();
 	const { userTokensBalance } = useTokens();
-	const { isOpenWallet, onCloseWallet, onOpenCoin, isOpenCoin, onCloseCoin } =
-		useModal();
+	const {
+		isOpenWallet,
+		onCloseWallet,
+		onOpenCoin,
+		isOpenCoin,
+		onCloseCoin,
+		onOpenConfirmSwap,
+		isOpenConfirmSwap,
+		onCloseConfirmSwap,
+	} = useModal();
 
 	const {
 		isConnected,
@@ -99,6 +109,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		currentInputTyped: "",
 		lastInputTyped: undefined,
 	});
+	const [txType, setTxType] = useState<string>("");
 	const [returnedTradeValue, setReturnedTradeValue] = useState<
 		IReturnedTradeValues | undefined
 	>(undefined);
@@ -123,6 +134,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			toast,
 			transactions
 		);
+
+	const isWrap =
+		(selectedToken[0]?.symbol === "SYS" &&
+			selectedToken[1]?.symbol === "WSYS") ||
+		(selectedToken[0]?.symbol === "WSYS" && selectedToken[1]?.symbol === "SYS");
 
 	const userHasSpecifiedInputOutput = Boolean(
 		selectedToken[0] &&
@@ -151,12 +167,31 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		const typedInput = event?.currentTarget.name;
 
 		if (inputValue === "" || regexPreventLetters.test(inputValue)) {
+			if (!isWrap) {
+				const inputFrom: IInputValues = {
+					value: typedInput === "inputFrom" ? inputValue : "",
+				};
+
+				const inputTo: IInputValues = {
+					value: typedInput === "inputTo" ? inputValue : "",
+				};
+
+				setTokenInputValue({
+					inputFrom,
+					inputTo,
+					typedValue: inputValue,
+					currentInputTyped: typedInput,
+					lastInputTyped: typedInput === "inputFrom" ? 0 : 1,
+				});
+				return;
+			}
+
 			const inputFrom: IInputValues = {
-				value: typedInput === "inputFrom" ? inputValue : "",
+				value: typedInput === "inputFrom" ? inputValue : inputValue,
 			};
 
 			const inputTo: IInputValues = {
-				value: typedInput === "inputTo" ? inputValue : "",
+				value: typedInput === "inputTo" ? inputValue : inputValue,
 			};
 
 			setTokenInputValue({
@@ -171,6 +206,16 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const switchTokensPosition = () =>
 		setSelectedToken(prevState => [...prevState]?.reverse());
+
+	const { execute: onWrap } = UseWrapCallback(
+		selectedToken,
+		tokenInputValue,
+		walletInfos,
+		setTransactions,
+		transactions,
+		setApprovalState,
+		signer as Signer
+	);
 
 	const handleSwapInfo = async () => {
 		const { v2Trade, bestSwapMethods, inputErrors, parsedAmount } =
@@ -336,9 +381,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	}, [expert]);
 
 	const isERC20 =
-		selectedToken[0]?.symbol !== "WSYS" &&
-		selectedToken[0]?.symbol !== "SYS" &&
-		selectedToken[0]?.symbol !== "PSYS";
+		selectedToken[0]?.symbol !== "SYS" && selectedToken[0]?.symbol !== "PSYS";
 
 	const approveValidation =
 		(isERC20 && approvalState === ApprovalState.UNKNOWN) ||
@@ -346,7 +389,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const isPending = approvalState === ApprovalState.PENDING;
 
-	console.log(tokensPairPosition);
+	const wrapOrUnwrap = selectedToken[0]?.symbol === "SYS" ? "Wrap" : "Unwrap";
 
 	return (
 		<Flex
@@ -360,7 +403,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				md: "center",
 				lg: "flex-start",
 			}}
-			flexDirection={{ base: "column", sm: "column", md: "column", lg: "row" }}
+			flexDirection={{
+				base: "column",
+				sm: "column",
+				md: "column",
+				lg: "row",
+			}}
 			mb={["6rem", "0"]}
 			px={["4", "0", "0", "0"]}
 		>
@@ -371,6 +419,25 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				selectedToken={selectedToken}
 				buttonId={buttonId}
 				setSelectedToken={setSelectedToken}
+			/>
+			<ConfirmSwap
+				isOpen={isOpenConfirmSwap}
+				onOpen={onOpenConfirmSwap}
+				onClose={onCloseConfirmSwap}
+				selectedTokens={selectedToken}
+				txType={txType}
+				onTx={
+					txType === "swap"
+						? swapCall?.callback
+						: txType === "approve"
+						? approve
+						: txType === "wrap"
+						? onWrap
+						: swapCall?.callback
+				}
+				trade={returnedTradeValue?.v2Trade}
+				isWrap={isWrap}
+				tokenInputValue={tokenInputValue}
 			/>
 			<Flex alignItems="center" flexDirection="column">
 				<Flex
@@ -387,10 +454,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					borderRadius={30}
 					border="1px solid transparent;"
 					boxShadow=" 0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4);"
-					background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+					background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					<Flex flexDirection="row" justifyContent="space-between" pb="1.5rem">
-						<Text fontWeight="semibold" fontSize={["xl", "2xl", "2xl", "2xl"]}>
+						<Text
+							color={theme.text.mono}
+							fontWeight="semibold"
+							fontSize={["xl", "2xl", "2xl", "2xl"]}
+						>
 							Swap
 						</Text>
 					</Flex>
@@ -402,9 +473,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						px="1.25rem"
 						border="1px solid"
 						borderColor={
-							(tokenInputValue.inputFrom.value > selectedToken[0]?.balance &&
+							(parseFloat(tokenInputValue.inputFrom.value) >
+								parseFloat(selectedToken[0]?.balance) &&
 								tokenInputValue.currentInputTyped !== "inputTo") ||
-							(isConnected && verifyIfHaveInsufficientLiquidity)
+							(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap)
 								? theme.text.red400
 								: "#ff000000"
 						}
@@ -431,10 +503,15 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								}}
 							>
 								<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
-								<Text fontSize="xl" fontWeight="500" px="3">
+								<Text
+									fontSize="xl"
+									fontWeight="500"
+									px="3"
+									color={theme.text.mono}
+								>
 									{selectedToken[0]?.symbol}
 								</Text>
-								<Icon as={IoIosArrowDown} />
+								<Icon as={IoIosArrowDown} color={theme.text.mono} />
 							</Flex>
 							<Input
 								fontSize="2xl"
@@ -448,10 +525,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								onChange={handleOnChangeTokenInputs}
 								name="inputFrom"
 								value={tokenInputValue?.inputFrom?.value}
+								_hover={{ border: "1px solid #3182CE" }}
+								_focus={{ border: "1px solid #3182CE" }}
 							/>
 						</Flex>
 					</Flex>
-					{tokenInputValue.inputFrom.value > selectedToken[0]?.balance &&
+					{parseFloat(tokenInputValue.inputFrom.value) >
+						parseFloat(selectedToken[0]?.balance) &&
 						tokenInputValue.currentInputTyped !== "inputTo" && (
 							<Flex flexDirection="row" gap="1" justifyContent="center">
 								<Text
@@ -473,7 +553,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								</Text>
 							</Flex>
 						)}
-					{isConnected && verifyIfHaveInsufficientLiquidity && (
+					{isConnected && verifyIfHaveInsufficientLiquidity && !isWrap && (
 						<Flex flexDirection="row" gap="1" justifyContent="center">
 							<Text
 								fontSize="sm"
@@ -492,7 +572,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						onClick={switchTokensPosition}
 						_hover={{ cursor: "pointer" }}
 					>
-						<MdWifiProtectedSetup size={25} color="cyan" />
+						<MdWifiProtectedSetup size={25} color={theme.text.cyanPurple} />
 					</Flex>
 					<Flex
 						borderRadius="2xl"
@@ -502,9 +582,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						px="1.25rem"
 						border="1px solid"
 						borderColor={
-							(tokenInputValue.inputTo.value > selectedToken[1]?.balance &&
+							(parseFloat(tokenInputValue.inputTo.value) >
+								parseFloat(selectedToken[1]?.balance) &&
 								tokenInputValue.currentInputTyped !== "inputFrom") ||
-							(isConnected && verifyIfHaveInsufficientLiquidity)
+							(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap)
 								? theme.text.red400
 								: "#ff000000"
 						}
@@ -549,10 +630,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								onChange={handleOnChangeTokenInputs}
 								name="inputTo"
 								value={tokenInputValue?.inputTo?.value}
+								_hover={{ border: "1px solid #3182CE" }}
+								_focus={{ border: "1px solid #3182CE" }}
 							/>
 						</Flex>
 					</Flex>
-					{tokenInputValue.inputTo.value > selectedToken[1]?.balance &&
+					{parseFloat(tokenInputValue.inputTo.value) >
+						parseFloat(selectedToken[1]?.balance) &&
 						tokenInputValue.currentInputTyped !== "inputFrom" && (
 							<Flex flexDirection="row" gap="1" justifyContent="center">
 								<Text
@@ -574,7 +658,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								</Text>
 							</Flex>
 						)}
-					{isConnected && verifyIfHaveInsufficientLiquidity && (
+					{isConnected && verifyIfHaveInsufficientLiquidity && !isWrap && (
 						<Flex flexDirection="row" gap="1" justifyContent="center">
 							<Text
 								fontSize="sm"
@@ -639,7 +723,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					{isExpert}
 					{isExpert && isOtherWallet}
 					<Flex>
-						{isERC20 && isConnected && (
+						{isERC20 && isConnected && !isWrap && (
 							<Button
 								w="100%"
 								mt="2rem"
@@ -648,26 +732,38 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								borderRadius="67px"
 								onClick={
 									approveValidation
-										? () => approve()
-										: () => swapCall?.callback && swapCall.callback()
+										? () => {
+												onOpenConfirmSwap();
+												setTxType("approve");
+										  }
+										: () => {
+												onOpenConfirmSwap();
+												setTxType("swap");
+										  }
 								}
 								bgColor={theme.bg.button.connectWalletSwap}
 								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"
 								disabled={!canSubmit || isPending}
+								_hover={{
+									opacity: 0.3,
+								}}
 							>
 								{approveValidation ? "Approve" : "Swap"}
 							</Button>
 						)}
-						{!isERC20 && (
+						{!isERC20 && !isWrap && isConnected && (
 							<Button
 								w="100%"
 								mt="2rem"
 								py="6"
 								px="6"
 								borderRadius="67px"
-								onClick={() => swapCall?.callback && swapCall.callback()}
+								onClick={() => {
+									onOpenConfirmSwap();
+									setTxType("swap");
+								}}
 								bgColor={theme.bg.button.connectWalletSwap}
 								color={theme.text.cyan}
 								fontSize="lg"
@@ -675,6 +771,26 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								disabled={!canSubmit || isPending}
 							>
 								{swapButtonValidation}
+							</Button>
+						)}
+						{isWrap && isConnected && (
+							<Button
+								w="100%"
+								mt="2rem"
+								py="6"
+								px="6"
+								borderRadius="67px"
+								onClick={() => {
+									onOpenConfirmSwap();
+									setTxType("wrap");
+								}}
+								bgColor={theme.bg.button.connectWalletSwap}
+								color={theme.text.cyan}
+								fontSize="lg"
+								fontWeight="semibold"
+								disabled={!canSubmit || isPending}
+							>
+								{wrapOrUnwrap}
 							</Button>
 						)}
 					</Flex>
@@ -781,6 +897,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					justifyContent="center"
 					flexDirection={["column", "row", "row", "row"]}
 					alignItems="center"
+					mb={`${tokensGraphCandleData.length === 0 && "16"}`}
 				>
 					<Flex>
 						<Img src={tokensPairPosition[0]?.logoURI} w="7" h="7" />

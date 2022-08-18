@@ -1,5 +1,6 @@
 import { Button, ButtonProps } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
+import { usePicasso } from "hooks";
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
@@ -7,9 +8,11 @@ interface IButtonProps extends ButtonProps {
 
 export const SlippageButton: FunctionComponent<IButtonProps> = props => {
 	const { children, ...rest } = props;
+	const theme = usePicasso();
 
 	return (
 		<Button
+			color={theme.text.transactionsItems}
 			w="max-content"
 			h="max-content"
 			py="0.5rem"
@@ -18,8 +21,10 @@ export const SlippageButton: FunctionComponent<IButtonProps> = props => {
 			fontSize="md"
 			fontWeight="semibold"
 			bgColor="transparent"
-			_active={{}}
-			_hover={{ background: "rgba(21, 61, 111, 1)" }}
+			_hover={{
+				background: theme.bg.slippage,
+				color: theme.text.mono,
+			}}
 			{...rest}
 		>
 			{children}

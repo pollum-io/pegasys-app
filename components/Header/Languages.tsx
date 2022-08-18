@@ -16,7 +16,7 @@ export const Languages: FunctionComponent = () => {
 						svg
 						style={{ fontSize: "1.5em" }}
 					/>
-					<Text _hover={{ cursor: "pointer", color: theme.text.cyan }}>
+					<Text _hover={{ cursor: "pointer", color: theme.text.cyanPurple }}>
 						{country}
 					</Text>
 				</Flex>

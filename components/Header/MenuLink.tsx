@@ -7,7 +7,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@chakra-ui/react";
-import { FunctionComponent, ReactNode } from "react";
+import { FunctionComponent, ReactNode, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { FaParachuteBox } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
@@ -69,7 +69,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 					icon={<BsThreeDots />}
 					transition="0.4s"
 					bg="transparent"
-					_hover={{ background: "rgba(255, 255, 255, 0.08)" }}
+					_hover={{ background: theme.bg.iconBg }}
 				/>
 			</PopoverTrigger>
 			<PopoverContent
@@ -77,7 +77,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 					outline: "none",
 				}}
 				w={["100vw", "100vw", "max-content", "max-content"]}
-				bgColor={theme.bg.blueNavy}
+				bgColor={theme.bg.blueNavyLight}
 				borderBottomRadius={["none", "none", "xl", "xl"]}
 				borderTopRadius={["2xl", "2xl", "xl", "xl"]}
 				p="0"
@@ -103,13 +103,14 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 								alignItems="center"
 								flexDirection="row"
 								key={links.name + Number(index)}
-								_hover={{ color: theme.text.cyan }}
+								_hover={{ color: theme.text.cyanPurple }}
 							>
 								<Flex>{links.icon}</Flex>
 								<InfoLinks
 									pb="1"
 									isVote={links.name === "Vote"}
 									href={links.link}
+									_hover={{ color: theme.text.cyanPurple }}
 								>
 									{links.name}
 								</InfoLinks>

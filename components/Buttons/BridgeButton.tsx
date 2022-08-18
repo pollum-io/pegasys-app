@@ -17,7 +17,7 @@ interface IButtonProps extends ButtonProps {
 }
 
 export const BridgeButton: FunctionComponent<IButtonProps> = props => {
-	const { ...rest } = props;
+	const { children, ...rest } = props;
 	const theme = usePicasso();
 	return (
 		<Flex justifyContent="center" alignItems="center">
@@ -27,7 +27,8 @@ export const BridgeButton: FunctionComponent<IButtonProps> = props => {
 					rightIcon={<MdExpandMore color={theme.text.header} />}
 					_active={{}}
 					_hover={{
-						bgColor: theme.bg.whiteGray,
+						bgColor: theme.text.topHeaderButton,
+						color: "white",
 						opacity: 1,
 						borderRadius: "70px",
 					}}
@@ -58,7 +59,9 @@ export const BridgeButton: FunctionComponent<IButtonProps> = props => {
 					minWidth="140px"
 					border="none"
 				>
-					<MenuItem _hover={{ bgColor: "transparent", color: theme.text.cyan }}>
+					<MenuItem
+						_hover={{ bgColor: "transparent", color: theme.text.cyanPurple }}
+					>
 						<Link
 							href="https://app.multichain.org/#/router"
 							target="_blank"
@@ -68,7 +71,9 @@ export const BridgeButton: FunctionComponent<IButtonProps> = props => {
 							Multichain
 						</Link>
 					</MenuItem>
-					<MenuItem _hover={{ bgColor: "transparent", color: theme.text.cyan }}>
+					<MenuItem
+						_hover={{ bgColor: "transparent", color: theme.text.cyanPurple }}
+					>
 						<Link
 							href="https://bridge.syscoin.org/"
 							target="_blank"
