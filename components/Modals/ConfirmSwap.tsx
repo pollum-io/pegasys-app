@@ -11,19 +11,56 @@ import {
 	ModalBody,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import React, { useState } from "react";
+import React from "react";
 import { MdArrowDownward } from "react-icons/md";
 import { AiOutlineClose } from "react-icons/ai";
+import { WrappedTokenInfo, ISwapTokenInputValue } from "types";
+import { Trade } from "@pollum-io/pegasys-sdk";
 
 interface IModal {
 	isOpen: boolean;
 	onClose: () => void;
+	selectedTokens: WrappedTokenInfo[];
+	txType: string;
+	onTx: () => any;
+	trade: Trade | undefined;
+	isWrap: boolean;
+	tokenInputValue: ISwapTokenInputValue;
 }
 
 export const ConfirmSwap: React.FC<IModal> = props => {
-	const { onClose, isOpen } = props;
+	const {
+		onClose,
+		isOpen,
+		selectedTokens,
+		txType,
+		onTx,
+		trade,
+		isWrap,
+		tokenInputValue,
+	} = props;
 	const theme = usePicasso();
 
+	const txName =
+		txType === "approve"
+			? "Approve"
+			: txType === "swap"
+			? "Swap"
+			: txType === "wrap" && isWrap
+			? "Wrap"
+			: txType === "wrap" && !isWrap
+			? "Unwrap"
+			: txType === "approve"
+			? "Approve"
+			: "Swap";
+
+	const receiveEstimatedValue = !isWrap
+		? trade?.outputAmount.toSignificant(4)
+		: tokenInputValue?.inputTo?.value;
+
+	const receiveOutput = !isWrap
+		? trade?.outputAmount?.currency.symbol
+		: selectedTokens[1]?.symbol;
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
@@ -40,7 +77,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 				>
 					<Flex alignItems="center">
 						<Text fontSize="lg" fontWeight="medium" textAlign="center">
-							Confirm Swap
+							Confirm {txName}
 						</Text>
 					</Flex>
 					<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
@@ -50,9 +87,9 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 				<ModalBody mb="4">
 					<Flex flexDirection="column" alignItems="center" mb="6">
 						<Flex flexDirection="row" gap="2">
-							<Text>0.312311</Text>
-							<Img src="icons/syscoin-logo.png" w="5" h="5" />
-							<Text>SYS</Text>
+							<Text>{tokenInputValue?.inputFrom?.value}</Text>
+							<Img src={selectedTokens[0]?.logoURI} w="5" h="5" />
+							<Text>{selectedTokens[0]?.symbol}</Text>
 						</Flex>
 						<Icon
 							as={MdArrowDownward}
@@ -63,14 +100,15 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 							borderRadius="full"
 						/>
 						<Flex flexDirection="row" gap="2">
-							<Text>0.312311</Text>
-							<Img src="icons/syscoin-logo.png" w="5" h="5" />
-							<Text>SYS</Text>
+							<Text>{tokenInputValue?.inputTo?.value}</Text>
+							<Img src={selectedTokens[1]?.logoURI} w="5" h="5" />
+							<Text>{selectedTokens[1]?.symbol}</Text>
 						</Flex>
 					</Flex>
 					<Text fontSize="sm">
-						Output is estimated. You will receive at least 17.4592 PSYS or the
-						transaction will revert.
+						Output is estimated. You will receive at least{" "}
+						{receiveEstimatedValue} {receiveOutput} or the transaction will
+						revert.
 					</Text>
 				</ModalBody>
 				<Flex
@@ -82,21 +120,26 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 					<Flex flexDirection="column" gap="2">
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text>Price</Text>
-							<Text fontWeight="medium">46.264 PSYS/SYS</Text>
-						</Flex>
-						<Flex flexDirection="row" justifyContent="space-between">
-							<Text>Minmum Received</Text>
-							<Text fontWeight="medium">6.264 PSYS</Text>
-						</Flex>
-						<Flex flexDirection="row" justifyContent="space-between">
-							<Text>Price Impact</Text>
-							<Text fontWeight="medium" color={theme.text.green400}>
-								0.01%
+							<Text fontWeight="medium">
+								{trade ? trade?.executionPrice?.toSignificant(6) : "-"}{" "}
+								{selectedTokens[0]?.symbol}/{selectedTokens[1]?.symbol}
 							</Text>
 						</Flex>
 						<Flex flexDirection="row" justifyContent="space-between">
-							<Text>Liquidity Provider Fee</Text>
-							<Text fontWeight="medium">0.005991 SYS</Text>
+							<Text>Minmum Received</Text>
+							<Text fontWeight="medium">
+								{trade
+									? `${trade?.outputAmount.toSignificant(4)} ${
+											trade?.outputAmount?.currency.symbol
+									  }`
+									: "-"}
+							</Text>
+						</Flex>
+						<Flex flexDirection="row" justifyContent="space-between">
+							<Text>Price Impact</Text>
+							<Text fontWeight="medium">
+								{trade ? `${trade?.priceImpact?.toSignificant(4)}%` : "-"}
+							</Text>
 						</Flex>
 					</Flex>
 					<Flex>
@@ -109,9 +152,13 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 							bgColor={theme.bg.button.connectWalletSwap}
 							color={theme.text.cyanWhite}
 							fontSize="lg"
+							onClick={() => {
+								onTx();
+								onClose();
+							}}
 							fontWeight="semibold"
 						>
-							Confirm Swap
+							Confirm {txName}
 						</Button>
 					</Flex>
 				</Flex>

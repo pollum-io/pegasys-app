@@ -11,8 +11,8 @@ import {
 	Text,
 	Tooltip,
 } from "@chakra-ui/react";
-import { useModal, usePicasso } from "hooks";
-import React, { useState } from "react";
+import { useModal, usePicasso, useTokens } from "hooks";
+import React, { useEffect, useState } from "react";
 import {
 	MdHelpOutline,
 	MdArrowBack,
@@ -21,19 +21,13 @@ import {
 } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { SelectCoinModal } from "components";
-import { ITokenBalance, ITokenBalanceWithId } from "types";
-import { TOKENS_INITIAL_STATE } from "helpers/consts";
+import { WrappedTokenInfo } from "types";
 
 interface IModal {
 	isModalOpen: boolean;
 	onModalClose: () => void;
 	isCreate?: boolean;
 	haveValue?: boolean;
-}
-interface IToken {
-	logoURI: string;
-	symbol: string;
-	id?: number;
 }
 interface ITokenInputValue {
 	inputFrom: string;
@@ -42,16 +36,17 @@ interface ITokenInputValue {
 
 export const AddLiquidityModal: React.FC<IModal> = props => {
 	const { isModalOpen, onModalClose, isCreate, haveValue } = props;
+
+	const { userTokensBalance } = useTokens();
+
 	const theme = usePicasso();
-	const { onOpenCoin, isOpenCoin, onCloseCoin } = useModal();
+	const { isOpenCoin, onCloseCoin } = useModal();
+	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
 	const [tokenInputValue, setTokenInputValue] = useState<ITokenInputValue>({
 		inputFrom: "",
 		inputTo: "",
 	});
-	const [selectedToken, setSelectedToken] = useState<
-		ITokenBalanceWithId[] | ITokenBalance[]
-	>(TOKENS_INITIAL_STATE);
 
 	const handleOnChangeTokenInputs = (
 		event: React.ChangeEvent<HTMLInputElement>
@@ -68,6 +63,17 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		}
 	};
 
+	useEffect(() => {
+		const defaultTokenValues = userTokensBalance.filter(
+			tokens =>
+				tokens.symbol === "WSYS" ||
+				tokens.symbol === "SYS" ||
+				tokens.symbol === "PSYS"
+		);
+
+		setSelectedToken([defaultTokenValues[2], defaultTokenValues[1]]);
+	}, [userTokensBalance]);
+
 	return (
 		<Modal
 			blockScrollOnMount={false}
@@ -78,8 +84,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 				isOpen={isOpenCoin}
 				onClose={onCloseCoin}
 				selectedToken={selectedToken}
-				buttonId={buttonId}
 				setSelectedToken={setSelectedToken}
+				buttonId={buttonId}
 			/>
 			<ModalOverlay />
 			<ModalContent
@@ -204,22 +210,22 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									mt="1"
 									id="0"
 									w="max-content"
-									onClick={event => {
-										onOpenCoin();
+									onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+										onOpen();
 										setButtonId(Number(event.currentTarget.id));
 									}}
 									borderRadius="2xl"
 									cursor="pointer"
 									_hover={{}}
 								>
-									<Img src={selectedToken[0].logoURI} w="6" h="6" />
+									<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
 									<Text
 										fontSize="xl"
 										fontWeight="500"
 										px="3"
 										_hover={{ opacity: "0.9" }}
 									>
-										{selectedToken[0].symbol}
+										{selectedToken[0]?.symbol}
 									</Text>
 									<Icon as={IoIosArrowDown} />
 								</Flex>
@@ -300,22 +306,22 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									mt="1"
 									id="1"
 									w="max-content"
-									onClick={event => {
-										onOpenCoin();
+									onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+										onOpen();
 										setButtonId(Number(event.currentTarget.id));
 									}}
 									borderRadius="2xl"
 									cursor="pointer"
 									_hover={{}}
 								>
-									<Img src={selectedToken[1].logoURI} w="6" h="6" />
+									<Img src={selectedToken[1]?.logoURI} w="6" h="6" />
 									<Text
 										fontSize="xl"
 										fontWeight="500"
 										px="3"
 										_hover={{ opacity: "0.9" }}
 									>
-										{selectedToken[1].symbol}
+										{selectedToken[1]?.symbol}
 									</Text>
 									<Icon as={IoIosArrowDown} />
 								</Flex>

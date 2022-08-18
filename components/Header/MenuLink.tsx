@@ -3,16 +3,14 @@ import {
 	Flex,
 	IconButton,
 	Popover,
-	PopoverArrow,
 	PopoverBody,
-	PopoverCloseButton,
 	PopoverContent,
 	PopoverTrigger,
 } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { FaParachuteBox } from "react-icons/fa";
-import { AiOutlineClose, AiOutlineInfoCircle } from "react-icons/ai";
+import { AiOutlineInfoCircle } from "react-icons/ai";
 import { usePicasso } from "hooks";
 import {
 	MdOutlineCallMade,

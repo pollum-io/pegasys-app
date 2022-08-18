@@ -11,12 +11,7 @@ import {
 	Switch,
 	Icon,
 } from "@chakra-ui/react";
-import React, {
-	FunctionComponent,
-	ReactNode,
-	useEffect,
-	useState,
-} from "react";
+import React, { FunctionComponent, ReactNode } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
 import { usePicasso, useWallet } from "hooks";
 import { IconButton } from "../Buttons/IconButton";
@@ -30,12 +25,8 @@ interface IButtonProps extends ButtonProps {
 export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	// const [expert, setExpert] = useState(false)
-	const { setExpert, expert } = useWallet();
-
-	useEffect(() => {
-		console.log("expert: ", expert);
-	}, [expert]);
-	const [slippage, setSlippage] = useState<string>("");
+	const { userSlippageTolerance, setUserSlippageTolerance, setExpert, expert } =
+		useWallet();
 
 	return (
 		<Popover placement="right">
@@ -87,10 +78,14 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							<SlippageButton
 								aria-label="Slip"
 								mr="3"
-								onClick={() => setSlippage("1")}
-								bgColor={slippage === "1" ? theme.bg.slippage : "transparent"}
+								onClick={() => setUserSlippageTolerance(10)}
+								bgColor={
+									userSlippageTolerance === 10
+										? theme.bg.slippage
+										: "transparent"
+								}
 								color={
-									slippage === "1"
+									userSlippageTolerance === 10
 										? theme.text.mono
 										: theme.text.transactionsItems
 								}
@@ -100,10 +95,14 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							<SlippageButton
 								aria-label="Slip"
 								mr="3"
-								onClick={() => setSlippage("2")}
-								bgColor={slippage === "2" ? theme.bg.slippage : "transparent"}
+								onClick={() => setUserSlippageTolerance(50)}
+								bgColor={
+									userSlippageTolerance === 50
+										? theme.bg.slippage
+										: "transparent"
+								}
 								color={
-									slippage === "2"
+									userSlippageTolerance === 50
 										? theme.text.mono
 										: theme.text.transactionsItems
 								}
@@ -115,10 +114,14 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								mr="3"
 								py="0.5rem"
 								px="1rem"
-								onClick={() => setSlippage("3")}
-								bgColor={slippage === "3" ? theme.bg.slippage : "transparent"}
+								onClick={() => setUserSlippageTolerance(100)}
+								bgColor={
+									userSlippageTolerance === 100
+										? theme.bg.slippage
+										: "transparent"
+								}
 								color={
-									slippage === "3"
+									userSlippageTolerance === 100
 										? theme.text.mono
 										: theme.text.transactionsItems
 								}

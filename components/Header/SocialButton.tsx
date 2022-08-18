@@ -8,18 +8,12 @@ import {
 	MenuButton,
 	MenuItem,
 	MenuList,
-	Text,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { FunctionComponent, ReactNode } from "react";
 import { FaDiscord, FaTelegramPlane } from "react-icons/fa";
 import { FiTwitter } from "react-icons/fi";
-import {
-	MdExpandMore,
-	MdKeyboardArrowRight,
-	MdOutlineCallMade,
-	MdOutlineModeComment,
-} from "react-icons/md";
+import { MdKeyboardArrowRight, MdOutlineModeComment } from "react-icons/md";
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;

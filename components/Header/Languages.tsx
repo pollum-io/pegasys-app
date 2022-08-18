@@ -1,15 +1,6 @@
-import {
-	ButtonProps,
-	Flex,
-	IconButton,
-	Popover,
-	PopoverBody,
-	PopoverContent,
-	PopoverTrigger,
-	Text,
-} from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import { FunctionComponent, ReactNode } from "react";
+import { FunctionComponent } from "react";
 import ReactCountryFlag from "react-country-flag";
 
 export const Languages: FunctionComponent = () => {

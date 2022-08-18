@@ -6,7 +6,8 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 
 export const SwitchToSyscoin: FunctionComponent<ButtonProps> = props => {
 	const theme = usePicasso();
-	const { connectorSelected, setWalletError } = useWallet();
+	const { connectorSelected, setWalletError, currentNetworkChainId } =
+		useWallet();
 	const { ...rest } = props;
 
 	return (
@@ -21,7 +22,8 @@ export const SwitchToSyscoin: FunctionComponent<ButtonProps> = props => {
 			onClick={() =>
 				ConnectSyscoinNetwork(
 					connectorSelected as AbstractConnector,
-					setWalletError
+					setWalletError,
+					currentNetworkChainId as number
 				)
 			}
 			{...rest}

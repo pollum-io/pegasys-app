@@ -1,4 +1,4 @@
-import { Flex, Icon, Img, Text, useColorMode } from "@chakra-ui/react";
+import { Flex, Icon, Img, useColorMode } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
@@ -10,7 +10,6 @@ import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
 import { MenuLinks } from "./MenuLink";
 import { SettingsButton } from "./SettingsButton";
-import { ExpertMode } from "./ExpertMode";
 
 export const Header: React.FC = () => {
 	const { toggleColorMode } = useColorMode();

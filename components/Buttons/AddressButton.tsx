@@ -6,11 +6,12 @@ import Jazzicon from "react-jazzicon";
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
 	onClick?: () => void;
+	pending?: boolean;
 }
 
 export const AddressButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
-	const { children, ...rest } = props;
+	const { children, pending, ...rest } = props;
 	const { walletError } = useWallet();
 
 	return (
@@ -44,12 +45,14 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 			) : (
 				<>
 					{" "}
-					<Flex pr="2" textTransform="uppercase">
-						<Jazzicon
-							diameter={18}
-							seed={Math.round(Math.random() * 10000000)}
-						/>
-					</Flex>
+					{!pending && (
+						<Flex pr="2" textTransform="uppercase">
+							<Jazzicon
+								diameter={18}
+								seed={Math.round(Math.random() * 10000000)}
+							/>
+						</Flex>
+					)}
 					{children}
 				</>
 			)}

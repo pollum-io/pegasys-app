@@ -32,7 +32,7 @@ interface IModal {
 export const FarmActions: React.FC<IModal> = props => {
 	const { isOpen, onClose, buttonId, setButtonId } = props;
 	const theme = usePicasso();
-	const [confirmDepoist, setConfirmDepoist] = useState(false);
+	const [confirmDepoist] = useState(false);
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
 
@@ -341,7 +341,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									mb="4"
 									w="85%"
 									colorScheme="teal"
-									onChange={value => setSliderValue(value)}
+									onChange={(value: number) => setSliderValue(value)}
 									onMouseEnter={() => setShowTooltip(true)}
 									onMouseLeave={() => setShowTooltip(false)}
 								>
