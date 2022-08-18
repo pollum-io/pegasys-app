@@ -77,7 +77,7 @@ export const FarmContainer: NextPage = () => {
 						gap="2.5"
 					>
 						<Text fontWeight="semibold" fontSize="xs">
-							View Your Staked Liquidity
+							Read more about PSYS
 						</Text>
 						<MdOutlineCallMade size={20} />
 					</Flex>

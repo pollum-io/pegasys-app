@@ -424,7 +424,7 @@ export const FarmActions: React.FC<IModal> = props => {
 					)}
 				</ModalBody>
 				<Flex>
-					{!buttonId === "withdraw" && (
+					{buttonId === "withdraw" && (
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
@@ -448,7 +448,7 @@ export const FarmActions: React.FC<IModal> = props => {
 							</Flex>
 						</Flex>
 					)}
-					{!buttonId === "claim" && (
+					{buttonId === "claim" && (
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
