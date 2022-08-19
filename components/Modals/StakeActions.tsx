@@ -4,10 +4,11 @@ import {
 	Icon,
 	Img,
 	Input,
+	InputGroup,
+	InputRightAddon,
 	Modal,
 	ModalBody,
 	ModalContent,
-	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
 	Slider,
@@ -199,33 +200,31 @@ export const StakeActions: React.FC<IModal> = props => {
 								<Text fontWeight="normal">Available to deposit: 1</Text>
 								{!confirmStake ? (
 									<Flex>
-										<Input
-											placeholder="0.0"
-											border="1px solid"
-											borderColor="rgba(1, 219, 243, 0.2)"
-											bgColor={theme.bg.whiteGray}
-											borderLeftRadius="full"
-											p="5"
-											w="25rem"
-											_hover={{}}
-											onChange={handleInput}
-											_focus={{
-												outline: "none",
-											}}
-										/>
-										<Button
-											border="1px solid rgba(0, 217, 239, 0.2)"
-											borderRightRadius="full"
-											bgColor={theme.bg.whiteGray}
-											color={theme.text.cyan}
-											fontSize="lg"
-											fontWeight="normal"
-											px="4"
-											py="5"
-											_hover={{ backgroundColor: theme.bg.blueNavyLightness }}
-										>
-											max
-										</Button>
+										<InputGroup size="lg">
+											<Input
+												placeholder="0.0"
+												border="1px solid"
+												borderColor="rgba(1, 219, 243, 0.2)"
+												bgColor={theme.bg.whiteGray}
+												borderLeftRadius="full"
+												w="25rem"
+												_hover={{}}
+												_focus={{
+													outline: "none",
+												}}
+											/>
+											<InputRightAddon
+												// eslint-disable-next-line react/no-children-prop
+												children="max"
+												border="1px solid transparent;"
+												background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, rgba(1, 219, 243, 0.2) border-box`}
+												borderRightRadius="full"
+												color={theme.text.cyan}
+												fontSize="lg"
+												fontWeight="normal"
+												_hover={{ backgroundColor: theme.bg.blueNavyLightness }}
+											/>
+										</InputGroup>
 									</Flex>
 								) : (
 									<Flex
@@ -276,32 +275,31 @@ export const StakeActions: React.FC<IModal> = props => {
 								Deposited PLP Liquidity: 0.000001
 							</Text>
 							<Flex flexDirection="row">
-								<Input
-									placeholder="0.0"
-									border="1px solid"
-									borderColor="rgba(1, 219, 243, 0.2)"
-									bgColor={theme.bg.whiteGray}
-									borderLeftRadius="full"
-									p="5"
-									w="25rem"
-									_hover={{}}
-									_focus={{
-										outline: "none",
-									}}
-								/>
-								<Button
-									border="1px solid rgba(0, 217, 239, 0.2)"
-									borderRightRadius="full"
-									bgColor={theme.bg.whiteGray}
-									color={theme.text.cyan}
-									fontSize="lg"
-									fontWeight="normal"
-									px="4"
-									py="5"
-									_hover={{ backgroundColor: theme.bg.blueNavyLightness }}
-								>
-									max
-								</Button>
+								<InputGroup size="lg">
+									<Input
+										placeholder="0.0"
+										border="1px solid"
+										borderColor="rgba(1, 219, 243, 0.2)"
+										bgColor={theme.bg.whiteGray}
+										borderLeftRadius="full"
+										w="25rem"
+										_hover={{}}
+										_focus={{
+											outline: "none",
+										}}
+									/>
+									<InputRightAddon
+										// eslint-disable-next-line react/no-children-prop
+										children="max"
+										border="1px solid transparent;"
+										background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, rgba(1, 219, 243, 0.2) border-box`}
+										borderRightRadius="full"
+										color={theme.text.cyan}
+										fontSize="lg"
+										fontWeight="normal"
+										_hover={{ backgroundColor: theme.bg.blueNavyLightness }}
+									/>
+								</InputGroup>
 							</Flex>
 							<Text fontWeight="normal" mt="2">
 								Uncalimed PSYS: 0.01819
@@ -321,19 +319,19 @@ export const StakeActions: React.FC<IModal> = props => {
 									onMouseEnter={() => setShowTooltip(true)}
 									onMouseLeave={() => setShowTooltip(false)}
 								>
-									<SliderMark value={0} mt="1" ml="1.5" fontSize="sm">
+									<SliderMark value={0} mt="0.5rem" ml="1.5" fontSize="sm">
 										0%
 									</SliderMark>
-									<SliderMark value={25} mt="1" ml="-2.5" fontSize="sm">
+									<SliderMark value={25} mt="0.5rem" ml="-2.5" fontSize="sm">
 										25%
 									</SliderMark>
-									<SliderMark value={50} mt="1" ml="-2.5" fontSize="sm">
+									<SliderMark value={50} mt="0.5rem" ml="-2.5" fontSize="sm">
 										50%
 									</SliderMark>
-									<SliderMark value={75} mt="1" ml="-2.5" fontSize="sm">
+									<SliderMark value={75} mt="0.5rem" ml="-2.5" fontSize="sm">
 										75%
 									</SliderMark>
-									<SliderMark value={100} mt="1" ml="-8" fontSize="sm">
+									<SliderMark value={100} mt="0.5rem" ml="-8" fontSize="sm">
 										100%
 									</SliderMark>
 									<SliderTrack>

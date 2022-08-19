@@ -35,7 +35,7 @@ export const FarmContainer: NextPage = () => {
 					zIndex="docked"
 					position="relative"
 					borderRadius="xl"
-					backgroundColor="blue.700"
+					backgroundColor={theme.bg.whiteGray}
 				>
 					<Img
 						borderRadius="xl"
@@ -67,11 +67,13 @@ export const FarmContainer: NextPage = () => {
 						</Text>
 					</Flex>
 					<Flex
+						zIndex="0"
+						position="relative"
+						top="2"
 						alignItems="center"
 						justifyContent="center"
 						flexDirection="row"
 						bgColor={theme.bg.whiteGray}
-						zIndex="docked"
 						borderBottomRadius="xl"
 						py="0.531rem"
 						gap="2.5"
@@ -192,8 +194,6 @@ export const FarmContainer: NextPage = () => {
 					mb="10rem"
 					sx={{ columnCount: [1, 1, 2, 2], columnGap: "35px" }}
 				>
-					<FarmCards />
-					<FarmCards />
 					<FarmCards />
 				</Box>
 			</Flex>

@@ -111,7 +111,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						1 {stakeTotalStake}
 					</Text>
 				</GridItem>
-				<GridItem flexDirection="column">
+				<GridItem flexDirection="column" pl="6">
 					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
 						Your rate (PSYS/Week)
 					</Text>
@@ -135,7 +135,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						1 {stakeYourStaked}
 					</Text>
 				</GridItem>
-				<GridItem flexDirection="column">
+				<GridItem flexDirection="column" pl="6">
 					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
 						Your unclaimed PSYS
 					</Text>

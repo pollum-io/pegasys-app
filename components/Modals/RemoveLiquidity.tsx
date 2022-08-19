@@ -177,7 +177,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						<SliderMark value={75} mt="1rem" ml="-2.5" fontSize="sm">
 							75%
 						</SliderMark>
-						<SliderMark value={100} mt="1rem" ml="-8" fontSize="sm">
+						<SliderMark value={100} mt="1" ml="-8" fontSize="sm">
 							100%
 						</SliderMark>
 						<SliderTrack>

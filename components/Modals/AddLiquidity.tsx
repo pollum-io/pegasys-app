@@ -376,13 +376,18 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								borderColor={theme.text.cyan}
 								mt="1.5rem"
 							>
-								<Text fontSize="md" fontWeight="medium" px="1.375rem" py="1rem">
+								<Text
+									fontSize="md"
+									fontWeight="medium"
+									px="1.375rem"
+									py="0.5rem"
+								>
 									Prices and pool share
 								</Text>
 								<Flex
 									flexDirection={["column", "row", "row", "row"]}
 									justifyContent="space-between"
-									py="1rem"
+									py="0.5rem"
 									px="1rem"
 									borderRadius="2xl"
 									borderWidth="1px"

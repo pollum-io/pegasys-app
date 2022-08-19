@@ -10,14 +10,9 @@ import {
 	Stack,
 	Switch,
 	Icon,
-	PopoverCloseButton,
+	PopoverArrow,
 } from "@chakra-ui/react";
-import React, {
-	FunctionComponent,
-	ReactNode,
-	useEffect,
-	useState,
-} from "react";
+import React, { FunctionComponent, ReactNode, useEffect } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
 import { usePicasso, useWallet } from "hooks";
 import { IconButton } from "../Buttons/IconButton";
@@ -33,43 +28,34 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	// const [expert, setExpert] = useState(false)
 	const { setExpert, expert } = useWallet();
 
-	useEffect(() => {
-		console.log("expert: ", expert);
-	}, [expert]);
-
 	return (
 		<Popover placement="right">
 			<PopoverTrigger {...props}>
 				<IconButton
 					bgColor="transparent"
-					_hover={{ background: "rgba(255, 255, 255, 0.08)" }}
 					aria-label="Popover"
 					icon={<MdSettings size={25} />}
+					_hover={{
+						background: "rgba(255, 255, 255, 0.08)",
+						color: theme.text.cyan,
+					}}
+					_expanded={{ color: theme.text.cyan }}
 				/>
 			</PopoverTrigger>
 			<PopoverContent
+				_focus={{
+					outline: "none",
+				}}
 				bgColor={theme.bg.blueNavy}
 				p="1rem 1.5rem 0.5rem"
 				w={["100vw", "100vw", "24.563rem", "24.563rem"]}
 				h="max-content"
 				bottom={["0rem", "0rem", "3.8rem", "3.8rem"]}
-				right={["0", "unset", "unset", "unset"]}
+				right={["0", "0", "unset", "unset"]}
 				mx={["0", "0", "20", "56"]}
 				position="fixed"
 			>
-				<Flex
-					justifyContent="flex-end"
-					zIndex="99"
-					pb={["1", "5", "0", "0"]}
-					display={{
-						base: "flex",
-						sm: "flex",
-						md: "none",
-						lg: "none",
-					}}
-				>
-					<PopoverCloseButton position="relative" size="md" />
-				</Flex>
+				<PopoverArrow />
 				<Flex
 					bgColor={theme.bg.whiteGray}
 					borderRadius="7rem"

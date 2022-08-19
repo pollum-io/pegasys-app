@@ -74,7 +74,7 @@ export const PoolsContainer: NextPage = () => {
 						zIndex="docked"
 						position="relative"
 						borderRadius="xl"
-						backgroundColor="blue.700"
+						backgroundColor={theme.bg.whiteGray}
 					>
 						<Img
 							borderRadius="xl"
@@ -112,7 +112,9 @@ export const PoolsContainer: NextPage = () => {
 							justifyContent="center"
 							flexDirection="row"
 							bgColor={theme.bg.whiteGray}
-							zIndex="docked"
+							zIndex="0"
+							position="relative"
+							top="2"
 							borderBottomRadius="xl"
 							py="0.531rem"
 							gap="2.5"
@@ -292,14 +294,9 @@ export const PoolsContainer: NextPage = () => {
 						>
 							<PoolCards />
 							<PoolCards />
+
 							<PoolCards />
-							<Button
-								onClick={() => {
-									showToast();
-								}}
-							>
-								show toast
-							</Button>
+							<PoolCards />
 						</Flex>
 					)}
 				</Flex>

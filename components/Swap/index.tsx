@@ -147,7 +147,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		isConnected &&
 		parseFloat(tokenInputValue?.inputFrom) > 0 &&
 		parseFloat(selectedToken[0]?.balance) >
-			parseFloat(tokenInputValue?.inputFrom);
+		parseFloat(tokenInputValue?.inputFrom);
 
 	const { expert } = useWallet();
 	const { otherWallet } = useWallet();
@@ -380,46 +380,41 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						</Flex>
 					)}
 					{tokenInputValue.inputTo && tokenInputValue.inputFrom && (
-						<Collapse in={show} animateOpacity>
+						<Flex
+							flexDirection="column"
+							borderRadius="2xl"
+							bgColor="transparent"
+							borderWidth="1px"
+							borderColor={theme.text.cyan}
+							mt="1.5rem"
+						>
+							<Text fontSize="md" fontWeight="medium" px="1.375rem" py="0.5rem">
+								Price
+							</Text>
 							<Flex
-								flexDirection="column"
+								flexDirection="row"
+								justifyContent="space-around"
+								py="0.5rem"
+								px="1rem"
 								borderRadius="2xl"
-								bgColor="transparent"
-								border="1px solid "
+								borderWidth="1px"
 								borderColor={theme.text.cyan}
-								mt="1.5rem"
+								bgColor={theme.bg.blueNavy}
 							>
-								<Text fontSize="md" fontWeight="medium" px="1.375rem" py="1rem">
-									Price
-								</Text>
-								<Flex
-									flexDirection="row"
-									justifyContent="space-around"
-									py="1rem"
-									px="1rem"
-									borderRadius="2xl"
-									borderRight="none"
-									borderLeft="none"
-									borderBottom="none"
-									borderWidth="1px"
-									borderColor={theme.text.cyan}
-									bgColor={theme.bg.blueNavy}
-								>
-									<Flex fontSize="sm" flexDirection="column" textAlign="center">
-										<Text fontWeight="semibold">-</Text>
-										<Text fontWeight="normal">
-											{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
-										</Text>
-									</Flex>
-									<Flex fontSize="sm" flexDirection="column" textAlign="center">
-										<Text fontWeight="semibold">-</Text>
-										<Text fontWeight="normal">
-											{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
-										</Text>
-									</Flex>
+								<Flex fontSize="sm" flexDirection="column" textAlign="center">
+									<Text fontWeight="semibold">-</Text>
+									<Text fontWeight="normal">
+										{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
+									</Text>
+								</Flex>
+								<Flex fontSize="sm" flexDirection="column" textAlign="center">
+									<Text fontWeight="semibold">-</Text>
+									<Text fontWeight="normal">
+										{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
+									</Text>
 								</Flex>
 							</Flex>
-						</Collapse>
+						</Flex>
 					)}
 					{isExpert}
 					{isExpert && isOtherWallet}

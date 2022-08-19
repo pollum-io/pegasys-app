@@ -21,8 +21,6 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
 
-	console.log(colorMode, "colorr");
-
 	return (
 		<Web3ReactProvider getLibrary={getLibrary}>
 			<WalletProvider>
@@ -52,9 +50,19 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 							/>
 							{colorMode === "dark" ? (
 								<Flex>
-									<div id="starsLightMode" />
-									<div id="starsLightMode2" />
-									<div id="starsLightMode3" />
+									{colorMode === "dark" ? (
+										<Flex>
+											<div id="starsLightMode" />
+											<div id="starsLightMode2" />
+											<div id="starsLightMode3" />
+										</Flex>
+									) : (
+										<Flex>
+											<div id="stars" />
+											<div id="stars2" />
+											<div id="stars3" />
+										</Flex>
+									)}
 								</Flex>
 							) : (
 								<Flex>
@@ -65,6 +73,15 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 							)}
 
 							<Header />
+							<Flex
+								w="100vw"
+								h="9%"
+								position="fixed"
+								bottom="-5"
+								background={colorMode === "dark" ? "#03060c" : "#ffffff"}
+								zIndex="40"
+								filter="blur(35px)"
+							/>
 							{children}
 						</Flex>
 					</ModalsProvider>

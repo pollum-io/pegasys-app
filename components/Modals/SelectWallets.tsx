@@ -9,9 +9,6 @@ import {
 import { usePicasso, useWallet } from "hooks";
 import { WalletOptions } from "components/WalletOptions";
 import { AiOutlineClose } from "react-icons/ai";
-import { useState } from "react";
-
-import { IWalletInfo } from "types/index";
 
 interface IModal {
 	isOpen: boolean;
@@ -73,13 +70,13 @@ export const SelectWallets: React.FC<IModal> = props => {
 								<AiOutlineClose size={22} onClick={onClose} />
 							</Flex>
 						</Flex>
-						<Flex flexDirection="column" justifyContent="center" align="center">
-							<Flex justifyContent="center" flexDirection="row">
-								<Flex className="circleLoading" id="walletLoading" />
-								<Text pb="2" fontSize="20px" fontWeight="600">
-									Initializing...
-								</Text>
-							</Flex>
+						<Flex justifyContent="center" flexDirection="row">
+							<Flex className="circleLoading" id="walletLoading" />
+							<Text pb="2" pl="10" fontSize="20px" fontWeight="600">
+								Initializing...
+							</Text>
+						</Flex>
+						<Flex justifyContent="center" align="center">
 							<Flex
 								pt="2"
 								py="0"
@@ -93,7 +90,7 @@ export const SelectWallets: React.FC<IModal> = props => {
 								border="1px solid"
 								borderRadius="full"
 								fontSize="md"
-								borderColor={theme.text.cyan}
+								borderColor={theme.text.cyanPsys}
 								fontWeight={500}
 								fontFamily="inter"
 								alignItems="center"

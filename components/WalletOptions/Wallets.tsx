@@ -36,7 +36,7 @@ export const Wallets = ({ id, header, icon, onClick }: IWalletProps) => {
 			borderRadius="full"
 			fontSize="md"
 			borderColor={theme.border.wallets}
-			_hover={{ borderColor: theme.text.cyan }}
+			_hover={{ borderColor: theme.text.cyanPsys }}
 			fontWeight={500}
 			id={id}
 			fontFamily="inter"

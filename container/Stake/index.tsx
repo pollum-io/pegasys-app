@@ -1,10 +1,7 @@
 import { Button, Flex, Img, Text } from "@chakra-ui/react";
-import { StakeActions } from "components/Modals/StakeActions";
 import { StakeCards } from "components/Stake/StakeCard";
-import { DefaultTemplate } from "container";
 import { usePicasso } from "hooks";
 import { NextPage } from "next";
-import { useState } from "react";
 import { MdOutlineCallMade } from "react-icons/md";
 
 export const StakeContainer: NextPage = () => {
@@ -24,7 +21,7 @@ export const StakeContainer: NextPage = () => {
 					zIndex="docked"
 					position="relative"
 					borderRadius="xl"
-					backgroundColor="blue.700"
+					backgroundColor={theme.bg.whiteGray}
 				>
 					<Img
 						borderRadius="xl"
@@ -59,7 +56,9 @@ export const StakeContainer: NextPage = () => {
 						justifyContent="center"
 						flexDirection="row"
 						bgColor={theme.bg.whiteGray}
-						zIndex="docked"
+						zIndex="0"
+						position="relative"
+						top="2"
 						borderBottomRadius="xl"
 						py="0.531rem"
 						gap="2.5"
@@ -131,7 +130,6 @@ export const StakeContainer: NextPage = () => {
 					mb="24"
 					alignItems={["center", "center", "center", "center"]}
 				>
-					<StakeCards />
 					<StakeCards />
 				</Flex>
 			</Flex>

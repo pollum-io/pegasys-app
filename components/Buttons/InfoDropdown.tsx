@@ -46,8 +46,9 @@ export const InfoDropdown: FunctionComponent = () => {
 		<Accordion allowMultiple>
 			<AccordionItem border="none" pb="2">
 				<AccordionButton
-					pl={["24", "36", "4", "4"]}
-					pr={["24", "36", "4", "4"]}
+					pl={["24", "36", "6", "6"]}
+					pr={["24", "36", "6", "6"]}
+					py={["2", "2", "1", "1"]}
 					_expanded={{ bg: theme.bg.whiteGray }}
 					_focus={{
 						outline: "none",
@@ -109,8 +110,9 @@ export const InfoDropdown: FunctionComponent = () => {
 			</AccordionItem>
 			<AccordionItem border="none" mb="2">
 				<AccordionButton
-					pl={["24", "36", "4", "4"]}
-					pr={["24", "36", "4", "4"]}
+					pl={["24", "36", "6", "6"]}
+					pr={["24", "36", "6", "6"]}
+					py={["2", "2", "1", "1"]}
 					_expanded={{ bg: theme.bg.whiteGray }}
 					_focus={{
 						outline: "none",

@@ -1,4 +1,4 @@
-import { Button, Flex, Img, Text, useDisclosure } from "@chakra-ui/react";
+import { Button, Flex, Img, Text } from "@chakra-ui/react";
 import { FunctionComponent, useState } from "react";
 import { useModal, usePicasso } from "hooks";
 import { FarmActions } from "components/Modals/FarmActions";
@@ -27,11 +27,8 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 	} = props;
 	const theme = usePicasso();
 
-	const {
-		onOpen: onOpenPool,
-		isOpen: isOpenPool,
-		onClose: onClosePool,
-	} = useDisclosure();
+	const { isOpenFarmActions, onOpenFarmActions, onCloseFarmActions } =
+		useModal();
 
 	const [buttonId, setButtonId] = useState<string>("");
 
@@ -50,8 +47,8 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 			background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 		>
 			<FarmActions
-				isOpen={isOpenPool}
-				onClose={onClosePool}
+				isOpen={isOpenFarmActions}
+				onClose={onCloseFarmActions}
 				buttonId={buttonId}
 				setButtonId={setButtonId}
 			/>
@@ -135,7 +132,7 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 					borderRadius="full"
 					onClick={(event: any) => {
 						setButtonId(event?.currentTarget?.id);
-						onOpenPool();
+						onOpenFarmActions();
 					}}
 				>
 					Withdraw
@@ -155,7 +152,7 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 					borderRadius="full"
 					onClick={(event: any) => {
 						setButtonId(event?.currentTarget?.id);
-						onOpenPool();
+						onOpenFarmActions();
 					}}
 				>
 					Deposit
@@ -175,7 +172,7 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 				fontWeight="semibold"
 				onClick={(event: any) => {
 					setButtonId(event?.currentTarget?.id);
-					onOpenPool();
+					onOpenFarmActions();
 				}}
 			>
 				Claim

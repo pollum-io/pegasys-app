@@ -71,7 +71,11 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 					icon={<BsThreeDots />}
 					transition="0.4s"
 					bg="transparent"
-					_hover={{ background: "rgba(255, 255, 255, 0.08)" }}
+					_hover={{
+						background: "rgba(255, 255, 255, 0.08)",
+						color: theme.text.cyan,
+					}}
+					_expanded={{ color: theme.text.cyan }}
 				/>
 			</PopoverTrigger>
 			<PopoverContent
@@ -124,7 +128,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 								key={links.name + Number(index)}
 								_hover={{ color: theme.text.cyan }}
 							>
-								<Flex pr="0.5rem">{links.icon}</Flex>
+								<Flex pl={["0", "0", "0.5rem", "0.5rem"]}>{links.icon}</Flex>
 								<InfoLinks isVote={links.name === "Vote"} href={links.link}>
 									{links.name}
 								</InfoLinks>

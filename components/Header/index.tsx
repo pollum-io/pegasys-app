@@ -5,6 +5,7 @@ import { useModal, usePicasso } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
 import React from "react";
+import { useRouter } from "next/router";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
@@ -15,6 +16,7 @@ import { ExpertMode } from "./ExpertMode";
 export const Header: React.FC = () => {
 	const { toggleColorMode } = useColorMode();
 	const theme = usePicasso();
+	const { pathname } = useRouter();
 
 	const { isOpenPsysBreakdown, onOpenPsysBreakdown, onClosePsysBreakdown } =
 		useModal();
@@ -67,7 +69,11 @@ export const Header: React.FC = () => {
 				ml={["7", "0", "0", "0"]}
 			>
 				{links.map((item, index) => (
-					<NavButton key={item.name + Number(index)} href={item.url}>
+					<NavButton
+						key={item.name + Number(index)}
+						href={item.url}
+						active={pathname === item.url}
+					>
 						{item.name}
 					</NavButton>
 				))}

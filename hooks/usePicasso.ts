@@ -30,6 +30,7 @@ const usePicasso = () => {
 			),
 			red400: useColorModeValue("red.400", "red.400"),
 			red500: useColorModeValue("red.500", "red.500"),
+			cyanPsys: useColorModeValue("#00d9ef", "#00d9ef"),
 		},
 		icon: {
 			theme: useColorModeValue(BsFillSunFill, BsFillMoonFill),
