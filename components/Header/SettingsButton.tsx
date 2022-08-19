@@ -11,6 +11,7 @@ import {
 	Switch,
 	Icon,
 	PopoverArrow,
+	Tooltip,
 } from "@chakra-ui/react";
 import React, { FunctionComponent, ReactNode, useEffect } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
@@ -78,7 +79,29 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							>
 								Slippage tolerance
 							</Text>
-							<Icon as={MdHelpOutline} color={theme.icon.whiteGray} />
+							<Flex>
+								<Tooltip
+									label="Sua transação será revertida se o preço For alterado de forma desfavorável acima dessa porcentagem."
+									position="relative"
+									bgColor={theme.bg.secondary}
+									color={theme.text.mono}
+									borderRadius="md"
+								>
+									<Text as="span" _hover={{ opacity: 0.8 }}>
+										<Flex pb="0.15rem">
+											<Icon
+												as={MdHelpOutline}
+												h="4"
+												w="4"
+												mt="3px"
+												color="white"
+												backgroundColor="gray.800"
+												borderRadius="full"
+											/>
+										</Flex>
+									</Text>
+								</Tooltip>
+							</Flex>
 						</Flex>
 						<Flex flexDirection="row" py="0.5rem">
 							<SlippageButton
@@ -164,7 +187,27 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							>
 								Transaction tolerance
 							</Text>
-							<Icon as={MdHelpOutline} color={theme.icon.whiteGray} />
+							<Tooltip
+								label="Sua transação será revertida se ela demorar mais do que isso."
+								position="relative"
+								bgColor={theme.bg.secondary}
+								color={theme.text.mono}
+								borderRadius="md"
+							>
+								<Text as="span" _hover={{ opacity: 0.8 }}>
+									<Flex pb="0.15rem">
+										<Icon
+											as={MdHelpOutline}
+											h="4"
+											w="4"
+											mt="3px"
+											color="white"
+											backgroundColor="gray.800"
+											borderRadius="full"
+										/>
+									</Flex>
+								</Text>
+							</Tooltip>
 						</Flex>
 						<Flex flexDirection="row" py="0.5rem" alignItems="center">
 							<Input
@@ -207,16 +250,32 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								>
 									Toggle Expert Mode
 								</Text>
-								<Icon as={MdHelpOutline} color={theme.icon.whiteGray} />
+								<Tooltip
+									label="Ignora os modais de confirmação e permite alta variação de preço. Use por sua conta e risco."
+									position="relative"
+									bgColor={theme.bg.secondary}
+									color={theme.text.mono}
+									borderRadius="md"
+								>
+									<Text as="span" _hover={{ opacity: 0.8 }}>
+										<Flex pb="0.15rem">
+											<Icon
+												as={MdHelpOutline}
+												h="4"
+												w="4"
+												mt="3px"
+												color="white"
+												backgroundColor="gray.800"
+												borderRadius="full"
+											/>
+										</Flex>
+									</Text>
+								</Tooltip>
 							</Flex>
 							<Flex flexDirection="row" ml={["2", "12", "12", "12"]}>
 								<Stack align="center" direction="row">
 									<Text color={theme.text.mono}>Off</Text>
-									<Switch
-										size="md"
-										colorScheme="teal"
-										onChange={() => setExpert(!expert)}
-									/>
+									<Switch size="md" onChange={() => setExpert(!expert)} />
 									<Text color={theme.text.mono}>On</Text>
 								</Stack>
 							</Flex>
