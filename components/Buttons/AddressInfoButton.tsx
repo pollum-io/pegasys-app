@@ -1,3 +1,5 @@
+// eslint-disable-next-line
+// @ts-nocheck
 import {
 	Button,
 	Flex,
@@ -11,11 +13,12 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { usePicasso, useWallet, useToasty } from "hooks";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState, useEffect } from "react";
 import Jazzicon from "react-jazzicon";
 import { MdContentCopy, MdOutlineCallMade } from "react-icons/md";
 import { shortAddress, copyToClipboard, openWalletOnExplorer } from "utils";
 import { AiOutlineClose } from "react-icons/ai";
+import { ITransactionResponse } from "types";
 
 interface IModal {
 	isOpen: boolean;
@@ -25,19 +28,60 @@ interface IModal {
 export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
-	const { walletAddress, connectorSelected } = useWallet();
+	const { walletAddress, transactions, currentNetworkChainId } = useWallet();
 	const { toast } = useToasty();
+	const [txs, setTxs] = useState<[]>([]);
 
 	const handleCopyToClipboard = () => {
 		copyToClipboard(walletAddress);
 
 		toast({
+			id: "toast1",
 			position: "top",
 			status: "success",
 			title: "Successfully copied",
 			description: "Address sucessfully copied to clipboard!",
 		});
 	};
+	const isEmpty =
+		Object.keys(transactions[57]).length === 0 &&
+		Object.keys(transactions[5700]).length === 0;
+
+	const explorerURL =
+		currentNetworkChainId === 5700
+			? "https://tanenbaum.io/tx"
+			: "https://explorer.syscoin.org/tx";
+
+	useEffect(() => {
+		if (!isEmpty) {
+			// eslint-disable-next-line
+			const currentTxs: ITransactionResponse[] | any[] = [
+				...Object.values(transactions[5700]),
+				...Object.values(transactions[57]),
+			];
+			setTxs(currentTxs);
+		}
+	}, [transactions]);
+
+	const isEmpty =
+		Object.keys(transactions[57]).length === 0 &&
+		Object.keys(transactions[5700]).length === 0;
+
+	const explorerURL =
+		currentNetworkChainId === 5700
+			? "https://tanenbaum.io/tx"
+			: "https://explorer.syscoin.org/tx";
+
+	useEffect(() => {
+		if (!isEmpty) {
+			// eslint-disable-next-line
+			const currentTxs: ITransactionResponse[] | any[] = [
+				...Object.values(transactions[5700]),
+				...Object.values(transactions[57]),
+			];
+			setTxs(currentTxs);
+		}
+	}, [transactions]);
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -50,7 +94,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 				position="absolute"
 				bottom={["0", "0", "none", "none"]}
 			>
-				<ModalHeader bgColor={theme.bg.blueNavy} borderTopRadius={18}>
+				<ModalHeader borderTopRadius={18} bgColor={theme.bg.blueNavyLight}>
 					<Flex alignItems="center" justifyContent="space-between">
 						<Text fontSize="lg" fontWeight="semibold">
 							Account
@@ -60,10 +104,10 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 						</Flex>
 					</Flex>
 				</ModalHeader>
-				<ModalBody bgColor={theme.bg.blueNavy} pb="6">
+				<ModalBody bgColor={theme.bg.blueNavyLight} pb="6">
 					<Flex
 						borderRadius={18}
-						bgColor={theme.bg.blackAlpha}
+						bgColor={theme.bg.blackLightness}
 						py="4"
 						px="4"
 						flexDirection="column"
@@ -77,7 +121,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								<Text
 									fontSize="md"
 									fontWeight="semibold"
-									color={theme.text.cyan}
+									color={theme.text.cyanPurple}
 								>
 									Connected with {connectorSelected?.name}
 								</Text>
@@ -86,16 +130,20 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								<Button
 									borderRadius="full"
 									border="1px solid"
-									borderColor={theme.text.cyan}
+									borderColor={theme.text.cyanPurple}
 									px="2"
 									py="0.5"
 									w="max-content"
 									h="max-content"
-									color={theme.text.gray300}
+									color={theme.text.whitePurple}
 									fontSize="sm"
 									fontWeight="bold"
 									alignItems="center"
 									bgColor="transparent"
+									_hover={{
+										borderColor: theme.text.cyanLightPurple,
+										color: theme.text.cyanLightPurple,
+									}}
 								>
 									CHANGE
 								</Button>
@@ -124,7 +172,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								onClick={() => handleCopyToClipboard()}
 								mr="4"
 							>
-								<Icon as={MdContentCopy} />
+								<Icon as={MdContentCopy} color={theme.text.gray300} />
 								<Text
 									_hover={{ textDecoration: "underline" }}
 									color={theme.text.gray300}
@@ -142,7 +190,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								cursor="pointer"
 								onClick={() => openWalletOnExplorer(walletAddress)}
 							>
-								<Icon as={MdOutlineCallMade} />
+								<Icon as={MdOutlineCallMade} color={theme.text.gray300} />
 								<Text
 									_hover={{ textDecoration: "underline" }}
 									fontSize="sm"
@@ -155,10 +203,30 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 						</Flex>
 					</Flex>
 				</ModalBody>
-				<ModalFooter bgColor={theme.bg.blackAlpha} justifyContent="flex-start">
-					<Text fontSize="sm" fontWeight="semibold">
-						Your transactions will appear here...
-					</Text>
+				<ModalFooter
+					bgColor={theme.bg.blackGray}
+					justifyContent="flex-start"
+					borderBottomRadius={18}
+					h="4.313rem"
+				>
+					{isEmpty && txs.length === 0 ? (
+						<Text fontSize="sm" fontWeight="semibold" color={theme.text.mono}>
+							Your transactions will appear here...
+						</Text>
+					) : (
+						<Flex flexDirection="column" gap={2}>
+							{txs.map((item: ITransactionResponse) => (
+								// eslint-disable-next-line
+								<a
+									href={`${explorerURL}/${item?.hash}`}
+									target="_blank"
+									rel="noreferrer"
+								>
+									{item?.summary}
+								</a>
+							))}
+						</Flex>
+					)}
 				</ModalFooter>
 			</ModalContent>
 		</Modal>

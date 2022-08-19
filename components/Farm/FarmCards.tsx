@@ -68,7 +68,7 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 					w="15%"
 					h="3rem"
 					mt="0"
-					backgroundColor="rgba(255, 255, 255, 0.06);"
+					backgroundColor={theme.bg.iconTicket}
 					borderBottomRadius="full"
 				>
 					<Img src="icons/pegasys.png" w="6" h="6" mb="0.6rem" />
@@ -76,10 +76,10 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 			</Flex>
 			<Flex flexDirection="column" pt="6">
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
-					<Text fontWeight="semibold" color={theme.text.cyan}>
+					<Text fontWeight="semibold" color={theme.text.cyanPurple}>
 						Total Staked
 					</Text>
-					<Text color={theme.text.cyan}>${totalStaked}</Text>
+					<Text color={theme.text.cyanPurple}>${totalStaked}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold">Your Stake</Text>
@@ -100,7 +100,7 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 			</Flex>
 			<Flex
 				flexDirection="column"
-				backgroundColor="rgba(255, 255, 255, 0.04);"
+				backgroundColor={theme.bg.farmRate}
 				borderRadius="0.375rem"
 				py="0.5rem"
 				px="1rem"
@@ -127,10 +127,13 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 					h="max-content"
 					bgColor={theme.bg.blueNavyLightness}
 					color={theme.text.cyan}
-					_hover={{ opacity: "1" }}
+					_hover={{
+						opacity: "1",
+						bgColor: theme.bg.bluePurple,
+					}}
 					_active={{}}
 					borderRadius="full"
-					onClick={(event: any) => {
+					onClick={(event: React.ChangeEvent<HTMLInputElement>) => {
 						setButtonId(event?.currentTarget?.id);
 						onOpenFarmActions();
 					}}
@@ -147,10 +150,13 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 					h="max-content"
 					bgColor={theme.bg.blueNavyLightness}
 					color={theme.text.cyan}
-					_hover={{ opacity: "1" }}
+					_hover={{
+						opacity: "1",
+						bgColor: theme.bg.bluePurple,
+					}}
 					_active={{}}
 					borderRadius="full"
-					onClick={(event: any) => {
+					onClick={(event: React.ChangeEvent<HTMLInputElement>) => {
 						setButtonId(event?.currentTarget?.id);
 						onOpenFarmActions();
 					}}
@@ -167,12 +173,17 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 				borderRadius="full"
 				bgColor="transparent"
 				borderWidth="1px"
-				borderColor={theme.text.cyan}
+				color={theme.text.whitePurple}
+				borderColor={theme.text.cyanPurple}
 				fontSize="sm"
 				fontWeight="semibold"
-				onClick={(event: any) => {
+				onClick={(event: React.ChangeEvent<HTMLInputElement>) => {
 					setButtonId(event?.currentTarget?.id);
 					onOpenFarmActions();
+				}}
+				_hover={{
+					borderColor: theme.text.cyanLightPurple,
+					color: theme.text.cyanLightPurple,
 				}}
 			>
 				Claim

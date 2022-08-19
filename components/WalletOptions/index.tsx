@@ -1,7 +1,6 @@
 import { ButtonProps, Flex, Text, theme } from "@chakra-ui/react";
 import { SUPPORTED_WALLETS } from "helpers/consts";
 import { FunctionComponent } from "react";
-import { isMobile } from "react-device-detect";
 import { useWallet } from "hooks";
 import { injected } from "utils/connectors";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -12,8 +11,7 @@ import { Wallets } from "./Wallets";
 declare let window: any;
 
 export const WalletOptions: FunctionComponent<ButtonProps> = () => {
-	const { connectWallet, setConnectorSelected, connectorSelected, connecting } =
-		useWallet();
+	const { connectWallet, setConnectorSelected } = useWallet();
 
 	const setConnectorValues = (connectorOptionsSelected: IWalletInfo) => {
 		const { connector } = connectorOptionsSelected;

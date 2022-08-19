@@ -5,6 +5,8 @@ import { FunctionComponent } from "react";
 import { AddressInfoButton } from "components/Buttons";
 import { shortAddress } from "utils";
 import { ExpertMode } from "components/Header/ExpertMode";
+import { ApprovalState } from "contexts";
+import { Circles } from "react-loading-icons";
 import { AddressButton } from "./AddressButton";
 
 export const WalletButton: FunctionComponent<ButtonProps> = props => {
@@ -22,7 +24,10 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 		onCloseAddress,
 	} = useModal();
 
-	const { isConnected, walletAddress, walletError } = useWallet();
+	const { isConnected, walletAddress, walletError, approvalState } =
+		useWallet();
+
+	const isPending = approvalState === ApprovalState.PENDING;
 
 	return (
 		<>
@@ -69,15 +74,28 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 				</>
 			)}
 
-			{isConnected && !walletError && (
-				<Flex>
+			{isConnected && !walletError && !isPending && (
+				<>
 					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
 					<AddressButton
 						onClick={walletError ? onOpenSelectWalletModal : onOpenAddress}
 					>
 						{shortAddress(walletAddress)}
 					</AddressButton>
-				</Flex>
+					<ExpertMode />
+				</>
+			)}
+			{isConnected && isPending && (
+				<>
+					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
+					<AddressButton
+						onClick={walletError ? onOpenSelectWalletModal : onOpenAddress}
+						pending={approvalState === ApprovalState.PENDING}
+					>
+						<Circles width={25} height={25} style={{ paddingRight: "6px" }} />{" "}
+						Pending
+					</AddressButton>
+				</>
 			)}
 		</>
 	);

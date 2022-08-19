@@ -10,9 +10,14 @@ import {
 	MenuItem,
 	MenuList,
 	Text,
+	useDisclosure,
+	useColorModeValue,
 } from "@chakra-ui/react";
-import { AddLiquidityModal, RemoveLiquidity } from "components";
-import { ImportPoolModal } from "components/Modals/ImportPool";
+import {
+	AddLiquidityModal,
+	ImportPoolModal,
+	RemoveLiquidity,
+} from "components";
 import { PoolCards } from "components/Pools/PoolCards";
 import { usePicasso, useWallet, useToasty, useModal } from "hooks";
 import { NextPage } from "next";
@@ -33,19 +38,9 @@ export const PoolsContainer: NextPage = () => {
 	} = useModal();
 
 	const [isCreate, setIsCreate] = useState(false);
-	const [haveValue, setHaveValue] = useState(false);
+	const [haveValue] = useState(false);
 	const { isConnected } = useWallet();
 	const [userHavePool, setUserHavePool] = useState(true);
-
-	const { toast } = useToasty();
-
-	const showToast = () => {
-		toast({
-			title: "Title",
-			description: "Something happend!",
-			status: "success",
-		});
-	};
 
 	return (
 		<Flex justifyContent="center" alignItems="center">
@@ -78,7 +73,7 @@ export const PoolsContainer: NextPage = () => {
 					>
 						<Img
 							borderRadius="xl"
-							src="images/backgrounds/BannerPools.png"
+							src={theme.bg.poolsBanner}
 							position="absolute"
 							zIndex="base"
 							w="100%"
@@ -91,8 +86,9 @@ export const PoolsContainer: NextPage = () => {
 							py={["0.8rem", "1.375rem", "1.375rem", "1.375rem"]}
 							gap="3"
 							h={["9rem", "10rem", "10rem", "10rem"]}
+							color="white"
 						>
-							<Text fontWeight="bold" color="white" fontSize="md">
+							<Text fontWeight="bold" fontSize="md">
 								Liquidity Provider Rewards
 							</Text>
 							<Text
@@ -122,7 +118,7 @@ export const PoolsContainer: NextPage = () => {
 							<Text fontWeight="medium" fontSize="xs" color="white">
 								View Your Staked Liquidity
 							</Text>
-							<MdOutlineCallMade size={20} color="white" />
+							<MdOutlineCallMade size={18} color="white" />
 						</Flex>
 					</Flex>
 					<Flex
@@ -158,23 +154,30 @@ export const PoolsContainer: NextPage = () => {
 							gap="5"
 						>
 							<Flex visibility={userHavePool ? "visible" : "hidden"}>
-								<InputGroup>
+								<InputGroup alignItems="center">
+									<InputLeftElement
+										pl="0.625rem"
+										pointerEvents="none"
+										pb="0.3rem"
+										// eslint-disable-next-line react/no-children-prop
+										children={
+											<MdSearch color={theme.icon.searchIcon} size={20} />
+										}
+									/>
 									<Input
 										borderColor={theme.bg.blueNavyLightness}
 										placeholder="Search by token name"
 										_placeholder={{
-											fontSize: "14px",
 											opacity: 1,
-											color: theme.text.cyanPurple,
+											color: theme.text.input,
 										}}
 										borderRadius="full"
 										w={["19.5rem", "18rem", "20rem", "20rem"]}
-										h="max-content"
+										h="2.2rem"
 										py={["0.2rem", "0.2rem", "1", "1"]}
 										pl="7"
-										_focus={{
-											outline: "none",
-										}}
+										_hover={{ border: "1px solid #3182CE" }}
+										_focus={{ border: "1px solid #3182CE", outline: "none" }}
 									/>
 									<Flex
 										position="absolute"
@@ -191,13 +194,16 @@ export const PoolsContainer: NextPage = () => {
 									fontWeight="semibold"
 									py="0.5rem"
 									px="1.5rem"
-									h="max-content"
+									h="2.2rem"
 									bgColor="transparent"
 									borderWidth="1px"
 									borderColor={theme.text.cyanPurple}
 									color={theme.text.whitePurple}
 									borderRadius="full"
-									_hover={{ opacity: "1" }}
+									_hover={{
+										borderColor: theme.text.cyanLightPurple,
+										color: theme.text.cyanLightPurple,
+									}}
 									_active={{}}
 									onClick={() => {
 										setIsCreate(true);
@@ -240,7 +246,9 @@ export const PoolsContainer: NextPage = () => {
 												h="max-content"
 												bgColor={theme.bg.blueNavyLightness}
 												color="white"
-												_hover={{ opacity: "1" }}
+												_hover={{
+													bgColor: theme.bg.bluePurple,
+												}}
 												_active={{}}
 												borderRadius="full"
 												rightIcon={<MdExpandMore size={20} />}
@@ -254,11 +262,36 @@ export const PoolsContainer: NextPage = () => {
 												p="4"
 												fontSize="sm"
 											>
-												<MenuItem>Pool Weight</MenuItem>
-												<MenuItem>Name</MenuItem>
-												<MenuItem>Claudio</MenuItem>
-												<MenuItem>Thom</MenuItem>
-												<MenuItem>Kaue</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Pool Weight
+												</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Name
+												</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Claudio
+												</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Thom
+												</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Kaue
+												</MenuItem>
 											</MenuList>
 										</Menu>
 									)}

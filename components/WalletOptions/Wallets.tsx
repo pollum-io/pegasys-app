@@ -1,6 +1,6 @@
 import { Button, Flex, Img } from "@chakra-ui/react";
 import { usePicasso, useWallet } from "hooks";
-import React, { useEffect } from "react";
+import React from "react";
 
 interface IWalletProps {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -15,13 +15,14 @@ export const Wallets = ({ id, header, icon, onClick }: IWalletProps) => {
 	const theme = usePicasso();
 	const { connecting, setConnecting } = useWallet();
 
-	useEffect(() => {
-		console.log(connecting);
-	}, [connecting]);
-
 	return (
 		<Button
 			onClick={() => onClick(setConnecting(!connecting))}
+			color={theme.text.mono}
+			_hover={{
+				bgColor: theme.bg.button.connectToWallet,
+				borderColor: theme.bg.button.connectToWallet,
+			}}
 			px="0"
 			py="0"
 			bgColor="transparent"
@@ -36,7 +37,6 @@ export const Wallets = ({ id, header, icon, onClick }: IWalletProps) => {
 			borderRadius="full"
 			fontSize="md"
 			borderColor={theme.border.wallets}
-			_hover={{ borderColor: theme.text.cyanPsys }}
 			fontWeight={500}
 			id={id}
 			fontFamily="inter"

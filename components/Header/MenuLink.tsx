@@ -3,16 +3,15 @@ import {
 	Flex,
 	IconButton,
 	Popover,
-	PopoverArrow,
 	PopoverBody,
 	PopoverCloseButton,
 	PopoverContent,
 	PopoverTrigger,
 } from "@chakra-ui/react";
-import { FunctionComponent, ReactNode } from "react";
+import { FunctionComponent, ReactNode, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { FaParachuteBox } from "react-icons/fa";
-import { AiOutlineClose, AiOutlineInfoCircle } from "react-icons/ai";
+import { AiOutlineInfoCircle } from "react-icons/ai";
 import { usePicasso } from "hooks";
 import {
 	MdOutlineCallMade,
@@ -83,7 +82,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 					outline: "none",
 				}}
 				w={["100%", "100vw", "max-content", "max-content"]}
-				bgColor={theme.bg.blueNavy}
+				bgColor={theme.bg.blueNavyLight}
 				borderBottomRadius={["none", "none", "xl", "xl"]}
 				borderTopRadius={["2xl", "2xl", "xl", "xl"]}
 				p="0"
@@ -126,7 +125,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 								flexDirection="row"
 								pb="1"
 								key={links.name + Number(index)}
-								_hover={{ color: theme.text.cyan }}
+								_hover={{ color: theme.text.cyanPurple }}
 							>
 								<Flex pl={["0", "0", "0.5rem", "0.5rem"]}>{links.icon}</Flex>
 								<InfoLinks isVote={links.name === "Vote"} href={links.link}>
