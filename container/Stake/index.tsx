@@ -2,10 +2,12 @@ import { Button, Flex, Img, Text } from "@chakra-ui/react";
 import { StakeCards } from "components/Stake/StakeCard";
 import { usePicasso } from "hooks";
 import { NextPage } from "next";
+import { useState } from "react";
 import { MdOutlineCallMade } from "react-icons/md";
 
 export const StakeContainer: NextPage = () => {
 	const theme = usePicasso();
+	const [buttonId, setButtonId] = useState<string>("");
 
 	return (
 		<Flex
@@ -25,7 +27,7 @@ export const StakeContainer: NextPage = () => {
 				>
 					<Img
 						borderRadius="xl"
-						src="images/backgrounds/BannerStake.png"
+						src={theme.bg.stakeBanner}
 						position="absolute"
 						zIndex="base"
 						w="100%"
@@ -38,6 +40,7 @@ export const StakeContainer: NextPage = () => {
 						py="1.375rem"
 						gap="3"
 						h={["7.5rem", "8rem", "10rem", "10rem"]}
+						color="white"
 					>
 						<Text fontWeight="bold" color="white" fontSize="md">
 							Pegasys PSYS Staking
@@ -60,6 +63,7 @@ export const StakeContainer: NextPage = () => {
 						borderBottomRadius="xl"
 						py="0.531rem"
 						gap="2.5"
+						color="white"
 					>
 						<Text fontWeight="semibold" fontSize="xs">
 							Read more about PSYS
@@ -96,28 +100,46 @@ export const StakeContainer: NextPage = () => {
 							]}
 						>
 							<Button
-								color={theme.bg.blue900}
-								bgColor={theme.bg.blue100}
+								onClick={() => setButtonId("psys")}
+								color={
+									buttonId === "psys"
+										? theme.text.farmActionsHover
+										: theme.text.farmActionsTop
+								}
+								bgColor={
+									buttonId === "psys"
+										? theme.bg.farmActionsHover
+										: "transparent"
+								}
 								borderRadius="full"
 								w="max-content"
 								h="max-content"
 								py="2"
 								px="6"
 								fontWeight="semibold"
+								_hover={{ opacity: "0.9" }}
 							>
 								PSYS
 							</Button>
 							<Button
-								color={theme.text.gray600}
-								bgColor="transparent"
+								onClick={() => setButtonId("usd")}
+								color={
+									buttonId === "usd"
+										? theme.text.farmActionsHover
+										: theme.text.farmActionsTop
+								}
+								bgColor={
+									buttonId === "usd" ? theme.bg.farmActionsHover : "transparent"
+								}
 								borderRadius="full"
 								w="max-content"
 								h="max-content"
 								py="2"
 								px="6"
 								fontWeight="semibold"
+								_hover={{}}
 							>
-								USDT
+								USD
 							</Button>
 						</Flex>
 					</Flex>

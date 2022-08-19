@@ -26,8 +26,13 @@ interface IButtonProps extends ButtonProps {
 export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	// const [expert, setExpert] = useState(false)
-	const { userSlippageTolerance, setUserSlippageTolerance, setExpert, expert } =
-		useWallet();
+	const {
+		userSlippageTolerance,
+		setUserSlippageTolerance,
+		setExpert,
+		expert,
+		isConnected,
+	} = useWallet();
 
 	return (
 		<Popover placement="right">
@@ -88,8 +93,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 												h="4"
 												w="4"
 												mt="3px"
-												color="white"
-												backgroundColor="gray.800"
+												color={theme.icon.whiteGray}
 												borderRadius="full"
 											/>
 										</Flex>
@@ -194,8 +198,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 											h="4"
 											w="4"
 											mt="3px"
-											color="white"
-											backgroundColor="gray.800"
+											color={theme.icon.whiteGray}
 											borderRadius="full"
 										/>
 									</Flex>
@@ -248,8 +251,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 											h="4"
 											w="4"
 											mt="3px"
-											color="white"
-											backgroundColor="gray.800"
+											color={theme.icon.whiteGray}
 											borderRadius="full"
 										/>
 									</Flex>
@@ -259,6 +261,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								<Stack align="center" direction="row">
 									<Text color={theme.text.mono}>Off</Text>
 									<Switch
+										disabled={!isConnected}
 										size="md"
 										onChange={() => setExpert(!expert)}
 										// colorScheme="lightPurple"

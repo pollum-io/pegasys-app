@@ -7,6 +7,7 @@ import {
 	Img,
 	Input,
 	Text,
+	Tooltip,
 } from "@chakra-ui/react";
 import {
 	useModal,
@@ -763,7 +764,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								fontWeight="semibold"
 								disabled={!canSubmit || isPending}
 								_hover={{
-									opacity: 0.3,
+									opacity: 0.9,
 								}}
 							>
 								{approveValidation ? "Approve" : "Swap"}
@@ -785,6 +786,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								fontSize="lg"
 								fontWeight="semibold"
 								disabled={!canSubmit || isPending}
+								_hover={{ opacity: 0.3 }}
 							>
 								{swapButtonValidation}
 							</Button>
@@ -815,7 +817,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					<Flex
 						flexDirection="column"
 						p="1.5rem"
-						background={theme.bg.blueNavy}
+						background={theme.bg.subModal}
 						w="90%"
 						borderRadius="xl"
 						mt="7"
@@ -823,29 +825,75 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						zIndex="1"
 					>
 						<Flex flexDirection="column">
-							<Flex flexDirection="row" justifyContent="space-between">
-								<Text fontWeight="normal">
-									Minmum Received <Icon as={MdHelpOutline} />
-								</Text>
-								<Text fontWeight="medium">
-									{returnedTradeValue?.v2Trade
-										? `${returnedTradeValue?.v2Trade?.outputAmount.toSignificant(
-												4
-										  )} ${
-												returnedTradeValue?.v2Trade?.outputAmount?.currency
-													.symbol
-										  }`
-										: "-"}
-								</Text>
+							<Flex
+								flexDirection="row"
+								justifyContent="space-between"
+								alignItems="center"
+							>
+								<Flex gap="1" alignItems="center">
+									<Text fontWeight="normal">Minimum Received</Text>
+									<Tooltip
+										label="Sua transação será revertida se houver um movimento de preço grande e desfavorável antes de ser confirmada."
+										position="relative"
+										bgColor={theme.bg.secondary}
+										color={theme.text.mono}
+										borderRadius="md"
+									>
+										<Text as="span" _hover={{ opacity: 0.8 }}>
+											<Flex pb="0.2rem">
+												<Icon
+													as={MdHelpOutline}
+													h="4"
+													w="4"
+													mt="3px"
+													color={theme.icon.whiteGray}
+													borderRadius="full"
+												/>
+											</Flex>
+										</Text>
+									</Tooltip>
+								</Flex>
+								<Flex>
+									<Text fontWeight="medium">
+										{returnedTradeValue?.v2Trade
+											? `${returnedTradeValue?.v2Trade?.outputAmount.toSignificant(
+													4
+											  )} ${
+													returnedTradeValue?.v2Trade?.outputAmount?.currency
+														.symbol
+											  }`
+											: "-"}
+									</Text>
+								</Flex>
 							</Flex>
 							<Flex
 								flexDirection="row"
 								justifyContent="space-between"
 								pt="0.75rem"
 							>
-								<Text fontWeight="normal">
-									Price Impact <Icon as={MdHelpOutline} />
-								</Text>
+								<Flex gap="1" alignItems="center">
+									<Text fontWeight="normal">Price Impact</Text>
+									<Tooltip
+										label="A diferença entre o preço de mercado e o preço estimado devido ao tamanho da troca."
+										position="relative"
+										bgColor={theme.bg.secondary}
+										color={theme.text.mono}
+										borderRadius="md"
+									>
+										<Text as="span" _hover={{ opacity: 0.8 }}>
+											<Flex pb="0.2rem">
+												<Icon
+													as={MdHelpOutline}
+													h="4"
+													w="4"
+													mt="3px"
+													color={theme.icon.whiteGray}
+													borderRadius="full"
+												/>
+											</Flex>
+										</Text>
+									</Tooltip>
+								</Flex>
 								<Text fontWeight="medium">
 									{returnedTradeValue?.v2Trade
 										? `${returnedTradeValue?.v2Trade?.priceImpact?.toSignificant(
@@ -859,9 +907,29 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								justifyContent="space-between"
 								pt="0.75rem"
 							>
-								<Text fontWeight="normal">
-									Liquidity Provider Fee <Icon as={MdHelpOutline} />
-								</Text>
+								<Flex gap="1" alignItems="center">
+									<Text fontWeight="normal">Liquidity Provider Fee</Text>
+									<Tooltip
+										label="Uma parte de cada troca (0,30%) vai para os provedores de liquidez como um incentivo do protocolo."
+										position="relative"
+										bgColor={theme.bg.secondary}
+										color={theme.text.mono}
+										borderRadius="md"
+									>
+										<Text as="span" _hover={{ opacity: 0.8 }}>
+											<Flex pb="0.2rem">
+												<Icon
+													as={MdHelpOutline}
+													h="4"
+													w="4"
+													mt="3px"
+													color={theme.icon.whiteGray}
+													borderRadius="full"
+												/>
+											</Flex>
+										</Text>
+									</Tooltip>
+								</Flex>
 								<Text fontWeight="medium">-</Text>
 							</Flex>
 							{tokenInputValue.inputFrom.value &&
@@ -873,9 +941,29 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 											justifyContent="space-between"
 											pt="2rem"
 										>
-											<Text fontWeight="normal">
-												Route <Icon as={MdHelpOutline} />
-											</Text>
+											<Flex gap="1" alignItems="center">
+												<Text fontWeight="normal">Route</Text>
+												<Tooltip
+													label="A rota através desses tokens resultaram no melhor preço para a sua troca."
+													position="relative"
+													bgColor={theme.bg.secondary}
+													color={theme.text.mono}
+													borderRadius="md"
+												>
+													<Text as="span" _hover={{ opacity: 0.8 }}>
+														<Flex pb="0.15rem">
+															<Icon
+																as={MdHelpOutline}
+																h="4"
+																w="4"
+																mt="3px"
+																color={theme.icon.whiteGray}
+																borderRadius="full"
+															/>
+														</Flex>
+													</Text>
+												</Tooltip>
+											</Flex>
 										</Flex>
 										<Flex
 											border="1px solid rgba(160, 174, 192, 1)"

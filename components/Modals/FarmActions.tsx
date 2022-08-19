@@ -49,16 +49,16 @@ export const FarmActions: React.FC<IModal> = props => {
 				h={["max-content", "100vh", "max-content", "max-content"]}
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
 				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
-				bgColor={theme.bg.blueNavy}
+				bgColor={theme.bg.blueNavyLight}
 				border={["none", "1px solid transparent"]}
+				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
-					backgroundColor={theme.bg.blueNavy}
+					backgroundColor={theme.bg.blueNavyLight}
 					borderTopRadius="3xl"
 					alignItems="baseline"
 					justifyContent="space-between"
 					pl={["5", "5", "20", "20"]}
-					background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					<Flex
 						flexDirection={["column-reverse", "column-reverse", "row", "row"]}
@@ -154,7 +154,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									lg: "block",
 								}}
 							>
-								<AiOutlineClose size={20} />
+								<AiOutlineClose size={20} color={theme.icon.closeWhiteGray} />
 							</Flex>
 							<Flex
 								display={{
@@ -204,7 +204,12 @@ export const FarmActions: React.FC<IModal> = props => {
 									</Text>
 								</Flex>
 							</Flex>
-							<Flex flexDirection="column" gap="2" mt="6">
+							<Flex
+								flexDirection="column"
+								gap="2"
+								mt="6"
+								color={theme.text.mono}
+							>
 								<Text fontWeight="normal">
 									Available to deposit: 0.00000000001
 								</Text>
@@ -459,7 +464,7 @@ export const FarmActions: React.FC<IModal> = props => {
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
-							background={theme.text.gray600}
+							background={theme.bg.subModal}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
 							top={["unset", "unset", "24rem", "24rem"]}
@@ -469,9 +474,14 @@ export const FarmActions: React.FC<IModal> = props => {
 							gap="2"
 						>
 							<Flex>
-								<Icon as={MdOutlineInfo} w="6" h="6" color={theme.text.cyan} />
+								<Icon
+									as={MdOutlineInfo}
+									w="6"
+									h="6"
+									color={theme.text.cyanPurple}
+								/>
 							</Flex>
-							<Flex flexDirection="column" gap="6">
+							<Flex flexDirection="column" gap="6" color={theme.text.mono}>
 								<Text>
 									Here the text would change explaining the “Exit” mode I
 									think... Need to confirm the warning content.
@@ -483,7 +493,7 @@ export const FarmActions: React.FC<IModal> = props => {
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
-							background={theme.text.gray600}
+							background={theme.bg.subModal}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
 							top={["unset", "unset", "20rem", "20rem"]}
@@ -493,9 +503,14 @@ export const FarmActions: React.FC<IModal> = props => {
 							gap="2"
 						>
 							<Flex>
-								<Icon as={MdOutlineInfo} w="6" h="6" color={theme.text.cyan} />
+								<Icon
+									as={MdOutlineInfo}
+									w="6"
+									h="6"
+									color={theme.text.cyanPurple}
+								/>
 							</Flex>
-							<Flex flexDirection="column" gap="6">
+							<Flex flexDirection="column" gap="6" color={theme.text.mono}>
 								<Text>
 									When you withdraw, your PSYS is claimed and your Pegasys
 									Liquidity tokens, PLP, are returned to you. You will no longer

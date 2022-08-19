@@ -122,7 +122,7 @@ export const InfoDropdown: FunctionComponent = () => {
 						outline: "none",
 					}}
 					_hover={{
-						color: theme.text.cyan,
+						color: theme.text.cyanPurple,
 						backgroundColor: "transparent",
 					}}
 				>

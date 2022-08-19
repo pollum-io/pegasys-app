@@ -68,13 +68,13 @@ export const StakeActions: React.FC<IModal> = props => {
 				w={["100vw", "100vw", "max-content", "max-content"]}
 				h={["max-content", "max-content", "max-content", "max-content"]}
 				borderRadius="3xl"
-				bgColor={theme.bg.blueNavy}
+				bgColor={theme.bg.blueNavyLight}
 				border="1px solid transparent"
 				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
-				background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
-					backgroundColor={theme.bg.blueNavy}
+					backgroundColor={theme.bg.blueNavyLight}
 					borderTopRadius="3xl"
 					alignItems="baseline"
 					justifyContent="space-between"
@@ -93,10 +93,14 @@ export const StakeActions: React.FC<IModal> = props => {
 								borderRadius="full"
 								onClick={() => setButtonId("stake")}
 								bgColor={
-									buttonId === "stake" ? theme.bg.blue100 : "transparent"
+									buttonId === "stake"
+										? theme.bg.farmActionsHover
+										: "transparent"
 								}
 								color={
-									buttonId === "stake" ? "black" : "rgba(255, 255, 255, 0.36)"
+									buttonId === "stake"
+										? theme.text.farmActionsHover
+										: theme.text.farmActionsTop
 								}
 								fontWeight="semibold"
 								_hover={{ opacity: "0.9" }}
@@ -112,10 +116,14 @@ export const StakeActions: React.FC<IModal> = props => {
 								borderRadius="full"
 								onClick={() => setButtonId("unstake")}
 								bgColor={
-									buttonId === "unstake" ? theme.bg.blue100 : "transparent"
+									buttonId === "unstake"
+										? theme.bg.farmActionsHover
+										: "transparent"
 								}
 								color={
-									buttonId === "unstake" ? "black" : "rgba(255, 255, 255, 0.36)"
+									buttonId === "unstake"
+										? theme.text.farmActionsHover
+										: theme.text.farmActionsTop
 								}
 								fontWeight="semibold"
 								_hover={{ opacity: "0.9" }}
@@ -130,10 +138,14 @@ export const StakeActions: React.FC<IModal> = props => {
 								borderRadius="full"
 								onClick={() => setButtonId("claim")}
 								bgColor={
-									buttonId === "claim" ? theme.bg.blue100 : "transparent"
+									buttonId === "claim"
+										? theme.bg.farmActionsHover
+										: "transparent"
 								}
 								color={
-									buttonId === "claim" ? "black" : "rgba(255, 255, 255, 0.36)"
+									buttonId === "claim"
+										? theme.text.farmActionsHover
+										: theme.text.farmActionsTop
 								}
 								fontWeight="semibold"
 								_hover={{ opacity: "0.9" }}
@@ -155,7 +167,7 @@ export const StakeActions: React.FC<IModal> = props => {
 									lg: "block",
 								}}
 							>
-								<AiOutlineClose size={20} />
+								<AiOutlineClose size={20} color={theme.icon.closeWhiteGray} />
 							</Flex>
 							<Flex
 								display={{
@@ -201,25 +213,30 @@ export const StakeActions: React.FC<IModal> = props => {
 										<Input
 											placeholder="0.0"
 											border="1px solid"
-											borderColor="rgba(1, 219, 243, 0.2)"
-											bgColor={theme.bg.whiteGray}
+											borderColor={theme.border.farmInput}
+											bgColor={theme.bg.blackAlpha}
 											borderLeftRadius="full"
 											p="5"
 											w="25rem"
-											_hover={{ border: "1px solid #3182CE" }}
-											_focus={{ border: "1px solid #3182CE" }}
+											_hover={{
+												borderColor: theme.border.farmInput,
+											}}
+											_focus={{
+												borderColor: theme.border.farmInput,
+											}}
 											onChange={handleInput}
 										/>
 										<Button
-											border="1px solid rgba(0, 217, 239, 0.2)"
+											border="1px solid"
+											borderColor={theme.border.farmInput}
 											borderRightRadius="full"
-											bgColor={theme.bg.whiteGray}
-											color={theme.text.cyan}
+											bgColor={theme.bg.max}
+											color={theme.text.max}
 											fontSize="lg"
 											fontWeight="normal"
 											px="4"
 											py="5"
-											_hover={{ backgroundColor: theme.bg.blueNavyLightness }}
+											_hover={{ backgroundColor: theme.bg.max, opacity: 0.9 }}
 										>
 											max
 										</Button>
@@ -275,23 +292,32 @@ export const StakeActions: React.FC<IModal> = props => {
 								<Input
 									placeholder="0.0"
 									border="1px solid"
-									borderColor="rgba(1, 219, 243, 0.2)"
-									bgColor={theme.bg.whiteGray}
+									borderColor={theme.border.farmInput}
+									bgColor={theme.bg.blackAlpha}
 									borderLeftRadius="full"
 									p="5"
 									w="25rem"
-									_hover={{}}
+									_hover={{
+										borderColor: theme.border.farmInput,
+									}}
+									_focus={{
+										borderColor: theme.border.farmInput,
+									}}
 								/>
 								<Button
-									border="1px solid rgba(0, 217, 239, 0.2)"
+									border="1px solid"
+									borderColor={theme.border.farmInput}
 									borderRightRadius="full"
-									bgColor={theme.bg.whiteGray}
-									color={theme.text.cyan}
+									bgColor={theme.bg.max}
+									color={theme.text.max}
 									fontSize="lg"
 									fontWeight="normal"
 									px="4"
 									py="5"
-									_hover={{ backgroundColor: theme.bg.blueNavyLightness }}
+									_hover={{
+										borderColor: theme.border.farmInput,
+										opacity: 0.9,
+									}}
 								>
 									max
 								</Button>
@@ -352,10 +378,13 @@ export const StakeActions: React.FC<IModal> = props => {
 									w="100%"
 									h="max-content"
 									border="1px solid"
-									borderColor={theme.text.cyan}
+									borderColor={theme.text.cyanPurple}
 									bgColor="transparent"
-									color="white"
-									_hover={{ opacity: "1" }}
+									color={theme.text.whitePurple}
+									_hover={{
+										borderColor: theme.text.cyanLightPurple,
+										color: theme.text.cyanLightPurple,
+									}}
 									_active={{}}
 									borderRadius="full"
 								>
@@ -370,7 +399,7 @@ export const StakeActions: React.FC<IModal> = props => {
 									h="max-content"
 									bgColor={theme.bg.blueNavyLightness}
 									color={theme.text.cyan}
-									_hover={{ opacity: "1" }}
+									_hover={{ opacity: "1", bgColor: theme.bg.bluePurple }}
 									_active={{}}
 									borderRadius="full"
 								>
@@ -382,7 +411,7 @@ export const StakeActions: React.FC<IModal> = props => {
 					{buttonId === "claim" && (
 						<Flex flexDirection="column" gap="6">
 							<Flex
-								bgColor={theme.bg.whiteGray}
+								bgColor={theme.bg.max}
 								flexDirection="column"
 								justifyContent="center"
 								alignItems="center"
@@ -411,7 +440,7 @@ export const StakeActions: React.FC<IModal> = props => {
 								h="max-content"
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
-								_hover={{ opacity: "1" }}
+								_hover={{ opacity: "1", bgColor: theme.bg.bluePurple }}
 								_active={{}}
 								borderRadius="full"
 							>
@@ -425,7 +454,7 @@ export const StakeActions: React.FC<IModal> = props => {
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
-							background={theme.text.gray600}
+							background={theme.bg.subModal}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
 							top={["unset", "unset", "24rem", "24rem"]}
@@ -435,9 +464,14 @@ export const StakeActions: React.FC<IModal> = props => {
 							gap="2"
 						>
 							<Flex>
-								<Icon as={MdOutlineInfo} w="6" h="6" color={theme.text.cyan} />
+								<Icon
+									as={MdOutlineInfo}
+									w="6"
+									h="6"
+									color={theme.text.cyanPurple}
+								/>
 							</Flex>
-							<Flex flexDirection="column" gap="6">
+							<Flex flexDirection="column" gap="6" color={theme.text.mono}>
 								<Text>
 									When you partially unstake your deposits, you will keep
 									earning rewards from this staking pool proportionally to your
@@ -450,7 +484,7 @@ export const StakeActions: React.FC<IModal> = props => {
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
-							background={theme.text.gray600}
+							background={theme.bg.subModal}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
 							top={["unset", "unset", "24rem", "24rem"]}
@@ -460,9 +494,14 @@ export const StakeActions: React.FC<IModal> = props => {
 							gap="2"
 						>
 							<Flex>
-								<Icon as={MdOutlineInfo} w="6" h="6" color={theme.text.cyan} />
+								<Icon
+									as={MdOutlineInfo}
+									w="6"
+									h="6"
+									color={theme.text.cyanPurple}
+								/>
 							</Flex>
-							<Flex flexDirection="column" gap="6">
+							<Flex flexDirection="column" gap="6" color={theme.text.mono}>
 								<Text>
 									Please note that when you claim without withdrawing your
 									liquidity remains in the staking pool.

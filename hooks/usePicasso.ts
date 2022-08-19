@@ -32,6 +32,7 @@ const usePicasso = () => {
 			blue: useColorModeValue("white", "cyan.300"),
 			infoLink: useColorModeValue("#565a69", "#c3c5cb"),
 			connectWallet: useColorModeValue("#665EE1", "#00d9ef"),
+			stakeMode: useColorModeValue("#A0AEC0", "#4A5568"),
 			swapInfo: useColorModeValue("#565a69", "#c3c5cb"),
 			whiteCyan: useColorModeValue("#ffffff", "#00d9ef"),
 			cyan: useColorModeValue("#ffffff", "#00d9ef"),
@@ -62,6 +63,10 @@ const usePicasso = () => {
 			theme: useColorModeValue(BsFillSunFill, BsFillMoonFill),
 		},
 		bg: {
+			stakeBanner: useColorModeValue(
+				"/images/backgrounds/LightBannerStake.png",
+				"/images/backgrounds/BannerStake.png"
+			),
 			psysReward: useColorModeValue(
 				"/images/backgrounds/LightPsysReward.png",
 				"/images/backgrounds/PsysReward.png"
@@ -75,7 +80,7 @@ const usePicasso = () => {
 				"/images/backgrounds/BannerFarm.png"
 			),
 			poolsBanner: useColorModeValue(
-				"images/backgrounds/LightPoolsBanner.png",
+				"images/backgrounds/LightBannerPool.png",
 				"images/backgrounds/BannerPools.png"
 			),
 			farmActions: useColorModeValue("white", "#0B172C"),
