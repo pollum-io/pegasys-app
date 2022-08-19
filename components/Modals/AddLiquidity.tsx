@@ -252,8 +252,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									name="inputFrom"
 									onChange={handleOnChangeTokenInputs}
 									value={tokenInputValue.inputFrom}
-									_hover={{ border: "1px solid #3182CE" }}
-									_focus={{ border: "1px solid #3182CE", outline: "none" }}
+									_focus={{ outline: "none" }}
 								/>
 							</Flex>
 						</Flex>
@@ -388,7 +387,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									fontSize="md"
 									fontWeight="medium"
 									px="1.375rem"
-									py="1rem"
+									py="0.5rem"
 									color={theme.text.mono}
 								>
 									Prices and pool share

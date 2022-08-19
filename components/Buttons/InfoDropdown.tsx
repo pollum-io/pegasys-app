@@ -8,6 +8,7 @@ import {
 	Flex,
 	Icon,
 	Link,
+	Text,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { FunctionComponent } from "react";
@@ -44,7 +45,7 @@ export const InfoDropdown: FunctionComponent = () => {
 
 	return (
 		<Accordion allowMultiple>
-			<AccordionItem border="none" pb="2">
+			<AccordionItem border="none">
 				<AccordionButton
 					pl={["24", "36", "6", "6"]}
 					pr={["24", "36", "6", "6"]}
@@ -64,7 +65,7 @@ export const InfoDropdown: FunctionComponent = () => {
 					<Icon as={MdOutlineCallMade} />
 					<Box
 						flex="1"
-						pl="1rem"
+						pl="0.5rem"
 						pr="10"
 						textAlign="left"
 						fontSize="md"
@@ -109,7 +110,7 @@ export const InfoDropdown: FunctionComponent = () => {
 					</AccordionPanel>
 				</Flex>
 			</AccordionItem>
-			<AccordionItem border="none" mb="2">
+			<AccordionItem border="none">
 				<AccordionButton
 					pl={["24", "36", "6", "6"]}
 					pr={["24", "36", "6", "6"]}
@@ -129,7 +130,7 @@ export const InfoDropdown: FunctionComponent = () => {
 					<Icon as={MdOutlineModeComment} />
 					<Box
 						flex="1"
-						pl="1rem"
+						pl="0.5rem"
 						pr="10"
 						textAlign="left"
 						fontSize="md"

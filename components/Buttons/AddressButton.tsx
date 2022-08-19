@@ -1,4 +1,5 @@
 import { Button, ButtonProps, Flex } from "@chakra-ui/react";
+import { ExpertMode } from "components/Header/ExpertMode";
 import { usePicasso, useWallet } from "hooks";
 import { FunctionComponent, ReactNode, useState } from "react";
 import Jazzicon from "react-jazzicon";
@@ -13,7 +14,7 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	const { children, pending, ...rest } = props;
 	const { walletError } = useWallet();
-	const [isExpertMode, setIsExportMode] = useState(true);
+	const [isExpertMode, setIsExportMode] = useState(false);
 
 	return (
 		<Button
@@ -31,7 +32,7 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 			px={["3", "3", "3", "3"]}
 			position={["absolute", "relative"]}
 			bottom={["12", "8", "8", "8"]}
-			right={!isExpertMode ? ["43%", "0", "0", "0"] : ["30%", "0", "0", "0"]}
+			right={isExpertMode ? ["43%", "0", "0", "0"] : ["30%", "0", "0", "0"]}
 			textTransform="uppercase"
 			overflow="hidden"
 			opacity="0.85"
@@ -45,7 +46,6 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 				"Wrong Network"
 			) : (
 				<>
-					{" "}
 					{!pending && (
 						<Flex pr="2" textTransform="uppercase">
 							<Jazzicon
@@ -57,6 +57,9 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 					{children}
 				</>
 			)}
+			<Flex display={["flex", "none", "none", "none"]} zIndex="-99">
+				<ExpertMode />
+			</Flex>
 		</Button>
 	);
 };

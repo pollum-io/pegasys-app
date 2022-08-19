@@ -698,13 +698,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							borderColor={theme.text.cyan}
 							mt="1.5rem"
 						>
-							<Text fontSize="md" fontWeight="medium" px="1.375rem" py="1rem">
+							<Text fontSize="md" fontWeight="medium" px="1.375rem" py="0.5rem">
 								Price
 							</Text>
 							<Flex
 								flexDirection="row"
 								justifyContent="space-around"
-								py="1rem"
+								py="0.5rem"
 								px="1rem"
 								borderRadius="2xl"
 								borderWidth="1px"
@@ -933,17 +933,21 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						{` ${selectedToken[1]?.symbol}`}
 					</Text>
 				</Flex>
-				<FilterButton
-					periodStateValue={tokensGraphCandlePeriod}
-					setPeriod={setTokensGraphCandlePeriod}
-				/>
 				{tokensGraphCandleData.length === 0 ? (
-					<Text>
-						Candle data not found to this token pair, please try again with
-						another tokens.
-					</Text>
+					<Flex align="center" justifyContent="center" flexDirection="column">
+						<Text fontWeight="semibold">
+							Data not found for this pair of tokens.
+						</Text>
+						<Text>Please try again with another pair.</Text>
+					</Flex>
 				) : (
-					<ChartComponent data={tokensGraphCandleData} />
+					<>
+						<FilterButton
+							periodStateValue={tokensGraphCandlePeriod}
+							setPeriod={setTokensGraphCandlePeriod}
+						/>
+						<ChartComponent data={tokensGraphCandleData} />
+					</>
 				)}
 			</Flex>
 		</Flex>

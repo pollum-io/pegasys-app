@@ -28,7 +28,12 @@ interface IModal {
 export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
-	const { walletAddress, transactions, currentNetworkChainId } = useWallet();
+	const {
+		walletAddress,
+		transactions,
+		currentNetworkChainId,
+		connectorSelected,
+	} = useWallet();
 	const { toast } = useToasty();
 	const [txs, setTxs] = useState<[]>([]);
 
@@ -43,26 +48,6 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 			description: "Address sucessfully copied to clipboard!",
 		});
 	};
-	const isEmpty =
-		Object.keys(transactions[57]).length === 0 &&
-		Object.keys(transactions[5700]).length === 0;
-
-	const explorerURL =
-		currentNetworkChainId === 5700
-			? "https://tanenbaum.io/tx"
-			: "https://explorer.syscoin.org/tx";
-
-	useEffect(() => {
-		if (!isEmpty) {
-			// eslint-disable-next-line
-			const currentTxs: ITransactionResponse[] | any[] = [
-				...Object.values(transactions[5700]),
-				...Object.values(transactions[57]),
-			];
-			setTxs(currentTxs);
-		}
-	}, [transactions]);
-
 	const isEmpty =
 		Object.keys(transactions[57]).length === 0 &&
 		Object.keys(transactions[5700]).length === 0;

@@ -81,7 +81,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 				_focus={{
 					outline: "none",
 				}}
-				w={["100%", "100vw", "max-content", "max-content"]}
+				w={["100vw", "100vw", "max-content", "max-content"]}
 				bgColor={theme.bg.blueNavyLight}
 				borderBottomRadius={["none", "none", "xl", "xl"]}
 				borderTopRadius={["2xl", "2xl", "xl", "xl"]}

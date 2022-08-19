@@ -10,12 +10,12 @@ export const ExpertMode: FunctionComponent = () => {
 		<Flex>
 			{expert && (
 				<Flex
-					position="relative"
+					position="fixed"
 					fontSize="12px"
-					zIndex="-1"
+					zIndex="-99"
 					background={[
-						`linear-gradient(${theme.bg.expertMode}, ${theme.bg.expertMode}) padding-box, linear-gradient(92deg, rgba(0, 183, 255, 0) 0%, #53D9D9 128.42%) border-box`,
-						`linear-gradient(${theme.bg.expertMode}, ${theme.bg.expertMode}) padding-box, linear-gradient(32deg, rgb(86 190 216 / 97%) 30.76%, rgb(86 190 216 / 6%) 97.76%) border-box`,
+						`linear-gradient(#010313, #010313) padding-box, linear-gradient(92deg, rgba(0, 183, 255, 0) 0%, #53D9D9 128.42%) border-box`,
+						`linear-gradient(${theme.bg.expertMode}, ${theme.bg.expertMode}) padding-box, linear-gradient(1deg, rgb(86 190 216 / 97%) 30.76%, rgb(86 190 216 / 6%) 97.76%) border-box`,
 					]}
 					border="1px solid transparent"
 					borderTop={["1px solid transparent", "none", "none", "none"]}
@@ -28,12 +28,11 @@ export const ExpertMode: FunctionComponent = () => {
 					borderBottomRadius={["2xl", "2xl", "2xl", "2xl"]}
 					borderBottomLeftRadius={["unset", "2xl", "2xl", "2xl"]}
 					borderTopRadius={["2xl", "unset", "unset", "unset"]}
-					borderTopLeftRadius={["unset", "2xl", "2xl", "2xl"]}
 					w="max-content"
 					h={["2.2rem", "max-content", "max-content", "max-content"]}
 					px={["4", "2.5rem", "2.5rem", "2.5rem"]}
 					pt={["0", "4", "4", "4"]}
-					ml={["1.5rem", "1.1rem", "1.1rem", "1.1rem"]}
+					ml={["0.3rem", "1.1rem", "1rem", "0.4rem"]}
 					bottom={["3.1rem", "1.5rem", "1.5rem", "1.5rem"]}
 					color={theme.text.mono}
 					alignItems="center"

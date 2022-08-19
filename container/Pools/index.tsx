@@ -160,9 +160,7 @@ export const PoolsContainer: NextPage = () => {
 										pointerEvents="none"
 										pb="0.3rem"
 										// eslint-disable-next-line react/no-children-prop
-										children={
-											<MdSearch color={theme.icon.searchIcon} size={20} />
-										}
+										children={<MdSearch color={theme.text.cyan} size={20} />}
 									/>
 									<Input
 										borderColor={theme.bg.blueNavyLightness}
@@ -175,17 +173,10 @@ export const PoolsContainer: NextPage = () => {
 										w={["19.5rem", "18rem", "20rem", "20rem"]}
 										h="2.2rem"
 										py={["0.2rem", "0.2rem", "1", "1"]}
-										pl="7"
+										pl="10"
 										_hover={{ border: "1px solid #3182CE" }}
 										_focus={{ border: "1px solid #3182CE", outline: "none" }}
 									/>
-									<Flex
-										position="absolute"
-										left="0.5rem"
-										bottom={["0.4rem", "0.4rem", "0.5rem", "0.5rem"]}
-									>
-										<MdSearch color={theme.text.cyanPurple} />
-									</Flex>
 								</InputGroup>
 							</Flex>
 							<Flex gap="4" alignItems="flex-end">
@@ -325,10 +316,6 @@ export const PoolsContainer: NextPage = () => {
 							mt="10"
 							justifyContent={["center", "center", "unset", "unset"]}
 						>
-							<PoolCards />
-							<PoolCards />
-
-							<PoolCards />
 							<PoolCards />
 						</Flex>
 					)}

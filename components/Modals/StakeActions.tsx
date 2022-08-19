@@ -153,11 +153,14 @@ export const StakeActions: React.FC<IModal> = props => {
 								display={{
 									base: "none",
 									sm: "none",
-									md: "block",
-									lg: "block",
+									md: "flex",
+									lg: "flex",
 								}}
+								position="relative"
+								right="2"
+								bottom="4"
 							>
-								<AiOutlineClose size={20} />
+								<AiOutlineClose size={24} />
 							</Flex>
 							<Flex
 								display={{
@@ -388,7 +391,7 @@ export const StakeActions: React.FC<IModal> = props => {
 					{buttonId === "claim" && (
 						<Flex flexDirection="column" gap="6">
 							<Flex
-								bgColor={theme.bg.blueNavy}
+								bgColor={theme.bg.whiteGray}
 								flexDirection="column"
 								justifyContent="center"
 								alignItems="center"

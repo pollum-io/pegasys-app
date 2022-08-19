@@ -12,6 +12,7 @@ import {
 	Icon,
 	PopoverArrow,
 	Tooltip,
+	PopoverCloseButton,
 } from "@chakra-ui/react";
 import React, { FunctionComponent, ReactNode, useEffect } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
@@ -56,7 +57,16 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 				mx={["0", "0", "20", "56"]}
 				position="fixed"
 			>
-				<PopoverArrow />
+				<Flex
+					justifyContent="flex-end"
+					zIndex="99"
+					pr="0rem"
+					pt="0rem"
+					pb="2"
+					h="max-content"
+				>
+					<PopoverCloseButton position="relative" size="md" />
+				</Flex>
 				<Flex
 					bgColor={theme.bg.transactionSettings}
 					borderRadius="7rem"
@@ -68,6 +78,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 						Transaction Settings
 					</Text>
 				</Flex>
+				<PopoverArrow />
 				<PopoverBody>
 					<Flex flexDirection="column" mt="4">
 						<Flex alignItems="center" flexDirection="row">

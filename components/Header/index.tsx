@@ -16,10 +16,10 @@ export const Header: React.FC = () => {
 	const { toggleColorMode } = useColorMode();
 	const theme = usePicasso();
 	const { pathname } = useRouter();
-
 	const { isOpenPsysBreakdown, onOpenPsysBreakdown, onClosePsysBreakdown } =
 		useModal();
 	const [nav, setNav] = useState(false);
+
 	const isNav = () => {
 		if (nav) {
 			return "white";
@@ -119,6 +119,7 @@ export const Header: React.FC = () => {
 					w="25%"
 					gap={["2", "0"]}
 					justifyContent={["space-around", "space-between"]}
+					pl={["6", "0", "0", "0"]}
 				>
 					<TokenButton onClick={onOpenPsysBreakdown} />
 					<NetworkButton />
