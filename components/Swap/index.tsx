@@ -49,6 +49,7 @@ import { OtherWallet } from "./OtherWallet";
 import { SwapExpertMode } from "./SwapExpertMode";
 import { TradeRouteComponent } from "./TradeRouteComponent";
 import { FilterButton } from "./FilterButton";
+import { FormattedPriceImpat } from "./FormattedPriceImpact";
 
 const ChartComponent = dynamic(() => import("./ChartComponent"), {
 	ssr: false,
@@ -152,8 +153,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const swapButtonValidation = !isConnected ? "Connect Wallet" : "Swap";
 
-	const { priceImpactWithoutFee, priceImpactSeverity } =
-		computeTradePriceBreakdown(returnedTradeValue?.v2Trade as Trade);
+	const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(
+		returnedTradeValue?.v2Trade as Trade
+	);
 
 	const handleOnChangeTokenInputs = (
 		event: React.ChangeEvent<HTMLInputElement>
@@ -422,7 +424,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			/>
 			<ConfirmSwap
 				isOpen={isOpenConfirmSwap}
-				onOpen={onOpenConfirmSwap}
 				onClose={onCloseConfirmSwap}
 				selectedTokens={selectedToken}
 				txType={txType}
@@ -830,13 +831,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								<Text fontWeight="normal">
 									Price Impact <Icon as={MdHelpOutline} />
 								</Text>
-								<Text fontWeight="medium">
-									{returnedTradeValue?.v2Trade
-										? `${returnedTradeValue?.v2Trade?.priceImpact?.toSignificant(
-												4
-										  )}%`
-										: "-"}
-								</Text>
+								<FormattedPriceImpat
+									priceImpact={returnedTradeValue?.v2Trade?.priceImpact}
+								/>
 							</Flex>
 							<Flex
 								flexDirection="row"
@@ -846,11 +843,16 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								<Text fontWeight="normal">
 									Liquidity Provider Fee <Icon as={MdHelpOutline} />
 								</Text>
-								<Text fontWeight="medium">-</Text>
+								<Text fontWeight="medium">
+									{realizedLPFee
+										? `${realizedLPFee.toSignificant(4)} ${
+												returnedTradeValue?.v2Trade?.inputAmount.currency.symbol
+										  }`
+										: "-"}
+								</Text>
 							</Flex>
-							{tokenInputValue.inputFrom.value &&
-								tokenInputValue.inputTo.value &&
-								returnedTradeValue?.v2TradeRoute && (
+							{returnedTradeValue?.v2TradeRoute &&
+								returnedTradeValue.v2TradeRoute.length > 2 && (
 									<Flex flexDirection="column">
 										<Flex
 											flexDirection="row"

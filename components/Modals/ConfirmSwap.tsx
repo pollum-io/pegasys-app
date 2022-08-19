@@ -22,7 +22,7 @@ interface IModal {
 	onClose: () => void;
 	selectedTokens: WrappedTokenInfo[];
 	txType: string;
-	onTx: () => any;
+	onTx: (() => Promise<string>) | (() => Promise<void>) | null | undefined;
 	trade: Trade | undefined;
 	isWrap: boolean;
 	tokenInputValue: ISwapTokenInputValue;
@@ -153,6 +153,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 							color={theme.text.cyanWhite}
 							fontSize="lg"
 							onClick={() => {
+								if (!onTx) return;
 								onTx();
 								onClose();
 							}}
