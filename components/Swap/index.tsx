@@ -2,12 +2,15 @@
 import {
 	Button,
 	ButtonProps,
+	Collapse,
+	Fade,
 	Flex,
 	Icon,
 	Img,
 	Input,
 	Text,
 	Tooltip,
+	useDisclosure,
 } from "@chakra-ui/react";
 import {
 	useModal,
@@ -61,6 +64,9 @@ interface ITokenInputValue {
 
 export const Swap: FunctionComponent<ButtonProps> = () => {
 	const theme = usePicasso();
+
+	const { isOpen, onToggle } = useDisclosure();
+	const [show, setShow] = React.useState(false);
 
 	const { t: translation } = useTranslation();
 	const { userTokensBalance } = useTokens();
@@ -218,6 +224,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setTransactions,
 		transactions,
 		setApprovalState,
+		// @ts-ignore
 		signer
 	);
 
@@ -410,7 +417,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	return (
 		<Flex
-			pt={["6", "6", "20", "24"]}
+			pt={["6", "6", "16", "16"]}
 			justifyContent="center"
 			fontFamily="inter"
 			fontStyle="normal"
@@ -439,7 +446,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			/>
 			<ConfirmSwap
 				isOpen={isOpenConfirmSwap}
-				onOpen={onOpenConfirmSwap}
 				onClose={onCloseConfirmSwap}
 				selectedTokens={selectedToken}
 				txType={txType}
@@ -474,11 +480,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					<Flex flexDirection="row" justifyContent="space-between" pb="1.5rem">
-						<Text
-							color={theme.text.mono}
-							fontWeight="semibold"
-							fontSize={["xl", "2xl", "2xl", "2xl"]}
-						>
+						<Text fontWeight="semibold" fontSize={["xl", "2xl", "2xl", "2xl"]}>
 							Swap
 						</Text>
 					</Flex>
@@ -528,7 +530,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								>
 									{selectedToken[0]?.symbol}
 								</Text>
-								<Icon as={IoIosArrowDown} color={theme.text.mono} />
+								<Icon as={IoIosArrowDown} />
 							</Flex>
 							<Input
 								fontSize="2xl"
@@ -543,7 +545,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								name="inputFrom"
 								value={tokenInputValue?.inputFrom?.value}
 								_hover={{ border: "1px solid #3182CE" }}
-								_focus={{ border: "1px solid #3182CE" }}
+								_focus={{ border: "1px solid #3182CE", outline: "none" }}
 							/>
 						</Flex>
 					</Flex>
@@ -648,7 +650,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								name="inputTo"
 								value={tokenInputValue?.inputTo?.value}
 								_hover={{ border: "1px solid #3182CE" }}
-								_focus={{ border: "1px solid #3182CE" }}
+								_focus={{ border: "1px solid #3182CE", outline: "none" }}
 							/>
 						</Flex>
 					</Flex>
@@ -697,13 +699,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							borderColor={theme.text.cyan}
 							mt="1.5rem"
 						>
-							<Text fontSize="md" fontWeight="medium" px="1.375rem" py="1rem">
+							<Text fontSize="md" fontWeight="medium" px="1.375rem" py="0.5rem">
 								Price
 							</Text>
 							<Flex
 								flexDirection="row"
 								justifyContent="space-around"
-								py="1rem"
+								py="0.5rem"
 								px="1rem"
 								borderRadius="2xl"
 								borderWidth="1px"
@@ -1019,17 +1021,21 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						{` ${selectedToken[1]?.symbol}`}
 					</Text>
 				</Flex>
-				<FilterButton
-					periodStateValue={tokensGraphCandlePeriod}
-					setPeriod={setTokensGraphCandlePeriod}
-				/>
 				{tokensGraphCandleData.length === 0 ? (
-					<Text>
-						Candle data not found to this token pair, please try again with
-						another tokens.
-					</Text>
+					<Flex align="center" justifyContent="center" flexDirection="column">
+						<Text fontWeight="semibold">
+							Data not found for this pair of tokens.
+						</Text>
+						<Text>Please try again with another pair.</Text>
+					</Flex>
 				) : (
-					<ChartComponent data={tokensGraphCandleData} />
+					<>
+						<FilterButton
+							periodStateValue={tokensGraphCandlePeriod}
+							setPeriod={setTokensGraphCandlePeriod}
+						/>
+						<ChartComponent data={tokensGraphCandleData} />
+					</>
 				)}
 			</Flex>
 		</Flex>

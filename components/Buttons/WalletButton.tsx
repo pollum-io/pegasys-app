@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from "@chakra-ui/react";
+import { Button, ButtonProps, Flex } from "@chakra-ui/react";
 import { SelectSyscoin, SelectWallets } from "components/Modals";
 import { useModal, usePicasso, useWallet } from "hooks";
 import { FunctionComponent } from "react";
@@ -32,7 +32,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 	return (
 		<>
 			{!isConnected && !walletError && (
-				<>
+				<Flex>
 					<SelectWallets
 						isOpen={isOpenSelectWalletModal}
 						onClose={onCloseSelectWalletModal}
@@ -53,13 +53,13 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						px={["6", "6", "8", "8"]}
 						position={["absolute", "relative"]}
 						bottom={["12", "10"]}
-						left={["25%", "0", "0", "0"]}
+						left={["28%", "0", "0", "0"]}
 						onClick={onOpenSelectWalletModal}
 						{...rest}
 					>
 						Connect wallet
 					</Button>
-				</>
+				</Flex>
 			)}
 
 			{walletError && (
@@ -82,7 +82,9 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 					>
 						{shortAddress(walletAddress)}
 					</AddressButton>
-					<ExpertMode />
+					<Flex display={["none", "flex", "flex", "flex"]} zIndex="-99">
+						<ExpertMode />
+					</Flex>
 				</>
 			)}
 			{isConnected && isPending && (
@@ -92,7 +94,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						onClick={walletError ? onOpenSelectWalletModal : onOpenAddress}
 						pending={approvalState === ApprovalState.PENDING}
 					>
-						<Circles width={25} height={25} style={{ paddingRight: "6px" }} />{" "}
+						<Circles width={25} height={25} style={{ paddingRight: "6px" }} />
 						Pending
 					</AddressButton>
 				</>

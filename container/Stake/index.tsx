@@ -23,7 +23,7 @@ export const StakeContainer: NextPage = () => {
 					zIndex="docked"
 					position="relative"
 					borderRadius="xl"
-					backgroundColor="blue.700"
+					backgroundColor={theme.bg.whiteGray}
 				>
 					<Img
 						borderRadius="xl"
@@ -46,7 +46,7 @@ export const StakeContainer: NextPage = () => {
 							Pegasys PSYS Staking
 						</Text>
 						<Text
-							fontWeight="semibold"
+							fontWeight="medium"
 							fontSize="sm"
 							lineHeight="shorter"
 							w={["70%", "50%", "50%", "50%"]}
@@ -59,13 +59,15 @@ export const StakeContainer: NextPage = () => {
 						justifyContent="center"
 						flexDirection="row"
 						bgColor={theme.bg.whiteGray}
-						zIndex="docked"
+						zIndex="0"
+						position="relative"
+						top="2"
 						borderBottomRadius="xl"
 						py="0.531rem"
 						gap="2.5"
 						color="white"
 					>
-						<Text fontWeight="semibold" fontSize="xs">
+						<Text fontWeight="medium" fontSize="xs">
 							Read more about PSYS
 						</Text>
 						<MdOutlineCallMade size={20} />
@@ -150,7 +152,6 @@ export const StakeContainer: NextPage = () => {
 					mb="24"
 					alignItems={["center", "center", "center", "center"]}
 				>
-					<StakeCards />
 					<StakeCards />
 				</Flex>
 			</Flex>

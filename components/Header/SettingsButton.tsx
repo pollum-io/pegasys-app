@@ -10,9 +10,11 @@ import {
 	Stack,
 	Switch,
 	Icon,
+	PopoverArrow,
 	Tooltip,
+	PopoverCloseButton,
 } from "@chakra-ui/react";
-import React, { FunctionComponent, ReactNode } from "react";
+import React, { FunctionComponent, ReactNode, useEffect } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
 import { usePicasso, useWallet } from "hooks";
 import { IconButton } from "../Buttons/IconButton";
@@ -44,18 +46,32 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 					}}
 					aria-label="Popover"
 					icon={<MdSettings size={25} />}
+					_expanded={{ color: theme.text.cyan }}
 				/>
 			</PopoverTrigger>
 			<PopoverContent
+				_focus={{
+					outline: "none",
+				}}
 				bgColor={theme.bg.blueNavy}
 				p="1rem 1.5rem 0.5rem"
 				w={["100vw", "100vw", "24.563rem", "24.563rem"]}
 				h="max-content"
 				bottom={["0rem", "0rem", "3.8rem", "3.8rem"]}
-				right={["0", "0", "", ""]}
+				right={["0", "0", "unset", "unset"]}
 				mx={["0", "0", "20", "56"]}
 				position="fixed"
 			>
+				<Flex
+					justifyContent="flex-end"
+					zIndex="99"
+					pr="0rem"
+					pt="0rem"
+					pb="2"
+					h="max-content"
+				>
+					<PopoverCloseButton position="relative" size="md" />
+				</Flex>
 				<Flex
 					bgColor={theme.bg.transactionSettings}
 					borderRadius="7rem"
@@ -67,6 +83,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 						Transaction Settings
 					</Text>
 				</Flex>
+				<PopoverArrow />
 				<PopoverBody>
 					<Flex flexDirection="column" mt="4">
 						<Flex alignItems="center" flexDirection="row">
@@ -169,6 +186,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								textAlign="center"
 								_focus={{
 									borderColor: theme.border.borderSettings,
+									outline: "none",
 								}}
 								_hover={{
 									borderColor: theme.border.borderSettings,
@@ -221,6 +239,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								borderColor={theme.border.borderSettings}
 								_focus={{
 									borderColor: theme.border.borderSettings,
+									outline: "none",
 								}}
 								_hover={{
 									borderColor: theme.border.borderSettings,
@@ -228,36 +247,46 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							/>
 							<Text color={theme.text.mono}>Minutes</Text>
 						</Flex>
-						<Flex alignItems="center" flexDirection="row" mt="4">
-							<Text
-								fontSize="md"
-								pr="1"
-								fontWeight="medium"
-								color={theme.text.mono}
+						<Flex
+							alignItems={["flex-start", "center", "center", "center"]}
+							flexDirection={["column", "row", "row", "row"]}
+							mt="4"
+						>
+							<Flex
+								flexDirection={["row", "row", "row", "row"]}
+								pb={["2", "2", "0", "0"]}
 							>
-								Toggle Expert Mode
-							</Text>
-							<Tooltip
-								label="Ignora os modais de confirmação e permite alta variação de preço. Use por sua conta e risco."
-								position="relative"
-								bgColor={theme.bg.secondary}
-								color={theme.text.mono}
-								borderRadius="md"
-							>
-								<Text as="span" _hover={{ opacity: 0.8 }}>
-									<Flex pb="0.15rem">
-										<Icon
-											as={MdHelpOutline}
-											h="4"
-											w="4"
-											mt="3px"
-											color={theme.icon.whiteGray}
-											borderRadius="full"
-										/>
-									</Flex>
+								<Text
+									fontSize={["sm", "md", "md", "md"]}
+									pr={["1", "1", "1", "1"]}
+									fontWeight="medium"
+									color={theme.text.mono}
+								>
+									Toggle Expert Mode
 								</Text>
-							</Tooltip>
-							<Flex flexDirection="row" ml="12">
+								<Tooltip
+									label="Ignora os modais de confirmação e permite alta variação de preço. Use por sua conta e risco."
+									position="relative"
+									bgColor={theme.bg.secondary}
+									color={theme.text.mono}
+									borderRadius="md"
+								>
+									<Text as="span" _hover={{ opacity: 0.8 }}>
+										<Flex pb="0.15rem">
+											<Icon
+												as={MdHelpOutline}
+												h="4"
+												w="4"
+												mt="3px"
+												color={theme.icon.whiteGray}
+												backgroundColor="gray.800"
+												borderRadius="full"
+											/>
+										</Flex>
+									</Text>
+								</Tooltip>
+							</Flex>
+							<Flex flexDirection="row" ml={["2", "12", "12", "12"]}>
 								<Stack align="center" direction="row">
 									<Text color={theme.text.mono}>Off</Text>
 									<Switch
@@ -275,7 +304,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 						bgColor={theme.bg.transactionSettings}
 						borderRadius="7rem"
 						py="2"
-						mt="8"
+						mt={["4", "8", "8", "8"]}
 						justifyContent="center"
 						alignItems="center"
 					>

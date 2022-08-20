@@ -20,8 +20,8 @@ import {
 	MdOutlineInfo,
 } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
-import { SelectCoinModal } from "components";
 import { WrappedTokenInfo } from "types";
+import { SelectCoinModal } from "./SelectCoin";
 
 interface IModal {
 	isModalOpen: boolean;
@@ -40,7 +40,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const { userTokensBalance } = useTokens();
 
 	const theme = usePicasso();
-	const { isOpenCoin, onCloseCoin } = useModal();
+	const { isOpenCoin, onCloseCoin, onOpenCoin } = useModal();
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
 	const [tokenInputValue, setTokenInputValue] = useState<ITokenInputValue>({
@@ -211,7 +211,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									id="0"
 									w="max-content"
 									onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-										onOpen();
+										onOpenCoin();
 										setButtonId(Number(event.currentTarget.id));
 									}}
 									borderRadius="2xl"
@@ -252,8 +252,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									name="inputFrom"
 									onChange={handleOnChangeTokenInputs}
 									value={tokenInputValue.inputFrom}
-									_hover={{ border: "1px solid #3182CE" }}
-									_focus={{ border: "1px solid #3182CE" }}
+									_focus={{ outline: "none" }}
 								/>
 							</Flex>
 						</Flex>
@@ -307,7 +306,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									id="1"
 									w="max-content"
 									onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-										onOpen();
+										onOpenCoin();
 										setButtonId(Number(event.currentTarget.id));
 									}}
 									borderRadius="2xl"
@@ -345,6 +344,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									type="number"
 									_placeholder={{ color: theme.text.whiteGray }}
 									_active={{ border: "none" }}
+									_focus={{
+										outline: "none",
+									}}
 									name="inputTo"
 									value={tokenInputValue.inputTo}
 									onChange={handleOnChangeTokenInputs}
@@ -385,7 +387,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									fontSize="md"
 									fontWeight="medium"
 									px="1.375rem"
-									py="1rem"
+									py="0.5rem"
 									color={theme.text.mono}
 								>
 									Prices and pool share
@@ -393,7 +395,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								<Flex
 									flexDirection={["column", "row", "row", "row"]}
 									justifyContent="space-between"
-									py="1rem"
+									py="0.5rem"
 									px="1rem"
 									borderRadius="2xl"
 									borderWidth="1px"

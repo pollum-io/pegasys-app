@@ -4,6 +4,8 @@ import {
 	Icon,
 	Img,
 	Input,
+	InputGroup,
+	InputRightAddon,
 	Modal,
 	ModalBody,
 	ModalContent,
@@ -70,7 +72,7 @@ export const FarmActions: React.FC<IModal> = props => {
 							pl={["0", "16", "0", "0"]}
 							gap="2"
 							flexDirection="row"
-							mt={["6", "6", "0", "0"]}
+							mt={["6", "6", "2", "2"]}
 						>
 							<Button
 								w="max-content"
@@ -215,35 +217,31 @@ export const FarmActions: React.FC<IModal> = props => {
 								</Text>
 								{!confirmDepoist ? (
 									<Flex>
-										<Input
-											placeholder="0.0"
-											border="1px solid"
-											borderColor={theme.border.farmInput}
-											bgColor={theme.bg.blackAlpha}
-											borderLeftRadius="full"
-											p="5"
-											w="25rem"
-											_hover={{
-												borderColor: theme.border.farmInput,
-											}}
-											_focus={{
-												borderColor: theme.border.farmInput,
-											}}
-										/>
-										<Button
-											border="1px solid "
-											borderColor={theme.border.farmInput}
-											borderRightRadius="full"
-											bgColor={theme.bg.max}
-											color={theme.text.max}
-											fontSize="lg"
-											fontWeight="normal"
-											px="4"
-											py="5"
-											_hover={{ backgroundColor: theme.bg.max, opacity: 0.9 }}
-										>
-											max
-										</Button>
+										<InputGroup size="lg">
+											<Input
+												placeholder="0.0"
+												border="1px solid"
+												borderColor="rgba(1, 219, 243, 0.2)"
+												bgColor={theme.bg.whiteGray}
+												borderLeftRadius="full"
+												w="25rem"
+												_hover={{}}
+												_focus={{
+													outline: "none",
+												}}
+											/>
+											<InputRightAddon
+												// eslint-disable-next-line react/no-children-prop
+												children="max"
+												border="1px solid transparent;"
+												background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, rgba(1, 219, 243, 0.2) border-box`}
+												borderRightRadius="full"
+												color={theme.text.cyan}
+												fontSize="lg"
+												fontWeight="normal"
+												_hover={{ backgroundColor: theme.bg.blueNavyLightness }}
+											/>
+										</InputGroup>
 									</Flex>
 								) : (
 									<Flex
@@ -269,7 +267,9 @@ export const FarmActions: React.FC<IModal> = props => {
 										</Flex>
 									</Flex>
 								)}
-								<Text fontWeight="normal">Weekly Rewards: 0 PSYS / Week</Text>
+								<Text fontWeight="normal" pt="1.5rem">
+									Weekly Rewards: 0 PSYS / Week
+								</Text>
 								<Text fontWeight="normal">Extra Reward: 0 PSYS / Week</Text>
 							</Flex>
 							<Button
@@ -278,7 +278,8 @@ export const FarmActions: React.FC<IModal> = props => {
 								py="3"
 								px="1.5rem"
 								w="100%"
-								my="4"
+								mt="1.5rem"
+								mb="1rem"
 								h="max-content"
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
@@ -350,19 +351,19 @@ export const FarmActions: React.FC<IModal> = props => {
 									onMouseEnter={() => setShowTooltip(true)}
 									onMouseLeave={() => setShowTooltip(false)}
 								>
-									<SliderMark value={0} mt="1" ml="1.5" fontSize="sm">
+									<SliderMark value={0} mt="0.5rem" ml="1.5" fontSize="sm">
 										0%
 									</SliderMark>
-									<SliderMark value={25} mt="1" ml="-2.5" fontSize="sm">
+									<SliderMark value={25} mt="0.5rem" ml="-2.5" fontSize="sm">
 										25%
 									</SliderMark>
-									<SliderMark value={50} mt="1" ml="-2.5" fontSize="sm">
+									<SliderMark value={50} mt="0.5rem" ml="-2.5" fontSize="sm">
 										50%
 									</SliderMark>
-									<SliderMark value={75} mt="1" ml="-2.5" fontSize="sm">
+									<SliderMark value={75} mt="0.5rem" ml="-2.5" fontSize="sm">
 										75%
 									</SliderMark>
-									<SliderMark value={100} mt="1" ml="-8" fontSize="sm">
+									<SliderMark value={100} mt="0.5rem" ml="-8" fontSize="sm">
 										100%
 									</SliderMark>
 									<SliderTrack>
@@ -379,7 +380,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									</Tooltip>
 								</Slider>
 							</Flex>
-							<Flex mt="7" mb="2" gap="4">
+							<Flex mt="1.5rem" mb="1rem" gap="4">
 								<Button
 									fontSize="lg"
 									fontWeight="semibold"

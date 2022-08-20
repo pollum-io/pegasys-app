@@ -22,7 +22,7 @@ interface IModal {
 	onClose: () => void;
 	selectedTokens: WrappedTokenInfo[];
 	txType: string;
-	onTx: () => any;
+	onTx: (() => Promise<string>) | (() => Promise<void>) | null | undefined;
 	trade: Trade | undefined;
 	isWrap: boolean;
 	tokenInputValue: ISwapTokenInputValue;

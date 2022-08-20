@@ -36,6 +36,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 	const theme = usePicasso();
 	const { isOpenStakeActions, onOpenStakeActions, onCloseStakeActions } =
 		useModal();
+
 	const [buttonId, setButtonId] = useState<string>("");
 	const { colorMode } = useColorMode();
 
@@ -128,7 +129,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						1 {stakeTotalStake}
 					</Text>
 				</GridItem>
-				<GridItem flexDirection="column">
+				<GridItem flexDirection="column" pl="6">
 					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyanPurple}>
 						Your rate (PSYS/Week)
 					</Text>
@@ -152,7 +153,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						1 {stakeYourStaked}
 					</Text>
 				</GridItem>
-				<GridItem flexDirection="column">
+				<GridItem flexDirection="column" pl="6">
 					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyanPurple}>
 						Your unclaimed PSYS
 					</Text>

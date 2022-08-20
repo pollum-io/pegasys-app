@@ -6,19 +6,21 @@ import { useRouter } from "next/router";
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
 	href: string;
+	active?: boolean;
 }
 
 export const NavButton: FunctionComponent<IButtonProps> = props => {
 	const { push } = useRouter();
-	const { href, children, color, display, ...rest } = props;
+	const { href, children, color, display, active, ...rest } = props;
 	const theme = usePicasso();
+
 	return (
 		<Link href={href} _hover={{ textDecoration: "none" }}>
 			<Button
-				color={theme.text.header}
+				color={active ? "white" : theme.text.header}
 				fontSize={["0.938rem", "md", "md", "md"]}
 				fontWeight="semibold"
-				bgColor="transparent"
+				bgColor={active ? theme.bg.whiteGray : "transparent"}
 				opacity="1"
 				borderRadius="70px"
 				transition="0.4s"
@@ -30,6 +32,7 @@ export const NavButton: FunctionComponent<IButtonProps> = props => {
 				_active={{}}
 				px={[3, 6, 6, 6]}
 				py="2"
+				display={display}
 				{...rest}
 			>
 				{children}

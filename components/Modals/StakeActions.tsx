@@ -4,6 +4,8 @@ import {
 	Icon,
 	Img,
 	Input,
+	InputGroup,
+	InputRightAddon,
 	Modal,
 	ModalBody,
 	ModalContent,
@@ -84,7 +86,7 @@ export const StakeActions: React.FC<IModal> = props => {
 						justifyContent="space-between"
 						alignItems={["flex-start", "flex-start", "center", "center"]}
 					>
-						<Flex pr="7" gap="2" mt={["6", "6", "0", "0"]}>
+						<Flex pr="7" gap="2" mt={["6", "6", "2", "2"]}>
 							<Button
 								w="max-content"
 								h="max-content"
@@ -163,9 +165,12 @@ export const StakeActions: React.FC<IModal> = props => {
 								display={{
 									base: "none",
 									sm: "none",
-									md: "block",
-									lg: "block",
+									md: "flex",
+									lg: "flex",
 								}}
+								position="relative"
+								right="2"
+								bottom="4"
 							>
 								<AiOutlineClose size={20} color={theme.icon.closeWhiteGray} />
 							</Flex>
@@ -270,7 +275,8 @@ export const StakeActions: React.FC<IModal> = props => {
 								py="3"
 								px="1.5rem"
 								w="100%"
-								my="4"
+								mt="1.5rem"
+								mb="1rem"
 								h="max-content"
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
@@ -340,19 +346,19 @@ export const StakeActions: React.FC<IModal> = props => {
 									onMouseEnter={() => setShowTooltip(true)}
 									onMouseLeave={() => setShowTooltip(false)}
 								>
-									<SliderMark value={0} mt="1" ml="1.5" fontSize="sm">
+									<SliderMark value={0} mt="0.5rem" ml="1.5" fontSize="sm">
 										0%
 									</SliderMark>
-									<SliderMark value={25} mt="1" ml="-2.5" fontSize="sm">
+									<SliderMark value={25} mt="0.5rem" ml="-2.5" fontSize="sm">
 										25%
 									</SliderMark>
-									<SliderMark value={50} mt="1" ml="-2.5" fontSize="sm">
+									<SliderMark value={50} mt="0.5rem" ml="-2.5" fontSize="sm">
 										50%
 									</SliderMark>
-									<SliderMark value={75} mt="1" ml="-2.5" fontSize="sm">
+									<SliderMark value={75} mt="0.5rem" ml="-2.5" fontSize="sm">
 										75%
 									</SliderMark>
-									<SliderMark value={100} mt="1" ml="-8" fontSize="sm">
+									<SliderMark value={100} mt="0.5rem" ml="-8" fontSize="sm">
 										100%
 									</SliderMark>
 									<SliderTrack>
@@ -369,7 +375,7 @@ export const StakeActions: React.FC<IModal> = props => {
 									</Tooltip>
 								</Slider>
 							</Flex>
-							<Flex mt="7" mb="2" gap="4">
+							<Flex mt="1.5rem" mb="1rem" gap="4">
 								<Button
 									fontSize="lg"
 									fontWeight="semibold"
@@ -487,7 +493,7 @@ export const StakeActions: React.FC<IModal> = props => {
 							background={theme.bg.subModal}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
-							top={["unset", "unset", "24rem", "24rem"]}
+							top={["unset", "unset", "24rem", "22.5rem"]}
 							borderTopRadius={["0", "0", "3xl", "3xl"]}
 							borderBottomRadius={["0", "0", "3xl", "3xl"]}
 							alignItems="flex-start"
