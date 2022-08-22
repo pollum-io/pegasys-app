@@ -50,7 +50,7 @@ interface IModal {
 }
 
 export const SelectCoinModal: React.FC<IModal> = props => {
-	const { selectedToken, buttonId, setSelectedToken, approvalState } = props;
+	const { selectedToken, buttonId, setSelectedToken } = props;
 	const { isOpen, onClose } = props;
 	const { onOpenManageToken, isOpenManageToken, onCloseManageToken } =
 		useModal();
@@ -60,7 +60,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const [filter, setFilter] = useState<WrappedTokenInfo[]>([]);
 	const [tokenError, setTokenError] = useState<WrappedTokenInfo[]>([]);
 	const [arrowOrder, setArrowOrder] = useState(false);
-	const { setApprovalState } = useWallet();
+	const { setApprovalState, approvalState } = useWallet();
 
 	const { userTokensBalance } = useTokens();
 
@@ -123,8 +123,14 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const handleSelectToken = useCallback(
 		(id: number, token: WrappedTokenInfo) => {
 			if (!selectedToken) return;
-			if (approvalState === ApprovalState.APPROVED) {
-				setApprovalState(ApprovalState.UNKNOWN);
+			if (
+				approvalState.status === ApprovalState.APPROVED &&
+				approvalState.type !== "approve"
+			) {
+				setApprovalState({
+					status: ApprovalState.UNKNOWN,
+					type: approvalState.type,
+				});
 			}
 			setSelectedToken((prevState: WrappedTokenInfo[]) => {
 				prevState[id] = new WrappedTokenInfo(token.tokenInfo);

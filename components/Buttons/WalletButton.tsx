@@ -27,7 +27,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 	const { isConnected, walletAddress, walletError, approvalState } =
 		useWallet();
 
-	const isPending = approvalState === ApprovalState.PENDING;
+	const isPending = approvalState.status === ApprovalState.PENDING;
 
 	return (
 		<>
@@ -90,7 +90,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
 					<AddressButton
 						onClick={walletError ? onOpenSelectWalletModal : onOpenAddress}
-						pending={approvalState === ApprovalState.PENDING}
+						pending={approvalState?.status === ApprovalState.PENDING}
 					>
 						<Circles width={25} height={25} style={{ paddingRight: "6px" }} />{" "}
 						Pending
