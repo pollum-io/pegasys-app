@@ -20,8 +20,6 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
 
-	console.log(colorMode, "colorr");
-
 	return (
 		<Web3ReactProvider getLibrary={getLibrary}>
 			<WalletProvider>
