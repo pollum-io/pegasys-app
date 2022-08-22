@@ -9,6 +9,7 @@ import { UseBestSwapMethod } from "./useBestSwapMethod";
 import { UseToastOptions } from "@chakra-ui/react";
 import { ApprovalState } from "./useApproveCallback";
 import { TransactionResponse } from "@ethersproject/providers";
+import { IApprovalState } from "contexts";
 
 export enum SwapCallbackState {
 	INVALID,
@@ -22,7 +23,7 @@ export function UseSwapCallback(
 	walletInfos: IWalletHookInfos,
 	signer: Signer,
 	setTransactions: React.Dispatch<React.SetStateAction<object>>,
-	setApprovalState: React.Dispatch<React.SetStateAction<ApprovalState>>,
+	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
 	transactions: object
 ) {
@@ -177,7 +178,7 @@ export function UseSwapCallback(
 						summary: withVersion,
 					});
 
-					setApprovalState(ApprovalState.PENDING);
+					setApprovalState({ status: ApprovalState.PENDING, type: "swap" });
 
 					return response.hash;
 				})

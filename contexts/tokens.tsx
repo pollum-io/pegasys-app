@@ -115,7 +115,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 	}, [isConnected, currentNetworkChainId, walletAddress]);
 
 	useEffect(() => {
-		if (approvalState === ApprovalState.APPROVED) {
+		if (approvalState.status === ApprovalState.APPROVED) {
 			getDefaultListToken();
 		}
 	}, [approvalState]);

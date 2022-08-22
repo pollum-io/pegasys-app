@@ -10,6 +10,7 @@ import {
 } from "utils";
 import { IWalletHookInfos, ISwapTokenInputValue } from "types";
 import { Signer } from "ethers";
+import { IApprovalState } from "contexts";
 
 export enum ApprovalState {
 	UNKNOWN,
@@ -26,7 +27,7 @@ export enum Field {
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
 export function useApproveCallback(
 	userInput: ISwapTokenInputValue,
-	setApprovalState: React.Dispatch<React.SetStateAction<ApprovalState>>,
+	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
 	walletInfos: IWalletHookInfos,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
 	setTransactions: React.Dispatch<React.SetStateAction<object>>,
@@ -91,7 +92,7 @@ export function useApproveCallback(
 					summary: `Approve ${currentAmountToApprove?.currency?.symbol}`,
 					approval: { tokenAddress: token?.address, spender },
 				});
-				setApprovalState(ApprovalState.PENDING);
+				setApprovalState({ status: ApprovalState.PENDING, type: "approve" });
 			})
 			.catch(error => {
 				if (error?.code === 4001) {
@@ -114,7 +115,7 @@ export function useApproveCallbackFromTrade(
 	walletInfos: IWalletHookInfos,
 	signer: Signer,
 	userInput: ISwapTokenInputValue,
-	setApprovalState: React.Dispatch<React.SetStateAction<ApprovalState>>,
+	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
 	setTransactions: React.Dispatch<React.SetStateAction<object>>,
 	transactions: object,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,

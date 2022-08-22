@@ -154,10 +154,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		selectedToken[0]?.symbol !== "SYS" && selectedToken[0]?.symbol !== "PSYS";
 
 	const approveValidation =
-		(isERC20 && approvalState === ApprovalState.UNKNOWN) ||
-		(isERC20 && approvalState === ApprovalState.PENDING);
+		(isERC20 && approvalState.status === ApprovalState.UNKNOWN) ||
+		(isERC20 && approvalState.status === ApprovalState.PENDING);
 
-	const isPending = approvalState === ApprovalState.PENDING;
+	const isPending = approvalState.status === ApprovalState.PENDING;
 
 	const wrapOrUnwrap = selectedToken[0]?.symbol === "SYS" ? "Wrap" : "Unwrap";
 

@@ -17,7 +17,10 @@ export enum ApprovalState {
 	PENDING,
 	APPROVED,
 }
-
+export interface IApprovalState {
+	status: ApprovalState;
+	type: string;
+}
 interface IWeb3 {
 	isConnected: boolean;
 	currentNetworkChainId: number | null;
@@ -47,8 +50,8 @@ interface IWeb3 {
 	setUserSlippageTolerance: React.Dispatch<React.SetStateAction<number>>;
 	setTransactions: React.Dispatch<React.SetStateAction<object>>;
 	transactions: object;
-	setApprovalState: React.Dispatch<React.SetStateAction<ApprovalState>>;
-	approvalState: ApprovalState;
+	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>;
+	approvalState: IApprovalState;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -81,9 +84,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		5700: {},
 	});
 
-	const [approvalState, setApprovalState] = useState<ApprovalState>(
-		ApprovalState.UNKNOWN
-	);
+	const [approvalState, setApprovalState] = useState<IApprovalState>({
+		status: ApprovalState.UNKNOWN,
+		type: "",
+	});
 	const { toast } = useToasty();
 
 	const connectToSysRpcIfNotConnected = () => {
@@ -158,7 +162,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	};
 
 	useMemo(() => {
-		if (approvalState === ApprovalState.PENDING) {
+		if (approvalState.status === ApprovalState.PENDING) {
 			const timer = setInterval(async () => {
 				const result = await fetch(
 					`${rpcUrl}?module=account&action=pendingtxlist&address=${walletAddress}`
@@ -181,7 +185,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 									},
 								},
 							});
-							setApprovalState(ApprovalState.APPROVED);
+							setApprovalState({
+								status: ApprovalState.APPROVED,
+								type: approvalState.type,
+							});
 							clearInterval(timer);
 							// eslint-disable-next-line
 							return;
@@ -193,7 +200,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	}, [approvalState]);
 
 	useEffect(() => {
-		if (approvalState === ApprovalState.APPROVED) {
+		if (approvalState.status === ApprovalState.APPROVED) {
 			toast({
 				title: "Transaction completed successfully.",
 				status: "success",
