@@ -56,10 +56,16 @@ const ChartComponent = dynamic(() => import("./ChartComponent"), {
 });
 
 export const Swap: FunctionComponent<ButtonProps> = () => {
+	// HOOKS IMPORTED VALUES //
+
 	const theme = usePicasso();
 
+	const { toast } = useToasty();
+
 	const { t: translation } = useTranslation();
+
 	const { userTokensBalance } = useTokens();
+
 	const {
 		isOpenWallet,
 		onCloseWallet,
@@ -86,20 +92,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		otherWallet,
 	} = useWallet();
 
-	const [tokensGraphCandleData, setTokensGraphCandleData] = useState<
-		IChartComponentData[]
-	>([]);
-	const [tokensGraphCandlePeriod, setTokensGraphCandlePeriod] =
-		useState<IChartComponentPeriod>({
-			id: 5,
-			period: ONE_DAY_IN_SECONDS,
-		});
-	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
-	const [tokensPairPosition, setTokensPairPosition] = useState<
-		WrappedTokenInfo[]
-	>([]);
-	const [buttonId, setButtonId] = useState<number>(0);
-	const [tokenInputValue, setTokenInputValue] = useState<ISwapTokenInputValue>({
+	// END HOOKS IMPORTED VALUES
+
+	// SOME INITIAL VALUES FOR REACT STATES //
+
+	const initialTokenInputValue = {
 		inputFrom: {
 			value: "",
 		},
@@ -109,12 +106,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		typedValue: "",
 		currentInputTyped: "",
 		lastInputTyped: undefined,
-	});
-	const [txType, setTxType] = useState<string>("");
-	const [returnedTradeValue, setReturnedTradeValue] = useState<
-		IReturnedTradeValues | undefined
-	>(undefined);
-	const { toast } = useToasty();
+	};
 
 	const walletInfos: IWalletHookInfos = {
 		chainId: currentNetworkChainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
@@ -122,19 +114,62 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		provider,
 	};
 
-	const swapCall =
-		returnedTradeValue?.v2Trade &&
-		signer &&
-		UseSwapCallback(
-			returnedTradeValue?.v2Trade,
-			userSlippageTolerance,
-			walletInfos,
-			signer,
-			setTransactions,
-			setApprovalState,
-			toast,
-			transactions
-		);
+	// END SOME INITIAL VALUES FOR REACT STATES //
+
+	// REACT STATES //
+
+	const [tokensGraphCandleData, setTokensGraphCandleData] = useState<
+		IChartComponentData[]
+	>([]);
+
+	const [tokensGraphCandlePeriod, setTokensGraphCandlePeriod] =
+		useState<IChartComponentPeriod>({
+			id: 5,
+			period: ONE_DAY_IN_SECONDS,
+		});
+
+	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
+
+	const [tokensPairPosition, setTokensPairPosition] = useState<
+		WrappedTokenInfo[]
+	>([]);
+
+	const [buttonId, setButtonId] = useState<number>(0);
+
+	const [tokenInputValue, setTokenInputValue] = useState<ISwapTokenInputValue>(
+		initialTokenInputValue
+	);
+
+	const [txType, setTxType] = useState<string>("");
+
+	const [returnedTradeValue, setReturnedTradeValue] = useState<
+		IReturnedTradeValues | undefined
+	>(undefined);
+
+	// END REACT STATES //
+
+	// VALIDATIONS AT ALL //
+
+	const isERC20 =
+		selectedToken[0]?.symbol !== "SYS" && selectedToken[0]?.symbol !== "PSYS";
+
+	const approveValidation =
+		(isERC20 && approvalState === ApprovalState.UNKNOWN) ||
+		(isERC20 && approvalState === ApprovalState.PENDING);
+
+	const isPending = approvalState === ApprovalState.PENDING;
+
+	const wrapOrUnwrap = selectedToken[0]?.symbol === "SYS" ? "Wrap" : "Unwrap";
+
+	const submitValidation = [
+		isConnected && tokenInputValue.lastInputTyped === 0
+			? parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
+			  parseFloat(tokenInputValue?.inputFrom?.value)
+			: parseFloat(selectedToken[1]?.tokenInfo?.balance) >=
+			  parseFloat(tokenInputValue?.inputTo?.value),
+	];
+
+	const canSubmit = submitValidation.every(validation => validation === true);
 
 	const isWrap =
 		(selectedToken[0]?.symbol === "SYS" &&
@@ -153,7 +188,25 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const swapButtonValidation = !isConnected ? "Connect Wallet" : "Swap";
 
-	const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(
+	// END VALIDATIONS AT ALL //
+
+	// HANDLE FUNCTIONALITIES AND HOOKS //
+
+	const swapCall =
+		returnedTradeValue?.v2Trade &&
+		signer &&
+		UseSwapCallback(
+			returnedTradeValue?.v2Trade,
+			userSlippageTolerance,
+			walletInfos,
+			signer,
+			setTransactions,
+			setApprovalState,
+			toast,
+			transactions
+		);
+
+	const { realizedLPFee } = computeTradePriceBreakdown(
 		returnedTradeValue?.v2Trade as Trade
 	);
 
@@ -239,72 +292,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		});
 	};
 
-	useMemo(() => {
-		if (!isConnected || !returnedTradeValue?.v2Trade) return;
-
-		const {
-			inputTo: { value: inputToValue },
-			inputFrom: { value: inputFromValue },
-			currentInputTyped,
-		} = tokenInputValue;
-
-		const {
-			v2Trade: { outputAmount, inputAmount },
-		} = returnedTradeValue;
-
-		if (currentInputTyped === "inputFrom") {
-			tokenInputValue.inputTo.value = inputFromValue
-				? outputAmount?.toSignificant(6)
-				: "";
-		}
-
-		if (currentInputTyped === "inputTo") {
-			tokenInputValue.inputFrom.value = inputToValue
-				? inputAmount?.toSignificant(6)
-				: "";
-		}
-	}, [isConnected, returnedTradeValue?.v2Trade]);
-
-	useEffect(() => {
-		if (!isConnected) return;
-
-		handleSwapInfo();
-	}, [
-		isConnected,
-		tokenInputValue,
-		selectedToken[0]?.address,
-		selectedToken[1]?.address,
-	]);
-
-	useEffect(() => {
-		if (!userTokensBalance) return;
-
-		const getTokensBySymbol = userTokensBalance?.filter(
-			token =>
-				token?.symbol === "WSYS" ||
-				token?.symbol === "SYS" ||
-				token?.symbol === "PSYS"
-		);
-
-		const setIdToTokens = getTokensBySymbol.map((token, index: number) => ({
-			...token,
-			id: index,
-		})) as WrappedTokenInfo[];
-
-		setSelectedToken(setIdToTokens);
-	}, [userTokensBalance]);
-
-	useEffect(() => {
-		const defaultTokenValues = userTokensBalance.filter(
-			tokens =>
-				tokens.symbol === "WSYS" ||
-				tokens.symbol === "SYS" ||
-				tokens.symbol === "PSYS"
-		);
-
-		setSelectedToken([defaultTokenValues[2], defaultTokenValues[1]]);
-	}, [userTokensBalance]);
-
 	const approve = useApproveCallbackFromTrade(
 		returnedTradeValue?.v2Trade as Trade,
 		{
@@ -344,6 +331,39 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		return requestTokensCandle;
 	};
 
+	// END HANDLE FUNCTIONALITIES AND HOOKS //
+
+	// REACT HOOKS SESSION //
+
+	useEffect(() => {
+		if (!userTokensBalance) return;
+
+		const getTokensBySymbol = userTokensBalance?.filter(
+			token =>
+				token?.symbol === "WSYS" ||
+				token?.symbol === "SYS" ||
+				token?.symbol === "PSYS"
+		);
+
+		const setIdToTokens = getTokensBySymbol.map((token, index: number) => ({
+			...token,
+			id: index,
+		})) as WrappedTokenInfo[];
+
+		setSelectedToken(setIdToTokens);
+	}, [userTokensBalance]);
+
+	useEffect(() => {
+		const defaultTokenValues = userTokensBalance.filter(
+			tokens =>
+				tokens.symbol === "WSYS" ||
+				tokens.symbol === "SYS" ||
+				tokens.symbol === "PSYS"
+		);
+
+		setSelectedToken([defaultTokenValues[2], defaultTokenValues[1]]);
+	}, [userTokensBalance]);
+
 	useEffect(() => {
 		if (
 			!selectedToken[0]?.address ||
@@ -359,14 +379,42 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		tokensGraphCandlePeriod.period,
 	]);
 
-	const submitValidation = [
-		isConnected && tokenInputValue.lastInputTyped === 0
-			? parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
-			  parseFloat(tokenInputValue?.inputFrom?.value)
-			: parseFloat(selectedToken[1]?.tokenInfo?.balance) >=
-			  parseFloat(tokenInputValue?.inputTo?.value),
-	];
-	const canSubmit = submitValidation.every(validation => validation === true);
+	useMemo(() => {
+		if (!isConnected || !returnedTradeValue?.v2Trade) return;
+
+		const {
+			inputTo: { value: inputToValue },
+			inputFrom: { value: inputFromValue },
+			currentInputTyped,
+		} = tokenInputValue;
+
+		const {
+			v2Trade: { outputAmount, inputAmount },
+		} = returnedTradeValue;
+
+		if (currentInputTyped === "inputFrom") {
+			tokenInputValue.inputTo.value = inputFromValue
+				? outputAmount?.toSignificant(6)
+				: "";
+		}
+
+		if (currentInputTyped === "inputTo") {
+			tokenInputValue.inputFrom.value = inputToValue
+				? inputAmount?.toSignificant(6)
+				: "";
+		}
+	}, [isConnected, returnedTradeValue?.v2Trade]);
+
+	useEffect(() => {
+		if (!isConnected) return;
+
+		handleSwapInfo();
+	}, [
+		isConnected,
+		tokenInputValue,
+		selectedToken[0]?.address,
+		selectedToken[1]?.address,
+	]);
 
 	const isOtherWallet = useMemo(() => {
 		if (otherWallet) {
@@ -382,16 +430,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		return null;
 	}, [expert]);
 
-	const isERC20 =
-		selectedToken[0]?.symbol !== "SYS" && selectedToken[0]?.symbol !== "PSYS";
-
-	const approveValidation =
-		(isERC20 && approvalState === ApprovalState.UNKNOWN) ||
-		(isERC20 && approvalState === ApprovalState.PENDING);
-
-	const isPending = approvalState === ApprovalState.PENDING;
-
-	const wrapOrUnwrap = selectedToken[0]?.symbol === "SYS" ? "Wrap" : "Unwrap";
+	// END REACT HOOKS //
 
 	return (
 		<Flex
@@ -636,6 +675,26 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							/>
 						</Flex>
 					</Flex>
+					{!isERC20 && !isWrap && (
+						<Button
+							w="100%"
+							mt="2rem"
+							py="6"
+							px="6"
+							borderRadius="67px"
+							onClick={() => {
+								onOpenConfirmSwap();
+								setTxType("swap");
+							}}
+							bgColor={theme.bg.button.connectWalletSwap}
+							color={theme.text.cyan}
+							fontSize="lg"
+							fontWeight="semibold"
+							disabled={!canSubmit || isPending}
+						>
+							{swapButtonValidation}
+						</Button>
+					)}
 					{parseFloat(tokenInputValue.inputTo.value) >
 						parseFloat(selectedToken[1]?.balance) &&
 						tokenInputValue.currentInputTyped !== "inputFrom" && (
@@ -752,26 +811,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								}}
 							>
 								{approveValidation ? "Approve" : "Swap"}
-							</Button>
-						)}
-						{!isERC20 && !isWrap && isConnected && (
-							<Button
-								w="100%"
-								mt="2rem"
-								py="6"
-								px="6"
-								borderRadius="67px"
-								onClick={() => {
-									onOpenConfirmSwap();
-									setTxType("swap");
-								}}
-								bgColor={theme.bg.button.connectWalletSwap}
-								color={theme.text.cyan}
-								fontSize="lg"
-								fontWeight="semibold"
-								disabled={!canSubmit || isPending}
-							>
-								{swapButtonValidation}
 							</Button>
 						)}
 						{isWrap && isConnected && (
