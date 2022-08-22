@@ -42,14 +42,14 @@ const ChartComponent = (props: IChartComponentProps) => {
 				},
 			},
 			leftPriceScale: {
-				visible: true,
+				visible: false,
 				borderColor: colors.borderColor,
 				scaleMargins: {
 					bottom: 0.05,
 				},
 			},
 			rightPriceScale: {
-				visible: false,
+				visible: true,
 				borderColor: colors.borderColor,
 				scaleMargins: {
 					bottom: 0.05,

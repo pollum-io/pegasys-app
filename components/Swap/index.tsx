@@ -835,91 +835,95 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						)}
 					</Flex>
 				</Flex>
-				{tokenInputValue.inputTo.value && tokenInputValue.inputFrom.value && (
-					<Flex
-						flexDirection="column"
-						p="1.5rem"
-						background={theme.bg.blueNavy}
-						w="90%"
-						borderRadius="xl"
-						mt="7"
-						mb={["2", "2", "2", "10rem"]}
-						zIndex="1"
-					>
-						<Flex flexDirection="column">
-							<Flex flexDirection="row" justifyContent="space-between">
-								<Text fontWeight="normal">
-									Minmum Received <Icon as={MdHelpOutline} />
-								</Text>
-								<Text fontWeight="medium">
-									{returnedTradeValue?.v2Trade
-										? `${returnedTradeValue?.v2Trade?.outputAmount.toSignificant(
-												4
-										  )} ${
-												returnedTradeValue?.v2Trade?.outputAmount?.currency
-													.symbol
-										  }`
-										: "-"}
-								</Text>
-							</Flex>
-							<Flex
-								flexDirection="row"
-								justifyContent="space-between"
-								pt="0.75rem"
-							>
-								<Text fontWeight="normal">
-									Price Impact <Icon as={MdHelpOutline} />
-								</Text>
-								<FormattedPriceImpat
-									priceImpact={returnedTradeValue?.v2Trade?.priceImpact}
-								/>
-							</Flex>
-							<Flex
-								flexDirection="row"
-								justifyContent="space-between"
-								pt="0.75rem"
-							>
-								<Text fontWeight="normal">
-									Liquidity Provider Fee <Icon as={MdHelpOutline} />
-								</Text>
-								<Text fontWeight="medium">
-									{realizedLPFee
-										? `${realizedLPFee.toSignificant(4)} ${
-												returnedTradeValue?.v2Trade?.inputAmount.currency.symbol
-										  }`
-										: "-"}
-								</Text>
-							</Flex>
-							{returnedTradeValue?.v2TradeRoute &&
-								returnedTradeValue.v2TradeRoute.length > 2 && (
-									<Flex flexDirection="column">
-										<Flex
-											flexDirection="row"
-											justifyContent="space-between"
-											pt="2rem"
-										>
-											<Text fontWeight="normal">
-												Route <Icon as={MdHelpOutline} />
-											</Text>
+				{tokenInputValue.inputTo.value &&
+					tokenInputValue.inputFrom.value &&
+					!isWrap && (
+						<Flex
+							flexDirection="column"
+							p="1.5rem"
+							background={theme.bg.blueNavy}
+							w="90%"
+							borderRadius="xl"
+							mt="7"
+							mb={["2", "2", "2", "10rem"]}
+							zIndex="1"
+						>
+							<Flex flexDirection="column">
+								<Flex flexDirection="row" justifyContent="space-between">
+									<Text fontWeight="normal">
+										Minmum Received <Icon as={MdHelpOutline} />
+									</Text>
+									<Text fontWeight="medium">
+										{returnedTradeValue?.v2Trade
+											? `${returnedTradeValue?.v2Trade?.outputAmount.toSignificant(
+													4
+											  )} ${
+													returnedTradeValue?.v2Trade?.outputAmount?.currency
+														.symbol
+											  }`
+											: "-"}
+									</Text>
+								</Flex>
+								<Flex
+									flexDirection="row"
+									justifyContent="space-between"
+									pt="0.75rem"
+								>
+									<Text fontWeight="normal">
+										Price Impact <Icon as={MdHelpOutline} />
+									</Text>
+									<FormattedPriceImpat
+										priceImpact={returnedTradeValue?.v2Trade?.priceImpact}
+									/>
+								</Flex>
+								<Flex
+									flexDirection="row"
+									justifyContent="space-between"
+									pt="0.75rem"
+								>
+									<Text fontWeight="normal">
+										Liquidity Provider Fee <Icon as={MdHelpOutline} />
+									</Text>
+									<Text fontWeight="medium">
+										{realizedLPFee
+											? `${realizedLPFee.toSignificant(4)} ${
+													returnedTradeValue?.v2Trade?.inputAmount.currency
+														.symbol
+											  }`
+											: "-"}
+									</Text>
+								</Flex>
+								{returnedTradeValue?.v2TradeRoute &&
+									returnedTradeValue.v2TradeRoute.length > 2 && (
+										<Flex flexDirection="column">
+											<Flex
+												flexDirection="row"
+												justifyContent="space-between"
+												pt="2rem"
+											>
+												<Text fontWeight="normal">
+													Route <Icon as={MdHelpOutline} />
+												</Text>
+											</Flex>
+											<Flex
+												border="1px solid rgba(160, 174, 192, 1)"
+												py="2.5"
+												px="4"
+												borderRadius="xl"
+												alignItems="center"
+												justifyContent="center"
+												flexWrap="wrap"
+												mt="2"
+											>
+												<TradeRouteComponent
+													transactionRoute={returnedTradeValue?.v2TradeRoute}
+												/>
+											</Flex>
 										</Flex>
-										<Flex
-											border="1px solid rgba(160, 174, 192, 1)"
-											py="2.5"
-											px="4"
-											borderRadius="xl"
-											alignItems="center"
-											flexWrap="wrap"
-											mt="2"
-										>
-											<TradeRouteComponent
-												transactionRoute={returnedTradeValue?.v2TradeRoute}
-											/>
-										</Flex>
-									</Flex>
-								)}
+									)}
+							</Flex>
 						</Flex>
-					</Flex>
-				)}
+					)}
 			</Flex>
 			<Flex
 				h="max-content"
