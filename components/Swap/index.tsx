@@ -513,9 +513,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						px="1.25rem"
 						border="1px solid"
 						borderColor={
-							(parseFloat(tokenInputValue.inputFrom.value) >
-								parseFloat(selectedToken[0]?.balance) &&
-								tokenInputValue.currentInputTyped !== "inputTo") ||
+							(isConnected &&
+								parseFloat(tokenInputValue.inputFrom.value) >
+									parseFloat(selectedToken[0]?.balance) &&
+								tokenInputValue.currentInputTyped === "inputFrom") ||
+							parseFloat(tokenInputValue.inputFrom.value) === 0 ||
+							tokenInputValue.inputFrom.value === "" ||
 							(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap)
 								? theme.text.red400
 								: "#ff000000"
@@ -570,10 +573,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							/>
 						</Flex>
 					</Flex>
-					{parseFloat(tokenInputValue.inputFrom.value) >
-						parseFloat(selectedToken[0]?.balance) &&
-						tokenInputValue.currentInputTyped !== "inputTo" && (
-							<Flex flexDirection="row" gap="1" justifyContent="center">
+					{tokenInputValue.currentInputTyped === "inputFrom" && (
+						<Flex flexDirection="row" gap="1" justifyContent="center">
+							{parseFloat(tokenInputValue.inputFrom.value) >
+								parseFloat(selectedToken[0]?.balance) && (
 								<Text
 									fontSize="sm"
 									pt="2"
@@ -581,31 +584,24 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									color={theme.text.red400}
 									fontWeight="semibold"
 								>
-									Insufficient {selectedToken[0]?.symbol} balance.
+									Insufficient {selectedToken[0]?.symbol} balance. Please enter
+									a valid amount.
 								</Text>
-								<Text
-									fontSize="sm"
-									pt="2"
-									textAlign="center"
-									color={theme.text.red400}
-								>
-									Please insert a valid amount.
-								</Text>
-							</Flex>
-						)}
-					{isConnected && verifyIfHaveInsufficientLiquidity && !isWrap && (
-						<Flex flexDirection="row" gap="1" justifyContent="center">
+							)}
+						</Flex>
+					)}
+					{parseFloat(tokenInputValue.inputFrom.value) === 0 ||
+						(tokenInputValue.inputFrom.value === "" && (
 							<Text
 								fontSize="sm"
 								pt="2"
 								textAlign="center"
-								color={theme.text.red400}
 								fontWeight="semibold"
+								color={theme.text.red400}
 							>
-								Insufficient liquidity for this trade.
+								Please insert a valid amount.
 							</Text>
-						</Flex>
-					)}
+						))}
 					<Flex
 						margin="0 auto"
 						py="4"
@@ -622,10 +618,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						px="1.25rem"
 						border="1px solid"
 						borderColor={
-							(parseFloat(tokenInputValue.inputTo.value) >
-								parseFloat(selectedToken[1]?.balance) &&
-								tokenInputValue.currentInputTyped !== "inputFrom") ||
-							(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap)
+							isConnected && verifyIfHaveInsufficientLiquidity && !isWrap
 								? theme.text.red400
 								: "#ff000000"
 						}
@@ -675,6 +668,19 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							/>
 						</Flex>
 					</Flex>
+					{isConnected && verifyIfHaveInsufficientLiquidity && !isWrap && (
+						<Flex flexDirection="row" gap="1" justifyContent="center">
+							<Text
+								fontSize="sm"
+								pt="2"
+								textAlign="center"
+								color={theme.text.red400}
+								fontWeight="semibold"
+							>
+								Insufficient liquidity for this trade.
+							</Text>
+						</Flex>
+					)}
 					{!isERC20 && !isWrap && (
 						<Button
 							w="100%"
@@ -695,91 +701,57 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							{swapButtonValidation}
 						</Button>
 					)}
-					{parseFloat(tokenInputValue.inputTo.value) >
-						parseFloat(selectedToken[1]?.balance) &&
-						tokenInputValue.currentInputTyped !== "inputFrom" && (
-							<Flex flexDirection="row" gap="1" justifyContent="center">
-								<Text
-									fontSize="sm"
-									pt="2"
-									textAlign="center"
-									color={theme.text.red400}
-									fontWeight="semibold"
-								>
-									Insufficient {selectedToken[1]?.symbol} balance.
-								</Text>
-								<Text
-									fontSize="sm"
-									pt="2"
-									textAlign="center"
-									color={theme.text.red400}
-								>
-									Please insert a valid amount.
-								</Text>
-							</Flex>
-						)}
-					{isConnected && verifyIfHaveInsufficientLiquidity && !isWrap && (
-						<Flex flexDirection="row" gap="1" justifyContent="center">
-							<Text
-								fontSize="sm"
-								pt="2"
-								textAlign="center"
-								color={theme.text.red400}
-								fontWeight="semibold"
-							>
-								Insufficient liquidity for this trade.
-							</Text>
-						</Flex>
-					)}
-					{tokenInputValue.inputTo.value && tokenInputValue.inputFrom.value && (
-						<Flex
-							flexDirection="column"
-							borderRadius="2xl"
-							bgColor="transparent"
-							borderWidth="1px"
-							borderColor={theme.text.cyan}
-							mt="1.5rem"
-						>
-							<Text fontSize="md" fontWeight="medium" px="1.375rem" py="1rem">
-								Price
-							</Text>
+					{tokenInputValue.inputTo.value &&
+						tokenInputValue.inputFrom.value &&
+						!isWrap && (
 							<Flex
-								flexDirection="row"
-								justifyContent="space-around"
-								py="1rem"
-								px="1rem"
+								flexDirection="column"
 								borderRadius="2xl"
+								bgColor="transparent"
 								borderWidth="1px"
 								borderColor={theme.text.cyan}
-								bgColor={theme.bg.blueNavy}
+								mt="1.5rem"
 							>
-								<Flex fontSize="sm" flexDirection="column" textAlign="center">
-									<Text fontWeight="semibold">
-										{returnedTradeValue?.v2Trade
-											? returnedTradeValue?.v2Trade?.executionPrice?.toSignificant(
-													6
-											  )
-											: "-"}
-									</Text>
-									<Text fontWeight="normal">
-										{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
-									</Text>
-								</Flex>
-								<Flex fontSize="sm" flexDirection="column" textAlign="center">
-									<Text fontWeight="semibold">
-										{returnedTradeValue?.v2Trade
-											? returnedTradeValue?.v2Trade?.executionPrice
-													?.invert()
-													.toSignificant(6)
-											: "-"}
-									</Text>
-									<Text fontWeight="normal">
-										{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
-									</Text>
+								<Text fontSize="md" fontWeight="medium" px="1.375rem" py="1rem">
+									Price
+								</Text>
+								<Flex
+									flexDirection="row"
+									justifyContent="space-around"
+									py="1rem"
+									px="1rem"
+									borderRadius="2xl"
+									borderWidth="1px"
+									borderColor={theme.text.cyan}
+									bgColor={theme.bg.blueNavy}
+								>
+									<Flex fontSize="sm" flexDirection="column" textAlign="center">
+										<Text fontWeight="semibold">
+											{returnedTradeValue?.v2Trade
+												? returnedTradeValue?.v2Trade?.executionPrice?.toSignificant(
+														6
+												  )
+												: "-"}
+										</Text>
+										<Text fontWeight="normal">
+											{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
+										</Text>
+									</Flex>
+									<Flex fontSize="sm" flexDirection="column" textAlign="center">
+										<Text fontWeight="semibold">
+											{returnedTradeValue?.v2Trade
+												? returnedTradeValue?.v2Trade?.executionPrice
+														?.invert()
+														.toSignificant(6)
+												: "-"}
+										</Text>
+										<Text fontWeight="normal">
+											{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
+										</Text>
+									</Flex>
 								</Flex>
 							</Flex>
-						</Flex>
-					)}
+						)}
 					{isExpert}
 					{isExpert && isOtherWallet}
 					<Flex>
@@ -821,7 +793,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								px="6"
 								borderRadius="67px"
 								onClick={() => {
-									onOpenConfirmSwap();
+									if (!onWrap) return;
+									onWrap();
 									setTxType("wrap");
 								}}
 								bgColor={theme.bg.button.connectWalletSwap}
@@ -945,19 +918,18 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					mb={`${tokensGraphCandleData.length === 0 && "16"}`}
 				>
 					<Flex>
-						<Img src={tokensPairPosition[0]?.logoURI} w="7" h="7" />
+						<Img src={tokensPairPosition[0]?.logoURI} w="7" h="7" mr="0.5" />
 						<Img src={tokensPairPosition[1]?.logoURI} w="7" h="7" />
 						<Text fontWeight="700" fontSize="xl" ml="2.5">
 							{tokensPairPosition[0]?.symbol} / {tokensPairPosition[1]?.symbol}
 						</Text>
 					</Flex>
 					<Text pl="2" fontSize="lg" fontWeight="400">
-						{`${
-							truncateNumberDecimalsPlaces(
-								parseFloat(tokensGraphCandleData[0]?.close)
-							) || "0.00"
-						}`}
-						{` ${tokensPairPosition[1]?.symbol}`}
+						{tokensGraphCandleData.length === 0
+							? "-"
+							: `${parseFloat(tokensGraphCandleData[0]?.close).toFixed(2)} ${
+									tokensPairPosition[1]?.symbol
+							  }`}
 					</Text>
 				</Flex>
 				{tokensGraphCandleData.length !== 0 && (
@@ -968,7 +940,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						/>
 					</Flex>
 				)}
-
 				<Flex direction="column" justifyContent="center">
 					<ChartComponent data={tokensGraphCandleData} />
 					{tokensGraphCandleData.length === 0 && (
