@@ -117,6 +117,14 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		setSigner(web3Signer);
 	};
 
+	const defaultActionsWhenConnectWallet = () => {
+		setIsConnected(!!window?.ethereum?.selectedAddress);
+		setAddress(isAddress(window?.ethereum?.selectedAddress));
+		getSignerIfConnected();
+		setWalletError(false);
+		setCurrentNetworkChainId(Number(window?.ethereum?.networkVersion));
+	};
+
 	const connectWallet = async (connector: AbstractConnector) => {
 		connector
 			.activate()
@@ -126,11 +134,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 						Number(window?.ethereum?.networkVersion)
 					)
 				) {
-					setIsConnected(!!window?.ethereum?.selectedAddress);
-					setAddress(isAddress(window?.ethereum?.selectedAddress));
-					getSignerIfConnected();
-					setWalletError(false);
-					setCurrentNetworkChainId(Number(window?.ethereum?.networkVersion));
+					defaultActionsWhenConnectWallet();
 				} else {
 					setWalletError(true);
 				}
@@ -212,7 +216,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		});
 
 		getCurrentConnectorProvider?.on("accountsChanged", () =>
-			setIsConnected(!!window?.ethereum?.selectedAddress)
+			defaultActionsWhenConnectWallet()
 		);
 	}, [connectorSelected]);
 
