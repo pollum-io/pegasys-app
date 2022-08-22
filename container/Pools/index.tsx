@@ -12,6 +12,7 @@ import {
 	Text,
 	useDisclosure,
 	useColorModeValue,
+	InputLeftElement,
 } from "@chakra-ui/react";
 import { AddLiquidityModal, RemoveLiquidity } from "components";
 import { PoolCards } from "components/Pools/PoolCards";

@@ -10,30 +10,29 @@ interface IButtonProps extends ButtonProps {
 
 export const NavButton: FunctionComponent<IButtonProps> = props => {
 	const { push } = useRouter();
-	const { href, children, color, display, ...rest } = props;
+	const { href, children, color, display } = props;
 	const theme = usePicasso();
 	return (
-		<Link href={href} _hover={{ textDecoration: "none" }}>
-			<Button
-				color={theme.text.header}
-				fontSize={["0.938rem", "md", "md", "md"]}
-				fontWeight="semibold"
-				bgColor="transparent"
-				opacity="1"
-				borderRadius="70px"
-				transition="0.4s"
-				_hover={{
-					bgColor: theme.text.topHeaderButton,
-					color: "white",
-					borderRadius: "70px",
-				}}
-				_active={{}}
-				px={[3, 6, 6, 6]}
-				py="2"
-				{...rest}
-			>
-				{children}
-			</Button>
-		</Link>
+		<Button
+			color={theme.text.header}
+			fontSize={["0.938rem", "md", "md", "md"]}
+			fontWeight="semibold"
+			bgColor="transparent"
+			opacity="1"
+			borderRadius="70px"
+			transition="0.4s"
+			_hover={{
+				bgColor: theme.text.topHeaderButton,
+				color: "white",
+				borderRadius: "70px",
+			}}
+			_active={{}}
+			px={[3, 6, 6, 6]}
+			py="2"
+			display={display}
+			onClick={() => push(href)}
+		>
+			{children}
+		</Button>
 	);
 };

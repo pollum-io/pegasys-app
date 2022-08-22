@@ -8,7 +8,7 @@ import { addTransaction } from "utils/addTransaction";
 import { UseBestSwapMethod } from "./useBestSwapMethod";
 import { UseToastOptions } from "@chakra-ui/react";
 import { ApprovalState } from "./useApproveCallback";
-import { TransactionResponse } from '@ethersproject/providers';
+import { TransactionResponse } from "@ethersproject/providers";
 
 export enum SwapCallbackState {
 	INVALID,
@@ -173,15 +173,9 @@ export function UseSwapCallback(
 							? withRecipient
 							: `${withRecipient} on ${tradeVersion.toUpperCase()}`;
 
-					addTransaction(
-						response,
-						walletInfos,
-						setTransactions,
-						transactions,
-						{
-							summary: withVersion,
-						},
-					);
+					addTransaction(response, walletInfos, setTransactions, transactions, {
+						summary: withVersion,
+					});
 
 					setApprovalState(ApprovalState.PENDING);
 

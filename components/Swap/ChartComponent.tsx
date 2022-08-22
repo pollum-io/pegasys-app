@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, theme } from "@chakra-ui/react";
 import { createChart, ColorType, UTCTimestamp } from "lightweight-charts";
 import React, { useEffect, useRef } from "react";
 import { IChartComponentData } from "types/index";
@@ -9,8 +9,9 @@ interface IChartComponentProps {
 
 const colors = {
 	backgroundColor: "transparent",
-	textColor: "#718096",
+	textColor: "#4A5568",
 	upColor: "#25855A",
+	borderColor: "#718096",
 	downColor: "#C53030",
 	borderVisible: false,
 	wickUpColor: "#25855A",
@@ -42,21 +43,21 @@ const ChartComponent = (props: IChartComponentProps) => {
 			},
 			leftPriceScale: {
 				visible: false,
-				borderColor: "#718096",
+				borderColor: colors.borderColor,
 				scaleMargins: {
 					bottom: 0.05,
 				},
 			},
 			rightPriceScale: {
 				visible: true,
-				borderColor: "#718096",
+				borderColor: colors.borderColor,
 				scaleMargins: {
 					bottom: 0.05,
 				},
 			},
 			timeScale: {
 				visible: true,
-				borderColor: "#718096",
+				borderColor: colors.borderColor,
 				timeVisible: true,
 				lockVisibleTimeRangeOnResize: true,
 			},
