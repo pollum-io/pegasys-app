@@ -23,17 +23,22 @@ export const TradeRouteComponent: FunctionComponent<
 		return tokenFind?.tokenInfo.logoURI;
 	};
 
-	return transactionRoute?.map((token, index: number) => (
-		<Flex key={token.address} alignItems="center">
-			<Flex gap="2">
-				<Img src={findTokenLogo(token.symbol as string)} w="5" h="5" />
-				<Text fontSize="sm">{token.symbol}</Text>
-			</Flex>
-			{index !== transactionRoute.length - 1 && (
-				<Flex mx="3" my="2">
-					<Icon as={IoIosArrowForward} />
-				</Flex>
-			)}
+	return (
+		<Flex>
+			{transactionRoute &&
+				transactionRoute.map((token, index: number) => (
+					<Flex key={token.address} alignItems="center">
+						<Flex gap="2">
+							<Img src={findTokenLogo(token.symbol as string)} w="5" h="5" />
+							<Text fontSize="sm">{token.symbol}</Text>
+						</Flex>
+						{index !== transactionRoute.length - 1 && (
+							<Flex mx="3" my="2">
+								<Icon as={IoIosArrowForward} />
+							</Flex>
+						)}
+					</Flex>
+				))}
 		</Flex>
-	));
+	);
 };
