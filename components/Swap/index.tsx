@@ -1,8 +1,6 @@
 import {
 	Button,
 	ButtonProps,
-	Collapse,
-	Fade,
 	Flex,
 	Icon,
 	Img,
@@ -41,10 +39,7 @@ import {
 import dynamic from "next/dynamic";
 import { useTranslation } from "react-i18next";
 import { Signer } from "ethers";
-import {
-	computeTradePriceBreakdown,
-	truncateNumberDecimalsPlaces,
-} from "utils";
+import { computeTradePriceBreakdown } from "utils";
 import { getTokensGraphCandle } from "services/index";
 
 import { ONE_DAY_IN_SECONDS } from "helpers/consts";
@@ -65,9 +60,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const theme = usePicasso();
 
 	const { toast } = useToasty();
-
-	const { isOpen, onToggle } = useDisclosure();
-	const [show, setShow] = React.useState(false);
 
 	const { t: translation } = useTranslation();
 
@@ -330,11 +322,19 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	);
 
 	const getTokensGraph = async () => {
-		setTokensPairPosition([selectedToken[0], selectedToken[1]]);
-
-		const requestTokensCandle = await getTokensGraphCandle(
+		const [token0, token1] = UseTokensPairSorted([
 			selectedToken[0],
 			selectedToken[1],
+		]);
+
+		setTokensPairPosition([
+			token0 as WrappedTokenInfo,
+			token1 as WrappedTokenInfo,
+		]);
+
+		const requestTokensCandle = await getTokensGraphCandle(
+			token0,
+			token1,
 			tokensGraphCandlePeriod.period
 		);
 
