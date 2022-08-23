@@ -7,7 +7,6 @@ import {
 	Input,
 	Text,
 	Tooltip,
-	useDisclosure,
 } from "@chakra-ui/react";
 import {
 	useModal,
@@ -42,8 +41,9 @@ import { Signer } from "ethers";
 import { computeTradePriceBreakdown } from "utils";
 import { getTokensGraphCandle } from "services/index";
 
-import { ONE_DAY_IN_SECONDS, SYS_LOGO } from "helpers/consts";
+import { ONE_DAY_IN_SECONDS } from "helpers/consts";
 import { ConfirmSwap } from "components/Modals/ConfirmSwap";
+import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { OtherWallet } from "./OtherWallet";
 import { SwapExpertMode } from "./SwapExpertMode";
 import { TradeRouteComponent } from "./TradeRouteComponent";
@@ -145,6 +145,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		IReturnedTradeValues | undefined
 	>(undefined);
 
+	const [isSSR, setIsSSR] = useState(true);
+
 	// END REACT STATES //
 
 	// VALIDATIONS AT ALL //
@@ -198,7 +200,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		!returnedTradeValue?.v2TradeRoute && userHasSpecifiedInputOutput
 	);
 
-	const swapButtonValidation = !isConnected ? "Connect Wallet" : "Swap";
+	const swapButtonValidation = !isConnected
+		? translation("swapPage.connectWallet")
+		: translation("swapPage.swap");
 
 	// END VALIDATIONS AT ALL //
 
@@ -442,6 +446,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		return null;
 	}, [expert]);
 
+	useEffect(() => {
+		setIsSSR(false);
+	}, []);
+
+	if (isSSR) return null;
+
 	// END REACT HOOKS //
 
 	return (
@@ -534,10 +544,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					>
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
-								From
+								{translation("swapPage.from")}
 							</Text>
 							<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-								Balance: {selectedToken[0]?.balance}
+								{translation("header.balance")} {selectedToken[0]?.balance}
 							</Text>
 						</Flex>
 						<Flex alignItems="center" justifyContent="space-between">
@@ -591,8 +601,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									color={theme.text.red400}
 									fontWeight="semibold"
 								>
-									Insufficient {selectedToken[0]?.symbol} balance. Please enter
-									a valid amount.
+									{translation("swapHooks.insufficient")}
+									{selectedToken[0]?.symbol}
+									{translation("swapHooks.balance")}. Please insert a valid
+									amount.
 								</Text>
 							)}
 						</Flex>
@@ -632,10 +644,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					>
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
-								To
+								{translation("swapPage.to")}
 							</Text>
 							<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-								Balance: {selectedToken[1]?.balance}
+								{translation("header.balance")} {selectedToken[1]?.balance}
 							</Text>
 						</Flex>
 
@@ -683,29 +695,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								color={theme.text.red400}
 								fontWeight="semibold"
 							>
-								Insufficient liquidity for this trade.
+								{translation("swapPage.insufficientLiquidity")}
 							</Text>
 						</Flex>
-					)}
-					{!isERC20 && !isWrap && (
-						<Button
-							w="100%"
-							mt="2rem"
-							py="6"
-							px="6"
-							borderRadius="67px"
-							onClick={() => {
-								onOpenConfirmSwap();
-								setTxType("swap");
-							}}
-							bgColor={theme.bg.button.connectWalletSwap}
-							color={theme.text.cyan}
-							fontSize="lg"
-							fontWeight="semibold"
-							disabled={!canSubmit || isPending}
-						>
-							{swapButtonValidation}
-						</Button>
 					)}
 					{tokenInputValue.inputTo.value &&
 						tokenInputValue.inputFrom.value &&
@@ -718,13 +710,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								borderColor={theme.text.cyan}
 								mt="1.5rem"
 							>
-								<Text
-									fontSize="md"
-									fontWeight="medium"
-									px="1.375rem"
-									py="0.5rem"
-								>
-									Price
+								<Text fontSize="md" fontWeight="medium" px="1.375rem" py="1rem">
+									{translation("swap.price")}
 								</Text>
 								<Flex
 									flexDirection="row"
@@ -763,6 +750,26 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								</Flex>
 							</Flex>
 						)}
+					{!isERC20 && !isWrap && (
+						<Button
+							w="100%"
+							mt="2rem"
+							py="6"
+							px="6"
+							borderRadius="67px"
+							onClick={() => {
+								onOpenConfirmSwap();
+								setTxType("swap");
+							}}
+							bgColor={theme.bg.button.connectWalletSwap}
+							color={theme.text.cyan}
+							fontSize="lg"
+							fontWeight="semibold"
+							disabled={!canSubmit || isPending}
+						>
+							{swapButtonValidation}
+						</Button>
+					)}
 					{isExpert}
 					{isExpert && isOtherWallet}
 					<Flex>
@@ -793,7 +800,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									opacity: 0.9,
 								}}
 							>
-								{approveValidation ? "Approve" : "Swap"}
+								{approveValidation
+									? translation("swapPage.approve")
+									: translation("swapPage.swap")}
 							</Button>
 						)}
 						{isWrap && isConnected && (
@@ -826,7 +835,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							flexDirection="column"
 							p="1.5rem"
 							background={theme.bg.blueNavy}
-							w="90%"
+							w="100%"
 							borderRadius="xl"
 							mt="7"
 							mb={["2", "2", "2", "10rem"]}
@@ -834,10 +843,17 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						>
 							<Flex flexDirection="column">
 								<Flex flexDirection="row" justifyContent="space-between">
-									<Text fontWeight="normal">
-										Minmum Received <Icon as={MdHelpOutline} />
-									</Text>
-									<Text fontWeight="medium">
+									<Flex>
+										<Text fontWeight="normal" mr="1" fontSize="sm">
+											{translation("swap.minimumReceived")}
+										</Text>
+
+										<TooltipComponent
+											label={translation("swap.transactionRevertHelper")}
+											icon={MdHelpOutline}
+										/>
+									</Flex>
+									<Text fontWeight="medium" fontSize="sm">
 										{returnedTradeValue?.v2Trade
 											? `${returnedTradeValue?.v2Trade?.outputAmount.toSignificant(
 													4
@@ -853,9 +869,16 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									justifyContent="space-between"
 									pt="0.75rem"
 								>
-									<Text fontWeight="normal">
-										Price Impact <Icon as={MdHelpOutline} />
-									</Text>
+									<Flex>
+										<Text fontWeight="normal" mr="1" fontSize="sm">
+											{translation("swap.priceImpact")}
+										</Text>
+
+										<TooltipComponent
+											label={translation("swap.priceImpactHelper")}
+											icon={MdHelpOutline}
+										/>
+									</Flex>
 									<FormattedPriceImpat
 										priceImpact={returnedTradeValue?.v2Trade?.priceImpact}
 									/>
@@ -865,10 +888,17 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									justifyContent="space-between"
 									pt="0.75rem"
 								>
-									<Text fontWeight="normal">
-										Liquidity Provider Fee <Icon as={MdHelpOutline} />
-									</Text>
-									<Text fontWeight="medium">
+									<Flex>
+										<Text fontWeight="normal" mr="1" fontSize="sm">
+											{translation("swap.liquidityProviderFee")}
+										</Text>
+
+										<TooltipComponent
+											label={translation("swap.liquidityProviderHelper")}
+											icon={MdHelpOutline}
+										/>
+									</Flex>
+									<Text fontWeight="medium" fontSize="sm">
 										{realizedLPFee
 											? `${realizedLPFee.toSignificant(4)} ${
 													returnedTradeValue?.v2Trade?.inputAmount.currency
@@ -885,17 +915,23 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 												justifyContent="space-between"
 												pt="2rem"
 											>
-												<Text fontWeight="normal">
-													Route <Icon as={MdHelpOutline} />
-												</Text>
+												<Flex>
+													<Text fontSize="sm" mr="1" fontWeight="normal">
+														{translation("swap.route")}
+													</Text>
+
+													<TooltipComponent
+														label={translation("swap.routingHelper")}
+														icon={MdHelpOutline}
+													/>
+												</Flex>
 											</Flex>
 											<Flex
 												border="1px solid rgba(160, 174, 192, 1)"
 												py="2.5"
-												px="4"
+												px="1"
 												borderRadius="xl"
 												alignItems="center"
-												justifyContent="center"
 												flexWrap="wrap"
 												mt="2"
 											>
@@ -930,24 +966,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				>
 					<Flex>
 						<Img
-							src={
-								tokensPairPosition[0]?.symbol === "SYS"
-									? SYS_LOGO
-									: tokensPairPosition[0]?.logoURI
-							}
+							src={tokensPairPosition[0]?.tokenInfo?.logoURI}
 							w="7"
 							h="7"
 							mr="0.5"
 						/>
-						<Img
-							src={
-								tokensPairPosition[1]?.symbol === "SYS"
-									? SYS_LOGO
-									: tokensPairPosition[1]?.logoURI
-							}
-							w="7"
-							h="7"
-						/>
+						<Img src={tokensPairPosition[1]?.tokenInfo?.logoURI} w="7" h="7" />
 						<Text fontWeight="700" fontSize="xl" ml="2.5">
 							{tokensPairPosition[0]?.symbol} / {tokensPairPosition[1]?.symbol}
 						</Text>
