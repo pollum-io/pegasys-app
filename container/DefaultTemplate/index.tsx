@@ -10,12 +10,14 @@ interface BaseLayoutProps {
 	children?: ReactNode;
 	heightValue?: string;
 	widthValue?: string;
+	alignItemsValue?: string;
 }
 
 export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 	children,
 	heightValue,
 	widthValue,
+	alignItemsValue,
 }) => {
 	const theme = usePicasso();
 	return (
@@ -29,8 +31,8 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 							style={{
 								minHeight: heightValue,
 								width: widthValue,
+								alignItems: alignItemsValue,
 							}}
-							alignItems="center"
 						>
 							<Flex
 								width="100%"

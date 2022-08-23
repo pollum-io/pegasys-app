@@ -4,7 +4,11 @@ import { DefaultTemplate } from "container";
 import { NextPage } from "next";
 
 export const HomeContainer: NextPage = () => (
-	<DefaultTemplate widthValue="100%" heightValue="100vh">
+	<DefaultTemplate
+		widthValue="100%"
+		heightValue="100vh"
+		alignItemsValue="center"
+	>
 		<Swap />
 	</DefaultTemplate>
 );
