@@ -1,8 +1,6 @@
 import {
 	Button,
 	ButtonProps,
-	Collapse,
-	Fade,
 	Flex,
 	Icon,
 	Img,
@@ -41,10 +39,7 @@ import {
 import dynamic from "next/dynamic";
 import { useTranslation } from "react-i18next";
 import { Signer } from "ethers";
-import {
-	computeTradePriceBreakdown,
-	truncateNumberDecimalsPlaces,
-} from "utils";
+import { computeTradePriceBreakdown } from "utils";
 import { getTokensGraphCandle } from "services/index";
 
 import { ONE_DAY_IN_SECONDS } from "helpers/consts";
@@ -65,9 +60,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const theme = usePicasso();
 
 	const { toast } = useToasty();
-
-	const { isOpen, onToggle } = useDisclosure();
-	const [show, setShow] = React.useState(false);
 
 	const { t: translation } = useTranslation();
 
@@ -177,6 +169,19 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	];
 
 	const canSubmit = submitValidation.every(validation => validation === true);
+
+	const wrapValidation = [
+		parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
+			parseFloat(tokenInputValue?.inputFrom?.value),
+		parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
+			parseFloat(tokenInputValue?.inputTo?.value),
+		parseFloat(selectedToken[1]?.tokenInfo?.balance) >=
+			parseFloat(tokenInputValue?.inputTo?.value),
+		parseFloat(selectedToken[1]?.tokenInfo?.balance) >=
+			parseFloat(tokenInputValue?.inputFrom?.value),
+	];
+
+	const canWrap = wrapValidation.some(valid => valid === true);
 
 	const isWrap =
 		(selectedToken[0]?.symbol === "SYS" &&
@@ -317,11 +322,19 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	);
 
 	const getTokensGraph = async () => {
-		setTokensPairPosition([selectedToken[0], selectedToken[1]]);
-
-		const requestTokensCandle = await getTokensGraphCandle(
+		const [token0, token1] = UseTokensPairSorted([
 			selectedToken[0],
 			selectedToken[1],
+		]);
+
+		setTokensPairPosition([
+			token0 as WrappedTokenInfo,
+			token1 as WrappedTokenInfo,
+		]);
+
+		const requestTokensCandle = await getTokensGraphCandle(
+			token0,
+			token1,
 			tokensGraphCandlePeriod.period
 		);
 
@@ -513,7 +526,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									parseFloat(selectedToken[0]?.balance) &&
 								tokenInputValue.currentInputTyped === "inputFrom") ||
 							parseFloat(tokenInputValue.inputFrom.value) === 0 ||
-							tokenInputValue.inputFrom.value === "" ||
 							(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap)
 								? theme.text.red400
 								: "#ff000000"
@@ -585,18 +597,17 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							)}
 						</Flex>
 					)}
-					{parseFloat(tokenInputValue.inputFrom.value) === 0 ||
-						(tokenInputValue.inputFrom.value === "" && (
-							<Text
-								fontSize="sm"
-								pt="2"
-								textAlign="center"
-								fontWeight="semibold"
-								color={theme.text.red400}
-							>
-								Please insert a valid amount.
-							</Text>
-						))}
+					{parseFloat(tokenInputValue.inputFrom.value) === 0 && (
+						<Text
+							fontSize="sm"
+							pt="2"
+							textAlign="center"
+							fontWeight="semibold"
+							color={theme.text.red400}
+						>
+							Please insert a valid amount.
+						</Text>
+					)}
 					<Flex
 						margin="0 auto"
 						py="4"
@@ -796,7 +807,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"
-								disabled={!canSubmit || isPending}
+								disabled={!canWrap || isPending}
 							>
 								{wrapOrUnwrap}
 							</Button>
