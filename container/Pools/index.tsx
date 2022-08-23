@@ -314,7 +314,7 @@ export const PoolsContainer: NextPage = () => {
 							mt="10"
 							justifyContent={["center", "center", "unset", "unset"]}
 						>
-							<PoolCards />
+							<PoolCards setIsCreate={setIsCreate} />
 						</Flex>
 					)}
 				</Flex>
