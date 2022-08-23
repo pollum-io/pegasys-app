@@ -4,6 +4,8 @@ import {
 	Icon,
 	Img,
 	Input,
+	InputGroup,
+	InputRightAddon,
 	Modal,
 	ModalBody,
 	ModalContent,
@@ -49,16 +51,16 @@ export const FarmActions: React.FC<IModal> = props => {
 				h={["max-content", "100vh", "max-content", "max-content"]}
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
 				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
-				bgColor={theme.bg.blueNavy}
+				bgColor={theme.bg.blueNavyLight}
 				border={["none", "1px solid transparent"]}
+				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
-					backgroundColor={theme.bg.blueNavy}
+					backgroundColor={theme.bg.blueNavyLight}
 					borderTopRadius="3xl"
 					alignItems="baseline"
 					justifyContent="space-between"
 					pl={["5", "5", "20", "20"]}
-					background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					<Flex
 						flexDirection={["column-reverse", "column-reverse", "row", "row"]}
@@ -70,7 +72,7 @@ export const FarmActions: React.FC<IModal> = props => {
 							pl={["0", "16", "0", "0"]}
 							gap="2"
 							flexDirection="row"
-							mt={["6", "6", "0", "0"]}
+							mt={["6", "6", "2", "2"]}
 						>
 							<Button
 								w="max-content"
@@ -154,7 +156,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									lg: "block",
 								}}
 							>
-								<AiOutlineClose size={20} />
+								<AiOutlineClose size={20} color={theme.icon.closeWhiteGray} />
 							</Flex>
 							<Flex
 								display={{
@@ -204,41 +206,42 @@ export const FarmActions: React.FC<IModal> = props => {
 									</Text>
 								</Flex>
 							</Flex>
-							<Flex flexDirection="column" gap="2" mt="6">
+							<Flex
+								flexDirection="column"
+								gap="2"
+								mt="6"
+								color={theme.text.mono}
+							>
 								<Text fontWeight="normal">
 									Available to deposit: 0.00000000001
 								</Text>
 								{!confirmDepoist ? (
 									<Flex>
-										<Input
-											placeholder="0.0"
-											border="1px solid"
-											borderColor={theme.border.farmInput}
-											bgColor={theme.bg.blackAlpha}
-											borderLeftRadius="full"
-											p="5"
-											w="25rem"
-											_hover={{
-												borderColor: theme.border.farmInput,
-											}}
-											_focus={{
-												borderColor: theme.border.farmInput,
-											}}
-										/>
-										<Button
-											border="1px solid "
-											borderColor={theme.border.farmInput}
-											borderRightRadius="full"
-											bgColor={theme.bg.max}
-											color={theme.text.max}
-											fontSize="lg"
-											fontWeight="normal"
-											px="4"
-											py="5"
-											_hover={{ backgroundColor: theme.bg.max, opacity: 0.9 }}
-										>
-											max
-										</Button>
+										<InputGroup size="lg">
+											<Input
+												placeholder="0.0"
+												border="1px solid"
+												borderColor="rgba(1, 219, 243, 0.2)"
+												bgColor={theme.bg.whiteGray}
+												borderLeftRadius="full"
+												w="25rem"
+												_hover={{}}
+												_focus={{
+													outline: "none",
+												}}
+											/>
+											<InputRightAddon
+												// eslint-disable-next-line react/no-children-prop
+												children="max"
+												border="1px solid transparent;"
+												background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, rgba(1, 219, 243, 0.2) border-box`}
+												borderRightRadius="full"
+												color={theme.text.cyan}
+												fontSize="lg"
+												fontWeight="normal"
+												_hover={{ backgroundColor: theme.bg.blueNavyLightness }}
+											/>
+										</InputGroup>
 									</Flex>
 								) : (
 									<Flex
@@ -264,7 +267,9 @@ export const FarmActions: React.FC<IModal> = props => {
 										</Flex>
 									</Flex>
 								)}
-								<Text fontWeight="normal">Weekly Rewards: 0 PSYS / Week</Text>
+								<Text fontWeight="normal" pt="1.5rem">
+									Weekly Rewards: 0 PSYS / Week
+								</Text>
 								<Text fontWeight="normal">Extra Reward: 0 PSYS / Week</Text>
 							</Flex>
 							<Button
@@ -273,7 +278,8 @@ export const FarmActions: React.FC<IModal> = props => {
 								py="3"
 								px="1.5rem"
 								w="100%"
-								my="4"
+								mt="1.5rem"
+								mb="1rem"
 								h="max-content"
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
@@ -345,19 +351,19 @@ export const FarmActions: React.FC<IModal> = props => {
 									onMouseEnter={() => setShowTooltip(true)}
 									onMouseLeave={() => setShowTooltip(false)}
 								>
-									<SliderMark value={0} mt="1" ml="1.5" fontSize="sm">
+									<SliderMark value={0} mt="0.5rem" ml="1.5" fontSize="sm">
 										0%
 									</SliderMark>
-									<SliderMark value={25} mt="1" ml="-2.5" fontSize="sm">
+									<SliderMark value={25} mt="0.5rem" ml="-2.5" fontSize="sm">
 										25%
 									</SliderMark>
-									<SliderMark value={50} mt="1" ml="-2.5" fontSize="sm">
+									<SliderMark value={50} mt="0.5rem" ml="-2.5" fontSize="sm">
 										50%
 									</SliderMark>
-									<SliderMark value={75} mt="1" ml="-2.5" fontSize="sm">
+									<SliderMark value={75} mt="0.5rem" ml="-2.5" fontSize="sm">
 										75%
 									</SliderMark>
-									<SliderMark value={100} mt="1" ml="-8" fontSize="sm">
+									<SliderMark value={100} mt="0.5rem" ml="-8" fontSize="sm">
 										100%
 									</SliderMark>
 									<SliderTrack>
@@ -374,7 +380,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									</Tooltip>
 								</Slider>
 							</Flex>
-							<Flex mt="7" mb="2" gap="4">
+							<Flex mt="1.5rem" mb="1rem" gap="4">
 								<Button
 									fontSize="lg"
 									fontWeight="semibold"
@@ -459,7 +465,7 @@ export const FarmActions: React.FC<IModal> = props => {
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
-							background={theme.text.gray600}
+							background={theme.bg.subModal}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
 							top={["unset", "unset", "24rem", "24rem"]}
@@ -469,9 +475,14 @@ export const FarmActions: React.FC<IModal> = props => {
 							gap="2"
 						>
 							<Flex>
-								<Icon as={MdOutlineInfo} w="6" h="6" color={theme.text.cyan} />
+								<Icon
+									as={MdOutlineInfo}
+									w="6"
+									h="6"
+									color={theme.text.cyanPurple}
+								/>
 							</Flex>
-							<Flex flexDirection="column" gap="6">
+							<Flex flexDirection="column" gap="6" color={theme.text.mono}>
 								<Text>
 									Here the text would change explaining the “Exit” mode I
 									think... Need to confirm the warning content.
@@ -483,7 +494,7 @@ export const FarmActions: React.FC<IModal> = props => {
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
-							background={theme.text.gray600}
+							background={theme.bg.subModal}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
 							top={["unset", "unset", "20rem", "20rem"]}
@@ -493,9 +504,14 @@ export const FarmActions: React.FC<IModal> = props => {
 							gap="2"
 						>
 							<Flex>
-								<Icon as={MdOutlineInfo} w="6" h="6" color={theme.text.cyan} />
+								<Icon
+									as={MdOutlineInfo}
+									w="6"
+									h="6"
+									color={theme.text.cyanPurple}
+								/>
 							</Flex>
-							<Flex flexDirection="column" gap="6">
+							<Flex flexDirection="column" gap="6" color={theme.text.mono}>
 								<Text>
 									When you withdraw, your PSYS is claimed and your Pegasys
 									Liquidity tokens, PLP, are returned to you. You will no longer

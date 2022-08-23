@@ -20,9 +20,10 @@ export const InfoLinks: FunctionComponent<ILinkProps> = props => {
 			color={theme.text.mono}
 			px={["2", "2", "2", "2"]}
 			py={["3", "3", "2", "2"]}
-			_hover={{ color: theme.text.cyan }}
+			_hover={{ color: theme.text.cyanPurple }}
 			background="transparent"
 			// isExternal={!isVote}
+			h="max-content"
 			pb={pb}
 			onClick={() => push(href as string)}
 		>

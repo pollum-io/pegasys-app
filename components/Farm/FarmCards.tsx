@@ -26,8 +26,10 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 		yourUnclaimed,
 	} = props;
 	const theme = usePicasso();
+
 	const { isOpenFarmActions, onOpenFarmActions, onCloseFarmActions } =
 		useModal();
+
 	const [buttonId, setButtonId] = useState<string>("");
 
 	return (
@@ -100,16 +102,16 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 				flexDirection="column"
 				backgroundColor={theme.bg.farmRate}
 				borderRadius="0.375rem"
-				py="0.438rem"
-				px="0.625rem"
+				py="0.5rem"
+				px="1rem"
 				mt="0.688rem"
 				mb="1.5rem"
 			>
-				<Flex justifyContent="space-between" pb="1" fontSize="sm">
+				<Flex justifyContent="space-between" pb="0.75rem" fontSize="sm">
 					<Text fontWeight="semibold">Your Rate</Text>
 					<Text>{yourRate} PSYS/Week</Text>
 				</Flex>
-				<Flex justifyContent="space-between" pb="1" fontSize="sm">
+				<Flex justifyContent="space-between" fontSize="sm">
 					<Text fontWeight="semibold">Your Unclaimed PSYS</Text>
 					<Text>{yourUnclaimed}</Text>
 				</Flex>

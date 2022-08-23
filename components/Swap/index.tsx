@@ -1,11 +1,15 @@
 import {
 	Button,
 	ButtonProps,
+	Collapse,
+	Fade,
 	Flex,
 	Icon,
 	Img,
 	Input,
 	Text,
+	Tooltip,
+	useDisclosure,
 } from "@chakra-ui/react";
 import {
 	useModal,
@@ -61,6 +65,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const theme = usePicasso();
 
 	const { toast } = useToasty();
+
+	const { isOpen, onToggle } = useDisclosure();
+	const [show, setShow] = React.useState(false);
 
 	const { t: translation } = useTranslation();
 
@@ -426,7 +433,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	return (
 		<Flex
-			pt={["6", "6", "20", "24"]}
+			pt={["6", "6", "16", "16"]}
 			justifyContent="center"
 			fontFamily="inter"
 			fontStyle="normal"
@@ -489,11 +496,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					<Flex flexDirection="row" justifyContent="space-between" pb="1.5rem">
-						<Text
-							color={theme.text.mono}
-							fontWeight="semibold"
-							fontSize={["xl", "2xl", "2xl", "2xl"]}
-						>
+						<Text fontWeight="semibold" fontSize={["xl", "2xl", "2xl", "2xl"]}>
 							Swap
 						</Text>
 					</Flex>
@@ -546,7 +549,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								>
 									{selectedToken[0]?.symbol}
 								</Text>
-								<Icon as={IoIosArrowDown} color={theme.text.mono} />
+								<Icon as={IoIosArrowDown} />
 							</Flex>
 							<Input
 								fontSize="2xl"
@@ -561,7 +564,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								name="inputFrom"
 								value={tokenInputValue?.inputFrom?.value}
 								_hover={{ border: "1px solid #3182CE" }}
-								_focus={{ border: "1px solid #3182CE" }}
+								_focus={{ border: "1px solid #3182CE", outline: "none" }}
 							/>
 						</Flex>
 					</Flex>
@@ -656,7 +659,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								name="inputTo"
 								value={tokenInputValue?.inputTo?.value}
 								_hover={{ border: "1px solid #3182CE" }}
-								_focus={{ border: "1px solid #3182CE" }}
+								_focus={{ border: "1px solid #3182CE", outline: "none" }}
 							/>
 						</Flex>
 					</Flex>
@@ -771,7 +774,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								fontWeight="semibold"
 								disabled={!canSubmit || isPending}
 								_hover={{
-									opacity: 0.3,
+									opacity: 0.9,
 								}}
 							>
 								{approveValidation ? "Approve" : "Swap"}

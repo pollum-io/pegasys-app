@@ -6,18 +6,20 @@ import { useRouter } from "next/router";
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
 	href: string;
+	active?: boolean;
 }
 
 export const NavButton: FunctionComponent<IButtonProps> = props => {
 	const { push } = useRouter();
-	const { href, children, color, display } = props;
+	const { href, children, color, display, active, ...rest } = props;
 	const theme = usePicasso();
+
 	return (
 		<Button
-			color={theme.text.header}
+			color={active ? "white" : theme.text.header}
 			fontSize={["0.938rem", "md", "md", "md"]}
 			fontWeight="semibold"
-			bgColor="transparent"
+			bgColor={active ? theme.bg.whiteGray : "transparent"}
 			opacity="1"
 			borderRadius="70px"
 			transition="0.4s"

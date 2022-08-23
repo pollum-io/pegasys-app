@@ -34,7 +34,7 @@ export const FarmContainer: NextPage = () => {
 					zIndex="docked"
 					position="relative"
 					borderRadius="xl"
-					backgroundColor="blue.700"
+					backgroundColor={theme.bg.whiteGray}
 				>
 					<Img
 						borderRadius="xl"
@@ -57,7 +57,7 @@ export const FarmContainer: NextPage = () => {
 							Pegasys Liquidity Mining
 						</Text>
 						<Text
-							fontWeight="semibold"
+							fontWeight="medium"
 							fontSize="sm"
 							lineHeight="shorter"
 							w={["100%", "70%", "50%", "50%"]}
@@ -67,17 +67,19 @@ export const FarmContainer: NextPage = () => {
 						</Text>
 					</Flex>
 					<Flex
+						zIndex="0"
+						position="relative"
+						top="2"
 						alignItems="center"
 						justifyContent="center"
 						flexDirection="row"
 						bgColor={theme.text.topHeaderButton}
-						zIndex="docked"
 						borderBottomRadius="xl"
 						py="0.531rem"
 						gap="2.5"
 						color="white"
 					>
-						<Text fontWeight="semibold" fontSize="xs">
+						<Text fontWeight="medium" fontSize="xs">
 							View Your Staked Liquidity
 						</Text>
 						<MdOutlineCallMade size={20} />
@@ -124,7 +126,7 @@ export const FarmContainer: NextPage = () => {
 								py={["0.1rem", "0.1rem", "1", "1"]}
 								pl="10"
 								_hover={{ border: "1px solid #3182CE" }}
-								_focus={{ border: "1px solid #3182CE" }}
+								_focus={{ border: "1px solid #3182CE", outline: "none" }}
 							/>
 							<Flex
 								pt="1rem"
@@ -193,13 +195,9 @@ export const FarmContainer: NextPage = () => {
 					zIndex="1"
 					justifyContent="space-between"
 					mt={["10", "10", "0", "0"]}
-					mr="1"
-					ml="1"
 					mb="10rem"
-					sx={{ columnCount: [1, 1, 2, 2], columnGap: "18px" }}
+					sx={{ columnCount: [1, 1, 2, 2], columnGap: "35px" }}
 				>
-					<FarmCards />
-					<FarmCards />
 					<FarmCards />
 				</Box>
 			</Flex>

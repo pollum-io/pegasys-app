@@ -1,4 +1,4 @@
-import { ButtonProps } from "@chakra-ui/react";
+import { ButtonProps, Flex, Text, theme } from "@chakra-ui/react";
 import { SUPPORTED_WALLETS } from "helpers/consts";
 import { FunctionComponent } from "react";
 import { useWallet } from "hooks";

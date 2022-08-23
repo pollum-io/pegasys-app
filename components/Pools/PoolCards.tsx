@@ -1,5 +1,5 @@
 import { Button, Flex, Img, Text } from "@chakra-ui/react";
-import { FunctionComponent } from "react";
+import { FunctionComponent, Dispatch, SetStateAction } from "react";
 import { useModal, usePicasso } from "hooks";
 import { AddLiquidityModal, RemoveLiquidity } from "components/Modals";
 
@@ -10,20 +10,22 @@ interface IPoolCards {
 	poolVolume?: string;
 	poolApr?: string;
 	poolShare?: string;
+	setIsCreate?: Dispatch<SetStateAction<boolean>>;
 }
 
 export const PoolCards: FunctionComponent<IPoolCards> = props => {
-	const { poolOf, poolLiquidity, poolVolume, poolApr, poolShare, poolTokens } =
-		props;
-	const theme = usePicasso();
 	const {
-		onOpenRemoveLiquidity,
-		isOpenRemoveLiquidity,
-		onCloseRemoveLiquidity,
-		onOpenAddLiquidity,
-		isOpenAddLiquidity,
-		onCloseAddLiquidity,
-	} = useModal();
+		poolOf,
+		poolLiquidity,
+		poolVolume,
+		poolApr,
+		poolShare,
+		poolTokens,
+		setIsCreate,
+	} = props;
+	const theme = usePicasso();
+	const { onOpenRemoveLiquidity, onOpenAddLiquidity, onCloseAddLiquidity } =
+		useModal();
 
 	return (
 		<Flex
@@ -34,14 +36,6 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			border="1px solid rgb(86,190,216, 0.4)"
 			background={theme.bg.blackAlpha}
 		>
-			<RemoveLiquidity
-				isModalOpen={isOpenRemoveLiquidity}
-				onModalClose={onCloseRemoveLiquidity}
-			/>
-			<AddLiquidityModal
-				isModalOpen={isOpenAddLiquidity}
-				onModalClose={onCloseAddLiquidity}
-			/>
 			<Flex gap="2">
 				<Flex>
 					<Img src="icons/syscoin-logo.png" w="6" h="6" />
@@ -106,7 +100,10 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					color={theme.text.cyan}
 					fontSize="sm"
 					fontWeight="semibold"
-					onClick={onOpenAddLiquidity}
+					onClick={() => {
+						setIsCreate(false);
+						onOpenAddLiquidity();
+					}}
 					_hover={{
 						bgColor: theme.bg.bluePurple,
 					}}

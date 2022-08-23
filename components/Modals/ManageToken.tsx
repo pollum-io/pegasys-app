@@ -60,7 +60,7 @@ export const ManageToken: React.FC<IModal> = props => {
 							px="6"
 							bgColor={theme.bg.blackAlpha}
 							_hover={{ border: "1px solid #3182CE" }}
-							_focus={{ border: "1px solid #3182CE" }}
+							_focus={{ border: "1px solid #3182CE", outline: "none" }}
 						/>
 						<Button
 							py="2"

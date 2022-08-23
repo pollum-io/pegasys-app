@@ -166,8 +166,8 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				mb="0"
 				border={["none", "1px solid transparent"]}
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
-				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
-				position="relative"
+				borderBottomRadius={["0", "0", "3xl", "3xl"]}
+				position={["absolute", "absolute", "relative", "relative"]}
 				h="max-content"
 			>
 				<ModalHeader display="flex" alignItems="center" gap="3">
@@ -210,7 +210,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							py={["0.1rem", "0.1rem", "1", "1"]}
 							pl="10"
 							_hover={{ border: "1px solid #3182CE" }}
-							_focus={{ border: "1px solid #3182CE" }}
+							_focus={{ border: "1px solid #3182CE", outline: "none" }}
 						/>
 						<Flex
 							position="absolute"
@@ -237,11 +237,32 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 						/>
 					</Flex>
 				</ModalBody>
-				<Flex flexDirection="column">
+				<Flex
+					flexDirection="column"
+					w="95%"
+					my="0"
+					pr="2"
+					pl="2"
+					h="1xs"
+					overflow="auto"
+					css={{
+						"&::-webkit-scrollbar": {
+							width: "6px",
+						},
+						"&::-webkit-scrollbar-track": {
+							width: "6px",
+							scrollbarColor: " #0b172c",
+						},
+						"&::-webkit-scrollbar-thumb": {
+							background: "#FFFFFF3D",
+							borderRadius: "24px",
+						},
+					}}
+				>
 					{filter?.map((token: WrappedTokenInfo, index: number) => (
 						<Button
 							bg="transparent"
-							px="10"
+							px="4"
 							py="6"
 							justifyContent="space-between"
 							key={token.address + Number(index)}
@@ -269,9 +290,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 									<Img src={token.logoURI} borderRadius="full" w="6" h="6" />
 									{token.symbol}
 								</Flex>
-								<Text fontFamily="mono" fontWeight="normal">
-									{token.balance}
-								</Text>
+								<Text fontWeight="normal">{token.balance}</Text>
 							</Flex>
 						</Button>
 					))}

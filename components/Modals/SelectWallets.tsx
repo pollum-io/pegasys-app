@@ -9,9 +9,6 @@ import {
 import { usePicasso, useWallet } from "hooks";
 import { WalletOptions } from "components/WalletOptions";
 import { AiOutlineClose } from "react-icons/ai";
-import { useState } from "react";
-
-import { IWalletInfo } from "types/index";
 
 interface IModal {
 	isOpen: boolean;
@@ -35,10 +32,12 @@ export const SelectWallets: React.FC<IModal> = props => {
 			<ModalContent
 				borderRadius="1.875rem"
 				my={["0", "0", "40", "40"]}
-				bgColor={theme.bg.blackAlpha}
-				w={["100vw", "100vw", "max-content", "max-content"]}
+				bgColor={theme.bg.blueNavy}
+				w={["100vw", "100vw", "50%", "md"]}
 				h="max-content"
-				p="8"
+				p="6"
+				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
+				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
 				position={["absolute", "absolute", "unset", "unset"]}
 				bottom={["0", "0", "unset", "unset"]}
 			>
@@ -60,7 +59,11 @@ export const SelectWallets: React.FC<IModal> = props => {
 							<Text textAlign="center" fontWeight="normal">
 								New to Syscoin?
 							</Text>
-							<Text textColor={theme.text.cyan} fontWeight="semibold">
+							<Text
+								textColor={theme.text.cyan}
+								fontWeight="semibold"
+								textAlign="center"
+							>
 								Learn more about setting up a wallet
 							</Text>
 						</Flex>
@@ -81,27 +84,28 @@ export const SelectWallets: React.FC<IModal> = props => {
 								Initializing...
 							</Text>
 						</Flex>
-
-						<Flex
-							pt="2"
-							py="0"
-							bgColor="transparent"
-							h="48px"
-							justifyContent="space-between"
-							w="290px"
-							mx="0"
-							my="2"
-							p="4"
-							border="1px solid"
-							borderRadius="full"
-							fontSize="md"
-							borderColor={theme.border.wallets}
-							fontWeight={500}
-							fontFamily="inter"
-							alignItems="center"
-						>
-							<Text>{connectorSelected.name}</Text>
-							<Img w="6" h="6" src={`icons/${connectorSelected.iconName}`} />
+						<Flex justifyContent="center" align="center">
+							<Flex
+								pt="2"
+								py="0"
+								bgColor="transparent"
+								h="48px"
+								justifyContent="space-between"
+								w="290px"
+								mx="0"
+								my="2"
+								p="4"
+								border="1px solid"
+								borderRadius="full"
+								fontSize="md"
+								borderColor={theme.text.cyanPsys}
+								fontWeight={500}
+								fontFamily="inter"
+								alignItems="center"
+							>
+								<Text>{connectorSelected.name}</Text>
+								<Img w="6" h="6" src={`icons/${connectorSelected.iconName}`} />
+							</Flex>
 						</Flex>
 					</Flex>
 				)}

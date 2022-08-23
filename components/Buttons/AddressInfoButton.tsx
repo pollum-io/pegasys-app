@@ -1,3 +1,5 @@
+// eslint-disable-next-line
+// @ts-nocheck
 import {
 	Button,
 	Flex,
@@ -26,7 +28,12 @@ interface IModal {
 export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
-	const { walletAddress, transactions, currentNetworkChainId } = useWallet();
+	const {
+		walletAddress,
+		transactions,
+		currentNetworkChainId,
+		connectorSelected,
+	} = useWallet();
 	const { toast } = useToasty();
 	const [txs, setTxs] = useState<[]>([]);
 
@@ -66,7 +73,8 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 			<ModalOverlay />
 			<ModalContent
 				borderRadius={18}
-				my={["0", "40", "40", "40"]}
+				my={["0", "40", "40", "0"]}
+				mb={["0", "0", "24rem", "24rem"]}
 				h="max-content"
 				position="absolute"
 				bottom={["0", "0", "none", "none"]}
@@ -100,7 +108,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									fontWeight="semibold"
 									color={theme.text.cyanPurple}
 								>
-									Connected with
+									Connected with {connectorSelected?.name}
 								</Text>
 							</Flex>
 							<Flex>
