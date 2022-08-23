@@ -153,6 +153,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 							color={theme.text.cyanWhite}
 							fontSize="lg"
 							onClick={() => {
+								if (!onTx) return;
 								onTx();
 								onClose();
 							}}

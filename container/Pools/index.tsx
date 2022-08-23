@@ -4,14 +4,12 @@ import {
 	Img,
 	Input,
 	InputGroup,
-	InputLeftElement,
 	Menu,
 	MenuButton,
 	MenuItem,
 	MenuList,
 	Text,
-	useDisclosure,
-	useColorModeValue,
+	InputLeftElement,
 } from "@chakra-ui/react";
 import {
 	AddLiquidityModal,

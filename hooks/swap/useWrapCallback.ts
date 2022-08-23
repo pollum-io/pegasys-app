@@ -7,7 +7,7 @@ import {
 	ISwapTokenInputValue,
 	IWalletHookInfos,
 } from "types";
-import { ApprovalState } from "contexts";
+import { ApprovalState, IApprovalState } from "contexts";
 import WETH_ABI from "utils/abis/weth.json";
 
 export enum WrapType {
@@ -22,7 +22,7 @@ export function UseWrapCallback(
 	walletInfos: IWalletHookInfos,
 	setTransaction: React.Dispatch<React.SetStateAction<object>>,
 	transactions: object,
-	setApprovalState: React.Dispatch<React.SetStateAction<ApprovalState>>,
+	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
 	signer: Signer
 ): {
 	wrapType: WrapType;
@@ -70,7 +70,10 @@ export function UseWrapCallback(
 										summary: `Wrap ${inputAmount.toSignificant(6)} SYS to WSYS`,
 									}
 								);
-								setApprovalState(ApprovalState.PENDING);
+								setApprovalState({
+									status: ApprovalState.PENDING,
+									type: "wrap",
+								});
 							} catch (error) {
 								console.error("Could not deposit", error);
 							}

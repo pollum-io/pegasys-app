@@ -49,6 +49,11 @@ const usePicasso = () => {
 			),
 			red400: useColorModeValue("red.400", "red.400"),
 			red500: useColorModeValue("red.500", "red.500"),
+			white: useColorModeValue("#fff", "#fff"),
+			whiteAlpha: useColorModeValue(
+				"rgba(255,255,255, .36)",
+				"rgba(255,255,255, .36)"
+			),
 			cyanPsys: useColorModeValue("#00d9ef", "#00d9ef"),
 		},
 		icon: {
@@ -118,6 +123,7 @@ const usePicasso = () => {
 			blueNavyLight: useColorModeValue("#ffffff", "#0B172C"),
 			blueGray: useColorModeValue("#171F2D", "#171F2D"),
 			blue100: useColorModeValue("blue.100", "blue.100"),
+			blue600: useColorModeValue("#2B6CB0", "#2B6CB0"),
 			blue900: useColorModeValue("blue.900", "blue.900"),
 			blueNavyLightness: useColorModeValue("#665EE1", "rgba(21, 61, 111, 1)"),
 			blueNavyLightnessOp: useColorModeValue(
