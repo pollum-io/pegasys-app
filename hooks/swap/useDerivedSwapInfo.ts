@@ -125,7 +125,8 @@ export async function UseDerivedSwapInfo(
 	const bestSwapMethods = UseBestSwapMethod(
 		v2Trade as Trade,
 		walletInfos.walletAddress,
-		signer as Signer
+		signer as Signer,
+		walletInfos
 	);
 
 	return {
