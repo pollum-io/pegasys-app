@@ -188,9 +188,6 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 	],
 };
 
-export const SYS_LOGO =
-	"https://app.pegasys.finance/static/media/syscoin_token_round.f5e7de99.png";
-
 /**
  * Some tokens can only be swapped via certain pairs, so we override the list of bases that are considered for these
  * tokens.
