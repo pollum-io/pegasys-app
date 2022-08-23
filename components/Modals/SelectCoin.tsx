@@ -162,7 +162,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				borderRadius="3xl"
 				bgColor={theme.bg.blueNavyLight}
 				bottom="0"
-				mt="16"
+				mt="10"
 				mb="0"
 				border={["none", "1px solid transparent"]}
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
@@ -240,10 +240,11 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				<Flex
 					flexDirection="column"
 					w="95%"
+					h="10%"
 					my="0"
 					pr="2"
 					pl="2"
-					h="1xs"
+					maxHeight="30rem"
 					overflow="auto"
 					css={{
 						"&::-webkit-scrollbar": {

@@ -119,7 +119,10 @@ const usePicasso = () => {
 			blackAlpha: useColorModeValue("#ffffff", "#081120"), // modal bg
 			blackLightness: useColorModeValue("#F7FAFC", "#081120"),
 			blackGray: useColorModeValue("#EDF2F7", "#081120"),
-			blueNavy: useColorModeValue("#F7FAFC", "#0B172C"), // intern modal flexes
+			blueNavy: useColorModeValue(
+				"rgba(255, 255, 255, 0.92)",
+				"rgba(11, 23, 44, 0.8)"
+			), // intern modal flexes
 			blueNavyLight: useColorModeValue("#ffffff", "#0B172C"),
 			blueGray: useColorModeValue("#171F2D", "#171F2D"),
 			blue100: useColorModeValue("blue.100", "blue.100"),

@@ -85,23 +85,36 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 					</Flex>
 				</ModalHeader>
 				<ModalBody mb="4">
-					<Flex flexDirection="column" alignItems="center" mb="6">
-						<Flex flexDirection="row" gap="2">
-							<Text>{tokenInputValue?.inputFrom?.value}</Text>
-							<Img src={selectedTokens[0]?.logoURI} w="5" h="5" />
-							<Text>{selectedTokens[0]?.symbol}</Text>
+					<Flex
+						flexDirection="row"
+						alignItems="stretch"
+						mb="6"
+						justifyContent="center"
+					>
+						<Flex flexDirection="column" gap="14" pr="2" alignItems="flex-end">
+							<Text textAlign="right">{tokenInputValue?.inputFrom?.value}</Text>
+							<Text textAlign="right">{tokenInputValue?.inputTo?.value}</Text>
 						</Flex>
-						<Icon
-							as={MdArrowDownward}
-							bg="transparent"
-							color={theme.text.cyanPurple}
-							w="6"
-							h="6"
-							borderRadius="full"
-						/>
-						<Flex flexDirection="row" gap="2">
-							<Text>{tokenInputValue?.inputTo?.value}</Text>
+						<Flex flexDirection="column" gap="1.1rem" alignItems="center">
+							<Img src={selectedTokens[0]?.logoURI} w="5" h="5" />
+							<Icon
+								as={MdArrowDownward}
+								bg="transparent"
+								color={theme.text.cyanPurple}
+								w="6"
+								h="6"
+								borderRadius="full"
+							/>
 							<Img src={selectedTokens[1]?.logoURI} w="5" h="5" />
+						</Flex>
+
+						<Flex
+							flexDirection="column"
+							gap="14"
+							pl="2"
+							alignItems="flex-start"
+						>
+							<Text>{selectedTokens[0]?.symbol}</Text>
 							<Text>{selectedTokens[1]?.symbol}</Text>
 						</Flex>
 					</Flex>

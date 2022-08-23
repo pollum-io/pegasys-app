@@ -710,13 +710,18 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								borderColor={theme.text.cyan}
 								mt="1.5rem"
 							>
-								<Text fontSize="md" fontWeight="medium" px="1.375rem" py="1rem">
+								<Text
+									fontSize="md"
+									fontWeight="medium"
+									px="1.375rem"
+									py="0.5rem"
+								>
 									{translation("swap.price")}
 								</Text>
 								<Flex
 									flexDirection="row"
 									justifyContent="space-around"
-									py="1rem"
+									py="0.5rem"
 									px="1rem"
 									borderRadius="2xl"
 									borderWidth="1px"
