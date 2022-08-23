@@ -41,7 +41,7 @@ import { Signer } from "ethers";
 import { computeTradePriceBreakdown } from "utils";
 import { getTokensGraphCandle } from "services/index";
 
-import { ONE_DAY_IN_SECONDS, SYS_LOGO } from "helpers/consts";
+import { ONE_DAY_IN_SECONDS } from "helpers/consts";
 import { ConfirmSwap } from "components/Modals/ConfirmSwap";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { OtherWallet } from "./OtherWallet";
@@ -958,24 +958,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				>
 					<Flex>
 						<Img
-							src={
-								tokensPairPosition[0]?.symbol === "SYS"
-									? SYS_LOGO
-									: tokensPairPosition[0]?.logoURI
-							}
+							src={tokensPairPosition[0]?.tokenInfo?.logoURI}
 							w="7"
 							h="7"
 							mr="0.5"
 						/>
-						<Img
-							src={
-								tokensPairPosition[1]?.symbol === "SYS"
-									? SYS_LOGO
-									: tokensPairPosition[1]?.logoURI
-							}
-							w="7"
-							h="7"
-						/>
+						<Img src={tokensPairPosition[1]?.tokenInfo?.logoURI} w="7" h="7" />
 						<Text fontWeight="700" fontSize="xl" ml="2.5">
 							{tokensPairPosition[0]?.symbol} / {tokensPairPosition[1]?.symbol}
 						</Text>
