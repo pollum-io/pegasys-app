@@ -723,55 +723,57 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Text>
 						</Flex>
 					)}
-					{tokenInputValue.inputTo.value && tokenInputValue.inputFrom.value && (
-						<Flex
-							flexDirection="column"
-							borderRadius="2xl"
-							bgColor="transparent"
-							borderWidth="1px"
-							borderColor={theme.text.cyan}
-							mt="1.5rem"
-						>
-							<Text fontSize="md" fontWeight="medium" px="1.375rem" py="1rem">
-								Price
-							</Text>
+					{tokenInputValue.inputTo.value &&
+						tokenInputValue.inputFrom.value &&
+						!isWrap && (
 							<Flex
-								flexDirection="row"
-								justifyContent="space-around"
-								py="1rem"
-								px="1rem"
+								flexDirection="column"
 								borderRadius="2xl"
+								bgColor="transparent"
 								borderWidth="1px"
 								borderColor={theme.text.cyan}
-								bgColor={theme.bg.blueNavy}
+								mt="1.5rem"
 							>
-								<Flex fontSize="sm" flexDirection="column" textAlign="center">
-									<Text fontWeight="semibold">
-										{returnedTradeValue?.v2Trade
-											? returnedTradeValue?.v2Trade?.executionPrice?.toSignificant(
-													6
-											  )
-											: "-"}
-									</Text>
-									<Text fontWeight="normal">
-										{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
-									</Text>
-								</Flex>
-								<Flex fontSize="sm" flexDirection="column" textAlign="center">
-									<Text fontWeight="semibold">
-										{returnedTradeValue?.v2Trade
-											? returnedTradeValue?.v2Trade?.executionPrice
-													?.invert()
-													.toSignificant(6)
-											: "-"}
-									</Text>
-									<Text fontWeight="normal">
-										{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
-									</Text>
+								<Text fontSize="md" fontWeight="medium" px="1.375rem" py="1rem">
+									Price
+								</Text>
+								<Flex
+									flexDirection="row"
+									justifyContent="space-around"
+									py="1rem"
+									px="1rem"
+									borderRadius="2xl"
+									borderWidth="1px"
+									borderColor={theme.text.cyan}
+									bgColor={theme.bg.blueNavy}
+								>
+									<Flex fontSize="sm" flexDirection="column" textAlign="center">
+										<Text fontWeight="semibold">
+											{returnedTradeValue?.v2Trade
+												? returnedTradeValue?.v2Trade?.executionPrice?.toSignificant(
+														6
+												  )
+												: "-"}
+										</Text>
+										<Text fontWeight="normal">
+											{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
+										</Text>
+									</Flex>
+									<Flex fontSize="sm" flexDirection="column" textAlign="center">
+										<Text fontWeight="semibold">
+											{returnedTradeValue?.v2Trade
+												? returnedTradeValue?.v2Trade?.executionPrice
+														?.invert()
+														.toSignificant(6)
+												: "-"}
+										</Text>
+										<Text fontWeight="normal">
+											{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
+										</Text>
+									</Flex>
 								</Flex>
 							</Flex>
-						</Flex>
-					)}
+						)}
 					{isExpert}
 					{isExpert && isOtherWallet}
 					<Flex>
@@ -813,8 +815,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								px="6"
 								borderRadius="67px"
 								onClick={() => {
-									onOpenConfirmSwap();
-									setTxType("wrap");
+									onWrap();
 								}}
 								bgColor={theme.bg.button.connectWalletSwap}
 								color={theme.text.cyan}
