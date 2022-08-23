@@ -178,6 +178,19 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const canSubmit = submitValidation.every(validation => validation === true);
 
+	const wrapValidation = [
+		parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
+			parseFloat(tokenInputValue?.inputFrom?.value),
+		parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
+			parseFloat(tokenInputValue?.inputTo?.value),
+		parseFloat(selectedToken[1]?.tokenInfo?.balance) >=
+			parseFloat(tokenInputValue?.inputTo?.value),
+		parseFloat(selectedToken[1]?.tokenInfo?.balance) >=
+			parseFloat(tokenInputValue?.inputFrom?.value),
+	];
+
+	const canWrap = wrapValidation.some(valid => valid === true);
+
 	const isWrap =
 		(selectedToken[0]?.symbol === "SYS" &&
 			selectedToken[1]?.symbol === "WSYS") ||
@@ -513,7 +526,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									parseFloat(selectedToken[0]?.balance) &&
 								tokenInputValue.currentInputTyped === "inputFrom") ||
 							parseFloat(tokenInputValue.inputFrom.value) === 0 ||
-							tokenInputValue.inputFrom.value === "" ||
 							(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap)
 								? theme.text.red400
 								: "#ff000000"
@@ -585,18 +597,17 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							)}
 						</Flex>
 					)}
-					{parseFloat(tokenInputValue.inputFrom.value) === 0 ||
-						(tokenInputValue.inputFrom.value === "" && (
-							<Text
-								fontSize="sm"
-								pt="2"
-								textAlign="center"
-								fontWeight="semibold"
-								color={theme.text.red400}
-							>
-								Please insert a valid amount.
-							</Text>
-						))}
+					{parseFloat(tokenInputValue.inputFrom.value) === 0 && (
+						<Text
+							fontSize="sm"
+							pt="2"
+							textAlign="center"
+							fontWeight="semibold"
+							color={theme.text.red400}
+						>
+							Please insert a valid amount.
+						</Text>
+					)}
 					<Flex
 						margin="0 auto"
 						py="4"
@@ -796,7 +807,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"
-								disabled={!canSubmit || isPending}
+								disabled={!canWrap || isPending}
 							>
 								{wrapOrUnwrap}
 							</Button>
