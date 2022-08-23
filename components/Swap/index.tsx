@@ -310,19 +310,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	);
 
 	const getTokensGraph = async () => {
-		const [token0, token1] = UseTokensPairSorted([
-			selectedToken[0],
-			selectedToken[1],
-		]);
-
-		setTokensPairPosition([
-			token0 as WrappedTokenInfo,
-			token1 as WrappedTokenInfo,
-		]);
+		setTokensPairPosition([selectedToken[0], selectedToken[1]]);
 
 		const requestTokensCandle = await getTokensGraphCandle(
-			token0,
-			token1,
+			selectedToken[0],
+			selectedToken[1],
 			tokensGraphCandlePeriod.period
 		);
 
