@@ -699,26 +699,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Text>
 						</Flex>
 					)}
-					{!isERC20 && !isWrap && (
-						<Button
-							w="100%"
-							mt="2rem"
-							py="6"
-							px="6"
-							borderRadius="67px"
-							onClick={() => {
-								onOpenConfirmSwap();
-								setTxType("swap");
-							}}
-							bgColor={theme.bg.button.connectWalletSwap}
-							color={theme.text.cyan}
-							fontSize="lg"
-							fontWeight="semibold"
-							disabled={!canSubmit || isPending}
-						>
-							{swapButtonValidation}
-						</Button>
-					)}
 					{tokenInputValue.inputTo.value &&
 						tokenInputValue.inputFrom.value &&
 						!isWrap && (
@@ -770,6 +750,26 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								</Flex>
 							</Flex>
 						)}
+					{!isERC20 && !isWrap && (
+						<Button
+							w="100%"
+							mt="2rem"
+							py="6"
+							px="6"
+							borderRadius="67px"
+							onClick={() => {
+								onOpenConfirmSwap();
+								setTxType("swap");
+							}}
+							bgColor={theme.bg.button.connectWalletSwap}
+							color={theme.text.cyan}
+							fontSize="lg"
+							fontWeight="semibold"
+							disabled={!canSubmit || isPending}
+						>
+							{swapButtonValidation}
+						</Button>
+					)}
 					{isExpert}
 					{isExpert && isOtherWallet}
 					<Flex>
