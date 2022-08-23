@@ -11,6 +11,7 @@ import {
 	Router,
 	TradeType,
 	SwapParameters,
+	ChainId,
 } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
 import pegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
@@ -26,7 +27,7 @@ export function UseBestSwapMethod(
 	walletInfos: IWalletHookInfos
 ): ISwapCall[] {
 	let deadline = useTransactionDeadline();
-	const chainId = walletInfos?.chainId;
+	const chainId = walletInfos?.chainId as ChainId;
 
 	if (!v2Trade || !walletAddress) return [];
 
