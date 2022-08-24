@@ -26,6 +26,7 @@ interface IModal {
 	trade: Trade | undefined;
 	isWrap: boolean;
 	tokenInputValue: ISwapTokenInputValue;
+	minimumReceived: string | 0 | null | undefined;
 }
 
 export const ConfirmSwap: React.FC<IModal> = props => {
@@ -38,6 +39,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 		trade,
 		isWrap,
 		tokenInputValue,
+		minimumReceived,
 	} = props;
 	const theme = usePicasso();
 
@@ -141,11 +143,8 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text>Minmum Received</Text>
 							<Text fontWeight="medium">
-								{trade
-									? `${trade?.outputAmount.toSignificant(4)} ${
-											trade?.outputAmount?.currency.symbol
-									  }`
-									: "-"}
+								{minimumReceived && minimumReceived}{" "}
+								{trade && trade?.outputAmount?.currency.symbol}
 							</Text>
 						</Flex>
 						<Flex flexDirection="row" justifyContent="space-between">
