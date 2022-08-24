@@ -308,12 +308,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									borderLeftRadius="full"
 									p="5"
 									w="25rem"
-									_hover={{
-										borderColor: theme.border.farmInput,
-									}}
-									_focus={{
-										borderColor: theme.border.farmInput,
-									}}
+									_focus={{ outline: "none" }}
 								/>
 								<Button
 									border="1px solid"
