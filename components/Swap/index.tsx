@@ -38,7 +38,7 @@ import {
 import dynamic from "next/dynamic";
 import { useTranslation } from "react-i18next";
 import { Signer } from "ethers";
-import { computeTradePriceBreakdown } from "utils";
+import { computeTradePriceBreakdown, Field } from "utils";
 import { getTokensGraphCandle } from "services/index";
 
 import { ONE_DAY_IN_SECONDS } from "helpers/consts";
@@ -204,6 +204,15 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		? translation("swapPage.connectWallet")
 		: translation("swapPage.swap");
 
+	const minimumReceived =
+		returnedTradeValue?.isExactIn && returnedTradeValue?.slippageAdjustedAmounts
+			? returnedTradeValue?.slippageAdjustedAmounts[
+					Field.OUTPUT
+			  ]?.toSignificant(4)
+			: returnedTradeValue?.slippageAdjustedAmounts &&
+			  returnedTradeValue?.slippageAdjustedAmounts[Field.INPUT]?.toSignificant(
+					4
+			  );
 	// END VALIDATIONS AT ALL //
 
 	// HANDLE FUNCTIONALITIES AND HOOKS //
@@ -289,15 +298,21 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	);
 
 	const handleSwapInfo = async () => {
-		const { v2Trade, bestSwapMethods, inputErrors, parsedAmount } =
-			await UseDerivedSwapInfo(
-				selectedToken,
-				tokenInputValue,
-				walletInfos,
-				translation,
-				userSlippageTolerance,
-				signer as Signer
-			);
+		const {
+			v2Trade,
+			bestSwapMethods,
+			inputErrors,
+			parsedAmount,
+			isExactIn,
+			slippageAdjustedAmounts,
+		} = await UseDerivedSwapInfo(
+			selectedToken,
+			tokenInputValue,
+			walletInfos,
+			translation,
+			userSlippageTolerance,
+			signer as Signer
+		);
 
 		setReturnedTradeValue({
 			parsedAmount,
@@ -305,6 +320,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			bestSwapMethods,
 			inputErrors,
 			v2TradeRoute: v2Trade?.route?.path,
+			isExactIn,
+			slippageAdjustedAmounts,
 		});
 	};
 
@@ -430,6 +447,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	}, [
 		isConnected,
 		tokenInputValue,
+		userSlippageTolerance,
 		selectedToken[0]?.address,
 		selectedToken[1]?.address,
 	]);
@@ -502,6 +520,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				trade={returnedTradeValue?.v2Trade}
 				isWrap={isWrap}
 				tokenInputValue={tokenInputValue}
+				minimumReceived={minimumReceived}
 			/>
 			<Flex alignItems="center" flexDirection="column">
 				<Flex
@@ -772,7 +791,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							color={theme.text.cyan}
 							fontSize="lg"
 							fontWeight="semibold"
-							disabled={!canSubmit || isPending}
+							disabled={!canSubmit}
 						>
 							{swapButtonValidation}
 						</Button>
@@ -828,7 +847,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"
-								disabled={!canWrap || isPending}
+								disabled={!canWrap}
 							>
 								{wrapOrUnwrap}
 							</Button>
@@ -861,13 +880,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 										/>
 									</Flex>
 									<Text fontWeight="medium" fontSize="sm">
-										{returnedTradeValue?.v2Trade
-											? `${returnedTradeValue?.v2Trade?.outputAmount.toSignificant(
-													4
-											  )} ${
-													returnedTradeValue?.v2Trade?.outputAmount?.currency
-														.symbol
-											  }`
+										{returnedTradeValue?.v2Trade &&
+										returnedTradeValue?.slippageAdjustedAmounts
+											? `${minimumReceived} ${returnedTradeValue?.v2Trade?.outputAmount?.currency.symbol}`
 											: "-"}
 									</Text>
 								</Flex>

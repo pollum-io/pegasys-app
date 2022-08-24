@@ -7,6 +7,12 @@ export async function getTokensGraphCandle(
 	token1: Token | WrappedTokenInfo,
 	period = 900
 ) {
+	const isWrap =
+		(token0.symbol === "SYS" && token1.symbol === "WSYS") ||
+		(token0.symbol === "WSYS" && token1.symbol === "SYS");
+
+	if (isWrap) return [];
+
 	const result = await apolloClient.query({
 		query: GET_TOKENS_GRAPH_CANDLE,
 		variables: {

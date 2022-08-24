@@ -103,7 +103,10 @@ export function UseWrapCallback(
 										)} WSYS to SYS`,
 									}
 								);
-								setApprovalState(ApprovalState.PENDING);
+								setApprovalState({
+									status: ApprovalState.PENDING,
+									type: "wrap",
+								});
 							} catch (error) {
 								console.error("Could not withdraw", error);
 							}
