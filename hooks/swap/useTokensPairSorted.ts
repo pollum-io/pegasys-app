@@ -1,15 +1,40 @@
 import { Token } from "@pollum-io/pegasys-sdk";
+import { PSYS, SYS_LOGO } from "helpers/consts";
+import { WrappedTokenInfo } from "types";
 
 export const UseTokensPairSorted = (tokens: Token[]) => {
-	// const SYS = new Token(
-	// 	tokens[0].chainId,
-	// 	"0x0000000000000000000000000000000000000000",
-	// 	18,
-	// 	"SYS"
-	// );
+	if (tokens[0].symbol === "SYS" && tokens[1].symbol === "WSYS") {
+		const SYS = new WrappedTokenInfo({
+			...PSYS[tokens[0].chainId],
+			name: "Syscoin",
+			symbol: "SYS",
+			logoURI: SYS_LOGO,
+		});
 
-	// const Token0 = tokens[0].symbol === "SYS" ? SYS : tokens[0];
-	// const Token1 = tokens[1].symbol === "SYS" ? SYS : tokens[1];
+		const [tokenA, tokenB]: Token[] = [SYS, tokens[1]];
+
+		const [token0, token1] = tokenA?.sortsBefore(tokenB)
+			? [tokenA, tokenB]
+			: [tokenB, tokenA];
+
+		return [token0, token1];
+	}
+	if (tokens[0].symbol === "WSYS" && tokens[1].symbol === "SYS") {
+		const SYS = new WrappedTokenInfo({
+			...PSYS[tokens[0].chainId],
+			name: "Syscoin",
+			symbol: "SYS",
+			logoURI: SYS_LOGO,
+		});
+
+		const [tokenA, tokenB]: Token[] = [tokens[0], SYS];
+
+		const [token0, token1] = tokenA?.sortsBefore(tokenB)
+			? [tokenA, tokenB]
+			: [tokenB, tokenA];
+
+		return [token0, token1];
+	}
 
 	const [tokenA, tokenB]: Token[] = [tokens[0], tokens[1]];
 

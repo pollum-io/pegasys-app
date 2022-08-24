@@ -408,16 +408,18 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			v2Trade: { outputAmount, inputAmount },
 		} = returnedTradeValue;
 
-		if (currentInputTyped === "inputFrom") {
-			tokenInputValue.inputTo.value = inputFromValue
-				? outputAmount?.toSignificant(6)
-				: "";
-		}
+		if (!isWrap) {
+			if (currentInputTyped === "inputFrom") {
+				tokenInputValue.inputTo.value = inputFromValue
+					? outputAmount?.toSignificant(6)
+					: "";
+			}
 
-		if (currentInputTyped === "inputTo") {
-			tokenInputValue.inputFrom.value = inputToValue
-				? inputAmount?.toSignificant(6)
-				: "";
+			if (currentInputTyped === "inputTo") {
+				tokenInputValue.inputFrom.value = inputToValue
+					? inputAmount?.toSignificant(6)
+					: "";
+			}
 		}
 	}, [isConnected, returnedTradeValue?.v2Trade]);
 

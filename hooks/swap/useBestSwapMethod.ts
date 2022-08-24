@@ -24,7 +24,8 @@ export function UseBestSwapMethod(
 	v2Trade: Trade,
 	walletAddress: string,
 	signer: Signer,
-	walletInfos: IWalletHookInfos
+	walletInfos: IWalletHookInfos,
+	slippageTolerance: number
 ): ISwapCall[] {
 	let deadline = useTransactionDeadline();
 	const chainId = walletInfos?.chainId as ChainId;
@@ -51,30 +52,29 @@ export function UseBestSwapMethod(
 
 	const bestSwapMethods: SwapParameters[] = [];
 
-	bestSwapMethods.push(
-		Router.swapCallParameters(v2Trade as Trade, {
-			feeOnTransfer: false,
-			allowedSlippage: new Percent(
-				JSBI.BigInt(INITIAL_ALLOWED_SLIPPAGE),
-				BIPS_BASE
-			),
-			recipient: walletAddress,
-			deadline: deadline?.toNumber() as number,
-		})
-	);
-
-	if (v2Trade?.tradeType === TradeType.EXACT_INPUT) {
+	if (slippageTolerance) {
 		bestSwapMethods.push(
-			Router.swapCallParameters(v2Trade, {
-				feeOnTransfer: true,
-				allowedSlippage: new Percent(
-					JSBI.BigInt(INITIAL_ALLOWED_SLIPPAGE),
-					BIPS_BASE
-				),
+			Router.swapCallParameters(v2Trade as Trade, {
+				feeOnTransfer: false,
+				allowedSlippage: new Percent(JSBI.BigInt(slippageTolerance), BIPS_BASE),
 				recipient: walletAddress,
 				deadline: deadline?.toNumber() as number,
 			})
 		);
+
+		if (v2Trade?.tradeType === TradeType.EXACT_INPUT) {
+			bestSwapMethods.push(
+				Router.swapCallParameters(v2Trade, {
+					feeOnTransfer: true,
+					allowedSlippage: new Percent(
+						JSBI.BigInt(slippageTolerance),
+						BIPS_BASE
+					),
+					recipient: walletAddress,
+					deadline: deadline?.toNumber() as number,
+				})
+			);
+		}
 	}
 
 	return bestSwapMethods.map(parameters => ({ parameters, contract }));
