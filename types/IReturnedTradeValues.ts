@@ -7,4 +7,12 @@ export interface IReturnedTradeValues {
 	bestSwapMethods: ISwapCall[];
 	inputErrors: string | undefined;
 	v2TradeRoute: Token[] | undefined;
+	isExactIn: boolean;
+	slippageAdjustedAmounts:
+		| 0
+		| {
+				INPUT?: CurrencyAmount | undefined;
+				OUTPUT?: CurrencyAmount | undefined;
+		  }
+		| null;
 }
