@@ -126,7 +126,8 @@ export async function UseDerivedSwapInfo(
 		v2Trade as Trade,
 		walletInfos.walletAddress,
 		signer as Signer,
-		walletInfos
+		walletInfos,
+		userAllowedSlippage
 	);
 
 	return {

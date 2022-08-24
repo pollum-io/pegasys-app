@@ -179,6 +179,10 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								px="0.3rem"
 								m="0"
 								borderRadius={36}
+								type="number"
+								onChange={e =>
+									setUserSlippageTolerance(Number(e.target.value) * 10)
+								}
 								placeholder="1.0%"
 								fontWeight="semibold"
 								border="1px solid"

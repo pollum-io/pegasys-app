@@ -33,7 +33,8 @@ export function UseSwapCallback(
 		trade as Trade,
 		walletInfos.walletAddress,
 		signer,
-		walletInfos
+		walletInfos,
+		allowedSlippage
 	);
 
 	const { address: recipientAddress } = useENS(walletAddress);
