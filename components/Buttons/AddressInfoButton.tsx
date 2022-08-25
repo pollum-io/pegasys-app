@@ -1,9 +1,8 @@
-// eslint-disable-next-line
-// @ts-nocheck
 import {
 	Button,
 	Flex,
 	Icon,
+	Link,
 	Modal,
 	ModalBody,
 	ModalContent,
@@ -35,7 +34,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 		connectorSelected,
 	} = useWallet();
 	const { toast } = useToasty();
-	const [txs, setTxs] = useState<[]>([]);
+	const [txs, setTxs] = useState<ITransactionResponse[]>([]);
 
 	const handleCopyToClipboard = () => {
 		copyToClipboard(walletAddress);
@@ -60,10 +59,11 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	useEffect(() => {
 		if (!isEmpty) {
 			// eslint-disable-next-line
-			const currentTxs: ITransactionResponse[] | any[] = [
+			const currentTxs: ITransactionResponse[] = [
 				...Object.values(transactions[5700]),
 				...Object.values(transactions[57]),
 			];
+
 			setTxs(currentTxs);
 		}
 	}, [transactions]);
@@ -192,24 +192,56 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 					bgColor={theme.bg.blackGray}
 					justifyContent="flex-start"
 					borderBottomRadius={18}
-					h="4.313rem"
+					h="max-content"
 				>
-					{isEmpty && txs.length === 0 ? (
+					{txs.length === 0 ? (
 						<Text fontSize="sm" fontWeight="semibold" color={theme.text.mono}>
 							Your transactions will appear here...
 						</Text>
 					) : (
-						<Flex flexDirection="column" gap={2}>
-							{txs.map((item: ITransactionResponse) => (
-								// eslint-disable-next-line
-								<a
-									href={`${explorerURL}/${item?.hash}`}
-									target="_blank"
-									rel="noreferrer"
+						<Flex flexDirection="column">
+							<Flex
+								justifyContent="space-between"
+								w="100%"
+								flexDirection="row"
+								gap="12rem"
+								pb="4"
+							>
+								<Text fontSize="sm" fontWeight="semibold">
+									Recent transactions
+								</Text>
+								<Text
+									fontSize="sm"
+									fontWeight="semibold"
+									color={theme.text.cyan}
+									_hover={{ cursor: "pointer", textDecoration: "underline" }}
+									onClick={() => setTxs([])}
 								>
-									{item?.summary}
-								</a>
-							))}
+									Clear All
+								</Text>
+							</Flex>
+							<Flex flexDirection="column" gap={1} w="max-content">
+								{txs.map((item: ITransactionResponse) => (
+									// eslint-disable-next-line react/jsx-key
+									<Link
+										fontSize="sm"
+										href={`${explorerURL}/${item?.hash}`}
+										target="_blank"
+										rel="noreferrer"
+										alignItems="center"
+									>
+										{item?.summary}
+										<Icon
+											as={MdOutlineCallMade}
+											w="4"
+											h="4"
+											top="0.15rem"
+											left="0.5rem"
+											position="relative"
+										/>
+									</Link>
+								))}
+							</Flex>
 						</Flex>
 					)}
 				</ModalFooter>

@@ -39,6 +39,7 @@ export const OtherWallet: FunctionComponent = () => {
 						textAlign="left"
 						type="text"
 						h="2.875rem"
+						_focus={{ outline: "none" }}
 					/>
 				</Flex>
 

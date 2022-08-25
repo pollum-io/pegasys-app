@@ -9,4 +9,12 @@ export interface IReturnedTradeValues {
 	inputErrors: string | undefined;
 	v2TradeRoute: Token[] | undefined;
 	currencyBalances: { [field in Field]?: CurrencyAmount };
+	isExactIn: boolean;
+	slippageAdjustedAmounts:
+		| 0
+		| {
+				INPUT?: CurrencyAmount | undefined;
+				OUTPUT?: CurrencyAmount | undefined;
+		  }
+		| null;
 }

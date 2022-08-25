@@ -1,12 +1,12 @@
 import {
 	Button,
 	ButtonProps,
+	Collapse,
 	Flex,
 	Icon,
 	Img,
 	Input,
 	Text,
-	Tooltip,
 } from "@chakra-ui/react";
 import {
 	useModal,
@@ -217,6 +217,15 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		maxAmountInput && returnedTradeValue?.parsedAmount?.equalTo(maxAmountInput)
 	);
 
+	const minimumReceived =
+		returnedTradeValue?.isExactIn && returnedTradeValue?.slippageAdjustedAmounts
+			? returnedTradeValue?.slippageAdjustedAmounts[
+					Field.OUTPUT
+			  ]?.toSignificant(4)
+			: returnedTradeValue?.slippageAdjustedAmounts &&
+			  returnedTradeValue?.slippageAdjustedAmounts[Field.INPUT]?.toSignificant(
+					4
+			  );
 	// END VALIDATIONS AT ALL //
 
 	// HANDLE FUNCTIONALITIES AND HOOKS //
@@ -317,9 +326,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		const {
 			v2Trade,
 			bestSwapMethods,
-			currencyBalances,
 			inputErrors,
 			parsedAmount,
+			currencyBalances,
+			isExactIn,
+			slippageAdjustedAmounts,
 		} = await UseDerivedSwapInfo(
 			selectedToken,
 			tokenInputValue,
@@ -336,6 +347,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			inputErrors,
 			v2TradeRoute: v2Trade?.route?.path,
 			currencyBalances,
+			isExactIn,
+			slippageAdjustedAmounts,
 		});
 	};
 
@@ -462,6 +475,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		isConnected,
 		tokenInputValue?.inputFrom?.value,
 		tokenInputValue?.inputTo?.value,
+		userSlippageTolerance,
 		selectedToken[0]?.address,
 		selectedToken[1]?.address,
 	]);
@@ -508,6 +522,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			}}
 			mb={["6rem", "0"]}
 			px={["4", "0", "0", "0"]}
+			zIndex="1"
 		>
 			<SelectWallets isOpen={isOpenWallet} onClose={onCloseWallet} />
 			<SelectCoinModal
@@ -534,6 +549,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				trade={returnedTradeValue?.v2Trade}
 				isWrap={isWrap}
 				tokenInputValue={tokenInputValue}
+				minimumReceived={minimumReceived}
+				liquidityFee={realizedLPFee}
 			/>
 			<Flex alignItems="center" flexDirection="column">
 				<Flex
@@ -640,8 +657,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								onChange={handleOnChangeTokenInputs}
 								name="inputFrom"
 								value={tokenInputValue?.inputFrom?.value}
-								_hover={{ border: "1px solid #3182CE" }}
-								_focus={{ border: "1px solid #3182CE", outline: "none" }}
+								_focus={{ outline: "none" }}
 							/>
 						</Flex>
 					</Flex>
@@ -736,8 +752,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								onChange={handleOnChangeTokenInputs}
 								name="inputTo"
 								value={tokenInputValue?.inputTo?.value}
-								_hover={{ border: "1px solid #3182CE" }}
-								_focus={{ border: "1px solid #3182CE", outline: "none" }}
+								_focus={{ outline: "none" }}
 							/>
 						</Flex>
 					</Flex>
@@ -754,62 +769,61 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Text>
 						</Flex>
 					)}
-					{tokenInputValue.inputTo.value &&
-						tokenInputValue.inputFrom.value &&
-						!isWrap && (
+					<Collapse
+						in={
+							!!tokenInputValue.inputTo.value &&
+							!!tokenInputValue.inputFrom.value &&
+							!isWrap
+						}
+					>
+						<Flex
+							flexDirection="column"
+							borderRadius="2xl"
+							bgColor="transparent"
+							borderWidth="1px"
+							borderColor={theme.text.cyan}
+							mt="1.5rem"
+						>
+							<Text fontSize="md" fontWeight="medium" px="1.375rem" py="0.5rem">
+								{translation("swap.price")}
+							</Text>
 							<Flex
-								flexDirection="column"
+								flexDirection="row"
+								justifyContent="space-around"
+								py="0.5rem"
+								px="1rem"
 								borderRadius="2xl"
-								bgColor="transparent"
 								borderWidth="1px"
 								borderColor={theme.text.cyan}
-								mt="1.5rem"
+								bgColor={theme.bg.blueNavy}
 							>
-								<Text
-									fontSize="md"
-									fontWeight="medium"
-									px="1.375rem"
-									py="0.5rem"
-								>
-									{translation("swap.price")}
-								</Text>
-								<Flex
-									flexDirection="row"
-									justifyContent="space-around"
-									py="0.5rem"
-									px="1rem"
-									borderRadius="2xl"
-									borderWidth="1px"
-									borderColor={theme.text.cyan}
-									bgColor={theme.bg.blueNavy}
-								>
-									<Flex fontSize="sm" flexDirection="column" textAlign="center">
-										<Text fontWeight="semibold">
-											{returnedTradeValue?.v2Trade
-												? returnedTradeValue?.v2Trade?.executionPrice?.toSignificant(
-														6
-												  )
-												: "-"}
-										</Text>
-										<Text fontWeight="normal">
-											{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
-										</Text>
-									</Flex>
-									<Flex fontSize="sm" flexDirection="column" textAlign="center">
-										<Text fontWeight="semibold">
-											{returnedTradeValue?.v2Trade
-												? returnedTradeValue?.v2Trade?.executionPrice
-														?.invert()
-														.toSignificant(6)
-												: "-"}
-										</Text>
-										<Text fontWeight="normal">
-											{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
-										</Text>
-									</Flex>
+								<Flex fontSize="sm" flexDirection="column" textAlign="center">
+									<Text fontWeight="semibold">
+										{returnedTradeValue?.v2Trade
+											? returnedTradeValue?.v2Trade?.executionPrice?.toSignificant(
+													6
+											  )
+											: "-"}
+									</Text>
+									<Text fontWeight="normal">
+										{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
+									</Text>
+								</Flex>
+								<Flex fontSize="sm" flexDirection="column" textAlign="center">
+									<Text fontWeight="semibold">
+										{returnedTradeValue?.v2Trade
+											? returnedTradeValue?.v2Trade?.executionPrice
+													?.invert()
+													.toSignificant(6)
+											: "-"}
+									</Text>
+									<Text fontWeight="normal">
+										{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
+									</Text>
 								</Flex>
 							</Flex>
-						)}
+						</Flex>
+					</Collapse>
 					{!isERC20 && !isWrap && (
 						<Button
 							w="100%"
@@ -825,7 +839,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							color={theme.text.cyan}
 							fontSize="lg"
 							fontWeight="semibold"
-							disabled={!canSubmit || isPending}
+							disabled={!canSubmit}
 						>
 							{swapButtonValidation}
 						</Button>
@@ -881,129 +895,133 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"
-								disabled={!canWrap || isPending}
+								disabled={!canWrap}
 							>
 								{wrapOrUnwrap}
 							</Button>
 						)}
 					</Flex>
 				</Flex>
-				{tokenInputValue.inputTo.value &&
-					tokenInputValue.inputFrom.value &&
-					!isWrap && (
-						<Flex
-							flexDirection="column"
-							p="1.5rem"
-							background={theme.bg.blueNavy}
-							w="100%"
-							borderRadius="xl"
-							mt="7"
-							mb={["2", "2", "2", "10rem"]}
-							zIndex="1"
-						>
-							<Flex flexDirection="column">
-								<Flex flexDirection="row" justifyContent="space-between">
-									<Flex>
-										<Text fontWeight="normal" mr="1" fontSize="sm">
-											{translation("swap.minimumReceived")}
-										</Text>
-
-										<TooltipComponent
-											label={translation("swap.transactionRevertHelper")}
-											icon={MdHelpOutline}
-										/>
-									</Flex>
-									<Text fontWeight="medium" fontSize="sm">
-										{returnedTradeValue?.v2Trade
-											? `${returnedTradeValue?.v2Trade?.outputAmount.toSignificant(
-													4
-											  )} ${
-													returnedTradeValue?.v2Trade?.outputAmount?.currency
-														.symbol
-											  }`
-											: "-"}
+				<Collapse
+					in={
+						!!tokenInputValue.inputTo.value &&
+						!!tokenInputValue.inputFrom.value &&
+						!isWrap
+					}
+				>
+					<Flex
+						flexDirection="column"
+						p="1.5rem"
+						background={theme.bg.blueNavy}
+						w="25rem"
+						borderRadius="xl"
+						mt="7"
+						mb={["2", "2", "2", "10rem"]}
+						zIndex="1"
+					>
+						<Flex flexDirection="column">
+							<Flex flexDirection="row" justifyContent="space-between">
+								<Flex>
+									<Text fontWeight="normal" mr="1" fontSize="sm">
+										{translation("swap.minimumReceived")}
 									</Text>
-								</Flex>
-								<Flex
-									flexDirection="row"
-									justifyContent="space-between"
-									pt="0.75rem"
-								>
-									<Flex>
-										<Text fontWeight="normal" mr="1" fontSize="sm">
-											{translation("swap.priceImpact")}
-										</Text>
 
-										<TooltipComponent
-											label={translation("swap.priceImpactHelper")}
-											icon={MdHelpOutline}
-										/>
-									</Flex>
-									<FormattedPriceImpat
-										priceImpact={returnedTradeValue?.v2Trade?.priceImpact}
+									<TooltipComponent
+										label={translation("swap.transactionRevertHelper")}
+										icon={MdHelpOutline}
 									/>
 								</Flex>
-								<Flex
-									flexDirection="row"
-									justifyContent="space-between"
-									pt="0.75rem"
-								>
-									<Flex>
-										<Text fontWeight="normal" mr="1" fontSize="sm">
-											{translation("swap.liquidityProviderFee")}
-										</Text>
-
-										<TooltipComponent
-											label={translation("swap.liquidityProviderHelper")}
-											icon={MdHelpOutline}
-										/>
-									</Flex>
-									<Text fontWeight="medium" fontSize="sm">
-										{realizedLPFee
-											? `${realizedLPFee.toSignificant(4)} ${
-													returnedTradeValue?.v2Trade?.inputAmount.currency
-														.symbol
-											  }`
-											: "-"}
+								<Text fontWeight="medium" fontSize="sm">
+									{returnedTradeValue?.v2Trade &&
+									returnedTradeValue?.slippageAdjustedAmounts
+										? `${minimumReceived} ${returnedTradeValue?.v2Trade?.outputAmount?.currency.symbol}`
+										: "-"}
+								</Text>
+							</Flex>
+							<Flex
+								flexDirection="row"
+								justifyContent="space-between"
+								pt="0.75rem"
+							>
+								<Flex>
+									<Text fontWeight="normal" mr="1" fontSize="sm">
+										{translation("swap.priceImpact")}
 									</Text>
-								</Flex>
-								{returnedTradeValue?.v2TradeRoute &&
-									returnedTradeValue.v2TradeRoute.length > 2 && (
-										<Flex flexDirection="column">
-											<Flex
-												flexDirection="row"
-												justifyContent="space-between"
-												pt="2rem"
-											>
-												<Flex>
-													<Text fontSize="sm" mr="1" fontWeight="normal">
-														{translation("swap.route")}
-													</Text>
 
-													<TooltipComponent
-														label={translation("swap.routingHelper")}
-														icon={MdHelpOutline}
-													/>
-												</Flex>
-											</Flex>
-											<Flex
-												border="1px solid rgba(160, 174, 192, 1)"
-												py="2.5"
-												px="1"
-												borderRadius="xl"
-												alignItems="center"
-												flexWrap="wrap"
-												mt="2"
-											>
-												<TradeRouteComponent
-													transactionRoute={returnedTradeValue?.v2TradeRoute}
+									<TooltipComponent
+										label={translation("swap.priceImpactHelper")}
+										icon={MdHelpOutline}
+									/>
+								</Flex>
+								<FormattedPriceImpat
+									priceImpact={returnedTradeValue?.v2Trade?.priceImpact}
+								/>
+							</Flex>
+							<Flex
+								flexDirection="row"
+								justifyContent="space-between"
+								pt="0.75rem"
+							>
+								<Flex w="max-content">
+									<Text
+										fontWeight="normal"
+										mr="1"
+										fontSize="sm"
+										w="max-content"
+									>
+										{translation("swap.liquidityProviderFee")}
+									</Text>
+
+									<TooltipComponent
+										label={translation("swap.liquidityProviderHelper")}
+										icon={MdHelpOutline}
+									/>
+								</Flex>
+								<Text fontWeight="medium" fontSize="sm" textAlign="right">
+									{realizedLPFee
+										? `${realizedLPFee.toSignificant(4)} ${
+												returnedTradeValue?.v2Trade?.inputAmount.currency.symbol
+										  }`
+										: "-"}
+								</Text>
+							</Flex>
+							{returnedTradeValue?.v2TradeRoute &&
+								returnedTradeValue.v2TradeRoute.length > 2 && (
+									<Flex flexDirection="column" w="100%">
+										<Flex
+											flexDirection="row"
+											justifyContent="space-between"
+											pt="1rem"
+										>
+											<Flex>
+												<Text fontSize="sm" mr="1" fontWeight="normal">
+													{translation("swap.route")}
+												</Text>
+
+												<TooltipComponent
+													label={translation("swap.routingHelper")}
+													icon={MdHelpOutline}
 												/>
 											</Flex>
 										</Flex>
-									)}
-							</Flex>
+										<Flex
+											border="1px solid rgba(160, 174, 192, 1)"
+											py="2.5"
+											px="1"
+											borderRadius="xl"
+											alignItems="center"
+											flexWrap="wrap"
+											mt="2"
+										>
+											<TradeRouteComponent
+												transactionRoute={returnedTradeValue?.v2TradeRoute}
+											/>
+										</Flex>
+									</Flex>
+								)}
 						</Flex>
-					)}
+					</Flex>
+				</Collapse>
 			</Flex>
 			<Flex
 				h="max-content"

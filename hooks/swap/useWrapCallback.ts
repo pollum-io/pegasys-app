@@ -6,6 +6,7 @@ import {
 	WrappedTokenInfo,
 	ISwapTokenInputValue,
 	IWalletHookInfos,
+	ITx,
 } from "types";
 import { ApprovalState, IApprovalState } from "contexts";
 import WETH_ABI from "utils/abis/weth.json";
@@ -20,8 +21,8 @@ export function UseWrapCallback(
 	tradeTokens: WrappedTokenInfo[],
 	inputValues: ISwapTokenInputValue,
 	walletInfos: IWalletHookInfos,
-	setTransaction: React.Dispatch<React.SetStateAction<object>>,
-	transactions: object,
+	setTransaction: React.Dispatch<React.SetStateAction<ITx>>,
+	transactions: ITx,
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
 	signer: Signer
 ): {
@@ -103,7 +104,10 @@ export function UseWrapCallback(
 										)} WSYS to SYS`,
 									}
 								);
-								setApprovalState(ApprovalState.PENDING);
+								setApprovalState({
+									status: ApprovalState.PENDING,
+									type: "wrap",
+								});
 							} catch (error) {
 								console.error("Could not withdraw", error);
 							}
