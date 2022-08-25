@@ -109,7 +109,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 												as={MdHelpOutline}
 												h="4"
 												w="4"
-												mt="3px"
+												mt="0.25rem"
 												color={theme.icon.whiteGray}
 												borderRadius="full"
 											/>
@@ -215,7 +215,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 											as={MdHelpOutline}
 											h="4"
 											w="4"
-											mt="3px"
+											mt="0.25rem"
 											color={theme.icon.whiteGray}
 											borderRadius="full"
 										/>
@@ -249,8 +249,11 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							mt="4"
 						>
 							<Flex
+								pt="0.1rem"
+								mt="4"
 								flexDirection={["row", "row", "row", "row"]}
 								pb={["2", "2", "0", "0"]}
+								alignItems="center"
 							>
 								<Text
 									fontSize={["sm", "md", "md", "md"]}
@@ -273,9 +276,8 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 												as={MdHelpOutline}
 												h="4"
 												w="4"
-												mt="3px"
+												mt="0.25rem"
 												color={theme.icon.whiteGray}
-												backgroundColor="gray.800"
 												borderRadius="full"
 											/>
 										</Flex>

@@ -17,7 +17,7 @@ export const BorderAnimation: FunctionComponent<ILinkProps> = props => {
 			w={["18rem", "md", "2xl", "2xl"]}
 			py="12"
 			gap="2.5"
-			bgColor={theme.bg.whiteGray}
+			bgColor={theme.bg.blueNavyLight}
 			justifyContent="center"
 			borderBottomRadius="2xl"
 		>
