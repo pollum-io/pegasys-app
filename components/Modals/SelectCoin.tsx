@@ -203,13 +203,14 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					<InputGroup>
 						<Input
 							borderRadius="full"
-							borderColor="rgba(21, 61, 111, 1)"
+							borderColor={theme.bg.blueNavyLightness}
 							_placeholder={{ color: theme.text.input, opacity: "0.6" }}
 							placeholder="Search, name or paste address"
 							onChange={handleInput}
 							py={["0.1rem", "0.1rem", "1", "1"]}
 							pl="10"
 							_focus={{ outline: "none" }}
+							_hover={{}}
 						/>
 						<Flex
 							position="absolute"
@@ -275,6 +276,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 								handleSelectToken(buttonId as number, token);
 								onClose();
 							}}
+							_hover={{ bgColor: theme.bg.max }}
 						>
 							<Flex
 								gap="4"
