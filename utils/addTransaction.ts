@@ -1,8 +1,7 @@
-import { TransactionResponse } from "@ethersproject/providers";
-import { ITx, IWalletHookInfos } from "types";
+import { ITransactionResponse, ITx, IWalletHookInfos } from "types";
 
 export const addTransaction = (
-	response: TransactionResponse,
+	response: ITransactionResponse,
 	walletInfo: IWalletHookInfos,
 	setTransaction: React.Dispatch<React.SetStateAction<ITx>>,
 	transactions: ITx,
