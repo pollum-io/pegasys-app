@@ -1,11 +1,11 @@
 import { TransactionResponse } from "@ethersproject/providers";
-import { IWalletHookInfos } from "types";
+import { ITx, IWalletHookInfos } from "types";
 
 export const addTransaction = (
 	response: TransactionResponse,
 	walletInfo: IWalletHookInfos,
-	setTransaction: React.Dispatch<React.SetStateAction<object>>,
-	transactions: object,
+	setTransaction: React.Dispatch<React.SetStateAction<ITx>>,
+	transactions: ITx,
 	customData?: {
 		summary?: string;
 		approval?: { tokenAddress: string; spender: string };

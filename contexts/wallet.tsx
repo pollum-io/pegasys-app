@@ -2,7 +2,7 @@ import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers, Signer } from "ethers";
 import { convertHexToNumber, isAddress } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { IWalletInfo, ITransactionResponse } from "types";
+import { IWalletInfo, ITx } from "types";
 import { useToasty } from "hooks";
 import {
 	INITIAL_ALLOWED_SLIPPAGE,
@@ -21,14 +21,7 @@ export interface IApprovalState {
 	status: ApprovalState;
 	type: string;
 }
-interface ITx {
-	57: {
-		[hash: string]: ITransactionResponse;
-	};
-	5700: {
-		[hash: string]: ITransactionResponse;
-	};
-}
+
 interface IWeb3 {
 	isConnected: boolean;
 	currentNetworkChainId: number | null;
