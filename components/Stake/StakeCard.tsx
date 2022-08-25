@@ -91,7 +91,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					py="1"
 					fontSize="xs"
 					ml="1"
-					onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+					onClick={event => {
 						setButtonId(event?.currentTarget?.id);
 						onOpenStakeActions();
 					}}
@@ -183,7 +183,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					px="0.75rem"
 					fontSize="sm"
 					fontWeight="semibold"
-					onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+					onClick={event => {
 						setButtonId(event?.currentTarget?.id);
 						onOpenStakeActions();
 					}}
@@ -205,7 +205,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					px="0.75rem"
 					fontSize="sm"
 					fontWeight="semibold"
-					onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+					onClick={event => {
 						setButtonId(event?.currentTarget?.id);
 						onOpenStakeActions();
 					}}
