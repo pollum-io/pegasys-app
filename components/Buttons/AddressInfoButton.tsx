@@ -47,6 +47,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 			description: "Address sucessfully copied to clipboard!",
 		});
 	};
+
 	const isEmpty =
 		Object.keys(transactions[57]).length === 0 &&
 		Object.keys(transactions[5700]).length === 0;
