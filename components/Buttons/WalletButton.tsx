@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from "@chakra-ui/react";
+import { Button, ButtonProps, Flex, Text } from "@chakra-ui/react";
 import { SelectSyscoin, SelectWallets } from "components/Modals";
 import { useModal, usePicasso, useWallet } from "hooks";
 import { FunctionComponent } from "react";
@@ -24,8 +24,13 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 		onCloseAddress,
 	} = useModal();
 
-	const { isConnected, walletAddress, walletError, approvalState } =
-		useWallet();
+	const {
+		isConnected,
+		walletAddress,
+		walletError,
+		approvalState,
+		pendingTxLength,
+	} = useWallet();
 
 	const isPending = approvalState.status === ApprovalState.PENDING;
 
@@ -88,13 +93,29 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 			{isConnected && isPending && (
 				<>
 					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
+					<Flex
+						ml="20px"
+						zIndex="1"
+						mb="10px"
+						w="2.313rem"
+						h="1.25rem"
+						borderRadius="xl"
+						gap="1"
+						bgColor={theme.bg.blueLightPurple}
+						border="1px solid"
+						borderColor="#1A4A87"
+						alignItems="center"
+						justifyContent="center"
+					>
+						<Text fontSize="14px" mb="1px">
+							{pendingTxLength}
+						</Text>
+						<Flex className="circleLoadingPending" />
+					</Flex>
 					<AddressButton
 						onClick={walletError ? onOpenSelectWalletModal : onOpenAddress}
 						pending={approvalState?.status === ApprovalState.PENDING}
-					>
-						<Circles width={25} height={25} style={{ paddingRight: "6px" }} />{" "}
-						Pending
-					</AddressButton>
+					/>
 				</>
 			)}
 		</>

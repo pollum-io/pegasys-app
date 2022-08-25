@@ -52,6 +52,10 @@ interface IWeb3 {
 	transactions: object;
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>;
 	approvalState: IApprovalState;
+	isGovernance: boolean;
+	setIsGovernance: React.Dispatch<React.SetStateAction<boolean>>;
+	setPendingTxLength: React.Dispatch<React.SetStateAction<number>>;
+	pendingTxLength: number;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -76,6 +80,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [connectorSelected, setConnectorSelected] = useState<IWalletInfo>();
 	const [expert, setExpert] = useState<boolean>(false);
 	const [otherWallet, setOtherWallet] = useState<boolean>(false);
+	const [isGovernance, setIsGovernance] = useState<boolean>(false);
 	const [userSlippageTolerance, setUserSlippageTolerance] = useState<number>(
 		INITIAL_ALLOWED_SLIPPAGE
 	);
@@ -83,6 +88,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		57: {},
 		5700: {},
 	});
+	const [pendingTxLength, setPendingTxLength] = useState<number>(0);
 
 	const [approvalState, setApprovalState] = useState<IApprovalState>({
 		status: ApprovalState.UNKNOWN,
@@ -169,6 +175,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 				).then(result => result.json());
 				if (result?.result[0]) {
 					const hash: string = result?.result[0]?.hash;
+					setPendingTxLength(Number(result?.result?.length));
 					provider?.getTransaction(hash).then(result => {
 						if (
 							result.from.toLowerCase() === walletAddress.toLowerCase() &&
@@ -185,6 +192,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 									},
 								},
 							});
+							setPendingTxLength(Number(result?.result?.length));
 							setApprovalState({
 								status: ApprovalState.APPROVED,
 								type: approvalState.type,
@@ -278,6 +286,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setTransactions,
 			approvalState,
 			setApprovalState,
+			isGovernance,
+			setIsGovernance,
+			setPendingTxLength,
+			pendingTxLength,
 		}),
 		[
 			isConnected,
