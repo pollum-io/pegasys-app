@@ -236,6 +236,12 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(
 	BIPS_BASE
 ); // 15%
 
+// used to ensure the user doesn't send so much ETH so they end up with <.01
+export const MIN_ETH: JSBI = JSBI.exponentiate(
+	JSBI.BigInt(10),
+	JSBI.BigInt(16)
+); // .01 ETH
+
 export const FIVE_MINUTES_IN_SECONDS = 300;
 export const FIFTEEN_MINUTES_IN_SECONDS = 900;
 export const ONE_HOUR_IN_SECONDS = 3600;

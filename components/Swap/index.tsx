@@ -21,11 +21,17 @@ import {
 	UseWrapCallback,
 	UseTokensPairSorted,
 } from "hooks";
-import React, { FunctionComponent, useEffect, useState, useMemo } from "react";
+import React, {
+	FunctionComponent,
+	useEffect,
+	useState,
+	useMemo,
+	useCallback,
+} from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
-import { ChainId, JSBI, Trade } from "@pollum-io/pegasys-sdk";
+import { ChainId, CurrencyAmount, JSBI, Trade } from "@pollum-io/pegasys-sdk";
 import {
 	ISwapTokenInputValue,
 	IWalletHookInfos,
@@ -38,7 +44,7 @@ import {
 import dynamic from "next/dynamic";
 import { useTranslation } from "react-i18next";
 import { Signer } from "ethers";
-import { computeTradePriceBreakdown } from "utils";
+import { computeTradePriceBreakdown, Field, maxAmountSpend } from "utils";
 import { getTokensGraphCandle } from "services/index";
 
 import { ONE_DAY_IN_SECONDS } from "helpers/consts";
@@ -204,9 +210,28 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		? translation("swapPage.connectWallet")
 		: translation("swapPage.swap");
 
+	const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(
+		returnedTradeValue?.currencyBalances[Field.INPUT]
+	);
+	const preventShowMaxButton = Boolean(
+		maxAmountInput && returnedTradeValue?.parsedAmount?.equalTo(maxAmountInput)
+	);
+
 	// END VALIDATIONS AT ALL //
 
 	// HANDLE FUNCTIONALITIES AND HOOKS //
+
+	const handleMaxInput = useCallback(() => {
+		setTokenInputValue(prevState => ({
+			...prevState,
+			inputFrom: {
+				value: maxAmountInput?.toExact() as string,
+			},
+			lastInputTyped: 0,
+			currentInputTyped: "inputFrom",
+			typedValue: maxAmountInput?.toExact() as string,
+		}));
+	}, [maxAmountInput]);
 
 	const swapCall =
 		returnedTradeValue?.v2Trade &&
@@ -289,15 +314,20 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	);
 
 	const handleSwapInfo = async () => {
-		const { v2Trade, bestSwapMethods, inputErrors, parsedAmount } =
-			await UseDerivedSwapInfo(
-				selectedToken,
-				tokenInputValue,
-				walletInfos,
-				translation,
-				userSlippageTolerance,
-				signer as Signer
-			);
+		const {
+			v2Trade,
+			bestSwapMethods,
+			currencyBalances,
+			inputErrors,
+			parsedAmount,
+		} = await UseDerivedSwapInfo(
+			selectedToken,
+			tokenInputValue,
+			walletInfos,
+			translation,
+			userSlippageTolerance,
+			signer as Signer
+		);
 
 		setReturnedTradeValue({
 			parsedAmount,
@@ -305,6 +335,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			bestSwapMethods,
 			inputErrors,
 			v2TradeRoute: v2Trade?.route?.path,
+			currencyBalances,
 		});
 	};
 
@@ -429,7 +460,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		handleSwapInfo();
 	}, [
 		isConnected,
-		tokenInputValue,
+		tokenInputValue?.inputFrom?.value,
+		tokenInputValue?.inputTo?.value,
 		selectedToken[0]?.address,
 		selectedToken[1]?.address,
 	]);
@@ -553,28 +585,49 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Text>
 						</Flex>
 						<Flex alignItems="center" justifyContent="space-between">
-							<Flex
-								alignItems="center"
-								id="0"
-								borderRadius={12}
-								cursor="pointer"
-								_hover={{}}
-								onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-									setButtonId(Number(event.currentTarget.id));
-									onOpenCoin();
-								}}
-							>
-								<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
-								<Text
-									fontSize="xl"
-									fontWeight="500"
-									px="3"
-									color={theme.text.mono}
+							<Flex w="100%" alignItems="center">
+								<Flex
+									alignItems="center"
+									id="0"
+									borderRadius={12}
+									cursor="pointer"
+									onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+										setButtonId(Number(event.currentTarget.id));
+										onOpenCoin();
+									}}
 								>
-									{selectedToken[0]?.symbol}
-								</Text>
-								<Icon as={IoIosArrowDown} />
+									<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
+									<Text
+										fontSize="xl"
+										fontWeight="500"
+										px="3"
+										color={theme.text.mono}
+									>
+										{selectedToken[0]?.symbol}
+									</Text>
+									<Icon as={IoIosArrowDown} />
+								</Flex>
+
+								{isConnected &&
+									!preventShowMaxButton &&
+									parseFloat(selectedToken[0]?.balance) !== 0 && (
+										<Flex ml="8" onClick={() => handleMaxInput()}>
+											<Button
+												bgColor="rgba(43, 108, 176, .6)"
+												px="5"
+												color={theme.text.white}
+												transition="250ms ease-in-out"
+												_hover={{
+													backgroundColor: theme.bg.blue600,
+												}}
+												type="button"
+											>
+												MAX
+											</Button>
+										</Flex>
+									)}
 							</Flex>
+
 							<Input
 								fontSize="2xl"
 								border="none"
