@@ -55,8 +55,6 @@ const ChartComponent = dynamic(() => import("./ChartComponent"), {
 });
 
 export const Swap: FunctionComponent<ButtonProps> = () => {
-	// HOOKS IMPORTED VALUES //
-
 	const theme = usePicasso();
 
 	const { toast } = useToasty();
