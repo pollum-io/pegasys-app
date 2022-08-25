@@ -863,7 +863,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						flexDirection="column"
 						p="1.5rem"
 						background={theme.bg.blueNavy}
-						w="100%"
+						w="25rem"
 						borderRadius="xl"
 						mt="7"
 						mb={["2", "2", "2", "10rem"]}
@@ -912,8 +912,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								justifyContent="space-between"
 								pt="0.75rem"
 							>
-								<Flex>
-									<Text fontWeight="normal" mr="1" fontSize="sm">
+								<Flex w="max-content">
+									<Text
+										fontWeight="normal"
+										mr="1"
+										fontSize="sm"
+										w="max-content"
+									>
 										{translation("swap.liquidityProviderFee")}
 									</Text>
 
@@ -922,7 +927,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 										icon={MdHelpOutline}
 									/>
 								</Flex>
-								<Text fontWeight="medium" fontSize="sm">
+								<Text fontWeight="medium" fontSize="sm" textAlign="right">
 									{realizedLPFee
 										? `${realizedLPFee.toSignificant(4)} ${
 												returnedTradeValue?.v2Trade?.inputAmount.currency.symbol
@@ -932,11 +937,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Flex>
 							{returnedTradeValue?.v2TradeRoute &&
 								returnedTradeValue.v2TradeRoute.length > 2 && (
-									<Flex flexDirection="column">
+									<Flex flexDirection="column" w="100%">
 										<Flex
 											flexDirection="row"
 											justifyContent="space-between"
-											pt="2rem"
+											pt="1rem"
 										>
 											<Flex>
 												<Text fontSize="sm" mr="1" fontWeight="normal">
