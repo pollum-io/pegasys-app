@@ -34,7 +34,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 		connectorSelected,
 	} = useWallet();
 	const { toast } = useToasty();
-	const [txs, setTxs] = useState<[]>([]);
+	const [txs, setTxs] = useState<ITransactionResponse[]>([]);
 
 	const handleCopyToClipboard = () => {
 		copyToClipboard(walletAddress);
@@ -59,10 +59,11 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	useEffect(() => {
 		if (!isEmpty) {
 			// eslint-disable-next-line
-			const currentTxs: ITransactionResponse[] | any[] = [
+			const currentTxs: ITransactionResponse[] = [
 				...Object.values(transactions[5700]),
 				...Object.values(transactions[57]),
 			];
+
 			setTxs(currentTxs);
 		}
 	}, [transactions]);
