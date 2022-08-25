@@ -22,6 +22,12 @@ export interface IApprovalState {
 	type: string;
 }
 
+export interface ISubmittedAproval {
+	status: boolean;
+	tokens: string[];
+	currentTokenToApprove?: string;
+}
+
 interface IWeb3 {
 	isConnected: boolean;
 	currentNetworkChainId: number | null;
@@ -53,6 +59,8 @@ interface IWeb3 {
 	transactions: ITx;
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>;
 	approvalState: IApprovalState;
+	setApprovalSubmitted: React.Dispatch<React.SetStateAction<ISubmittedAproval>>;
+	approvalSubmitted: ISubmittedAproval;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -79,6 +87,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [otherWallet, setOtherWallet] = useState<boolean>(false);
 	const [userSlippageTolerance, setUserSlippageTolerance] = useState<number>(
 		INITIAL_ALLOWED_SLIPPAGE
+	);
+	const [approvalSubmitted, setApprovalSubmitted] = useState<ISubmittedAproval>(
+		{ status: false, tokens: [""], currentTokenToApprove: "" }
 	);
 	const [transactions, setTransactions] = useState<ITx>({
 		57: {},
@@ -192,6 +203,13 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 								status: ApprovalState.APPROVED,
 								type: approvalState.type,
 							});
+							const indexToken = approvalSubmitted.tokens.indexOf(
+								`${approvalSubmitted?.currentTokenToApprove}`
+							);
+							setApprovalSubmitted(prevState => ({
+								...prevState,
+								tokens: [...prevState.tokens].splice(indexToken, 1),
+							}));
 							clearInterval(timer);
 							// eslint-disable-next-line
 							return;
@@ -209,7 +227,35 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 				status: "success",
 			});
 		}
+
+		if (
+			approvalState.type === "approve-swap" &&
+			approvalState.status === ApprovalState.APPROVED
+		) {
+			setApprovalSubmitted(prevState => ({
+				status: false,
+				tokens: [...prevState.tokens],
+			}));
+		}
 	}, [approvalState]);
+
+	useEffect(() => {
+		const initialSubmittedValue: ISubmittedAproval = JSON.parse(
+			`${localStorage.getItem("approvalSubmitted")}`
+		);
+		if (initialSubmittedValue) {
+			setApprovalSubmitted(initialSubmittedValue);
+		}
+	}, []);
+
+	useEffect(() => {
+		if (approvalSubmitted && approvalState.status !== ApprovalState.UNKNOWN) {
+			localStorage.setItem(
+				"approvalSubmitted",
+				JSON.stringify(approvalSubmitted)
+			);
+		}
+	}, [approvalSubmitted]);
 
 	useMemo(async () => {
 		if (!connectorSelected) return;
@@ -281,6 +327,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setTransactions,
 			approvalState,
 			setApprovalState,
+			approvalSubmitted,
+			setApprovalSubmitted,
 		}),
 		[
 			isConnected,

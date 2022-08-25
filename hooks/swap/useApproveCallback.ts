@@ -15,7 +15,7 @@ import {
 	ITransactionResponse,
 } from "types";
 import { Signer } from "ethers";
-import { IApprovalState } from "contexts";
+import { IApprovalState, ISubmittedAproval } from "contexts";
 
 export enum ApprovalState {
 	UNKNOWN,
@@ -37,6 +37,7 @@ export function useApproveCallback(
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
 	setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
 	transactions: ITx,
+	setApprovalSubmitted: React.Dispatch<React.SetStateAction<ISubmittedAproval>>,
 	amountToApprove?: { [field in Field]?: CurrencyAmount },
 	spender?: string,
 	signer?: Signer
@@ -98,6 +99,14 @@ export function useApproveCallback(
 					approval: { tokenAddress: token?.address, spender },
 				});
 				setApprovalState({ status: ApprovalState.PENDING, type: "approve" });
+				setApprovalSubmitted(prevState => ({
+					status: true,
+					tokens: [
+						...prevState.tokens,
+						`${currentAmountToApprove?.currency?.symbol}`,
+					],
+					currentTokenToApprove: currentAmountToApprove?.currency?.symbol,
+				}));
 			})
 			.catch(error => {
 				if (error?.code === 4001) {
@@ -124,6 +133,7 @@ export function useApproveCallbackFromTrade(
 	setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
 	transactions: ITx,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
+	setApprovalSubmitted: React.Dispatch<React.SetStateAction<ISubmittedAproval>>,
 	allowedSlippage = 0
 ) {
 	const { chainId } = walletInfos;
@@ -138,6 +148,7 @@ export function useApproveCallbackFromTrade(
 		toast,
 		setTransactions,
 		transactions,
+		setApprovalSubmitted,
 		amountToApprove,
 		chainId ? ROUTER_ADDRESS[chainId] : ROUTER_ADDRESS[ChainId.NEVM],
 		signer
