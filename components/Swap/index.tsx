@@ -730,10 +730,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						<Flex
 							flexDirection="column"
 							borderRadius="2xl"
-							bgColor="transparent"
 							borderWidth="1px"
-							borderColor={theme.text.cyan}
+							borderColor={theme.text.cyanPurple}
 							mt="1.5rem"
+							color={theme.text.mono}
 						>
 							<Text fontSize="md" fontWeight="medium" px="1.375rem" py="0.5rem">
 								{translation("swap.price")}
@@ -742,11 +742,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								flexDirection="row"
 								justifyContent="space-around"
 								py="0.5rem"
-								px="1rem"
 								borderRadius="2xl"
 								borderWidth="1px"
-								borderColor={theme.text.cyan}
-								bgColor={theme.bg.blueNavy}
+								borderColor={theme.text.cyanPurple}
+								bgColor={theme.bg.bluePink}
+								color={theme.text.mono}
 							>
 								<Flex fontSize="sm" flexDirection="column" textAlign="center">
 									<Text fontWeight="semibold">
@@ -775,10 +775,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Flex>
 						</Flex>
 					</Collapse>
+					{isExpert}
+					{isExpert && isOtherWallet}
 					{!isERC20 && !isWrap && (
 						<Button
 							w="100%"
-							mt="2rem"
+							mt={isExpert ? "1rem" : "2rem"}
 							py="6"
 							px="6"
 							borderRadius="67px"
@@ -791,12 +793,15 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							fontSize="lg"
 							fontWeight="semibold"
 							disabled={!canSubmit}
+							_hover={
+								canSubmit
+									? { bgColor: theme.bg.bluePurple }
+									: { opacity: "0.3" }
+							}
 						>
 							{swapButtonValidation}
 						</Button>
 					)}
-					{isExpert}
-					{isExpert && isOtherWallet}
 					<Flex>
 						{isERC20 && isConnected && !isWrap && (
 							<Button
@@ -1032,7 +1037,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					{tokensGraphCandleData.length === 0 && (
 						<Text
 							textAlign="center"
-							color="#fff"
+							color={theme.text.mono}
 							fontWeight="400"
 							fontSize="sm"
 						>

@@ -72,7 +72,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 			<ModalContent
 				borderRadius="3xl"
 				border="1px solid transparent;"
-				background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
 					display="flex"
@@ -92,11 +92,11 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 				<ModalBody mb="4">
 					<Flex
 						flexDirection="row"
-						alignItems="stretch"
+						alignItems="center"
 						mb="6"
 						justifyContent="center"
 					>
-						<Flex flexDirection="column" gap="14" pr="2" alignItems="flex-end">
+						<Flex flexDirection="column" gap="14" pr="2">
 							<Text textAlign="right" fontWeight="semibold">
 								{tokenInputValue?.inputFrom?.value}
 							</Text>
@@ -127,7 +127,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 							<Text>{selectedTokens[1]?.symbol}</Text>
 						</Flex>
 					</Flex>
-					<Text fontSize="sm">
+					<Text fontSize="sm" color={theme.text.mono}>
 						Output is estimated. You will receive at least{" "}
 						{receiveEstimatedValue} {receiveOutput} or the transaction will
 						revert.
@@ -187,6 +187,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 								onTx();
 								onClose();
 							}}
+							_hover={{ bgColor: theme.bg.bluePurple }}
 							fontWeight="semibold"
 						>
 							Confirm {txName}

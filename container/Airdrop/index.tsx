@@ -34,13 +34,13 @@ export const AirdropContainer: NextPage = () => {
 					zIndex="99"
 					position="relative"
 					borderTopRadius="2xl"
-					backgroundColor={theme.bg.blueNavy}
+					backgroundColor="transparent"
 					w={["18rem", "md", "2xl", "2xl"]}
-					box-shadow="0px 0px 0px 1px rgba(0, 0, 0, 0.1)"
+					box-shadow=" 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04)"
 					filter="drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.2)) drop-shadow(0px 15px 40px rgba(0, 0, 0, 0.4))"
 				>
 					<Img
-						src="images/backgrounds/PsysAirdrop.png"
+						src={theme.bg.psysAirdrop}
 						position="absolute"
 						zIndex="base"
 						w="100%"
@@ -72,6 +72,7 @@ export const AirdropContainer: NextPage = () => {
 						w="65%"
 						h="100%"
 						borderTopLeftRadius="2xl"
+						borderBottomRadius="2xl"
 						zIndex="base"
 						position="absolute"
 						background="linear-gradient(89.54deg, rgba(8, 17, 32, 0.9) 44.27%, rgba(8, 17, 32, 0) 100.3%)"
@@ -84,7 +85,7 @@ export const AirdropContainer: NextPage = () => {
 								<Flex>
 									<Text
 										textAlign="center"
-										color="white"
+										color={theme.text.mono}
 										px={["4", "2", "2", "2"]}
 										fontSize={["sm", "sm", "md", "md"]}
 									>
