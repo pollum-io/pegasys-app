@@ -42,6 +42,7 @@ export async function UseDerivedSwapInfo(
 ): Promise<{
 	parsedAmount: CurrencyAmount | undefined;
 	v2Trade: Trade | undefined;
+	currencyBalances: { [field in Field]?: CurrencyAmount };
 	bestSwapMethods: ISwapCall[];
 	inputErrors: string | undefined;
 	isExactIn: boolean;
@@ -141,6 +142,7 @@ export async function UseDerivedSwapInfo(
 	return {
 		parsedAmount,
 		v2Trade: v2Trade ?? undefined,
+		currencyBalances,
 		bestSwapMethods,
 		inputErrors: inputError ?? undefined,
 		isExactIn,
