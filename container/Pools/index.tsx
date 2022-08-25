@@ -25,9 +25,8 @@ import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
 export const PoolsContainer: NextPage = () => {
 	const theme = usePicasso();
 	const {
-		onOpenPool,
-		isOpenPool,
-		onClosePool,
+		isOpenImportPool,
+		onCloseImportPool,
 		isOpenRemoveLiquidity,
 		onCloseRemoveLiquidity,
 		onOpenAddLiquidity,
@@ -54,7 +53,10 @@ export const PoolsContainer: NextPage = () => {
 				isCreate={isCreate}
 				haveValue={haveValue}
 			/>
-			<ImportPoolModal isModalOpen={isOpenPool} onModalClose={onClosePool} />
+			<ImportPoolModal
+				isModalOpen={isOpenImportPool}
+				onModalClose={onCloseImportPool}
+			/>
 			<Flex
 				alignItems="flex-start"
 				justifyContent="center"
