@@ -8,7 +8,12 @@ import {
 	computeSlippageAdjustedAmounts,
 	getContract,
 } from "utils";
-import { IWalletHookInfos, ISwapTokenInputValue } from "types";
+import {
+	IWalletHookInfos,
+	ISwapTokenInputValue,
+	ITx,
+	ITransactionResponse,
+} from "types";
 import { Signer } from "ethers";
 import { IApprovalState } from "contexts";
 
@@ -30,8 +35,8 @@ export function useApproveCallback(
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
 	walletInfos: IWalletHookInfos,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
-	setTransactions: React.Dispatch<React.SetStateAction<object>>,
-	transactions: object,
+	setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
+	transactions: ITx,
 	amountToApprove?: { [field in Field]?: CurrencyAmount },
 	spender?: string,
 	signer?: Signer
@@ -87,7 +92,7 @@ export function useApproveCallback(
 					gasLimit: calculateGasMargin(estimatedGas),
 				}
 			)
-			.then((response: TransactionResponse) => {
+			.then((response: ITransactionResponse) => {
 				addTransaction(response, walletInfos, setTransactions, transactions, {
 					summary: `Approve ${currentAmountToApprove?.currency?.symbol}`,
 					approval: { tokenAddress: token?.address, spender },
@@ -116,8 +121,8 @@ export function useApproveCallbackFromTrade(
 	signer: Signer,
 	userInput: ISwapTokenInputValue,
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
-	setTransactions: React.Dispatch<React.SetStateAction<object>>,
-	transactions: object,
+	setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
+	transactions: ITx,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
 	allowedSlippage = 0
 ) {

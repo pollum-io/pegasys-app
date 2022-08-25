@@ -2,7 +2,7 @@ import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers, Signer } from "ethers";
 import { convertHexToNumber, isAddress } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { IWalletInfo } from "types";
+import { IWalletInfo, ITx } from "types";
 import { useToasty } from "hooks";
 import {
 	INITIAL_ALLOWED_SLIPPAGE,
@@ -21,6 +21,7 @@ export interface IApprovalState {
 	status: ApprovalState;
 	type: string;
 }
+
 interface IWeb3 {
 	isConnected: boolean;
 	currentNetworkChainId: number | null;
@@ -48,8 +49,8 @@ interface IWeb3 {
 	setOtherWallet: React.Dispatch<React.SetStateAction<boolean>>;
 	userSlippageTolerance: number;
 	setUserSlippageTolerance: React.Dispatch<React.SetStateAction<number>>;
-	setTransactions: React.Dispatch<React.SetStateAction<object>>;
-	transactions: object;
+	setTransactions: React.Dispatch<React.SetStateAction<ITx>>;
+	transactions: ITx;
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>;
 	approvalState: IApprovalState;
 }
@@ -79,7 +80,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [userSlippageTolerance, setUserSlippageTolerance] = useState<number>(
 		INITIAL_ALLOWED_SLIPPAGE
 	);
-	const [transactions, setTransactions] = useState<object>({
+	const [transactions, setTransactions] = useState<ITx>({
 		57: {},
 		5700: {},
 	});
@@ -176,10 +177,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 						) {
 							setTransactions({
 								...transactions,
-								[currentNetworkChainId]: {
-									...transactions[currentNetworkChainId],
+								[Number(currentNetworkChainId)]: {
+									...transactions[currentNetworkChainId === 57 ? 57 : 5700],
 									[hash]: {
-										...transactions[currentNetworkChainId][hash],
+										...transactions[currentNetworkChainId === 57 ? 57 : 5700][
+											hash
+										],
 										...result,
 										hash,
 									},
