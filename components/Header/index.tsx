@@ -62,7 +62,7 @@ export const Header: React.FC = () => {
 				<Img
 					w={["7", "8", "6", "6"]}
 					h={["7", "8", "6", "6"]}
-					src="icons/pegasys.png"
+					src={theme.icon.pegasysLogo}
 					ml={["2", "4", "4", "4"]}
 					mt={["1.5", "1", "2", "1.5"]}
 					position="absolute"
