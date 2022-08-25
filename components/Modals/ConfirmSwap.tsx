@@ -15,7 +15,8 @@ import React from "react";
 import { MdArrowDownward } from "react-icons/md";
 import { AiOutlineClose } from "react-icons/ai";
 import { WrappedTokenInfo, ISwapTokenInputValue } from "types";
-import { Trade } from "@pollum-io/pegasys-sdk";
+import { CurrencyAmount, Trade } from "@pollum-io/pegasys-sdk";
+import { FormattedPriceImpat } from "components/Swap/FormattedPriceImpact";
 
 interface IModal {
 	isOpen: boolean;
@@ -27,6 +28,7 @@ interface IModal {
 	isWrap: boolean;
 	tokenInputValue: ISwapTokenInputValue;
 	minimumReceived: string | 0 | null | undefined;
+	liquidityFee?: CurrencyAmount;
 }
 
 export const ConfirmSwap: React.FC<IModal> = props => {
@@ -39,6 +41,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 		trade,
 		isWrap,
 		tokenInputValue,
+		liquidityFee,
 		minimumReceived,
 	} = props;
 	const theme = usePicasso();
@@ -94,8 +97,12 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 						justifyContent="center"
 					>
 						<Flex flexDirection="column" gap="14" pr="2" alignItems="flex-end">
-							<Text textAlign="right">{tokenInputValue?.inputFrom?.value}</Text>
-							<Text textAlign="right">{tokenInputValue?.inputTo?.value}</Text>
+							<Text textAlign="right" fontWeight="semibold">
+								{tokenInputValue?.inputFrom?.value}
+							</Text>
+							<Text textAlign="right" fontWeight="semibold">
+								{tokenInputValue?.inputTo?.value}
+							</Text>
 						</Flex>
 						<Flex flexDirection="column" gap="1.1rem" alignItems="center">
 							<Img src={selectedTokens[0]?.logoURI} w="5" h="5" />
@@ -150,7 +157,18 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text>Price Impact</Text>
 							<Text fontWeight="medium">
-								{trade ? `${trade?.priceImpact?.toSignificant(4)}%` : "-"}
+								{trade ? (
+									<FormattedPriceImpat priceImpact={trade?.priceImpact} />
+								) : (
+									"-"
+								)}
+							</Text>
+						</Flex>
+						<Flex flexDirection="row" justifyContent="space-between">
+							<Text>Liquidity Provider Fee</Text>
+							<Text fontWeight="medium">
+								{liquidityFee && liquidityFee?.toSignificant(4)}{" "}
+								{trade && trade?.inputAmount?.currency?.symbol}
 							</Text>
 						</Flex>
 					</Flex>

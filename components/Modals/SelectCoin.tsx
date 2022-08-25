@@ -56,7 +56,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 		useModal();
 	const theme = usePicasso();
 	const [defaultTokens, setDefaultTokens] = useState<WrappedTokenInfo[]>([]);
-	const [order, setOrder] = useState<"asc" | "desc">("desc");
+	const [order, setOrder] = useState<"asc" | "desc">("asc");
 	const [filter, setFilter] = useState<WrappedTokenInfo[]>([]);
 	const [tokenError, setTokenError] = useState<WrappedTokenInfo[]>([]);
 	const [arrowOrder, setArrowOrder] = useState(false);
@@ -113,7 +113,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 			})
 			.sort(
 				(valueA: { balance: string }, valueB: { balance: string }) =>
-					Number(valueA.balance) - Number(valueB.balance)
+					Number(valueB.balance) - Number(valueA.balance)
 			);
 
 		setDefaultTokens(orderedTokens);
@@ -209,8 +209,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							onChange={handleInput}
 							py={["0.1rem", "0.1rem", "1", "1"]}
 							pl="10"
-							_hover={{ border: "1px solid #3182CE" }}
-							_focus={{ border: "1px solid #3182CE", outline: "none" }}
+							_focus={{ outline: "none" }}
 						/>
 						<Flex
 							position="absolute"
@@ -221,12 +220,12 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							<MdSearch color={theme.icon.searchIcon} size={20} />
 						</Flex>
 					</InputGroup>
-					<Flex my="5" gap="2">
+					<Flex my="5" gap="2" justifyContent="space-between">
 						<Text fontSize="md" color={theme.text.cyanPurple}>
 							Token name
 						</Text>
 						<IconButton
-							as={arrowOrder ? MdArrowUpward : MdArrowDownward}
+							as={arrowOrder ? MdArrowDownward : MdArrowUpward}
 							aria-label="Order"
 							minW="none"
 							bg="transparent"
@@ -234,6 +233,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							w="6"
 							h="6"
 							onClick={() => orderList(filter)}
+							mr="4"
 						/>
 					</Flex>
 				</ModalBody>

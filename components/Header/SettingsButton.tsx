@@ -189,11 +189,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								borderColor={theme.border.borderSettings}
 								textAlign="center"
 								_focus={{
-									borderColor: theme.border.borderSettings,
 									outline: "none",
-								}}
-								_hover={{
-									borderColor: theme.border.borderSettings,
 								}}
 							/>
 						</Flex>
@@ -242,11 +238,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								border="1px solid"
 								borderColor={theme.border.borderSettings}
 								_focus={{
-									borderColor: theme.border.borderSettings,
 									outline: "none",
-								}}
-								_hover={{
-									borderColor: theme.border.borderSettings,
 								}}
 							/>
 							<Text color={theme.text.mono}>Minutes</Text>

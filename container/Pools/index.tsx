@@ -172,8 +172,7 @@ export const PoolsContainer: NextPage = () => {
 										h="2.2rem"
 										py={["0.2rem", "0.2rem", "1", "1"]}
 										pl="10"
-										_hover={{ border: "1px solid #3182CE" }}
-										_focus={{ border: "1px solid #3182CE", outline: "none" }}
+										_focus={{ outline: "none" }}
 									/>
 								</InputGroup>
 							</Flex>
