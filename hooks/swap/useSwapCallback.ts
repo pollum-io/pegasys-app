@@ -25,7 +25,7 @@ export function UseSwapCallback(
 	setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
 	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
-	setCurrentInputTokenName:React.Dispatch<React.SetStateAction<string>>,
+	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
 	txType: string,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
 	transactions: ITx
@@ -183,8 +183,8 @@ export function UseSwapCallback(
 					});
 
 					setApprovalState({ status: ApprovalState.PENDING, type: txType });
-					setCurrentTxHash(`${response?.hash}`)
-					setCurrentInputTokenName(`${inputSymbol}`)
+					setCurrentTxHash(`${response?.hash}`);
+					setCurrentInputTokenName(`${inputSymbol}`);
 
 					return response.hash;
 				})

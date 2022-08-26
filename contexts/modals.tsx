@@ -13,9 +13,9 @@ export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({
 	} = useDisclosure();
 
 	const {
-		onOpen: onOpenPool,
-		isOpen: isOpenPool,
-		onClose: onClosePool,
+		onOpen: onOpenImportPool,
+		isOpen: isOpenImportPool,
+		onClose: onCloseImportPool,
 	} = useDisclosure();
 
 	const {
@@ -98,9 +98,9 @@ export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const modalProviderValue = useMemo(
 		() => ({
-			onOpenPool,
-			isOpenPool,
-			onClosePool,
+			onOpenImportPool,
+			isOpenImportPool,
+			onCloseImportPool,
 			onOpenRemoveLiquidity,
 			isOpenRemoveLiquidity,
 			onCloseRemoveLiquidity,
@@ -145,9 +145,9 @@ export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({
 			onCloseStakeActions,
 		}),
 		[
-			onOpenPool,
-			isOpenPool,
-			onClosePool,
+			onOpenImportPool,
+			isOpenImportPool,
+			onCloseImportPool,
 			onOpenRemoveLiquidity,
 			isOpenRemoveLiquidity,
 			onCloseRemoveLiquidity,

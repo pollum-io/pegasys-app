@@ -63,7 +63,7 @@ export const Header: React.FC = () => {
 					w={["7", "8", "6", "6"]}
 					h={["7", "8", "6", "6"]}
 					src={theme.icon.pegasysLogo}
-					ml={["2", "4", "4", "4"]}
+					ml={["4", "4", "4", "4"]}
 					mt={["1.5", "1", "2", "1.5"]}
 					position="absolute"
 					left="0"

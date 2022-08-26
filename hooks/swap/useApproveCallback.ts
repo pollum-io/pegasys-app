@@ -1,5 +1,10 @@
 import { MaxUint256 } from "@ethersproject/constants";
-import { Trade, CurrencyAmount, ChainId } from "@pollum-io/pegasys-sdk";
+import {
+	Trade,
+	CurrencyAmount,
+	ChainId,
+	TokenAmount,
+} from "@pollum-io/pegasys-sdk";
 import { UseToastOptions } from "@chakra-ui/react";
 import { ROUTER_ADDRESS } from "helpers/consts";
 import {
@@ -29,6 +34,11 @@ export enum Field {
 	OUTPUT = "OUTPUT",
 }
 
+interface IError {
+	code: number;
+	message: string;
+}
+
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
 export function useApproveCallback(
 	userInput: ISwapTokenInputValue,
@@ -40,7 +50,7 @@ export function useApproveCallback(
 	setApprovalSubmitted: React.Dispatch<React.SetStateAction<ISubmittedAproval>>,
 	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
 	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
-	amountToApprove?: { [field in Field]?: CurrencyAmount },
+	amountToApprove: { [field in Field]: TokenAmount },
 	spender?: string,
 	signer?: Signer
 ): () => Promise<void> {
@@ -111,7 +121,7 @@ export function useApproveCallback(
 				setCurrentTxHash(`${response?.hash}`);
 				setCurrentInputTokenName(`${currentAmountToApprove?.currency?.symbol}`);
 			})
-			.catch(error => {
+			.catch((error: IError) => {
 				if (error?.code === 4001) {
 					toast({
 						status: "error",
@@ -142,9 +152,9 @@ export function useApproveCallbackFromTrade(
 	allowedSlippage = 0
 ) {
 	const { chainId } = walletInfos;
-	const amountToApprove = trade
-		? computeSlippageAdjustedAmounts(trade, allowedSlippage)
-		: undefined;
+	const amountToApprove = (
+		trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage) : undefined
+	) as { [field in Field]: TokenAmount };
 
 	return useApproveCallback(
 		userInput,
