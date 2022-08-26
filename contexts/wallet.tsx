@@ -61,6 +61,10 @@ interface IWeb3 {
 	approvalState: IApprovalState;
 	setApprovalSubmitted: React.Dispatch<React.SetStateAction<ISubmittedAproval>>;
 	approvalSubmitted: ISubmittedAproval;
+	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>;
+	currentTxHash: string;
+	currentInputTokenName: string;
+	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -89,8 +93,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		INITIAL_ALLOWED_SLIPPAGE
 	);
 	const [approvalSubmitted, setApprovalSubmitted] = useState<ISubmittedAproval>(
-		{ status: false, tokens: [""], currentTokenToApprove: "" }
+		{ status: false, tokens: [], currentTokenToApprove: "" }
 	);
+	const [currentTxHash, setCurrentTxHash] = useState<string>("");
+	const [currentInputTokenName, setCurrentInputTokenName] =
+		useState<string>("");
 	const [transactions, setTransactions] = useState<ITx>({
 		57: {},
 		5700: {},
@@ -179,43 +186,43 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 				const result = await fetch(
 					`${rpcUrl}?module=account&action=pendingtxlist&address=${walletAddress}`
 				).then(result => result.json());
-				if (result?.result[0]) {
-					const hash: string = result?.result[0]?.hash;
-					provider?.getTransaction(hash).then(result => {
-						if (
-							result.from.toLowerCase() === walletAddress.toLowerCase() &&
-							result.confirmations !== 0
-						) {
-							setTransactions({
-								...transactions,
-								[Number(currentNetworkChainId)]: {
-									...transactions[currentNetworkChainId === 57 ? 57 : 5700],
-									[hash]: {
-										...transactions[currentNetworkChainId === 57 ? 57 : 5700][
-											hash
-										],
-										...result,
-										hash,
-									},
+
+				const hash = `${currentTxHash}`;
+				provider?.getTransaction(hash).then(result => {
+					if (
+						result.from.toLowerCase() === walletAddress.toLowerCase() &&
+						result.confirmations !== 0
+					) {
+						setTransactions({
+							...transactions,
+							[Number(currentNetworkChainId)]: {
+								...transactions[currentNetworkChainId === 57 ? 57 : 5700],
+								[hash]: {
+									...transactions[currentNetworkChainId === 57 ? 57 : 5700][
+										hash
+									],
+									...result,
+									hash,
 								},
-							});
-							setApprovalState({
-								status: ApprovalState.APPROVED,
-								type: approvalState.type,
-							});
-							const indexToken = approvalSubmitted.tokens.indexOf(
-								`${approvalSubmitted?.currentTokenToApprove}`
-							);
+							},
+						});
+						setApprovalState({
+							status: ApprovalState.APPROVED,
+							type: approvalState.type,
+						});
+						if (approvalState.type === "approve-swap") {
 							setApprovalSubmitted(prevState => ({
 								...prevState,
-								tokens: [...prevState.tokens].splice(indexToken, 1),
+								tokens: prevState.tokens.filter(
+									token => token !== `${currentInputTokenName}`
+								),
 							}));
-							clearInterval(timer);
-							// eslint-disable-next-line
-							return;
 						}
-					});
-				}
+						clearInterval(timer);
+						// eslint-disable-next-line
+						return;
+					}
+				});
 			}, 10000);
 		}
 	}, [approvalState]);
@@ -230,11 +237,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		if (
 			approvalState.type === "approve-swap" &&
-			approvalState.status === ApprovalState.APPROVED
+			approvalState.status === ApprovalState.APPROVED &&
+			approvalSubmitted.tokens.length === 0
 		) {
 			setApprovalSubmitted(prevState => ({
+				...prevState,
 				status: false,
-				tokens: [...prevState.tokens],
 			}));
 		}
 	}, [approvalState]);
@@ -243,6 +251,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		const initialSubmittedValue: ISubmittedAproval = JSON.parse(
 			`${localStorage.getItem("approvalSubmitted")}`
 		);
+		console.log(initialSubmittedValue);
 		if (initialSubmittedValue) {
 			setApprovalSubmitted(initialSubmittedValue);
 		}
@@ -329,6 +338,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setApprovalState,
 			approvalSubmitted,
 			setApprovalSubmitted,
+			currentTxHash,
+			setCurrentTxHash,
+			currentInputTokenName,
+			setCurrentInputTokenName,
 		}),
 		[
 			isConnected,

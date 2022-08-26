@@ -38,6 +38,8 @@ export function useApproveCallback(
 	setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
 	transactions: ITx,
 	setApprovalSubmitted: React.Dispatch<React.SetStateAction<ISubmittedAproval>>,
+	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
+	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
 	amountToApprove?: { [field in Field]?: CurrencyAmount },
 	spender?: string,
 	signer?: Signer
@@ -105,8 +107,9 @@ export function useApproveCallback(
 						...prevState.tokens,
 						`${currentAmountToApprove?.currency?.symbol}`,
 					],
-					currentTokenToApprove: currentAmountToApprove?.currency?.symbol,
 				}));
+				setCurrentTxHash(`${response?.hash}`);
+				setCurrentInputTokenName(`${currentAmountToApprove?.currency?.symbol}`);
 			})
 			.catch(error => {
 				if (error?.code === 4001) {
@@ -134,6 +137,8 @@ export function useApproveCallbackFromTrade(
 	transactions: ITx,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
 	setApprovalSubmitted: React.Dispatch<React.SetStateAction<ISubmittedAproval>>,
+	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
+	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
 	allowedSlippage = 0
 ) {
 	const { chainId } = walletInfos;
@@ -149,6 +154,8 @@ export function useApproveCallbackFromTrade(
 		setTransactions,
 		transactions,
 		setApprovalSubmitted,
+		setCurrentTxHash,
+		setCurrentInputTokenName,
 		amountToApprove,
 		chainId ? ROUTER_ADDRESS[chainId] : ROUTER_ADDRESS[ChainId.NEVM],
 		signer

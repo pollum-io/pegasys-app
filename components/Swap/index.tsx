@@ -95,6 +95,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		approvalState,
 		setApprovalSubmitted,
 		approvalSubmitted,
+		setCurrentTxHash,
+		setCurrentInputTokenName,
 		expert,
 		otherWallet,
 	} = useWallet();
@@ -254,6 +256,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			signer,
 			setTransactions,
 			setApprovalState,
+			setCurrentTxHash,
+			setCurrentInputTokenName,
+			txType,
 			toast,
 			transactions
 		);
@@ -321,6 +326,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setTransactions,
 		transactions,
 		setApprovalState,
+		setCurrentTxHash,
 		signer as Signer
 	);
 
@@ -369,6 +375,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		transactions,
 		toast,
 		setApprovalSubmitted,
+		setCurrentTxHash,
+		setCurrentInputTokenName,
 		userSlippageTolerance
 	);
 
