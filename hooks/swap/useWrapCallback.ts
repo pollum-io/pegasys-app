@@ -24,6 +24,7 @@ export function UseWrapCallback(
 	setTransaction: React.Dispatch<React.SetStateAction<ITx>>,
 	transactions: ITx,
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
+	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
 	signer: Signer
 ): {
 	wrapType: WrapType;
@@ -77,6 +78,7 @@ export function UseWrapCallback(
 									status: ApprovalState.PENDING,
 									type: "wrap",
 								});
+								setCurrentTxHash(`${txReceipt?.hash}`);
 							} catch (error) {
 								console.error("Could not deposit", error);
 							}
@@ -110,6 +112,7 @@ export function UseWrapCallback(
 									status: ApprovalState.PENDING,
 									type: "wrap",
 								});
+								setCurrentTxHash(`${txReceipt?.hash}`);
 							} catch (error) {
 								console.error("Could not withdraw", error);
 							}

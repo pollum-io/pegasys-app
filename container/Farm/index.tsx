@@ -126,6 +126,7 @@ export const FarmContainer: NextPage = () => {
 								py={["0.1rem", "0.1rem", "1", "1"]}
 								pl="10"
 								_focus={{ outline: "none" }}
+								_hover={{}}
 							/>
 							<Flex
 								pt="1rem"

@@ -160,7 +160,9 @@ export const PoolsContainer: NextPage = () => {
 										pointerEvents="none"
 										pb="0.3rem"
 										// eslint-disable-next-line react/no-children-prop
-										children={<MdSearch color={theme.text.cyan} size={20} />}
+										children={
+											<MdSearch color={theme.icon.searchIcon} size={20} />
+										}
 									/>
 									<Input
 										borderColor={theme.bg.blueNavyLightness}
@@ -175,6 +177,7 @@ export const PoolsContainer: NextPage = () => {
 										py={["0.2rem", "0.2rem", "1", "1"]}
 										pl="10"
 										_focus={{ outline: "none" }}
+										_hover={{}}
 									/>
 								</InputGroup>
 							</Flex>
