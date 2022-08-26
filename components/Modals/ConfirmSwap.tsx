@@ -49,7 +49,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 	const txName =
 		txType === "approve"
 			? "Approve"
-			: txType === "swap"
+			: txType === "swap" || txType === "approve-swap"
 			? "Swap"
 			: txType === "wrap" && isWrap
 			? "Wrap"

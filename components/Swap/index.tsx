@@ -93,6 +93,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		transactions,
 		setApprovalState,
 		approvalState,
+		setApprovalSubmitted,
+		approvalSubmitted,
+		setCurrentTxHash,
+		setCurrentInputTokenName,
 		expert,
 		otherWallet,
 	} = useWallet();
@@ -252,6 +256,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			signer,
 			setTransactions,
 			setApprovalState,
+			setCurrentTxHash,
+			setCurrentInputTokenName,
+			txType,
 			toast,
 			transactions
 		);
@@ -319,6 +326,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setTransactions,
 		transactions,
 		setApprovalState,
+		setCurrentTxHash,
 		signer as Signer
 	);
 
@@ -366,6 +374,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setTransactions,
 		transactions,
 		toast,
+		setApprovalSubmitted,
+		setCurrentTxHash,
+		setCurrentInputTokenName,
 		userSlippageTolerance
 	);
 
@@ -538,7 +549,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				selectedTokens={selectedToken}
 				txType={txType}
 				onTx={
-					txType === "swap"
+					txType === "swap" || txType === "approve-swap"
 						? swapCall?.callback
 						: txType === "approve"
 						? approve
@@ -860,14 +871,17 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								px="6"
 								borderRadius="67px"
 								onClick={
-									approveValidation
+									approveValidation &&
+									!approvalSubmitted.tokens.includes(
+										`${selectedToken[0]?.symbol}`
+									)
 										? () => {
 												onOpenConfirmSwap();
 												setTxType("approve");
 										  }
 										: () => {
 												onOpenConfirmSwap();
-												setTxType("swap");
+												setTxType("approve-swap");
 										  }
 								}
 								bgColor={theme.bg.button.connectWalletSwap}
@@ -879,7 +893,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									opacity: 0.9,
 								}}
 							>
-								{approveValidation
+								{approveValidation &&
+								!approvalSubmitted.tokens.includes(
+									`${selectedToken[0]?.symbol}`
+								)
 									? translation("swapPage.approve")
 									: translation("swapPage.swap")}
 							</Button>
