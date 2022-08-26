@@ -175,6 +175,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 						Select a token
 					</Text>
 					<Tooltip
+						hasArrow
 						label="Find a token by searching for its name or symbol or by pasting its address below."
 						position="relative"
 						bgColor={theme.bg.secondary}

@@ -1,6 +1,7 @@
-import { Icon, PlacementWithLogical, Tooltip } from "@chakra-ui/react";
+import { Icon, PlacementWithLogical, Theme, Tooltip } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
 import { IconType } from "react-icons/lib";
+import { usePicasso } from "hooks";
 
 interface ITooltipComponent {
 	label: string;
@@ -16,6 +17,8 @@ export const TooltipComponent: FunctionComponent<ITooltipComponent> = ({
 	hasArrow = true,
 }) => (
 	<Tooltip
+		color="white"
+		bgColor="#171923"
 		hasArrow={hasArrow}
 		label={label}
 		shouldWrapChildren

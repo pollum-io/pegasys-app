@@ -83,6 +83,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 						</Text>
 					</Flex>
 					<Tooltip
+						hasArrow
 						label="When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
 						position="relative"
 						bgColor={theme.bg.blueNavy}

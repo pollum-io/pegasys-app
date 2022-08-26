@@ -41,7 +41,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 			<ModalContent
 				borderTopRadius="3xl"
 				borderBottomRadius={["none", "none", "3xl", "3xl"]}
-				bgColor={theme.bg.blueNavyLight}
+				bgColor="transparent"
 				my={["0", "0", "40", "40"]}
 				w={["100vw", "100vw", "xs", "xs"]}
 				h="md"
@@ -72,7 +72,13 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 						justifyContent="space-between"
 						zIndex="docked"
 					>
-						<Text textAlign="left" w="60%" fontSize="2xl" fontWeight="semibold">
+						<Text
+							textAlign="left"
+							w="60%"
+							fontSize="2xl"
+							fontWeight="semibold"
+							color="white"
+						>
 							Your PSYS Breakdown
 						</Text>
 						<Flex _hover={{ cursor: "pointer" }} onClick={onClose} mr="2">

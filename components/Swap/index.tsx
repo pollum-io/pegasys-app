@@ -7,6 +7,7 @@ import {
 	Img,
 	Input,
 	Text,
+	useColorMode,
 } from "@chakra-ui/react";
 import {
 	useModal,
@@ -64,6 +65,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	// HOOKS IMPORTED VALUES //
 
 	const theme = usePicasso();
+
+	const { colorMode } = useColorMode();
 
 	const { toast } = useToasty();
 
@@ -577,7 +580,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					zIndex="1"
 					borderRadius={30}
 					border="1px solid transparent;"
-					boxShadow=" 0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4);"
+					boxShadow={
+						colorMode === "light"
+							? "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
+							: "0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4)"
+					}
 					background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					<Flex flexDirection="row" justifyContent="space-between" pb="1.5rem">

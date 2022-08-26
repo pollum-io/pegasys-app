@@ -185,7 +185,7 @@ export const FarmActions: React.FC<IModal> = props => {
 				<ModalBody
 					mb="2	"
 					borderBottomRadius={["0", "0", "3xl", "3xl"]}
-					background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+					background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					{buttonId === "deposit" && (
 						<Flex flexDirection="column">
@@ -221,8 +221,8 @@ export const FarmActions: React.FC<IModal> = props => {
 											<Input
 												placeholder="0.0"
 												border="1px solid"
-												borderColor="rgba(1, 219, 243, 0.2)"
-												bgColor={theme.bg.whiteGray}
+												borderColor={theme.border.farmInput}
+												bgColor={theme.bg.blackAlpha}
 												borderLeftRadius="full"
 												w="25rem"
 												_hover={{}}
@@ -234,12 +234,12 @@ export const FarmActions: React.FC<IModal> = props => {
 												// eslint-disable-next-line react/no-children-prop
 												children="max"
 												border="1px solid transparent;"
-												background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, rgba(1, 219, 243, 0.2) border-box`}
+												background={`linear-gradient(${theme.bg.max}, ${theme.bg.max}) padding-box, rgba(1, 219, 243, 0.2) border-box`}
 												borderRightRadius="full"
-												color={theme.text.cyan}
+												color={theme.text.max}
 												fontSize="lg"
 												fontWeight="normal"
-												_hover={{ backgroundColor: theme.bg.blueNavyLightness }}
+												_hover={{}}
 											/>
 										</InputGroup>
 									</Flex>

@@ -69,6 +69,7 @@ const usePicasso = () => {
 			theme: useColorModeValue(BsFillSunFill, BsFillMoonFill),
 		},
 		bg: {
+			chartPeriod: useColorModeValue("#665EE1", "#2B6CB0"),
 			bluePink: useColorModeValue("#FAF5FF", "#0B172C"),
 			stakeBanner: useColorModeValue(
 				"/images/backgrounds/LightBannerStake.png",
@@ -116,7 +117,7 @@ const usePicasso = () => {
 			bluePurple: useColorModeValue("#8C15E8", "#0753B2"),
 			topHeader: useColorModeValue("#FFFFFF", "#000000"),
 			primary: useColorModeValue("#EDF2F7", "#000913"),
-			secondary: useColorModeValue("gray.300", "#171923"), // tooltip background
+			secondary: useColorModeValue("#EDF2F7", "#171923"), // tooltip background
 			bgPrimary: useColorModeValue("#f7f8fa", "#2c2f36"),
 			whiteGray: useColorModeValue("#665EE1", "rgba(8, 17, 32, 1)"), //
 			expertMode: useColorModeValue("#FFFFFF", "#081120"), //

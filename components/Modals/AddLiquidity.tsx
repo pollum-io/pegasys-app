@@ -119,10 +119,10 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						</Text>
 					</Flex>
 					<Tooltip
+						hasArrow
 						label="When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
 						position="relative"
 						bgColor={theme.bg.blueNavy}
-						border="1px solid"
 						borderColor={theme.border.borderSettings}
 						color={theme.text.swapInfo}
 						borderRadius="md"
@@ -380,7 +380,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								borderRadius="2xl"
 								bgColor="transparent"
 								borderWidth="1px"
-								borderColor={theme.text.cyan}
+								borderColor={theme.text.cyanPurple}
 								mt="1.5rem"
 							>
 								<Text
@@ -399,8 +399,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									px="1rem"
 									borderRadius="2xl"
 									borderWidth="1px"
-									borderColor={theme.text.cyan}
-									bgColor={theme.bg.blueNavy}
+									borderColor={theme.text.cyanPurple}
+									bgColor={theme.bg.bluePink}
 								>
 									<Flex
 										fontSize="sm"
@@ -458,12 +458,13 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					<Flex
 						flexDirection="column"
 						p="1.5rem"
-						background={theme.bg.blueGray}
+						background={theme.bg.subModal}
 						position={["relative", "relative", "absolute", "absolute"]}
 						bottom={["0", "0", "-280", "-280"]}
 						w="100%"
 						borderTopRadius={["0", "0", "3xl", "3xl"]}
 						borderBottomRadius={["0", "0", "3xl", "3xl"]}
+						color={theme.text.mono}
 					>
 						<Text fontWeight="bold" fontSize="lg">
 							Your position

@@ -56,11 +56,15 @@ export const SelectWallets: React.FC<IModal> = props => {
 						</Flex>
 
 						<Flex flexDirection="column" fontSize="sm">
-							<Text textAlign="center" fontWeight="normal">
+							<Text
+								textAlign="center"
+								fontWeight="normal"
+								color={theme.text.mono}
+							>
 								New to Syscoin?
 							</Text>
 							<Text
-								textColor={theme.text.cyan}
+								textColor={theme.text.cyanPurple}
 								fontWeight="semibold"
 								textAlign="center"
 							>

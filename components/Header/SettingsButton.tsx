@@ -46,7 +46,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 					}}
 					aria-label="Popover"
 					icon={<MdSettings size={25} />}
-					_expanded={{ color: theme.text.cyan }}
+					_expanded={{ color: theme.text.cyanPurple }}
 				/>
 			</PopoverTrigger>
 			<PopoverContent
@@ -62,6 +62,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 				mx={["0", "0", "20", "56"]}
 				position="fixed"
 			>
+				<PopoverArrow />
 				<Flex
 					justifyContent="flex-end"
 					zIndex="99"
@@ -69,6 +70,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 					pt="0rem"
 					pb="2"
 					h="max-content"
+					display={["flex", "flex", "none", "none"]}
 				>
 					<PopoverCloseButton position="relative" size="md" />
 				</Flex>
@@ -83,7 +85,6 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 						Transaction Settings
 					</Text>
 				</Flex>
-				<PopoverArrow />
 				<PopoverBody>
 					<Flex flexDirection="column" mt="4">
 						<Flex alignItems="center" flexDirection="row">
@@ -97,6 +98,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							</Text>
 							<Flex>
 								<Tooltip
+									hasArrow
 									label="Sua transação será revertida se o preço For alterado de forma desfavorável acima dessa porcentagem."
 									position="relative"
 									bgColor={theme.bg.secondary}
@@ -191,6 +193,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								_focus={{
 									outline: "none",
 								}}
+								_hover={{}}
 							/>
 						</Flex>
 						<Flex alignItems="center" flexDirection="row" pt="0.1rem" mt="4">
@@ -203,6 +206,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								Transaction tolerance
 							</Text>
 							<Tooltip
+								hasArrow
 								label="Sua transação será revertida se ela demorar mais do que isso."
 								position="relative"
 								bgColor={theme.bg.secondary}
@@ -240,6 +244,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								_focus={{
 									outline: "none",
 								}}
+								_hover={{}}
 							/>
 							<Text color={theme.text.mono}>Minutes</Text>
 						</Flex>
@@ -247,6 +252,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							alignItems={["flex-start", "center", "center", "center"]}
 							flexDirection={["column", "row", "row", "row"]}
 							mt="4"
+							h="max-content"
 						>
 							<Flex
 								pt="0.1rem"
@@ -264,6 +270,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 									Toggle Expert Mode
 								</Text>
 								<Tooltip
+									hasArrow
 									label="Ignora os modais de confirmação e permite alta variação de preço. Use por sua conta e risco."
 									position="relative"
 									bgColor={theme.bg.secondary}
@@ -284,7 +291,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 									</Text>
 								</Tooltip>
 							</Flex>
-							<Flex flexDirection="row" ml={["2", "12", "12", "12"]}>
+							<Flex flexDirection="row" ml={["2", "12", "12", "12"]} mt="5">
 								<Stack align="center" direction="row">
 									<Text color={theme.text.mono}>Off</Text>
 									<Switch
