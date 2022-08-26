@@ -28,7 +28,7 @@ export const getBalanceOfSingleCall = async (
 			signerOrProvider
 		);
 
-		const contractCall = await singleCall(contract, "balanceOf", walletAddress);
+		const contractCall = await singleCall(contract, "balanceOf");
 
 		const formattedBalance = String(
 			ethers.utils.formatUnits(contractCall, decimals)
@@ -101,6 +101,8 @@ export const getMultiCall = async (
 
 	try {
 		const getTokensCode = await Promise.all(
+			// eslint-disable-next-line
+			// @ts-ignore
 			tokenAddress.map(token => signerOrProvider.getCode(token))
 		);
 
