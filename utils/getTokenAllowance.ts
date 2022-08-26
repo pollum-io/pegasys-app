@@ -12,6 +12,7 @@ export async function getTokenAllowance(
 
 	const inputs = [owner, spender];
 	const allowance = await singleCall(contract as Contract, "allowance");
+	console.log("a");
 	const allowanceValue = await allowance(inputs[0], inputs[1]);
 
 	return token && allowance
