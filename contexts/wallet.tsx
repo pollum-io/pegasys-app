@@ -251,7 +251,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		const initialSubmittedValue: ISubmittedAproval = JSON.parse(
 			`${localStorage.getItem("approvalSubmitted")}`
 		);
-		console.log(initialSubmittedValue);
 		if (initialSubmittedValue) {
 			setApprovalSubmitted(initialSubmittedValue);
 		}
