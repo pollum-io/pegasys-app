@@ -94,6 +94,10 @@ const usePicasso = () => {
 				"images/backgrounds/LightBannerPool.png",
 				"images/backgrounds/BannerPools.png"
 			),
+			poolsBannerMobile: useColorModeValue(
+				"images/backgrounds/LightBannerPool.png",
+				"images/backgrounds/BannerPoolsMobile.png"
+			),
 			farmActions: useColorModeValue("white", "#0B172C"),
 			max: useColorModeValue("#EDF2F7", "#081120"),
 			farmActionsHover: useColorModeValue("rgba(102, 94, 225, 0.3)", "#BEE3F8"),

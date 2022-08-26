@@ -935,7 +935,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						flexDirection="column"
 						p="1.5rem"
 						background={theme.bg.blueNavy}
-						w="25rem"
+						w={["20rem", "20rem", "25rem", "25rem"]}
 						borderRadius="xl"
 						mt="7"
 						mb={["2", "2", "2", "10rem"]}
@@ -984,7 +984,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								justifyContent="space-between"
 								pt="0.75rem"
 							>
-								<Flex w="max-content">
+								<Flex w={["70%", "70%", "max-content", "max-content"]}>
 									<Text
 										fontWeight="normal"
 										mr="1"

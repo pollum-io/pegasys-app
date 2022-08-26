@@ -74,8 +74,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			<Flex gap="2" mt="1.5rem">
 				<Button
 					w="100%"
-					py="2"
-					px="6"
+					size="sm"
 					border="1px solid"
 					borderColor={theme.text.cyanPurple}
 					borderRadius="67px"
@@ -93,8 +92,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 				</Button>
 				<Button
 					w="100%"
-					py="2"
-					px="6"
+					size="sm"
 					borderRadius="67px"
 					bgColor={theme.bg.blueNavyLightness}
 					color={theme.text.cyan}

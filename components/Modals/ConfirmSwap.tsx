@@ -70,8 +70,12 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
+				position={["absolute", "absolute", "relative", "relative"]}
+				m={["0", "0", "10", "10"]}
+				bottom={["0", "0", "unset", "unset"]}
 				borderRadius="3xl"
-				border="1px solid transparent;"
+				borderBottomRadius={["0", "0", "3xl", "3xl"]}
+				border={["none", "1px solid transparent"]}
 				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
@@ -135,9 +139,10 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 				</ModalBody>
 				<Flex
 					bgColor={theme.bg.blackLightness}
-					borderBottomRadius="3xl"
+					borderBottomRadius={["0", "0", "3xl", "3xl"]}
 					flexDirection="column"
 					p="1.5rem"
+					pb={["3.75rem", "3.75rem", "1.5rem", "1.5rem"]}
 				>
 					<Flex flexDirection="column" gap="2">
 						<Flex flexDirection="row" justifyContent="space-between">

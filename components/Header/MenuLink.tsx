@@ -94,7 +94,8 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 				<Flex
 					justifyContent="flex-end"
 					zIndex="99"
-					pr="0rem"
+					pr="0.3rem"
+					pt="0.5rem"
 					display={{
 						base: "flex",
 						sm: "flex",

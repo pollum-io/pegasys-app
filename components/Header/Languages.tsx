@@ -8,7 +8,7 @@ export const Languages: FunctionComponent = () => {
 	const theme = usePicasso();
 
 	return (
-		<Flex flexWrap="wrap" ml="2" mt="2">
+		<Flex flexWrap="wrap" ml="0" mt="2">
 			{array.map((country, index) => (
 				<Flex p="0.5rem" key={country + Number(index)} gap="2">
 					<ReactCountryFlag

@@ -50,7 +50,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 			>
 				<Flex
 					w="100%"
-					px="8"
+					px="6"
 					py="10"
 					flexDirection="column"
 					zIndex="docked"
@@ -75,7 +75,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 						<Text textAlign="left" w="60%" fontSize="2xl" fontWeight="semibold">
 							Your PSYS Breakdown
 						</Text>
-						<Flex _hover={{ cursor: "pointer" }} onClick={onClose} mr="2">
+						<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
 							<AiOutlineClose size={22} color="white" />
 						</Flex>
 					</Flex>

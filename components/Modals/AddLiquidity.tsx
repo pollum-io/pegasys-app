@@ -109,7 +109,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							<MdArrowBack size={24} color={theme.icon.whiteGray} />
 						</Flex>
 						<Text
-							fontSize="2xl"
+							fontSize={["xl", "xl", "2xl", "2xl"]}
 							fontWeight="medium"
 							textAlign="center"
 							px="4"
@@ -440,7 +440,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							<Button
 								w="100%"
 								mt="1.5rem"
-								py="6"
+								py={["4", "4", "6", "6"]}
 								px="6"
 								borderRadius="67px"
 								bgColor={theme.bg.button.connectWalletSwap}
@@ -528,7 +528,11 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								color={theme.text.cyanPurple}
 							/>
 						</Flex>
-						<Flex flexDirection="column" gap="6">
+						<Flex
+							flexDirection="column"
+							gap="6"
+							fontSize={["sm", "sm", "md", "md"]}
+						>
 							<Text>
 								By adding liquidity you’ll earn 0.25% of all trades on this pair
 								proportional to your share of the pool.

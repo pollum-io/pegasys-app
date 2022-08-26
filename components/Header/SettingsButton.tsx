@@ -302,7 +302,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 						bgColor={theme.bg.transactionSettings}
 						borderRadius="7rem"
 						py="2"
-						mt={["4", "8", "8", "8"]}
+						mt={["8", "8", "8", "8"]}
 						justifyContent="center"
 						alignItems="center"
 					>
