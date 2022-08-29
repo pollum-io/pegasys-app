@@ -157,6 +157,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const [isSSR, setIsSSR] = useState(true);
 
+	const [approveTokenStatus, setApproveTokenStatus] = useState<ApprovalState>(
+		ApprovalState.UNKNOWN
+	);
+
 	// END REACT STATES //
 
 	// VALIDATIONS AT ALL //
@@ -220,6 +224,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const preventShowMaxButton = Boolean(
 		maxAmountInput && returnedTradeValue?.parsedAmount?.equalTo(maxAmountInput)
 	);
+
+	const alreadyApproved = approveTokenStatus === ApprovalState.APPROVED;
 
 	const minimumReceived =
 		returnedTradeValue?.isExactIn && returnedTradeValue?.slippageAdjustedAmounts
@@ -377,6 +383,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setApprovalSubmitted,
 		setCurrentTxHash,
 		setCurrentInputTokenName,
+		setApproveTokenStatus,
 		userSlippageTolerance
 	);
 
@@ -871,10 +878,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								px="6"
 								borderRadius="67px"
 								onClick={
-									approveValidation &&
-									!approvalSubmitted.tokens.includes(
-										`${selectedToken[0]?.symbol}`
-									)
+									approveValidation && !alreadyApproved
 										? () => {
 												onOpenConfirmSwap();
 												setTxType("approve");
@@ -893,10 +897,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									opacity: 0.9,
 								}}
 							>
-								{approveValidation &&
-								!approvalSubmitted.tokens.includes(
-									`${selectedToken[0]?.symbol}`
-								)
+								{approveValidation && !alreadyApproved
 									? translation("swapPage.approve")
 									: translation("swapPage.swap")}
 							</Button>
