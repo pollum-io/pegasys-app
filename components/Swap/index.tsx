@@ -6,7 +6,6 @@ import {
 	Icon,
 	Img,
 	Input,
-	List,
 	Text,
 } from "@chakra-ui/react";
 import {
