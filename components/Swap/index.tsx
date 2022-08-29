@@ -7,6 +7,8 @@ import {
 	Img,
 	Input,
 	Text,
+	Skeleton,
+	SkeletonCircle,
 } from "@chakra-ui/react";
 import {
 	useModal,
@@ -50,13 +52,11 @@ import { getTokensGraphCandle } from "services/index";
 import { ONE_DAY_IN_SECONDS } from "helpers/consts";
 import { ConfirmSwap } from "components/Modals/ConfirmSwap";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
-import Skeleton from "react-loading-skeleton";
 import { OtherWallet } from "./OtherWallet";
 import { SwapExpertMode } from "./SwapExpertMode";
 import { TradeRouteComponent } from "./TradeRouteComponent";
 import { FilterButton } from "./FilterButton";
 import { FormattedPriceImpat } from "./FormattedPriceImpact";
-import "react-loading-skeleton/dist/skeleton.css";
 
 const ChartComponent = dynamic(() => import("./ChartComponent"), {
 	ssr: false,
@@ -1072,73 +1072,66 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					mb={`${tokensGraphCandleData?.length === 0 && "16"}`}
 				>
 					<Flex>
-						{isLoadingGraphCandles ? (
-							<>
-								<Skeleton
-									width="28px"
-									style={{
-										display: "inline-flex",
-										alignItems: "center",
-										height: "28px",
-										marginRight: "3px",
-										border: "1px solid rgba(255,255,255, .5)",
-									}}
-									circle
-									count={2}
-									inline
-									baseColor="transparent"
-									highlightColor={theme.bg.candleGraphColor}
-								/>
+						<SkeletonCircle
+							isLoaded={!isLoadingGraphCandles}
+							mr={`${isLoadingGraphCandles && "0.5"}`}
+							fadeDuration={1.5}
+							speed={1.3}
+							background="transparent"
+							opacity={`${isLoadingGraphCandles && 0.2}`}
+							startColor="#8A15E6"
+							endColor="#19EBCE"
+						>
+							<Img
+								src={tokensPairPosition[0]?.tokenInfo?.logoURI}
+								w="7"
+								h="7"
+								mr="0.5"
+							/>
+						</SkeletonCircle>
 
-								<Skeleton
-									width="60px"
-									style={{
-										display: "inline-flex",
-										alignItems: "center",
-										height: "28px",
-										marginRight: "3px",
-										border: "1px solid rgba(255,255,255, .5)",
-									}}
-									count={2}
-									inline
-									baseColor="transparent"
-									highlightColor={theme.bg.candleGraphColor}
-								/>
-							</>
-						) : (
-							<>
-								<Img
-									src={tokensPairPosition[0]?.tokenInfo?.logoURI}
-									w="7"
-									h="7"
-									mr="0.5"
-								/>
-								<Img
-									src={tokensPairPosition[1]?.tokenInfo?.logoURI}
-									w="7"
-									h="7"
-								/>
-								<Text fontWeight="700" fontSize="xl" ml="2.5">
-									{tokensPairPosition[0]?.symbol} /{" "}
-									{tokensPairPosition[1]?.symbol}
-								</Text>
-							</>
-						)}
-					</Flex>
-					{isLoadingGraphCandles ? (
+						<SkeletonCircle
+							isLoaded={!isLoadingGraphCandles}
+							fadeDuration={1.5}
+							speed={1.3}
+							background="transparent"
+							opacity={`${isLoadingGraphCandles && 0.2}`}
+							startColor="#8A15E6"
+							endColor="#19EBCE"
+						>
+							<Img
+								src={tokensPairPosition[1]?.tokenInfo?.logoURI}
+								w="7"
+								h="7"
+							/>
+						</SkeletonCircle>
+
 						<Skeleton
-							width="60px"
-							style={{
-								display: "inline-flex",
-								alignItems: "center",
-								height: "28px",
-								border: "1px solid rgba(255,255,255, .5)",
-							}}
-							inline
-							baseColor="transparent"
-							highlightColor={theme.bg.candleGraphColor}
-						/>
-					) : (
+							isLoaded={!isLoadingGraphCandles}
+							ml={`${isLoadingGraphCandles && "1.5"}`}
+							fadeDuration={1.5}
+							speed={1.3}
+							background="transparent"
+							opacity={`${isLoadingGraphCandles && 0.2}`}
+							startColor="#8A15E6"
+							endColor="#19EBCE"
+						>
+							<Text fontWeight="700" fontSize="xl" ml="2.5">
+								{tokensPairPosition[0]?.symbol} /{" "}
+								{tokensPairPosition[1]?.symbol}
+							</Text>
+						</Skeleton>
+					</Flex>
+					<Skeleton
+						h={`${isLoadingGraphCandles && "32px"}`}
+						isLoaded={!isLoadingGraphCandles}
+						fadeDuration={1.5}
+						speed={1.3}
+						background="transparent"
+						opacity={`${isLoadingGraphCandles && 0.2}`}
+						startColor="#8A15E6"
+						endColor="#19EBCE"
+					>
 						<Text pl="2" fontSize="lg" fontWeight="400">
 							{tokensGraphCandleData?.length === 0
 								? "-"
@@ -1146,27 +1139,68 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 										String(tokensGraphCandleData[0]?.close)
 								  ).toFixed(2)} ${tokensPairPosition[1]?.symbol}`}
 						</Text>
-					)}
+					</Skeleton>
 				</Flex>
 				{tokensGraphCandleData?.length !== 0 && (
-					<Flex my="6">
+					<Flex my="6" justifyContent="center">
 						{isLoadingGraphCandles ? (
-							<Flex width="100%" alignItems="center" justifyContent="center">
-								<Skeleton
-									width="40px"
-									style={{
-										width: "100%",
-										display: "inline-flex",
-										alignItems: "center",
-										height: "40px",
-										margin: "0px 10px",
-										border: "1px solid rgba(255,255,255, .5)",
-									}}
-									baseColor="transparent"
-									inline
-									count={5}
-									circle
-									highlightColor={theme.bg.candleGraphColor}
+							<Flex
+								w="100%"
+								maxW={`${isLoadingGraphCandles && "70%"}`}
+								alignItems="center"
+								justifyContent={`${
+									isLoadingGraphCandles ? "space-evenly" : "center"
+								}`}
+							>
+								<SkeletonCircle
+									w="40px"
+									h="40px"
+									fadeDuration={1.5}
+									speed={1.3}
+									background="transparent"
+									opacity={`${isLoadingGraphCandles && 0.2}`}
+									startColor="#8A15E6"
+									endColor="#19EBCE"
+								/>
+								<SkeletonCircle
+									w="40px"
+									h="40px"
+									fadeDuration={1.5}
+									speed={1.3}
+									background="transparent"
+									opacity={`${isLoadingGraphCandles && 0.2}`}
+									startColor="#8A15E6"
+									endColor="#19EBCE"
+								/>
+								<SkeletonCircle
+									w="40px"
+									h="40px"
+									fadeDuration={1.5}
+									speed={1.3}
+									background="transparent"
+									opacity={`${isLoadingGraphCandles && 0.2}`}
+									startColor="#8A15E6"
+									endColor="#19EBCE"
+								/>
+								<SkeletonCircle
+									w="40px"
+									h="40px"
+									fadeDuration={1.5}
+									speed={1.3}
+									background="transparent"
+									opacity={`${isLoadingGraphCandles && 0.2}`}
+									startColor="#8A15E6"
+									endColor="#19EBCE"
+								/>
+								<SkeletonCircle
+									w="40px"
+									h="40px"
+									fadeDuration={1.5}
+									speed={1.3}
+									background="transparent"
+									opacity={`${isLoadingGraphCandles && 0.2}`}
+									startColor="#8A15E6"
+									endColor="#19EBCE"
 								/>
 							</Flex>
 						) : (
@@ -1181,22 +1215,25 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					direction="column"
 					justifyContent="center"
 					maxW={isLoadingGraphCandles ? "475px" : ""}
+					borderBottom={`${isLoadingGraphCandles && "1px solid"}`}
+					borderRight={`${isLoadingGraphCandles && "1px solid"}`}
+					borderColor={`${isLoadingGraphCandles && "rgba(255,255,255, .25)"}`}
+					borderRadius={`${isLoadingGraphCandles && "5px"}`}
 				>
-					{isLoadingGraphCandles ? (
-						<Skeleton
-							width="100%"
-							style={{
-								height: "315px",
-								borderBottom: "1px solid",
-								borderRight: "1px solid",
-								borderColor: "rgba(255,255,255, .5)",
-							}}
-							baseColor="transparent"
-							highlightColor={theme.bg.candleGraphColor}
-						/>
-					) : (
+					<Skeleton
+						w="100%"
+						h="315px"
+						isLoaded={!isLoadingGraphCandles}
+						fadeDuration={1.5}
+						speed={1.3}
+						background="transparent"
+						opacity={`${isLoadingGraphCandles && 0.1}`}
+						startColor="#8A15E6"
+						endColor="#19EBCE"
+						borderRadius="5px"
+					>
 						<ChartComponent data={tokensGraphCandleData} />
-					)}
+					</Skeleton>
 
 					{tokensGraphCandleData?.length === 0 && !isLoadingGraphCandles && (
 						<Text
