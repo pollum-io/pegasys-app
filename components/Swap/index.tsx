@@ -1180,7 +1180,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				<Flex
 					direction="column"
 					justifyContent="center"
-					maxW={isLoadingGraphCandles ? "450px" : ""}
+					maxW={isLoadingGraphCandles ? "475px" : ""}
 				>
 					{isLoadingGraphCandles ? (
 						<Skeleton
@@ -1190,7 +1190,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								borderBottom: "1px solid",
 								borderRight: "1px solid",
 								borderColor: "rgba(255,255,255, .5)",
-								animationDirection: "alternate",
 							}}
 							baseColor="transparent"
 							highlightColor={theme.bg.candleGraphColor}
