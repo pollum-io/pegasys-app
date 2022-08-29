@@ -1088,6 +1088,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									count={2}
 									inline
 									baseColor="transparent"
+									highlightColor={theme.bg.candleGraphColor}
 								/>
 
 								<Skeleton
@@ -1102,6 +1103,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									count={2}
 									inline
 									baseColor="transparent"
+									highlightColor={theme.bg.candleGraphColor}
 								/>
 							</>
 						) : (
@@ -1131,10 +1133,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								display: "inline-flex",
 								alignItems: "center",
 								height: "28px",
-								border: "1px solid rgba(255,255,255, .3)",
+								border: "1px solid rgba(255,255,255, .5)",
 							}}
 							inline
 							baseColor="transparent"
+							highlightColor={theme.bg.candleGraphColor}
 						/>
 					) : (
 						<Text pl="2" fontSize="lg" fontWeight="400">
@@ -1158,12 +1161,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 										alignItems: "center",
 										height: "40px",
 										margin: "0px 10px",
-										border: "1px solid rgba(255,255,255, .3)",
+										border: "1px solid rgba(255,255,255, .5)",
 									}}
 									baseColor="transparent"
 									inline
 									count={5}
 									circle
+									highlightColor={theme.bg.candleGraphColor}
 								/>
 							</Flex>
 						) : (
@@ -1187,9 +1191,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								borderBottom: "1px solid",
 								borderRight: "1px solid",
 								borderColor: "rgba(255,255,255, .5)",
+								animationDirection: "alternate",
 							}}
 							baseColor="transparent"
-							highlightColor="rgba(255, 255,255, .5)"
+							highlightColor={theme.bg.candleGraphColor}
 						/>
 					) : (
 						<ChartComponent data={tokensGraphCandleData} />
