@@ -6,7 +6,6 @@ import {
 	Icon,
 	Img,
 	Input,
-	List,
 	Text,
 } from "@chakra-ui/react";
 import {
@@ -38,9 +37,9 @@ import {
 	IWalletHookInfos,
 	WrappedTokenInfo,
 	IInputValues,
+	IChartComponentData,
 	IReturnedTradeValues,
 	IChartComponentPeriod,
-	IChartComponentData,
 } from "types";
 import dynamic from "next/dynamic";
 import { useTranslation } from "react-i18next";
@@ -51,13 +50,11 @@ import { getTokensGraphCandle } from "services/index";
 import { ONE_DAY_IN_SECONDS } from "helpers/consts";
 import { ConfirmSwap } from "components/Modals/ConfirmSwap";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
-import Skeleton from "react-loading-skeleton";
 import { OtherWallet } from "./OtherWallet";
 import { SwapExpertMode } from "./SwapExpertMode";
 import { TradeRouteComponent } from "./TradeRouteComponent";
 import { FilterButton } from "./FilterButton";
 import { FormattedPriceImpat } from "./FormattedPriceImpact";
-import "react-loading-skeleton/dist/skeleton.css";
 
 const ChartComponent = dynamic(() => import("./ChartComponent"), {
 	ssr: false,
@@ -129,9 +126,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	// END SOME INITIAL VALUES FOR REACT STATES //
 
 	// REACT STATES //
-
-	const [isLoadingGraphCandles, setIsLoadingGraphCandles] =
-		useState<boolean>(false);
 
 	const [tokensGraphCandleData, setTokensGraphCandleData] = useState<
 		IChartComponentData[]
@@ -397,16 +391,15 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			token1 as WrappedTokenInfo,
 		]);
 
-		const tokensCandleData = await getTokensGraphCandle(
+		const requestTokensCandle = await getTokensGraphCandle(
 			token0,
 			token1,
-			setIsLoadingGraphCandles,
 			tokensGraphCandlePeriod.period
 		);
 
-		setTokensGraphCandleData(tokensCandleData);
+		setTokensGraphCandleData(requestTokensCandle);
 
-		return tokensCandleData;
+		return requestTokensCandle;
 	};
 
 	// END HANDLE FUNCTIONALITIES AND HOOKS //
@@ -1052,7 +1045,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					</Flex>
 				</Collapse>
 			</Flex>
-
 			<Flex
 				h="max-content"
 				w={["18rem", "sm", "100%", "xl"]}
@@ -1070,132 +1062,39 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					justifyContent="center"
 					flexDirection={["column", "row", "row", "row"]}
 					alignItems="center"
-					mb={`${tokensGraphCandleData?.length === 0 && "16"}`}
+					mb={`${tokensGraphCandleData.length === 0 && "16"}`}
 				>
 					<Flex>
-						{isLoadingGraphCandles ? (
-							<>
-								<Skeleton
-									width="28px"
-									style={{
-										display: "inline-flex",
-										alignItems: "center",
-										height: "28px",
-										marginRight: "3px",
-										border: "1px solid rgba(255,255,255, .5)",
-									}}
-									circle
-									count={2}
-									inline
-									baseColor="transparent"
-								/>
-
-								<Skeleton
-									width="60px"
-									style={{
-										display: "inline-flex",
-										alignItems: "center",
-										height: "28px",
-										marginRight: "3px",
-										border: "1px solid rgba(255,255,255, .5)",
-									}}
-									count={2}
-									inline
-									baseColor="transparent"
-								/>
-							</>
-						) : (
-							<>
-								<Img
-									src={tokensPairPosition[0]?.tokenInfo?.logoURI}
-									w="7"
-									h="7"
-									mr="0.5"
-								/>
-								<Img
-									src={tokensPairPosition[1]?.tokenInfo?.logoURI}
-									w="7"
-									h="7"
-								/>
-								<Text fontWeight="700" fontSize="xl" ml="2.5">
-									{tokensPairPosition[0]?.symbol} /{" "}
-									{tokensPairPosition[1]?.symbol}
-								</Text>
-							</>
-						)}
-					</Flex>
-					{isLoadingGraphCandles ? (
-						<Skeleton
-							width="60px"
-							style={{
-								display: "inline-flex",
-								alignItems: "center",
-								height: "28px",
-								border: "1px solid rgba(255,255,255, .3)",
-							}}
-							inline
-							baseColor="transparent"
+						<Img
+							src={tokensPairPosition[0]?.tokenInfo?.logoURI}
+							w="7"
+							h="7"
+							mr="0.5"
 						/>
-					) : (
-						<Text pl="2" fontSize="lg" fontWeight="400">
-							{tokensGraphCandleData?.length === 0
-								? "-"
-								: `${parseFloat(
-										String(tokensGraphCandleData[0]?.close)
-								  ).toFixed(2)} ${tokensPairPosition[1]?.symbol}`}
+						<Img src={tokensPairPosition[1]?.tokenInfo?.logoURI} w="7" h="7" />
+						<Text fontWeight="700" fontSize="xl" ml="2.5">
+							{tokensPairPosition[0]?.symbol} / {tokensPairPosition[1]?.symbol}
 						</Text>
-					)}
+					</Flex>
+					<Text pl="2" fontSize="lg" fontWeight="400">
+						{tokensGraphCandleData.length === 0
+							? "-"
+							: `${parseFloat(tokensGraphCandleData[0]?.close).toFixed(2)} ${
+									tokensPairPosition[1]?.symbol
+							  }`}
+					</Text>
 				</Flex>
-				{tokensGraphCandleData?.length !== 0 && (
+				{tokensGraphCandleData.length !== 0 && (
 					<Flex my="6">
-						{isLoadingGraphCandles ? (
-							<Flex width="100%" alignItems="center" justifyContent="center">
-								<Skeleton
-									width="40px"
-									style={{
-										width: "100%",
-										display: "inline-flex",
-										alignItems: "center",
-										height: "40px",
-										margin: "0px 10px",
-										border: "1px solid rgba(255,255,255, .3)",
-									}}
-									baseColor="transparent"
-									inline
-									count={5}
-									circle
-								/>
-							</Flex>
-						) : (
-							<FilterButton
-								periodStateValue={tokensGraphCandlePeriod}
-								setPeriod={setTokensGraphCandlePeriod}
-							/>
-						)}
+						<FilterButton
+							periodStateValue={tokensGraphCandlePeriod}
+							setPeriod={setTokensGraphCandlePeriod}
+						/>
 					</Flex>
 				)}
-				<Flex
-					direction="column"
-					justifyContent="center"
-					maxW={isLoadingGraphCandles ? "450px" : ""}
-				>
-					{isLoadingGraphCandles ? (
-						<Skeleton
-							width="100%"
-							style={{
-								height: "315px",
-								borderBottom: "1px solid",
-								borderRight: "1px solid",
-								borderColor: "rgba(255,255,255, .5)",
-							}}
-							baseColor="transparent"
-							highlightColor="rgba(255, 255,255, .5)"
-						/>
-					) : (
-						<ChartComponent data={tokensGraphCandleData} />
-					)}
-
-					{tokensGraphCandleData?.length === 0 && !isLoadingGraphCandles && (
+				<Flex direction="column" justifyContent="center">
+					<ChartComponent data={tokensGraphCandleData} />
+					{tokensGraphCandleData.length === 0 && (
 						<Text
 							textAlign="center"
 							color={theme.text.mono}
