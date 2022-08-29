@@ -1,5 +1,11 @@
 import { MaxUint256 } from "@ethersproject/constants";
-import { Trade, ChainId, TokenAmount, Token } from "@pollum-io/pegasys-sdk";
+import {
+	Trade,
+	CurrencyAmount,
+	ChainId,
+	TokenAmount,
+	Token,
+} from "@pollum-io/pegasys-sdk";
 import { UseToastOptions } from "@chakra-ui/react";
 import { ROUTER_ADDRESS } from "helpers/consts";
 import {
@@ -28,6 +34,11 @@ export enum ApprovalState {
 export enum Field {
 	INPUT = "INPUT",
 	OUTPUT = "OUTPUT",
+}
+
+interface IError {
+	code: number;
+	message: string;
 }
 
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
@@ -128,7 +139,7 @@ export function useApproveCallback(
 				setCurrentTxHash(`${response?.hash}`);
 				setCurrentInputTokenName(`${currentAmountToApprove?.currency?.symbol}`);
 			})
-			.catch(error => {
+			.catch((error: IError) => {
 				if (error?.code === 4001) {
 					toast({
 						status: "error",

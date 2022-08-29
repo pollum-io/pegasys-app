@@ -10,7 +10,7 @@ interface IPoolCards {
 	poolVolume?: string;
 	poolApr?: string;
 	poolShare?: string;
-	setIsCreate?: Dispatch<SetStateAction<boolean>>;
+	setIsCreate: Dispatch<SetStateAction<boolean>>;
 }
 
 export const PoolCards: FunctionComponent<IPoolCards> = props => {

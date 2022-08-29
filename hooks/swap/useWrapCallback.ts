@@ -48,6 +48,8 @@ export function UseWrapCallback(
 	);
 
 	if (!wethContract || !chainId || !inputCurrency || !outputCurrency)
+		// eslint-disable-next-line
+		// @ts-ignore
 		return WrapType.NOT_APPLICABLE;
 
 	// eslint-disable-next-line
@@ -119,5 +121,7 @@ export function UseWrapCallback(
 			inputError: sufficientBalance ? undefined : "Insufficient WSYSbalance",
 		};
 	}
+	// eslint-disable-next-line
+	// @ts-ignore
 	return WrapType.NOT_APPLICABLE;
 }

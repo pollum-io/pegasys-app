@@ -7,7 +7,7 @@ export async function getTokenAllowance(
 	owner: string,
 	spender: string,
 	signer: Signer
-) {
+): Promise<TokenAmount | undefined | null> {
 	if (token) {
 		const contract = await getContract(token?.address, signer);
 		const inputs = [owner, spender];
