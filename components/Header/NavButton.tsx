@@ -1,4 +1,4 @@
-import { Button, ButtonProps, Link } from "@chakra-ui/react";
+import { Button, ButtonProps } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
 import { usePicasso } from "hooks";
 import { useRouter } from "next/router";
@@ -11,7 +11,7 @@ interface IButtonProps extends ButtonProps {
 
 export const NavButton: FunctionComponent<IButtonProps> = props => {
 	const { push } = useRouter();
-	const { href, children, color, display, active, ...rest } = props;
+	const { href, children, display, active } = props;
 	const theme = usePicasso();
 
 	return (

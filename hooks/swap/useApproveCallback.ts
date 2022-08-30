@@ -1,11 +1,5 @@
 import { MaxUint256 } from "@ethersproject/constants";
-import {
-	Trade,
-	CurrencyAmount,
-	ChainId,
-	TokenAmount,
-	Token,
-} from "@pollum-io/pegasys-sdk";
+import { Trade, ChainId, TokenAmount, Token } from "@pollum-io/pegasys-sdk";
 import { UseToastOptions } from "@chakra-ui/react";
 import { ROUTER_ADDRESS } from "helpers/consts";
 import {
@@ -85,23 +79,19 @@ export function useApproveCallback(
 	const approve = async (): Promise<void> => {
 		const tokenContract = await getContract(token?.address, signer as Signer);
 		if (!token) {
-			console.error("no token");
-			return;
+			throw new Error("No token informed");
 		}
 
 		if (!tokenContract) {
-			console.error("tokenContract is null");
-			return;
+			throw new Error("Token Contract is null");
 		}
 
 		if (!amountToApprove) {
-			console.error("missing amount to approve");
-			return;
+			throw new Error("Missing amount to approve");
 		}
 
 		if (!spender) {
-			console.error("no spender");
-			return;
+			throw new Error("No Spender");
 		}
 		let useExact = false;
 		const estimatedGas = await tokenContract.estimateGas

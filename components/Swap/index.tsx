@@ -96,7 +96,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setApprovalState,
 		approvalState,
 		setApprovalSubmitted,
-		approvalSubmitted,
 		setCurrentTxHash,
 		setCurrentInputTokenName,
 		expert,
@@ -1079,7 +1078,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								index // Array with number of elements to display in the screen
 							) => (
 								<SkeletonCircle
-									key={index}
+									key={_ + Number(index)}
 									isLoaded={!isLoadingGraphCandles}
 									mr={`${isLoadingGraphCandles && "0.5"}`}
 									fadeDuration={1.5}
@@ -1155,7 +1154,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 										index // Array with number of elements to display in the screen
 									) => (
 										<SkeletonCircle
-											key={index}
+											key={_ + Number(index)}
 											w="40px"
 											h="40px"
 											fadeDuration={1.5}

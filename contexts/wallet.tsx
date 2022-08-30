@@ -174,8 +174,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 					String(error).includes("User denied account authorization")
 				) {
 					setConnecting(false);
-				} else {
-					console.log(error);
 				}
 			});
 	};
@@ -183,7 +181,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	useMemo(() => {
 		if (approvalState.status === ApprovalState.PENDING) {
 			const timer = setInterval(async () => {
-				const result = await fetch(
+				await fetch(
 					`${rpcUrl}?module=account&action=pendingtxlist&address=${walletAddress}`
 				).then(result => result.json());
 

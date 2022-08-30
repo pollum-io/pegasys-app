@@ -59,13 +59,6 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 			? "Approve"
 			: "Swap";
 
-	const receiveEstimatedValue = !isWrap
-		? trade?.outputAmount.toSignificant(4)
-		: tokenInputValue?.inputTo?.value;
-
-	const receiveOutput = !isWrap
-		? trade?.outputAmount?.currency.symbol
-		: selectedTokens[1]?.symbol;
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />

@@ -80,7 +80,7 @@ export function UseWrapCallback(
 								});
 								setCurrentTxHash(`${txReceipt?.hash}`);
 							} catch (error) {
-								console.error("Could not deposit", error);
+								throw new Error("Could not deposit");
 							}
 					  }
 					: undefined,
@@ -114,7 +114,7 @@ export function UseWrapCallback(
 								});
 								setCurrentTxHash(`${txReceipt?.hash}`);
 							} catch (error) {
-								console.error("Could not withdraw", error);
+								throw new Error("Could not withdraw");
 							}
 					  }
 					: undefined,

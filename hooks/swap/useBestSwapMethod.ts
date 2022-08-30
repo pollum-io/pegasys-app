@@ -1,8 +1,4 @@
-import {
-	BIPS_BASE,
-	INITIAL_ALLOWED_SLIPPAGE,
-	ROUTER_ADDRESS,
-} from "helpers/consts";
+import { BIPS_BASE, ROUTER_ADDRESS } from "helpers/consts";
 import { BigNumber } from "@ethersproject/bignumber";
 import {
 	Trade,
