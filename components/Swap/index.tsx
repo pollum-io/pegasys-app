@@ -1069,42 +1069,38 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					justifyContent="center"
 					flexDirection={["column", "row", "row", "row"]}
 					alignItems="center"
-					mb={`${tokensGraphCandleData?.length === 0 && "16"}`}
+					mb={`${tokensGraphCandleData?.length === 0 && "5"}`}
 				>
 					<Flex>
-						<SkeletonCircle
-							isLoaded={!isLoadingGraphCandles}
-							mr={`${isLoadingGraphCandles && "0.5"}`}
-							fadeDuration={1.5}
-							speed={1.3}
-							background="transparent"
-							opacity={`${isLoadingGraphCandles && 0.2}`}
-							startColor="#8A15E6"
-							endColor="#19EBCE"
-						>
-							<Img
-								src={tokensPairPosition[0]?.tokenInfo?.logoURI}
-								w="7"
-								h="7"
-								mr="0.5"
-							/>
-						</SkeletonCircle>
-
-						<SkeletonCircle
-							isLoaded={!isLoadingGraphCandles}
-							fadeDuration={1.5}
-							speed={1.3}
-							background="transparent"
-							opacity={`${isLoadingGraphCandles && 0.2}`}
-							startColor="#8A15E6"
-							endColor="#19EBCE"
-						>
-							<Img
-								src={tokensPairPosition[1]?.tokenInfo?.logoURI}
-								w="7"
-								h="7"
-							/>
-						</SkeletonCircle>
+						{[0, 1].map(
+							(
+								_,
+								index // Array with number of elements to display in the screen
+							) => (
+								<SkeletonCircle
+									key={index}
+									isLoaded={!isLoadingGraphCandles}
+									mr={`${isLoadingGraphCandles && "0.5"}`}
+									fadeDuration={1.5}
+									speed={1.3}
+									background="transparent"
+									opacity={`${isLoadingGraphCandles && 0.2}`}
+									startColor="#8A15E6"
+									endColor="#19EBCE"
+								>
+									<Img
+										src={
+											index === 0
+												? tokensPairPosition[0]?.tokenInfo?.logoURI
+												: tokensPairPosition[1]?.tokenInfo?.logoURI
+										}
+										w="7"
+										h="7"
+										mr="0.5"
+									/>
+								</SkeletonCircle>
+							)
+						)}
 
 						<Skeleton
 							isLoaded={!isLoadingGraphCandles}
@@ -1152,56 +1148,24 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									isLoadingGraphCandles ? "space-evenly" : "center"
 								}`}
 							>
-								<SkeletonCircle
-									w="40px"
-									h="40px"
-									fadeDuration={1.5}
-									speed={1.3}
-									background="transparent"
-									opacity={`${isLoadingGraphCandles && 0.2}`}
-									startColor="#8A15E6"
-									endColor="#19EBCE"
-								/>
-								<SkeletonCircle
-									w="40px"
-									h="40px"
-									fadeDuration={1.5}
-									speed={1.3}
-									background="transparent"
-									opacity={`${isLoadingGraphCandles && 0.2}`}
-									startColor="#8A15E6"
-									endColor="#19EBCE"
-								/>
-								<SkeletonCircle
-									w="40px"
-									h="40px"
-									fadeDuration={1.5}
-									speed={1.3}
-									background="transparent"
-									opacity={`${isLoadingGraphCandles && 0.2}`}
-									startColor="#8A15E6"
-									endColor="#19EBCE"
-								/>
-								<SkeletonCircle
-									w="40px"
-									h="40px"
-									fadeDuration={1.5}
-									speed={1.3}
-									background="transparent"
-									opacity={`${isLoadingGraphCandles && 0.2}`}
-									startColor="#8A15E6"
-									endColor="#19EBCE"
-								/>
-								<SkeletonCircle
-									w="40px"
-									h="40px"
-									fadeDuration={1.5}
-									speed={1.3}
-									background="transparent"
-									opacity={`${isLoadingGraphCandles && 0.2}`}
-									startColor="#8A15E6"
-									endColor="#19EBCE"
-								/>
+								{[1, 2, 3, 4, 5].map(
+									(
+										_,
+										index // Array with number of elements to display in the screen
+									) => (
+										<SkeletonCircle
+											key={index}
+											w="40px"
+											h="40px"
+											fadeDuration={1.5}
+											speed={1.3}
+											background="transparent"
+											opacity={`${isLoadingGraphCandles && 0.2}`}
+											startColor="#8A15E6"
+											endColor="#19EBCE"
+										/>
+									)
+								)}
 							</Flex>
 						) : (
 							<FilterButton
@@ -1232,19 +1196,30 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						endColor="#19EBCE"
 						borderRadius="5px"
 					>
-						<ChartComponent data={tokensGraphCandleData} />
-					</Skeleton>
+						{tokensGraphCandleData?.length === 0 && !isLoadingGraphCandles ? (
+							<>
+								<Text
+									textAlign="center"
+									color={theme.text.mono}
+									fontWeight="medium"
+									fontSize="md"
+								>
+									Data not found for this pair of tokens.
+								</Text>
 
-					{tokensGraphCandleData?.length === 0 && !isLoadingGraphCandles && (
-						<Text
-							textAlign="center"
-							color={theme.text.mono}
-							fontWeight="400"
-							fontSize="sm"
-						>
-							Candle data not available to this token pair.
-						</Text>
-					)}
+								<Text
+									textAlign="center"
+									color={theme.text.mono}
+									fontWeight="normal"
+									fontSize="sm"
+								>
+									Please try again with another pair.
+								</Text>
+							</>
+						) : (
+							<ChartComponent data={tokensGraphCandleData} />
+						)}
+					</Skeleton>
 				</Flex>
 			</Flex>
 		</Flex>
