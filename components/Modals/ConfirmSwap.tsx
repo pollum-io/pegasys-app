@@ -128,9 +128,8 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 						</Flex>
 					</Flex>
 					<Text fontSize="sm" color={theme.text.mono}>
-						Output is estimated. You will receive at least{" "}
-						{receiveEstimatedValue} {receiveOutput} or the transaction will
-						revert.
+						Output is estimated. You will receive at least {minimumReceived} or
+						the transaction will revert.
 					</Text>
 				</ModalBody>
 				<Flex
