@@ -86,7 +86,7 @@ export const Header: React.FC = () => {
 				))}
 				<NavButton
 					href="/"
-					color={theme.text.header}
+					color={theme.icon.whiteGray}
 					display={{
 						base: "none",
 						sm: "none",

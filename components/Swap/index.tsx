@@ -620,7 +620,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Text>
 						</Flex>
 						<Flex alignItems="center" justifyContent="space-between">
-							<Flex w="100%" alignItems="center">
+							<Flex w="100%" alignItems="center" mt="0.313rem">
 								<Flex
 									alignItems="center"
 									id="0"
@@ -647,18 +647,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									!preventShowMaxButton &&
 									parseFloat(selectedToken[0]?.balance) !== 0 && (
 										<Flex ml="8" onClick={() => handleMaxInput()}>
-											<Button
-												bgColor="rgba(43, 108, 176, .6)"
-												px="5"
-												color={theme.text.white}
-												transition="250ms ease-in-out"
-												_hover={{
-													backgroundColor: theme.bg.blue600,
-												}}
-												type="button"
+											<Flex
+												color={theme.text.cyanPurple}
+												_hover={{ cursor: "pointer", opacity: "0.9" }}
 											>
-												MAX
-											</Button>
+												Max
+											</Flex>
 										</Flex>
 									)}
 							</Flex>
@@ -742,6 +736,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 						<Flex alignItems="center" justifyContent="space-between">
 							<Flex
+								mt="0.313rem"
 								alignItems="center"
 								id="1"
 								borderRadius={12}
@@ -795,6 +790,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						}
 					>
 						<Flex
+							w="100%"
 							flexDirection="column"
 							borderRadius="2xl"
 							borderWidth="1px"
@@ -810,7 +806,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								justifyContent="space-around"
 								py="0.5rem"
 								borderRadius="2xl"
-								borderWidth="1px"
+								borderTop="1px solid"
 								borderColor={theme.text.cyanPurple}
 								bgColor={theme.bg.bluePink}
 								color={theme.text.mono}
@@ -855,7 +851,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								onOpenConfirmSwap();
 								setTxType("swap");
 							}}
-							bgColor={theme.bg.button.connectWalletSwap}
+							bgColor={theme.bg.blueNavyLightness}
 							color={theme.text.cyan}
 							fontSize="lg"
 							fontWeight="semibold"
@@ -891,7 +887,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 												setTxType("approve-swap");
 										  }
 								}
-								bgColor={theme.bg.button.connectWalletSwap}
+								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"
@@ -920,7 +916,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									onWrap();
 									setTxType("wrap");
 								}}
-								bgColor={theme.bg.button.connectWalletSwap}
+								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"

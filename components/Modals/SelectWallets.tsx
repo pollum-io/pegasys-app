@@ -5,6 +5,7 @@ import {
 	ModalOverlay,
 	Text,
 	Img,
+	useColorMode,
 } from "@chakra-ui/react";
 import { usePicasso, useWallet } from "hooks";
 import { WalletOptions } from "components/WalletOptions";
@@ -18,6 +19,7 @@ interface IModal {
 export const SelectWallets: React.FC<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
+	const { colorMode } = useColorMode();
 	const {
 		connecting,
 		connectorSelected,
@@ -74,7 +76,11 @@ export const SelectWallets: React.FC<IModal> = props => {
 					</Flex>
 				)}
 				{connecting && connectorSelected && (
-					<Flex flexDirection="column" justifyContent="center">
+					<Flex
+						flexDirection="column"
+						justifyContent="center"
+						color={theme.text.mono}
+					>
 						<Flex justifyContent="flex-end" gap="3" align="center" pb="5">
 							<Flex _hover={{ cursor: "pointer" }}>
 								<AiOutlineClose size={22} onClick={onClose} />
@@ -82,7 +88,14 @@ export const SelectWallets: React.FC<IModal> = props => {
 						</Flex>
 						<Flex justifyContent="center" flexDirection="row" pl="2">
 							<Flex pt="0.4">
-								<Flex mb="5px" className="circleLoading" />
+								<Flex
+									mb="5px"
+									className={
+										colorMode === "dark"
+											? "circleLoading"
+											: "circleLoadingLight"
+									}
+								/>
 							</Flex>
 							<Text pb="2" pl="3" fontSize="18px" fontWeight="600">
 								Initializing...
@@ -102,7 +115,7 @@ export const SelectWallets: React.FC<IModal> = props => {
 								border="1px solid"
 								borderRadius="full"
 								fontSize="md"
-								borderColor={theme.text.cyanPsys}
+								borderColor={theme.border.wallets}
 								fontWeight={500}
 								fontFamily="inter"
 								alignItems="center"

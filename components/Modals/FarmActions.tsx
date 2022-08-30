@@ -89,7 +89,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								color={
 									buttonId === "deposit"
 										? theme.text.farmActionsHover
-										: theme.text.farmActionsTop
+										: theme.border.borderSettings
 								}
 								fontWeight="semibold"
 								_hover={{ opacity: "0.9" }}
@@ -112,7 +112,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								color={
 									buttonId === "withdraw"
 										? theme.text.farmActionsHover
-										: theme.text.farmActionsTop
+										: theme.border.borderSettings
 								}
 								fontWeight="semibold"
 								_hover={{ opacity: "0.9" }}
@@ -134,7 +134,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								color={
 									buttonId === "claim"
 										? theme.text.farmActionsHover
-										: theme.text.farmActionsTop
+										: theme.border.borderSettings
 								}
 								fontWeight="semibold"
 								_hover={{ opacity: "0.9" }}
@@ -166,7 +166,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									lg: "none",
 								}}
 							>
-								<MdArrowBack size={24} color={theme.text.gray} />
+								<MdArrowBack size={24} color={theme.text.gray500} />
 							</Flex>
 							<Text
 								display={{
@@ -175,7 +175,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									md: "none",
 									lg: "none",
 								}}
-								color={theme.text.gray}
+								color={theme.text.gray500}
 							>
 								Farms
 							</Text>
@@ -233,13 +233,19 @@ export const FarmActions: React.FC<IModal> = props => {
 											<InputRightAddon
 												// eslint-disable-next-line react/no-children-prop
 												children="max"
-												border="1px solid transparent;"
-												background={`linear-gradient(${theme.bg.max}, ${theme.bg.max}) padding-box, rgba(1, 219, 243, 0.2) border-box`}
+												border="1px solid"
+												borderColor={theme.border.farmInput}
+												background={theme.bg.max}
 												borderRightRadius="full"
 												color={theme.text.max}
 												fontSize="lg"
 												fontWeight="normal"
-												_hover={{}}
+												_hover={{
+													borderColor: theme.border.farmInput,
+													bgColor: theme.bg.blueNavyLightness,
+													color: theme.text.cyan,
+													cursor: "pointer",
+												}}
 											/>
 										</InputGroup>
 									</Flex>
@@ -299,34 +305,38 @@ export const FarmActions: React.FC<IModal> = props => {
 							<Text fontWeight="normal" mb="2">
 								Deposited PLP Liquidity: 0.000001
 							</Text>
-							<Flex flexDirection="row">
-								<Input
-									placeholder="0.0"
-									border="1px solid"
-									borderColor={theme.border.farmInput}
-									bgColor={theme.bg.blackAlpha}
-									borderLeftRadius="full"
-									p="5"
-									w="25rem"
-									_focus={{ outline: "none" }}
-								/>
-								<Button
-									border="1px solid"
-									borderColor={theme.border.farmInput}
-									borderRightRadius="full"
-									bgColor={theme.bg.max}
-									color={theme.text.max}
-									fontSize="lg"
-									fontWeight="normal"
-									px="4"
-									py="5"
-									_hover={{
-										borderColor: theme.border.farmInput,
-										opacity: 0.9,
-									}}
-								>
-									max
-								</Button>
+							<Flex>
+								<InputGroup size="md">
+									<Input
+										placeholder="0.0"
+										border="1px solid"
+										borderColor={theme.border.farmInput}
+										bgColor={theme.bg.blackAlpha}
+										borderLeftRadius="full"
+										w="25rem"
+										_hover={{}}
+										_focus={{
+											outline: "none",
+										}}
+									/>
+									<InputRightAddon
+										// eslint-disable-next-line react/no-children-prop
+										children="max"
+										border="1px solid"
+										borderColor={theme.border.farmInput}
+										background={theme.bg.max}
+										borderRightRadius="full"
+										color={theme.text.max}
+										fontSize="lg"
+										fontWeight="normal"
+										_hover={{
+											borderColor: theme.border.farmInput,
+											bgColor: theme.bg.blueNavyLightness,
+											color: theme.text.cyan,
+											cursor: "pointer",
+										}}
+									/>
+								</InputGroup>
 							</Flex>
 							<Text fontWeight="normal" mt="2">
 								Uncalimed PSYS: 0.01819
@@ -492,7 +502,7 @@ export const FarmActions: React.FC<IModal> = props => {
 							background={theme.bg.subModal}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
-							top={["unset", "unset", "20rem", "20rem"]}
+							top={["unset", "unset", "19.6rem", "19.6rem"]}
 							borderTopRadius={["0", "0", "3xl", "3xl"]}
 							borderBottomRadius={["0", "0", "3xl", "3xl"]}
 							alignItems="flex-start"

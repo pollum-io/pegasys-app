@@ -74,7 +74,7 @@ export const FilterButton: FunctionComponent<IFilterPorps> = ({
 				<ListItem
 					key={periods.id}
 					bgColor={id === periods.id ? theme.bg.chartPeriod : "transparent"}
-					color={id === periods.id ? theme.text.white : theme.text.stakeMode}
+					color={id === periods.id ? "white" : theme.text.stakeMode}
 					px="3"
 					py="3"
 					w="42px"
@@ -87,7 +87,7 @@ export const FilterButton: FunctionComponent<IFilterPorps> = ({
 					_hover={{
 						cursor: "pointer",
 						background: theme.bg.chartPeriod,
-						color: theme.text.white,
+						color: "white",
 					}}
 					value={periods.period}
 					onClick={() =>

@@ -159,7 +159,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 						px="6"
 						borderRadius="67px"
 						bgColor={theme.bg.blueNavyLightness}
-						color={theme.text.cyanWhite}
+						color={theme.text.cyan}
 						fontSize="sm"
 						fontWeight="semibold"
 						_hover={{

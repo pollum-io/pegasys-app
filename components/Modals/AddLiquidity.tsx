@@ -147,7 +147,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							h={["100%", "max-content", "90%", "100%"]}
 							borderRadius="2xl"
 							bgColor={theme.bg.blueNavyLightnessOp}
-							color={theme.text.cyanWhite}
+							color={theme.text.cyan}
 							p="1.5rem"
 							flexDirection="column"
 							gap={3}
@@ -443,8 +443,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								py="6"
 								px="6"
 								borderRadius="67px"
-								bgColor={theme.bg.button.connectWalletSwap}
-								color={theme.text.cyanWhite}
+								bgColor={theme.bg.blueNavyLightness}
+								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"
 								_hover={{ bgColor: theme.bg.bluePurple }}

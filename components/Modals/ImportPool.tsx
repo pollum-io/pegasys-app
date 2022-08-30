@@ -194,7 +194,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								py="6"
 								px="6"
 								borderRadius="67px"
-								bgColor={theme.bg.button.connectWalletSwap}
+								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"

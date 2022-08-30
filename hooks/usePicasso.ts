@@ -12,7 +12,6 @@ const usePicasso = () => {
 				"rgba(0, 0, 0, 0.24)",
 				"rgba(255, 255, 255, 0.36"
 			),
-			farmActionsTop: useColorModeValue("#A0AEC0", "rgba(255, 255, 255, 0.36)"),
 			farmActionsHover: useColorModeValue("#3B3693", "#1A365D"),
 			max: useColorModeValue("#2D3748", "#00D9EF"),
 			input: useColorModeValue("#9F7AEA", "#36B4D4"),
@@ -22,19 +21,14 @@ const usePicasso = () => {
 				"rgb(255, 255, 255, 0.64)"
 			),
 			cyanLightPurple: useColorModeValue("#8C15E8", "#00d9ef"),
-			header: useColorModeValue("#A0AEC0", "white"),
 			whitePurple: useColorModeValue("#665EE1", "white"),
-			cyanWhite: useColorModeValue("white", "#00d9ef"),
 			topHeaderButton: useColorModeValue("#665EE1", "#081120"),
 			cyanPurple: useColorModeValue("#665EE1", "#00d9ef"),
 			mono: useColorModeValue("#1A202C", "white"), // text black and white
 			navItem: useColorModeValue("#4A5568", "#EDF2F7"), // bottom header icons color
 			blue: useColorModeValue("white", "cyan.300"),
-			infoLink: useColorModeValue("#565a69", "#c3c5cb"),
-			connectWallet: useColorModeValue("#665EE1", "#00d9ef"),
 			stakeMode: useColorModeValue("#A0AEC0", "#4A5568"),
 			swapInfo: useColorModeValue("#565a69", "#c3c5cb"),
-			whiteCyan: useColorModeValue("#ffffff", "#00d9ef"),
 			cyan: useColorModeValue("#ffffff", "#00d9ef"),
 			redError: useColorModeValue("#ff2532a3", "#ff2532a3"),
 			gray: useColorModeValue("gray.400", "gray.400"),
@@ -49,12 +43,10 @@ const usePicasso = () => {
 			),
 			red400: useColorModeValue("red.400", "red.400"),
 			red500: useColorModeValue("red.500", "red.500"),
-			white: useColorModeValue("#fff", "#fff"),
 			whiteAlpha: useColorModeValue(
 				"rgba(255,255,255, .36)",
 				"rgba(255,255,255, .36)"
 			),
-			cyanPsys: useColorModeValue("#00d9ef", "#00d9ef"),
 		},
 		icon: {
 			infoWhiteRed: useColorModeValue("#E53E3E", "#ffffff"),
@@ -106,8 +98,6 @@ const usePicasso = () => {
 				"rgba(0, 0, 0, 0.06)",
 				"rgba(255, 255, 255, 0.06)"
 			),
-			connectToWallet: useColorModeValue("#EEEAF4", "#153D6F"),
-			settings: useColorModeValue("white", "#0B172C"),
 			slippage: useColorModeValue("#D6BCFA", "#153D6F"),
 			transactionSettings: useColorModeValue("rgb(0, 0, 0, 0.04)", "#081120"),
 			iconBg: useColorModeValue(
@@ -118,13 +108,9 @@ const usePicasso = () => {
 			topHeader: useColorModeValue("#FFFFFF", "#000000"),
 			primary: useColorModeValue("#EDF2F7", "#000913"),
 			secondary: useColorModeValue("#EDF2F7", "#171923"), // tooltip background
-			bgPrimary: useColorModeValue("#f7f8fa", "#2c2f36"),
 			whiteGray: useColorModeValue("#665EE1", "rgba(8, 17, 32, 1)"), //
-			expertMode: useColorModeValue("#FFFFFF", "#081120"), //
-			iceGray: useColorModeValue("#f7f8fa", "#2c2f36"), //
 			blackAlpha: useColorModeValue("#ffffff", "#081120"), // modal bg
 			blackLightness: useColorModeValue("#F7FAFC", "#081120"),
-			blackGray: useColorModeValue("#EDF2F7", "#081120"),
 			blueNavy: useColorModeValue("#F7FAFC", "#0B172C"), // intern modal flexes
 			blueNavyLight: useColorModeValue("#ffffff", "#0B172C"),
 			blueGray: useColorModeValue("#171F2D", "#171F2D"),
@@ -134,7 +120,7 @@ const usePicasso = () => {
 			blueNavyLightness: useColorModeValue("#665EE1", "rgba(21, 61, 111, 1)"),
 			blueNavyLightnessOp: useColorModeValue(
 				"rgb(102,94,225, 0.8)",
-				"rgba(21, 61, 111, 1);"
+				"rgba(21, 61, 111, 1)"
 			),
 			button: {
 				connectToWallet: useColorModeValue("#EEEAF4", "#153D6F"),
@@ -145,7 +131,6 @@ const usePicasso = () => {
 					"linear-gradient(90deg, #665EE1 9.38%, rgba(0, 184, 255, 0.3) 128.42%)",
 					"linear-gradient(90deg, #53D9D9 9.38%, rgb(0 184 255 / 35%) 128.42%)"
 				),
-				connectWalletSwap: useColorModeValue("#665EE1", "rgba(21, 61, 111, 1)"),
 				slippageSetting: useColorModeValue("#ffffff", "#212429"),
 				sysBalance: useColorModeValue(
 					"#315df6",
@@ -159,15 +144,11 @@ const usePicasso = () => {
 					"linear-gradient(128.17deg, rgb(83, 217, 217) -14.78%, rgb(0, 184, 255) 110.05%)",
 					"linear-gradient(128.17deg, rgb(83, 217, 217) -14.78%, rgba(0, 184, 255, 0.1) 110.05%)"
 				),
-				swapBlue: useColorModeValue("#00d9ef", "#153d6f70"),
-				swapTokenCurrency: useColorModeValue("#F7F8FA", "#2C2F36"),
-				switchNetwork: useColorModeValue("#04d3c0", "#153d6f70"),
 			},
 		},
 		border: {
 			manageInput: useColorModeValue("#E2E8F0", "rgba(255, 255, 255, 0.24)"),
 			farmInput: useColorModeValue("#CBD5E0", "rgba(0, 217, 239, 0.2)"),
-			cyanPurple: useColorModeValue("#8C15E8", "#0753B2"),
 			modalBorderShadow: useColorModeValue(
 				"0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.2);",
 				"0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4);"
@@ -187,9 +168,7 @@ const usePicasso = () => {
 			connectWallet: useColorModeValue("#04d3c0", "#153d6f70"),
 			borderSettings: useColorModeValue("#A0AEC0", "rgba(255, 255, 255, 0.36)"),
 			blueSys: useColorModeValue("#315df6", "#315df6"),
-			swapInput: useColorModeValue("#f7f8fa", "#2c2f36"),
-			wallets: useColorModeValue("#edeef2", "#40444f"),
-			redError: useColorModeValue("#ff2532a3", "#ff2532a3"),
+			wallets: useColorModeValue("#e0e0e0", "rgba(255, 255, 255, 0.36)"),
 		},
 	};
 

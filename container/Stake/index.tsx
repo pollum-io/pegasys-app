@@ -106,7 +106,7 @@ export const StakeContainer: NextPage = () => {
 								color={
 									buttonId === "psys"
 										? theme.text.farmActionsHover
-										: theme.text.farmActionsTop
+										: theme.border.borderSettings
 								}
 								bgColor={
 									buttonId === "psys"
@@ -119,7 +119,7 @@ export const StakeContainer: NextPage = () => {
 								py="2"
 								px="6"
 								fontWeight="semibold"
-								_hover={{ opacity: "0.9" }}
+								_hover={{}}
 							>
 								PSYS
 							</Button>
@@ -128,7 +128,7 @@ export const StakeContainer: NextPage = () => {
 								color={
 									buttonId === "usd"
 										? theme.text.farmActionsHover
-										: theme.text.farmActionsTop
+										: theme.border.borderSettings
 								}
 								bgColor={
 									buttonId === "usd" ? theme.bg.farmActionsHover : "transparent"

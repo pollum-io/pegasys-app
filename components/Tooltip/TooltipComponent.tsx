@@ -2,6 +2,7 @@ import { Icon, PlacementWithLogical, Theme, Tooltip } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
 import { IconType } from "react-icons/lib";
 import { usePicasso } from "hooks";
+import { string } from "yup/lib/locale";
 
 interface ITooltipComponent {
 	label: string;

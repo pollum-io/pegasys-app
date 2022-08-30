@@ -212,7 +212,7 @@ export const PoolsContainer: NextPage = () => {
 											px="1.5rem"
 											h="max-content"
 											bgColor={theme.bg.blueNavyLightness}
-											color={theme.text.cyanWhite}
+											color={theme.text.cyan}
 											_hover={{ opacity: "1" }}
 											_active={{}}
 											onClick={() => {

@@ -95,6 +95,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 						alignItems="center"
 						mb="6"
 						justifyContent="center"
+						pr="4rem"
 					>
 						<Flex flexDirection="column" gap="14" pr="2">
 							<Text textAlign="right" fontWeight="semibold">
@@ -179,8 +180,8 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 							py="6"
 							px="6"
 							borderRadius="67px"
-							bgColor={theme.bg.button.connectWalletSwap}
-							color={theme.text.cyanWhite}
+							bgColor={theme.bg.blueNavyLightness}
+							color={theme.text.cyan}
 							fontSize="lg"
 							onClick={() => {
 								if (!onTx) return;

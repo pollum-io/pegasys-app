@@ -189,7 +189,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 					</Flex>
 				</ModalBody>
 				<ModalFooter
-					bgColor={theme.bg.blackGray}
+					bgColor={theme.bg.max}
 					justifyContent="flex-start"
 					borderBottomRadius={18}
 					h="max-content"
@@ -213,7 +213,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								<Text
 									fontSize="sm"
 									fontWeight="semibold"
-									color={theme.text.cyan}
+									color={theme.text.cyanPurple}
 									_hover={{ cursor: "pointer", textDecoration: "underline" }}
 									onClick={() => setTxs([])}
 								>
