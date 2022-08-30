@@ -24,7 +24,6 @@ interface IPoolCards {
 
 export const StakeCards: FunctionComponent<IPoolCards> = props => {
 	const {
-		stakeTokens,
 		stakeOf,
 		stakeApr,
 		stakeTotalStake,
@@ -32,6 +31,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 		stakeDepositFee,
 		stakeYourStaked,
 		stakeYourUnclaimed,
+		stakeTokens,
 	} = props;
 	const theme = usePicasso();
 	const { isOpenStakeActions, onOpenStakeActions, onCloseStakeActions } =

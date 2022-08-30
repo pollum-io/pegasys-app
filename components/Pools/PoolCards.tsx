@@ -1,7 +1,6 @@
 import { Button, Flex, Img, Text } from "@chakra-ui/react";
 import { FunctionComponent, Dispatch, SetStateAction } from "react";
 import { useModal, usePicasso } from "hooks";
-import { AddLiquidityModal, RemoveLiquidity } from "components/Modals";
 
 interface IPoolCards {
 	poolTokens?: [];
@@ -20,12 +19,11 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		poolVolume,
 		poolApr,
 		poolShare,
-		poolTokens,
 		setIsCreate,
+		poolTokens,
 	} = props;
 	const theme = usePicasso();
-	const { onOpenRemoveLiquidity, onOpenAddLiquidity, onCloseAddLiquidity } =
-		useModal();
+	const { onOpenRemoveLiquidity, onOpenAddLiquidity } = useModal();
 
 	return (
 		<Flex

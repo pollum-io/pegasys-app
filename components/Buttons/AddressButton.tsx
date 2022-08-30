@@ -14,7 +14,7 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	const { children, pending, ...rest } = props;
 	const { walletError } = useWallet();
-	const [isExpertMode, setIsExportMode] = useState(false);
+	const [isExpertMode] = useState(false);
 
 	return (
 		<Button

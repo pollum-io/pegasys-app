@@ -36,9 +36,9 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	const { userTokensBalance } = useTokens();
 
 	const theme = usePicasso();
-	const { onOpenCoin, isOpenCoin, onCloseCoin } = useModal();
+	const { isOpenCoin, onCloseCoin } = useModal();
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
-	const [buttonId, setButtonId] = useState<number>(0);
+	const [buttonId] = useState<number>(0);
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
 
