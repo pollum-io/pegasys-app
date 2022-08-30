@@ -193,7 +193,7 @@ export const StakeActions: React.FC<IModal> = props => {
 								}}
 								color={theme.text.gray}
 							>
-								Farms
+								Stake
 							</Text>
 						</Flex>
 					</Flex>
