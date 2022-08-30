@@ -779,8 +779,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							/>
 						</Flex>
 					</Flex>
-					{isConnected && verifyIfHaveInsufficientLiquidity && !isWrap && (
-						<Flex flexDirection="row" gap="1" justifyContent="center">
+					<Flex
+						flexDirection="column"
+						gap="1"
+						justifyContent="center"
+						alignItems="center"
+					>
+						{isConnected && verifyIfHaveInsufficientLiquidity && !isWrap && (
 							<Text
 								fontSize="sm"
 								pt="2"
@@ -790,8 +795,24 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							>
 								{translation("swapPage.insufficientLiquidity")}
 							</Text>
-						</Flex>
-					)}
+						)}
+						{isConnected &&
+							tokenInputValue.currentInputTyped === "inputTo" &&
+							parseFloat(tokenInputValue.inputTo.value) >
+								parseFloat(selectedToken[1]?.tokenInfo?.balance) && (
+								<Text
+									fontSize="sm"
+									pt="2"
+									textAlign="center"
+									color={theme.text.red400}
+									fontWeight="semibold"
+								>
+									{translation("swapHooks.insufficient")}
+									{selectedToken[1]?.tokenInfo?.symbol}
+									{translation("swapHooks.balance")}
+								</Text>
+							)}
+					</Flex>
 					<Collapse
 						in={
 							!!tokenInputValue.inputTo.value &&
@@ -875,7 +896,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						</Button>
 					)}
 					<Flex>
-						{isERC20 && isConnected && !isWrap && (
+						{isERC20 && !isWrap && (
 							<Button
 								w="100%"
 								mt="2rem"
@@ -902,12 +923,16 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									opacity: 0.9,
 								}}
 							>
-								{approveValidation && !alreadyApproved
-									? translation("swapPage.approve")
-									: translation("swapPage.swap")}
+								{isConnected
+									? `${
+											approveValidation && !alreadyApproved
+												? translation("swapPage.approve")
+												: translation("swapPage.swap")
+									  }`
+									: `${swapButtonValidation}`}
 							</Button>
 						)}
-						{isWrap && isConnected && (
+						{isWrap && (
 							<Button
 								w="100%"
 								mt="2rem"
@@ -925,7 +950,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								fontWeight="semibold"
 								disabled={!canWrap}
 							>
-								{wrapOrUnwrap}
+								{isConnected ? `${wrapOrUnwrap}` : `${swapButtonValidation}`}
 							</Button>
 						)}
 					</Flex>
@@ -1069,7 +1094,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					justifyContent="center"
 					flexDirection={["column", "row", "row", "row"]}
 					alignItems="center"
-					mb={`${tokensGraphCandleData?.length === 0 && "5"}`}
+					mb={`${
+						!isLoadingGraphCandles && tokensGraphCandleData?.length === 0 && "5"
+					}`}
 				>
 					<Flex>
 						{[0, 1].map(
@@ -1137,44 +1164,53 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						</Text>
 					</Skeleton>
 				</Flex>
-				{tokensGraphCandleData?.length !== 0 && (
-					<Flex my="6" justifyContent="center">
-						{isLoadingGraphCandles ? (
-							<Flex
-								w="100%"
-								maxW={`${isLoadingGraphCandles && "70%"}`}
-								alignItems="center"
-								justifyContent={`${
-									isLoadingGraphCandles ? "space-evenly" : "center"
-								}`}
-							>
-								{[1, 2, 3, 4, 5].map(
-									(
-										_,
-										index // Array with number of elements to display in the screen
-									) => (
-										<SkeletonCircle
-											key={_ + Number(index)}
-											w="40px"
-											h="40px"
-											fadeDuration={1.5}
-											speed={1.3}
-											background="transparent"
-											opacity={`${isLoadingGraphCandles && 0.2}`}
-											startColor="#8A15E6"
-											endColor="#19EBCE"
-										/>
-									)
-								)}
-							</Flex>
-						) : (
+
+				<Flex
+					my={`${
+						tokensGraphCandleData.length === 0 && !isLoadingGraphCandles
+							? "0"
+							: "6"
+					}`}
+					justifyContent="center"
+				>
+					{isLoadingGraphCandles ? (
+						<Flex
+							w="100%"
+							maxW={`${isLoadingGraphCandles && "70%"}`}
+							alignItems="center"
+							justifyContent={`${
+								isLoadingGraphCandles ? "space-evenly" : "center"
+							}`}
+						>
+							{[1, 2, 3, 4, 5].map(
+								(
+									_,
+									index // Array with number of elements to display in the screen
+								) => (
+									<SkeletonCircle
+										key={_ + Number(index)}
+										w="40px"
+										h="40px"
+										fadeDuration={1.5}
+										speed={1.3}
+										background="transparent"
+										opacity={`${isLoadingGraphCandles && 0.2}`}
+										startColor="#8A15E6"
+										endColor="#19EBCE"
+									/>
+								)
+							)}
+						</Flex>
+					) : (
+						tokensGraphCandleData.length !== 0 && (
 							<FilterButton
 								periodStateValue={tokensGraphCandlePeriod}
 								setPeriod={setTokensGraphCandlePeriod}
 							/>
-						)}
-					</Flex>
-				)}
+						)
+					)}
+				</Flex>
+
 				<Flex
 					direction="column"
 					justifyContent="center"
