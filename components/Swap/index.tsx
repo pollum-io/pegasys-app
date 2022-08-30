@@ -606,11 +606,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						border="1px solid"
 						borderColor={
 							(isConnected &&
+								tokenInputValue.currentInputTyped === "inputFrom" &&
 								parseFloat(tokenInputValue.inputFrom.value) >
-									parseFloat(selectedToken[0]?.balance) &&
-								tokenInputValue.currentInputTyped === "inputFrom") ||
+									parseFloat(selectedToken[0]?.balance)) ||
 							parseFloat(tokenInputValue.inputFrom.value) === 0 ||
-							(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap)
+							(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap) ||
+							(isConnected && Boolean(tokenInputValue.inputFrom.value === ""))
 								? theme.text.red400
 								: "#ff000000"
 						}
@@ -697,23 +698,25 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								>
 									{translation("swapHooks.insufficient")}
 									{selectedToken[0]?.symbol}
-									{translation("swapHooks.balance")}. Please insert a valid
-									amount.
+									{translation("swapHooks.balance")}.
+									{translation("swapHooks.enterAmount")}
 								</Text>
 							)}
 						</Flex>
 					)}
-					{parseFloat(tokenInputValue.inputFrom.value) === 0 && (
-						<Text
-							fontSize="sm"
-							pt="2"
-							textAlign="center"
-							fontWeight="semibold"
-							color={theme.text.red400}
-						>
-							Please insert a valid amount.
-						</Text>
-					)}
+					{isConnected &&
+						(tokenInputValue.inputFrom.value === "" ||
+							parseFloat(tokenInputValue.inputFrom.value) === 0) && (
+							<Text
+								fontSize="sm"
+								pt="2"
+								textAlign="center"
+								fontWeight="semibold"
+								color={theme.text.red400}
+							>
+								{translation("swapHooks.enterAmount")}
+							</Text>
+						)}
 					<Flex
 						margin="0 auto"
 						py="4"

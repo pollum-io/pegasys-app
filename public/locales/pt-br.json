@@ -58,7 +58,7 @@
   "earn": {
     "claimAccumulated": "Resgate {{ symbol }} acumulados",
     "connectWallet": "Conectar a uma carteira",
-    "enterAmount": "Insira um valor",
+    "enterAmount": "Insira um valor válido",
     "unclaimedReward": "{{ symbol }} não resgatado",
     "claim": "Reivindicar",
     "claimReward": "{{ symbol }} Reivindicar",
@@ -469,7 +469,7 @@
   },
   "swapHooks": {
     "connectWallet": "Conectar a uma carteira",
-    "enterAmount": "Insira um valor",
+    "enterAmount": "Insira um valor válido",
     "selectToken": "Selecione um token",
     "enterRecipient": "Digite um destinatário",
     "invalidRecipient": "Destinatário inválido",
@@ -480,17 +480,17 @@
     "connectWallet": "Conectar a uma carteira",
     "insufficientInputAmount": "Quantidade de entrada insuficiente",
     "invalidPair": "Par inválido",
-    "enterAmount": "Insira um valor",
+    "enterAmount": "Insira um valor válido",
     "insufficient": "Saldo de ",
     "balance": " insuficiente"
   },
   "stakeHooks": {
     "connectWallet": "Conectar a uma carteira",
-    "enterAmount": "Insira um valor"
+    "enterAmount": "Insira um valor válido"
   },
   "burnHooks": {
     "connectWallet": "Conectar a uma carteira",
-    "enterAmount": "Insira um valor"
+    "enterAmount": "Insira um valor válido"
   },
   "migratePage": {
     "stake": "ESTACA",
