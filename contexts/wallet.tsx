@@ -65,6 +65,12 @@ interface IWeb3 {
 	currentTxHash: string;
 	currentInputTokenName: string;
 	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>;
+	isGovernance: boolean;
+	setIsGovernance: React.Dispatch<React.SetStateAction<boolean>>;
+	setPendingTxLength: React.Dispatch<React.SetStateAction<number>>;
+	pendingTxLength: number;
+	showCancelled: boolean;
+	setShowCancelled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -89,6 +95,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [connectorSelected, setConnectorSelected] = useState<IWalletInfo>();
 	const [expert, setExpert] = useState<boolean>(false);
 	const [otherWallet, setOtherWallet] = useState<boolean>(false);
+	const [showCancelled, setShowCancelled] = useState<boolean>(false);
+	const [isGovernance, setIsGovernance] = useState<boolean>(false);
 	const [userSlippageTolerance, setUserSlippageTolerance] = useState<number>(
 		INITIAL_ALLOWED_SLIPPAGE
 	);
@@ -102,6 +110,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		57: {},
 		5700: {},
 	});
+	const [pendingTxLength, setPendingTxLength] = useState<number>(0);
 
 	const [approvalState, setApprovalState] = useState<IApprovalState>({
 		status: ApprovalState.UNKNOWN,
@@ -181,11 +190,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	useMemo(() => {
 		if (approvalState.status === ApprovalState.PENDING) {
 			const timer = setInterval(async () => {
-				await fetch(
+				const getTx = await fetch(
 					`${rpcUrl}?module=account&action=pendingtxlist&address=${walletAddress}`
 				).then(result => result.json());
 
 				const hash = `${currentTxHash}`;
+				setPendingTxLength(Number(getTx?.result?.length));
 				provider?.getTransaction(hash).then(result => {
 					if (
 						result.from.toLowerCase() === walletAddress.toLowerCase() &&
@@ -204,6 +214,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 								},
 							},
 						});
+						setPendingTxLength(Number(getTx?.result?.length));
 						setApprovalState({
 							status: ApprovalState.APPROVED,
 							type: approvalState.type,
@@ -339,6 +350,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setCurrentTxHash,
 			currentInputTokenName,
 			setCurrentInputTokenName,
+			isGovernance,
+			setIsGovernance,
+			setPendingTxLength,
+			pendingTxLength,
+			showCancelled,
+			setShowCancelled,
 		}),
 		[
 			isConnected,
