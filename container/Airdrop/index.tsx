@@ -1,5 +1,13 @@
 import { NextPage } from "next";
-import { Button, Flex, Icon, Img, Link, Text } from "@chakra-ui/react";
+import {
+	Button,
+	Flex,
+	Icon,
+	Img,
+	Link,
+	Text,
+	useMediaQuery,
+} from "@chakra-ui/react";
 import { usePicasso, useWallet } from "hooks";
 import { SiDiscord, SiTwitter } from "react-icons/si";
 import { FaTelegramPlane } from "react-icons/fa";
@@ -9,13 +17,14 @@ import { BorderAnimation } from "components/Airdrop/BorderAnimation";
 
 export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	const { isConnected } = useWallet();
 
 	const [isNotAvailable] = useState();
 	const [isClaim] = useState();
 	const [isClaiming] = useState();
-	const [isClaimed] = useState();
+	const [isClaimed] = useState(true);
 
 	return (
 		<Flex
@@ -35,12 +44,10 @@ export const AirdropContainer: NextPage = () => {
 					position="relative"
 					borderTopRadius="2xl"
 					backgroundColor="transparent"
-					w={["18rem", "md", "2xl", "2xl"]}
-					box-shadow=" 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04)"
-					filter="drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.2)) drop-shadow(0px 15px 40px rgba(0, 0, 0, 0.4))"
+					w={["20rem", "md", "2xl", "2xl"]}
 				>
 					<Img
-						src={theme.bg.psysAirdrop}
+						src={isMobile ? theme.bg.aidropBannerMobile : theme.bg.psysAirdrop}
 						position="absolute"
 						zIndex="base"
 						w="100%"
@@ -81,7 +88,7 @@ export const AirdropContainer: NextPage = () => {
 				<Flex>
 					{!isConnected ? (
 						<BorderAnimation>
-							<Flex py="4">
+							<Flex py={["0", "0", "4", "4"]}>
 								<Flex>
 									<Text
 										textAlign="center"
@@ -186,7 +193,7 @@ export const AirdropContainer: NextPage = () => {
 													_active={{}}
 													borderRadius="full"
 												>
-													<Flex className="circleLoading" />
+													<Flex className="circleLoading" pr="2" />
 													Claiming...
 												</Button>
 											)}

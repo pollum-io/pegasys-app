@@ -65,7 +65,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						px={["6", "6", "8", "8"]}
 						position={["absolute", "relative"]}
 						bottom={["12", "10"]}
-						left={["28%", "0", "0", "0"]}
+						left={["25%", "0", "0", "0"]}
 						onClick={onOpenSelectWalletModal}
 						{...rest}
 					>

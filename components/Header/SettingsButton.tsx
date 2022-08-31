@@ -93,6 +93,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 					bgColor="transparent"
 					_hover={{
 						background: theme.bg.iconBg,
+						color: theme.text.cyanLightPurple,
 					}}
 					aria-label="Popover"
 					icon={<MdSettings size={25} />}
@@ -367,7 +368,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 						bgColor={theme.bg.transactionSettings}
 						borderRadius="7rem"
 						py="2"
-						mt={["4", "8", "8", "8"]}
+						mt={["8", "8", "8", "8"]}
 						justifyContent="center"
 						alignItems="center"
 					>

@@ -10,6 +10,7 @@ import {
 	MenuList,
 	Text,
 	InputLeftElement,
+	useMediaQuery,
 } from "@chakra-ui/react";
 import {
 	AddLiquidityModal,
@@ -34,6 +35,7 @@ export const PoolsContainer: NextPage = () => {
 		onCloseAddLiquidity,
 	} = useModal();
 
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const [isCreate, setIsCreate] = useState(false);
 	const [haveValue] = useState(false);
 	const { isConnected } = useWallet();
@@ -73,7 +75,7 @@ export const PoolsContainer: NextPage = () => {
 					>
 						<Img
 							borderRadius="xl"
-							src={theme.bg.poolsBanner}
+							src={isMobile ? theme.bg.poolsBannerMobile : theme.bg.poolsBanner}
 							position="absolute"
 							zIndex="base"
 							w="100%"
@@ -130,7 +132,7 @@ export const PoolsContainer: NextPage = () => {
 						zIndex="docked"
 					>
 						<Flex
-							mt="4"
+							mt={["2rem", "2rem", "4", "4"]}
 							flexDirection="row"
 							justifyContent="space-between"
 							w="100%"
@@ -153,7 +155,9 @@ export const PoolsContainer: NextPage = () => {
 							alignItems={["center", "center", "flex-end", "flex-end"]}
 							gap="5"
 						>
-							<Flex visibility={userHavePool ? "visible" : "hidden"}>
+							<Flex
+								visibility={userHavePool && isConnected ? "visible" : "hidden"}
+							>
 								<InputGroup alignItems="center">
 									<InputLeftElement
 										pl="0.625rem"
@@ -172,7 +176,7 @@ export const PoolsContainer: NextPage = () => {
 											color: theme.text.input,
 										}}
 										borderRadius="full"
-										w={["19.5rem", "18rem", "20rem", "20rem"]}
+										w={["18.5rem", "18rem", "20rem", "20rem"]}
 										h="2.2rem"
 										py={["0.2rem", "0.2rem", "1", "1"]}
 										pl="10"
@@ -187,7 +191,7 @@ export const PoolsContainer: NextPage = () => {
 									fontWeight="semibold"
 									py="0.5rem"
 									px="1.5rem"
-									h="2.2rem"
+									size="sm"
 									bgColor="transparent"
 									borderWidth="1px"
 									borderColor={theme.text.cyanPurple}
@@ -205,13 +209,22 @@ export const PoolsContainer: NextPage = () => {
 								>
 									Create a Pair
 								</Button>
-								<Flex flexDirection="column">
-									{!userHavePool ? (
+								<Flex
+									flexDirection="column"
+									alignItems={[
+										"flex-end",
+										"flex-end",
+										"flex-start",
+										"flex-start",
+									]}
+								>
+									{userHavePool && !isConnected ? (
 										<Button
 											fontSize="sm"
 											fontWeight="semibold"
-											py="0.625rem"
+											py="0.5rem"
 											px="1.5rem"
+											size="sm"
 											h="max-content"
 											bgColor={theme.bg.blueNavyLightness}
 											color={theme.text.cyanWhite}
@@ -236,6 +249,7 @@ export const PoolsContainer: NextPage = () => {
 												fontWeight="semibold"
 												py="0.5rem"
 												px="1rem"
+												size="sm"
 												h="max-content"
 												bgColor={theme.bg.blueNavyLightness}
 												color="white"

@@ -107,12 +107,7 @@ export const Header: React.FC = () => {
 				py="2"
 				justifyContent={["space-around", "space-between"]}
 			>
-				<Flex
-					w="25%"
-					gap={["2", "0"]}
-					justifyContent={["space-around", "space-between"]}
-					pl={["6", "0", "0", "0"]}
-				>
+				<Flex w="25%" gap={["2", "4"]} pl={["0", "2", "0", "0"]}>
 					<TokenButton onClick={onOpenPsysBreakdown} />
 					<NetworkButton />
 				</Flex>
@@ -123,6 +118,7 @@ export const Header: React.FC = () => {
 					<IconButton
 						_hover={{
 							background: theme.bg.iconBg,
+							color: theme.text.cyanLightPurple,
 						}}
 						aria-label="Theme"
 						icon={<theme.icon.theme />}
