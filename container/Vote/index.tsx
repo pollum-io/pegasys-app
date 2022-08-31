@@ -203,25 +203,28 @@ export const VoteContainer: NextPage<IVoteProps> = props => {
 							>
 								<Flex
 									bgColor={theme.bg.blueNavy}
-									h="15.188rem"
+									h="max-content"
 									w="100%"
 									borderTopRadius="xl"
 									flexDirection="column"
+									pb={["2", "4", "4", "4"]}
 								>
 									<Flex
-										alignItems="center"
-										justifyContent="center"
-										w="60%"
-										h="1.625rem"
+										flexDirection={["column", "column", "row", "row"]}
+										justifyContent="flex-start"
+										w={["91%", "65%", "60%", "60%"]}
+										h="max-content"
 										mt="1.5rem"
+										py="1"
 										backgroundColor="#48BB78"
 										borderRightRadius="full"
 									>
 										<Text
 											fontWeight="semibold"
 											color="white"
-											fontSize="13px"
+											fontSize="13"
 											pl="1rem"
+											pt={["0", "0", "0.04rem", "0.04rem"]}
 										>
 											EXECUTED
 										</Text>
@@ -230,69 +233,85 @@ export const VoteContainer: NextPage<IVoteProps> = props => {
 											color="white"
 											fontSize="12px"
 											pl="1rem"
+											pt={["0", "0", "0.04rem", "0.04rem"]}
 										>
 											Voting ended Ago 16, 2022 at 9:08 AM GMT-3
 										</Text>
 									</Flex>
-									<Flex mx="7" mt="4" flexDirection="column">
+									<Flex mx={["4", "5", "5", "5"]} mt="4" flexDirection="column">
 										<Text
+											mr={["4", "4", "4", "0"]}
 											fontWeight="semibold"
 											color={theme.text.mono}
-											fontSize="24px"
+											fontSize={["16px", "16", "24px", "24px"]}
 										>
 											Should the Pegasys community participate in the Protocol
 											Guild Pilot?
 										</Text>
 										<Flex
+											flexDirection={["column", "column", "row", "row"]}
 											bgColor="rgba(255, 255, 255, 0.04)"
 											w="100%"
-											h="4.563rem"
+											h="max-content"
 											borderRadius="xl"
 											mt="4"
 											py="2"
 											px="3"
 											justifyContent="space-between"
 											color={theme.text.mono}
+											flexWrap="wrap"
 										>
 											<Flex
 												justifyContent="space-between"
 												flexDirection="column"
+												w={["100%", "100%", "46%", "46%"]}
 											>
-												<Flex justifyContent="space-between" w="full-content">
+												<Flex
+													justifyContent="space-between"
+													w="full-content"
+													pb={["4", "4", "4", "4"]}
+													fontSize="14px"
+													fontWeight="600"
+													color={theme.text.mono}
+												>
 													<Text>For</Text>
 													<Flex>
-														<Text fontWeight="semibold" mr="0.563rem">
-															50,634,749
-														</Text>
-														<Text>/ 40,000,000</Text>
+														<Text mr="0.563rem">50,634,749</Text>
+														<Text fontWeight="400">/ 40,000,000</Text>
 													</Flex>
 												</Flex>
 												<Flex
-													w="16.625rem"
+													w="100%"
 													borderRadius="xl"
 													h="0.375rem"
 													bgColor="#48BB78"
-													mb="8px"
+													mb={["15px", "15px", "8px", "8px"]}
 												/>
 											</Flex>
 											<Flex
 												justifyContent="space-between"
 												flexDirection="column"
+												w={["100%", "100%", "46%", "46%"]}
 											>
-												<Flex justifyContent="space-between" w="full-content">
+												<Flex
+													justifyContent="space-between"
+													w="full-content"
+													pb={["4", "4", "4", "4"]}
+													fontSize="14px"
+													fontWeight="600"
+													color={theme.text.mono}
+												>
 													<Text color="">Against</Text>
 													<Flex>
-														<Text fontWeight="semibold" color={theme.text.mono}>
-															390
-														</Text>
+														<Text>390</Text>
 													</Flex>
 												</Flex>
 												<Flex
-													w="16.625rem"
+													w="100%"
 													borderRadius="xl"
 													h="0.375rem"
 													bgColor={theme.bg.voteGray}
-													mb="8px"
+													mb={["0", "0", "8px", "8px"]}
 												>
 													<Flex
 														w="3.313rem"
@@ -305,17 +324,24 @@ export const VoteContainer: NextPage<IVoteProps> = props => {
 										</Flex>
 									</Flex>
 								</Flex>
-								<Flex mx="7" mt="4" flexDirection="column" gap="5">
+								<Flex
+									mx={["4", "5", "5", "5"]}
+									mt={["7", "6", "6", "6"]}
+									flexDirection="column"
+									gap="7"
+								>
 									<Flex
 										justifyContent="flex-start"
-										w="full-content"
+										w="100%"
 										gap="3"
 										flexDirection="column"
+										color={theme.text.mono}
 									>
-										<Text fontWeight="bold" color={theme.text.mono}>
-											Details
-										</Text>
-										<Flex>
+										<Text fontWeight="bold">Details</Text>
+										<Flex
+											w="100%"
+											flexDirection={["column", "column", "row", "row"]}
+										>
 											<Text>1:</Text>
 											<Text
 												color={theme.text.cyanPurple}

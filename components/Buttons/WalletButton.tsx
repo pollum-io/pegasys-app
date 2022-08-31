@@ -79,7 +79,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 				</>
 			)}
 
-			{isConnected && !walletError && !isPending && (
+			{isConnected && !walletError && isPending && (
 				<>
 					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
 					<AddressButton
@@ -90,13 +90,17 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 					<ExpertMode />
 				</>
 			)}
-			{isConnected && isPending && (
+			{isConnected && !isPending && (
 				<>
 					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
+
 					<Flex
 						ml="20px"
-						zIndex="1"
-						mb="10px"
+						zIndex="2"
+						py={["2", "2", "2", "2"]}
+						position={["absolute", "relative"]}
+						left={["6", "32"]}
+						bottom={["12", "2.2rem"]}
 						w="2.313rem"
 						h="1.25rem"
 						borderRadius="xl"
@@ -115,7 +119,9 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 					<AddressButton
 						onClick={walletError ? onOpenSelectWalletModal : onOpenAddress}
 						pending={approvalState?.status === ApprovalState.PENDING}
-					/>
+					>
+						{shortAddress(walletAddress)}
+					</AddressButton>
 				</>
 			)}
 		</>
