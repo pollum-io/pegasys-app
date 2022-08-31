@@ -1,4 +1,10 @@
-import { Button, ButtonProps, Flex, Text } from "@chakra-ui/react";
+import {
+	Button,
+	ButtonProps,
+	Flex,
+	Text,
+	useColorMode,
+} from "@chakra-ui/react";
 import { SelectSyscoin, SelectWallets } from "components/Modals";
 import { useModal, usePicasso, useWallet } from "hooks";
 import { FunctionComponent } from "react";
@@ -33,6 +39,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 	} = useWallet();
 
 	const isPending = approvalState.status === ApprovalState.PENDING;
+	const { colorMode } = useColorMode();
 
 	return (
 		<>
@@ -79,7 +86,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 				</>
 			)}
 
-			{isConnected && !walletError && isPending && (
+			{isConnected && !walletError && !isPending && (
 				<>
 					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
 					<AddressButton
@@ -90,7 +97,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 					<ExpertMode />
 				</>
 			)}
-			{isConnected && !isPending && (
+			{isConnected && isPending && (
 				<>
 					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
 
@@ -107,11 +114,11 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						gap="1"
 						bgColor={theme.bg.blueLightPurple}
 						border="1px solid"
-						borderColor="#1A4A87"
+						borderColor={colorMode === "dark" ? "#1A4A87" : "transparent"}
 						alignItems="center"
 						justifyContent="center"
 					>
-						<Text fontSize="14px" mb="1px">
+						<Text fontSize="14px" color="white">
 							{pendingTxLength}
 						</Text>
 						<Flex className="circleLoadingPending" />

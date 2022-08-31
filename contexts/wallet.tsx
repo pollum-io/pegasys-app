@@ -56,6 +56,8 @@ interface IWeb3 {
 	setIsGovernance: React.Dispatch<React.SetStateAction<boolean>>;
 	setPendingTxLength: React.Dispatch<React.SetStateAction<number>>;
 	pendingTxLength: number;
+	showCancelled: boolean;
+	setShowCancelled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -80,6 +82,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [connectorSelected, setConnectorSelected] = useState<IWalletInfo>();
 	const [expert, setExpert] = useState<boolean>(false);
 	const [otherWallet, setOtherWallet] = useState<boolean>(false);
+	const [showCancelled, setShowCancelled] = useState<boolean>(false);
 	const [isGovernance, setIsGovernance] = useState<boolean>(false);
 	const [userSlippageTolerance, setUserSlippageTolerance] = useState<number>(
 		INITIAL_ALLOWED_SLIPPAGE
@@ -290,6 +293,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setIsGovernance,
 			setPendingTxLength,
 			pendingTxLength,
+			showCancelled,
+			setShowCancelled,
 		}),
 		[
 			isConnected,
