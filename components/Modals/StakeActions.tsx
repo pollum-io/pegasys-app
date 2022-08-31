@@ -57,19 +57,23 @@ export const StakeActions: React.FC<IModal> = props => {
 	}, []);
 
 	return (
-		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				mt="10rem"
+				mt={["0", "0", "10rem", "10rem"]}
 				mb="0"
 				position={["absolute", "absolute", "relative", "relative"]}
 				bottom="0"
-				maxHeight="90%"
 				w={["100vw", "100vw", "max-content", "max-content"]}
 				h={["max-content", "max-content", "max-content", "max-content"]}
 				borderRadius="3xl"
 				bgColor={theme.bg.blueNavyLight}
-				border="1px solid transparent"
+				border={[
+					"none",
+					"none",
+					"1px solid transparent",
+					"1px solid transparent",
+				]}
 				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
 				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>

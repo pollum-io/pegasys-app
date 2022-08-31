@@ -131,7 +131,10 @@ const usePicasso = () => {
 				"rgba(255, 255, 255, 0.08)"
 			),
 			bluePurple: useColorModeValue("#8C15E8", "#0753B2"),
-			topHeader: useColorModeValue("#FFFFFF", "#000000"),
+			topHeader: useColorModeValue(
+				"rgba(255, 255, 255, 0.24);",
+				"rgba(255, 255, 255, 0.24);"
+			),
 			primary: useColorModeValue("#EDF2F7", "#000913"),
 			secondary: useColorModeValue("gray.300", "#171923"), // tooltip background
 			bgPrimary: useColorModeValue("#f7f8fa", "#2c2f36"),

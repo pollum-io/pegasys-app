@@ -118,6 +118,7 @@ export const Header: React.FC = () => {
 					<IconButton
 						_hover={{
 							background: theme.bg.iconBg,
+							color: theme.text.cyanLightPurple,
 						}}
 						aria-label="Theme"
 						icon={<theme.icon.theme />}

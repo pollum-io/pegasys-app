@@ -326,8 +326,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		}
 	};
 
-	const switchTokensPosition = () =>
+	const switchTokensPosition = () => {
 		setSelectedToken(prevState => [...prevState]?.reverse());
+	};
 
 	const { execute: onWrap } = UseWrapCallback(
 		selectedToken,

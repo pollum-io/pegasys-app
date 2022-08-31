@@ -40,7 +40,7 @@ export const FarmActions: React.FC<IModal> = props => {
 	const [showTooltip, setShowTooltip] = React.useState(false);
 
 	return (
-		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
 				mt={["8rem", "8", "10rem", "10rem"]}

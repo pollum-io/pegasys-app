@@ -93,6 +93,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 					bgColor="transparent"
 					_hover={{
 						background: theme.bg.iconBg,
+						color: theme.text.cyanLightPurple,
 					}}
 					aria-label="Popover"
 					icon={<MdSettings size={25} />}
