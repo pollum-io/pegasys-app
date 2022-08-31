@@ -95,8 +95,20 @@ const usePicasso = () => {
 				"images/backgrounds/BannerPools.png"
 			),
 			poolsBannerMobile: useColorModeValue(
-				"images/backgrounds/LightBannerPool.png",
+				"images/backgrounds/BannerPoolsMobileLightmode.png",
 				"images/backgrounds/BannerPoolsMobile.png"
+			),
+			farmBannerMobile: useColorModeValue(
+				"images/backgrounds/BannerFarmMobileLightmode.png",
+				"images/backgrounds/BannerFarmMobileDarkMode.png"
+			),
+			stakeBannerMobile: useColorModeValue(
+				"images/backgrounds/BannerStakeMobileLightmode.png",
+				"images/backgrounds/BannerStakeMobileDarkmode.png"
+			),
+			aidropBannerMobile: useColorModeValue(
+				"images/backgrounds/BannerAidropMobileLightmode.png",
+				"images/backgrounds/BannerAidropMobileDarkmode.png"
 			),
 			farmActions: useColorModeValue("white", "#0B172C"),
 			max: useColorModeValue("#EDF2F7", "#081120"),

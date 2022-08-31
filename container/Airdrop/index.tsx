@@ -1,5 +1,13 @@
 import { NextPage } from "next";
-import { Button, Flex, Icon, Img, Link, Text } from "@chakra-ui/react";
+import {
+	Button,
+	Flex,
+	Icon,
+	Img,
+	Link,
+	Text,
+	useMediaQuery,
+} from "@chakra-ui/react";
 import { usePicasso, useWallet } from "hooks";
 import { SiDiscord, SiTwitter } from "react-icons/si";
 import { FaTelegramPlane } from "react-icons/fa";
@@ -9,6 +17,7 @@ import { BorderAnimation } from "components/Airdrop/BorderAnimation";
 
 export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	const { isConnected } = useWallet();
 
@@ -36,10 +45,9 @@ export const AirdropContainer: NextPage = () => {
 					borderTopRadius="2xl"
 					backgroundColor="transparent"
 					w={["20rem", "md", "2xl", "2xl"]}
-					box-shadow=" 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04)"
 				>
 					<Img
-						src={theme.bg.psysAirdrop}
+						src={isMobile ? theme.bg.aidropBannerMobile : theme.bg.psysAirdrop}
 						position="absolute"
 						zIndex="base"
 						w="100%"

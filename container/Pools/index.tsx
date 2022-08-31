@@ -10,6 +10,7 @@ import {
 	MenuList,
 	Text,
 	InputLeftElement,
+	useMediaQuery,
 } from "@chakra-ui/react";
 import {
 	AddLiquidityModal,
@@ -34,6 +35,7 @@ export const PoolsContainer: NextPage = () => {
 		onCloseAddLiquidity,
 	} = useModal();
 
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const [isCreate, setIsCreate] = useState(false);
 	const [haveValue] = useState(false);
 	const { isConnected } = useWallet();
@@ -73,7 +75,7 @@ export const PoolsContainer: NextPage = () => {
 					>
 						<Img
 							borderRadius="xl"
-							src={theme.bg.poolsBannerMobile}
+							src={isMobile ? theme.bg.poolsBannerMobile : theme.bg.poolsBanner}
 							position="absolute"
 							zIndex="base"
 							w="100%"

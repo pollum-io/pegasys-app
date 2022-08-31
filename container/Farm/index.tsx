@@ -11,6 +11,7 @@ import {
 	MenuButton,
 	Icon,
 	Box,
+	useMediaQuery,
 } from "@chakra-ui/react";
 import { FarmCards } from "components/Farm/FarmCards";
 import { usePicasso } from "hooks";
@@ -19,6 +20,7 @@ import { MdOutlineCallMade, MdSearch, MdExpandMore } from "react-icons/md";
 
 export const FarmContainer: NextPage = () => {
 	const theme = usePicasso();
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	return (
 		<Flex
@@ -38,7 +40,7 @@ export const FarmContainer: NextPage = () => {
 				>
 					<Img
 						borderRadius="xl"
-						src={theme.bg.farmBanner}
+						src={isMobile ? theme.bg.farmBannerMobile : theme.bg.farmBanner}
 						position="absolute"
 						zIndex="base"
 						w="100%"
