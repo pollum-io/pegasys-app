@@ -59,13 +59,6 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 			? "Approve"
 			: "Swap";
 
-	const receiveEstimatedValue = !isWrap
-		? trade?.outputAmount.toSignificant(4)
-		: tokenInputValue?.inputTo?.value;
-
-	const receiveOutput = !isWrap
-		? trade?.outputAmount?.currency.symbol
-		: selectedTokens[1]?.symbol;
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
@@ -132,9 +125,8 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 						</Flex>
 					</Flex>
 					<Text fontSize="sm" color={theme.text.mono}>
-						Output is estimated. You will receive at least{" "}
-						{receiveEstimatedValue} {receiveOutput} or the transaction will
-						revert.
+						Output is estimated. You will receive at least {minimumReceived} or
+						the transaction will revert.
 					</Text>
 				</ModalBody>
 				<Flex

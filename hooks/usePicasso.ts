@@ -69,6 +69,7 @@ const usePicasso = () => {
 			theme: useColorModeValue(BsFillSunFill, BsFillMoonFill),
 		},
 		bg: {
+			candleGraphColor: useColorModeValue("#153d6f69", "#153d6f69"),
 			bluePink: useColorModeValue("#FAF5FF", "#0B172C"),
 			stakeBanner: useColorModeValue(
 				"/images/backgrounds/LightBannerStake.png",

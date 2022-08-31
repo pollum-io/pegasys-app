@@ -18,7 +18,7 @@ import {
 	RemoveLiquidity,
 } from "components";
 import { PoolCards } from "components/Pools/PoolCards";
-import { usePicasso, useWallet, useToasty, useModal } from "hooks";
+import { usePicasso, useWallet, useModal } from "hooks";
 import { NextPage } from "next";
 import { useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
@@ -39,7 +39,7 @@ export const PoolsContainer: NextPage = () => {
 	const [isCreate, setIsCreate] = useState(false);
 	const [haveValue] = useState(false);
 	const { isConnected } = useWallet();
-	const [userHavePool, setUserHavePool] = useState(true);
+	const [userHavePool] = useState(true);
 
 	return (
 		<Flex justifyContent="center" alignItems="center">

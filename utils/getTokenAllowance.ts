@@ -7,14 +7,16 @@ export async function getTokenAllowance(
 	owner: string,
 	spender: string,
 	signer: Signer
-): Promise<TokenAmount | undefined> {
-	const contract = await getContract(token?.address, signer);
-
-	const inputs = [owner, spender];
-	const allowance = await singleCall(contract as Contract, "allowance");
-	const allowanceValue = await allowance(inputs[0], inputs[1]);
-
-	return token && allowance
-		? new TokenAmount(token, allowanceValue.toString())
-		: undefined;
+): Promise<TokenAmount | undefined | null> {
+	if (token) {
+		const contract = await getContract(token?.address, signer);
+		const inputs = [owner, spender];
+		const allowance = await singleCall(contract as Contract, "allowance");
+		const allowanceValue = await allowance(inputs[0], inputs[1]);
+		if (allowanceValue && token) {
+			return new TokenAmount(token, allowanceValue.toString());
+		}
+		return undefined;
+	}
+	return null;
 }

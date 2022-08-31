@@ -4,8 +4,6 @@ import {
 	Icon,
 	Img,
 	Input,
-	InputGroup,
-	InputRightAddon,
 	Modal,
 	ModalBody,
 	ModalContent,

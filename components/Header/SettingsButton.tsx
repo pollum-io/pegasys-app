@@ -14,9 +14,12 @@ import {
 	Tooltip,
 	PopoverCloseButton,
 } from "@chakra-ui/react";
-import React, { FunctionComponent, ReactNode, useEffect } from "react";
+import React, { FunctionComponent, ReactNode, useState } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
+import { IoWarningOutline } from "react-icons/io5";
 import { usePicasso, useWallet } from "hooks";
+import { mockedSlippageValues } from "helpers/mockedData";
+import { useTranslation } from "react-i18next";
 import { IconButton } from "../Buttons/IconButton";
 import { SlippageButton } from "../Buttons/SlippageButton";
 import { Languages } from "./Languages";
@@ -25,9 +28,16 @@ interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
 }
 
+enum SlippageError {
+	InvalidInput = "InvalidInput",
+	RiskyLow = "RiskyLow",
+	RiskyHigh = "RiskyHigh",
+}
+
 export const SettingsButton: FunctionComponent<IButtonProps> = props => {
+	const [slippageInputValue, setSlippageInputValue] = useState<string>("");
+
 	const theme = usePicasso();
-	// const [expert, setExpert] = useState(false)
 	const {
 		userSlippageTolerance,
 		setUserSlippageTolerance,
@@ -35,6 +45,46 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 		expert,
 		isConnected,
 	} = useWallet();
+
+	const { t: translation } = useTranslation();
+
+	const slippageInputIsValid =
+		slippageInputValue === "" ||
+		(userSlippageTolerance / 100).toFixed(2) ===
+			Number.parseFloat(slippageInputValue).toFixed(2);
+
+	let slippageInputErrors: SlippageError | undefined;
+
+	if (slippageInputValue !== "" && !slippageInputIsValid) {
+		slippageInputErrors = SlippageError.InvalidInput;
+	} else if (slippageInputIsValid && userSlippageTolerance < 50) {
+		slippageInputErrors = SlippageError.RiskyLow;
+	} else if (slippageInputIsValid && userSlippageTolerance > 500) {
+		slippageInputErrors = SlippageError.RiskyHigh;
+	} else {
+		slippageInputErrors = undefined;
+	}
+
+	const parseSlippageCustomValue = (slippageValue: string) => {
+		if (slippageValue === "") {
+			setUserSlippageTolerance(50);
+			setSlippageInputValue("");
+			return;
+		}
+
+		setSlippageInputValue(slippageValue);
+
+		const valueAsIntFromRoundedFloat = parseFloat(
+			(Number(slippageValue) * 100).toString()
+		);
+
+		if (
+			!Number.isNaN(valueAsIntFromRoundedFloat) &&
+			valueAsIntFromRoundedFloat < 5000
+		) {
+			setUserSlippageTolerance(valueAsIntFromRoundedFloat);
+		}
+	};
 
 	return (
 		<Popover placement="right">
@@ -118,81 +168,96 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								</Tooltip>
 							</Flex>
 						</Flex>
-						<Flex flexDirection="row" py="0.5rem">
+						<Flex flexDirection="row" py="0.5rem" alignItems="center">
+							{mockedSlippageValues.map(slippageValue => (
+								<SlippageButton
+									key={slippageValue.id}
+									aria-label="Slip"
+									mr="3"
+									onClick={() => {
+										setUserSlippageTolerance(slippageValue.valueInBips);
+										setSlippageInputValue("");
+									}}
+									bgColor={
+										userSlippageTolerance === slippageValue.valueInBips
+											? theme.bg.slippage
+											: "transparent"
+									}
+									color={
+										userSlippageTolerance === slippageValue.valueInBips
+											? theme.text.mono
+											: theme.text.transactionsItems
+									}
+								>
+									{slippageValue.valueInBips / 100}%
+								</SlippageButton>
+							))}
+
 							<SlippageButton
 								aria-label="Slip"
-								mr="3"
-								onClick={() => setUserSlippageTolerance(10)}
-								bgColor={
-									userSlippageTolerance === 10
-										? theme.bg.slippage
-										: "transparent"
-								}
-								color={
-									userSlippageTolerance === 10
-										? theme.text.mono
-										: theme.text.transactionsItems
-								}
-							>
-								0.1%
-							</SlippageButton>
-							<SlippageButton
-								aria-label="Slip"
-								mr="3"
-								onClick={() => setUserSlippageTolerance(50)}
-								bgColor={
-									userSlippageTolerance === 50
-										? theme.bg.slippage
-										: "transparent"
-								}
-								color={
-									userSlippageTolerance === 50
-										? theme.text.mono
-										: theme.text.transactionsItems
-								}
-							>
-								0.5%
-							</SlippageButton>
-							<SlippageButton
-								aria-label="Slip"
-								mr="3"
-								py="0.5rem"
-								px="1rem"
-								onClick={() => setUserSlippageTolerance(100)}
-								bgColor={
-									userSlippageTolerance === 100
-										? theme.bg.slippage
-										: "transparent"
-								}
-								color={
-									userSlippageTolerance === 100
-										? theme.text.mono
-										: theme.text.transactionsItems
-								}
-							>
-								1%
-							</SlippageButton>
-							<Input
-								w="25%"
-								h="max-content"
-								py="0.3rem"
-								px="0.3rem"
-								m="0"
+								w="30%"
+								padding="0"
 								borderRadius={36}
-								type="number"
-								onChange={e =>
-									setUserSlippageTolerance(Number(e.target.value) * 10)
-								}
-								placeholder="1.0%"
-								fontWeight="semibold"
 								border="1px solid"
-								borderColor={theme.border.borderSettings}
-								textAlign="center"
-								_focus={{
-									outline: "none",
-								}}
-							/>
+								borderColor={
+									!slippageInputIsValid
+										? "#FF6871"
+										: theme.border.borderSettings
+								}
+							>
+								<Flex alignItems="center">
+									{!!slippageInputValue &&
+									(slippageInputErrors === SlippageError.RiskyLow ||
+										slippageInputErrors === SlippageError.RiskyHigh) ? (
+										<Text
+											role="img"
+											aria-label="warning"
+											position="absolute"
+											left="10px"
+										>
+											<IoWarningOutline color="yellow" />
+										</Text>
+									) : null}
+									<Input
+										w="100%"
+										h="max-content"
+										py="0.3rem"
+										px="0.3rem"
+										m="0"
+										border="none"
+										value={slippageInputValue}
+										type="number"
+										color={!slippageInputIsValid ? "red" : ""}
+										onChange={e => parseSlippageCustomValue(e.target.value)}
+										placeholder="1.0%"
+										fontWeight="normal"
+										textAlign="center"
+										_focus={{
+											outline: "none",
+										}}
+									/>
+									<Text position="absolute" left="75%">
+										%
+									</Text>
+								</Flex>
+							</SlippageButton>
 						</Flex>
+						{!!slippageInputErrors && (
+							<Text
+								fontSize="sm"
+								color={
+									slippageInputErrors === SlippageError.InvalidInput
+										? "red"
+										: "#F3841E"
+								}
+							>
+								{slippageInputErrors === SlippageError.InvalidInput
+									? translation("transactionSettings.enterValidSlippage")
+									: slippageInputErrors === SlippageError.RiskyLow
+									? translation("transactionSettings.transactionMayFail")
+									: translation("transactionSettings.transactionMayFrontrun")}
+							</Text>
+						)}
 						<Flex alignItems="center" flexDirection="row" pt="0.1rem" mt="4">
 							<Text
 								fontSize="md"

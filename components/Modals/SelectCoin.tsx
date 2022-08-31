@@ -15,7 +15,6 @@ import {
 	Text,
 	Tooltip,
 	InputGroup,
-	InputLeftElement,
 } from "@chakra-ui/react";
 import {
 	ApprovalState,

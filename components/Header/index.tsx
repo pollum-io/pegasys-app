@@ -1,5 +1,5 @@
 import { Flex, Icon, Img, Link, useColorMode } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React from "react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
 import { useModal, usePicasso } from "hooks";
@@ -18,15 +18,7 @@ export const Header: React.FC = () => {
 	const { pathname } = useRouter();
 	const { isOpenPsysBreakdown, onOpenPsysBreakdown, onClosePsysBreakdown } =
 		useModal();
-	const [nav, setNav] = useState(false);
 
-	const isNav = () => {
-		if (nav) {
-			return "white";
-		}
-
-		return null;
-	};
 	const links = [
 		{
 			name: "Swap",

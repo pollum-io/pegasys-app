@@ -18,13 +18,7 @@ interface IModal {
 export const SelectWallets: React.FC<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
-	const {
-		connecting,
-		connectorSelected,
-		setConnecting,
-		provider,
-		isConnected,
-	} = useWallet();
+	const { connecting, connectorSelected } = useWallet();
 
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
