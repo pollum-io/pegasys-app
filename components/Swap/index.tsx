@@ -100,6 +100,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setCurrentInputTokenName,
 		expert,
 		otherWallet,
+		userTransactionDeadlineValue,
 	} = useWallet();
 
 	// END HOOKS IMPORTED VALUES
@@ -266,6 +267,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		UseSwapCallback(
 			returnedTradeValue?.v2Trade,
 			userSlippageTolerance,
+			userTransactionDeadlineValue,
 			walletInfos,
 			signer,
 			setTransactions,
@@ -359,6 +361,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			walletInfos,
 			translation,
 			userSlippageTolerance,
+			userTransactionDeadlineValue,
 			signer as Signer
 		);
 
@@ -503,6 +506,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		tokenInputValue?.inputFrom?.value,
 		tokenInputValue?.inputTo?.value,
 		userSlippageTolerance,
+		userTransactionDeadlineValue,
 		selectedToken[0]?.address,
 		selectedToken[1]?.address,
 	]);

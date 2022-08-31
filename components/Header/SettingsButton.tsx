@@ -20,6 +20,7 @@ import { IoWarningOutline } from "react-icons/io5";
 import { usePicasso, useWallet } from "hooks";
 import { mockedSlippageValues } from "helpers/mockedData";
 import { useTranslation } from "react-i18next";
+import { DEFAULT_DEADLINE_FROM_NOW } from "helpers/consts";
 import { IconButton } from "../Buttons/IconButton";
 import { SlippageButton } from "../Buttons/SlippageButton";
 import { Languages } from "./Languages";
@@ -34,19 +35,48 @@ enum SlippageError {
 	RiskyHigh = "RiskyHigh",
 }
 
+enum DeadlineError {
+	InvalidInput = "InvalidInput",
+}
+
 export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	const [slippageInputValue, setSlippageInputValue] = useState<string>("");
+	const [deadlineInputValue, setDeadlineInputValue] = useState<string>("");
 
 	const theme = usePicasso();
 	const {
 		userSlippageTolerance,
 		setUserSlippageTolerance,
+		userTransactionDeadlineValue,
+		setUserTransactionDeadlineValue,
 		setExpert,
 		expert,
 		isConnected,
 	} = useWallet();
 
 	const { t: translation } = useTranslation();
+
+	// Transaction Slippage handlers - Validations //
+	const parseCustomTransactionSlippageValue = (slippageValue: string) => {
+		if (slippageValue === "") {
+			setUserSlippageTolerance(50); // Reset slippage value if user let the input empty
+			setSlippageInputValue("");
+			return;
+		}
+
+		setSlippageInputValue(slippageValue);
+
+		const valueAsIntFromRoundedFloat = parseFloat(
+			(Number(slippageValue) * 100).toString()
+		);
+
+		if (
+			!Number.isNaN(valueAsIntFromRoundedFloat) &&
+			valueAsIntFromRoundedFloat < 5000
+		) {
+			setUserSlippageTolerance(valueAsIntFromRoundedFloat);
+		}
+	};
 
 	const slippageInputIsValid =
 		slippageInputValue === "" ||
@@ -65,26 +95,46 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 		slippageInputErrors = undefined;
 	}
 
-	const parseSlippageCustomValue = (slippageValue: string) => {
-		if (slippageValue === "") {
-			setUserSlippageTolerance(50);
-			setSlippageInputValue("");
+	// END Transaction Slippage handlers - Validations //
+
+	// Transaction Deadline handlers - Validations //
+
+	const parseCustomTransactionDeadlineValue = (deadlineValue: string) => {
+		if (deadlineValue === "") {
+			setUserTransactionDeadlineValue(DEFAULT_DEADLINE_FROM_NOW); // Reset deadline value if user let the input empty
+			setDeadlineInputValue("");
 			return;
 		}
 
-		setSlippageInputValue(slippageValue);
+		setDeadlineInputValue(deadlineValue);
 
-		const valueAsIntFromRoundedFloat = parseFloat(
-			(Number(slippageValue) * 100).toString()
-		);
+		const transformValueAsInt: number = Number(deadlineValue) * 60;
 
-		if (
-			!Number.isNaN(valueAsIntFromRoundedFloat) &&
-			valueAsIntFromRoundedFloat < 5000
-		) {
-			setUserSlippageTolerance(valueAsIntFromRoundedFloat);
+		if (!Number.isNaN(transformValueAsInt) && transformValueAsInt > 0) {
+			setUserTransactionDeadlineValue(transformValueAsInt);
 		}
 	};
+
+	const deadlineInputIsValid =
+		deadlineInputValue === "" ||
+		(Number(userTransactionDeadlineValue) / 60).toString() ===
+			deadlineInputValue;
+
+	let deadlineInputError: DeadlineError | undefined;
+
+	if (deadlineInputValue !== "" && !deadlineInputIsValid) {
+		deadlineInputError = DeadlineError.InvalidInput;
+	} else {
+		deadlineInputError = undefined;
+	}
+
+	console.log("deadlineInputError", deadlineInputError);
+
+	console.log("userDeadline", userTransactionDeadlineValue);
+
+	// END Transaction Deadline handlers - Validations //
+
+	// console.log('deadline', (userSlippageTolerance / 100).toFixed(2))
 
 	return (
 		<Popover placement="right">
@@ -228,8 +278,10 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 										value={slippageInputValue}
 										type="number"
 										color={!slippageInputIsValid ? "red" : ""}
-										onChange={e => parseSlippageCustomValue(e.target.value)}
-										placeholder="1.0%"
+										onChange={e =>
+											parseCustomTransactionSlippageValue(e.target.value)
+										}
+										placeholder={(userSlippageTolerance / 100).toFixed(2)}
 										fontWeight="normal"
 										textAlign="center"
 										_focus={{
@@ -295,16 +347,25 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								py="0.2rem"
 								px="0.4rem"
 								mr="3"
+								color={deadlineInputError ? "red" : undefined}
 								borderRadius={36}
-								placeholder="60"
+								placeholder={(
+									Number(userTransactionDeadlineValue) / 60
+								).toString()}
 								textAlign="center"
 								fontWeight="normal"
 								fontSize="md"
 								border="1px solid"
-								borderColor={theme.border.borderSettings}
+								borderColor={
+									deadlineInputError ? "#FF6871" : theme.border.borderSettings
+								}
+								value={deadlineInputValue}
 								_focus={{
 									outline: "none",
 								}}
+								onChange={e =>
+									parseCustomTransactionDeadlineValue(e.target.value)
+								}
 							/>
 							<Text color={theme.text.mono}>Minutes</Text>
 						</Flex>
