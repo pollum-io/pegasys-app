@@ -72,7 +72,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 					bg="transparent"
 					_hover={{
 						background: "rgba(255, 255, 255, 0.08)",
-						color: theme.text.cyan,
+						color: theme.text.cyanLightPurple,
 					}}
 					_expanded={{ color: theme.text.cyan }}
 				/>
@@ -94,7 +94,8 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 				<Flex
 					justifyContent="flex-end"
 					zIndex="99"
-					pr="0rem"
+					pr="0.3rem"
+					pt="0.5rem"
 					display={{
 						base: "flex",
 						sm: "flex",

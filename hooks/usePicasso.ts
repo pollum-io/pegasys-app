@@ -95,6 +95,22 @@ const usePicasso = () => {
 				"images/backgrounds/LightBannerPool.png",
 				"images/backgrounds/BannerPools.png"
 			),
+			poolsBannerMobile: useColorModeValue(
+				"images/backgrounds/BannerPoolsMobileLightmode.png",
+				"images/backgrounds/BannerPoolsMobile.png"
+			),
+			farmBannerMobile: useColorModeValue(
+				"images/backgrounds/BannerFarmMobileLightmode.png",
+				"images/backgrounds/BannerFarmMobileDarkMode.png"
+			),
+			stakeBannerMobile: useColorModeValue(
+				"images/backgrounds/BannerStakeMobileLightmode.png",
+				"images/backgrounds/BannerStakeMobileDarkmode.png"
+			),
+			aidropBannerMobile: useColorModeValue(
+				"images/backgrounds/BannerAidropMobileLightmode.png",
+				"images/backgrounds/BannerAidropMobileDarkmode.png"
+			),
 			farmActions: useColorModeValue("white", "#0B172C"),
 			max: useColorModeValue("#EDF2F7", "#081120"),
 			farmActionsHover: useColorModeValue("rgba(102, 94, 225, 0.3)", "#BEE3F8"),
@@ -115,7 +131,10 @@ const usePicasso = () => {
 				"rgba(255, 255, 255, 0.08)"
 			),
 			bluePurple: useColorModeValue("#8C15E8", "#0753B2"),
-			topHeader: useColorModeValue("#FFFFFF", "#000000"),
+			topHeader: useColorModeValue(
+				"rgba(255, 255, 255, 0.24);",
+				"rgba(255, 255, 255, 0.24);"
+			),
 			primary: useColorModeValue("#EDF2F7", "#000913"),
 			secondary: useColorModeValue("gray.300", "#171923"), // tooltip background
 			bgPrimary: useColorModeValue("#f7f8fa", "#2c2f36"),

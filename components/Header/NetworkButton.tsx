@@ -21,7 +21,6 @@ export const NetworkButton: FunctionComponent<IButtonProps> = props => {
 			transition="0.2s"
 			_hover={{}}
 			_active={{}}
-			ml={`${currentNetworkChainId === 5700 && "5"}`}
 		>
 			{children}
 			{isConnected

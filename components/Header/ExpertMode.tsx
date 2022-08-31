@@ -32,7 +32,7 @@ export const ExpertMode: FunctionComponent = () => {
 					h={["2.2rem", "max-content", "max-content", "max-content"]}
 					px={["4", "2.5rem", "2.5rem", "2.5rem"]}
 					pt={["0", "4", "4", "4"]}
-					ml={["0.3rem", "1.1rem", "1rem", "0.4rem"]}
+					ml={["0.3rem", "1.1rem", "1rem", "1rem"]}
 					bottom={["3.1rem", "1.5rem", "1.5rem", "1.5rem"]}
 					color={theme.text.mono}
 					alignItems="center"

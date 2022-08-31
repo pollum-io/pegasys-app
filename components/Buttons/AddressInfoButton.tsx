@@ -74,13 +74,19 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 			<ModalOverlay />
 			<ModalContent
 				borderRadius={18}
+				borderBottomRadius={["0", "18"]}
 				my={["0", "40", "40", "0"]}
 				mb={["0", "0", "24rem", "24rem"]}
 				h="max-content"
 				position="absolute"
 				bottom={["0", "0", "none", "none"]}
 			>
-				<ModalHeader borderTopRadius={18} bgColor={theme.bg.blueNavyLight}>
+				<ModalHeader
+					borderTopRadius={18}
+					bgColor={theme.bg.blueNavyLight}
+					pt="1.5rem"
+					pb="1rem"
+				>
 					<Flex alignItems="center" justifyContent="space-between">
 						<Text fontSize="lg" fontWeight="semibold">
 							Account
@@ -105,7 +111,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 						>
 							<Flex>
 								<Text
-									fontSize="md"
+									fontSize={["sm", "sm", "md", "md"]}
 									fontWeight="semibold"
 									color={theme.text.cyanPurple}
 								>
@@ -122,7 +128,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									w="max-content"
 									h="max-content"
 									color={theme.text.whitePurple}
-									fontSize="sm"
+									fontSize={["xs", "xs", "sm", "sm"]}
 									fontWeight="bold"
 									alignItems="center"
 									bgColor="transparent"
@@ -183,7 +189,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									fontWeight="normal"
 									pl="1"
 								>
-									View on the Explorer
+									View on Explorer
 								</Text>
 							</Flex>
 						</Flex>
@@ -192,8 +198,9 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 				<ModalFooter
 					bgColor={theme.bg.blackGray}
 					justifyContent="flex-start"
-					borderBottomRadius={18}
+					borderBottomRadius={["0", "18"]}
 					h="max-content"
+					pb={["3.75rem", "3.75rem", "0", "0"]}
 				>
 					{txs.length === 0 ? (
 						<Text fontSize="sm" fontWeight="semibold" color={theme.text.mono}>
