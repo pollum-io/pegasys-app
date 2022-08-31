@@ -181,7 +181,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const wrapOrUnwrap = selectedToken[0]?.symbol === "SYS" ? "Wrap" : "Unwrap";
 
 	const submitValidation = [
-		isConnected && tokenInputValue.lastInputTyped === 0
+		isConnected &&
+		parseFloat(tokenInputValue.typedValue) > 0 &&
+		tokenInputValue.lastInputTyped === 0
 			? parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
 			  parseFloat(tokenInputValue?.inputFrom?.value)
 			: parseFloat(selectedToken[1]?.tokenInfo?.balance) >=
@@ -191,6 +193,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const canSubmit = submitValidation.every(validation => validation === true);
 
 	const wrapValidation = [
+		isConnected,
+		parseFloat(tokenInputValue.typedValue) > 0,
 		parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
 			parseFloat(tokenInputValue?.inputFrom?.value),
 		parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
@@ -201,7 +205,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			parseFloat(tokenInputValue?.inputFrom?.value),
 	];
 
-	const canWrap = wrapValidation.some(valid => valid === true);
+	const canWrap = wrapValidation.every(valid => valid === true);
 
 	const isWrap =
 		(selectedToken[0]?.symbol === "SYS" &&
@@ -921,7 +925,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"
-								disabled={!canSubmit || isPending}
+								disabled={!canSubmit}
 								_hover={{
 									opacity: 0.9,
 								}}
