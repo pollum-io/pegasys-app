@@ -193,10 +193,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const canSubmit = submitValidation.every(validation => validation === true);
 
 	const wrapValidation = [
-		isConnected &&
-			parseFloat(tokenInputValue.typedValue) > 0 &&
-			tokenInputValue.lastInputTyped === 0,
-		parseFloat(tokenInputValue.typedValue) > 0,
+		isConnected && parseFloat(tokenInputValue.typedValue) > 0,
 		parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
 			parseFloat(tokenInputValue?.inputFrom?.value),
 		parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
@@ -615,9 +612,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								tokenInputValue.currentInputTyped === "inputFrom" &&
 								parseFloat(tokenInputValue.inputFrom.value) >
 									parseFloat(selectedToken[0]?.balance)) ||
-							parseFloat(tokenInputValue.inputFrom.value) === 0 ||
-							(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap) ||
-							(isConnected && Boolean(tokenInputValue.inputFrom.value === ""))
+							(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap)
 								? theme.text.red400
 								: "#ff000000"
 						}
@@ -710,19 +705,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							)}
 						</Flex>
 					)}
-					{isConnected &&
-						(tokenInputValue.inputFrom.value === "" ||
-							parseFloat(tokenInputValue.inputFrom.value) === 0) && (
-							<Text
-								fontSize="sm"
-								pt="2"
-								textAlign="center"
-								fontWeight="semibold"
-								color={theme.text.red400}
-							>
-								{translation("swapHooks.enterAmount")}
-							</Text>
-						)}
 					<Flex
 						margin="0 auto"
 						py="4"
@@ -894,14 +876,18 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							color={theme.text.cyan}
 							fontSize="lg"
 							fontWeight="semibold"
-							disabled={!canSubmit}
+							disabled={!canSubmit || Boolean(returnedTradeValue?.inputErrors)}
 							_hover={
 								canSubmit
 									? { bgColor: theme.bg.bluePurple }
 									: { opacity: "0.3" }
 							}
 						>
-							{swapButtonValidation}
+							{isConnected &&
+							(tokenInputValue.typedValue === "" ||
+								parseFloat(tokenInputValue.typedValue) === 0)
+								? translation("swapHooks.enterAmount")
+								: `${swapButtonValidation}`}
 						</Button>
 					)}
 					<Flex>
@@ -933,11 +919,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								}}
 							>
 								{isConnected
-									? `${
-											approveValidation && !alreadyApproved
-												? translation("swapPage.approve")
-												: translation("swapPage.swap")
-									  }`
+									? tokenInputValue.typedValue === "" ||
+									  parseFloat(tokenInputValue.typedValue) === 0
+										? translation("swapHooks.enterAmount")
+										: `${
+												approveValidation && !alreadyApproved
+													? translation("swapPage.approve")
+													: translation("swapPage.swap")
+										  }`
 									: `${swapButtonValidation}`}
 							</Button>
 						)}
@@ -957,9 +946,21 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"
-								disabled={!canWrap}
+								disabled={
+									!canWrap ||
+									(tokenInputValue.currentInputTyped === "inputFrom" &&
+										parseFloat(tokenInputValue.typedValue) >
+											parseFloat(selectedToken[0]?.tokenInfo?.balance)) ||
+									(tokenInputValue.currentInputTyped === "inputTo" &&
+										parseFloat(tokenInputValue.typedValue) >
+											parseFloat(selectedToken[1]?.tokenInfo?.balance))
+								}
 							>
-								{isConnected ? `${wrapOrUnwrap}` : `${swapButtonValidation}`}
+								{isConnected &&
+								(tokenInputValue.typedValue === "" ||
+									parseFloat(tokenInputValue.typedValue) === 0)
+									? translation("swapHooks.enterAmount")
+									: `${wrapOrUnwrap}`}
 							</Button>
 						)}
 					</Flex>
