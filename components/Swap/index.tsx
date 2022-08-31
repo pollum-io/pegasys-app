@@ -160,8 +160,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		IReturnedTradeValues | undefined
 	>(undefined);
 
-	const [isSSR, setIsSSR] = useState(true);
-
 	const [approveTokenStatus, setApproveTokenStatus] = useState<ApprovalState>(
 		ApprovalState.UNKNOWN
 	);
@@ -526,12 +524,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		}
 		return null;
 	}, [expert]);
-
-	useEffect(() => {
-		setIsSSR(false);
-	}, []);
-
-	if (isSSR) return null;
 
 	// END REACT HOOKS //
 

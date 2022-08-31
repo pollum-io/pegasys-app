@@ -128,10 +128,6 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 		deadlineInputError = undefined;
 	}
 
-	console.log("deadlineInputError", deadlineInputError);
-
-	console.log("userDeadline", userTransactionDeadlineValue);
-
 	// END Transaction Deadline handlers - Validations //
 
 	// console.log('deadline', (userSlippageTolerance / 100).toFixed(2))
@@ -367,7 +363,9 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 									parseCustomTransactionDeadlineValue(e.target.value)
 								}
 							/>
-							<Text color={theme.text.mono}>Minutes</Text>
+							<Text color={theme.text.mono}>
+								{translation("transactionSettings.minutes")}
+							</Text>
 						</Flex>
 						<Flex
 							alignItems={["flex-start", "center", "center", "center"]}
