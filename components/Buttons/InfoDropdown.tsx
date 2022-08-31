@@ -46,9 +46,9 @@ export const InfoDropdown: FunctionComponent = () => {
 		<Accordion allowMultiple>
 			<AccordionItem border="none">
 				<AccordionButton
-					pl={["24", "36", "4", "4"]}
-					pr={["24", "36", "4", "4"]}
-					py={["3", "3", "2", "2"]}
+					pl={["24", "36", "6", "6"]}
+					pr={["24", "36", "6", "6"]}
+					py={["2", "2", "1", "1"]}
 					_expanded={{
 						bg: theme.bg.blackLightness,
 						color: theme.text.cyanPurple,
@@ -64,7 +64,7 @@ export const InfoDropdown: FunctionComponent = () => {
 					<Icon as={MdOutlineCallMade} />
 					<Box
 						flex="1"
-						pl="2"
+						pl="0.5rem"
 						pr="10"
 						textAlign="left"
 						fontSize="md"
@@ -111,9 +111,9 @@ export const InfoDropdown: FunctionComponent = () => {
 			</AccordionItem>
 			<AccordionItem border="none">
 				<AccordionButton
-					pl={["24", "36", "4", "4"]}
-					pr={["24", "36", "4", "4"]}
-					py={["3", "3", "2", "2"]}
+					pl={["24", "36", "6", "6"]}
+					pr={["24", "36", "6", "6"]}
+					py={["2", "2", "1", "1"]}
 					_expanded={{
 						bg: theme.bg.blackLightness,
 						color: theme.text.cyanPurple,
@@ -122,14 +122,14 @@ export const InfoDropdown: FunctionComponent = () => {
 						outline: "none",
 					}}
 					_hover={{
-						color: theme.text.cyan,
+						color: theme.text.cyanPurple,
 						backgroundColor: "transparent",
 					}}
 				>
 					<Icon as={MdOutlineModeComment} />
 					<Box
 						flex="1"
-						pl="2"
+						pl="0.5rem"
 						pr="10"
 						textAlign="left"
 						fontSize="md"

@@ -21,7 +21,7 @@ export const FormattedPriceImpat = ({
 	};
 
 	return (
-		<Text fontWeight="medium" color={getColorBySeverity()}>
+		<Text fontWeight="medium" fontSize="sm" color={getColorBySeverity()}>
 			{priceImpact
 				? priceImpact.lessThan(ONE_BIPS)
 					? "<0.01%"

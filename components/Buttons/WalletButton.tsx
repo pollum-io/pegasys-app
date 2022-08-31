@@ -44,7 +44,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 	return (
 		<>
 			{!isConnected && !walletError && (
-				<>
+				<Flex>
 					<SelectWallets
 						isOpen={isOpenSelectWalletModal}
 						onClose={onCloseSelectWalletModal}
@@ -65,13 +65,13 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						px={["6", "6", "8", "8"]}
 						position={["absolute", "relative"]}
 						bottom={["12", "10"]}
-						left={["25%", "0", "0", "0"]}
+						left={["28%", "0", "0", "0"]}
 						onClick={onOpenSelectWalletModal}
 						{...rest}
 					>
 						Connect wallet
 					</Button>
-				</>
+				</Flex>
 			)}
 
 			{walletError && (
@@ -94,7 +94,9 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 					>
 						{shortAddress(walletAddress)}
 					</AddressButton>
-					<ExpertMode />
+					<Flex display={["none", "flex", "flex", "flex"]} zIndex="-99">
+						<ExpertMode />
+					</Flex>
 				</>
 			)}
 			{isConnected && isPending && (

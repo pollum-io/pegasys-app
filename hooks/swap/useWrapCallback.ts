@@ -6,6 +6,7 @@ import {
 	WrappedTokenInfo,
 	ISwapTokenInputValue,
 	IWalletHookInfos,
+	ITx,
 } from "types";
 import { ApprovalState, IApprovalState } from "contexts";
 import WETH_ABI from "utils/abis/weth.json";
@@ -20,9 +21,10 @@ export function UseWrapCallback(
 	tradeTokens: WrappedTokenInfo[],
 	inputValues: ISwapTokenInputValue,
 	walletInfos: IWalletHookInfos,
-	setTransaction: React.Dispatch<React.SetStateAction<object>>,
-	transactions: object,
+	setTransaction: React.Dispatch<React.SetStateAction<ITx>>,
+	transactions: ITx,
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
+	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
 	signer: Signer
 ): {
 	wrapType: WrapType;
@@ -46,6 +48,8 @@ export function UseWrapCallback(
 	);
 
 	if (!wethContract || !chainId || !inputCurrency || !outputCurrency)
+		// eslint-disable-next-line
+		// @ts-ignore
 		return WrapType.NOT_APPLICABLE;
 
 	// eslint-disable-next-line
@@ -74,8 +78,9 @@ export function UseWrapCallback(
 									status: ApprovalState.PENDING,
 									type: "wrap",
 								});
+								setCurrentTxHash(`${txReceipt?.hash}`);
 							} catch (error) {
-								console.error("Could not deposit", error);
+								throw new Error("Could not deposit");
 							}
 					  }
 					: undefined,
@@ -103,14 +108,20 @@ export function UseWrapCallback(
 										)} WSYS to SYS`,
 									}
 								);
-								setApprovalState(ApprovalState.PENDING);
+								setApprovalState({
+									status: ApprovalState.PENDING,
+									type: "wrap",
+								});
+								setCurrentTxHash(`${txReceipt?.hash}`);
 							} catch (error) {
-								console.error("Could not withdraw", error);
+								throw new Error("Could not withdraw");
 							}
 					  }
 					: undefined,
 			inputError: sufficientBalance ? undefined : "Insufficient WSYSbalance",
 		};
 	}
+	// eslint-disable-next-line
+	// @ts-ignore
 	return WrapType.NOT_APPLICABLE;
 }

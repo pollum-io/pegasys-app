@@ -24,11 +24,16 @@ export const TradeRouteComponent: FunctionComponent<
 	};
 
 	return (
-		<Flex>
+		<Flex
+			w="100%"
+			alignItems="center"
+			justifyContent="space-evenly"
+			flexWrap="wrap"
+		>
 			{transactionRoute &&
 				transactionRoute.map((token, index: number) => (
 					<Flex key={token.address} alignItems="center">
-						<Flex gap="2">
+						<Flex gap="2" flexWrap="wrap">
 							<Img src={findTokenLogo(token.symbol as string)} w="5" h="5" />
 							<Text fontSize="sm">{token.symbol}</Text>
 						</Flex>

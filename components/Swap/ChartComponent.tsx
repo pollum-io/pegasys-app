@@ -1,4 +1,4 @@
-import { Flex, theme } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { createChart, ColorType, UTCTimestamp } from "lightweight-charts";
 import React, { useEffect, useRef } from "react";
 import { IChartComponentData } from "types/index";
@@ -39,13 +39,6 @@ const ChartComponent = (props: IChartComponentProps) => {
 				},
 				horzLines: {
 					visible: false,
-				},
-			},
-			leftPriceScale: {
-				visible: false,
-				borderColor: colors.borderColor,
-				scaleMargins: {
-					bottom: 0.05,
 				},
 			},
 			rightPriceScale: {

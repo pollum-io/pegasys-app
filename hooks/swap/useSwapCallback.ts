@@ -3,7 +3,7 @@ import { Trade } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
 import { useENS } from "hooks";
 import { calculateGasMargin, isZero, shortAddress, isAddress } from "utils";
-import { IWalletHookInfos } from "types";
+import { ITx, IWalletHookInfos } from "types";
 import { addTransaction } from "utils/addTransaction";
 import { UseBestSwapMethod } from "./useBestSwapMethod";
 import { UseToastOptions } from "@chakra-ui/react";
@@ -22,10 +22,13 @@ export function UseSwapCallback(
 	allowedSlippage: number, // in bips
 	walletInfos: IWalletHookInfos,
 	signer: Signer,
-	setTransactions: React.Dispatch<React.SetStateAction<object>>,
+	setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
+	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
+	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
+	txType: string,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
-	transactions: object
+	transactions: ITx
 ) {
 	const { walletAddress, chainId: chain } = walletInfos;
 
@@ -33,7 +36,8 @@ export function UseSwapCallback(
 		trade as Trade,
 		walletInfos.walletAddress,
 		signer,
-		walletInfos
+		walletInfos,
+		allowedSlippage
 	);
 
 	const { address: recipientAddress } = useENS(walletAddress);
@@ -178,7 +182,9 @@ export function UseSwapCallback(
 						summary: withVersion,
 					});
 
-					setApprovalState({ status: ApprovalState.PENDING, type: "swap" });
+					setApprovalState({ status: ApprovalState.PENDING, type: txType });
+					setCurrentTxHash(`${response?.hash}`);
+					setCurrentInputTokenName(`${inputSymbol}`);
 
 					return response.hash;
 				})

@@ -23,3 +23,4 @@ export * from "./addTransaction";
 export * from "./getTokenAllowance";
 export * from "./truncateNumberDecimalsPlaces";
 export * from "./priceImpactSeverity";
+export * from "./maxAmountSpend";

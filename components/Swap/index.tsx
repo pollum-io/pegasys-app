@@ -1,11 +1,14 @@
 import {
 	Button,
 	ButtonProps,
+	Collapse,
 	Flex,
 	Icon,
 	Img,
 	Input,
 	Text,
+	Skeleton,
+	SkeletonCircle,
 } from "@chakra-ui/react";
 import {
 	useModal,
@@ -20,31 +23,35 @@ import {
 	UseWrapCallback,
 	UseTokensPairSorted,
 } from "hooks";
-import React, { FunctionComponent, useEffect, useState, useMemo } from "react";
+import React, {
+	FunctionComponent,
+	useEffect,
+	useState,
+	useMemo,
+	useCallback,
+} from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { SelectCoinModal, SelectWallets } from "components/Modals";
-import { ChainId, JSBI, Trade } from "@pollum-io/pegasys-sdk";
+import { ChainId, CurrencyAmount, JSBI, Trade } from "@pollum-io/pegasys-sdk";
 import {
 	ISwapTokenInputValue,
 	IWalletHookInfos,
 	WrappedTokenInfo,
 	IInputValues,
-	IChartComponentData,
 	IReturnedTradeValues,
 	IChartComponentPeriod,
+	IChartComponentData,
 } from "types";
 import dynamic from "next/dynamic";
 import { useTranslation } from "react-i18next";
 import { Signer } from "ethers";
-import {
-	computeTradePriceBreakdown,
-	truncateNumberDecimalsPlaces,
-} from "utils";
+import { computeTradePriceBreakdown, Field, maxAmountSpend } from "utils";
 import { getTokensGraphCandle } from "services/index";
 
 import { ONE_DAY_IN_SECONDS } from "helpers/consts";
 import { ConfirmSwap } from "components/Modals/ConfirmSwap";
+import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { OtherWallet } from "./OtherWallet";
 import { SwapExpertMode } from "./SwapExpertMode";
 import { TradeRouteComponent } from "./TradeRouteComponent";
@@ -88,6 +95,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		transactions,
 		setApprovalState,
 		approvalState,
+		setApprovalSubmitted,
+		setCurrentTxHash,
+		setCurrentInputTokenName,
 		expert,
 		otherWallet,
 	} = useWallet();
@@ -118,6 +128,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	// REACT STATES //
 
+	const [isLoadingGraphCandles, setIsLoadingGraphCandles] =
+		useState<boolean>(false);
+
 	const [tokensGraphCandleData, setTokensGraphCandleData] = useState<
 		IChartComponentData[]
 	>([]);
@@ -146,6 +159,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		IReturnedTradeValues | undefined
 	>(undefined);
 
+	const [isSSR, setIsSSR] = useState(true);
+
+	const [approveTokenStatus, setApproveTokenStatus] = useState<ApprovalState>(
+		ApprovalState.UNKNOWN
+	);
+
 	// END REACT STATES //
 
 	// VALIDATIONS AT ALL //
@@ -162,7 +181,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const wrapOrUnwrap = selectedToken[0]?.symbol === "SYS" ? "Wrap" : "Unwrap";
 
 	const submitValidation = [
-		isConnected && tokenInputValue.lastInputTyped === 0
+		isConnected &&
+		parseFloat(tokenInputValue.typedValue) > 0 &&
+		tokenInputValue.lastInputTyped === 0
 			? parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
 			  parseFloat(tokenInputValue?.inputFrom?.value)
 			: parseFloat(selectedToken[1]?.tokenInfo?.balance) >=
@@ -170,6 +191,23 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	];
 
 	const canSubmit = submitValidation.every(validation => validation === true);
+
+	const wrapValidation = [
+		isConnected &&
+			parseFloat(tokenInputValue.typedValue) > 0 &&
+			tokenInputValue.lastInputTyped === 0,
+		parseFloat(tokenInputValue.typedValue) > 0,
+		parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
+			parseFloat(tokenInputValue?.inputFrom?.value),
+		parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
+			parseFloat(tokenInputValue?.inputTo?.value),
+		parseFloat(selectedToken[1]?.tokenInfo?.balance) >=
+			parseFloat(tokenInputValue?.inputTo?.value),
+		parseFloat(selectedToken[1]?.tokenInfo?.balance) >=
+			parseFloat(tokenInputValue?.inputFrom?.value),
+	];
+
+	const canWrap = wrapValidation.some(valid => valid === true);
 
 	const isWrap =
 		(selectedToken[0]?.symbol === "SYS" &&
@@ -186,11 +224,43 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		!returnedTradeValue?.v2TradeRoute && userHasSpecifiedInputOutput
 	);
 
-	const swapButtonValidation = !isConnected ? "Connect Wallet" : "Swap";
+	const swapButtonValidation = !isConnected
+		? translation("swapPage.connectWallet")
+		: translation("swapPage.swap");
 
+	const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(
+		returnedTradeValue?.currencyBalances[Field.INPUT]
+	);
+	const preventShowMaxButton = Boolean(
+		maxAmountInput && returnedTradeValue?.parsedAmount?.equalTo(maxAmountInput)
+	);
+
+	const alreadyApproved = approveTokenStatus === ApprovalState.APPROVED;
+
+	const minimumReceived =
+		returnedTradeValue?.isExactIn && returnedTradeValue?.slippageAdjustedAmounts
+			? returnedTradeValue?.slippageAdjustedAmounts[
+					Field.OUTPUT
+			  ]?.toSignificant(4)
+			: returnedTradeValue?.slippageAdjustedAmounts &&
+			  returnedTradeValue?.slippageAdjustedAmounts[Field.INPUT]?.toSignificant(
+					4
+			  );
 	// END VALIDATIONS AT ALL //
 
 	// HANDLE FUNCTIONALITIES AND HOOKS //
+
+	const handleMaxInput = useCallback(() => {
+		setTokenInputValue(prevState => ({
+			...prevState,
+			inputFrom: {
+				value: maxAmountInput?.toExact() as string,
+			},
+			lastInputTyped: 0,
+			currentInputTyped: "inputFrom",
+			typedValue: maxAmountInput?.toExact() as string,
+		}));
+	}, [maxAmountInput]);
 
 	const swapCall =
 		returnedTradeValue?.v2Trade &&
@@ -202,6 +272,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			signer,
 			setTransactions,
 			setApprovalState,
+			setCurrentTxHash,
+			setCurrentInputTokenName,
+			txType,
 			toast,
 			transactions
 		);
@@ -269,19 +342,27 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setTransactions,
 		transactions,
 		setApprovalState,
+		setCurrentTxHash,
 		signer as Signer
 	);
 
 	const handleSwapInfo = async () => {
-		const { v2Trade, bestSwapMethods, inputErrors, parsedAmount } =
-			await UseDerivedSwapInfo(
-				selectedToken,
-				tokenInputValue,
-				walletInfos,
-				translation,
-				userSlippageTolerance,
-				signer as Signer
-			);
+		const {
+			v2Trade,
+			bestSwapMethods,
+			inputErrors,
+			parsedAmount,
+			currencyBalances,
+			isExactIn,
+			slippageAdjustedAmounts,
+		} = await UseDerivedSwapInfo(
+			selectedToken,
+			tokenInputValue,
+			walletInfos,
+			translation,
+			userSlippageTolerance,
+			signer as Signer
+		);
 
 		setReturnedTradeValue({
 			parsedAmount,
@@ -289,6 +370,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			bestSwapMethods,
 			inputErrors,
 			v2TradeRoute: v2Trade?.route?.path,
+			currencyBalances,
+			isExactIn,
+			slippageAdjustedAmounts,
 		});
 	};
 
@@ -306,21 +390,34 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setTransactions,
 		transactions,
 		toast,
+		setApprovalSubmitted,
+		setCurrentTxHash,
+		setCurrentInputTokenName,
+		setApproveTokenStatus,
 		userSlippageTolerance
 	);
 
 	const getTokensGraph = async () => {
-		setTokensPairPosition([selectedToken[0], selectedToken[1]]);
-
-		const requestTokensCandle = await getTokensGraphCandle(
+		const [token0, token1] = UseTokensPairSorted([
 			selectedToken[0],
 			selectedToken[1],
+		]);
+
+		setTokensPairPosition([
+			token0 as WrappedTokenInfo,
+			token1 as WrappedTokenInfo,
+		]);
+
+		const tokensCandleData = await getTokensGraphCandle(
+			token0,
+			token1,
+			setIsLoadingGraphCandles,
 			tokensGraphCandlePeriod.period
 		);
 
-		setTokensGraphCandleData(requestTokensCandle);
+		setTokensGraphCandleData(tokensCandleData);
 
-		return requestTokensCandle;
+		return tokensCandleData;
 	};
 
 	// END HANDLE FUNCTIONALITIES AND HOOKS //
@@ -384,16 +481,18 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			v2Trade: { outputAmount, inputAmount },
 		} = returnedTradeValue;
 
-		if (currentInputTyped === "inputFrom") {
-			tokenInputValue.inputTo.value = inputFromValue
-				? outputAmount?.toSignificant(6)
-				: "";
-		}
+		if (!isWrap) {
+			if (currentInputTyped === "inputFrom") {
+				tokenInputValue.inputTo.value = inputFromValue
+					? outputAmount?.toSignificant(6)
+					: "";
+			}
 
-		if (currentInputTyped === "inputTo") {
-			tokenInputValue.inputFrom.value = inputToValue
-				? inputAmount?.toSignificant(6)
-				: "";
+			if (currentInputTyped === "inputTo") {
+				tokenInputValue.inputFrom.value = inputToValue
+					? inputAmount?.toSignificant(6)
+					: "";
+			}
 		}
 	}, [isConnected, returnedTradeValue?.v2Trade]);
 
@@ -403,7 +502,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		handleSwapInfo();
 	}, [
 		isConnected,
-		tokenInputValue,
+		tokenInputValue?.inputFrom?.value,
+		tokenInputValue?.inputTo?.value,
+		userSlippageTolerance,
 		selectedToken[0]?.address,
 		selectedToken[1]?.address,
 	]);
@@ -422,11 +523,17 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		return null;
 	}, [expert]);
 
+	useEffect(() => {
+		setIsSSR(false);
+	}, []);
+
+	if (isSSR) return null;
+
 	// END REACT HOOKS //
 
 	return (
 		<Flex
-			pt={["6", "6", "20", "24"]}
+			pt={["6", "6", "16", "16"]}
 			justifyContent="center"
 			fontFamily="inter"
 			fontStyle="normal"
@@ -444,6 +551,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			}}
 			mb={["6rem", "0"]}
 			px={["4", "0", "0", "0"]}
+			zIndex="1"
 		>
 			<SelectWallets isOpen={isOpenWallet} onClose={onCloseWallet} />
 			<SelectCoinModal
@@ -459,7 +567,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				selectedTokens={selectedToken}
 				txType={txType}
 				onTx={
-					txType === "swap"
+					txType === "swap" || txType === "approve-swap"
 						? swapCall?.callback
 						: txType === "approve"
 						? approve
@@ -470,6 +578,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				trade={returnedTradeValue?.v2Trade}
 				isWrap={isWrap}
 				tokenInputValue={tokenInputValue}
+				minimumReceived={minimumReceived}
+				liquidityFee={realizedLPFee}
 			/>
 			<Flex alignItems="center" flexDirection="column">
 				<Flex
@@ -489,11 +599,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					<Flex flexDirection="row" justifyContent="space-between" pb="1.5rem">
-						<Text
-							color={theme.text.mono}
-							fontWeight="semibold"
-							fontSize={["xl", "2xl", "2xl", "2xl"]}
-						>
+						<Text fontWeight="semibold" fontSize={["xl", "2xl", "2xl", "2xl"]}>
 							Swap
 						</Text>
 					</Flex>
@@ -505,10 +611,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						px="1.25rem"
 						border="1px solid"
 						borderColor={
-							(parseFloat(tokenInputValue.inputFrom.value) >
-								parseFloat(selectedToken[0]?.balance) &&
-								tokenInputValue.currentInputTyped !== "inputTo") ||
-							(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap)
+							(isConnected &&
+								tokenInputValue.currentInputTyped === "inputFrom" &&
+								parseFloat(tokenInputValue.inputFrom.value) >
+									parseFloat(selectedToken[0]?.balance)) ||
+							parseFloat(tokenInputValue.inputFrom.value) === 0 ||
+							(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap) ||
+							(isConnected && Boolean(tokenInputValue.inputFrom.value === ""))
 								? theme.text.red400
 								: "#ff000000"
 						}
@@ -516,35 +625,56 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					>
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
-								From
+								{translation("swapPage.from")}
 							</Text>
 							<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-								Balance: {selectedToken[0]?.balance}
+								{translation("header.balance")} {selectedToken[0]?.balance}
 							</Text>
 						</Flex>
 						<Flex alignItems="center" justifyContent="space-between">
-							<Flex
-								alignItems="center"
-								id="0"
-								borderRadius={12}
-								cursor="pointer"
-								_hover={{}}
-								onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-									setButtonId(Number(event.currentTarget.id));
-									onOpenCoin();
-								}}
-							>
-								<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
-								<Text
-									fontSize="xl"
-									fontWeight="500"
-									px="3"
-									color={theme.text.mono}
+							<Flex w="100%" alignItems="center">
+								<Flex
+									alignItems="center"
+									id="0"
+									borderRadius={12}
+									cursor="pointer"
+									onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+										setButtonId(Number(event.currentTarget.id));
+										onOpenCoin();
+									}}
 								>
-									{selectedToken[0]?.symbol}
-								</Text>
-								<Icon as={IoIosArrowDown} color={theme.text.mono} />
+									<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
+									<Text
+										fontSize="xl"
+										fontWeight="500"
+										px="3"
+										color={theme.text.mono}
+									>
+										{selectedToken[0]?.symbol}
+									</Text>
+									<Icon as={IoIosArrowDown} />
+								</Flex>
+
+								{isConnected &&
+									!preventShowMaxButton &&
+									parseFloat(selectedToken[0]?.balance) !== 0 && (
+										<Flex ml="8" onClick={() => handleMaxInput()}>
+											<Button
+												bgColor="rgba(43, 108, 176, .6)"
+												px="5"
+												color={theme.text.white}
+												transition="250ms ease-in-out"
+												_hover={{
+													backgroundColor: theme.bg.blue600,
+												}}
+												type="button"
+											>
+												MAX
+											</Button>
+										</Flex>
+									)}
 							</Flex>
+
 							<Input
 								fontSize="2xl"
 								border="none"
@@ -557,15 +687,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								onChange={handleOnChangeTokenInputs}
 								name="inputFrom"
 								value={tokenInputValue?.inputFrom?.value}
-								_hover={{ border: "1px solid #3182CE" }}
-								_focus={{ border: "1px solid #3182CE" }}
+								_focus={{ outline: "none" }}
 							/>
 						</Flex>
 					</Flex>
-					{parseFloat(tokenInputValue.inputFrom.value) >
-						parseFloat(selectedToken[0]?.balance) &&
-						tokenInputValue.currentInputTyped !== "inputTo" && (
-							<Flex flexDirection="row" gap="1" justifyContent="center">
+					{tokenInputValue.currentInputTyped === "inputFrom" && (
+						<Flex flexDirection="row" gap="1" justifyContent="center">
+							{parseFloat(tokenInputValue.inputFrom.value) >
+								parseFloat(selectedToken[0]?.balance) && (
 								<Text
 									fontSize="sm"
 									pt="2"
@@ -573,31 +702,27 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									color={theme.text.red400}
 									fontWeight="semibold"
 								>
-									Insufficient {selectedToken[0]?.symbol} balance.
+									{translation("swapHooks.insufficient")}
+									{selectedToken[0]?.symbol}
+									{translation("swapHooks.balance")}.
+									{translation("swapHooks.enterAmount")}
 								</Text>
-								<Text
-									fontSize="sm"
-									pt="2"
-									textAlign="center"
-									color={theme.text.red400}
-								>
-									Please insert a valid amount.
-								</Text>
-							</Flex>
-						)}
-					{isConnected && verifyIfHaveInsufficientLiquidity && !isWrap && (
-						<Flex flexDirection="row" gap="1" justifyContent="center">
+							)}
+						</Flex>
+					)}
+					{isConnected &&
+						(tokenInputValue.inputFrom.value === "" ||
+							parseFloat(tokenInputValue.inputFrom.value) === 0) && (
 							<Text
 								fontSize="sm"
 								pt="2"
 								textAlign="center"
-								color={theme.text.red400}
 								fontWeight="semibold"
+								color={theme.text.red400}
 							>
-								Insufficient liquidity for this trade.
+								{translation("swapHooks.enterAmount")}
 							</Text>
-						</Flex>
-					)}
+						)}
 					<Flex
 						margin="0 auto"
 						py="4"
@@ -614,10 +739,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						px="1.25rem"
 						border="1px solid"
 						borderColor={
-							(parseFloat(tokenInputValue.inputTo.value) >
-								parseFloat(selectedToken[1]?.balance) &&
-								tokenInputValue.currentInputTyped !== "inputFrom") ||
-							(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap)
+							isConnected && verifyIfHaveInsufficientLiquidity && !isWrap
 								? theme.text.red400
 								: "#ff000000"
 						}
@@ -625,10 +747,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					>
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
-								To
+								{translation("swapPage.to")}
 							</Text>
 							<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-								Balance: {selectedToken[1]?.balance}
+								{translation("header.balance")} {selectedToken[1]?.balance}
 							</Text>
 						</Flex>
 
@@ -662,15 +784,105 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								onChange={handleOnChangeTokenInputs}
 								name="inputTo"
 								value={tokenInputValue?.inputTo?.value}
-								_hover={{ border: "1px solid #3182CE" }}
-								_focus={{ border: "1px solid #3182CE" }}
+								_focus={{ outline: "none" }}
 							/>
 						</Flex>
 					</Flex>
+					<Flex
+						flexDirection="column"
+						gap="1"
+						justifyContent="center"
+						alignItems="center"
+					>
+						{isConnected && verifyIfHaveInsufficientLiquidity && !isWrap && (
+							<Text
+								fontSize="sm"
+								pt="2"
+								textAlign="center"
+								color={theme.text.red400}
+								fontWeight="semibold"
+							>
+								{translation("swapPage.insufficientLiquidity")}
+							</Text>
+						)}
+						{isConnected &&
+							tokenInputValue.currentInputTyped === "inputTo" &&
+							parseFloat(tokenInputValue.inputTo.value) >
+								parseFloat(selectedToken[1]?.tokenInfo?.balance) && (
+								<Text
+									fontSize="sm"
+									pt="2"
+									textAlign="center"
+									color={theme.text.red400}
+									fontWeight="semibold"
+								>
+									{translation("swapHooks.insufficient")}
+									{selectedToken[1]?.tokenInfo?.symbol}
+									{translation("swapHooks.balance")}
+								</Text>
+							)}
+					</Flex>
+					<Collapse
+						in={
+							!!tokenInputValue.inputTo.value &&
+							!!tokenInputValue.inputFrom.value &&
+							!isWrap
+						}
+					>
+						<Flex
+							flexDirection="column"
+							borderRadius="2xl"
+							borderWidth="1px"
+							borderColor={theme.text.cyanPurple}
+							mt="1.5rem"
+							color={theme.text.mono}
+						>
+							<Text fontSize="md" fontWeight="medium" px="1.375rem" py="0.5rem">
+								{translation("swap.price")}
+							</Text>
+							<Flex
+								flexDirection="row"
+								justifyContent="space-around"
+								py="0.5rem"
+								borderRadius="2xl"
+								borderWidth="1px"
+								borderColor={theme.text.cyanPurple}
+								bgColor={theme.bg.bluePink}
+								color={theme.text.mono}
+							>
+								<Flex fontSize="sm" flexDirection="column" textAlign="center">
+									<Text fontWeight="semibold">
+										{returnedTradeValue?.v2Trade
+											? returnedTradeValue?.v2Trade?.executionPrice?.toSignificant(
+													6
+											  )
+											: "-"}
+									</Text>
+									<Text fontWeight="normal">
+										{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
+									</Text>
+								</Flex>
+								<Flex fontSize="sm" flexDirection="column" textAlign="center">
+									<Text fontWeight="semibold">
+										{returnedTradeValue?.v2Trade
+											? returnedTradeValue?.v2Trade?.executionPrice
+													?.invert()
+													.toSignificant(6)
+											: "-"}
+									</Text>
+									<Text fontWeight="normal">
+										{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
+									</Text>
+								</Flex>
+							</Flex>
+						</Flex>
+					</Collapse>
+					{isExpert}
+					{isExpert && isOtherWallet}
 					{!isERC20 && !isWrap && (
 						<Button
 							w="100%"
-							mt="2rem"
+							mt={isExpert ? "1rem" : "2rem"}
 							py="6"
 							px="6"
 							borderRadius="67px"
@@ -682,102 +894,18 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							color={theme.text.cyan}
 							fontSize="lg"
 							fontWeight="semibold"
-							disabled={!canSubmit || isPending}
+							disabled={!canSubmit}
+							_hover={
+								canSubmit
+									? { bgColor: theme.bg.bluePurple }
+									: { opacity: "0.3" }
+							}
 						>
 							{swapButtonValidation}
 						</Button>
 					)}
-					{parseFloat(tokenInputValue.inputTo.value) >
-						parseFloat(selectedToken[1]?.balance) &&
-						tokenInputValue.currentInputTyped !== "inputFrom" && (
-							<Flex flexDirection="row" gap="1" justifyContent="center">
-								<Text
-									fontSize="sm"
-									pt="2"
-									textAlign="center"
-									color={theme.text.red400}
-									fontWeight="semibold"
-								>
-									Insufficient {selectedToken[1]?.symbol} balance.
-								</Text>
-								<Text
-									fontSize="sm"
-									pt="2"
-									textAlign="center"
-									color={theme.text.red400}
-								>
-									Please insert a valid amount.
-								</Text>
-							</Flex>
-						)}
-					{isConnected && verifyIfHaveInsufficientLiquidity && !isWrap && (
-						<Flex flexDirection="row" gap="1" justifyContent="center">
-							<Text
-								fontSize="sm"
-								pt="2"
-								textAlign="center"
-								color={theme.text.red400}
-								fontWeight="semibold"
-							>
-								Insufficient liquidity for this trade.
-							</Text>
-						</Flex>
-					)}
-					{tokenInputValue.inputTo.value &&
-						tokenInputValue.inputFrom.value &&
-						!isWrap && (
-							<Flex
-								flexDirection="column"
-								borderRadius="2xl"
-								bgColor="transparent"
-								borderWidth="1px"
-								borderColor={theme.text.cyan}
-								mt="1.5rem"
-							>
-								<Text fontSize="md" fontWeight="medium" px="1.375rem" py="1rem">
-									Price
-								</Text>
-								<Flex
-									flexDirection="row"
-									justifyContent="space-around"
-									py="1rem"
-									px="1rem"
-									borderRadius="2xl"
-									borderWidth="1px"
-									borderColor={theme.text.cyan}
-									bgColor={theme.bg.blueNavy}
-								>
-									<Flex fontSize="sm" flexDirection="column" textAlign="center">
-										<Text fontWeight="semibold">
-											{returnedTradeValue?.v2Trade
-												? returnedTradeValue?.v2Trade?.executionPrice?.toSignificant(
-														6
-												  )
-												: "-"}
-										</Text>
-										<Text fontWeight="normal">
-											{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
-										</Text>
-									</Flex>
-									<Flex fontSize="sm" flexDirection="column" textAlign="center">
-										<Text fontWeight="semibold">
-											{returnedTradeValue?.v2Trade
-												? returnedTradeValue?.v2Trade?.executionPrice
-														?.invert()
-														.toSignificant(6)
-												: "-"}
-										</Text>
-										<Text fontWeight="normal">
-											{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
-										</Text>
-									</Flex>
-								</Flex>
-							</Flex>
-						)}
-					{isExpert}
-					{isExpert && isOtherWallet}
 					<Flex>
-						{isERC20 && isConnected && !isWrap && (
+						{isERC20 && !isWrap && (
 							<Button
 								w="100%"
 								mt="2rem"
@@ -785,14 +913,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								px="6"
 								borderRadius="67px"
 								onClick={
-									approveValidation
+									approveValidation && !alreadyApproved
 										? () => {
 												onOpenConfirmSwap();
 												setTxType("approve");
 										  }
 										: () => {
 												onOpenConfirmSwap();
-												setTxType("swap");
+												setTxType("approve-swap");
 										  }
 								}
 								bgColor={theme.bg.button.connectWalletSwap}
@@ -801,13 +929,19 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								fontWeight="semibold"
 								disabled={!canSubmit || isPending}
 								_hover={{
-									opacity: 0.3,
+									opacity: 0.9,
 								}}
 							>
-								{approveValidation ? "Approve" : "Swap"}
+								{isConnected
+									? `${
+											approveValidation && !alreadyApproved
+												? translation("swapPage.approve")
+												: translation("swapPage.swap")
+									  }`
+									: `${swapButtonValidation}`}
 							</Button>
 						)}
-						{isWrap && isConnected && (
+						{isWrap && (
 							<Button
 								w="100%"
 								mt="2rem"
@@ -815,109 +949,143 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								px="6"
 								borderRadius="67px"
 								onClick={() => {
+									if (!onWrap) return;
 									onWrap();
+									setTxType("wrap");
 								}}
 								bgColor={theme.bg.button.connectWalletSwap}
 								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"
-								disabled={!canSubmit || isPending}
+								disabled={!canWrap}
 							>
-								{wrapOrUnwrap}
+								{isConnected ? `${wrapOrUnwrap}` : `${swapButtonValidation}`}
 							</Button>
 						)}
 					</Flex>
 				</Flex>
-				{tokenInputValue.inputTo.value &&
-					tokenInputValue.inputFrom.value &&
-					!isWrap && (
-						<Flex
-							flexDirection="column"
-							p="1.5rem"
-							background={theme.bg.blueNavy}
-							w="90%"
-							borderRadius="xl"
-							mt="7"
-							mb={["2", "2", "2", "10rem"]}
-							zIndex="1"
-						>
-							<Flex flexDirection="column">
-								<Flex flexDirection="row" justifyContent="space-between">
-									<Text fontWeight="normal">
-										Minmum Received <Icon as={MdHelpOutline} />
+				<Collapse
+					in={
+						!!tokenInputValue.inputTo.value &&
+						!!tokenInputValue.inputFrom.value &&
+						!isWrap
+					}
+				>
+					<Flex
+						flexDirection="column"
+						p="1.5rem"
+						background={theme.bg.blueNavy}
+						w="25rem"
+						borderRadius="xl"
+						mt="7"
+						mb={["2", "2", "2", "10rem"]}
+						zIndex="1"
+					>
+						<Flex flexDirection="column">
+							<Flex flexDirection="row" justifyContent="space-between">
+								<Flex>
+									<Text fontWeight="normal" mr="1" fontSize="sm">
+										{translation("swap.minimumReceived")}
 									</Text>
-									<Text fontWeight="medium">
-										{returnedTradeValue?.v2Trade
-											? `${returnedTradeValue?.v2Trade?.outputAmount.toSignificant(
-													4
-											  )} ${
-													returnedTradeValue?.v2Trade?.outputAmount?.currency
-														.symbol
-											  }`
-											: "-"}
-									</Text>
-								</Flex>
-								<Flex
-									flexDirection="row"
-									justifyContent="space-between"
-									pt="0.75rem"
-								>
-									<Text fontWeight="normal">
-										Price Impact <Icon as={MdHelpOutline} />
-									</Text>
-									<FormattedPriceImpat
-										priceImpact={returnedTradeValue?.v2Trade?.priceImpact}
+
+									<TooltipComponent
+										label={translation("swap.transactionRevertHelper")}
+										icon={MdHelpOutline}
 									/>
 								</Flex>
-								<Flex
-									flexDirection="row"
-									justifyContent="space-between"
-									pt="0.75rem"
-								>
-									<Text fontWeight="normal">
-										Liquidity Provider Fee <Icon as={MdHelpOutline} />
+								<Text fontWeight="medium" fontSize="sm">
+									{returnedTradeValue?.v2Trade &&
+									returnedTradeValue?.slippageAdjustedAmounts
+										? `${minimumReceived} ${returnedTradeValue?.v2Trade?.outputAmount?.currency.symbol}`
+										: "-"}
+								</Text>
+							</Flex>
+							<Flex
+								flexDirection="row"
+								justifyContent="space-between"
+								pt="0.75rem"
+							>
+								<Flex>
+									<Text fontWeight="normal" mr="1" fontSize="sm">
+										{translation("swap.priceImpact")}
 									</Text>
-									<Text fontWeight="medium">
-										{realizedLPFee
-											? `${realizedLPFee.toSignificant(4)} ${
-													returnedTradeValue?.v2Trade?.inputAmount.currency
-														.symbol
-											  }`
-											: "-"}
-									</Text>
+
+									<TooltipComponent
+										label={translation("swap.priceImpactHelper")}
+										icon={MdHelpOutline}
+									/>
 								</Flex>
-								{returnedTradeValue?.v2TradeRoute &&
-									returnedTradeValue.v2TradeRoute.length > 2 && (
-										<Flex flexDirection="column">
-											<Flex
-												flexDirection="row"
-												justifyContent="space-between"
-												pt="2rem"
-											>
-												<Text fontWeight="normal">
-													Route <Icon as={MdHelpOutline} />
+								<FormattedPriceImpat
+									priceImpact={returnedTradeValue?.v2Trade?.priceImpact}
+								/>
+							</Flex>
+							<Flex
+								flexDirection="row"
+								justifyContent="space-between"
+								pt="0.75rem"
+							>
+								<Flex w="max-content">
+									<Text
+										fontWeight="normal"
+										mr="1"
+										fontSize="sm"
+										w="max-content"
+									>
+										{translation("swap.liquidityProviderFee")}
+									</Text>
+
+									<TooltipComponent
+										label={translation("swap.liquidityProviderHelper")}
+										icon={MdHelpOutline}
+									/>
+								</Flex>
+								<Text fontWeight="medium" fontSize="sm" textAlign="right">
+									{realizedLPFee
+										? `${realizedLPFee.toSignificant(4)} ${
+												returnedTradeValue?.v2Trade?.inputAmount.currency.symbol
+										  }`
+										: "-"}
+								</Text>
+							</Flex>
+							{returnedTradeValue?.v2TradeRoute &&
+								returnedTradeValue.v2TradeRoute.length > 2 && (
+									<Flex flexDirection="column" w="100%">
+										<Flex
+											flexDirection="row"
+											justifyContent="space-between"
+											pt="1rem"
+										>
+											<Flex>
+												<Text fontSize="sm" mr="1" fontWeight="normal">
+													{translation("swap.route")}
 												</Text>
-											</Flex>
-											<Flex
-												border="1px solid rgba(160, 174, 192, 1)"
-												py="2.5"
-												px="4"
-												borderRadius="xl"
-												alignItems="center"
-												justifyContent="center"
-												flexWrap="wrap"
-												mt="2"
-											>
-												<TradeRouteComponent
-													transactionRoute={returnedTradeValue?.v2TradeRoute}
+
+												<TooltipComponent
+													label={translation("swap.routingHelper")}
+													icon={MdHelpOutline}
 												/>
 											</Flex>
 										</Flex>
-									)}
-							</Flex>
+										<Flex
+											border="1px solid rgba(160, 174, 192, 1)"
+											py="2.5"
+											px="1"
+											borderRadius="xl"
+											alignItems="center"
+											flexWrap="wrap"
+											mt="2"
+										>
+											<TradeRouteComponent
+												transactionRoute={returnedTradeValue?.v2TradeRoute}
+											/>
+										</Flex>
+									</Flex>
+								)}
 						</Flex>
-					)}
+					</Flex>
+				</Collapse>
 			</Flex>
+
 			<Flex
 				h="max-content"
 				w={["18rem", "sm", "100%", "xl"]}
@@ -935,45 +1103,168 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					justifyContent="center"
 					flexDirection={["column", "row", "row", "row"]}
 					alignItems="center"
-					mb={`${tokensGraphCandleData.length === 0 && "16"}`}
+					mb={`${
+						!isLoadingGraphCandles && tokensGraphCandleData?.length === 0 && "5"
+					}`}
 				>
 					<Flex>
-						<Img src={tokensPairPosition[0]?.logoURI} w="7" h="7" />
-						<Img src={tokensPairPosition[1]?.logoURI} w="7" h="7" />
-						<Text fontWeight="700" fontSize="xl" ml="2.5">
-							{tokensPairPosition[0]?.symbol} / {tokensPairPosition[1]?.symbol}
-						</Text>
-					</Flex>
-					<Text pl="2" fontSize="lg" fontWeight="400">
-						{`${
-							truncateNumberDecimalsPlaces(
-								parseFloat(tokensGraphCandleData[0]?.close)
-							) || "0.00"
-						}`}
-						{` ${tokensPairPosition[1]?.symbol}`}
-					</Text>
-				</Flex>
-				{tokensGraphCandleData.length !== 0 && (
-					<Flex my="6">
-						<FilterButton
-							periodStateValue={tokensGraphCandlePeriod}
-							setPeriod={setTokensGraphCandlePeriod}
-						/>
-					</Flex>
-				)}
+						{[0, 1].map(
+							(
+								_,
+								index // Array with number of elements to display in the screen
+							) => (
+								<SkeletonCircle
+									key={_ + Number(index)}
+									isLoaded={!isLoadingGraphCandles}
+									mr={`${isLoadingGraphCandles && "0.5"}`}
+									fadeDuration={1.5}
+									speed={1.3}
+									background="transparent"
+									opacity={`${isLoadingGraphCandles && 0.2}`}
+									startColor="#8A15E6"
+									endColor="#19EBCE"
+								>
+									<Img
+										src={
+											index === 0
+												? tokensPairPosition[0]?.tokenInfo?.logoURI
+												: tokensPairPosition[1]?.tokenInfo?.logoURI
+										}
+										w="7"
+										h="7"
+										mr="0.5"
+									/>
+								</SkeletonCircle>
+							)
+						)}
 
-				<Flex direction="column" justifyContent="center">
-					<ChartComponent data={tokensGraphCandleData} />
-					{tokensGraphCandleData.length === 0 && (
-						<Text
-							textAlign="center"
-							color="#fff"
-							fontWeight="400"
-							fontSize="sm"
+						<Skeleton
+							isLoaded={!isLoadingGraphCandles}
+							ml={`${isLoadingGraphCandles && "1.5"}`}
+							fadeDuration={1.5}
+							speed={1.3}
+							background="transparent"
+							opacity={`${isLoadingGraphCandles && 0.2}`}
+							startColor="#8A15E6"
+							endColor="#19EBCE"
 						>
-							Candle data not available to this token pair.
+							<Text fontWeight="700" fontSize="xl" ml="2.5">
+								{tokensPairPosition[0]?.symbol} /{" "}
+								{tokensPairPosition[1]?.symbol}
+							</Text>
+						</Skeleton>
+					</Flex>
+					<Skeleton
+						h={`${isLoadingGraphCandles && "32px"}`}
+						isLoaded={!isLoadingGraphCandles}
+						fadeDuration={1.5}
+						speed={1.3}
+						background="transparent"
+						opacity={`${isLoadingGraphCandles && 0.2}`}
+						startColor="#8A15E6"
+						endColor="#19EBCE"
+					>
+						<Text pl="2" fontSize="lg" fontWeight="400">
+							{tokensGraphCandleData?.length === 0
+								? "-"
+								: `${parseFloat(
+										String(tokensGraphCandleData[0]?.close)
+								  ).toFixed(2)} ${tokensPairPosition[1]?.symbol}`}
 						</Text>
+					</Skeleton>
+				</Flex>
+
+				<Flex
+					my={`${
+						tokensGraphCandleData.length === 0 && !isLoadingGraphCandles
+							? "0"
+							: "6"
+					}`}
+					justifyContent="center"
+				>
+					{isLoadingGraphCandles ? (
+						<Flex
+							w="100%"
+							maxW={`${isLoadingGraphCandles && "70%"}`}
+							alignItems="center"
+							justifyContent={`${
+								isLoadingGraphCandles ? "space-evenly" : "center"
+							}`}
+						>
+							{[1, 2, 3, 4, 5].map(
+								(
+									_,
+									index // Array with number of elements to display in the screen
+								) => (
+									<SkeletonCircle
+										key={_ + Number(index)}
+										w="40px"
+										h="40px"
+										fadeDuration={1.5}
+										speed={1.3}
+										background="transparent"
+										opacity={`${isLoadingGraphCandles && 0.2}`}
+										startColor="#8A15E6"
+										endColor="#19EBCE"
+									/>
+								)
+							)}
+						</Flex>
+					) : (
+						tokensGraphCandleData.length !== 0 && (
+							<FilterButton
+								periodStateValue={tokensGraphCandlePeriod}
+								setPeriod={setTokensGraphCandlePeriod}
+							/>
+						)
 					)}
+				</Flex>
+
+				<Flex
+					direction="column"
+					justifyContent="center"
+					maxW={isLoadingGraphCandles ? "475px" : ""}
+					borderBottom={`${isLoadingGraphCandles && "1px solid"}`}
+					borderRight={`${isLoadingGraphCandles && "1px solid"}`}
+					borderColor={`${isLoadingGraphCandles && "rgba(255,255,255, .25)"}`}
+					borderRadius={`${isLoadingGraphCandles && "5px"}`}
+				>
+					<Skeleton
+						w="100%"
+						h="315px"
+						isLoaded={!isLoadingGraphCandles}
+						fadeDuration={1.5}
+						speed={1.3}
+						background="transparent"
+						opacity={`${isLoadingGraphCandles && 0.1}`}
+						startColor="#8A15E6"
+						endColor="#19EBCE"
+						borderRadius="5px"
+					>
+						{tokensGraphCandleData?.length === 0 && !isLoadingGraphCandles ? (
+							<>
+								<Text
+									textAlign="center"
+									color={theme.text.mono}
+									fontWeight="medium"
+									fontSize="md"
+								>
+									Data not found for this pair of tokens.
+								</Text>
+
+								<Text
+									textAlign="center"
+									color={theme.text.mono}
+									fontWeight="normal"
+									fontSize="sm"
+								>
+									Please try again with another pair.
+								</Text>
+							</>
+						) : (
+							<ChartComponent data={tokensGraphCandleData} />
+						)}
+					</Skeleton>
 				</Flex>
 			</Flex>
 		</Flex>

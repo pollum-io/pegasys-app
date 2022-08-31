@@ -15,7 +15,8 @@ import React from "react";
 import { MdArrowDownward } from "react-icons/md";
 import { AiOutlineClose } from "react-icons/ai";
 import { WrappedTokenInfo, ISwapTokenInputValue } from "types";
-import { Trade } from "@pollum-io/pegasys-sdk";
+import { CurrencyAmount, Trade } from "@pollum-io/pegasys-sdk";
+import { FormattedPriceImpat } from "components/Swap/FormattedPriceImpact";
 
 interface IModal {
 	isOpen: boolean;
@@ -26,6 +27,8 @@ interface IModal {
 	trade: Trade | undefined;
 	isWrap: boolean;
 	tokenInputValue: ISwapTokenInputValue;
+	minimumReceived: string | 0 | null | undefined;
+	liquidityFee?: CurrencyAmount;
 }
 
 export const ConfirmSwap: React.FC<IModal> = props => {
@@ -38,13 +41,15 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 		trade,
 		isWrap,
 		tokenInputValue,
+		liquidityFee,
+		minimumReceived,
 	} = props;
 	const theme = usePicasso();
 
 	const txName =
 		txType === "approve"
 			? "Approve"
-			: txType === "swap"
+			: txType === "swap" || txType === "approve-swap"
 			? "Swap"
 			: txType === "wrap" && isWrap
 			? "Wrap"
@@ -54,20 +59,13 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 			? "Approve"
 			: "Swap";
 
-	const receiveEstimatedValue = !isWrap
-		? trade?.outputAmount.toSignificant(4)
-		: tokenInputValue?.inputTo?.value;
-
-	const receiveOutput = !isWrap
-		? trade?.outputAmount?.currency.symbol
-		: selectedTokens[1]?.symbol;
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
 				borderRadius="3xl"
 				border="1px solid transparent;"
-				background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
 					display="flex"
@@ -85,30 +83,46 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 					</Flex>
 				</ModalHeader>
 				<ModalBody mb="4">
-					<Flex flexDirection="column" alignItems="center" mb="6">
-						<Flex flexDirection="row" gap="2">
-							<Text>{tokenInputValue?.inputFrom?.value}</Text>
-							<Img src={selectedTokens[0]?.logoURI} w="5" h="5" />
-							<Text>{selectedTokens[0]?.symbol}</Text>
+					<Flex
+						flexDirection="row"
+						alignItems="center"
+						mb="6"
+						justifyContent="center"
+					>
+						<Flex flexDirection="column" gap="14" pr="2">
+							<Text textAlign="right" fontWeight="semibold">
+								{tokenInputValue?.inputFrom?.value}
+							</Text>
+							<Text textAlign="right" fontWeight="semibold">
+								{tokenInputValue?.inputTo?.value}
+							</Text>
 						</Flex>
-						<Icon
-							as={MdArrowDownward}
-							bg="transparent"
-							color={theme.text.cyanPurple}
-							w="6"
-							h="6"
-							borderRadius="full"
-						/>
-						<Flex flexDirection="row" gap="2">
-							<Text>{tokenInputValue?.inputTo?.value}</Text>
+						<Flex flexDirection="column" gap="1.1rem" alignItems="center">
+							<Img src={selectedTokens[0]?.logoURI} w="5" h="5" />
+							<Icon
+								as={MdArrowDownward}
+								bg="transparent"
+								color={theme.text.cyanPurple}
+								w="6"
+								h="6"
+								borderRadius="full"
+							/>
 							<Img src={selectedTokens[1]?.logoURI} w="5" h="5" />
+						</Flex>
+
+						<Flex
+							flexDirection="column"
+							gap="14"
+							pl="2"
+							alignItems="flex-start"
+						>
+							<Text>{selectedTokens[0]?.symbol}</Text>
 							<Text>{selectedTokens[1]?.symbol}</Text>
 						</Flex>
 					</Flex>
-					<Text fontSize="sm">
-						Output is estimated. You will receive at least{" "}
-						{receiveEstimatedValue} {receiveOutput} or the transaction will
-						revert.
+					<Text fontSize="sm" color={theme.text.mono}>
+						Output is estimated. You will receive at least {minimumReceived} or
+						the transaction will revert.
 					</Text>
 				</ModalBody>
 				<Flex
@@ -128,17 +142,25 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text>Minmum Received</Text>
 							<Text fontWeight="medium">
-								{trade
-									? `${trade?.outputAmount.toSignificant(4)} ${
-											trade?.outputAmount?.currency.symbol
-									  }`
-									: "-"}
+								{minimumReceived && minimumReceived}{" "}
+								{trade && trade?.outputAmount?.currency.symbol}
 							</Text>
 						</Flex>
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text>Price Impact</Text>
 							<Text fontWeight="medium">
-								{trade ? `${trade?.priceImpact?.toSignificant(4)}%` : "-"}
+								{trade ? (
+									<FormattedPriceImpat priceImpact={trade?.priceImpact} />
+								) : (
+									"-"
+								)}
+							</Text>
+						</Flex>
+						<Flex flexDirection="row" justifyContent="space-between">
+							<Text>Liquidity Provider Fee</Text>
+							<Text fontWeight="medium">
+								{liquidityFee && liquidityFee?.toSignificant(4)}{" "}
+								{trade && trade?.inputAmount?.currency?.symbol}
 							</Text>
 						</Flex>
 					</Flex>
@@ -157,6 +179,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 								onTx();
 								onClose();
 							}}
+							_hover={{ bgColor: theme.bg.bluePurple }}
 							fontWeight="semibold"
 						>
 							Confirm {txName}

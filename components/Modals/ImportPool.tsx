@@ -28,7 +28,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 	const { userTokensBalance } = useTokens();
 
 	const theme = usePicasso();
-	const { isOpenCoin, onCloseCoin } = useModal();
+	const { isOpenCoin, onCloseCoin, onOpenCoin } = useModal();
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
 
@@ -58,8 +58,13 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 			/>
 			<ModalOverlay />
 			<ModalContent
+				bottom={["0", "0", "0", "0"]}
+				mb={["0"]}
+				position={["absolute", "absolute", "relative", "relative"]}
+				h={["max-content", "max-content", "max-content", "max-content"]}
 				p="1.5rem"
 				borderRadius="3xl"
+				borderBottomRadius={["0px", "3xl", "3xl", "3xl"]}
 				border="1px solid transparent;"
 				background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
@@ -89,8 +94,8 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 						<Text as="span" _hover={{ opacity: 0.8 }}>
 							<Icon
 								as={MdHelpOutline}
-								h="4"
-								w="4"
+								h="5"
+								w="5"
 								color="white"
 								backgroundColor="gray.800"
 								borderRadius="full"
@@ -115,7 +120,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 							id="0"
 							width="100%"
 							onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-								onOpen();
+								onOpenCoin();
 								setButtonId(Number(event.currentTarget.id));
 							}}
 							p="4"
@@ -157,7 +162,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								id="1"
 								width="100%"
 								onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-									onOpen();
+									onOpenCoin();
 									setButtonId(Number(event.currentTarget.id));
 								}}
 								p="4"

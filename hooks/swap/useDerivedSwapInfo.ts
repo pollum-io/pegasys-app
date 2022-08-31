@@ -42,8 +42,17 @@ export async function UseDerivedSwapInfo(
 ): Promise<{
 	parsedAmount: CurrencyAmount | undefined;
 	v2Trade: Trade | undefined;
+	currencyBalances: { [field in Field]?: CurrencyAmount };
 	bestSwapMethods: ISwapCall[];
 	inputErrors: string | undefined;
+	isExactIn: boolean;
+	slippageAdjustedAmounts:
+		| 0
+		| {
+				INPUT?: CurrencyAmount | undefined;
+				OUTPUT?: CurrencyAmount | undefined;
+		  }
+		| null;
 }> {
 	const isExactIn: boolean = inputValues.lastInputTyped === 0;
 
@@ -125,13 +134,18 @@ export async function UseDerivedSwapInfo(
 	const bestSwapMethods = UseBestSwapMethod(
 		v2Trade as Trade,
 		walletInfos.walletAddress,
-		signer as Signer
+		signer as Signer,
+		walletInfos,
+		userAllowedSlippage
 	);
 
 	return {
 		parsedAmount,
 		v2Trade: v2Trade ?? undefined,
+		currencyBalances,
 		bestSwapMethods,
 		inputErrors: inputError ?? undefined,
+		isExactIn,
+		slippageAdjustedAmounts,
 	};
 }

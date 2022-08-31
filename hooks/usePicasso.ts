@@ -32,6 +32,7 @@ const usePicasso = () => {
 			blue: useColorModeValue("white", "cyan.300"),
 			infoLink: useColorModeValue("#565a69", "#c3c5cb"),
 			connectWallet: useColorModeValue("#665EE1", "#00d9ef"),
+			stakeMode: useColorModeValue("#A0AEC0", "#4A5568"),
 			swapInfo: useColorModeValue("#565a69", "#c3c5cb"),
 			whiteCyan: useColorModeValue("#ffffff", "#00d9ef"),
 			cyan: useColorModeValue("#ffffff", "#00d9ef"),
@@ -54,6 +55,7 @@ const usePicasso = () => {
 				"rgba(255,255,255, .36)",
 				"rgba(255,255,255, .36)"
 			),
+			cyanPsys: useColorModeValue("#00d9ef", "#00d9ef"),
 		},
 		icon: {
 			infoWhiteRed: useColorModeValue("#E53E3E", "#ffffff"),
@@ -68,6 +70,16 @@ const usePicasso = () => {
 			theme: useColorModeValue(BsFillSunFill, BsFillMoonFill),
 		},
 		bg: {
+			candleGraphColor: useColorModeValue("#153d6f69", "#153d6f69"),
+			bluePink: useColorModeValue("#FAF5FF", "#0B172C"),
+			stakeBanner: useColorModeValue(
+				"/images/backgrounds/LightBannerStake.png",
+				"/images/backgrounds/BannerStake.png"
+			),
+			psysAirdrop: useColorModeValue(
+				"/images/backgrounds/LightPsysAirdrop.png",
+				"/images/backgrounds/PsysAirdrop.png"
+			),
 			governanceBanner: useColorModeValue(
 				"/images/backgrounds/LightGovernanceBanner.png",
 				"/images/backgrounds/GovernanceBanner.png"
@@ -85,7 +97,7 @@ const usePicasso = () => {
 				"/images/backgrounds/BannerFarm.png"
 			),
 			poolsBanner: useColorModeValue(
-				"images/backgrounds/LightPoolsBanner.png",
+				"images/backgrounds/LightBannerPool.png",
 				"images/backgrounds/BannerPools.png"
 			),
 			farmActions: useColorModeValue("white", "#0B172C"),
@@ -111,7 +123,7 @@ const usePicasso = () => {
 			bluePurple: useColorModeValue("#8C15E8", "#0753B2"),
 			topHeader: useColorModeValue("#FFFFFF", "#000000"),
 			primary: useColorModeValue("#EDF2F7", "#000913"),
-			secondary: useColorModeValue("gray.300", "gray.800"), // tooltip background
+			secondary: useColorModeValue("gray.300", "#171923"), // tooltip background
 			bgPrimary: useColorModeValue("#f7f8fa", "#2c2f36"),
 			whiteGray: useColorModeValue("#665EE1", "rgba(8, 17, 32, 1)"), //
 			expertMode: useColorModeValue("#FFFFFF", "#081120"), //

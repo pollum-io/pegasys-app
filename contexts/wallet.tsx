@@ -2,7 +2,7 @@ import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers, Signer } from "ethers";
 import { convertHexToNumber, isAddress } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { IWalletInfo } from "types";
+import { IWalletInfo, ITx } from "types";
 import { useToasty } from "hooks";
 import {
 	INITIAL_ALLOWED_SLIPPAGE,
@@ -21,6 +21,13 @@ export interface IApprovalState {
 	status: ApprovalState;
 	type: string;
 }
+
+export interface ISubmittedAproval {
+	status: boolean;
+	tokens: string[];
+	currentTokenToApprove?: string;
+}
+
 interface IWeb3 {
 	isConnected: boolean;
 	currentNetworkChainId: number | null;
@@ -48,10 +55,16 @@ interface IWeb3 {
 	setOtherWallet: React.Dispatch<React.SetStateAction<boolean>>;
 	userSlippageTolerance: number;
 	setUserSlippageTolerance: React.Dispatch<React.SetStateAction<number>>;
-	setTransactions: React.Dispatch<React.SetStateAction<object>>;
-	transactions: object;
+	setTransactions: React.Dispatch<React.SetStateAction<ITx>>;
+	transactions: ITx;
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>;
 	approvalState: IApprovalState;
+	setApprovalSubmitted: React.Dispatch<React.SetStateAction<ISubmittedAproval>>;
+	approvalSubmitted: ISubmittedAproval;
+	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>;
+	currentTxHash: string;
+	currentInputTokenName: string;
+	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>;
 	isGovernance: boolean;
 	setIsGovernance: React.Dispatch<React.SetStateAction<boolean>>;
 	setPendingTxLength: React.Dispatch<React.SetStateAction<number>>;
@@ -87,7 +100,13 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [userSlippageTolerance, setUserSlippageTolerance] = useState<number>(
 		INITIAL_ALLOWED_SLIPPAGE
 	);
-	const [transactions, setTransactions] = useState<object>({
+	const [approvalSubmitted, setApprovalSubmitted] = useState<ISubmittedAproval>(
+		{ status: false, tokens: [], currentTokenToApprove: "" }
+	);
+	const [currentTxHash, setCurrentTxHash] = useState<string>("");
+	const [currentInputTokenName, setCurrentInputTokenName] =
+		useState<string>("");
+	const [transactions, setTransactions] = useState<ITx>({
 		57: {},
 		5700: {},
 	});
@@ -164,8 +183,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 					String(error).includes("User denied account authorization")
 				) {
 					setConnecting(false);
-				} else {
-					console.log(error);
 				}
 			});
 	};
@@ -173,39 +190,48 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	useMemo(() => {
 		if (approvalState.status === ApprovalState.PENDING) {
 			const timer = setInterval(async () => {
-				const result = await fetch(
+				const getTx = await fetch(
 					`${rpcUrl}?module=account&action=pendingtxlist&address=${walletAddress}`
 				).then(result => result.json());
-				if (result?.result[0]) {
-					const hash: string = result?.result[0]?.hash;
-					setPendingTxLength(Number(result?.result?.length));
-					provider?.getTransaction(hash).then(result => {
-						if (
-							result.from.toLowerCase() === walletAddress.toLowerCase() &&
-							result.confirmations !== 0
-						) {
-							setTransactions({
-								...transactions,
-								[currentNetworkChainId]: {
-									...transactions[currentNetworkChainId],
-									[hash]: {
-										...transactions[currentNetworkChainId][hash],
-										...result,
-										hash,
-									},
+
+				const hash = `${currentTxHash}`;
+				setPendingTxLength(Number(getTx?.result?.length));
+				provider?.getTransaction(hash).then(result => {
+					if (
+						result.from.toLowerCase() === walletAddress.toLowerCase() &&
+						result.confirmations !== 0
+					) {
+						setTransactions({
+							...transactions,
+							[Number(currentNetworkChainId)]: {
+								...transactions[currentNetworkChainId === 57 ? 57 : 5700],
+								[hash]: {
+									...transactions[currentNetworkChainId === 57 ? 57 : 5700][
+										hash
+									],
+									...result,
+									hash,
 								},
-							});
-							setPendingTxLength(Number(result?.result?.length));
-							setApprovalState({
-								status: ApprovalState.APPROVED,
-								type: approvalState.type,
-							});
-							clearInterval(timer);
-							// eslint-disable-next-line
-							return;
+							},
+						});
+						setPendingTxLength(Number(getTx?.result?.length));
+						setApprovalState({
+							status: ApprovalState.APPROVED,
+							type: approvalState.type,
+						});
+						if (approvalState.type === "approve-swap") {
+							setApprovalSubmitted(prevState => ({
+								...prevState,
+								tokens: prevState.tokens.filter(
+									token => token !== `${currentInputTokenName}`
+								),
+							}));
 						}
-					});
-				}
+						clearInterval(timer);
+						// eslint-disable-next-line
+						return;
+					}
+				});
 			}, 10000);
 		}
 	}, [approvalState]);
@@ -217,7 +243,36 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 				status: "success",
 			});
 		}
+
+		if (
+			approvalState.type === "approve-swap" &&
+			approvalState.status === ApprovalState.APPROVED &&
+			approvalSubmitted.tokens.length === 0
+		) {
+			setApprovalSubmitted(prevState => ({
+				...prevState,
+				status: false,
+			}));
+		}
 	}, [approvalState]);
+
+	useEffect(() => {
+		const initialSubmittedValue: ISubmittedAproval = JSON.parse(
+			`${localStorage.getItem("approvalSubmitted")}`
+		);
+		if (initialSubmittedValue) {
+			setApprovalSubmitted(initialSubmittedValue);
+		}
+	}, []);
+
+	useEffect(() => {
+		if (approvalSubmitted && approvalState.status !== ApprovalState.UNKNOWN) {
+			localStorage.setItem(
+				"approvalSubmitted",
+				JSON.stringify(approvalSubmitted)
+			);
+		}
+	}, [approvalSubmitted]);
 
 	useMemo(async () => {
 		if (!connectorSelected) return;
@@ -289,6 +344,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setTransactions,
 			approvalState,
 			setApprovalState,
+			approvalSubmitted,
+			setApprovalSubmitted,
+			currentTxHash,
+			setCurrentTxHash,
+			currentInputTokenName,
+			setCurrentInputTokenName,
 			isGovernance,
 			setIsGovernance,
 			setPendingTxLength,

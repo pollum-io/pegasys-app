@@ -20,8 +20,8 @@ import {
 import { useModal, usePicasso, useTokens } from "hooks";
 import React, { useState, useEffect } from "react";
 import { MdHelpOutline, MdArrowBack } from "react-icons/md";
-import { SelectCoinModal } from "components";
 import { WrappedTokenInfo } from "types";
+import { SelectCoinModal } from "./SelectCoin";
 
 interface IModal {
 	isModalOpen: boolean;
@@ -36,9 +36,9 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	const { userTokensBalance } = useTokens();
 
 	const theme = usePicasso();
-	const { onOpenCoin, isOpenCoin, onCloseCoin } = useModal();
+	const { isOpenCoin, onCloseCoin } = useModal();
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
-	const [buttonId, setButtonId] = useState<number>(0);
+	const [buttonId] = useState<number>(0);
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
 
@@ -173,25 +173,26 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						defaultValue={5}
 						min={0}
 						max={100}
-						mb="4"
-						colorScheme="teal"
+						mb="6"
+						size="lg"
+						colorScheme="red"
 						onChange={(value: number) => setSliderValue(value)}
 						onMouseEnter={() => setShowTooltip(true)}
 						onMouseLeave={() => setShowTooltip(false)}
 					>
-						<SliderMark value={0} mt="1" ml="1.5" fontSize="sm">
+						<SliderMark value={0} mt="1rem" ml="1.5" fontSize="sm">
 							0%
 						</SliderMark>
-						<SliderMark value={25} mt="1" ml="-2.5" fontSize="sm">
+						<SliderMark value={25} mt="1rem" ml="-2.5" fontSize="sm">
 							25%
 						</SliderMark>
-						<SliderMark value={50} mt="1" ml="-2.5" fontSize="sm">
+						<SliderMark value={50} mt="1rem" ml="-2.5" fontSize="sm">
 							50%
 						</SliderMark>
-						<SliderMark value={75} mt="1" ml="-2.5" fontSize="sm">
+						<SliderMark value={75} mt="1rem" ml="-2.5" fontSize="sm">
 							75%
 						</SliderMark>
-						<SliderMark value={100} mt="1" ml="-8" fontSize="sm">
+						<SliderMark value={100} mt="1rem" ml="-8" fontSize="sm">
 							100%
 						</SliderMark>
 						<SliderTrack>

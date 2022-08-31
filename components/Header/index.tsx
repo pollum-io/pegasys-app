@@ -1,10 +1,11 @@
-import { Flex, Icon, Img, useColorMode } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Flex, Icon, Img, Link, useColorMode } from "@chakra-ui/react";
+import React from "react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
 import { useModal, usePicasso } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
+import { useRouter } from "next/router";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
@@ -14,17 +15,10 @@ import { SettingsButton } from "./SettingsButton";
 export const Header: React.FC = () => {
 	const { toggleColorMode } = useColorMode();
 	const theme = usePicasso();
-
+	const { pathname } = useRouter();
 	const { isOpenPsysBreakdown, onOpenPsysBreakdown, onClosePsysBreakdown } =
 		useModal();
-	const [nav, setNav] = useState(false);
-	const isNav = () => {
-		if (nav) {
-			return "white";
-		}
 
-		return null;
-	};
 	const links = [
 		{
 			name: "Swap",
@@ -56,14 +50,17 @@ export const Header: React.FC = () => {
 				isOpen={isOpenPsysBreakdown}
 				onClose={onClosePsysBreakdown}
 			/>
-			<Img
-				w={["7", "8", "6", "6"]}
-				h={["7", "8", "6", "6"]}
-				src={theme.icon.pegasysLogo}
-				ml={["2", "4", "4", "4"]}
-				position="absolute"
-				left="0"
-			/>
+			<Link href="/">
+				<Img
+					w={["7", "8", "6", "6"]}
+					h={["7", "8", "6", "6"]}
+					src={theme.icon.pegasysLogo}
+					ml={["4", "4", "4", "4"]}
+					mt={["1.5", "1", "2", "1.5"]}
+					position="absolute"
+					left="0"
+				/>
+			</Link>
 			<Flex
 				gap={["0", "1", "1", "1"]}
 				bgColor={theme.bg.topHeader}
@@ -71,7 +68,11 @@ export const Header: React.FC = () => {
 				ml={["7", "0", "0", "0"]}
 			>
 				{links.map((item, index) => (
-					<NavButton key={item.name + Number(index)} href={item.url}>
+					<NavButton
+						key={item.name + Number(index)}
+						href={item.url}
+						active={pathname === item.url}
+					>
 						{item.name}
 					</NavButton>
 				))}
@@ -101,7 +102,8 @@ export const Header: React.FC = () => {
 				zIndex="99"
 				alignItems="center"
 				px={["0", "10"]}
-				pl={["4", "10"]}
+				pl={["1", "6", "6", "10"]}
+				pr={["0", "4", "6", "10"]}
 				py="2"
 				justifyContent={["space-around", "space-between"]}
 			>
@@ -109,6 +111,7 @@ export const Header: React.FC = () => {
 					w="25%"
 					gap={["2", "0"]}
 					justifyContent={["space-around", "space-between"]}
+					pl={["6", "0", "0", "0"]}
 				>
 					<TokenButton onClick={onOpenPsysBreakdown} />
 					<NetworkButton />

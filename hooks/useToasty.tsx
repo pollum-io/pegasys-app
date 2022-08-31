@@ -108,7 +108,6 @@ const useToasty = () => {
 							py="0.15rem"
 						>
 							{toastIcon}
-
 							<Flex flexDirection="column" ml="0.8rem">
 								<Text font-weight="bold">{`${state?.title}`}</Text>
 								<Text fontSize="sm" font-weight="normal">
@@ -123,7 +122,7 @@ const useToasty = () => {
 				),
 			});
 		}
-	}, [state, toast]);
+	}, [state]);
 
 	return { toastState: state, toast: setState };
 };

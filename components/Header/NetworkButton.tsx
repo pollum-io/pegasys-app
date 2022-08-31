@@ -1,6 +1,6 @@
 import { Text } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
-import { usePicasso } from "hooks";
+import { usePicasso, useWallet } from "hooks";
 
 interface IButtonProps {
 	children?: ReactNode;
@@ -8,7 +8,7 @@ interface IButtonProps {
 
 export const NetworkButton: FunctionComponent<IButtonProps> = props => {
 	const { children } = props;
-	const connectedNetwork = "NEVM";
+	const { currentNetworkChainId, isConnected } = useWallet();
 	const theme = usePicasso();
 
 	return (
@@ -21,9 +21,14 @@ export const NetworkButton: FunctionComponent<IButtonProps> = props => {
 			transition="0.2s"
 			_hover={{}}
 			_active={{}}
+			ml={`${currentNetworkChainId === 5700 && "5"}`}
 		>
 			{children}
-			{connectedNetwork}
+			{isConnected
+				? currentNetworkChainId === 57
+					? "NEVM"
+					: "TANENBAUM"
+				: "NEVM"}
 		</Text>
 	);
 };

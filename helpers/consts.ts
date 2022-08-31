@@ -7,6 +7,9 @@ type ChainTokenList = {
 	readonly [chainId in ChainId]: Token[];
 };
 
+export const SYS_LOGO =
+	"https://app.pegasys.finance/static/media/syscoin_token_round.f5e7de99.png";
+
 export const ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
 	[ChainId.TANENBAUM]: "0xE18c200A70908c89fFA18C628fE1B83aC0065EA4",
 	[ChainId.NEVM]: "0x017dAd2578372CAEE5c6CddfE35eEDB3728544C4",
@@ -232,6 +235,12 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(
 	JSBI.BigInt(1500),
 	BIPS_BASE
 ); // 15%
+
+// used to ensure the user doesn't send so much ETH so they end up with <.01
+export const MIN_ETH: JSBI = JSBI.exponentiate(
+	JSBI.BigInt(10),
+	JSBI.BigInt(16)
+); // .01 ETH
 
 export const FIVE_MINUTES_IN_SECONDS = 300;
 export const FIFTEEN_MINUTES_IN_SECONDS = 900;

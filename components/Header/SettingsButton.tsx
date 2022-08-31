@@ -10,10 +10,16 @@ import {
 	Stack,
 	Switch,
 	Icon,
+	PopoverArrow,
+	Tooltip,
+	PopoverCloseButton,
 } from "@chakra-ui/react";
-import React, { FunctionComponent, ReactNode } from "react";
+import React, { FunctionComponent, ReactNode, useState } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
+import { IoWarningOutline } from "react-icons/io5";
 import { usePicasso, useWallet } from "hooks";
+import { mockedSlippageValues } from "helpers/mockedData";
+import { useTranslation } from "react-i18next";
 import { IconButton } from "../Buttons/IconButton";
 import { SlippageButton } from "../Buttons/SlippageButton";
 import { Languages } from "./Languages";
@@ -22,11 +28,63 @@ interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
 }
 
+enum SlippageError {
+	InvalidInput = "InvalidInput",
+	RiskyLow = "RiskyLow",
+	RiskyHigh = "RiskyHigh",
+}
+
 export const SettingsButton: FunctionComponent<IButtonProps> = props => {
+	const [slippageInputValue, setSlippageInputValue] = useState<string>("");
+
 	const theme = usePicasso();
-	// const [expert, setExpert] = useState(false)
-	const { userSlippageTolerance, setUserSlippageTolerance, setExpert, expert } =
-		useWallet();
+	const {
+		userSlippageTolerance,
+		setUserSlippageTolerance,
+		setExpert,
+		expert,
+		isConnected,
+	} = useWallet();
+
+	const { t: translation } = useTranslation();
+
+	const slippageInputIsValid =
+		slippageInputValue === "" ||
+		(userSlippageTolerance / 100).toFixed(2) ===
+			Number.parseFloat(slippageInputValue).toFixed(2);
+
+	let slippageInputErrors: SlippageError | undefined;
+
+	if (slippageInputValue !== "" && !slippageInputIsValid) {
+		slippageInputErrors = SlippageError.InvalidInput;
+	} else if (slippageInputIsValid && userSlippageTolerance < 50) {
+		slippageInputErrors = SlippageError.RiskyLow;
+	} else if (slippageInputIsValid && userSlippageTolerance > 500) {
+		slippageInputErrors = SlippageError.RiskyHigh;
+	} else {
+		slippageInputErrors = undefined;
+	}
+
+	const parseSlippageCustomValue = (slippageValue: string) => {
+		if (slippageValue === "") {
+			setUserSlippageTolerance(50);
+			setSlippageInputValue("");
+			return;
+		}
+
+		setSlippageInputValue(slippageValue);
+
+		const valueAsIntFromRoundedFloat = parseFloat(
+			(Number(slippageValue) * 100).toString()
+		);
+
+		if (
+			!Number.isNaN(valueAsIntFromRoundedFloat) &&
+			valueAsIntFromRoundedFloat < 5000
+		) {
+			setUserSlippageTolerance(valueAsIntFromRoundedFloat);
+		}
+	};
 
 	return (
 		<Popover placement="right">
@@ -38,18 +96,32 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 					}}
 					aria-label="Popover"
 					icon={<MdSettings size={25} />}
+					_expanded={{ color: theme.text.cyan }}
 				/>
 			</PopoverTrigger>
 			<PopoverContent
+				_focus={{
+					outline: "none",
+				}}
 				bgColor={theme.bg.blueNavy}
 				p="1rem 1.5rem 0.5rem"
 				w={["100vw", "100vw", "24.563rem", "24.563rem"]}
 				h="max-content"
 				bottom={["0rem", "0rem", "3.8rem", "3.8rem"]}
-				right={["0", "0", "", ""]}
+				right={["0", "0", "unset", "unset"]}
 				mx={["0", "0", "20", "56"]}
 				position="fixed"
 			>
+				<Flex
+					justifyContent="flex-end"
+					zIndex="99"
+					pr="0rem"
+					pt="0rem"
+					pb="2"
+					h="max-content"
+				>
+					<PopoverCloseButton position="relative" size="md" />
+				</Flex>
 				<Flex
 					bgColor={theme.bg.transactionSettings}
 					borderRadius="7rem"
@@ -61,6 +133,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 						Transaction Settings
 					</Text>
 				</Flex>
+				<PopoverArrow />
 				<PopoverBody>
 					<Flex flexDirection="column" mt="4">
 						<Flex alignItems="center" flexDirection="row">
@@ -72,82 +145,119 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							>
 								Slippage tolerance
 							</Text>
-							<Icon as={MdHelpOutline} color={theme.icon.whiteGray} />
+							<Flex>
+								<Tooltip
+									label="Sua transação será revertida se o preço For alterado de forma desfavorável acima dessa porcentagem."
+									position="relative"
+									bgColor={theme.bg.secondary}
+									color={theme.text.mono}
+									borderRadius="md"
+								>
+									<Text as="span" _hover={{ opacity: 0.8 }}>
+										<Flex pb="0.15rem">
+											<Icon
+												as={MdHelpOutline}
+												h="4"
+												w="4"
+												mt="0.25rem"
+												color={theme.icon.whiteGray}
+												borderRadius="full"
+											/>
+										</Flex>
+									</Text>
+								</Tooltip>
+							</Flex>
 						</Flex>
-						<Flex flexDirection="row" py="0.5rem">
+						<Flex flexDirection="row" py="0.5rem" alignItems="center">
+							{mockedSlippageValues.map(slippageValue => (
+								<SlippageButton
+									key={slippageValue.id}
+									aria-label="Slip"
+									mr="3"
+									onClick={() => {
+										setUserSlippageTolerance(slippageValue.valueInBips);
+										setSlippageInputValue("");
+									}}
+									bgColor={
+										userSlippageTolerance === slippageValue.valueInBips
+											? theme.bg.slippage
+											: "transparent"
+									}
+									color={
+										userSlippageTolerance === slippageValue.valueInBips
+											? theme.text.mono
+											: theme.text.transactionsItems
+									}
+								>
+									{slippageValue.valueInBips / 100}%
+								</SlippageButton>
+							))}
+
 							<SlippageButton
 								aria-label="Slip"
-								mr="3"
-								onClick={() => setUserSlippageTolerance(10)}
-								bgColor={
-									userSlippageTolerance === 10
-										? theme.bg.slippage
-										: "transparent"
-								}
-								color={
-									userSlippageTolerance === 10
-										? theme.text.mono
-										: theme.text.transactionsItems
-								}
-							>
-								0.1%
-							</SlippageButton>
-							<SlippageButton
-								aria-label="Slip"
-								mr="3"
-								onClick={() => setUserSlippageTolerance(50)}
-								bgColor={
-									userSlippageTolerance === 50
-										? theme.bg.slippage
-										: "transparent"
-								}
-								color={
-									userSlippageTolerance === 50
-										? theme.text.mono
-										: theme.text.transactionsItems
-								}
-							>
-								0.5%
-							</SlippageButton>
-							<SlippageButton
-								aria-label="Slip"
-								mr="3"
-								py="0.5rem"
-								px="1rem"
-								onClick={() => setUserSlippageTolerance(100)}
-								bgColor={
-									userSlippageTolerance === 100
-										? theme.bg.slippage
-										: "transparent"
-								}
-								color={
-									userSlippageTolerance === 100
-										? theme.text.mono
-										: theme.text.transactionsItems
-								}
-							>
-								1%
-							</SlippageButton>
-							<Input
-								w="25%"
-								h="max-content"
-								py="0.3rem"
-								px="0.3rem"
-								m="0"
+								w="30%"
+								padding="0"
 								borderRadius={36}
-								placeholder="1.0%"
-								fontWeight="semibold"
 								border="1px solid"
-								borderColor={theme.border.borderSettings}
-								textAlign="center"
-								_focus={{
-									borderColor: theme.border.borderSettings,
-								}}
-								_hover={{
-									borderColor: theme.border.borderSettings,
-								}}
-							/>
+								borderColor={
+									!slippageInputIsValid
+										? "#FF6871"
+										: theme.border.borderSettings
+								}
+							>
+								<Flex alignItems="center">
+									{!!slippageInputValue &&
+									(slippageInputErrors === SlippageError.RiskyLow ||
+										slippageInputErrors === SlippageError.RiskyHigh) ? (
+										<Text
+											role="img"
+											aria-label="warning"
+											position="absolute"
+											left="10px"
+										>
+											<IoWarningOutline color="yellow" />
+										</Text>
+									) : null}
+									<Input
+										w="100%"
+										h="max-content"
+										py="0.3rem"
+										px="0.3rem"
+										m="0"
+										border="none"
+										value={slippageInputValue}
+										type="number"
+										color={!slippageInputIsValid ? "red" : ""}
+										onChange={e => parseSlippageCustomValue(e.target.value)}
+										placeholder="1.0%"
+										fontWeight="normal"
+										textAlign="center"
+										_focus={{
+											outline: "none",
+										}}
+									/>
+									<Text position="absolute" left="75%">
+										%
+									</Text>
+								</Flex>
+							</SlippageButton>
 						</Flex>
+						{!!slippageInputErrors && (
+							<Text
+								fontSize="sm"
+								color={
+									slippageInputErrors === SlippageError.InvalidInput
+										? "red"
+										: "#F3841E"
+								}
+							>
+								{slippageInputErrors === SlippageError.InvalidInput
+									? translation("transactionSettings.enterValidSlippage")
+									: slippageInputErrors === SlippageError.RiskyLow
+									? translation("transactionSettings.transactionMayFail")
+									: translation("transactionSettings.transactionMayFrontrun")}
+							</Text>
+						)}
 						<Flex alignItems="center" flexDirection="row" pt="0.1rem" mt="4">
 							<Text
 								fontSize="md"
@@ -157,7 +267,26 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							>
 								Transaction tolerance
 							</Text>
-							<Icon as={MdHelpOutline} color={theme.icon.whiteGray} />
+							<Tooltip
+								label="Sua transação será revertida se ela demorar mais do que isso."
+								position="relative"
+								bgColor={theme.bg.secondary}
+								color={theme.text.mono}
+								borderRadius="md"
+							>
+								<Text as="span" _hover={{ opacity: 0.8 }}>
+									<Flex pb="0.15rem">
+										<Icon
+											as={MdHelpOutline}
+											h="4"
+											w="4"
+											mt="0.25rem"
+											color={theme.icon.whiteGray}
+											borderRadius="full"
+										/>
+									</Flex>
+								</Text>
+							</Tooltip>
 						</Flex>
 						<Flex flexDirection="row" py="0.5rem" alignItems="center">
 							<Input
@@ -174,31 +303,60 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								border="1px solid"
 								borderColor={theme.border.borderSettings}
 								_focus={{
-									borderColor: theme.border.borderSettings,
-								}}
-								_hover={{
-									borderColor: theme.border.borderSettings,
+									outline: "none",
 								}}
 							/>
 							<Text color={theme.text.mono}>Minutes</Text>
 						</Flex>
-						<Flex alignItems="center" flexDirection="row" mt="4">
-							<Text
-								fontSize="md"
-								pr="1"
-								fontWeight="medium"
-								color={theme.text.mono}
+						<Flex
+							alignItems={["flex-start", "center", "center", "center"]}
+							flexDirection={["column", "row", "row", "row"]}
+							mt="4"
+						>
+							<Flex
+								pt="0.1rem"
+								mt="4"
+								flexDirection={["row", "row", "row", "row"]}
+								pb={["2", "2", "0", "0"]}
+								alignItems="center"
 							>
-								Toggle Expert Mode
-							</Text>
-							<Icon as={MdHelpOutline} color={theme.icon.whiteGray} />
-							<Flex flexDirection="row" ml="12">
+								<Text
+									fontSize={["sm", "md", "md", "md"]}
+									pr={["1", "1", "1", "1"]}
+									fontWeight="medium"
+									color={theme.text.mono}
+								>
+									Toggle Expert Mode
+								</Text>
+								<Tooltip
+									label="Ignora os modais de confirmação e permite alta variação de preço. Use por sua conta e risco."
+									position="relative"
+									bgColor={theme.bg.secondary}
+									color={theme.text.mono}
+									borderRadius="md"
+								>
+									<Text as="span" _hover={{ opacity: 0.8 }}>
+										<Flex pb="0.15rem">
+											<Icon
+												as={MdHelpOutline}
+												h="4"
+												w="4"
+												mt="0.25rem"
+												color={theme.icon.whiteGray}
+												borderRadius="full"
+											/>
+										</Flex>
+									</Text>
+								</Tooltip>
+							</Flex>
+							<Flex flexDirection="row" ml={["2", "12", "12", "12"]}>
 								<Stack align="center" direction="row">
 									<Text color={theme.text.mono}>Off</Text>
 									<Switch
+										disabled={!isConnected}
 										size="md"
-										colorScheme="teal"
 										onChange={() => setExpert(!expert)}
+										// colorScheme="lightPurple"
 									/>
 									<Text color={theme.text.mono}>On</Text>
 								</Stack>
@@ -209,7 +367,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 						bgColor={theme.bg.transactionSettings}
 						borderRadius="7rem"
 						py="2"
-						mt="8"
+						mt={["4", "8", "8", "8"]}
 						justifyContent="center"
 						alignItems="center"
 					>

@@ -15,7 +15,6 @@ import {
 	Text,
 	Tooltip,
 	InputGroup,
-	InputLeftElement,
 } from "@chakra-ui/react";
 import {
 	ApprovalState,
@@ -56,7 +55,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 		useModal();
 	const theme = usePicasso();
 	const [defaultTokens, setDefaultTokens] = useState<WrappedTokenInfo[]>([]);
-	const [order, setOrder] = useState<"asc" | "desc">("desc");
+	const [order, setOrder] = useState<"asc" | "desc">("asc");
 	const [filter, setFilter] = useState<WrappedTokenInfo[]>([]);
 	const [tokenError, setTokenError] = useState<WrappedTokenInfo[]>([]);
 	const [arrowOrder, setArrowOrder] = useState(false);
@@ -113,7 +112,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 			})
 			.sort(
 				(valueA: { balance: string }, valueB: { balance: string }) =>
-					Number(valueA.balance) - Number(valueB.balance)
+					Number(valueB.balance) - Number(valueA.balance)
 			);
 
 		setDefaultTokens(orderedTokens);
@@ -162,12 +161,12 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				borderRadius="3xl"
 				bgColor={theme.bg.blueNavyLight}
 				bottom="0"
-				mt="16"
+				mt="10"
 				mb="0"
 				border={["none", "1px solid transparent"]}
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
-				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
-				position="relative"
+				borderBottomRadius={["0", "0", "3xl", "3xl"]}
+				position={["absolute", "absolute", "relative", "relative"]}
 				h="max-content"
 			>
 				<ModalHeader display="flex" alignItems="center" gap="3">
@@ -203,14 +202,14 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					<InputGroup>
 						<Input
 							borderRadius="full"
-							borderColor="rgba(21, 61, 111, 1)"
+							borderColor={theme.bg.blueNavyLightness}
 							_placeholder={{ color: theme.text.input, opacity: "0.6" }}
 							placeholder="Search, name or paste address"
 							onChange={handleInput}
 							py={["0.1rem", "0.1rem", "1", "1"]}
 							pl="10"
-							_hover={{ border: "1px solid #3182CE" }}
-							_focus={{ border: "1px solid #3182CE" }}
+							_focus={{ outline: "none" }}
+							_hover={{}}
 						/>
 						<Flex
 							position="absolute"
@@ -221,12 +220,12 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							<MdSearch color={theme.icon.searchIcon} size={20} />
 						</Flex>
 					</InputGroup>
-					<Flex my="5" gap="2">
+					<Flex my="5" gap="2" justifyContent="space-between">
 						<Text fontSize="md" color={theme.text.cyanPurple}>
 							Token name
 						</Text>
 						<IconButton
-							as={arrowOrder ? MdArrowUpward : MdArrowDownward}
+							as={arrowOrder ? MdArrowDownward : MdArrowUpward}
 							aria-label="Order"
 							minW="none"
 							bg="transparent"
@@ -234,14 +233,37 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							w="6"
 							h="6"
 							onClick={() => orderList(filter)}
+							mr="4"
 						/>
 					</Flex>
 				</ModalBody>
-				<Flex flexDirection="column">
+				<Flex
+					flexDirection="column"
+					w="95%"
+					h="10%"
+					my="0"
+					pr="2"
+					pl="2"
+					maxHeight="30rem"
+					overflow="auto"
+					css={{
+						"&::-webkit-scrollbar": {
+							width: "6px",
+						},
+						"&::-webkit-scrollbar-track": {
+							width: "6px",
+							scrollbarColor: " #0b172c",
+						},
+						"&::-webkit-scrollbar-thumb": {
+							background: "#FFFFFF3D",
+							borderRadius: "24px",
+						},
+					}}
+				>
 					{filter?.map((token: WrappedTokenInfo, index: number) => (
 						<Button
 							bg="transparent"
-							px="10"
+							px="4"
 							py="6"
 							justifyContent="space-between"
 							key={token.address + Number(index)}
@@ -253,6 +275,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 								handleSelectToken(buttonId as number, token);
 								onClose();
 							}}
+							_hover={{ bgColor: theme.bg.max }}
 						>
 							<Flex
 								gap="4"
@@ -269,9 +292,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 									<Img src={token.logoURI} borderRadius="full" w="6" h="6" />
 									{token.symbol}
 								</Flex>
-								<Text fontFamily="mono" fontWeight="normal">
-									{token.balance}
-								</Text>
+								<Text fontWeight="normal">{token.balance}</Text>
 							</Flex>
 						</Button>
 					))}

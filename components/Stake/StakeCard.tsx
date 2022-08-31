@@ -1,4 +1,12 @@
-import { Button, Flex, Grid, GridItem, Img, Text } from "@chakra-ui/react";
+import {
+	Button,
+	Flex,
+	Grid,
+	GridItem,
+	Img,
+	Text,
+	useColorMode,
+} from "@chakra-ui/react";
 import { FunctionComponent, useState } from "react";
 import { useModal, usePicasso } from "hooks";
 import { StakeActions } from "components/Modals/StakeActions";
@@ -16,7 +24,6 @@ interface IPoolCards {
 
 export const StakeCards: FunctionComponent<IPoolCards> = props => {
 	const {
-		stakeTokens,
 		stakeOf,
 		stakeApr,
 		stakeTotalStake,
@@ -24,11 +31,14 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 		stakeDepositFee,
 		stakeYourStaked,
 		stakeYourUnclaimed,
+		stakeTokens,
 	} = props;
 	const theme = usePicasso();
 	const { isOpenStakeActions, onOpenStakeActions, onCloseStakeActions } =
 		useModal();
+
 	const [buttonId, setButtonId] = useState<string>("");
+	const { colorMode } = useColorMode();
 
 	return (
 		<Flex
@@ -40,6 +50,11 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 			gap="8"
 			borderRadius="2xl"
 			border="1px solid transparent"
+			boxShadow={
+				colorMode === "light"
+					? "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05);"
+					: "none"
+			}
 			background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 		>
 			<StakeActions
@@ -50,7 +65,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 			/>
 			<Flex
 				id="header"
-				bg="rgba(255, 255, 255, 0.04)"
+				bg={theme.bg.iconTicket}
 				justifyContent="center"
 				flexDirection="row"
 				pt="3"
@@ -63,21 +78,26 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 				gap="2"
 			>
 				<Img src="icons/pegasys.png" w="6" h="6" />
-				<Text>Earn {stakeOf}</Text>
+				<Text color={theme.text.whitePurple}>Earn {stakeOf}</Text>
 				<Button
 					id="claim"
 					border="1px solid"
-					borderColor={theme.text.cyan}
+					borderColor={theme.text.cyanPurple}
 					borderRadius="full"
 					w="max-content"
 					h="max-content"
+					color={theme.text.whitePurple}
 					bgColor="transparent"
 					py="1"
 					fontSize="xs"
 					ml="1"
-					onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+					onClick={event => {
 						setButtonId(event?.currentTarget?.id);
 						onOpenStakeActions();
+					}}
+					_hover={{
+						borderColor: theme.text.cyanLightPurple,
+						color: theme.text.cyanLightPurple,
 					}}
 				>
 					Claim
@@ -94,50 +114,50 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 				pl={["8", "8", "0", "0"]}
 			>
 				<GridItem flexDirection="column">
-					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
+					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyanPurple}>
 						APR
 					</Text>
-					<Text fontWeight="medium" fontSize="md">
+					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
 						1 {stakeApr}
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column">
-					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
+					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyanPurple}>
 						Total staked (PSYS)
 					</Text>
-					<Text fontWeight="medium" fontSize="md">
+					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
 						1 {stakeTotalStake}
 					</Text>
 				</GridItem>
-				<GridItem flexDirection="column">
-					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
+				<GridItem flexDirection="column" pl="6">
+					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyanPurple}>
 						Your rate (PSYS/Week)
 					</Text>
-					<Text fontWeight="medium" fontSize="md">
+					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
 						1 {stakeYourRate}
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column">
-					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
+					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyanPurple}>
 						Deposit Fee
 					</Text>
-					<Text fontWeight="medium" fontSize="md">
+					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
 						1 {stakeDepositFee}%
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column">
-					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
+					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyanPurple}>
 						Your Staked PSYS
 					</Text>
-					<Text fontWeight="medium" fontSize="md">
+					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
 						1 {stakeYourStaked}
 					</Text>
 				</GridItem>
-				<GridItem flexDirection="column">
-					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyan}>
+				<GridItem flexDirection="column" pl="6">
+					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyanPurple}>
 						Your unclaimed PSYS
 					</Text>
-					<Text fontWeight="medium" fontSize="md">
+					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
 						1 {stakeYourUnclaimed}
 					</Text>
 				</GridItem>
@@ -156,15 +176,20 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					height="2rem"
 					bgColor="transparent"
 					border="1px solid"
-					borderColor={theme.text.cyan}
+					borderColor={theme.text.cyanPurple}
+					color={theme.text.whitePurple}
 					borderRadius="full"
 					py="2"
 					px="0.75rem"
 					fontSize="sm"
 					fontWeight="semibold"
-					onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+					onClick={event => {
 						setButtonId(event?.currentTarget?.id);
 						onOpenStakeActions();
+					}}
+					_hover={{
+						borderColor: theme.text.cyanLightPurple,
+						color: theme.text.cyanLightPurple,
 					}}
 				>
 					Unstake
@@ -180,9 +205,12 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					px="0.75rem"
 					fontSize="sm"
 					fontWeight="semibold"
-					onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+					onClick={event => {
 						setButtonId(event?.currentTarget?.id);
 						onOpenStakeActions();
+					}}
+					_hover={{
+						bgColor: theme.bg.bluePurple,
 					}}
 				>
 					Stake
