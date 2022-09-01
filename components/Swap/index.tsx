@@ -331,6 +331,24 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const switchTokensPosition = () => {
 		setSelectedToken(prevState => [...prevState]?.reverse());
+		setTokenInputValue(prevState => ({
+			...prevState,
+			currentInputTyped:
+				prevState.currentInputTyped === "inputFrom" ? "inputTo" : "inputFrom",
+			lastInputTyped: prevState.lastInputTyped === 0 ? 1 : 0,
+			inputFrom: {
+				value:
+					prevState.currentInputTyped === "inputFrom"
+						? prevState.inputTo.value
+						: prevState.typedValue,
+			},
+			inputTo: {
+				value:
+					prevState.currentInputTyped === "inputTo"
+						? prevState.inputFrom.value
+						: prevState.typedValue,
+			},
+		}));
 	};
 
 	const { execute: onWrap } = UseWrapCallback(
