@@ -22,6 +22,7 @@ import { usePicasso, useWallet, useModal } from "hooks";
 import { NextPage } from "next";
 import { useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
+import { WrappedTokenInfo } from "types";
 
 export const PoolsContainer: NextPage = () => {
 	const theme = usePicasso();
@@ -40,6 +41,7 @@ export const PoolsContainer: NextPage = () => {
 	const [haveValue] = useState(false);
 	const { isConnected } = useWallet();
 	const [userHavePool] = useState(true);
+	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 
 	return (
 		<Flex justifyContent="center" alignItems="center">
@@ -48,12 +50,15 @@ export const PoolsContainer: NextPage = () => {
 				onModalClose={onCloseAddLiquidity}
 				isCreate={isCreate}
 				haveValue={haveValue}
+				setSelectedToken={setSelectedToken}
+				selectedToken={selectedToken}
 			/>
 			<RemoveLiquidity
 				isModalOpen={isOpenRemoveLiquidity}
 				onModalClose={onCloseRemoveLiquidity}
 				isCreate={isCreate}
-				haveValue={haveValue}
+				setSelectedToken={setSelectedToken}
+				selectedToken={selectedToken}
 			/>
 			<ImportPoolModal
 				isModalOpen={isOpenImportPool}

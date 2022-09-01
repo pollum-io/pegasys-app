@@ -17,7 +17,10 @@ import {
 	SliderFilledTrack,
 	SliderThumb,
 } from "@chakra-ui/react";
-import { useModal, usePicasso, useTokens } from "hooks";
+import { ChainId } from "@pollum-io/pegasys-sdk";
+import { Signer } from "ethers";
+import { useModal, usePicasso, useTokens, useWallet } from "hooks";
+import { UseRemoveLiquidity } from "hooks/pools/useRemoveLiquidity";
 import React, { useState, useEffect } from "react";
 import { MdHelpOutline, MdArrowBack } from "react-icons/md";
 import { WrappedTokenInfo } from "types";
@@ -26,21 +29,43 @@ import { SelectCoinModal } from "./SelectCoin";
 interface IModal {
 	isModalOpen: boolean;
 	onModalClose: () => void;
+	setSelectedToken: React.Dispatch<React.SetStateAction<WrappedTokenInfo[]>>;
+	selectedToken: WrappedTokenInfo[];
 	isCreate?: boolean;
-	haveValue?: boolean;
 }
 
 export const RemoveLiquidity: React.FC<IModal> = props => {
-	const { isModalOpen, onModalClose, isCreate, haveValue } = props;
+	const {
+		isModalOpen,
+		onModalClose,
+		isCreate,
+		selectedToken,
+		setSelectedToken,
+	} = props;
 
 	const { userTokensBalance } = useTokens();
+	const { provider, walletAddress, currentNetworkChainId, signer } =
+		useWallet();
 
 	const theme = usePicasso();
 	const { isOpenCoin, onCloseCoin } = useModal();
-	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId] = useState<number>(0);
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
+
+	const walletInfos = {
+		provider,
+		walletAddress,
+		chainId: currentNetworkChainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
+	};
+
+	const { onAttemptToApprove } = UseRemoveLiquidity(
+		"0xb9a3EDE63BF1d8cC7E75352Fb7C9Db6dcaFbC8F8",
+		sliderValue,
+		walletInfos,
+		signer as Signer,
+		selectedToken
+	);
 
 	useEffect(() => {
 		const defaultTokenValues = userTokensBalance.filter(
@@ -242,6 +267,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						w="100%"
 						py="6"
 						px="6"
+						onClick={onAttemptToApprove}
 						borderRadius="67px"
 						bgColor={theme.bg.button.connectWalletSwap}
 						color={theme.text.cyan}
@@ -251,7 +277,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 							bgColor: theme.bg.bluePurple,
 						}}
 					>
-						{isCreate ? "Create a pair" : "Add Liquidity"}
+						{isCreate ? "Create a pair" : "Remove Liquidity"}
 					</Button>
 				</Flex>
 				<Flex

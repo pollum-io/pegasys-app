@@ -28,6 +28,8 @@ interface IModal {
 	onModalClose: () => void;
 	isCreate?: boolean;
 	haveValue?: boolean;
+	setSelectedToken: React.Dispatch<React.SetStateAction<WrappedTokenInfo[]>>;
+	selectedToken: WrappedTokenInfo[];
 }
 interface ITokenInputValue {
 	inputFrom: string;
@@ -35,13 +37,19 @@ interface ITokenInputValue {
 }
 
 export const AddLiquidityModal: React.FC<IModal> = props => {
-	const { isModalOpen, onModalClose, isCreate, haveValue } = props;
+	const {
+		isModalOpen,
+		onModalClose,
+		isCreate,
+		haveValue,
+		selectedToken,
+		setSelectedToken,
+	} = props;
 
 	const { userTokensBalance } = useTokens();
 
 	const theme = usePicasso();
 	const { isOpenCoin, onCloseCoin, onOpenCoin } = useModal();
-	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
 	const [tokenInputValue, setTokenInputValue] = useState<ITokenInputValue>({
 		inputFrom: "",
