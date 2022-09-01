@@ -105,9 +105,12 @@ const usePicasso = () => {
 				"rgba(255, 255, 255, 0.08)"
 			),
 			bluePurple: useColorModeValue("#8C15E8", "#0753B2"),
-			topHeader: useColorModeValue("#FFFFFF", "#000000"),
+			topHeader: useColorModeValue(
+				"rgba(255, 255, 255, 0.24)",
+				"rgba(0, 0, 0, 0.24)"
+			),
 			primary: useColorModeValue("#EDF2F7", "#000913"),
-			secondary: useColorModeValue("#EDF2F7", "#171923"), // tooltip background
+			secondary: useColorModeValue("#FFFFFF", "#0B172C"), // tooltip background
 			whiteGray: useColorModeValue("#665EE1", "rgba(8, 17, 32, 1)"), //
 			blackAlpha: useColorModeValue("#ffffff", "#081120"), // modal bg
 			blackLightness: useColorModeValue("#F7FAFC", "#081120"),
@@ -147,6 +150,7 @@ const usePicasso = () => {
 			},
 		},
 		border: {
+			chart: useColorModeValue("#A0AEC0", "#718096"),
 			manageInput: useColorModeValue("#E2E8F0", "rgba(255, 255, 255, 0.24)"),
 			farmInput: useColorModeValue("#CBD5E0", "rgba(0, 217, 239, 0.2)"),
 			modalBorderShadow: useColorModeValue(

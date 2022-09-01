@@ -972,7 +972,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									<Text fontWeight="normal" mr="1" fontSize="sm">
 										{translation("swap.priceImpact")}
 									</Text>
-
 									<TooltipComponent
 										label={translation("swap.priceImpactHelper")}
 										icon={MdHelpOutline}

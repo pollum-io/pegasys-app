@@ -2,6 +2,7 @@ import { Flex } from "@chakra-ui/react";
 import { createChart, ColorType, UTCTimestamp } from "lightweight-charts";
 import React, { useEffect, useRef } from "react";
 import { IChartComponentData } from "types/index";
+import { usePicasso } from "hooks";
 
 interface IChartComponentProps {
 	data: IChartComponentData[];
@@ -20,6 +21,7 @@ const colors = {
 
 const ChartComponent = (props: IChartComponentProps) => {
 	const { data } = props;
+	const theme = usePicasso();
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const chartContainerRef: any = useRef();
@@ -28,8 +30,9 @@ const ChartComponent = (props: IChartComponentProps) => {
 		const chart = createChart(chartContainerRef.current, {
 			layout: {
 				background: { type: ColorType.Solid, color: colors.backgroundColor },
-				textColor: colors.textColor,
+				textColor: theme.border.chart,
 				fontSize: 16,
+				fontFamily: "Inter",
 			},
 			width: chartContainerRef.current.clientWidth,
 			height: 350,
@@ -43,14 +46,14 @@ const ChartComponent = (props: IChartComponentProps) => {
 			},
 			rightPriceScale: {
 				visible: true,
-				borderColor: colors.borderColor,
+				borderColor: theme.border.chart,
 				scaleMargins: {
 					bottom: 0.05,
 				},
 			},
 			timeScale: {
 				visible: true,
-				borderColor: colors.borderColor,
+				borderColor: theme.border.chart,
 				timeVisible: true,
 				lockVisibleTimeRangeOnResize: true,
 			},

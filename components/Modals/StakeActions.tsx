@@ -38,9 +38,7 @@ export const StakeActions: React.FC<IModal> = props => {
 	const [inputValue, setInputValue] = useState("");
 	const [isAprroving] = useState("");
 	const [isApproved] = useState("");
-
 	const [sliderValue, setSliderValue] = React.useState(5);
-	const [showTooltip, setShowTooltip] = React.useState(false);
 
 	const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const value = event?.target?.value;
@@ -347,8 +345,6 @@ export const StakeActions: React.FC<IModal> = props => {
 									w="85%"
 									colorScheme="teal"
 									onChange={(value: number) => setSliderValue(value)}
-									onMouseEnter={() => setShowTooltip(true)}
-									onMouseLeave={() => setShowTooltip(false)}
 								>
 									<SliderMark value={0} mt="0.5rem" ml="1.5" fontSize="sm">
 										0%
@@ -368,15 +364,8 @@ export const StakeActions: React.FC<IModal> = props => {
 									<SliderTrack>
 										<SliderFilledTrack bg={theme.text.psysBalance} />
 									</SliderTrack>
-									<Tooltip
-										hasArrow
-										bg="teal.500"
-										color="white"
-										placement="top"
-										isOpen={showTooltip}
-									>
-										<SliderThumb />
-									</Tooltip>
+
+									<SliderThumb />
 								</Slider>
 							</Flex>
 							<Flex mt="1.5rem" mb="1rem" gap="4">
