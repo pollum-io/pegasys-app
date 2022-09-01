@@ -715,7 +715,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									{translation("swapHooks.insufficient")}
 									{selectedToken[0]?.symbol}
 									{translation("swapHooks.balance")}.
-									{translation("swapHooks.enterAmount")}
 								</Text>
 							)}
 						</Flex>
