@@ -87,7 +87,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 							<MdArrowBack size={24} color={theme.icon.whiteGray} />
 						</Flex>
 						<Text
-							fontSize="2xl"
+							fontSize={["xl", "xl", "2xl", "2xl"]}
 							fontWeight="medium"
 							textAlign="center"
 							px="4"

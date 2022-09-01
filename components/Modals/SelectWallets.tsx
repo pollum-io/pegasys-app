@@ -38,7 +38,7 @@ export const SelectWallets: React.FC<IModal> = props => {
 				{!connecting && (
 					<Flex flexDirection="column" justifyContent="center">
 						<Flex justifyContent="space-between" align="center" pb="5">
-							<Text fontSize="xl" fontWeight="semibold">
+							<Text fontSize={["lg", "lg", "xl", "xl"]} fontWeight="semibold">
 								Connect to a Wallet
 							</Text>
 							<Flex _hover={{ cursor: "pointer" }}>
@@ -49,7 +49,11 @@ export const SelectWallets: React.FC<IModal> = props => {
 							<WalletOptions />
 						</Flex>
 
-						<Flex flexDirection="column" fontSize="sm">
+						<Flex
+							flexDirection="column"
+							fontSize="sm"
+							pb={["3.75rem", "3.75rem", "0", "0"]}
+						>
 							<Text textAlign="center" fontWeight="normal">
 								New to Syscoin?
 							</Text>
@@ -70,7 +74,12 @@ export const SelectWallets: React.FC<IModal> = props => {
 								<AiOutlineClose size={22} onClick={onClose} />
 							</Flex>
 						</Flex>
-						<Flex justifyContent="center" flexDirection="row" pl="2">
+						<Flex
+							justifyContent="center"
+							flexDirection="row"
+							pl="2"
+							pb="1.5rem"
+						>
 							<Flex pt="0.4">
 								<Flex mb="5px" className="circleLoading" />
 							</Flex>

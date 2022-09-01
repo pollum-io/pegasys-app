@@ -44,7 +44,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 		<Flex
 			zIndex="1"
 			flexDirection="column"
-			w={["18rem", "xs", "2xl", "2xl"]}
+			w={["20rem", "xs", "2xl", "2xl"]}
 			h="max-content"
 			alignItems={["flex-start", "flex-start", "center", "center"]}
 			gap="8"
@@ -110,11 +110,11 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					"repeat(3, 1fr)",
 					"repeat(3, 1fr)",
 				]}
-				gap="2rem"
+				gap={["1rem", "1rem", "2rem", "2rem"]}
 				pl={["8", "8", "0", "0"]}
 			>
 				<GridItem flexDirection="column">
-					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyanPurple}>
+					<Text fontSize="sm" color={theme.text.cyanPurple}>
 						APR
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
@@ -122,15 +122,15 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column">
-					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyanPurple}>
+					<Text fontSize="sm" color={theme.text.cyanPurple}>
 						Total staked (PSYS)
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
 						1 {stakeTotalStake}
 					</Text>
 				</GridItem>
-				<GridItem flexDirection="column" pl="6">
-					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyanPurple}>
+				<GridItem flexDirection="column" pl={["0", "0", "6", "6"]}>
+					<Text fontSize="sm" color={theme.text.cyanPurple}>
 						Your rate (PSYS/Week)
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
@@ -138,7 +138,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column">
-					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyanPurple}>
+					<Text fontSize="sm" color={theme.text.cyanPurple}>
 						Deposit Fee
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
@@ -146,15 +146,15 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column">
-					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyanPurple}>
+					<Text fontSize="sm" color={theme.text.cyanPurple}>
 						Your Staked PSYS
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
 						1 {stakeYourStaked}
 					</Text>
 				</GridItem>
-				<GridItem flexDirection="column" pl="6">
-					<Text fontWeight="medium" fontSize="sm" color={theme.text.cyanPurple}>
+				<GridItem flexDirection="column" pl={["0", "0", "6", "6"]}>
+					<Text fontSize="sm" color={theme.text.cyanPurple}>
 						Your unclaimed PSYS
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
@@ -168,7 +168,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 				mb="6"
 				flexDirection="row"
 				alignItems="center"
-				ml={["2.2rem", "2.2rem", "0", "0"]}
+				ml={["3rem", "3rem", "0", "0"]}
 			>
 				<Button
 					id="unstake"

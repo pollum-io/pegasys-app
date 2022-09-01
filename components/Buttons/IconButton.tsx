@@ -9,7 +9,10 @@ export const IconButton: FunctionComponent<IconButtonProps> = props => {
 			color={theme.text.mono}
 			transition="0.4s"
 			bgColor="transparent"
-			_hover={{ background: "rgba(255, 255, 255, 0.08)" }}
+			_hover={{
+				background: "rgba(255, 255, 255, 0.08)",
+				color: theme.text.cyanLightPurple,
+			}}
 			_active={{}}
 			{...props}
 		/>

@@ -38,6 +38,7 @@ const usePicasso = () => {
 			cyan: useColorModeValue("#ffffff", "#00d9ef"),
 			redError: useColorModeValue("#ff2532a3", "#ff2532a3"),
 			gray: useColorModeValue("gray.400", "gray.400"),
+			gray45: useColorModeValue("gray.500", "gray.400"),
 			gray600: useColorModeValue("gray.600", "gray.600"),
 			gray500: useColorModeValue("gray.500", "gray.500"), // balance text color
 			gray300: useColorModeValue("#718096", "#CBD5E0"),
@@ -79,6 +80,10 @@ const usePicasso = () => {
 				"/images/backgrounds/LightPsysAirdrop.png",
 				"/images/backgrounds/PsysAirdrop.png"
 			),
+			governanceBanner: useColorModeValue(
+				"/images/backgrounds/LightGovernanceBanner.png",
+				"/images/backgrounds/GovernanceBanner.png"
+			),
 			psysReward: useColorModeValue(
 				"/images/backgrounds/LightPsysReward.png",
 				"/images/backgrounds/PsysReward.png"
@@ -94,6 +99,22 @@ const usePicasso = () => {
 			poolsBanner: useColorModeValue(
 				"images/backgrounds/LightBannerPool.png",
 				"images/backgrounds/BannerPools.png"
+			),
+			poolsBannerMobile: useColorModeValue(
+				"images/backgrounds/BannerPoolsMobileLightmode.png",
+				"images/backgrounds/BannerPoolsMobile.png"
+			),
+			farmBannerMobile: useColorModeValue(
+				"images/backgrounds/BannerFarmMobileLightmode.png",
+				"images/backgrounds/BannerFarmMobileDarkMode.png"
+			),
+			stakeBannerMobile: useColorModeValue(
+				"images/backgrounds/BannerStakeMobileLightmode.png",
+				"images/backgrounds/BannerStakeMobileDarkmode.png"
+			),
+			aidropBannerMobile: useColorModeValue(
+				"images/backgrounds/BannerAidropMobileLightmode.png",
+				"images/backgrounds/BannerAidropMobileDarkmode.png"
 			),
 			farmActions: useColorModeValue("white", "#0B172C"),
 			max: useColorModeValue("#EDF2F7", "#081120"),
@@ -114,14 +135,18 @@ const usePicasso = () => {
 				"rgb(222,225,226, 0.4)",
 				"rgba(255, 255, 255, 0.08)"
 			),
+			blueLightPurple: useColorModeValue("#665EE1", "#153D6F"),
 			bluePurple: useColorModeValue("#8C15E8", "#0753B2"),
-			topHeader: useColorModeValue("#FFFFFF", "#000000"),
+			topHeader: useColorModeValue(
+				"rgba(255, 255, 255, 0.24);",
+				"rgba(255, 255, 255, 0.24);"
+			),
 			primary: useColorModeValue("#EDF2F7", "#000913"),
 			secondary: useColorModeValue("gray.300", "#171923"), // tooltip background
 			bgPrimary: useColorModeValue("#f7f8fa", "#2c2f36"),
 			whiteGray: useColorModeValue("#665EE1", "rgba(8, 17, 32, 1)"), //
 			expertMode: useColorModeValue("#FFFFFF", "#081120"), //
-			iceGray: useColorModeValue("#f7f8fa", "#2c2f36"), //
+			voteGray: useColorModeValue("#E2E8F0", "#081120"), //
 			blackAlpha: useColorModeValue("#ffffff", "#081120"), // modal bg
 			blackLightness: useColorModeValue("#F7FAFC", "#081120"),
 			blackGray: useColorModeValue("#EDF2F7", "#081120"),
