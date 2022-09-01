@@ -1,5 +1,5 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
-import { ethers, Signer } from "ethers";
+import { BigNumber, ethers, Signer } from "ethers";
 import { convertHexToNumber, isAddress } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { IWalletInfo, ITx } from "types";
@@ -9,6 +9,7 @@ import {
 	SYS_TESTNET_CHAIN_PARAMS,
 	NEVM_CHAIN_PARAMS,
 	SUPPORTED_NETWORK_CHAINS,
+	DEFAULT_DEADLINE_FROM_NOW,
 } from "../helpers/consts";
 
 export enum ApprovalState {
@@ -53,6 +54,10 @@ interface IWeb3 {
 	setExpert: React.Dispatch<React.SetStateAction<boolean>>;
 	otherWallet: boolean;
 	setOtherWallet: React.Dispatch<React.SetStateAction<boolean>>;
+	userTransactionDeadlineValue: BigNumber | number;
+	setUserTransactionDeadlineValue: React.Dispatch<
+		React.SetStateAction<BigNumber | number>
+	>;
 	userSlippageTolerance: number;
 	setUserSlippageTolerance: React.Dispatch<React.SetStateAction<number>>;
 	setTransactions: React.Dispatch<React.SetStateAction<ITx>>;
@@ -95,6 +100,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [connectorSelected, setConnectorSelected] = useState<IWalletInfo>();
 	const [expert, setExpert] = useState<boolean>(false);
 	const [otherWallet, setOtherWallet] = useState<boolean>(false);
+	const [userTransactionDeadlineValue, setUserTransactionDeadlineValue] =
+		useState<BigNumber | number>(DEFAULT_DEADLINE_FROM_NOW);
 	const [showCancelled, setShowCancelled] = useState<boolean>(false);
 	const [isGovernance, setIsGovernance] = useState<boolean>(false);
 	const [userSlippageTolerance, setUserSlippageTolerance] = useState<number>(
@@ -338,6 +345,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			expert,
 			otherWallet,
 			setOtherWallet,
+			userTransactionDeadlineValue,
+			setUserTransactionDeadlineValue,
 			userSlippageTolerance,
 			setUserSlippageTolerance,
 			transactions,
@@ -365,7 +374,18 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			connectWallet,
 			walletError,
 			connectorSelected,
+			currentNetworkChainId,
+			expert,
+			otherWallet,
+			userTransactionDeadlineValue,
 			userSlippageTolerance,
+			transactions,
+			approvalState,
+			approvalSubmitted,
+			currentTxHash,
+			isGovernance,
+			pendingTxLength,
+			showCancelled,
 		]
 	);
 
