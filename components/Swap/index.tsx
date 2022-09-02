@@ -9,6 +9,7 @@ import {
 	Text,
 	Skeleton,
 	SkeletonCircle,
+	useColorMode,
 } from "@chakra-ui/react";
 import {
 	useModal,
@@ -66,6 +67,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	// HOOKS IMPORTED VALUES //
 
 	const theme = usePicasso();
+
+	const { colorMode } = useColorMode();
 
 	const { toast } = useToasty();
 
@@ -607,7 +610,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					zIndex="1"
 					borderRadius={30}
 					border="1px solid transparent;"
-					boxShadow=" 0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4);"
+					boxShadow={
+						colorMode === "light"
+							? "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
+							: "0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4)"
+					}
 					background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					<Flex flexDirection="row" justifyContent="space-between" pb="1.5rem">
@@ -642,7 +649,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Text>
 						</Flex>
 						<Flex alignItems="center" justifyContent="space-between">
-							<Flex w="100%" alignItems="center">
+							<Flex w="100%" alignItems="center" mt="0.313rem">
 								<Flex
 									alignItems="center"
 									id="0"
@@ -669,18 +676,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									!preventShowMaxButton &&
 									parseFloat(selectedToken[0]?.balance) !== 0 && (
 										<Flex ml="8" onClick={() => handleMaxInput()}>
-											<Button
-												bgColor="rgba(43, 108, 176, .6)"
-												px="5"
-												color={theme.text.white}
-												transition="250ms ease-in-out"
-												_hover={{
-													backgroundColor: theme.bg.blue600,
-												}}
-												type="button"
+											<Flex
+												color={theme.text.cyanPurple}
+												_hover={{ cursor: "pointer", opacity: "0.9" }}
 											>
-												MAX
-											</Button>
+												Max
+											</Flex>
 										</Flex>
 									)}
 							</Flex>
@@ -752,6 +753,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 						<Flex alignItems="center" justifyContent="space-between">
 							<Flex
+								mt="0.313rem"
 								alignItems="center"
 								id="1"
 								borderRadius={12}
@@ -826,6 +828,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						}
 					>
 						<Flex
+							w="100%"
 							flexDirection="column"
 							borderRadius="2xl"
 							borderWidth="1px"
@@ -841,7 +844,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								justifyContent="space-around"
 								py="0.5rem"
 								borderRadius="2xl"
-								borderWidth="1px"
+								borderTop="1px solid"
 								borderColor={theme.text.cyanPurple}
 								bgColor={theme.bg.bluePink}
 								color={theme.text.mono}
@@ -886,7 +889,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								onOpenConfirmSwap();
 								setTxType("swap");
 							}}
-							bgColor={theme.bg.button.connectWalletSwap}
+							bgColor={theme.bg.blueNavyLightness}
 							color={theme.text.cyan}
 							fontSize="lg"
 							fontWeight="semibold"
@@ -923,7 +926,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 												setTxType("approve-swap");
 										  }
 								}
-								bgColor={theme.bg.button.connectWalletSwap}
+								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"
@@ -956,7 +959,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									onWrap();
 									setTxType("wrap");
 								}}
-								bgColor={theme.bg.button.connectWalletSwap}
+								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"
@@ -1024,7 +1027,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									<Text fontWeight="normal" mr="1" fontSize="sm">
 										{translation("swap.priceImpact")}
 									</Text>
-
 									<TooltipComponent
 										label={translation("swap.priceImpactHelper")}
 										icon={MdHelpOutline}

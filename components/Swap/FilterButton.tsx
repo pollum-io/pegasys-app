@@ -29,8 +29,10 @@ export const FilterButton: FunctionComponent<IFilterPorps> = ({
 			{periodsMockedData.map(periods => (
 				<ListItem
 					key={periods.id}
-					bgColor={id === periods.id ? theme.bg.blue600 : "transparent"}
-					color={id === periods.id ? theme.text.white : theme.text.whiteAlpha}
+					bgColor={
+						id === periods.id ? theme.bg.candleGraphColor : "transparent"
+					}
+					color={id === periods.id ? "white" : theme.text.stakeMode}
 					px="3"
 					py="3"
 					w="42px"
@@ -38,12 +40,12 @@ export const FilterButton: FunctionComponent<IFilterPorps> = ({
 					display="flex"
 					alignItems="center"
 					justifyContent="center"
-					fontWeight="600"
+					fontWeight="400"
 					borderRadius="full"
 					_hover={{
 						cursor: "pointer",
-						background: theme.bg.blue600,
-						color: theme.text.white,
+						background: theme.bg.candleGraphColor,
+						color: "white",
 					}}
 					value={periods.period}
 					onClick={() =>

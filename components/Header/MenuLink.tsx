@@ -71,10 +71,10 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 					transition="0.4s"
 					bg="transparent"
 					_hover={{
-						background: "rgba(255, 255, 255, 0.08)",
-						color: theme.text.cyanLightPurple,
+						color: theme.text.cyanPurple,
+						background: theme.bg.iconBg,
 					}}
-					_expanded={{ color: theme.text.cyan }}
+					_expanded={{ color: theme.text.cyanPurple }}
 				/>
 			</PopoverTrigger>
 			<PopoverContent

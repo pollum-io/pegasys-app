@@ -107,7 +107,7 @@ export const StakeContainer: NextPage = () => {
 								color={
 									buttonId === "psys"
 										? theme.text.farmActionsHover
-										: theme.text.farmActionsTop
+										: theme.border.borderSettings
 								}
 								bgColor={
 									buttonId === "psys"
@@ -115,12 +115,15 @@ export const StakeContainer: NextPage = () => {
 										: "transparent"
 								}
 								borderRadius="full"
-								w="max-content"
+								w="5.688rem"
 								h="max-content"
 								py="2"
 								px="6"
 								fontWeight="semibold"
-								_hover={{ opacity: "0.9" }}
+								_hover={{
+									bgColor: theme.bg.farmActionsHover,
+									color: theme.text.farmActionsHover,
+								}}
 							>
 								PSYS
 							</Button>
@@ -129,18 +132,21 @@ export const StakeContainer: NextPage = () => {
 								color={
 									buttonId === "usd"
 										? theme.text.farmActionsHover
-										: theme.text.farmActionsTop
+										: theme.border.borderSettings
 								}
 								bgColor={
 									buttonId === "usd" ? theme.bg.farmActionsHover : "transparent"
 								}
 								borderRadius="full"
-								w="max-content"
+								w="5.688rem"
 								h="max-content"
 								py="2"
 								px="6"
 								fontWeight="semibold"
-								_hover={{}}
+								_hover={{
+									bgColor: theme.bg.farmActionsHover,
+									color: theme.text.farmActionsHover,
+								}}
 							>
 								USD
 							</Button>

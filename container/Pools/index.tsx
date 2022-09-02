@@ -189,8 +189,9 @@ export const PoolsContainer: NextPage = () => {
 								<Button
 									fontSize="sm"
 									fontWeight="semibold"
-									py="0.5rem"
+									py={["0.2rem", "0.2rem", "1", "1"]}
 									px="1.5rem"
+									h="2.2rem"
 									size="sm"
 									bgColor="transparent"
 									borderWidth="1px"
@@ -222,13 +223,15 @@ export const PoolsContainer: NextPage = () => {
 										<Button
 											fontSize="sm"
 											fontWeight="semibold"
-											py="0.5rem"
+											py={["0.2rem", "0.2rem", "1", "1"]}
 											px="1.5rem"
 											size="sm"
-											h="max-content"
+											h="2.2rem"
 											bgColor={theme.bg.blueNavyLightness}
-											color={theme.text.cyanWhite}
-											_hover={{ opacity: "1" }}
+											color={theme.text.cyan}
+											_hover={{
+												bgColor: theme.bg.bluePurple,
+											}}
 											_active={{}}
 											onClick={() => {
 												setIsCreate(false);
@@ -247,10 +250,10 @@ export const PoolsContainer: NextPage = () => {
 												as={Button}
 												fontSize="sm"
 												fontWeight="semibold"
-												py="0.5rem"
+												py={["0.2rem", "0.2rem", "1", "1"]}
 												px="1rem"
 												size="sm"
-												h="max-content"
+												h="2.2rem"
 												bgColor={theme.bg.blueNavyLightness}
 												color="white"
 												_hover={{
