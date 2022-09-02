@@ -128,7 +128,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 							borderRadius="2xl"
 							cursor="pointer"
 							_hover={{
-								bgColor: theme.bg.button.swapTokenCurrency,
+								bgColor: "red",
 							}}
 						>
 							<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
@@ -170,7 +170,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								borderRadius="2xl"
 								cursor="pointer"
 								_hover={{
-									bgColor: theme.bg.button.swapTokenCurrency,
+									bgColor: "red",
 								}}
 							>
 								<Img src={selectedToken[1]?.logoURI} w="6" h="6" />
