@@ -676,12 +676,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									!preventShowMaxButton &&
 									parseFloat(selectedToken[0]?.balance) !== 0 && (
 										<Flex ml="8" onClick={() => handleMaxInput()}>
-											<Flex
+											<Text
 												color={theme.text.cyanPurple}
-												_hover={{ cursor: "pointer", opacity: "0.9" }}
+												_hover={{ cursor: "pointer", opacity: "0.8" }}
 											>
 												Max
-											</Flex>
+											</Text>
 										</Flex>
 									)}
 							</Flex>

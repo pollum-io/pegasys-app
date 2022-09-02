@@ -27,7 +27,7 @@ const usePicasso = () => {
 			mono: useColorModeValue("#1A202C", "white"), // text black and white
 			navItem: useColorModeValue("#4A5568", "#EDF2F7"), // bottom header icons color
 			blue: useColorModeValue("white", "cyan.300"),
-			stakeMode: useColorModeValue("#A0AEC0", "#4A5568"),
+			stakeMode: useColorModeValue("#A0AEC0", "rgba(255, 255, 255, 0.36)"),
 			swapInfo: useColorModeValue("#565a69", "#c3c5cb"),
 			cyan: useColorModeValue("#ffffff", "#00d9ef"),
 			redError: useColorModeValue("#ff2532a3", "#ff2532a3"),
@@ -62,6 +62,7 @@ const usePicasso = () => {
 			theme: useColorModeValue(BsFillSunFill, BsFillMoonFill),
 		},
 		bg: {
+			voteGray: useColorModeValue("#E2E8F0", "#081120"),
 			candleGraphColor: useColorModeValue("#665EE1", "#2B6CB0"),
 			bluePink: useColorModeValue("#FAF5FF", "#0B172C"),
 			stakeBanner: useColorModeValue(
@@ -172,7 +173,7 @@ const usePicasso = () => {
 			},
 		},
 		border: {
-			chart: useColorModeValue("#A0AEC0", "#718096"),
+			chart: useColorModeValue("#A0AEC0", "#787d85"),
 			manageInput: useColorModeValue("#E2E8F0", "rgba(255, 255, 255, 0.24)"),
 			farmInput: useColorModeValue("#CBD5E0", "rgba(0, 217, 239, 0.2)"),
 			modalBorderShadow: useColorModeValue(

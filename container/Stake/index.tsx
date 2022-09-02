@@ -121,8 +121,7 @@ export const StakeContainer: NextPage = () => {
 								px="6"
 								fontWeight="semibold"
 								_hover={{
-									bgColor: theme.bg.farmActionsHover,
-									color: theme.text.farmActionsHover,
+									opacity: "0.9",
 								}}
 							>
 								PSYS
@@ -144,8 +143,7 @@ export const StakeContainer: NextPage = () => {
 								px="6"
 								fontWeight="semibold"
 								_hover={{
-									bgColor: theme.bg.farmActionsHover,
-									color: theme.text.farmActionsHover,
+									opacity: "0.9",
 								}}
 							>
 								USD
