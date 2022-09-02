@@ -1,10 +1,16 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers } from "ethers";
-import { WrappedTokenInfo } from "types";
+import { ListsState, TokenAddressMap, WrappedTokenInfo } from "types";
 import { useWallet, ApprovalState } from "hooks";
-import { getDefaultTokens } from "networks";
+import { getDefaultTokens, getTokenListByUrl } from "networks";
 import { getBalanceOfMultiCall, truncateNumberDecimalsPlaces } from "utils";
-import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
+import { TokenInfo, TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
+import {
+	EMPTY_TOKEN_LIST,
+	INITIAL_TOKEN_LIST_STATE,
+	tokenListCache,
+} from "helpers/tokenListHelpers";
+import { DEFAULT_TOKEN_LISTS_SELECTED, PEGASYS_LIST } from "helpers/consts";
 
 interface ITokensContext {
 	userTokensBalance: WrappedTokenInfo[];
@@ -18,6 +24,10 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [userTokensBalance, setUserTokensBalance] = useState<
 		WrappedTokenInfo[]
 	>([]);
+
+	const [tokenListManageState, setTokenListManageState] = useState<ListsState>(
+		INITIAL_TOKEN_LIST_STATE
+	);
 
 	const {
 		isConnected,
@@ -110,6 +120,67 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		return {};
 	};
 
+	const listToTokenMap = (list: TokenList): TokenAddressMap => {
+		const verifyCurrentList = tokenListCache?.get(list);
+
+		if (verifyCurrentList) return verifyCurrentList;
+
+		const mapAroundList = list.tokens.reduce<TokenAddressMap>(
+			(tokenMap, tokenInfo) => {
+				const token = new WrappedTokenInfo(tokenInfo);
+
+				if (tokenMap[token.chainId][token.address] !== undefined)
+					throw new Error("Duplicated token");
+				return {
+					...tokenMap,
+					[token.chainId]: {
+						...tokenMap[token.chainId],
+						[token.address]: token,
+					},
+				};
+			},
+			{ ...EMPTY_TOKEN_LIST }
+		);
+		tokenListCache?.set(list, mapAroundList);
+
+		return mapAroundList;
+	};
+
+	const useTokenList = (urls: string[] | undefined): TokenAddressMap => {
+		const lists = tokenListManageState.byUrl;
+
+		const tokenList = {} as {
+			[chainId: string]: { [tokenAddress: string]: WrappedTokenInfo };
+		};
+
+		([] as string[]).concat(urls || []).forEach(url => {
+			const currentUrl = lists[url]?.current;
+			if (url && currentUrl) {
+				try {
+					const data = listToTokenMap(currentUrl);
+					// eslint-disable-next-line
+					for (const [chainId, tokens] of Object.entries(data)) {
+						tokenList[chainId] = tokenList[chainId] || {};
+						tokenList[chainId] = {
+							...tokenList[chainId],
+							...tokens,
+						};
+					}
+				} catch (error) {
+					console.error("Could not show token list due to error", error);
+				}
+			}
+		});
+
+		return tokenList as TokenAddressMap;
+	};
+
+	const UseSelectedListUrl = (): string[] | undefined =>
+		([] as string[]).concat(tokenListManageState?.selectedListUrl || []);
+
+	const UseSelectedTokenList = (): TokenAddressMap =>
+		useTokenList(UseSelectedListUrl());
+
 	useEffect(() => {
 		getDefaultListToken();
 	}, [isConnected, currentNetworkChainId, walletAddress]);
@@ -119,6 +190,12 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			getDefaultListToken();
 		}
 	}, [approvalState]);
+
+	useEffect(() => {
+		UseSelectedTokenList();
+	}, [isConnected]);
+
+	console.log("listCache", tokenListCache);
 
 	const tokensProviderValue = useMemo(
 		() => ({
