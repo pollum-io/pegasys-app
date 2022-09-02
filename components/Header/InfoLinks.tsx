@@ -11,7 +11,7 @@ interface ILinkProps extends LinkProps {
 export const InfoLinks: FunctionComponent<ILinkProps> = props => {
 	const theme = usePicasso();
 	const { push } = useRouter();
-	const { children, isVote, pb, href } = props;
+	const { children, pb, href, isVote } = props;
 
 	return (
 		<Button

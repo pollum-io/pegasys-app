@@ -1,5 +1,6 @@
 import {
 	Button,
+	Collapse,
 	Flex,
 	Icon,
 	Img,
@@ -38,12 +39,12 @@ export const FarmActions: React.FC<IModal> = props => {
 	const [sliderValue, setSliderValue] = React.useState(5);
 
 	return (
-		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
 				mt={["8rem", "8", "10rem", "10rem"]}
 				mb={["0", "0", "10rem", "10rem"]}
-				position={["absolute", "absolute", "relative", "relative"]}
+				position={["fixed", "fixed", "relative", "relative"]}
 				bottom="0"
 				maxWidth="max-content"
 				w={["100vw", "100vw", "max-content", "max-content"]}
@@ -59,7 +60,7 @@ export const FarmActions: React.FC<IModal> = props => {
 					borderTopRadius="3xl"
 					alignItems="baseline"
 					justifyContent="space-between"
-					pl={["5", "5", "20", "20"]}
+					pl={["4", "5", "20", "20"]}
 				>
 					<Flex
 						flexDirection={["column-reverse", "column-reverse", "row", "row"]}
@@ -69,7 +70,7 @@ export const FarmActions: React.FC<IModal> = props => {
 						<Flex
 							pr={["0", "0", "7", "7"]}
 							pl={["0", "16", "0", "0"]}
-							gap="2"
+							gap={["1", "2", "2", "2"]}
 							flexDirection="row"
 							mt={["6", "6", "2", "2"]}
 						>
@@ -91,7 +92,10 @@ export const FarmActions: React.FC<IModal> = props => {
 										: theme.border.borderSettings
 								}
 								fontWeight="semibold"
-								_hover={{ opacity: "0.9" }}
+								_hover={{
+									bgColor: theme.bg.farmActionsHover,
+									color: theme.text.farmActionsHover,
+								}}
 							>
 								Deposit
 							</Button>
@@ -114,7 +118,10 @@ export const FarmActions: React.FC<IModal> = props => {
 										: theme.border.borderSettings
 								}
 								fontWeight="semibold"
-								_hover={{ opacity: "0.9" }}
+								_hover={{
+									bgColor: theme.bg.farmActionsHover,
+									color: theme.text.farmActionsHover,
+								}}
 							>
 								Withdraw
 							</Button>
@@ -136,7 +143,10 @@ export const FarmActions: React.FC<IModal> = props => {
 										: theme.border.borderSettings
 								}
 								fontWeight="semibold"
-								_hover={{ opacity: "0.9" }}
+								_hover={{
+									bgColor: theme.bg.farmActionsHover,
+									color: theme.text.farmActionsHover,
+								}}
 							>
 								Claim
 							</Button>
@@ -182,7 +192,7 @@ export const FarmActions: React.FC<IModal> = props => {
 					</Flex>
 				</ModalHeader>
 				<ModalBody
-					mb="2	"
+					mb="2"
 					borderBottomRadius={["0", "0", "3xl", "3xl"]}
 					background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
@@ -239,6 +249,7 @@ export const FarmActions: React.FC<IModal> = props => {
 												color={theme.text.max}
 												fontSize="lg"
 												fontWeight="normal"
+												transition="100ms ease-in-out"
 												_hover={{
 													borderColor: theme.border.farmInput,
 													bgColor: theme.bg.blueNavyLightness,
@@ -328,6 +339,7 @@ export const FarmActions: React.FC<IModal> = props => {
 										color={theme.text.max}
 										fontSize="lg"
 										fontWeight="normal"
+										transition="100ms ease-in-out"
 										_hover={{
 											borderColor: theme.border.farmInput,
 											bgColor: theme.bg.blueNavyLightness,
@@ -337,10 +349,11 @@ export const FarmActions: React.FC<IModal> = props => {
 									/>
 								</InputGroup>
 							</Flex>
-							<Text fontWeight="normal" mt="2">
-								Uncalimed PSYS: 0.01819
-							</Text>
-
+							<Collapse in={sliderValue === 100} animateOpacity>
+								<Text fontWeight="normal" mt="2">
+									Uncalimed PSYS: 0.01819
+								</Text>
+							</Collapse>
 							<Flex justify="center">
 								<Slider
 									id="slider"
@@ -381,7 +394,8 @@ export const FarmActions: React.FC<IModal> = props => {
 									py="3"
 									px="1.5rem"
 									w="100%"
-									h="max-content"
+									h={["2.5rem", "2.5rem", "3rem", "3rem"]}
+									display={["none", "none", "flex", "flex"]}
 									border="1px solid"
 									borderColor={theme.text.cyanPurple}
 									bgColor="transparent"
@@ -392,6 +406,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									}}
 									_active={{}}
 									borderRadius="full"
+									onClick={onClose}
 								>
 									Cancel
 								</Button>
@@ -402,6 +417,8 @@ export const FarmActions: React.FC<IModal> = props => {
 									px="1.5rem"
 									w="100%"
 									h="max-content"
+									border="1px solid"
+									borderColor="transparent"
 									bgColor={theme.bg.blueNavyLightness}
 									color={theme.text.cyan}
 									_hover={{ opacity: "1", bgColor: theme.bg.bluePurple }}
@@ -459,7 +476,12 @@ export const FarmActions: React.FC<IModal> = props => {
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
-							background={theme.bg.subModal}
+							background={[
+								theme.bg.iconTicket,
+								theme.bg.iconTicket,
+								theme.bg.subModal,
+								theme.bg.subModal,
+							]}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
 							top={["unset", "unset", "24rem", "24rem"]}
@@ -488,7 +510,12 @@ export const FarmActions: React.FC<IModal> = props => {
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
-							background={theme.bg.subModal}
+							background={[
+								theme.bg.iconTicket,
+								theme.bg.iconTicket,
+								theme.bg.subModal,
+								theme.bg.subModal,
+							]}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
 							top={["unset", "unset", "19.6rem", "19.6rem"]}

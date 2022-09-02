@@ -1,5 +1,5 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
-import { ethers, Signer } from "ethers";
+import { BigNumber, ethers, Signer } from "ethers";
 import { convertHexToNumber, isAddress } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { IWalletInfo, ITx } from "types";
@@ -9,6 +9,7 @@ import {
 	SYS_TESTNET_CHAIN_PARAMS,
 	NEVM_CHAIN_PARAMS,
 	SUPPORTED_NETWORK_CHAINS,
+	DEFAULT_DEADLINE_FROM_NOW,
 } from "../helpers/consts";
 
 export enum ApprovalState {
@@ -53,6 +54,10 @@ interface IWeb3 {
 	setExpert: React.Dispatch<React.SetStateAction<boolean>>;
 	otherWallet: boolean;
 	setOtherWallet: React.Dispatch<React.SetStateAction<boolean>>;
+	userTransactionDeadlineValue: BigNumber | number;
+	setUserTransactionDeadlineValue: React.Dispatch<
+		React.SetStateAction<BigNumber | number>
+	>;
 	userSlippageTolerance: number;
 	setUserSlippageTolerance: React.Dispatch<React.SetStateAction<number>>;
 	setTransactions: React.Dispatch<React.SetStateAction<ITx>>;
@@ -65,6 +70,12 @@ interface IWeb3 {
 	currentTxHash: string;
 	currentInputTokenName: string;
 	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>;
+	isGovernance: boolean;
+	setIsGovernance: React.Dispatch<React.SetStateAction<boolean>>;
+	setPendingTxLength: React.Dispatch<React.SetStateAction<number>>;
+	pendingTxLength: number;
+	showCancelled: boolean;
+	setShowCancelled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -89,6 +100,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [connectorSelected, setConnectorSelected] = useState<IWalletInfo>();
 	const [expert, setExpert] = useState<boolean>(false);
 	const [otherWallet, setOtherWallet] = useState<boolean>(false);
+	const [userTransactionDeadlineValue, setUserTransactionDeadlineValue] =
+		useState<BigNumber | number>(DEFAULT_DEADLINE_FROM_NOW);
+	const [showCancelled, setShowCancelled] = useState<boolean>(false);
+	const [isGovernance, setIsGovernance] = useState<boolean>(false);
 	const [userSlippageTolerance, setUserSlippageTolerance] = useState<number>(
 		INITIAL_ALLOWED_SLIPPAGE
 	);
@@ -102,6 +117,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		57: {},
 		5700: {},
 	});
+	const [pendingTxLength, setPendingTxLength] = useState<number>(0);
 
 	const [approvalState, setApprovalState] = useState<IApprovalState>({
 		status: ApprovalState.UNKNOWN,
@@ -174,8 +190,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 					String(error).includes("User denied account authorization")
 				) {
 					setConnecting(false);
-				} else {
-					console.log(error);
 				}
 			});
 	};
@@ -183,11 +197,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	useMemo(() => {
 		if (approvalState.status === ApprovalState.PENDING) {
 			const timer = setInterval(async () => {
-				const result = await fetch(
+				const getTx = await fetch(
 					`${rpcUrl}?module=account&action=pendingtxlist&address=${walletAddress}`
 				).then(result => result.json());
 
 				const hash = `${currentTxHash}`;
+				setPendingTxLength(Number(getTx?.result?.length));
 				provider?.getTransaction(hash).then(result => {
 					if (
 						result.from.toLowerCase() === walletAddress.toLowerCase() &&
@@ -206,6 +221,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 								},
 							},
 						});
+						setPendingTxLength(Number(getTx?.result?.length));
 						setApprovalState({
 							status: ApprovalState.APPROVED,
 							type: approvalState.type,
@@ -251,7 +267,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		const initialSubmittedValue: ISubmittedAproval = JSON.parse(
 			`${localStorage.getItem("approvalSubmitted")}`
 		);
-		console.log(initialSubmittedValue);
 		if (initialSubmittedValue) {
 			setApprovalSubmitted(initialSubmittedValue);
 		}
@@ -330,6 +345,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			expert,
 			otherWallet,
 			setOtherWallet,
+			userTransactionDeadlineValue,
+			setUserTransactionDeadlineValue,
 			userSlippageTolerance,
 			setUserSlippageTolerance,
 			transactions,
@@ -342,6 +359,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setCurrentTxHash,
 			currentInputTokenName,
 			setCurrentInputTokenName,
+			isGovernance,
+			setIsGovernance,
+			setPendingTxLength,
+			pendingTxLength,
+			showCancelled,
+			setShowCancelled,
 		}),
 		[
 			isConnected,
@@ -351,7 +374,18 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			connectWallet,
 			walletError,
 			connectorSelected,
+			currentNetworkChainId,
+			expert,
+			otherWallet,
+			userTransactionDeadlineValue,
 			userSlippageTolerance,
+			transactions,
+			approvalState,
+			approvalSubmitted,
+			currentTxHash,
+			isGovernance,
+			pendingTxLength,
+			showCancelled,
 		]
 	);
 

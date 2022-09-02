@@ -1,8 +1,4 @@
-import {
-	BIPS_BASE,
-	INITIAL_ALLOWED_SLIPPAGE,
-	ROUTER_ADDRESS,
-} from "helpers/consts";
+import { BIPS_BASE, ROUTER_ADDRESS } from "helpers/consts";
 import { BigNumber } from "@ethersproject/bignumber";
 import {
 	Trade,
@@ -25,9 +21,10 @@ export function UseBestSwapMethod(
 	walletAddress: string,
 	signer: Signer,
 	walletInfos: IWalletHookInfos,
-	slippageTolerance: number
+	slippageTolerance: number,
+	transactionDeadlineValue: BigNumber | number
 ): ISwapCall[] {
-	let deadline = useTransactionDeadline();
+	let deadline = useTransactionDeadline(transactionDeadlineValue);
 	const chainId = walletInfos?.chainId as ChainId;
 
 	if (!v2Trade || !walletAddress) return [];

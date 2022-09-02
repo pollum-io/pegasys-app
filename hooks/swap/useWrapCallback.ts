@@ -48,6 +48,8 @@ export function UseWrapCallback(
 	);
 
 	if (!wethContract || !chainId || !inputCurrency || !outputCurrency)
+		// eslint-disable-next-line
+		// @ts-ignore
 		return WrapType.NOT_APPLICABLE;
 
 	// eslint-disable-next-line
@@ -78,7 +80,7 @@ export function UseWrapCallback(
 								});
 								setCurrentTxHash(`${txReceipt?.hash}`);
 							} catch (error) {
-								console.error("Could not deposit", error);
+								throw new Error("Could not deposit");
 							}
 					  }
 					: undefined,
@@ -112,12 +114,14 @@ export function UseWrapCallback(
 								});
 								setCurrentTxHash(`${txReceipt?.hash}`);
 							} catch (error) {
-								console.error("Could not withdraw", error);
+								throw new Error("Could not withdraw");
 							}
 					  }
 					: undefined,
 			inputError: sufficientBalance ? undefined : "Insufficient WSYSbalance",
 		};
 	}
+	// eslint-disable-next-line
+	// @ts-ignore
 	return WrapType.NOT_APPLICABLE;
 }

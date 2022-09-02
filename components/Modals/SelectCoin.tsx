@@ -15,7 +15,6 @@ import {
 	Text,
 	Tooltip,
 	InputGroup,
-	InputLeftElement,
 } from "@chakra-ui/react";
 import {
 	ApprovalState,
@@ -233,7 +232,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					my="0"
 					pr="2"
 					pl="2"
-					maxHeight="30rem"
+					maxHeight={["20rem", "20rem", "30rem", "30rem"]}
 					overflow="auto"
 					css={{
 						"&::-webkit-scrollbar": {
@@ -286,20 +285,32 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 						</Button>
 					))}
 				</Flex>
-
-				<ModalFooter
+				<Flex
 					alignContent="center"
 					justifyContent="center"
 					flexDirection="column"
 					px="0"
 					py="0"
-					bgColor={theme.bg.blackAlpha}
+					bgColor={[
+						theme.bg.blueNavy,
+						theme.bg.blueNavy,
+						theme.bg.blackAlpha,
+						theme.bg.blackAlpha,
+					]}
 					alignItems="center"
 					borderBottomRadius={["0px", "0", "3xl", "3xl"]}
 				>
 					<Flex pt="8" py="5">
 						<Text
-							bg="transparent"
+							bg={[
+								theme.bg.blueNavyLightness,
+								theme.bg.blueNavyLightness,
+								"transparent",
+								"transparent",
+							]}
+							px={["4.688rem", "4.688rem", "0", "0"]}
+							py={["0.5rem", "0.5rem", "0", "0"]}
+							borderRadius="full"
 							color={theme.text.cyanPurple}
 							_hover={{ opacity: "0.9", cursor: "pointer" }}
 							_active={{}}
@@ -311,7 +322,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							Manage Token Lists
 						</Text>
 					</Flex>
-				</ModalFooter>
+				</Flex>
 			</ModalContent>
 		</Modal>
 	);

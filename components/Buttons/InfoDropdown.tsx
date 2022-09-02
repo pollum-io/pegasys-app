@@ -8,7 +8,6 @@ import {
 	Flex,
 	Icon,
 	Link,
-	Text,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { FunctionComponent } from "react";

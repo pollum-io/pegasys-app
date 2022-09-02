@@ -1,5 +1,5 @@
 import { MaxUint256 } from "@ethersproject/constants";
-import { Trade, CurrencyAmount, ChainId } from "@pollum-io/pegasys-sdk";
+import { Trade, ChainId, TokenAmount, Token } from "@pollum-io/pegasys-sdk";
 import { UseToastOptions } from "@chakra-ui/react";
 import { ROUTER_ADDRESS } from "helpers/consts";
 import {
@@ -7,6 +7,7 @@ import {
 	calculateGasMargin,
 	computeSlippageAdjustedAmounts,
 	getContract,
+	getTokenAllowance,
 } from "utils";
 import {
 	IWalletHookInfos,
@@ -29,6 +30,11 @@ export enum Field {
 	OUTPUT = "OUTPUT",
 }
 
+interface IError {
+	code: number;
+	message: string;
+}
+
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
 export function useApproveCallback(
 	userInput: ISwapTokenInputValue,
@@ -40,40 +46,52 @@ export function useApproveCallback(
 	setApprovalSubmitted: React.Dispatch<React.SetStateAction<ISubmittedAproval>>,
 	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
 	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
-	amountToApprove?: { [field in Field]?: CurrencyAmount },
+	setApproveTokenStatus: React.Dispatch<React.SetStateAction<ApprovalState>>,
+	amountToApprove?: { [field in Field]?: TokenAmount },
 	spender?: string,
 	signer?: Signer
-): () => Promise<void> {
-	const token =
+) {
+	const token = (
 		userInput.lastInputTyped === 0
 			? amountToApprove?.INPUT?.token
-			: amountToApprove?.OUTPUT?.token;
+			: amountToApprove?.OUTPUT?.token
+	) as Token;
 
 	const currentAmountToApprove =
 		userInput.lastInputTyped === 0
 			? amountToApprove?.INPUT
 			: amountToApprove?.OUTPUT;
 
+	getTokenAllowance(
+		token,
+		walletInfos.walletAddress && walletInfos.walletAddress,
+		`${spender}`,
+		signer as Signer
+	).then(result => {
+		// eslint-disable-next-line
+		result && currentAmountToApprove instanceof TokenAmount
+			? result?.lessThan(currentAmountToApprove)
+				? setApproveTokenStatus(ApprovalState.NOT_APPROVED)
+				: setApproveTokenStatus(ApprovalState.APPROVED)
+			: result;
+	});
+
 	const approve = async (): Promise<void> => {
 		const tokenContract = await getContract(token?.address, signer as Signer);
 		if (!token) {
-			console.error("no token");
-			return;
+			throw new Error("No token informed");
 		}
 
 		if (!tokenContract) {
-			console.error("tokenContract is null");
-			return;
+			throw new Error("Token Contract is null");
 		}
 
 		if (!amountToApprove) {
-			console.error("missing amount to approve");
-			return;
+			throw new Error("Missing amount to approve");
 		}
 
 		if (!spender) {
-			console.error("no spender");
-			return;
+			throw new Error("No Spender");
 		}
 		let useExact = false;
 		const estimatedGas = await tokenContract.estimateGas
@@ -111,7 +129,7 @@ export function useApproveCallback(
 				setCurrentTxHash(`${response?.hash}`);
 				setCurrentInputTokenName(`${currentAmountToApprove?.currency?.symbol}`);
 			})
-			.catch(error => {
+			.catch((error: IError) => {
 				if (error?.code === 4001) {
 					toast({
 						status: "error",
@@ -139,12 +157,14 @@ export function useApproveCallbackFromTrade(
 	setApprovalSubmitted: React.Dispatch<React.SetStateAction<ISubmittedAproval>>,
 	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
 	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
+	setApproveTokenStatus: React.Dispatch<React.SetStateAction<ApprovalState>>,
 	allowedSlippage = 0
 ) {
 	const { chainId } = walletInfos;
-	const amountToApprove = trade
-		? computeSlippageAdjustedAmounts(trade, allowedSlippage)
-		: undefined;
+	const amountToApprove = computeSlippageAdjustedAmounts(
+		trade,
+		allowedSlippage
+	) as { [field in Field]?: TokenAmount };
 
 	return useApproveCallback(
 		userInput,
@@ -156,6 +176,7 @@ export function useApproveCallbackFromTrade(
 		setApprovalSubmitted,
 		setCurrentTxHash,
 		setCurrentInputTokenName,
+		setApproveTokenStatus,
 		amountToApprove,
 		chainId ? ROUTER_ADDRESS[chainId] : ROUTER_ADDRESS[ChainId.NEVM],
 		signer

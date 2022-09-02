@@ -1,5 +1,5 @@
 import { Flex, Icon, Img, Link, useColorMode } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React from "react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
 import { useModal, usePicasso } from "hooks";
@@ -18,15 +18,7 @@ export const Header: React.FC = () => {
 	const { pathname } = useRouter();
 	const { isOpenPsysBreakdown, onOpenPsysBreakdown, onClosePsysBreakdown } =
 		useModal();
-	const [nav, setNav] = useState(false);
 
-	const isNav = () => {
-		if (nav) {
-			return "white";
-		}
-
-		return null;
-	};
 	const links = [
 		{
 			name: "Swap",
@@ -63,7 +55,7 @@ export const Header: React.FC = () => {
 					w={["7", "8", "6", "6"]}
 					h={["7", "8", "6", "6"]}
 					src={theme.icon.pegasysLogo}
-					ml={["2", "4", "4", "4"]}
+					ml={["4", "4", "4", "4"]}
 					mt={["1.5", "1", "2", "1.5"]}
 					position="absolute"
 					left="0"
@@ -116,12 +108,7 @@ export const Header: React.FC = () => {
 				py="2"
 				justifyContent={["space-around", "space-between"]}
 			>
-				<Flex
-					w="25%"
-					gap={["2", "0"]}
-					justifyContent={["space-around", "space-between"]}
-					pl={["6", "0", "0", "0"]}
-				>
+				<Flex w="25%" gap={["2", "4"]} pl={["0", "2", "0", "0"]}>
 					<TokenButton onClick={onOpenPsysBreakdown} />
 					<NetworkButton />
 				</Flex>
@@ -132,6 +119,7 @@ export const Header: React.FC = () => {
 					<IconButton
 						_hover={{
 							background: theme.bg.iconBg,
+							color: theme.text.cyanPurple,
 						}}
 						aria-label="Theme"
 						icon={<theme.icon.theme />}

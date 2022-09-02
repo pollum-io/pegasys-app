@@ -1,7 +1,6 @@
 import { Button, Flex, Img, Text } from "@chakra-ui/react";
 import { FunctionComponent, Dispatch, SetStateAction } from "react";
 import { useModal, usePicasso } from "hooks";
-import { AddLiquidityModal, RemoveLiquidity } from "components/Modals";
 
 interface IPoolCards {
 	poolTokens?: [];
@@ -10,7 +9,7 @@ interface IPoolCards {
 	poolVolume?: string;
 	poolApr?: string;
 	poolShare?: string;
-	setIsCreate?: Dispatch<SetStateAction<boolean>>;
+	setIsCreate: Dispatch<SetStateAction<boolean>>;
 }
 
 export const PoolCards: FunctionComponent<IPoolCards> = props => {
@@ -20,12 +19,11 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		poolVolume,
 		poolApr,
 		poolShare,
-		poolTokens,
 		setIsCreate,
+		poolTokens,
 	} = props;
 	const theme = usePicasso();
-	const { onOpenRemoveLiquidity, onOpenAddLiquidity, onCloseAddLiquidity } =
-		useModal();
+	const { onOpenRemoveLiquidity, onOpenAddLiquidity } = useModal();
 
 	return (
 		<Flex
@@ -74,14 +72,15 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			<Flex gap="2" mt="1.5rem">
 				<Button
 					w="100%"
-					py="2"
-					px="6"
+					size="sm"
 					border="1px solid"
 					borderColor={theme.text.cyanPurple}
 					borderRadius="67px"
 					bgColor="transparent"
 					color={theme.text.whitePurple}
 					fontSize="sm"
+					py={["0.2rem", "0.2rem", "1", "1"]}
+					h="2.2rem"
 					fontWeight="semibold"
 					onClick={onOpenRemoveLiquidity}
 					_hover={{
@@ -93,12 +92,13 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 				</Button>
 				<Button
 					w="100%"
-					py="2"
-					px="6"
+					size="sm"
 					borderRadius="67px"
 					bgColor={theme.bg.blueNavyLightness}
 					color={theme.text.cyan}
 					fontSize="sm"
+					py={["0.2rem", "0.2rem", "1", "1"]}
+					h="2.2rem"
 					fontWeight="semibold"
 					onClick={() => {
 						setIsCreate(false);

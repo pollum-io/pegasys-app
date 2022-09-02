@@ -8,7 +8,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@chakra-ui/react";
-import { FunctionComponent, ReactNode, useState } from "react";
+import { FunctionComponent, ReactNode } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { FaParachuteBox } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
@@ -71,6 +71,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 					transition="0.4s"
 					bg="transparent"
 					_hover={{
+						color: theme.text.cyanPurple,
 						background: theme.bg.iconBg,
 					}}
 					_expanded={{ color: theme.text.cyanPurple }}
@@ -93,7 +94,8 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 				<Flex
 					justifyContent="flex-end"
 					zIndex="99"
-					pr="0rem"
+					pr="0.3rem"
+					pt="0.5rem"
 					display={{
 						base: "flex",
 						sm: "flex",

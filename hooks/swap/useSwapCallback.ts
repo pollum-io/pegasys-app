@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { Trade } from "@pollum-io/pegasys-sdk";
-import { Signer } from "ethers";
+import { BigNumber, Signer } from "ethers";
 import { useENS } from "hooks";
 import { calculateGasMargin, isZero, shortAddress, isAddress } from "utils";
 import { ITx, IWalletHookInfos } from "types";
@@ -20,6 +20,7 @@ export enum SwapCallbackState {
 export function UseSwapCallback(
 	trade: Trade | undefined, // trade to execute, required
 	allowedSlippage: number, // in bips
+	transactionDeadlineValue: BigNumber | number,
 	walletInfos: IWalletHookInfos,
 	signer: Signer,
 	setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
@@ -37,7 +38,8 @@ export function UseSwapCallback(
 		walletInfos.walletAddress,
 		signer,
 		walletInfos,
-		allowedSlippage
+		allowedSlippage,
+		transactionDeadlineValue
 	);
 
 	const { address: recipientAddress } = useENS(walletAddress);

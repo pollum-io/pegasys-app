@@ -39,9 +39,9 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	const { userTokensBalance } = useTokens();
 
 	const theme = usePicasso();
-	const { onOpenCoin, isOpenCoin, onCloseCoin } = useModal();
+	const { isOpenCoin, onCloseCoin } = useModal();
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
-	const [buttonId, setButtonId] = useState<number>(0);
+	const [buttonId] = useState<number>(0);
 	const [sliderValue, setSliderValue] = React.useState(5);
 
 	useEffect(() => {
@@ -89,7 +89,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 							<MdArrowBack size={24} color={theme.icon.whiteGray} />
 						</Flex>
 						<Text
-							fontSize="2xl"
+							fontSize={["xl", "xl", "2xl", "2xl"]}
 							fontWeight="medium"
 							textAlign="center"
 							px="4"

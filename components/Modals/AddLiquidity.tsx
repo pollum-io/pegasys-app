@@ -77,11 +77,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	}, [userTokensBalance]);
 
 	return (
-		<Modal
-			blockScrollOnMount={false}
-			isOpen={isModalOpen}
-			onClose={onModalClose}
-		>
+		<Modal blockScrollOnMount isOpen={isModalOpen} onClose={onModalClose}>
 			<SelectCoinModal
 				isOpen={isOpenCoin}
 				onClose={onCloseCoin}
@@ -95,8 +91,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 				top={["1rem", "2rem", "0", "0"]}
 				position={["absolute", "absolute", "relative", "relative"]}
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
-				h={["100%", "100%", "max-content", "max-content"]}
-				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
+				h={["max-content", "100%", "max-content", "max-content"]}
+				borderBottomRadius={["0px", "3xl", "3xl", "3xl"]}
 				border={["none", "1px solid transparent"]}
 				background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
@@ -111,7 +107,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							<MdArrowBack size={24} color={theme.icon.whiteGray} />
 						</Flex>
 						<Text
-							fontSize="2xl"
+							fontSize={["xl", "xl", "2xl", "2xl"]}
 							fontWeight="medium"
 							textAlign="center"
 							px="4"
@@ -378,7 +374,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									Prices and pool share
 								</Text>
 								<Flex
-									flexDirection={["column", "row", "row", "row"]}
+									flexDirection={["row", "row", "row", "row"]}
 									justifyContent="space-between"
 									py="0.5rem"
 									px="1rem"
@@ -389,7 +385,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								>
 									<Flex
 										fontSize="sm"
-										flexDirection={["row", "column", "column", "column"]}
+										flexDirection={["column", "column", "column", "column"]}
 										gap={["2", "0", "0", "0"]}
 										textAlign="center"
 									>
@@ -400,7 +396,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									</Flex>
 									<Flex
 										fontSize="sm"
-										flexDirection={["row", "column", "column", "column"]}
+										flexDirection={["column", "column", "column", "column"]}
 										gap={["2", "0", "0", "0"]}
 										textAlign="center"
 									>
@@ -412,7 +408,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									<Flex
 										fontSize="sm"
 										gap={["2", "0", "0", "0"]}
-										flexDirection={["row", "column", "column", "column"]}
+										flexDirection={["column", "column", "column", "column"]}
 										textAlign="center"
 									>
 										<Text fontWeight="semibold">-</Text>
@@ -425,7 +421,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							<Button
 								w="100%"
 								mt="1.5rem"
-								py="6"
+								py={["4", "4", "6", "6"]}
 								px="6"
 								borderRadius="67px"
 								bgColor={theme.bg.blueNavyLightness}
@@ -445,7 +441,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						p="1.5rem"
 						background={theme.bg.subModal}
 						position={["relative", "relative", "absolute", "absolute"]}
-						bottom={["0", "0", "-280", "-280"]}
+						bottom={["0", "-280", "-280", "-280"]}
 						w="100%"
 						borderTopRadius={["0", "0", "3xl", "3xl"]}
 						borderBottomRadius={["0", "0", "3xl", "3xl"]}
@@ -514,7 +510,11 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								color={theme.text.cyanPurple}
 							/>
 						</Flex>
-						<Flex flexDirection="column" gap="6">
+						<Flex
+							flexDirection="column"
+							gap="6"
+							fontSize={["sm", "sm", "md", "md"]}
+						>
 							<Text>
 								By adding liquidity you’ll earn 0.25% of all trades on this pair
 								proportional to your share of the pool.

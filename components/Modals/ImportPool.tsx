@@ -28,7 +28,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 	const { userTokensBalance } = useTokens();
 
 	const theme = usePicasso();
-	const { isOpenCoin, onCloseCoin } = useModal();
+	const { isOpenCoin, onCloseCoin, onOpenCoin } = useModal();
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
 
@@ -121,7 +121,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 							id="0"
 							width="100%"
 							onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-								onOpen();
+								onOpenCoin();
 								setButtonId(Number(event.currentTarget.id));
 							}}
 							p="4"
@@ -163,7 +163,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								id="1"
 								width="100%"
 								onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-									onOpen();
+									onOpenCoin();
 									setButtonId(Number(event.currentTarget.id));
 								}}
 								p="4"

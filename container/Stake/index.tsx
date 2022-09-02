@@ -1,4 +1,4 @@
-import { Button, Flex, Img, Text } from "@chakra-ui/react";
+import { Button, Flex, Img, Text, useMediaQuery } from "@chakra-ui/react";
 import { StakeCards } from "components/Stake/StakeCard";
 import { usePicasso } from "hooks";
 import { NextPage } from "next";
@@ -8,6 +8,7 @@ import { MdOutlineCallMade } from "react-icons/md";
 export const StakeContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [buttonId, setButtonId] = useState<string>("");
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	return (
 		<Flex
@@ -27,7 +28,7 @@ export const StakeContainer: NextPage = () => {
 				>
 					<Img
 						borderRadius="xl"
-						src={theme.bg.stakeBanner}
+						src={isMobile ? theme.bg.stakeBannerMobile : theme.bg.stakeBanner}
 						position="absolute"
 						zIndex="base"
 						w="100%"
@@ -114,12 +115,15 @@ export const StakeContainer: NextPage = () => {
 										: "transparent"
 								}
 								borderRadius="full"
-								w="max-content"
+								w="5.688rem"
 								h="max-content"
 								py="2"
 								px="6"
 								fontWeight="semibold"
-								_hover={{}}
+								_hover={{
+									bgColor: theme.bg.farmActionsHover,
+									color: theme.text.farmActionsHover,
+								}}
 							>
 								PSYS
 							</Button>
@@ -134,12 +138,15 @@ export const StakeContainer: NextPage = () => {
 									buttonId === "usd" ? theme.bg.farmActionsHover : "transparent"
 								}
 								borderRadius="full"
-								w="max-content"
+								w="5.688rem"
 								h="max-content"
 								py="2"
 								px="6"
 								fontWeight="semibold"
-								_hover={{}}
+								_hover={{
+									bgColor: theme.bg.farmActionsHover,
+									color: theme.text.farmActionsHover,
+								}}
 							>
 								USD
 							</Button>
