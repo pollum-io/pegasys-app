@@ -26,16 +26,16 @@ export const ConfirmList: React.FC<IModal> = props => {
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
-			<ModalContent borderRadius="3xl" bgColor={theme.bg.blueNavy}>
+			<ModalContent borderRadius="3xl" bgColor={theme.bg.blueNavyLight}>
 				<ModalHeader
 					display="flex"
 					alignItems="center"
 					justifyContent="space-between"
-					bgColor={theme.bg.whiteGray}
+					bgColor={theme.bg.blackAlpha}
 					borderTopRadius="3xl"
 				>
 					<Flex gap="3">
-						<Flex _hover={{ cursor: "pointer" }}>
+						<Flex>
 							<RiInformationFill size={24} color={theme.icon.infoWhiteRed} />
 						</Flex>
 						<Text
@@ -67,17 +67,17 @@ export const ConfirmList: React.FC<IModal> = props => {
 					display="flex"
 					alignItems="center"
 					justifyContent="space-between"
-					bgColor={theme.bg.whiteGray}
+					bgColor={theme.bg.blackAlpha}
 					borderBottomRadius="3xl"
 				>
 					<Button
-						py="2"
+						py="3"
 						px="6"
 						my="2"
 						w="100%"
 						h="max-content"
 						borderRadius="67px"
-						bgColor={theme.bg.button.connectWalletSwap}
+						bgColor={theme.bg.blueNavyLightness}
 						color={theme.text.cyan}
 						fontSize="md"
 						fontWeight="semibold"

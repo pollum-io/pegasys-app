@@ -16,7 +16,7 @@ export const NavButton: FunctionComponent<IButtonProps> = props => {
 
 	return (
 		<Button
-			color={active ? "white" : theme.text.header}
+			color={active ? "white" : theme.icon.whiteGray}
 			fontSize={["0.938rem", "md", "md", "md"]}
 			fontWeight="semibold"
 			bgColor={active ? theme.bg.whiteGray : "transparent"}

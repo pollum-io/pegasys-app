@@ -9,16 +9,21 @@
 	animation: circleLoading 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
 	border-color: rgb(4, 205, 255) #666666 #666666 #666666;
 }
-.circleLoadingPending {
+.circleLoadingLight {
 	box-sizing: border-box;
 	display: block;
 	position: relative;
-	width: 12px;
-	height: 12px;
-	border: 0.119rem solid #fff;
+	width: 22px;
+	height: 22px;
+	border: 2px solid #fff;
 	border-radius: 50%;
 	animation: circleLoading 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-	border-color: rgb(4, 205, 255) rgba(255, 255, 255, 0.48) rgba(255, 255, 255, 0.48) rgba(255, 255, 255, 0.48);
+	border-color: #665EE1 rgba(0, 0, 0, 0.08) rgba(0, 0, 0, 0.08) rgba(0, 0, 0, 0.08);
+}
+#walletLoading {
+	bottom: 97px;
+	left: 106px;
+	right: 100px;
 }
 .circleLoading:nth-child(1) {
 	animation-delay: -0.45s;

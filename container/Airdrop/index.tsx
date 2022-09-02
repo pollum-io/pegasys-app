@@ -172,7 +172,7 @@ export const AirdropContainer: NextPage = () => {
 													w="3xs"
 													h="max-content"
 													bgColor={theme.bg.blueNavyLightness}
-													color={theme.text.cyanWhite}
+													color={theme.text.cyan}
 													_hover={{ opacity: "1" }}
 													_active={{}}
 													borderRadius="full"
@@ -188,7 +188,7 @@ export const AirdropContainer: NextPage = () => {
 													w="3xs"
 													h="max-content"
 													bgColor={theme.bg.blueNavyLightness}
-													color={theme.text.cyanWhite}
+													color={theme.text.cyan}
 													_hover={{ opacity: "1" }}
 													_active={{}}
 													borderRadius="full"

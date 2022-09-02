@@ -16,7 +16,7 @@ export const TokenButton: FunctionComponent<IButtonProps> = props => {
 			bgClip="text"
 			fontWeight="normal"
 			fontSize="md"
-			transition="0.2s"
+			transition="0.1s"
 			_hover={{ cursor: "pointer", fontWeight: "700" }}
 			_active={{}}
 			className="textAnimation"

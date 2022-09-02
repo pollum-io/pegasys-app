@@ -17,8 +17,11 @@ export const SwitchToSyscoin: FunctionComponent<ButtonProps> = props => {
 			borderRadius="full"
 			fontSize="md"
 			fontWeight="semibold"
-			color={theme.text.whiteCyan}
-			bgColor={theme.bg.button.switchNetwork}
+			bgColor={theme.bg.blueNavyLightness}
+			color={theme.text.cyan}
+			_hover={{
+				bgColor: theme.bg.bluePurple,
+			}}
 			onClick={() =>
 				ConnectSyscoinNetwork(
 					connectorSelected as AbstractConnector,

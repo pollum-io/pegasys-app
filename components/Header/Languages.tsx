@@ -5,7 +5,7 @@ import ReactCountryFlag from "react-country-flag";
 import i18next, { availableLanguages } from "helpers/translation";
 
 export const Languages: FunctionComponent = () => {
-	const countryFlagsNames = ["US", "DE", "TR", "ZH", "ES", "FR", "BR", "VN"];
+	const countryFlagsNames = ["US", "DE", "TR", "CN", "ES", "FR", "BR", "VN"];
 	const theme = usePicasso();
 
 	return (

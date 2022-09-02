@@ -15,7 +15,7 @@ export const ExpertMode: FunctionComponent = () => {
 					zIndex="-99"
 					background={[
 						`linear-gradient(#010313, #010313) padding-box, linear-gradient(92deg, rgba(0, 183, 255, 0) 0%, #53D9D9 128.42%) border-box`,
-						`linear-gradient(${theme.bg.expertMode}, ${theme.bg.expertMode}) padding-box, linear-gradient(1deg, rgb(86 190 216 / 97%) 30.76%, rgb(86 190 216 / 6%) 97.76%) border-box`,
+						`linear-gradient(${theme.bg.candleGraphColor}, ${theme.bg.candleGraphColor}) padding-box, linear-gradient(1deg, rgb(86 190 216 / 97%) 30.76%, rgb(86 190 216 / 6%) 97.76%) border-box`,
 					]}
 					border="1px solid transparent"
 					borderTop={["1px solid transparent", "none", "none", "none"]}
