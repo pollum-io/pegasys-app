@@ -37,6 +37,7 @@ export const FarmActions: React.FC<IModal> = props => {
 	const theme = usePicasso();
 	const [confirmDepoist] = useState(false);
 	const [sliderValue, setSliderValue] = React.useState(5);
+	const [showTooltip, setShowTooltip] = React.useState(false);
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -93,8 +94,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								}
 								fontWeight="semibold"
 								_hover={{
-									bgColor: theme.bg.farmActionsHover,
-									color: theme.text.farmActionsHover,
+									opacity: "0.9",
 								}}
 							>
 								Deposit
@@ -119,8 +119,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								}
 								fontWeight="semibold"
 								_hover={{
-									bgColor: theme.bg.farmActionsHover,
-									color: theme.text.farmActionsHover,
+									opacity: "0.9",
 								}}
 							>
 								Withdraw
@@ -144,8 +143,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								}
 								fontWeight="semibold"
 								_hover={{
-									bgColor: theme.bg.farmActionsHover,
-									color: theme.text.farmActionsHover,
+									opacity: "0.9",
 								}}
 							>
 								Claim
@@ -365,6 +363,8 @@ export const FarmActions: React.FC<IModal> = props => {
 									w="85%"
 									colorScheme="teal"
 									onChange={(value: number) => setSliderValue(value)}
+									onMouseEnter={() => setShowTooltip(true)}
+									onMouseLeave={() => setShowTooltip(false)}
 								>
 									<SliderMark value={0} mt="0.5rem" ml="1.5" fontSize="sm">
 										0%
@@ -384,7 +384,17 @@ export const FarmActions: React.FC<IModal> = props => {
 									<SliderTrack>
 										<SliderFilledTrack bg={theme.text.psysBalance} />
 									</SliderTrack>
-									<SliderThumb />
+									<Tooltip
+										hasArrow
+										filter="drop-shadow(0px 1px 3px rgba(0, 0, 0, 0.1)) drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.06))"
+										bgColor={theme.bg.secondary}
+										color={theme.text.mono}
+										placement="top"
+										isOpen={showTooltip}
+										label={`${sliderValue}%`}
+									>
+										<SliderThumb />
+									</Tooltip>
 								</Slider>
 							</Flex>
 							<Flex mt="1.5rem" mb="1rem" gap="4">
@@ -416,9 +426,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									py="3"
 									px="1.5rem"
 									w="100%"
-									h="max-content"
-									border="1px solid"
-									borderColor="transparent"
+									h={["2.5rem", "2.5rem", "3rem", "3rem"]}
 									bgColor={theme.bg.blueNavyLightness}
 									color={theme.text.cyan}
 									_hover={{ opacity: "1", bgColor: theme.bg.bluePurple }}
@@ -484,7 +492,7 @@ export const FarmActions: React.FC<IModal> = props => {
 							]}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
-							top={["unset", "unset", "24rem", "24rem"]}
+							top={["unset", "unset", "22.5rem", "22.5rem"]}
 							borderTopRadius={["0", "0", "3xl", "3xl"]}
 							borderBottomRadius={["0", "0", "3xl", "3xl"]}
 							alignItems="flex-start"

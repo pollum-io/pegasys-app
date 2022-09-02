@@ -39,6 +39,7 @@ export const StakeActions: React.FC<IModal> = props => {
 	const [isAprroving] = useState("");
 	const [isApproved] = useState("");
 	const [sliderValue, setSliderValue] = React.useState(5);
+	const [showTooltip, setShowTooltip] = React.useState(false);
 
 	const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const value = event?.target?.value;
@@ -108,8 +109,7 @@ export const StakeActions: React.FC<IModal> = props => {
 								}
 								fontWeight="semibold"
 								_hover={{
-									bgColor: theme.bg.farmActionsHover,
-									color: theme.text.farmActionsHover,
+									opacity: "0.9",
 								}}
 							>
 								Stake
@@ -134,8 +134,7 @@ export const StakeActions: React.FC<IModal> = props => {
 								}
 								fontWeight="semibold"
 								_hover={{
-									bgColor: theme.bg.farmActionsHover,
-									color: theme.text.farmActionsHover,
+									opacity: "0.9",
 								}}
 							>
 								Unstake
@@ -159,8 +158,7 @@ export const StakeActions: React.FC<IModal> = props => {
 								}
 								fontWeight="semibold"
 								_hover={{
-									bgColor: theme.bg.farmActionsHover,
-									color: theme.text.farmActionsHover,
+									opacity: "0.9",
 								}}
 							>
 								Claim
@@ -360,6 +358,8 @@ export const StakeActions: React.FC<IModal> = props => {
 									w="85%"
 									colorScheme="teal"
 									onChange={(value: number) => setSliderValue(value)}
+									onMouseEnter={() => setShowTooltip(true)}
+									onMouseLeave={() => setShowTooltip(false)}
 								>
 									<SliderMark value={0} mt="0.5rem" ml="1.5" fontSize="sm">
 										0%
@@ -380,7 +380,17 @@ export const StakeActions: React.FC<IModal> = props => {
 										<SliderFilledTrack bg={theme.text.psysBalance} />
 									</SliderTrack>
 
-									<SliderThumb />
+									<Tooltip
+										hasArrow
+										filter="drop-shadow(0px 1px 3px rgba(0, 0, 0, 0.1)) drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.06))"
+										bgColor={theme.bg.secondary}
+										color={theme.text.mono}
+										placement="top"
+										isOpen={showTooltip}
+										label={`${sliderValue}%`}
+									>
+										<SliderThumb />
+									</Tooltip>
 								</Slider>
 							</Flex>
 							<Flex mt="1.5rem" mb="1rem" gap="4">
@@ -390,7 +400,7 @@ export const StakeActions: React.FC<IModal> = props => {
 									py="3"
 									px="1.5rem"
 									w="100%"
-									h="max-content"
+									h={["2.5rem", "2.5rem", "3rem", "3rem"]}
 									border="1px solid"
 									borderColor={theme.text.cyanPurple}
 									bgColor="transparent"
@@ -401,6 +411,7 @@ export const StakeActions: React.FC<IModal> = props => {
 									}}
 									_active={{}}
 									borderRadius="full"
+									onClick={onClose}
 								>
 									Cancel
 								</Button>
@@ -410,10 +421,10 @@ export const StakeActions: React.FC<IModal> = props => {
 									py="3"
 									px="1.5rem"
 									w="100%"
-									h="max-content"
+									h={["2.5rem", "2.5rem", "3rem", "3rem"]}
 									bgColor={theme.bg.blueNavyLightness}
 									color={theme.text.cyan}
-									_hover={{ opacity: "1", bgColor: theme.bg.bluePurple }}
+									_hover={{ bgColor: theme.bg.bluePurple }}
 									_active={{}}
 									borderRadius="full"
 								>
