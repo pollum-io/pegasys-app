@@ -634,6 +634,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								tokenInputValue.currentInputTyped === "inputFrom" &&
 								parseFloat(tokenInputValue.inputFrom.value) >
 									parseFloat(selectedToken[0]?.balance)) ||
+							(tokenInputValue.currentInputTyped === "inputTo" &&
+								parseFloat(tokenInputValue.inputFrom.value) >
+									parseFloat(selectedToken[0]?.balance)) ||
 							(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap)
 								? theme.text.red400
 								: "#ff000000"
@@ -703,6 +706,24 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						</Flex>
 					</Flex>
 					{tokenInputValue.currentInputTyped === "inputFrom" && (
+						<Flex flexDirection="row" gap="1" justifyContent="center">
+							{parseFloat(tokenInputValue.inputFrom.value) >
+								parseFloat(selectedToken[0]?.balance) && (
+								<Text
+									fontSize="sm"
+									pt="2"
+									textAlign="center"
+									color={theme.text.red400}
+									fontWeight="semibold"
+								>
+									{translation("swapHooks.insufficient")}
+									{selectedToken[0]?.symbol}
+									{translation("swapHooks.balance")}.
+								</Text>
+							)}
+						</Flex>
+					)}
+					{tokenInputValue.currentInputTyped === "inputTo" && (
 						<Flex flexDirection="row" gap="1" justifyContent="center">
 							{parseFloat(tokenInputValue.inputFrom.value) >
 								parseFloat(selectedToken[0]?.balance) && (
@@ -803,22 +824,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								{translation("swapPage.insufficientLiquidity")}
 							</Text>
 						)}
-						{isConnected &&
-							tokenInputValue.currentInputTyped === "inputTo" &&
-							parseFloat(tokenInputValue.inputTo.value) >
-								parseFloat(selectedToken[1]?.tokenInfo?.balance) && (
-								<Text
-									fontSize="sm"
-									pt="2"
-									textAlign="center"
-									color={theme.text.red400}
-									fontWeight="semibold"
-								>
-									{translation("swapHooks.insufficient")}
-									{selectedToken[1]?.tokenInfo?.symbol}
-									{translation("swapHooks.balance")}
-								</Text>
-							)}
 					</Flex>
 					<Collapse
 						in={

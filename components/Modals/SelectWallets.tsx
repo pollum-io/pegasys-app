@@ -67,6 +67,7 @@ export const SelectWallets: React.FC<IModal> = props => {
 								textColor={theme.text.cyanPurple}
 								fontWeight="semibold"
 								textAlign="center"
+								_hover={{ cursor: "pointer" }}
 							>
 								Learn more about setting up a wallet
 							</Text>
