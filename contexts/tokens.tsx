@@ -1,7 +1,7 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers } from "ethers";
 import { ListsState, TokenAddressMap, WrappedTokenInfo } from "types";
-import { useWallet, ApprovalState } from "hooks";
+import { useWallet, ApprovalState, useTokensListManage } from "hooks";
 import { getDefaultTokens, getTokenListByUrl } from "networks";
 import { getBalanceOfMultiCall, truncateNumberDecimalsPlaces } from "utils";
 import { TokenInfo, TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
@@ -25,10 +25,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		WrappedTokenInfo[]
 	>([]);
 
-	const [tokenListManageState, setTokenListManageState] = useState<ListsState>(
-		INITIAL_TOKEN_LIST_STATE
-	);
-
+	const { tokenListManageState } = useTokensListManage();
 	const {
 		isConnected,
 		provider,
@@ -120,12 +117,63 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		return {};
 	};
 
-	const listToTokenMap = (list: TokenList): TokenAddressMap => {
+	const listToTokenMap = async (list: TokenList): Promise<TokenAddressMap> => {
 		const verifyCurrentList = tokenListCache?.get(list);
 
 		if (verifyCurrentList) return verifyCurrentList;
 
-		const mapAroundList = list.tokens.reduce<TokenAddressMap>(
+		const SYSToken: TokenInfo = {
+			...list.tokens.find(token => token.symbol === "WSYS"),
+			name: "Syscoin",
+			symbol: "SYS",
+			logoURI:
+				"https://app.pegasys.finance/static/media/syscoin_token_round.f5e7de99.png",
+		} as TokenInfo;
+
+		const listWithAllTokens = [...list.tokens, SYSToken];
+
+		// console.log('listWithAllTokens', listWithAllTokens)
+
+		const tokensAddress = listWithAllTokens.map(token => token.address);
+
+		const tokensDecimals = listWithAllTokens.map(token => token.decimals);
+
+		const providerTokenBalance =
+			(await provider
+				?.getBalance(walletAddress)
+				.then(result => result.toString())) || "0";
+
+		const balanceFormattedValue =
+			ethers.utils.formatEther(providerTokenBalance);
+
+		const getContractBalances = await getBalanceOfMultiCall(
+			tokensAddress,
+			walletAddress,
+			provider,
+			tokensDecimals
+		);
+
+		const listTokensWithBalance = listWithAllTokens.map(token => {
+			const balanceItems = getContractBalances.find(
+				balance => balance.address === token.address
+			);
+
+			if (token.symbol === "SYS") {
+				return {
+					...token,
+					balance: balanceFormattedValue as string,
+				};
+			}
+
+			return {
+				...token,
+				balance: ethers.utils.formatEther(balanceItems?.balance as string),
+			};
+		});
+
+		// console.log('listTokensWithBalance', listTokensWithBalance)
+
+		const mapAroundList = listTokensWithBalance.reduce<TokenAddressMap>(
 			(tokenMap, tokenInfo) => {
 				const token = new WrappedTokenInfo(tokenInfo);
 
@@ -141,6 +189,9 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			},
 			{ ...EMPTY_TOKEN_LIST }
 		);
+
+		// console.log('mapAroundList', mapAroundList)
+
 		tokenListCache?.set(list, mapAroundList);
 
 		return mapAroundList;
@@ -149,9 +200,17 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 	const useTokenList = (urls: string[] | undefined): TokenAddressMap => {
 		const lists = tokenListManageState.byUrl;
 
+		// console.log('lists', lists)
+
 		const tokenList = {} as {
 			[chainId: string]: { [tokenAddress: string]: WrappedTokenInfo };
 		};
+
+		([] as string[]).concat(urls || []).forEach(url => {
+			const currentUrl = lists[url]?.current;
+
+			// console.log('currentUrl', lists.current)
+		});
 
 		([] as string[]).concat(urls || []).forEach(url => {
 			const currentUrl = lists[url]?.current;
@@ -193,9 +252,9 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	useEffect(() => {
 		UseSelectedTokenList();
-	}, [isConnected]);
+	}, []);
 
-	console.log("listCache", tokenListCache);
+	// console.log("listCache", tokenListCache);
 
 	const tokensProviderValue = useMemo(
 		() => ({

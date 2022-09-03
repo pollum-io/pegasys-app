@@ -13,18 +13,29 @@ const getDefaultTokens = (
 	).then(res => res.json());
 };
 
+interface IGetTokenListByUrl {
+	response: TokenList;
+	id: string;
+}
+
 const getTokenListByUrl = async (
 	listUrl: string
-): Promise<TokenList | undefined> => {
+): Promise<IGetTokenListByUrl | undefined> => {
+	const requestId = Math.floor(Math.random() * 10).toString();
 	const urlConverted = returnConvertedUrl(listUrl);
 
-	const urlFetchedReponse = await (await fetch(urlConverted[0])).json();
+	const urlFetchedReponse = await fetch(urlConverted[0]);
 
 	if (!urlFetchedReponse.ok) {
 		console.log(`Failed to download list ${listUrl}`);
 	}
 
-	return urlFetchedReponse;
+	const urlFetchedReponseJson = await urlFetchedReponse.json();
+
+	return {
+		response: urlFetchedReponseJson,
+		id: requestId,
+	};
 };
 
 export { getDefaultTokens, getTokenListByUrl };
