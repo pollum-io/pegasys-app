@@ -44,14 +44,25 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	} = props;
 
 	const { userTokensBalance } = useTokens();
-	const { provider, walletAddress, currentNetworkChainId, signer } =
-		useWallet();
+	const {
+		provider,
+		walletAddress,
+		currentNetworkChainId,
+		signer,
+		userSlippageTolerance,
+		setTransactions,
+		transactions,
+		setCurrentTxHash,
+		setApprovalState,
+		approvalState,
+	} = useWallet();
 
 	const theme = usePicasso();
 	const { isOpenCoin, onCloseCoin } = useModal();
 	const [buttonId] = useState<number>(0);
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
+	const [txSignature, setTxSignature] = useState<boolean>(false);
 
 	const walletInfos = {
 		provider,
@@ -59,12 +70,19 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 		chainId: currentNetworkChainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
 	};
 
-	const { onAttemptToApprove } = UseRemoveLiquidity(
+	const { onAttemptToApprove, onRemove } = UseRemoveLiquidity(
 		"0xb9a3EDE63BF1d8cC7E75352Fb7C9Db6dcaFbC8F8",
 		sliderValue,
 		walletInfos,
 		signer as Signer,
-		selectedToken
+		selectedToken,
+		userSlippageTolerance,
+		setTransactions,
+		transactions,
+		setCurrentTxHash,
+		setApprovalState,
+		approvalState,
+		setTxSignature,
 	);
 
 	useEffect(() => {
@@ -267,7 +285,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						w="100%"
 						py="6"
 						px="6"
-						onClick={onAttemptToApprove}
+						onClick={!txSignature ? onAttemptToApprove : onRemove}
 						borderRadius="67px"
 						bgColor={theme.bg.button.connectWalletSwap}
 						color={theme.text.cyan}

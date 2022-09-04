@@ -17,6 +17,7 @@ import {
 } from "types";
 import { Signer } from "ethers";
 import { IApprovalState, ISubmittedAproval } from "contexts";
+import abi20 from "utils/abis/erc20.json";
 
 export enum ApprovalState {
 	UNKNOWN,
@@ -77,7 +78,11 @@ export function useApproveCallback(
 	});
 
 	const approve = async (): Promise<void> => {
-		const tokenContract = await getContract(token?.address, signer as Signer);
+		const tokenContract = await getContract(
+			token?.address,
+			signer as Signer,
+			abi20
+		);
 		if (!token) {
 			throw new Error("No token informed");
 		}
