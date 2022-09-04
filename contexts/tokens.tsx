@@ -122,58 +122,58 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		if (verifyCurrentList) return verifyCurrentList;
 
-		const SYSToken: TokenInfo = {
-			...list.tokens.find(token => token.symbol === "WSYS"),
-			name: "Syscoin",
-			symbol: "SYS",
-			logoURI:
-				"https://app.pegasys.finance/static/media/syscoin_token_round.f5e7de99.png",
-		} as TokenInfo;
+		// const SYSToken: TokenInfo = {
+		// 	...list.tokens.find(token => token.symbol === "WSYS"),
+		// 	name: "Syscoin",
+		// 	symbol: "SYS",
+		// 	logoURI:
+		// 		"https://app.pegasys.finance/static/media/syscoin_token_round.f5e7de99.png",
+		// } as TokenInfo;
 
-		const listWithAllTokens = [...list.tokens, SYSToken];
+		// const listWithAllTokens = [...list.tokens, SYSToken];
 
-		// console.log('listWithAllTokens', listWithAllTokens)
+		// // console.log('listWithAllTokens', listWithAllTokens)
 
-		const tokensAddress = listWithAllTokens.map(token => token.address);
+		// const tokensAddress = listWithAllTokens.map(token => token.address);
 
-		const tokensDecimals = listWithAllTokens.map(token => token.decimals);
+		// const tokensDecimals = listWithAllTokens.map(token => token.decimals);
 
-		const providerTokenBalance =
-			(await provider
-				?.getBalance(walletAddress)
-				.then(result => result.toString())) || "0";
+		// const providerTokenBalance =
+		// 	(await provider
+		// 		?.getBalance(walletAddress)
+		// 		.then(result => result.toString())) || "0";
 
-		const balanceFormattedValue =
-			ethers.utils.formatEther(providerTokenBalance);
+		// const balanceFormattedValue =
+		// 	ethers.utils.formatEther(providerTokenBalance);
 
-		const getContractBalances = await getBalanceOfMultiCall(
-			tokensAddress,
-			walletAddress,
-			provider,
-			tokensDecimals
-		);
+		// const getContractBalances = await getBalanceOfMultiCall(
+		// 	tokensAddress,
+		// 	walletAddress,
+		// 	provider,
+		// 	tokensDecimals
+		// );
 
-		const listTokensWithBalance = listWithAllTokens.map(token => {
-			const balanceItems = getContractBalances.find(
-				balance => balance.address === token.address
-			);
+		// const listTokensWithBalance = listWithAllTokens.map(token => {
+		// 	const balanceItems = getContractBalances.find(
+		// 		balance => balance.address === token.address
+		// 	);
 
-			if (token.symbol === "SYS") {
-				return {
-					...token,
-					balance: balanceFormattedValue as string,
-				};
-			}
+		// 	if (token.symbol === "SYS") {
+		// 		return {
+		// 			...token,
+		// 			balance: balanceFormattedValue as string,
+		// 		};
+		// 	}
 
-			return {
-				...token,
-				balance: ethers.utils.formatEther(balanceItems?.balance as string),
-			};
-		});
+		// 	return {
+		// 		...token,
+		// 		balance: ethers.utils.formatEther(balanceItems?.balance as string),
+		// 	};
+		// });
 
 		// console.log('listTokensWithBalance', listTokensWithBalance)
 
-		const mapAroundList = listTokensWithBalance.reduce<TokenAddressMap>(
+		const mapAroundList = list.tokens.reduce<TokenAddressMap>(
 			(tokenMap, tokenInfo) => {
 				const token = new WrappedTokenInfo(tokenInfo);
 
@@ -200,37 +200,33 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 	const useTokenList = (urls: string[] | undefined): TokenAddressMap => {
 		const lists = tokenListManageState.byUrl;
 
-		// console.log('lists', lists)
-
 		const tokenList = {} as {
 			[chainId: string]: { [tokenAddress: string]: WrappedTokenInfo };
 		};
 
-		([] as string[]).concat(urls || []).forEach(url => {
+		const formattedUrls = ([] as string[]).concat(urls || []);
+
+		formattedUrls.forEach(url => {
 			const currentUrl = lists[url]?.current;
 
-			// console.log('currentUrl', lists.current)
-		});
-
-		([] as string[]).concat(urls || []).forEach(url => {
-			const currentUrl = lists[url]?.current;
 			if (url && currentUrl) {
 				try {
-					const data = listToTokenMap(currentUrl);
-					// eslint-disable-next-line
-					for (const [chainId, tokens] of Object.entries(data)) {
-						tokenList[chainId] = tokenList[chainId] || {};
-						tokenList[chainId] = {
-							...tokenList[chainId],
-							...tokens,
-						};
-					}
+					listToTokenMap(currentUrl).then(data => {
+						// eslint-disable-next-line
+						for (const [chainId, tokens] of Object.entries(data)) {
+							tokenList[chainId] = tokenList[chainId] || {};
+
+							tokenList[chainId] = {
+								...tokenList[chainId],
+								...tokens,
+							};
+						}
+					});
 				} catch (error) {
-					console.error("Could not show token list due to error", error);
+					console.log("Could not show token list due to error", error);
 				}
 			}
 		});
-
 		return tokenList as TokenAddressMap;
 	};
 
@@ -252,9 +248,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	useEffect(() => {
 		UseSelectedTokenList();
-	}, []);
-
-	// console.log("listCache", tokenListCache);
+	}, [tokenListManageState]);
 
 	const tokensProviderValue = useMemo(
 		() => ({

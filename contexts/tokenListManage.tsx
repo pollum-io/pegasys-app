@@ -29,14 +29,14 @@ export const TokensListManageProvider: React.FC<{
 		if (!currentList) {
 			// eslint-disable-next-line
 			setTokenListManageState(prevState => ({
-				...prevState,
-				...(prevState.byUrl[listUrl] = {
+				...((prevState.byUrl[listUrl] = {
 					...prevState?.byUrl[listUrl],
 					current: tokenListResponse?.response as TokenList,
 					error: null,
 					loadingRequestId: tokenListResponse?.id as string,
 					pendingUpdate: null,
 				}),
+				prevState),
 			}));
 		} else if (
 			loadingRequestId === "" ||
@@ -44,14 +44,14 @@ export const TokensListManageProvider: React.FC<{
 		) {
 			// eslint-disable-next-line
 			setTokenListManageState(prevState => ({
-				...prevState,
-				...(prevState.byUrl[listUrl] = {
+				...((prevState.byUrl[listUrl] = {
 					...prevState?.byUrl[listUrl],
 					loadingRequestId: null,
 					error: null,
 					current: currentList,
 					pendingUpdate: tokenListResponse?.response as TokenList,
 				}),
+				prevState),
 			}));
 		}
 
@@ -64,8 +64,6 @@ export const TokensListManageProvider: React.FC<{
 			fetchAndFulfilledTokenListManage(url)
 		);
 	}, [tokenListManageState?.byUrl]);
-
-	console.log("tokenListManageState", tokenListManageState);
 
 	const tokensListManageProviderValue = useMemo(
 		() => ({
