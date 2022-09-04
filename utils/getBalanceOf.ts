@@ -2,6 +2,7 @@ import { BigNumber, Contract, ethers, Signer } from "ethers";
 // import pegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
 import pairPegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/PegasysPair.sol/PegasysPair.json";
 import { Interface } from "@ethersproject/abi";
+import { IAddressessAndBalances } from "types/IAdressesAndBalances";
 import abi20 from "./abis/erc20.json";
 import { createContractUsingAbi } from "./contractInstance";
 import { singleCall } from "./singleCall";
@@ -17,6 +18,7 @@ export const getBalanceOfSingleCall = async (
 		| Signer
 		| ethers.providers.JsonRpcProvider
 		| ethers.providers.Web3Provider
+		| ethers.providers.Provider
 		| undefined,
 	decimals: number
 ) => {
@@ -39,11 +41,6 @@ export const getBalanceOfSingleCall = async (
 		return "0";
 	}
 };
-
-interface IAddressessAndBalances {
-	address: string;
-	balance: string;
-}
 
 export const getBalanceOfMultiCall = async (
 	tokenAddress: string[],
