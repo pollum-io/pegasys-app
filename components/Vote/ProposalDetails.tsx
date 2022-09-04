@@ -166,7 +166,7 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 										w="100%"
 										borderRadius="xl"
 										h="0.375rem"
-										bgColor={theme.bg.whiteGray}
+										bgColor={theme.bg.voteGray}
 										mb={["0", "0", "8px", "8px"]}
 									>
 										<Flex

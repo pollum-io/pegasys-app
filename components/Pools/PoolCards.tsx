@@ -69,7 +69,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					<Text>{poolShare || "-"}</Text>
 				</Flex>
 			</Flex>
-			<Flex gap="2" mt="1.5rem">
+			<Flex gap="2" mt="1.5rem" bgColor="red">
 				<Button
 					w="100%"
 					size="sm"
