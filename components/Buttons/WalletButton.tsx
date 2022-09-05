@@ -12,7 +12,6 @@ import { AddressInfoButton } from "components/Buttons";
 import { shortAddress } from "utils";
 import { ExpertMode } from "components/Header/ExpertMode";
 import { ApprovalState } from "contexts";
-import { Circles } from "react-loading-icons";
 import { AddressButton } from "./AddressButton";
 
 export const WalletButton: FunctionComponent<ButtonProps> = props => {
@@ -123,7 +122,12 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						<Text fontSize="14px" color="white">
 							{pendingTxLength}
 						</Text>
-						<Flex className="circleLoadingPending" />
+						<Flex
+							className="circleLoading"
+							id={
+								colorMode === "dark" ? "smallPendingDark" : "smallPendingLight"
+							}
+						/>
 					</Flex>
 					<AddressButton
 						onClick={walletError ? onOpenSelectWalletModal : onOpenAddress}
