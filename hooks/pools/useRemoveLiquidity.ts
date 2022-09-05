@@ -59,16 +59,12 @@ export const UseRemoveLiquidity = (
 		signer
 	);
 
+	const currencyBIsETH = currencyB === NSYS;
+	const oneCurrencyIsETH = currencyA === NSYS || currencyBIsETH;
+
 	let percentToRemove: Percent = new Percent(sliderValue.toString(), "100");
 
 	async function onAttemptToApprove() {
-		const pairBalance = await getBalanceOfSingleCall(
-			pairAddress,
-			account,
-			signer,
-			6
-		);
-
 		const pair = await useAllCommonPairs(currencyA, currencyB, walletInfos);
 
 		const pairBalanceAmount = new TokenAmount(
@@ -76,11 +72,6 @@ export const UseRemoveLiquidity = (
 			JSBI.BigInt("100")
 		);
 
-		const totalSupply = await getTotalSupply(pair[0].liquidityToken, signer);
-
-		console.log("totalSupp in ANOTHER: ", {
-			totalSupply
-		});
 
 		if (
 			!pairContract ||
@@ -211,21 +202,22 @@ export const UseRemoveLiquidity = (
 				  )
 				: undefined;
 
-		const currencyAmountA = new TokenAmount(
-			currencyA,
-			percentToRemove?.multiply(liquidityValueA?.raw).quotient
-		);
-		const currencyAmountB = new TokenAmount(
-			currencyB,
-			percentToRemove?.multiply(liquidityValueB?.raw).quotient
-		);
+		const currencyAmountA =
+			liquidityValueA &&
+			new TokenAmount(
+				currencyA,
+				percentToRemove?.multiply(liquidityValueA?.raw).quotient
+			);
+		const currencyAmountB =
+			liquidityValueB &&
+			new TokenAmount(
+				currencyB,
+				percentToRemove?.multiply(liquidityValueB?.raw).quotient
+			);
 
 		if (!chainId || !provider || !account || !deadline)
 			throw new Error("missing dependencies");
-		if (!currencyAmountA || !currencyAmountB) {
-			// TODO: Translate using i18n
-			throw new Error("missing currency amounts");
-		}
+
 		const router = await getContract(
 			chainRouter,
 			signer as Signer,
@@ -245,16 +237,13 @@ export const UseRemoveLiquidity = (
 		);
 		if (!liquidityAmount) throw new Error("missing liquidity amount");
 
-		const currencyBIsETH = currencyB === NSYS;
-		const oneCurrencyIsETH = currencyA === NSYS || currencyBIsETH;
-
 		// TODO: Translate using i18n
 		if (!currencyA || !currencyB) throw new Error("could not wrap");
 
 		let methodNames: string[],
 			args: Array<string | string[] | number | boolean>;
 		// we have approval, use normal remove liquidity
-		if (approvalState.status === ApprovalState.APPROVED) {
+		if (signatureData) {
 			// removeLiquiditySYS
 			if (oneCurrencyIsETH) {
 				methodNames = [

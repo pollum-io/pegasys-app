@@ -3,7 +3,8 @@ import { CurrencyAmount, JSBI } from "@pollum-io/pegasys-sdk";
 export function calculateSlippageAmount(
 	value: CurrencyAmount,
 	slippage: number
-): [JSBI, JSBI] {
+) {
+	if (!value) return [];
 	if (slippage < 0 || slippage > 10000) {
 		throw Error(`Unexpected slippage value: ${slippage}`);
 	}
