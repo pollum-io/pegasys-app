@@ -5,6 +5,7 @@ import {
 	ModalOverlay,
 	Text,
 	Img,
+	useColorMode,
 } from "@chakra-ui/react";
 import { usePicasso, useWallet } from "hooks";
 import { WalletOptions } from "components/WalletOptions";
@@ -18,6 +19,7 @@ interface IModal {
 export const SelectWallets: React.FC<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
+	const { colorMode } = useColorMode();
 	const { connecting, connectorSelected } = useWallet();
 
 	return (
@@ -54,13 +56,18 @@ export const SelectWallets: React.FC<IModal> = props => {
 							fontSize="sm"
 							pb={["3.75rem", "3.75rem", "0", "0"]}
 						>
-							<Text textAlign="center" fontWeight="normal">
+							<Text
+								textAlign="center"
+								fontWeight="normal"
+								color={theme.text.mono}
+							>
 								New to Syscoin?
 							</Text>
 							<Text
-								textColor={theme.text.cyan}
+								textColor={theme.text.cyanPurple}
 								fontWeight="semibold"
 								textAlign="center"
+								_hover={{ cursor: "pointer" }}
 							>
 								Learn more about setting up a wallet
 							</Text>
@@ -68,7 +75,11 @@ export const SelectWallets: React.FC<IModal> = props => {
 					</Flex>
 				)}
 				{connecting && connectorSelected && (
-					<Flex flexDirection="column" justifyContent="center">
+					<Flex
+						flexDirection="column"
+						justifyContent="center"
+						color={theme.text.mono}
+					>
 						<Flex justifyContent="flex-end" gap="3" align="center" pb="5">
 							<Flex _hover={{ cursor: "pointer" }}>
 								<AiOutlineClose size={22} onClick={onClose} />
@@ -81,7 +92,14 @@ export const SelectWallets: React.FC<IModal> = props => {
 							pb="1.5rem"
 						>
 							<Flex pt="0.4">
-								<Flex mb="5px" className="circleLoading" />
+								<Flex
+									mb="5px"
+									className={
+										colorMode === "dark"
+											? "circleLoading"
+											: "circleLoadingLight"
+									}
+								/>
 							</Flex>
 							<Text pb="2" pl="3" fontSize="18px" fontWeight="600">
 								Initializing...
@@ -101,7 +119,7 @@ export const SelectWallets: React.FC<IModal> = props => {
 								border="1px solid"
 								borderRadius="full"
 								fontSize="md"
-								borderColor={theme.text.cyanPsys}
+								borderColor={theme.border.wallets}
 								fontWeight={500}
 								fontFamily="inter"
 								alignItems="center"

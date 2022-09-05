@@ -83,9 +83,10 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 						</Text>
 					</Flex>
 					<Tooltip
+						hasArrow
 						label="When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
 						position="relative"
-						bgColor={theme.bg.blueNavy}
+						bgColor="red"
 						border="1px solid"
 						borderColor={theme.border.borderSettings}
 						color={theme.text.swapInfo}
@@ -127,7 +128,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 							borderRadius="2xl"
 							cursor="pointer"
 							_hover={{
-								bgColor: theme.bg.button.swapTokenCurrency,
+								bgColor: "red",
 							}}
 						>
 							<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
@@ -169,7 +170,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								borderRadius="2xl"
 								cursor="pointer"
 								_hover={{
-									bgColor: theme.bg.button.swapTokenCurrency,
+									bgColor: "red",
 								}}
 							>
 								<Img src={selectedToken[1]?.logoURI} w="6" h="6" />
@@ -193,7 +194,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								py="6"
 								px="6"
 								borderRadius="67px"
-								bgColor={theme.bg.button.connectWalletSwap}
+								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"

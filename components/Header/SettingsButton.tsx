@@ -21,6 +21,7 @@ import { usePicasso, useWallet } from "hooks";
 import { mockedSlippageValues } from "helpers/mockedData";
 import { useTranslation } from "react-i18next";
 import { DEFAULT_DEADLINE_FROM_NOW } from "helpers/consts";
+import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { IconButton } from "../Buttons/IconButton";
 import { SlippageButton } from "../Buttons/SlippageButton";
 import { Languages } from "./Languages";
@@ -44,6 +45,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	const [deadlineInputValue, setDeadlineInputValue] = useState<string>("");
 
 	const theme = usePicasso();
+	// const [expert, setExpert] = useState(false)
 	const {
 		userSlippageTolerance,
 		setUserSlippageTolerance,
@@ -139,11 +141,11 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 					bgColor="transparent"
 					_hover={{
 						background: theme.bg.iconBg,
-						color: theme.text.cyanLightPurple,
+						color: theme.text.cyanPurple,
 					}}
 					aria-label="Popover"
 					icon={<MdSettings size={25} />}
-					_expanded={{ color: theme.text.cyan }}
+					_expanded={{ color: theme.text.cyanPurple }}
 				/>
 			</PopoverTrigger>
 			<PopoverContent
@@ -159,6 +161,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 				mx={["0", "0", "20", "56"]}
 				position="fixed"
 			>
+				<PopoverArrow />
 				<Flex
 					justifyContent="flex-end"
 					zIndex="99"
@@ -166,6 +169,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 					pt="0rem"
 					pb="2"
 					h="max-content"
+					display={["flex", "flex", "none", "none"]}
 				>
 					<PopoverCloseButton position="relative" size="md" />
 				</Flex>
@@ -180,7 +184,6 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 						Transaction Settings
 					</Text>
 				</Flex>
-				<PopoverArrow />
 				<PopoverBody>
 					<Flex flexDirection="column" mt="4">
 						<Flex alignItems="center" flexDirection="row">
@@ -193,26 +196,12 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								Slippage tolerance
 							</Text>
 							<Flex>
-								<Tooltip
-									label="Sua transação será revertida se o preço For alterado de forma desfavorável acima dessa porcentagem."
-									position="relative"
-									bgColor={theme.bg.secondary}
-									color={theme.text.mono}
-									borderRadius="md"
-								>
-									<Text as="span" _hover={{ opacity: 0.8 }}>
-										<Flex pb="0.15rem">
-											<Icon
-												as={MdHelpOutline}
-												h="4"
-												w="4"
-												mt="0.25rem"
-												color={theme.icon.whiteGray}
-												borderRadius="full"
-											/>
-										</Flex>
-									</Text>
-								</Tooltip>
+								<TooltipComponent
+									label={translation(
+										"transactionSettings.transactionRevertSlippageHelper"
+									)}
+									icon={MdHelpOutline}
+								/>
 							</Flex>
 						</Flex>
 						<Flex flexDirection="row" py="0.5rem" alignItems="center">
@@ -316,26 +305,12 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							>
 								Transaction tolerance
 							</Text>
-							<Tooltip
-								label="Sua transação será revertida se ela demorar mais do que isso."
-								position="relative"
-								bgColor={theme.bg.secondary}
-								color={theme.text.mono}
-								borderRadius="md"
-							>
-								<Text as="span" _hover={{ opacity: 0.8 }}>
-									<Flex pb="0.15rem">
-										<Icon
-											as={MdHelpOutline}
-											h="4"
-											w="4"
-											mt="0.25rem"
-											color={theme.icon.whiteGray}
-											borderRadius="full"
-										/>
-									</Flex>
-								</Text>
-							</Tooltip>
+							<TooltipComponent
+								label={translation(
+									"transactionSettings.transactionRevertDeadlineHelper"
+								)}
+								icon={MdHelpOutline}
+							/>
 						</Flex>
 						<Flex flexDirection="row" py="0.5rem" alignItems="center">
 							<Input
@@ -372,6 +347,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							alignItems={["flex-start", "center", "center", "center"]}
 							flexDirection={["column", "row", "row", "row"]}
 							mt="4"
+							h="max-content"
 						>
 							<Flex
 								pt="0.1rem"
@@ -388,28 +364,14 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								>
 									Toggle Expert Mode
 								</Text>
-								<Tooltip
-									label="Ignora os modais de confirmação e permite alta variação de preço. Use por sua conta e risco."
-									position="relative"
-									bgColor={theme.bg.secondary}
-									color={theme.text.mono}
-									borderRadius="md"
-								>
-									<Text as="span" _hover={{ opacity: 0.8 }}>
-										<Flex pb="0.15rem">
-											<Icon
-												as={MdHelpOutline}
-												h="4"
-												w="4"
-												mt="0.25rem"
-												color={theme.icon.whiteGray}
-												borderRadius="full"
-											/>
-										</Flex>
-									</Text>
-								</Tooltip>
+								<TooltipComponent
+									label={translation(
+										"transactionSettings.transactionRevertDeadlineHelper"
+									)}
+									icon={MdHelpOutline}
+								/>
 							</Flex>
-							<Flex flexDirection="row" ml={["2", "12", "12", "12"]}>
+							<Flex flexDirection="row" ml={["2", "12", "12", "12"]} mt="5">
 								<Stack align="center" direction="row">
 									<Text color={theme.text.mono}>Off</Text>
 									<Switch

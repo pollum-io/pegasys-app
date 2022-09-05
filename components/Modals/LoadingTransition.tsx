@@ -28,7 +28,7 @@ export const LoadingTransition: React.FC<IModal> = props => {
 				bgColor={theme.bg.blueNavy}
 				p="6"
 				border="1px solid transparent"
-				background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<Flex
 					bgColor="transparent"
@@ -46,8 +46,9 @@ export const LoadingTransition: React.FC<IModal> = props => {
 					justifyContent="center"
 					align="center"
 					gap="3"
+					color={theme.text.mono}
 				>
-					<Img src="icons/loading.gif" w="35%" h="35%" />
+					<Img src={theme.icon.pegasysLogo} w="35%" h="35%" />
 					<Flex flexDirection="row">
 						<Text fontSize="2xl" fontWeight="semibold">
 							Waiting for confirmation

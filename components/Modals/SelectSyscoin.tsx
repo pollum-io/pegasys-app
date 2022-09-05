@@ -28,7 +28,8 @@ export const SelectSyscoin: FunctionComponent<IModal> = props => {
 				borderRadius="3xl"
 				my="40"
 				p="1.5rem"
-				bgColor={theme.bg.blueNavy}
+				bgColor={theme.bg.blueNavyLight}
+				color={theme.text.mono}
 			>
 				<Flex alignItems="center" justifyContent="space-between">
 					<Text fontSize="lg" fontWeight="semibold">

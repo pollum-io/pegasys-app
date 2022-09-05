@@ -65,6 +65,7 @@ export const Header: React.FC = () => {
 			<Flex
 				gap={["0", "1", "1", "1"]}
 				bgColor={theme.bg.topHeader}
+				opacity="0.95"
 				borderRadius="20"
 				ml={["7", "0", "0", "0"]}
 			>
@@ -79,7 +80,7 @@ export const Header: React.FC = () => {
 				))}
 				<NavButton
 					href="/"
-					color={theme.text.header}
+					color={theme.icon.whiteGray}
 					display={{
 						base: "none",
 						sm: "none",
@@ -119,7 +120,7 @@ export const Header: React.FC = () => {
 					<IconButton
 						_hover={{
 							background: theme.bg.iconBg,
-							color: theme.text.cyanLightPurple,
+							color: theme.text.cyanPurple,
 						}}
 						aria-label="Theme"
 						icon={<theme.icon.theme />}

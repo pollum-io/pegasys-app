@@ -4,6 +4,8 @@ import {
 	Icon,
 	Img,
 	Input,
+	InputGroup,
+	InputRightAddon,
 	Modal,
 	ModalBody,
 	ModalContent,
@@ -36,7 +38,6 @@ export const StakeActions: React.FC<IModal> = props => {
 	const [inputValue, setInputValue] = useState("");
 	const [isAprroving] = useState("");
 	const [isApproved] = useState("");
-
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
 
@@ -104,10 +105,12 @@ export const StakeActions: React.FC<IModal> = props => {
 								color={
 									buttonId === "stake"
 										? theme.text.farmActionsHover
-										: theme.text.farmActionsTop
+										: theme.border.borderSettings
 								}
 								fontWeight="semibold"
-								_hover={{ opacity: "0.9" }}
+								_hover={{
+									opacity: "0.9",
+								}}
 							>
 								Stake
 							</Button>
@@ -127,10 +130,12 @@ export const StakeActions: React.FC<IModal> = props => {
 								color={
 									buttonId === "unstake"
 										? theme.text.farmActionsHover
-										: theme.text.farmActionsTop
+										: theme.border.borderSettings
 								}
 								fontWeight="semibold"
-								_hover={{ opacity: "0.9" }}
+								_hover={{
+									opacity: "0.9",
+								}}
 							>
 								Unstake
 							</Button>
@@ -149,10 +154,12 @@ export const StakeActions: React.FC<IModal> = props => {
 								color={
 									buttonId === "claim"
 										? theme.text.farmActionsHover
-										: theme.text.farmActionsTop
+										: theme.border.borderSettings
 								}
 								fontWeight="semibold"
-								_hover={{ opacity: "0.9" }}
+								_hover={{
+									opacity: "0.9",
+								}}
 							>
 								Claim
 							</Button>
@@ -217,31 +224,38 @@ export const StakeActions: React.FC<IModal> = props => {
 								<Text fontWeight="normal">Available to deposit: 1</Text>
 								{!confirmStake ? (
 									<Flex>
-										<Input
-											placeholder="0.0"
-											border="1px solid"
-											borderColor={theme.border.farmInput}
-											bgColor={theme.bg.blackAlpha}
-											borderLeftRadius="full"
-											p="5"
-											w="25rem"
-											_focus={{ outline: "none" }}
-											onChange={handleInput}
-										/>
-										<Button
-											border="1px solid"
-											borderColor={theme.border.farmInput}
-											borderRightRadius="full"
-											bgColor={theme.bg.max}
-											color={theme.text.max}
-											fontSize="lg"
-											fontWeight="normal"
-											px="4"
-											py="5"
-											_hover={{ backgroundColor: theme.bg.max, opacity: 0.9 }}
-										>
-											max
-										</Button>
+										<InputGroup size="md">
+											<Input
+												placeholder="0.0"
+												border="1px solid"
+												borderColor={theme.border.farmInput}
+												bgColor={theme.bg.blackAlpha}
+												borderLeftRadius="full"
+												w="25rem"
+												_hover={{}}
+												_focus={{
+													outline: "none",
+												}}
+											/>
+											<InputRightAddon
+												// eslint-disable-next-line react/no-children-prop
+												children="max"
+												border="1px solid"
+												borderColor={theme.border.farmInput}
+												background={theme.bg.max}
+												borderRightRadius="full"
+												color={theme.text.max}
+												fontSize="lg"
+												fontWeight="normal"
+												transition="100ms ease-in-out"
+												_hover={{
+													borderColor: theme.border.farmInput,
+													bgColor: theme.bg.blueNavyLightness,
+													color: theme.text.cyan,
+													cursor: "pointer",
+												}}
+											/>
+										</InputGroup>
 									</Flex>
 								) : (
 									<Flex
@@ -277,7 +291,11 @@ export const StakeActions: React.FC<IModal> = props => {
 								h="max-content"
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
-								_hover={{ opacity: "1" }}
+								_hover={
+									inputValue
+										? { bgColor: theme.bg.bluePurple }
+										: { opacity: "0.3" }
+								}
 								_active={{}}
 								borderRadius="full"
 								disabled={!inputValue}
@@ -291,34 +309,39 @@ export const StakeActions: React.FC<IModal> = props => {
 							<Text fontWeight="normal" mb="2">
 								Deposited PLP Liquidity: 0.000001
 							</Text>
-							<Flex flexDirection="row">
-								<Input
-									placeholder="0.0"
-									border="1px solid"
-									borderColor={theme.border.farmInput}
-									bgColor={theme.bg.blackAlpha}
-									borderLeftRadius="full"
-									p="5"
-									w="25rem"
-									_focus={{ outline: "none" }}
-								/>
-								<Button
-									border="1px solid"
-									borderColor={theme.border.farmInput}
-									borderRightRadius="full"
-									bgColor={theme.bg.max}
-									color={theme.text.max}
-									fontSize="lg"
-									fontWeight="normal"
-									px="4"
-									py="5"
-									_hover={{
-										borderColor: theme.border.farmInput,
-										opacity: 0.9,
-									}}
-								>
-									max
-								</Button>
+							<Flex>
+								<InputGroup size="md">
+									<Input
+										placeholder="0.0"
+										border="1px solid"
+										borderColor={theme.border.farmInput}
+										bgColor={theme.bg.blackAlpha}
+										borderLeftRadius="full"
+										w="25rem"
+										_hover={{}}
+										_focus={{
+											outline: "none",
+										}}
+									/>
+									<InputRightAddon
+										// eslint-disable-next-line react/no-children-prop
+										children="max"
+										border="1px solid"
+										borderColor={theme.border.farmInput}
+										background={theme.bg.max}
+										borderRightRadius="full"
+										color={theme.text.max}
+										fontSize="lg"
+										fontWeight="normal"
+										transition="100ms ease-in-out"
+										_hover={{
+											borderColor: theme.border.farmInput,
+											bgColor: theme.bg.blueNavyLightness,
+											color: theme.text.cyan,
+											cursor: "pointer",
+										}}
+									/>
+								</InputGroup>
 							</Flex>
 							<Text fontWeight="normal" mt="2">
 								Uncalimed PSYS: 0.01819
@@ -356,12 +379,15 @@ export const StakeActions: React.FC<IModal> = props => {
 									<SliderTrack>
 										<SliderFilledTrack bg={theme.text.psysBalance} />
 									</SliderTrack>
+
 									<Tooltip
 										hasArrow
-										bg="teal.500"
-										color="white"
+										filter="drop-shadow(0px 1px 3px rgba(0, 0, 0, 0.1)) drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.06))"
+										bgColor={theme.bg.secondary}
+										color={theme.text.mono}
 										placement="top"
 										isOpen={showTooltip}
+										label={`${sliderValue}%`}
 									>
 										<SliderThumb />
 									</Tooltip>
@@ -374,7 +400,7 @@ export const StakeActions: React.FC<IModal> = props => {
 									py="3"
 									px="1.5rem"
 									w="100%"
-									h="max-content"
+									h={["2.5rem", "2.5rem", "3rem", "3rem"]}
 									border="1px solid"
 									borderColor={theme.text.cyanPurple}
 									bgColor="transparent"
@@ -385,6 +411,7 @@ export const StakeActions: React.FC<IModal> = props => {
 									}}
 									_active={{}}
 									borderRadius="full"
+									onClick={onClose}
 								>
 									Cancel
 								</Button>
@@ -394,10 +421,10 @@ export const StakeActions: React.FC<IModal> = props => {
 									py="3"
 									px="1.5rem"
 									w="100%"
-									h="max-content"
+									h={["2.5rem", "2.5rem", "3rem", "3rem"]}
 									bgColor={theme.bg.blueNavyLightness}
 									color={theme.text.cyan}
-									_hover={{ opacity: "1", bgColor: theme.bg.bluePurple }}
+									_hover={{ bgColor: theme.bg.bluePurple }}
 									_active={{}}
 									borderRadius="full"
 								>
@@ -485,7 +512,7 @@ export const StakeActions: React.FC<IModal> = props => {
 							background={theme.bg.subModal}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
-							top={["unset", "unset", "24rem", "22.5rem"]}
+							top={["unset", "unset", "24rem", "23rem"]}
 							borderTopRadius={["0", "0", "3xl", "3xl"]}
 							borderBottomRadius={["0", "0", "3xl", "3xl"]}
 							alignItems="flex-start"

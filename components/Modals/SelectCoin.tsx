@@ -38,6 +38,8 @@ import {
 } from "react-icons/md";
 import { WrappedTokenInfo } from "types";
 import BigNumber from "bignumber.js";
+import { TooltipComponent } from "components/Tooltip/TooltipComponent";
+import { useTranslation } from "react-i18next";
 import { ManageToken } from "./ManageToken";
 
 interface IModal {
@@ -60,7 +62,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const [tokenError, setTokenError] = useState<WrappedTokenInfo[]>([]);
 	const [arrowOrder, setArrowOrder] = useState(false);
 	const { setApprovalState, approvalState } = useWallet();
-
+	const { t: translation } = useTranslation();
 	const { userTokensBalance } = useTokens();
 
 	const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
@@ -173,24 +175,10 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					<Text fontSize="lg" fontWeight="semibold">
 						Select a token
 					</Text>
-					<Tooltip
-						label="Find a token by searching for its name or symbol or by pasting its address below."
-						position="relative"
-						bgColor={theme.bg.secondary}
-						color={theme.text.mono}
-						borderRadius="md"
-					>
-						<Text as="span" _hover={{ opacity: 0.8 }}>
-							<Icon
-								mt="2"
-								as={MdHelpOutline}
-								h="5"
-								w="5"
-								color={theme.icon.helpIcon}
-								borderRadius="full"
-							/>
-						</Text>
-					</Tooltip>
+					<TooltipComponent
+						label={translation("searchModal.findToken")}
+						icon={MdHelpOutline}
+					/>
 				</ModalHeader>
 				<ModalCloseButton
 					color={theme.icon.closeWhiteGray}
