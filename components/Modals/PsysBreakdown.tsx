@@ -1,17 +1,15 @@
 import {
 	Button,
 	Flex,
-	Icon,
 	Img,
 	Modal,
 	ModalBody,
 	ModalContent,
 	ModalFooter,
-	ModalHeader,
 	ModalOverlay,
 	Text,
 } from "@chakra-ui/react";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso } from "hooks";
 import { FunctionComponent } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
@@ -43,7 +41,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 			<ModalContent
 				borderTopRadius="3xl"
 				borderBottomRadius={["none", "none", "3xl", "3xl"]}
-				bgColor={theme.bg.blueNavy}
+				bgColor="transparent"
 				my={["0", "0", "40", "40"]}
 				w={["100vw", "100vw", "xs", "xs"]}
 				h="md"
@@ -52,15 +50,15 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 			>
 				<Flex
 					w="100%"
-					px="8"
+					px="6"
 					py="10"
 					flexDirection="column"
 					zIndex="docked"
 					position="relative"
-					bgColor="#0B172C"
+					bgColor="transparent"
 				>
 					<Img
-						src="images/backgrounds/PsysReward.png"
+						src={theme.bg.psysReward}
 						position="absolute"
 						zIndex="base"
 						w="100%"
@@ -74,27 +72,38 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 						justifyContent="space-between"
 						zIndex="docked"
 					>
-						<Text textAlign="left" w="60%" fontSize="2xl">
+						<Text
+							textAlign="left"
+							w="60%"
+							fontSize="2xl"
+							fontWeight="500"
+							color="white"
+						>
 							Your PSYS Breakdown
 						</Text>
 						<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
-							<AiOutlineClose size={22} />
+							<AiOutlineClose size={22} color="white" />
 						</Flex>
 					</Flex>
 				</Flex>
-				<ModalBody bgColor={theme.bg.blueNavy}>
+				<ModalBody bgColor={theme.bg.blueNavyLight}>
 					<Flex alignItems="center" justifyContent="center">
 						<Img
-							src="icons/pegasys.png"
+							src={theme.icon.pegasysLogo}
 							w="8"
 							h="8"
 							filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
 						/>
-						<Text fontSize="2xl" fontWeight="semibold" ml="2">
+						<Text
+							fontSize="2xl"
+							fontWeight="semibold"
+							ml="2"
+							color={theme.text.mono}
+						>
 							{psysValue}
 						</Text>
 					</Flex>
-					<Flex flexDirection="column" gap="4" mt="8">
+					<Flex flexDirection="column" gap="4" mt="8" color={theme.text.mono}>
 						<Flex
 							alignItems="center"
 							justifyContent="space-between"
@@ -138,7 +147,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 					</Flex>
 				</ModalBody>
 				<ModalFooter
-					bgColor={theme.bg.blueNavy}
+					bgColor={theme.bg.blueNavyLight}
 					justifyContent="flex-start"
 					pb={["2rem", "2rem", "6", "6"]}
 					mt={["2", "10", "0", "0"]}
@@ -149,10 +158,13 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 						py="2"
 						px="6"
 						borderRadius="67px"
-						bgColor={theme.bg.button.connectWalletSwap}
+						bgColor={theme.bg.blueNavyLightness}
 						color={theme.text.cyan}
 						fontSize="sm"
 						fontWeight="semibold"
+						_hover={{
+							bgColor: theme.bg.bluePurple,
+						}}
 					>
 						Add PSYS to MetaMask
 					</Button>

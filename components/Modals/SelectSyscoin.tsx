@@ -28,7 +28,8 @@ export const SelectSyscoin: FunctionComponent<IModal> = props => {
 				borderRadius="3xl"
 				my="40"
 				p="1.5rem"
-				bgColor={theme.bg.blueNavy}
+				bgColor={theme.bg.blueNavyLight}
+				color={theme.text.mono}
 			>
 				<Flex alignItems="center" justifyContent="space-between">
 					<Text fontSize="lg" fontWeight="semibold">
@@ -39,7 +40,7 @@ export const SelectSyscoin: FunctionComponent<IModal> = props => {
 					</Flex>
 				</Flex>
 				<Flex py="1.5rem">
-					<IoIosInformationCircle size={26} />
+					<IoIosInformationCircle size={26} color={theme.icon.infoWhiteRed} />
 					<Text fontSize="md" fontWeight="normal" pl="1.125rem">
 						Please connect to the appropriate Syscoin network.
 					</Text>

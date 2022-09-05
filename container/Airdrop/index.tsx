@@ -1,6 +1,13 @@
-import { DefaultTemplate } from "container";
 import { NextPage } from "next";
-import { Button, Flex, Icon, Img, Link, Text } from "@chakra-ui/react";
+import {
+	Button,
+	Flex,
+	Icon,
+	Img,
+	Link,
+	Text,
+	useMediaQuery,
+} from "@chakra-ui/react";
 import { usePicasso, useWallet } from "hooks";
 import { SiDiscord, SiTwitter } from "react-icons/si";
 import { FaTelegramPlane } from "react-icons/fa";
@@ -10,13 +17,14 @@ import { BorderAnimation } from "components/Airdrop/BorderAnimation";
 
 export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	const { isConnected } = useWallet();
 
-	const [isNotAvailable, setIsNotAvailable] = useState();
-	const [isClaim, setIsClaim] = useState();
-	const [isClaiming, setIsClaiming] = useState();
-	const [isClaimed, setIsClaimed] = useState();
+	const [isNotAvailable] = useState();
+	const [isClaim] = useState();
+	const [isClaiming] = useState();
+	const [isClaimed] = useState(true);
 
 	return (
 		<Flex
@@ -35,13 +43,11 @@ export const AirdropContainer: NextPage = () => {
 					zIndex="99"
 					position="relative"
 					borderTopRadius="2xl"
-					backgroundColor={theme.bg.blueNavy}
-					w={["18rem", "md", "2xl", "2xl"]}
-					box-shadow="0px 0px 0px 1px rgba(0, 0, 0, 0.1)"
-					filter="drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.2)) drop-shadow(0px 15px 40px rgba(0, 0, 0, 0.4))"
+					backgroundColor="transparent"
+					w={["20rem", "md", "2xl", "2xl"]}
 				>
 					<Img
-						src="images/backgrounds/PsysAirdrop.png"
+						src={isMobile ? theme.bg.aidropBannerMobile : theme.bg.psysAirdrop}
 						position="absolute"
 						zIndex="base"
 						w="100%"
@@ -60,7 +66,7 @@ export const AirdropContainer: NextPage = () => {
 						</Text>
 						<Text
 							color="white"
-							fontWeight="semibold"
+							fontWeight="medium"
 							fontSize="sm"
 							lineHeight="shorter"
 							w={["100%", "90%", "60%", "60%"]}
@@ -73,6 +79,7 @@ export const AirdropContainer: NextPage = () => {
 						w="65%"
 						h="100%"
 						borderTopLeftRadius="2xl"
+						borderBottomRadius="2xl"
 						zIndex="base"
 						position="absolute"
 						background="linear-gradient(89.54deg, rgba(8, 17, 32, 0.9) 44.27%, rgba(8, 17, 32, 0) 100.3%)"
@@ -81,11 +88,11 @@ export const AirdropContainer: NextPage = () => {
 				<Flex>
 					{!isConnected ? (
 						<BorderAnimation>
-							<Flex py="4">
+							<Flex py={["0", "0", "4", "4"]}>
 								<Flex>
 									<Text
 										textAlign="center"
-										color="white"
+										color={theme.text.mono}
 										px={["4", "2", "2", "2"]}
 										fontSize={["sm", "sm", "md", "md"]}
 									>
@@ -165,7 +172,7 @@ export const AirdropContainer: NextPage = () => {
 													w="3xs"
 													h="max-content"
 													bgColor={theme.bg.blueNavyLightness}
-													color={theme.text.cyanWhite}
+													color={theme.text.cyan}
 													_hover={{ opacity: "1" }}
 													_active={{}}
 													borderRadius="full"
@@ -181,12 +188,12 @@ export const AirdropContainer: NextPage = () => {
 													w="3xs"
 													h="max-content"
 													bgColor={theme.bg.blueNavyLightness}
-													color={theme.text.cyanWhite}
+													color={theme.text.cyan}
 													_hover={{ opacity: "1" }}
 													_active={{}}
 													borderRadius="full"
 												>
-													<Flex className="circleLoading" />
+													<Flex className="circleLoading" pr="2" />
 													Claiming...
 												</Button>
 											)}

@@ -1,29 +1,38 @@
 import { Flex } from "@chakra-ui/react";
-import { createChart, ColorType } from "lightweight-charts";
+import { createChart, ColorType, UTCTimestamp } from "lightweight-charts";
 import React, { useEffect, useRef } from "react";
+import { IChartComponentData } from "types/index";
+import { usePicasso } from "hooks";
 
-const ChartComponent = (props: any) => {
-	const {
-		data,
-		colors: {
-			backgroundColor = "black",
-			textColor = "#718096",
-			upColor = "#25855A",
-			downColor = "#C53030",
-			borderVisible = false,
-			wickUpColor = "#25855A",
-			wickDownColor = "#C53030",
-		},
-	} = props;
+interface IChartComponentProps {
+	data: IChartComponentData[];
+}
 
+const colors = {
+	backgroundColor: "transparent",
+	textColor: "#4A5568",
+	upColor: "#25855A",
+	borderColor: "#718096",
+	downColor: "#C53030",
+	borderVisible: false,
+	wickUpColor: "#25855A",
+	wickDownColor: "#C53030",
+};
+
+const ChartComponent = (props: IChartComponentProps) => {
+	const { data } = props;
+	const theme = usePicasso();
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const chartContainerRef: any = useRef();
 
 	useEffect(() => {
 		const chart = createChart(chartContainerRef.current, {
 			layout: {
-				background: { type: ColorType.Solid, color: backgroundColor },
-				textColor,
+				background: { type: ColorType.Solid, color: colors.backgroundColor },
+				textColor: theme.border.chart,
 				fontSize: 16,
+				fontFamily: "Inter",
 			},
 			width: chartContainerRef.current.clientWidth,
 			height: 350,
@@ -35,27 +44,21 @@ const ChartComponent = (props: any) => {
 					visible: false,
 				},
 			},
-			leftPriceScale: {
-				visible: false,
-				borderColor: "#718096",
-				scaleMargins: {
-					bottom: 0,
-				},
-			},
 			rightPriceScale: {
 				visible: true,
-				borderColor: "#718096",
+				borderColor: theme.border.chart,
 				scaleMargins: {
-					bottom: 0,
+					bottom: 0.05,
 				},
 			},
 			timeScale: {
 				visible: true,
-				borderColor: "#718096",
+				borderColor: theme.border.chart,
 				timeVisible: true,
 				lockVisibleTimeRangeOnResize: true,
 			},
 		});
+
 		chart.timeScale().fitContent();
 
 		const handleResize = () => {
@@ -63,16 +66,49 @@ const ChartComponent = (props: any) => {
 		};
 
 		const newSeries = chart.addCandlestickSeries({
-			upColor: "#25855A",
-			downColor: "#C53030",
+			upColor: colors.upColor,
+			downColor: colors.downColor,
 			borderVisible: false,
-			wickUpColor: "#26a69a",
-			wickDownColor: "transparent",
+			wickUpColor: colors.wickUpColor,
+			wickDownColor: colors.wickDownColor,
 		});
-		newSeries.setData(data);
+
+		const convertedDataValuesAndTypes = data.map(
+			({
+				time: oldTime,
+				open: oldOpen,
+				high: oldHigh,
+				low: oldLow,
+				close: oldClose,
+			}) => {
+				const [time, open, high, low, close] = [
+					oldTime as UTCTimestamp,
+					parseFloat(oldOpen) as number,
+					parseFloat(oldHigh) as number,
+					parseFloat(oldLow) as number,
+					parseFloat(oldClose) as number,
+				];
+
+				return {
+					time,
+					open,
+					high,
+					low,
+					close,
+				};
+			}
+		);
+
+		newSeries.setData(convertedDataValuesAndTypes.reverse());
+
+		chart.timeScale().setVisibleLogicalRange({
+			from: convertedDataValuesAndTypes.length - 20,
+			to: convertedDataValuesAndTypes.length,
+		});
 
 		window.addEventListener("resize", handleResize);
 
+		// eslint-disable-next-line
 		return () => {
 			window.removeEventListener("resize", handleResize);
 
@@ -80,13 +116,13 @@ const ChartComponent = (props: any) => {
 		};
 	}, [
 		data,
-		backgroundColor,
-		textColor,
-		upColor,
-		downColor,
-		borderVisible,
-		wickUpColor,
-		wickDownColor,
+		colors.backgroundColor,
+		colors.textColor,
+		colors.upColor,
+		colors.downColor,
+		colors.borderVisible,
+		colors.wickUpColor,
+		colors.wickDownColor,
 	]);
 
 	return <Flex ref={chartContainerRef} />;

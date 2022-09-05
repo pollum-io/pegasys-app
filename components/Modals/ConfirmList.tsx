@@ -1,6 +1,5 @@
 import {
 	Button,
-	Divider,
 	Flex,
 	Modal,
 	ModalBody,
@@ -27,19 +26,23 @@ export const ConfirmList: React.FC<IModal> = props => {
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
-			<ModalContent borderRadius="3xl" bgColor={theme.bg.blueNavy}>
+			<ModalContent borderRadius="3xl" bgColor={theme.bg.blueNavyLight}>
 				<ModalHeader
 					display="flex"
 					alignItems="center"
 					justifyContent="space-between"
-					bgColor={theme.bg.whiteGray}
+					bgColor={theme.bg.blackAlpha}
 					borderTopRadius="3xl"
 				>
 					<Flex gap="3">
-						<Flex _hover={{ cursor: "pointer" }}>
-							<RiInformationFill size={24} />
+						<Flex>
+							<RiInformationFill size={24} color={theme.icon.infoWhiteRed} />
 						</Flex>
-						<Text fontSize="lg" fontWeight="semibold">
+						<Text
+							fontSize="lg"
+							fontWeight="semibold"
+							color={theme.icon.infoWhiteRed}
+						>
 							Confirm List
 						</Text>
 					</Flex>
@@ -47,7 +50,7 @@ export const ConfirmList: React.FC<IModal> = props => {
 						<AiOutlineClose size={22} onClick={onClose} />
 					</Flex>
 				</ModalHeader>
-				<ModalBody py="6">
+				<ModalBody py="6" bgColor={theme.bg.blueNavyLight}>
 					<Flex gap="5" flexDirection="column">
 						<Text>Please be careful when adding custom token lists.</Text>
 						<Text>
@@ -64,20 +67,23 @@ export const ConfirmList: React.FC<IModal> = props => {
 					display="flex"
 					alignItems="center"
 					justifyContent="space-between"
-					bgColor={theme.bg.whiteGray}
+					bgColor={theme.bg.blackAlpha}
 					borderBottomRadius="3xl"
 				>
 					<Button
-						py="2"
+						py="3"
 						px="6"
 						my="2"
 						w="100%"
 						h="max-content"
 						borderRadius="67px"
-						bgColor={theme.bg.button.connectWalletSwap}
+						bgColor={theme.bg.blueNavyLightness}
 						color={theme.text.cyan}
 						fontSize="md"
 						fontWeight="semibold"
+						_hover={{
+							bgColor: theme.bg.bluePurple,
+						}}
 					>
 						Add List
 					</Button>

@@ -17,10 +17,13 @@ import {
 	SliderFilledTrack,
 	SliderThumb,
 } from "@chakra-ui/react";
-import { useModal, usePicasso } from "hooks";
-import React, { useState } from "react";
+import { useModal, usePicasso, useTokens } from "hooks";
+import React, { useState, useEffect } from "react";
 import { MdHelpOutline, MdArrowBack } from "react-icons/md";
-import { SelectCoinModal } from "components";
+import { WrappedTokenInfo } from "types";
+import { TooltipComponent } from "components/Tooltip/TooltipComponent";
+import { useTranslation } from "react-i18next";
+import { SelectCoinModal } from "./SelectCoin";
 
 interface IModal {
 	isModalOpen: boolean;
@@ -28,23 +31,29 @@ interface IModal {
 	isCreate?: boolean;
 	haveValue?: boolean;
 }
-interface IToken {
-	logoURI: string;
-	symbol: string;
-	id?: number;
-}
 
 export const RemoveLiquidity: React.FC<IModal> = props => {
 	const { isModalOpen, onModalClose, isCreate, haveValue } = props;
+	const { t: translation } = useTranslation();
+
+	const { userTokensBalance } = useTokens();
+
 	const theme = usePicasso();
-	const { onOpenCoin, isOpenCoin, onCloseCoin } = useModal();
-	const [selectedToken] = useState<IToken[]>([
-		{ logoURI: "icons/syscoin-logo.png", symbol: "SYS", id: 0 },
-		{ logoURI: "icons/pegasys.png", symbol: "PSYS", id: 1 },
-	]);
-	const [buttonId, setButtonId] = useState<number>(0);
+	const { isOpenCoin, onCloseCoin } = useModal();
+	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
+	const [buttonId] = useState<number>(0);
 	const [sliderValue, setSliderValue] = React.useState(5);
-	const [showTooltip, setShowTooltip] = React.useState(false);
+
+	useEffect(() => {
+		const defaultTokenValues = userTokensBalance.filter(
+			tokens =>
+				tokens.symbol === "WSYS" ||
+				tokens.symbol === "SYS" ||
+				tokens.symbol === "PSYS"
+		);
+
+		setSelectedToken([defaultTokenValues[2], defaultTokenValues[1]]);
+	}, [userTokensBalance]);
 
 	return (
 		<Modal
@@ -56,6 +65,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 				isOpen={isOpenCoin}
 				onClose={onCloseCoin}
 				selectedToken={selectedToken}
+				setSelectedToken={setSelectedToken}
 				buttonId={buttonId}
 			/>
 			<ModalOverlay />
@@ -65,7 +75,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 				border={["none", "1px solid transparent"]}
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
 				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
-				background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
 					display="flex"
@@ -74,44 +84,33 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 					px="0"
 					py="0"
 				>
-					<Flex alignItems="center">
+					<Flex alignItems="center" color={theme.text.mono}>
 						<Flex _hover={{ cursor: "pointer" }} onClick={onModalClose}>
-							<MdArrowBack size={24} />
+							<MdArrowBack size={24} color={theme.icon.whiteGray} />
 						</Flex>
-						<Text fontSize="2xl" fontWeight="medium" textAlign="center" px="4">
+						<Text
+							fontSize={["xl", "xl", "2xl", "2xl"]}
+							fontWeight="medium"
+							textAlign="center"
+							px="4"
+							color={theme.text.mono}
+						>
 							Remove Liquidity
 						</Text>
 					</Flex>
-					<Tooltip
-						label="When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-						position="relative"
-						bgColor={theme.bg.blueNavy}
-						border="1px solid"
-						borderColor={theme.border.borderSettings}
-						color={theme.text.swapInfo}
-						borderRadius="md"
-						px="4"
-						py="2"
-					>
-						<Text as="span" _hover={{ opacity: 0.8 }}>
-							<Icon
-								as={MdHelpOutline}
-								h="4"
-								w="4"
-								color="white"
-								backgroundColor="gray.800"
-								borderRadius="full"
-							/>
-						</Text>
-					</Tooltip>
+					<TooltipComponent
+						label={translation("navigationTabs.whenYouAddLiquidityInfo")}
+						icon={MdHelpOutline}
+					/>
 				</ModalHeader>
 				<Flex
-					flexDirection="column"
 					bgColor={theme.bg.blueNavy}
+					flexDirection="column"
 					borderRadius="2xl"
 					mt="4"
 					px="5"
 					py="5"
+					color={theme.text.mono}
 				>
 					<Flex
 						flexDirection="row"
@@ -120,7 +119,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						fontWeight="medium"
 					>
 						<Text>Amount</Text>
-						<Text color={theme.text.cyan}>Detailed</Text>
+						<Text color={theme.text.cyanPurple}>Detailed</Text>
 					</Flex>
 					<Flex
 						flexDirection="row"
@@ -153,48 +152,41 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						</Flex>
 					</Flex>
 					<Slider
+						color={theme.text.transactionsItems}
 						id="slider"
 						mt="9"
 						defaultValue={5}
 						min={0}
 						max={100}
-						mb="4"
-						colorScheme="teal"
-						onChange={value => setSliderValue(value)}
-						onMouseEnter={() => setShowTooltip(true)}
-						onMouseLeave={() => setShowTooltip(false)}
+						mb="6"
+						size="lg"
+						colorScheme="red"
+						onChange={(value: number) => setSliderValue(value)}
 					>
-						<SliderMark value={0} mt="1" ml="1.5" fontSize="sm">
+						<SliderMark value={0} mt="1rem" ml="1.5" fontSize="sm">
 							0%
 						</SliderMark>
-						<SliderMark value={25} mt="1" ml="-2.5" fontSize="sm">
+						<SliderMark value={25} mt="1rem" ml="-2.5" fontSize="sm">
 							25%
 						</SliderMark>
-						<SliderMark value={50} mt="1" ml="-2.5" fontSize="sm">
+						<SliderMark value={50} mt="1rem" ml="-2.5" fontSize="sm">
 							50%
 						</SliderMark>
-						<SliderMark value={75} mt="1" ml="-2.5" fontSize="sm">
+						<SliderMark value={75} mt="1rem" ml="-2.5" fontSize="sm">
 							75%
 						</SliderMark>
-						<SliderMark value={100} mt="1" ml="-8" fontSize="sm">
+						<SliderMark value={100} mt="1rem" ml="-8" fontSize="sm">
 							100%
 						</SliderMark>
 						<SliderTrack>
 							<SliderFilledTrack bg={theme.text.psysBalance} />
 						</SliderTrack>
-						<Tooltip
-							hasArrow
-							bg="teal.500"
-							color="white"
-							placement="top"
-							isOpen={showTooltip}
-						>
-							<SliderThumb />
-						</Tooltip>
+
+						<SliderThumb />
 					</Slider>
 				</Flex>
 
-				<Flex flexDirection="column" py="6">
+				<Flex flexDirection="column" py="6" color={theme.text.mono}>
 					<Flex flexDirection="row" justifyContent="space-between">
 						<Text fontWeight="medium" fontSize="md">
 							Recive
@@ -227,10 +219,13 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						py="6"
 						px="6"
 						borderRadius="67px"
-						bgColor={theme.bg.button.connectWalletSwap}
+						bgColor={theme.bg.blueNavyLightness}
 						color={theme.text.cyan}
 						fontSize="lg"
 						fontWeight="semibold"
+						_hover={{
+							bgColor: theme.bg.bluePurple,
+						}}
 					>
 						{isCreate ? "Create a pair" : "Add Liquidity"}
 					</Button>
@@ -238,7 +233,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 				<Flex
 					flexDirection="column"
 					p="1.5rem"
-					background={theme.bg.blueGray}
+					background={theme.bg.subModal}
 					position={["absolute", "absolute", "absolute", "absolute"]}
 					bottom={["-245", "-245", "-280", "-280"]}
 					left={["0", "0", "0", "0"]}

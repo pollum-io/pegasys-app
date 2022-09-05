@@ -3,7 +3,6 @@ import {
 	Flex,
 	Icon,
 	Modal,
-	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
 	Img,
@@ -11,57 +10,38 @@ import {
 	Text,
 	Tooltip,
 } from "@chakra-ui/react";
-import { useModal, usePicasso } from "hooks";
-import React, { useState } from "react";
+import { useModal, usePicasso, useTokens } from "hooks";
+import React, { useEffect, useState } from "react";
 import { MdArrowBack, MdHelpOutline, MdAdd } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
-import { ITokenBalance, ITokenBalanceWithId } from "types";
 import { SelectCoinModal } from "components";
+import { WrappedTokenInfo } from "types";
 
 interface IModal {
 	isModalOpen: boolean;
 	onModalClose: () => void;
 }
 
-interface IToken extends ITokenBalance {
-	logoURI: string;
-	symbol: string;
-	id?: number;
-}
-
 export const ImportPoolModal: React.FC<IModal> = props => {
 	const { isModalOpen, onModalClose } = props;
+
+	const { userTokensBalance } = useTokens();
+
 	const theme = usePicasso();
-	const { onOpenCoin, isOpenCoin, onCloseCoin } = useModal();
-	const [selectedToken, setSelectedToken] = useState<
-		IToken[] | ITokenBalance[] | ITokenBalanceWithId[]
-	>([
-		{
-			logoURI: "icons/syscoin-logo.png",
-			symbol: "SYS",
-			id: 0,
-			balance: "0",
-			chainId: 0,
-			address: "",
-			decimals: 0,
-			name: "Syscoin",
-			extensions: {},
-			tags: [],
-		},
-		{
-			logoURI: "icons/pegasys.png",
-			symbol: "PSYS",
-			id: 1,
-			balance: "0",
-			chainId: 0,
-			address: "",
-			decimals: 0,
-			name: "Pegasys",
-			extensions: {},
-			tags: [],
-		},
-	]);
+	const { isOpenCoin, onCloseCoin, onOpenCoin } = useModal();
+	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
 	const [buttonId, setButtonId] = useState<number>(0);
+
+	useEffect(() => {
+		const defaultTokenValues = userTokensBalance.filter(
+			tokens =>
+				tokens.symbol === "WSYS" ||
+				tokens.symbol === "SYS" ||
+				tokens.symbol === "PSYS"
+		);
+
+		setSelectedToken([defaultTokenValues[0], defaultTokenValues[1]]);
+	}, [userTokensBalance]);
 
 	return (
 		<Modal
@@ -78,8 +58,13 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 			/>
 			<ModalOverlay />
 			<ModalContent
+				bottom={["0", "0", "0", "0"]}
+				mb={["0"]}
+				position={["absolute", "absolute", "relative", "relative"]}
+				h={["max-content", "max-content", "max-content", "max-content"]}
 				p="1.5rem"
 				borderRadius="3xl"
+				borderBottomRadius={["0px", "3xl", "3xl", "3xl"]}
 				border="1px solid transparent;"
 				background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
@@ -98,9 +83,10 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 						</Text>
 					</Flex>
 					<Tooltip
+						hasArrow
 						label="When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
 						position="relative"
-						bgColor={theme.bg.blueNavy}
+						bgColor="red"
 						border="1px solid"
 						borderColor={theme.border.borderSettings}
 						color={theme.text.swapInfo}
@@ -109,8 +95,8 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 						<Text as="span" _hover={{ opacity: 0.8 }}>
 							<Icon
 								as={MdHelpOutline}
-								h="4"
-								w="4"
+								h="5"
+								w="5"
 								color="white"
 								backgroundColor="gray.800"
 								borderRadius="full"
@@ -134,7 +120,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 							bgColor={theme.bg.blueNavy}
 							id="0"
 							width="100%"
-							onClick={event => {
+							onClick={(event: React.MouseEvent<HTMLInputElement>) => {
 								onOpenCoin();
 								setButtonId(Number(event.currentTarget.id));
 							}}
@@ -142,10 +128,10 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 							borderRadius="2xl"
 							cursor="pointer"
 							_hover={{
-								bgColor: theme.bg.button.swapTokenCurrency,
+								bgColor: "red",
 							}}
 						>
-							<Img src={selectedToken[0].logoURI} w="6" h="6" />
+							<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
 							<Text
 								fontSize="xl"
 								fontWeight="500"
@@ -153,7 +139,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								px="3"
 								textAlign="start"
 							>
-								{selectedToken[0].symbol}
+								{selectedToken[0]?.symbol}
 							</Text>
 							<IoIosArrowDown />
 						</Flex>
@@ -176,7 +162,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								bgColor={theme.bg.blueNavy}
 								id="1"
 								width="100%"
-								onClick={event => {
+								onClick={(event: React.MouseEvent<HTMLInputElement>) => {
 									onOpenCoin();
 									setButtonId(Number(event.currentTarget.id));
 								}}
@@ -184,10 +170,10 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								borderRadius="2xl"
 								cursor="pointer"
 								_hover={{
-									bgColor: theme.bg.button.swapTokenCurrency,
+									bgColor: "red",
 								}}
 							>
-								<Img src={selectedToken[1].logoURI} w="6" h="6" />
+								<Img src={selectedToken[1]?.logoURI} w="6" h="6" />
 								<Text
 									fontSize="xl"
 									fontWeight="500"
@@ -195,7 +181,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 									px="3"
 									textAlign="start"
 								>
-									{selectedToken[1].symbol}
+									{selectedToken[1]?.symbol}
 								</Text>
 								<IoIosArrowDown />
 							</Flex>
@@ -208,7 +194,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 								py="6"
 								px="6"
 								borderRadius="67px"
-								bgColor={theme.bg.button.connectWalletSwap}
+								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"

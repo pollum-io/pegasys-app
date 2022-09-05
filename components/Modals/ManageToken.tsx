@@ -39,36 +39,42 @@ export const ManageToken: React.FC<IModal> = props => {
 			>
 				<ModalHeader display="flex" alignItems="center" gap="3">
 					<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
-						<MdArrowBack size={24} />
+						<MdArrowBack size={24} color={theme.icon.whiteGray} />
 					</Flex>
-					<Text fontSize="lg" fontWeight="semibold">
+					<Text fontSize="lg" fontWeight="semibold" color={theme.text.mono}>
 						Manage Lists
 					</Text>
 				</ModalHeader>
 				<ModalBody>
-					<Text fontSize="sm" fontWeight="semibold">
+					<Text fontSize="sm" fontWeight="semibold" color={theme.text.mono}>
 						Add a List
 					</Text>
-					<Flex flexDirection="row" alignItems="baseline" gap="4" mt="3">
+					<Flex flexDirection="row" alignItems="baseline" gap="3" mt="3">
 						<Input
 							borderRadius="full"
-							borderColor="rgba(21, 61, 111, 1)"
-							_placeholder={{ color: theme.text.cyan, opacity: "0.6" }}
+							borderColor={theme.border.manageInput}
+							_placeholder={{ color: theme.text.manageInput, opacity: "0.6" }}
 							placeholder="https:// or ipfs://"
 							h="max-content"
 							py="1"
 							px="6"
+							bgColor={theme.bg.blackAlpha}
+							_focus={{ outline: "none" }}
+							_hover={{}}
 						/>
 						<Button
 							py="2"
 							px="6"
 							h="max-content"
 							borderRadius="67px"
-							bgColor={theme.bg.button.connectWalletSwap}
+							bgColor={theme.bg.blueNavyLightness}
 							color={theme.text.cyan}
 							fontSize="sm"
 							fontWeight="semibold"
 							onClick={onOpenConfirmList}
+							_hover={{
+								bgColor: theme.bg.bluePurple,
+							}}
 						>
 							Add
 						</Button>

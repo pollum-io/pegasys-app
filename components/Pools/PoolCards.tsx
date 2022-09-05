@@ -1,7 +1,6 @@
 import { Button, Flex, Img, Text } from "@chakra-ui/react";
-import { FunctionComponent } from "react";
+import { FunctionComponent, Dispatch, SetStateAction } from "react";
 import { useModal, usePicasso } from "hooks";
-import { AddLiquidityModal, RemoveLiquidity } from "components/Modals";
 
 interface IPoolCards {
 	poolTokens?: [];
@@ -10,20 +9,21 @@ interface IPoolCards {
 	poolVolume?: string;
 	poolApr?: string;
 	poolShare?: string;
+	setIsCreate: Dispatch<SetStateAction<boolean>>;
 }
 
 export const PoolCards: FunctionComponent<IPoolCards> = props => {
-	const { poolOf, poolLiquidity, poolVolume, poolApr, poolShare, poolTokens } =
-		props;
-	const theme = usePicasso();
 	const {
-		onOpenRemoveLiquidity,
-		isOpenRemoveLiquidity,
-		onCloseRemoveLiquidity,
-		onOpenAddLiquidity,
-		isOpenAddLiquidity,
-		onCloseAddLiquidity,
-	} = useModal();
+		poolOf,
+		poolLiquidity,
+		poolVolume,
+		poolApr,
+		poolShare,
+		setIsCreate,
+		poolTokens,
+	} = props;
+	const theme = usePicasso();
+	const { onOpenRemoveLiquidity, onOpenAddLiquidity } = useModal();
 
 	return (
 		<Flex
@@ -31,17 +31,9 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			p="6"
 			w="xs"
 			borderRadius="xl"
-			border="1px solid rgb(86,190,216, 0.4) "
+			border="1px solid rgb(86,190,216, 0.4)"
 			background={theme.bg.blackAlpha}
 		>
-			<RemoveLiquidity
-				isModalOpen={isOpenRemoveLiquidity}
-				onModalClose={onCloseRemoveLiquidity}
-			/>
-			<AddLiquidityModal
-				isModalOpen={isOpenAddLiquidity}
-				onModalClose={onCloseAddLiquidity}
-			/>
 			<Flex gap="2">
 				<Flex>
 					<Img src="icons/syscoin-logo.png" w="6" h="6" />
@@ -77,32 +69,44 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					<Text>{poolShare || "-"}</Text>
 				</Flex>
 			</Flex>
-			<Flex gap="2" mt="1.5rem">
+			<Flex gap="2" mt="1.5rem" bgColor="red">
 				<Button
 					w="100%"
-					py="2"
-					px="6"
+					size="sm"
 					border="1px solid"
 					borderColor={theme.text.cyanPurple}
 					borderRadius="67px"
 					bgColor="transparent"
 					color={theme.text.whitePurple}
 					fontSize="sm"
+					py={["0.2rem", "0.2rem", "1", "1"]}
+					h="2.2rem"
 					fontWeight="semibold"
 					onClick={onOpenRemoveLiquidity}
+					_hover={{
+						borderColor: theme.text.cyanLightPurple,
+						color: theme.text.cyanLightPurple,
+					}}
 				>
 					Remove
 				</Button>
 				<Button
 					w="100%"
-					py="2"
-					px="6"
+					size="sm"
 					borderRadius="67px"
-					bgColor={theme.bg.button.connectWalletSwap}
+					bgColor={theme.bg.blueNavyLightness}
 					color={theme.text.cyan}
 					fontSize="sm"
+					py={["0.2rem", "0.2rem", "1", "1"]}
+					h="2.2rem"
 					fontWeight="semibold"
-					onClick={onOpenAddLiquidity}
+					onClick={() => {
+						setIsCreate(false);
+						onOpenAddLiquidity();
+					}}
+					_hover={{
+						bgColor: theme.bg.bluePurple,
+					}}
 				>
 					Add Liquidity
 				</Button>

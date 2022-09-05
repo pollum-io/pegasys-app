@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { useEffect, useState } from "react";
 import type { AppProps } from "next/app";
 import { ColorHandler } from "utils";
 import "../styles/backgroundStars.css";
@@ -7,43 +8,54 @@ import "styles/psysAnimation.css";
 import "styles/borderAnimation.css";
 import "styles/circleLoadingAnimation.css";
 import "styles/loadingDotsAnimation.css";
+import "helpers/translation";
 
-const MyApp = ({ Component, pageProps }: AppProps) => (
-	<>
-		<Head>
-			<title>Pegasys Protocol</title>
-			<meta name="description" content="" />
-			<meta
-				property="og:url"
-				content="https://pegasys.financefinance"
-				key="ogurl"
-			/>
-			<meta property="og:image" content="/meta.png" key="ogimage" />
-			<meta
-				property="og:site_name"
-				content="Pegasys Protocol"
-				key="ogsitename"
-			/>
-			<meta property="og:title" content="Pegasys Protocol" key="ogtitle" />
-			<meta
-				property="og:description"
-				content="Swap, earn, and build with the leading decentralized crypto trading protocol on Syscoin."
-				key="ogdesc"
-			/>
-			<link rel="icon" href="/favicon.ico" />
-			<meta property="twitter:card" content="summary_large_image" />
-			<meta property="twitter:url" content="https://pegasys.finance" />
-			<meta property="twitter:title" content="Pegasys Protocol" />
-			<meta
-				property="twitter:description"
-				content="Swap, earn, and build with the leading decentralized crypto trading protocol on Syscoin."
-			/>
-			<meta property="twitter:image" content="/meta.png" />
-		</Head>
-		<ColorHandler cookies={pageProps.cookies}>
-			<Component {...pageProps} />
-		</ColorHandler>
-	</>
-);
+const MyApp = ({ Component, pageProps }: AppProps) => {
+	const [isSSR, setIsSSR] = useState(true);
+
+	useEffect(() => {
+		setIsSSR(false);
+	}, []);
+
+	if (isSSR) return null;
+
+	return (
+		<>
+			<Head>
+				<title>Pegasys Protocol</title>
+				<meta name="description" content="" />
+				<meta
+					property="og:url"
+					content="https://pegasys.financefinance"
+					key="ogurl"
+				/>
+				<meta property="og:image" content="/meta.png" key="ogimage" />
+				<meta
+					property="og:site_name"
+					content="Pegasys Protocol"
+					key="ogsitename"
+				/>
+				<meta property="og:title" content="Pegasys Protocol" key="ogtitle" />
+				<meta
+					property="og:description"
+					content="Swap, earn, and build with the leading decentralized crypto trading protocol on Syscoin."
+					key="ogdesc"
+				/>
+				<link rel="icon" href="/favicon.ico" />
+				<meta property="twitter:card" content="summary_large_image" />
+				<meta property="twitter:url" content="https://pegasys.finance" />
+				<meta property="twitter:title" content="Pegasys Protocol" />
+				<meta
+					property="twitter:description"
+					content="Swap, earn, and build with the leading decentralized crypto trading protocol on Syscoin."
+				/>
+				<meta property="twitter:image" content="/meta.png" />
+			</Head>
+			<ColorHandler cookies={pageProps.cookies}>
+				<Component {...pageProps} />
+			</ColorHandler>
+		</>
+	);
+};
 
 export default MyApp;

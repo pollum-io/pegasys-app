@@ -1,10 +1,18 @@
-import { Button, ButtonProps } from "@chakra-ui/react";
+import {
+	Button,
+	ButtonProps,
+	Flex,
+	Text,
+	useColorMode,
+} from "@chakra-ui/react";
 import { SelectSyscoin, SelectWallets } from "components/Modals";
 import { useModal, usePicasso, useWallet } from "hooks";
 import { FunctionComponent } from "react";
 import { AddressInfoButton } from "components/Buttons";
 import { shortAddress } from "utils";
 import { ExpertMode } from "components/Header/ExpertMode";
+import { ApprovalState } from "contexts";
+import { Circles } from "react-loading-icons";
 import { AddressButton } from "./AddressButton";
 
 export const WalletButton: FunctionComponent<ButtonProps> = props => {
@@ -22,12 +30,21 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 		onCloseAddress,
 	} = useModal();
 
-	const { isConnected, walletAddress, walletError } = useWallet();
+	const {
+		isConnected,
+		walletAddress,
+		walletError,
+		approvalState,
+		pendingTxLength,
+	} = useWallet();
+
+	const isPending = approvalState.status === ApprovalState.PENDING;
+	const { colorMode } = useColorMode();
 
 	return (
 		<>
 			{!isConnected && !walletError && (
-				<>
+				<Flex>
 					<SelectWallets
 						isOpen={isOpenSelectWalletModal}
 						onClose={onCloseSelectWalletModal}
@@ -54,7 +71,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 					>
 						Connect wallet
 					</Button>
-				</>
+				</Flex>
 			)}
 
 			{walletError && (
@@ -69,7 +86,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 				</>
 			)}
 
-			{isConnected && !walletError && (
+			{isConnected && !walletError && !isPending && (
 				<>
 					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
 					<AddressButton
@@ -77,7 +94,43 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 					>
 						{shortAddress(walletAddress)}
 					</AddressButton>
-					<ExpertMode />
+					<Flex display={["none", "flex", "flex", "flex"]} zIndex="-99">
+						<ExpertMode />
+					</Flex>
+				</>
+			)}
+			{isConnected && isPending && (
+				<>
+					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
+
+					<Flex
+						ml="20px"
+						zIndex="2"
+						py={["2", "2", "2", "2"]}
+						position={["absolute", "relative"]}
+						left={["6", "32"]}
+						bottom={["12", "2.2rem"]}
+						w="2.313rem"
+						h="1.25rem"
+						borderRadius="xl"
+						gap="1"
+						bgColor={theme.bg.blueLightPurple}
+						border="1px solid"
+						borderColor={colorMode === "dark" ? "#1A4A87" : "transparent"}
+						alignItems="center"
+						justifyContent="center"
+					>
+						<Text fontSize="14px" color="white">
+							{pendingTxLength}
+						</Text>
+						<Flex className="circleLoadingPending" />
+					</Flex>
+					<AddressButton
+						onClick={walletError ? onOpenSelectWalletModal : onOpenAddress}
+						pending={approvalState?.status === ApprovalState.PENDING}
+					>
+						{shortAddress(walletAddress)}
+					</AddressButton>
 				</>
 			)}
 		</>

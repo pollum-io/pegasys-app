@@ -16,6 +16,7 @@ import { usePicasso } from "hooks";
 import React from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { MdContentCopy, MdOutlineCallMade } from "react-icons/md";
+import { RiInformationFill } from "react-icons/ri";
 
 interface IModal {
 	isOpen: boolean;
@@ -32,12 +33,12 @@ export const TokenImported: React.FC<IModal> = props => {
 			<ModalContent
 				mt="10rem"
 				borderRadius="3xl"
-				bgColor={theme.bg.blueNavy}
+				bgColor={theme.bg.blueNavyLight}
 				border="1px solid transparent"
-				background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
-					backgroundColor={theme.bg.whiteGray}
+					bgColor={theme.bg.blackAlpha}
 					borderTopRadius="3xl"
 					alignItems="baseline"
 				>
@@ -46,7 +47,14 @@ export const TokenImported: React.FC<IModal> = props => {
 						justifyContent="space-between"
 						alignItems="center"
 					>
-						<Text fontSize="lg" fontWeight="semibold">
+						<Flex>
+							<RiInformationFill size={24} color={theme.icon.infoWhiteRed} />
+						</Flex>
+						<Text
+							fontSize="lg"
+							fontWeight="semibold"
+							color={theme.icon.infoWhiteRed}
+						>
 							Token Imported
 						</Text>
 						<Button
@@ -60,7 +68,7 @@ export const TokenImported: React.FC<IModal> = props => {
 					</Flex>
 				</ModalHeader>
 				<ModalBody>
-					<Flex flexDirection="column" gap="4">
+					<Flex flexDirection="column" gap="4" color={theme.text.mono}>
 						<Text>This token is not on the active token list(s).</Text>
 						<Text lineHeight="base">
 							Pegasys can load arbitrary tokens by token addresses. Please be
@@ -102,7 +110,7 @@ export const TokenImported: React.FC<IModal> = props => {
 					</Flex>
 				</ModalBody>
 				<ModalFooter
-					backgroundColor={theme.bg.whiteGray}
+					backgroundColor={theme.bg.blackAlpha}
 					borderBottomRadius="3xl"
 					justifyContent="space-between"
 					alignItems="center"
@@ -118,7 +126,7 @@ export const TokenImported: React.FC<IModal> = props => {
 						py="2"
 						px="2"
 						borderRadius="full"
-						bgColor={theme.bg.button.connectWalletSwap}
+						bgColor={theme.bg.blueNavyLightness}
 						color={theme.text.cyan}
 						fontWeight="semibold"
 					>

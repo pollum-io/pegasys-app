@@ -1,4 +1,4 @@
-import { Button, ButtonProps, Link } from "@chakra-ui/react";
+import { Button, ButtonProps } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
 import { usePicasso } from "hooks";
 import { useRouter } from "next/router";
@@ -6,31 +6,31 @@ import { useRouter } from "next/router";
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
 	href: string;
+	active?: boolean;
 }
 
 export const NavButton: FunctionComponent<IButtonProps> = props => {
 	const { push } = useRouter();
-	const { href, children, color, display } = props;
+	const { href, children, display, active } = props;
 	const theme = usePicasso();
+
 	return (
 		<Button
-			color={color}
+			color={active ? "white" : theme.icon.whiteGray}
 			fontSize={["0.938rem", "md", "md", "md"]}
 			fontWeight="semibold"
-			bgColor="transparent"
+			bgColor={active ? theme.bg.whiteGray : "transparent"}
 			opacity="1"
 			borderRadius="70px"
 			transition="0.4s"
 			_hover={{
-				bgColor: theme.bg.whiteGray,
-				opacity: 1,
-				borderRadius: "70px",
+				opacity: "0.9",
 			}}
-			onClick={() => push(href)}
 			_active={{}}
-			px={[3, 6, 6, 6]}
+			px={[3.5, 6, 6, 6]}
 			py="2"
 			display={display}
+			onClick={() => push(href)}
 		>
 			{children}
 		</Button>

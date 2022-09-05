@@ -5,13 +5,13 @@ import {
 	Text,
 	Input,
 	InputGroup,
-	InputLeftElement,
 	Menu,
 	MenuItem,
 	MenuList,
 	MenuButton,
 	Icon,
 	Box,
+	useMediaQuery,
 } from "@chakra-ui/react";
 import { FarmCards } from "components/Farm/FarmCards";
 import { usePicasso } from "hooks";
@@ -20,6 +20,7 @@ import { MdOutlineCallMade, MdSearch, MdExpandMore } from "react-icons/md";
 
 export const FarmContainer: NextPage = () => {
 	const theme = usePicasso();
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	return (
 		<Flex
@@ -35,11 +36,11 @@ export const FarmContainer: NextPage = () => {
 					zIndex="docked"
 					position="relative"
 					borderRadius="xl"
-					backgroundColor="blue.700"
+					backgroundColor={theme.bg.whiteGray}
 				>
 					<Img
 						borderRadius="xl"
-						src="images/backgrounds/BannerFarm.png"
+						src={isMobile ? theme.bg.farmBannerMobile : theme.bg.farmBanner}
 						position="absolute"
 						zIndex="base"
 						w="100%"
@@ -52,12 +53,13 @@ export const FarmContainer: NextPage = () => {
 						py="1.375rem"
 						gap="3"
 						h={["9rem", "10rem", "10rem", "10rem"]}
+						color="white"
 					>
-						<Text fontWeight="bold" color="white" fontSize="md">
+						<Text fontWeight="bold" fontSize="md">
 							Pegasys Liquidity Mining
 						</Text>
 						<Text
-							fontWeight="semibold"
+							fontWeight="medium"
 							fontSize="sm"
 							lineHeight="shorter"
 							w={["100%", "70%", "50%", "50%"]}
@@ -67,16 +69,19 @@ export const FarmContainer: NextPage = () => {
 						</Text>
 					</Flex>
 					<Flex
+						zIndex="0"
+						position="relative"
+						top="2"
 						alignItems="center"
 						justifyContent="center"
 						flexDirection="row"
-						bgColor={theme.bg.whiteGray}
-						zIndex="docked"
+						bgColor={theme.text.topHeaderButton}
 						borderBottomRadius="xl"
 						py="0.531rem"
 						gap="2.5"
+						color="white"
 					>
-						<Text fontWeight="semibold" fontSize="xs">
+						<Text fontWeight="medium" fontSize="xs">
 							View Your Staked Liquidity
 						</Text>
 						<MdOutlineCallMade size={20} />
@@ -115,20 +120,23 @@ export const FarmContainer: NextPage = () => {
 						<InputGroup right="0rem">
 							<Input
 								placeholder="Search by token name"
-								_placeholder={{ opacity: 1, color: theme.text.cyan }}
-								borderColor="#153D6F"
+								_placeholder={{ opacity: 1, color: theme.text.input }}
+								borderColor={theme.bg.blueNavyLightness}
 								borderRadius="full"
 								w={["20rem", "28rem", "20rem", "20rem"]}
-								h="max-content"
-								py={["0.1rem", "0.1rem", "1", "1"]}
-								pl="8"
+								h="2.2rem"
+								py={["0.2rem", "0.2rem", "1", "1"]}
+								pl="10"
+								_focus={{ outline: "none" }}
+								_hover={{}}
 							/>
 							<Flex
+								pt="1rem"
 								position="absolute"
-								left="0.5rem"
+								pl="0.9rem"
 								bottom={["0.3rem", "0.3rem", "0.5rem", "0.5rem"]}
 							>
-								<MdSearch color={theme.text.cyanPurple} />
+								<MdSearch color={theme.icon.searchIcon} size={20} />
 							</Flex>
 						</InputGroup>
 						<Flex
@@ -147,18 +155,21 @@ export const FarmContainer: NextPage = () => {
 									fontWeight="semibold"
 									alignItems="center"
 									justifyContent="justify-content"
-									py="1.5"
+									py={["0.2rem", "0.2rem", "1", "1"]}
 									pl="4"
 									pr="4"
 									w="max-content"
-									h="max-content"
+									h="2.2rem"
 									bgColor={theme.bg.blueNavyLightness}
 									color={theme.text.mono}
-									_hover={{ opacity: "1" }}
+									_hover={{
+										opacity: "1",
+										bgColor: theme.bg.bluePurple,
+									}}
 									_active={{}}
 									borderRadius="full"
 								>
-									<Flex alignItems="center">
+									<Flex alignItems="center" color="white">
 										APR
 										<Icon as={MdExpandMore} w="5" h="5" ml="8" />
 									</Flex>
@@ -186,13 +197,9 @@ export const FarmContainer: NextPage = () => {
 					zIndex="1"
 					justifyContent="space-between"
 					mt={["10", "10", "0", "0"]}
-					mr="1"
-					ml="1"
 					mb="10rem"
-					sx={{ columnCount: [1, 1, 2, 2], columnGap: "18px" }}
+					sx={{ columnCount: [1, 1, 2, 2], columnGap: "35px" }}
 				>
-					<FarmCards />
-					<FarmCards />
 					<FarmCards />
 				</Box>
 			</Flex>

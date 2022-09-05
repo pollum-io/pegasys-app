@@ -1,21 +1,26 @@
 import { Button, ButtonProps, Flex } from "@chakra-ui/react";
+import { ExpertMode } from "components/Header/ExpertMode";
 import { usePicasso, useWallet } from "hooks";
-import { FunctionComponent, ReactNode } from "react";
+import { FunctionComponent, ReactNode, useState } from "react";
 import Jazzicon from "react-jazzicon";
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
 	onClick?: () => void;
+	pending?: boolean;
 }
 
 export const AddressButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
-	const { children, ...rest } = props;
+	const { children, pending, ...rest } = props;
 	const { walletError } = useWallet();
+	const [isExpertMode] = useState(false);
 
 	return (
 		<Button
-			bg={walletError ? theme.text.redError : theme.bg.button.userAddress}
+			color="white"
+			bg={walletError ? theme.text.redError : theme.bg.button.connectWallet}
+			borderColor={theme.border.connectWallet}
 			justifyContent="space-arround"
 			w="max-content"
 			h="max-content"
@@ -26,12 +31,13 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 			py={["2", "2", "2", "2"]}
 			px={["3", "3", "3", "3"]}
 			position={["absolute", "relative"]}
-			bottom={["12", "10"]}
-			left={["20%", "0", "0", "0"]}
+			bottom={["12", "8", "8", "8"]}
+			right={isExpertMode ? ["43%", "0", "0", "0"] : ["30%", "0", "0", "0"]}
 			textTransform="uppercase"
 			overflow="hidden"
+			opacity="0.85"
 			_hover={{
-				borderColor: walletError ? theme.text.redError : theme.text.cyan,
+				opacity: "1",
 			}}
 			_active={{}}
 			{...rest}
@@ -40,16 +46,20 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 				"Wrong Network"
 			) : (
 				<>
-					{" "}
-					<Flex pr="2" textTransform="uppercase">
-						<Jazzicon
-							diameter={18}
-							seed={Math.round(Math.random() * 10000000)}
-						/>
-					</Flex>
+					{!pending && (
+						<Flex pr="2" textTransform="uppercase">
+							<Jazzicon
+								diameter={18}
+								seed={Math.round(Math.random() * 10000000)}
+							/>
+						</Flex>
+					)}
 					{children}
 				</>
 			)}
+			<Flex display={["flex", "none", "none", "none"]} zIndex="-99">
+				<ExpertMode />
+			</Flex>
 		</Button>
 	);
 };

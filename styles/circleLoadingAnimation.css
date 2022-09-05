@@ -1,15 +1,7 @@
 .circleLoading {
-	display: inline-block;
-	position: relative;
-	width: 20px;
-	height: 20px;
-	bottom: 10px;
-	left: 50px;
-}
-.circleLoading {
 	box-sizing: border-box;
 	display: block;
-	position: absolute;
+	position: relative;
 	width: 22px;
 	height: 22px;
 	border: 2px solid #fff;
@@ -17,12 +9,22 @@
 	animation: circleLoading 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
 	border-color: rgb(4, 205, 255) #666666 #666666 #666666;
 }
-#walletLoading{
+.circleLoadingLight {
+	box-sizing: border-box;
+	display: block;
+	position: relative;
+	width: 22px;
+	height: 22px;
+	border: 2px solid #fff;
+	border-radius: 50%;
+	animation: circleLoading 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+	border-color: #665EE1 rgba(0, 0, 0, 0.08) rgba(0, 0, 0, 0.08) rgba(0, 0, 0, 0.08);
+}
+#walletLoading {
 	bottom: 97px;
 	left: 106px;
 	right: 100px;
 }
-
 .circleLoading:nth-child(1) {
 	animation-delay: -0.45s;
 }

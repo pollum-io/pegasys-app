@@ -1,5 +1,4 @@
 import { Text } from "@chakra-ui/react";
-import { usePicasso } from "hooks";
 import { FunctionComponent, ReactNode } from "react";
 
 interface IButtonProps {
@@ -9,7 +8,6 @@ interface IButtonProps {
 
 export const TokenButton: FunctionComponent<IButtonProps> = props => {
 	const { children, ...rest } = props;
-	const theme = usePicasso();
 	const token = "PSYS";
 
 	return (
@@ -18,7 +16,7 @@ export const TokenButton: FunctionComponent<IButtonProps> = props => {
 			bgClip="text"
 			fontWeight="normal"
 			fontSize="md"
-			transition="0.2s"
+			transition="0.1s"
 			_hover={{ cursor: "pointer", fontWeight: "700" }}
 			_active={{}}
 			className="textAnimation"

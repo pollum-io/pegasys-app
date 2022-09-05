@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import { Swap } from "components";
 import { DefaultTemplate } from "container";
 import { NextPage } from "next";

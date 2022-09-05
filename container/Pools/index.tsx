@@ -4,17 +4,21 @@ import {
 	Img,
 	Input,
 	InputGroup,
-	InputLeftElement,
 	Menu,
 	MenuButton,
 	MenuItem,
 	MenuList,
 	Text,
+	InputLeftElement,
+	useMediaQuery,
 } from "@chakra-ui/react";
-import { AddLiquidityModal, RemoveLiquidity } from "components";
-import { ImportPoolModal } from "components/Modals/ImportPool";
+import {
+	AddLiquidityModal,
+	ImportPoolModal,
+	RemoveLiquidity,
+} from "components";
 import { PoolCards } from "components/Pools/PoolCards";
-import { usePicasso, useWallet, useToasty, useModal } from "hooks";
+import { usePicasso, useWallet, useModal } from "hooks";
 import { NextPage } from "next";
 import { useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
@@ -22,7 +26,8 @@ import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
 export const PoolsContainer: NextPage = () => {
 	const theme = usePicasso();
 	const {
-		onOpenPool,
+		isOpenImportPool,
+		onCloseImportPool,
 		isOpenRemoveLiquidity,
 		onCloseRemoveLiquidity,
 		onOpenAddLiquidity,
@@ -30,20 +35,11 @@ export const PoolsContainer: NextPage = () => {
 		onCloseAddLiquidity,
 	} = useModal();
 
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const [isCreate, setIsCreate] = useState(false);
-	const [haveValue, setHaveValue] = useState(false);
+	const [haveValue] = useState(false);
 	const { isConnected } = useWallet();
-	const [userHavePool, setUserHavePool] = useState(true);
-
-	const { toast } = useToasty();
-
-	const showToast = () => {
-		toast({
-			title: "Title",
-			description: "Something happend!",
-			status: "success",
-		});
-	};
+	const [userHavePool] = useState(true);
 
 	return (
 		<Flex justifyContent="center" alignItems="center">
@@ -59,6 +55,10 @@ export const PoolsContainer: NextPage = () => {
 				isCreate={isCreate}
 				haveValue={haveValue}
 			/>
+			<ImportPoolModal
+				isModalOpen={isOpenImportPool}
+				onModalClose={onCloseImportPool}
+			/>
 			<Flex
 				alignItems="flex-start"
 				justifyContent="center"
@@ -71,11 +71,11 @@ export const PoolsContainer: NextPage = () => {
 						zIndex="docked"
 						position="relative"
 						borderRadius="xl"
-						backgroundColor="blue.700"
+						backgroundColor={theme.bg.whiteGray}
 					>
 						<Img
 							borderRadius="xl"
-							src="images/backgrounds/BannerPools.png"
+							src={isMobile ? theme.bg.poolsBannerMobile : theme.bg.poolsBanner}
 							position="absolute"
 							zIndex="base"
 							w="100%"
@@ -88,13 +88,14 @@ export const PoolsContainer: NextPage = () => {
 							py={["0.8rem", "1.375rem", "1.375rem", "1.375rem"]}
 							gap="3"
 							h={["9rem", "10rem", "10rem", "10rem"]}
+							color="white"
 						>
-							<Text fontWeight="bold" color="white" fontSize="md">
+							<Text fontWeight="bold" fontSize="md">
 								Liquidity Provider Rewards
 							</Text>
 							<Text
 								color="white"
-								fontWeight="semibold"
+								fontWeight="medium"
 								fontSize="sm"
 								lineHeight="shorter"
 								w={["100%", "70%", "60%", "60%"]}
@@ -109,15 +110,17 @@ export const PoolsContainer: NextPage = () => {
 							justifyContent="center"
 							flexDirection="row"
 							bgColor={theme.bg.whiteGray}
-							zIndex="docked"
+							zIndex="0"
+							position="relative"
+							top="2"
 							borderBottomRadius="xl"
 							py="0.531rem"
 							gap="2.5"
 						>
-							<Text fontWeight="semibold" fontSize="xs" color="white">
+							<Text fontWeight="medium" fontSize="xs" color="white">
 								View Your Staked Liquidity
 							</Text>
-							<MdOutlineCallMade size={20} color="white" />
+							<MdOutlineCallMade size={18} color="white" />
 						</Flex>
 					</Flex>
 					<Flex
@@ -129,7 +132,7 @@ export const PoolsContainer: NextPage = () => {
 						zIndex="docked"
 					>
 						<Flex
-							mt="4"
+							mt={["2rem", "2rem", "4", "4"]}
 							flexDirection="row"
 							justifyContent="space-between"
 							w="100%"
@@ -148,48 +151,57 @@ export const PoolsContainer: NextPage = () => {
 							flexDirection={["column-reverse", "column-reverse", "row", "row"]}
 							zIndex="docked"
 							w="100%"
-							mt={["0", "0", "2", "2"]}
+							mt={["4", "0", "2", "2"]}
 							alignItems={["center", "center", "flex-end", "flex-end"]}
 							gap="5"
 						>
-							<Flex visibility={userHavePool ? "visible" : "hidden"}>
-								<InputGroup>
+							<Flex
+								visibility={userHavePool && isConnected ? "visible" : "hidden"}
+							>
+								<InputGroup alignItems="center">
+									<InputLeftElement
+										pl="0.625rem"
+										pointerEvents="none"
+										pb="0.3rem"
+										// eslint-disable-next-line react/no-children-prop
+										children={
+											<MdSearch color={theme.icon.searchIcon} size={20} />
+										}
+									/>
 									<Input
 										borderColor={theme.bg.blueNavyLightness}
 										placeholder="Search by token name"
 										_placeholder={{
-											fontSize: "14px",
 											opacity: 1,
-											color: theme.text.cyanPurple,
+											color: theme.text.input,
 										}}
 										borderRadius="full"
-										w={["18rem", "18rem", "20rem", "20rem"]}
-										h="max-content"
-										py={["0.1rem", "0.1rem", "1", "1"]}
-										pl="6"
+										w={["18.5rem", "18rem", "20rem", "20rem"]}
+										h="2.2rem"
+										py={["0.2rem", "0.2rem", "1", "1"]}
+										pl="10"
+										_focus={{ outline: "none" }}
+										_hover={{}}
 									/>
-									<Flex
-										position="absolute"
-										left="0.5rem"
-										bottom={["0.3rem", "0.3rem", "0.5rem", "0.5rem"]}
-									>
-										<MdSearch color={theme.text.cyanPurple} />
-									</Flex>
 								</InputGroup>
 							</Flex>
 							<Flex gap="4" alignItems="flex-end">
 								<Button
 									fontSize="sm"
 									fontWeight="semibold"
-									py="0.562rem"
+									py={["0.2rem", "0.2rem", "1", "1"]}
 									px="1.5rem"
-									h="max-content"
+									h="2.2rem"
+									size="sm"
 									bgColor="transparent"
 									borderWidth="1px"
 									borderColor={theme.text.cyanPurple}
 									color={theme.text.whitePurple}
 									borderRadius="full"
-									_hover={{ opacity: "1" }}
+									_hover={{
+										borderColor: theme.text.cyanLightPurple,
+										color: theme.text.cyanLightPurple,
+									}}
 									_active={{}}
 									onClick={() => {
 										setIsCreate(true);
@@ -198,17 +210,28 @@ export const PoolsContainer: NextPage = () => {
 								>
 									Create a Pair
 								</Button>
-								<Flex flexDirection="column">
-									{!userHavePool ? (
+								<Flex
+									flexDirection="column"
+									alignItems={[
+										"flex-end",
+										"flex-end",
+										"flex-start",
+										"flex-start",
+									]}
+								>
+									{userHavePool && !isConnected ? (
 										<Button
 											fontSize="sm"
 											fontWeight="semibold"
-											py="0.625rem"
+											py={["0.2rem", "0.2rem", "1", "1"]}
 											px="1.5rem"
-											h="max-content"
+											size="sm"
+											h="2.2rem"
 											bgColor={theme.bg.blueNavyLightness}
-											color={theme.text.cyanWhite}
-											_hover={{ opacity: "1" }}
+											color={theme.text.cyan}
+											_hover={{
+												bgColor: theme.bg.bluePurple,
+											}}
 											_active={{}}
 											onClick={() => {
 												setIsCreate(false);
@@ -227,12 +250,15 @@ export const PoolsContainer: NextPage = () => {
 												as={Button}
 												fontSize="sm"
 												fontWeight="semibold"
-												py="0.625rem"
-												px="1.5rem"
-												h="max-content"
+												py={["0.2rem", "0.2rem", "1", "1"]}
+												px="1rem"
+												size="sm"
+												h="2.2rem"
 												bgColor={theme.bg.blueNavyLightness}
 												color="white"
-												_hover={{ opacity: "1" }}
+												_hover={{
+													bgColor: theme.bg.bluePurple,
+												}}
 												_active={{}}
 												borderRadius="full"
 												rightIcon={<MdExpandMore size={20} />}
@@ -246,11 +272,36 @@ export const PoolsContainer: NextPage = () => {
 												p="4"
 												fontSize="sm"
 											>
-												<MenuItem>Pool Weight</MenuItem>
-												<MenuItem>Name</MenuItem>
-												<MenuItem>Claudio</MenuItem>
-												<MenuItem>Thom</MenuItem>
-												<MenuItem>Kaue</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Pool Weight
+												</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Name
+												</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Claudio
+												</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Thom
+												</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+												>
+													Kaue
+												</MenuItem>
 											</MenuList>
 										</Menu>
 									)}
@@ -261,35 +312,20 @@ export const PoolsContainer: NextPage = () => {
 					{!isConnected ? (
 						<Flex
 							w="100%"
-							mt={["1rem", "1rem", "4rem", "4rem"]}
+							mt={["3rem", "3rem", "4rem", "4rem"]}
 							flexDirection="column"
 							alignItems="center"
 							justifyContent="center"
 							gap="16"
 						>
-							<Text fontSize={["sm", "sm", "md", "md"]} fontWeight="normal">
+							<Text
+								fontSize={["sm", "sm", "md", "md"]}
+								fontWeight="normal"
+								textAlign="center"
+							>
 								Please connect your wallet in the button bellow to be able to
 								view your liquidity.
 							</Text>
-							<Flex flexDirection="row" gap="1">
-								<Text
-									color="white"
-									fontSize="md"
-									fontWeight="normal"
-									w="max-content"
-								>
-									Don&apos;t see a pool you joined?{" "}
-								</Text>
-								<Text
-									fontWeight="semibold"
-									color={theme.text.cyanWhite}
-									onClick={onOpenPool}
-									textDecoration="underline"
-									_hover={{ cursor: "pointer" }}
-								>
-									Import it.
-								</Text>
-							</Flex>
 						</Flex>
 					) : (
 						<Flex
@@ -299,16 +335,7 @@ export const PoolsContainer: NextPage = () => {
 							mt="10"
 							justifyContent={["center", "center", "unset", "unset"]}
 						>
-							<PoolCards />
-							<PoolCards />
-							<PoolCards />
-							<Button
-								onClick={() => {
-									showToast();
-								}}
-							>
-								show toast
-							</Button>
+							<PoolCards setIsCreate={setIsCreate} />
 						</Flex>
 					)}
 				</Flex>
