@@ -154,7 +154,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	}, [selectedToken, isOpen]);
 
 	return (
-		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ManageToken isOpen={isOpenManageToken} onClose={onCloseManageToken} />
 			<ModalOverlay />
 			<ModalContent

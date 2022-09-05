@@ -1,10 +1,11 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Img, Text, useMediaQuery } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
 import { usePicasso, useWallet } from "hooks";
 
 export const ExpertMode: FunctionComponent = () => {
 	const theme = usePicasso();
 	const { expert } = useWallet();
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	return (
 		<Flex>
@@ -25,6 +26,7 @@ export const ExpertMode: FunctionComponent = () => {
 						"1px solid transparent",
 						"1px solid transparent",
 					]}
+					display={["none", "flex", "flex", "flex"]}
 					borderBottomRadius={["2xl", "2xl", "2xl", "2xl"]}
 					borderBottomLeftRadius={["unset", "2xl", "2xl", "2xl"]}
 					borderTopRadius={["2xl", "unset", "unset", "unset"]}
@@ -32,12 +34,37 @@ export const ExpertMode: FunctionComponent = () => {
 					h={["2.2rem", "max-content", "max-content", "max-content"]}
 					px={["4", "2.5rem", "2.5rem", "2.5rem"]}
 					pt={["0", "4", "4", "4"]}
-					ml={["0.3rem", "1.1rem", "1rem", "1rem"]}
+					ml={["0.3rem", "1rem", "1rem", "1rem"]}
 					bottom={["3.1rem", "1.5rem", "1.5rem", "1.5rem"]}
 					color={theme.text.mono}
 					alignItems="center"
 				>
 					<Text fontWeight="light" fontSize="xs">
+						Expert mode
+					</Text>
+				</Flex>
+			)}
+			{expert && (
+				<Flex
+					display={["flex", "none", "none", "none"]}
+					id="flex"
+					minWidth="2rem"
+					w="7rem"
+				>
+					<Img
+						src={theme.icon.borderExpertMode}
+						position="absolute"
+						px="6rem"
+						bottom="3rem"
+						h="63%"
+					/>
+					<Text
+						fontWeight="light"
+						fontSize="xs"
+						position="relative"
+						bottom="2.3rem"
+						left="7.5rem"
+					>
 						Expert mode
 					</Text>
 				</Flex>
