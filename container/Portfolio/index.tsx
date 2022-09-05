@@ -26,12 +26,30 @@ export const PortfolioContainer: NextPage = () => {
 	const theme = usePicasso();
 
 	return (
-		<Flex flexDirection="column" zIndex="docked">
-			<Flex flexDirection="column">
-				<Flex w="max-content" gap="4" position="relative" mt="10" left="65rem">
-					<Text>Wallet</Text>
-					<Text>Liquidity</Text>
-					<Text>Transactions</Text>
+		<Flex
+			flexDirection="column"
+			zIndex="docked"
+			justifyContent="center"
+			w="100%"
+		>
+			<Flex
+				flexDirection="row"
+				bgColor="blue"
+				mx="156px"
+				justifyContent="flex-end"
+				display={["none", "none", "flex", "flex"]}
+				alignItems="center"
+			>
+				<Flex w="max-content" gap="4" mt="10" left="65rem" bgColor="red">
+					<Text _hover={{ color: "white", cursor: "pointer" }} fontSize="18px">
+						Wallet
+					</Text>
+					<Text _hover={{ color: "white", cursor: "pointer" }} fontSize="18px">
+						Liquidity
+					</Text>
+					<Text _hover={{ color: "white", cursor: "pointer" }} fontSize="18px">
+						Transactions
+					</Text>
 				</Flex>
 			</Flex>
 			<Flex
