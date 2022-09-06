@@ -117,6 +117,7 @@ export function useApproveCallback(
 				addTransaction(response, walletInfos, setTransactions, transactions, {
 					summary: `Approve ${currentAmountToApprove?.currency?.symbol}`,
 					approval: { tokenAddress: token?.address, spender },
+					finished: false,
 				});
 				setApprovalState({ status: ApprovalState.PENDING, type: "approve" });
 				setApprovalSubmitted(prevState => ({

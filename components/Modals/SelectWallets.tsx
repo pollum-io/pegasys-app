@@ -94,10 +94,11 @@ export const SelectWallets: React.FC<IModal> = props => {
 							<Flex pt="0.4">
 								<Flex
 									mb="5px"
-									className={
+									className="circleLoading"
+									id={
 										colorMode === "dark"
-											? "circleLoading"
-											: "circleLoadingLight"
+											? "walletLoadingDark"
+											: "walletLoadingLight"
 									}
 								/>
 							</Flex>

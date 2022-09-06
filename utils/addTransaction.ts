@@ -9,6 +9,7 @@ export const addTransaction = (
 		summary?: string;
 		approval?: { tokenAddress: string; spender: string };
 		claim?: { recipient: string };
+		finished?: boolean;
 	}
 ) => {
 	const { chainId, walletAddress } = walletInfo;
