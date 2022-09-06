@@ -11,7 +11,6 @@ import { useTransactionDeadline } from "hooks/swap/useTransactionDeadline";
 import { ITx, IWalletHookInfos, WrappedTokenInfo } from "types";
 import {
 	addTransaction,
-	calculateGasMargin,
 	calculateSlippageAmount,
 	createContractUsingAbi,
 	getBalanceOfSingleCall,
@@ -36,7 +35,7 @@ export const UseRemoveLiquidity = (
 	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
 	approvalState: IApprovalState,
-	setTxSignature: React.Dispatch<React.SetStateAction<boolean>>,
+	setTxSignature: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
 	const [signatureData, setSignatureData] = useState<{
 		v: number;
@@ -67,11 +66,17 @@ export const UseRemoveLiquidity = (
 	async function onAttemptToApprove() {
 		const pair = await useAllCommonPairs(currencyA, currencyB, walletInfos);
 
-		const pairBalanceAmount = new TokenAmount(
-			pair[0].liquidityToken,
-			JSBI.BigInt("100")
+		const pairBalance = await getBalanceOfSingleCall(
+			pairAddress,
+			account,
+			signer,
+			6
 		);
 
+		const pairBalanceAmount = new TokenAmount(
+			pair[0].liquidityToken,
+			pairBalance
+		);
 
 		if (
 			!pairContract ||
@@ -160,7 +165,7 @@ export const UseRemoveLiquidity = (
 
 		const pairBalanceAmount = new TokenAmount(
 			pair[0].liquidityToken,
-			JSBI.BigInt(pairBalance.toString())
+			pairBalance
 		);
 		const totalSupply = await getTotalSupply(pair[0].liquidityToken, signer);
 
@@ -170,7 +175,6 @@ export const UseRemoveLiquidity = (
 			pairBalanceAmount &&
 			currencyA &&
 			currencyA instanceof Token &&
-			// this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
 			JSBI.greaterThanOrEqual(totalSupply.raw, pairBalanceAmount.raw)
 				? new TokenAmount(
 						currencyA,
@@ -189,7 +193,6 @@ export const UseRemoveLiquidity = (
 			pairBalanceAmount &&
 			currencyB &&
 			currencyB instanceof Token &&
-			// this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
 			JSBI.greaterThanOrEqual(totalSupply.raw, pairBalanceAmount.raw)
 				? new TokenAmount(
 						currencyB,
@@ -229,7 +232,6 @@ export const UseRemoveLiquidity = (
 			CURRENCY_B: calculateSlippageAmount(currencyAmountB, allowedSlippage)[0],
 		};
 
-		// TODO: Translate using i18n
 		if (!currencyA || !currencyB) throw new Error("missing tokens");
 		const liquidityAmount = new TokenAmount(
 			pair[0]?.liquidityToken,
@@ -237,13 +239,12 @@ export const UseRemoveLiquidity = (
 		);
 		if (!liquidityAmount) throw new Error("missing liquidity amount");
 
-		// TODO: Translate using i18n
 		if (!currencyA || !currencyB) throw new Error("could not wrap");
 
 		let methodNames: string[],
 			args: Array<string | string[] | number | boolean>;
 		// we have approval, use normal remove liquidity
-		if (signatureData) {
+		if (approvalState.status === ApprovalState.APPROVED) {
 			// removeLiquiditySYS
 			if (oneCurrencyIsETH) {
 				methodNames = [
@@ -285,7 +286,7 @@ export const UseRemoveLiquidity = (
 					currencyBIsETH ? currencyA?.address : currencyB?.address,
 					liquidityAmount.raw.toString(),
 					amountsMin[currencyBIsETH ? "CURRENCY_A" : "CURRENCY_B"].toString(),
-					amountsMin[currencyBIsETH ? "CURRENCY_B" : "CURRENCY_A"].toString(),
+					amountsMin[currencyBIsETH ? "CURRENCY_A" : "CURRENCY_B"].toString(),
 					account,
 					signatureData.deadline,
 					false,
@@ -312,61 +313,41 @@ export const UseRemoveLiquidity = (
 				];
 			}
 		} else {
-			// TODO: Translate using i18n
 			throw new Error(
 				"Attempting to confirm without approval or a signature. Please contact support."
 			);
 		}
 
-		const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
-			methodNames.map(methodName =>
-				router?.estimateGas[methodName](...args)
-					.then(calculateGasMargin)
-					.catch(error => {
-						console.log(`estimateGas failed`, methodName, args, error);
-						return undefined;
-					})
-			)
-		);
+		const methodName = methodNames[0];
+		const safeGasEstimate = BigNumber.from("988524");
 
-		const indexOfSuccessfulEstimation = safeGasEstimates.findIndex(
-			safeGasEstimate => BigNumber.isBigNumber(safeGasEstimate)
-		);
-
-		// all estimations failed...
-		if (indexOfSuccessfulEstimation === -1) {
-			console.log("This transaction would fail. Please contact support.");
-		} else {
-			const methodName = methodNames[indexOfSuccessfulEstimation];
-			const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation];
-
-			setTxSignature(true);
-			await router[methodName](...args, {
-				gasLimit: safeGasEstimate,
-			})
-				.then((response: TransactionResponse) => {
-
-					// TODO: Translate using i18n
-					addTransaction(response, walletInfos, setTransactions, transactions, {
-						summary:
-							t("removeLiquidity.remove") +
-							" " +
-							currencyAmountA?.toSignificant(3) +
-							" " +
-							currencyA?.symbol +
-							" and " +
-							currencyAmountB?.toSignificant(3) +
-							" " +
-							currencyB?.symbol,
-					});
-
-					setCurrentTxHash(response?.hash);
-				})
-				.catch((error: Error) => {
-					// we only care if the error is something _other_ than the user rejected the tx
-					console.log(error);
+		setTxSignature(true);
+		await router[methodName](...args, {
+			gasLimit: safeGasEstimate,
+		})
+			.then((response: TransactionResponse) => {
+				addTransaction(response, walletInfos, setTransactions, transactions, {
+					summary:
+						t("removeLiquidity.remove") +
+						" " +
+						currencyAmountA?.toSignificant(3) +
+						" " +
+						currencyA?.symbol +
+						" and " +
+						currencyAmountB?.toSignificant(3) +
+						" " +
+						currencyB?.symbol,
 				});
-		}
+				setApprovalState({
+					status: ApprovalState.PENDING,
+					type: "remove-liquidity",
+				});
+				setCurrentTxHash(response?.hash);
+			})
+			.catch((error: Error) => {
+				// we only care if the error is something _other_ than the user rejected the tx
+				console.log(error);
+			});
 	}
 
 	return {
