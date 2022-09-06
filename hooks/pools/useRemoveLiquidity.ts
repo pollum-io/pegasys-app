@@ -165,7 +165,7 @@ export const UseRemoveLiquidity = (
 
 		const pairBalanceAmount = new TokenAmount(
 			pair[0].liquidityToken,
-			pairBalance
+			JSBI.BigInt(pairBalance.toString())
 		);
 		const totalSupply = await getTotalSupply(pair[0].liquidityToken, signer);
 
