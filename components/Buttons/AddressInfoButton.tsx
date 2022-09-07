@@ -12,7 +12,8 @@ import {
 	Text,
 	useColorMode,
 } from "@chakra-ui/react";
-import { usePicasso, useWallet, useToasty } from "hooks";
+import { useToasty, useWallet as psUseWallet } from "pegasys-services";
+import { usePicasso, useWallet } from "hooks";
 import { FunctionComponent, useState, useEffect } from "react";
 import Jazzicon from "react-jazzicon";
 import { MdContentCopy, MdOutlineCallMade } from "react-icons/md";
@@ -29,17 +30,13 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
-	const {
-		walletAddress,
-		transactions,
-		currentNetworkChainId,
-		connectorSelected,
-	} = useWallet();
+	const { transactions, connectorSelected } = useWallet();
+	const { address, chainId } = psUseWallet();
 	const { toast } = useToasty();
 	const [txs, setTxs] = useState<ITransactionResponse[]>([]);
 
 	const handleCopyToClipboard = () => {
-		copyToClipboard(walletAddress);
+		copyToClipboard(address);
 
 		toast({
 			id: "toast1",
@@ -55,7 +52,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 		Object.keys(transactions[5700]).length === 0;
 
 	const explorerURL =
-		currentNetworkChainId === 5700
+		chainId === 5700
 			? "https://tanenbaum.io/tx"
 			: "https://explorer.syscoin.org/tx";
 
@@ -155,7 +152,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									seed={Math.round(Math.random() * 10000000)}
 								/>
 							</Flex>
-							{walletAddress && shortAddress(walletAddress)}
+							{address && shortAddress(address)}
 						</Flex>
 						<Flex flexDirection="row" mt="4">
 							<Flex
@@ -182,7 +179,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								flexDirection="row"
 								alignItems="center"
 								cursor="pointer"
-								onClick={() => openWalletOnExplorer(walletAddress)}
+								onClick={() => openWalletOnExplorer(address)}
 							>
 								<Icon as={MdOutlineCallMade} color={theme.text.gray300} />
 								<Text

@@ -11,8 +11,15 @@ import {
 	Text,
 	Tooltip,
 } from "@chakra-ui/react";
-import { useModal, usePicasso, useTokens } from "hooks";
-import React, { useEffect, useState } from "react";
+import {
+	useModal,
+	usePicasso,
+	useTokens,
+	useWallet,
+	usePairs,
+	useAllCommonPairs,
+} from "hooks";
+import React, { useEffect, useMemo, useState } from "react";
 import {
 	MdHelpOutline,
 	MdArrowBack,
@@ -23,6 +30,8 @@ import { IoIosArrowDown } from "react-icons/io";
 import { WrappedTokenInfo } from "types";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { useTranslation } from "react-i18next";
+import { PoolServices, useWallet as psUseWallet } from "pegasys-services";
+import { addTransaction } from "utils";
 import { SelectCoinModal } from "./SelectCoin";
 
 interface IModal {
@@ -50,6 +59,37 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		inputTo: "",
 	});
 
+	const {
+		userSlippageTolerance,
+		userTransactionDeadlineValue,
+		provider,
+		setTransactions,
+		transactions,
+	} = useWallet();
+	const { address, chainId } = psUseWallet();
+
+	const walletInfo = useMemo(
+		() => ({
+			walletAddress: address,
+			chainId,
+			provider,
+		}),
+		[chainId, address, provider]
+	);
+
+	// const pairs = usePairs(
+	// 	selectedToken[0] && selectedToken[1]
+	// 		? [[selectedToken[0], selectedToken[1]]]
+	// 		: [],
+	// 	walletInfo
+	// );
+
+	const pairs = useAllCommonPairs(
+		selectedToken[0],
+		selectedToken[1] ?? selectedToken[0],
+		walletInfo
+	);
+
 	const handleOnChangeTokenInputs = (
 		event: React.ChangeEvent<HTMLInputElement>
 	) => {
@@ -63,6 +103,27 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 				[event.target.name]: inputValue,
 			}));
 		}
+	};
+
+	const addLiquidity = async () => {
+		console.log("entrou");
+
+		const pair = await pairs.then(res => res[0]);
+
+		console.log("pair: ", pair);
+
+		const response = await PoolServices.addLiquidity({
+			tokens: selectedToken as [WrappedTokenInfo, WrappedTokenInfo],
+			values: [tokenInputValue.inputFrom, tokenInputValue.inputTo],
+			haveValue,
+			slippage: userSlippageTolerance,
+			userDeadline: userTransactionDeadlineValue,
+			pair,
+		});
+
+		console.log("response: ", response);
+
+		addTransaction(response, walletInfo, setTransactions, transactions);
 	};
 
 	useEffect(() => {
@@ -429,6 +490,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								fontSize="lg"
 								fontWeight="semibold"
 								_hover={{ bgColor: theme.bg.bluePurple }}
+								onClick={addLiquidity}
 							>
 								{isCreate ? "Create a pair" : "Add Liquidity"}
 							</Button>

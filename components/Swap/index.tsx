@@ -11,6 +11,7 @@ import {
 	SkeletonCircle,
 	useColorMode,
 } from "@chakra-ui/react";
+import { useToasty, useWallet as psUseWallet } from "pegasys-services";
 import {
 	useModal,
 	usePicasso,
@@ -19,7 +20,6 @@ import {
 	UseDerivedSwapInfo,
 	useApproveCallbackFromTrade,
 	UseSwapCallback,
-	useToasty,
 	ApprovalState,
 	UseWrapCallback,
 	UseTokensPairSorted,
@@ -88,11 +88,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	} = useModal();
 
 	const {
-		isConnected,
-		currentNetworkChainId,
 		provider,
 		signer,
-		walletAddress,
 		userSlippageTolerance,
 		setTransactions,
 		transactions,
@@ -105,6 +102,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		otherWallet,
 		userTransactionDeadlineValue,
 	} = useWallet();
+
+	const { address, chainId, isConnected } = psUseWallet();
 
 	// END HOOKS IMPORTED VALUES
 
@@ -123,8 +122,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	};
 
 	const walletInfos: IWalletHookInfos = {
-		chainId: currentNetworkChainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
-		walletAddress,
+		chainId: chainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
+		walletAddress: address,
 		provider,
 	};
 
@@ -399,10 +398,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const approve = useApproveCallbackFromTrade(
 		returnedTradeValue?.v2Trade as Trade,
 		{
-			chainId:
-				currentNetworkChainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
+			chainId: chainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
 			provider,
-			walletAddress,
+			walletAddress: address,
 		},
 		signer as Signer,
 		tokenInputValue,

@@ -18,10 +18,11 @@ import {
 	RemoveLiquidity,
 } from "components";
 import { PoolCards } from "components/Pools/PoolCards";
-import { usePicasso, useWallet, useModal } from "hooks";
+import { usePicasso, useModal } from "hooks";
 import { NextPage } from "next";
 import { useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
+import { useWallet } from "pegasys-services";
 
 export const PoolsContainer: NextPage = () => {
 	const theme = usePicasso();
