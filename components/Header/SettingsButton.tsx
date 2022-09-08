@@ -20,6 +20,9 @@ import { IoWarningOutline } from "react-icons/io5";
 import { usePicasso, useWallet } from "hooks";
 import { mockedSlippageValues } from "helpers/mockedData";
 import { useTranslation } from "react-i18next";
+import { DEFAULT_DEADLINE_FROM_NOW } from "helpers/consts";
+import { TooltipComponent } from "components/Tooltip/TooltipComponent";
+import { useWallet as psUseWallet } from "pegasys-services";
 import { IconButton } from "../Buttons/IconButton";
 import { SlippageButton } from "../Buttons/SlippageButton";
 import { Languages } from "./Languages";
@@ -34,40 +37,33 @@ enum SlippageError {
 	RiskyHigh = "RiskyHigh",
 }
 
+enum DeadlineError {
+	InvalidInput = "InvalidInput",
+}
+
 export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	const [slippageInputValue, setSlippageInputValue] = useState<string>("");
+	const [deadlineInputValue, setDeadlineInputValue] = useState<string>("");
 
 	const theme = usePicasso();
+	// const [expert, setExpert] = useState(false)
 	const {
 		userSlippageTolerance,
 		setUserSlippageTolerance,
+		userTransactionDeadlineValue,
+		setUserTransactionDeadlineValue,
 		setExpert,
 		expert,
-		isConnected,
 	} = useWallet();
+
+	const { isConnected } = psUseWallet();
 
 	const { t: translation } = useTranslation();
 
-	const slippageInputIsValid =
-		slippageInputValue === "" ||
-		(userSlippageTolerance / 100).toFixed(2) ===
-			Number.parseFloat(slippageInputValue).toFixed(2);
-
-	let slippageInputErrors: SlippageError | undefined;
-
-	if (slippageInputValue !== "" && !slippageInputIsValid) {
-		slippageInputErrors = SlippageError.InvalidInput;
-	} else if (slippageInputIsValid && userSlippageTolerance < 50) {
-		slippageInputErrors = SlippageError.RiskyLow;
-	} else if (slippageInputIsValid && userSlippageTolerance > 500) {
-		slippageInputErrors = SlippageError.RiskyHigh;
-	} else {
-		slippageInputErrors = undefined;
-	}
-
-	const parseSlippageCustomValue = (slippageValue: string) => {
+	// Transaction Slippage handlers - Validations //
+	const parseCustomTransactionSlippageValue = (slippageValue: string) => {
 		if (slippageValue === "") {
-			setUserSlippageTolerance(50);
+			setUserSlippageTolerance(50); // Reset slippage value if user let the input empty
 			setSlippageInputValue("");
 			return;
 		}
@@ -86,6 +82,60 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 		}
 	};
 
+	const slippageInputIsValid =
+		slippageInputValue === "" ||
+		(userSlippageTolerance / 100).toFixed(2) ===
+			Number.parseFloat(slippageInputValue).toFixed(2);
+
+	let slippageInputErrors: SlippageError | undefined;
+
+	if (slippageInputValue !== "" && !slippageInputIsValid) {
+		slippageInputErrors = SlippageError.InvalidInput;
+	} else if (slippageInputIsValid && userSlippageTolerance < 50) {
+		slippageInputErrors = SlippageError.RiskyLow;
+	} else if (slippageInputIsValid && userSlippageTolerance > 500) {
+		slippageInputErrors = SlippageError.RiskyHigh;
+	} else {
+		slippageInputErrors = undefined;
+	}
+
+	// END Transaction Slippage handlers - Validations //
+
+	// Transaction Deadline handlers - Validations //
+
+	const parseCustomTransactionDeadlineValue = (deadlineValue: string) => {
+		if (deadlineValue === "") {
+			setUserTransactionDeadlineValue(DEFAULT_DEADLINE_FROM_NOW); // Reset deadline value if user let the input empty
+			setDeadlineInputValue("");
+			return;
+		}
+
+		setDeadlineInputValue(deadlineValue);
+
+		const transformValueAsInt: number = Number(deadlineValue) * 60;
+
+		if (!Number.isNaN(transformValueAsInt) && transformValueAsInt > 0) {
+			setUserTransactionDeadlineValue(transformValueAsInt);
+		}
+	};
+
+	const deadlineInputIsValid =
+		deadlineInputValue === "" ||
+		(Number(userTransactionDeadlineValue) / 60).toString() ===
+			deadlineInputValue;
+
+	let deadlineInputError: DeadlineError | undefined;
+
+	if (deadlineInputValue !== "" && !deadlineInputIsValid) {
+		deadlineInputError = DeadlineError.InvalidInput;
+	} else {
+		deadlineInputError = undefined;
+	}
+
+	// END Transaction Deadline handlers - Validations //
+
+	// console.log('deadline', (userSlippageTolerance / 100).toFixed(2))
+
 	return (
 		<Popover placement="right">
 			<PopoverTrigger {...props}>
@@ -93,11 +143,11 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 					bgColor="transparent"
 					_hover={{
 						background: theme.bg.iconBg,
-						color: theme.text.cyanLightPurple,
+						color: theme.text.cyanPurple,
 					}}
 					aria-label="Popover"
 					icon={<MdSettings size={25} />}
-					_expanded={{ color: theme.text.cyan }}
+					_expanded={{ color: theme.text.cyanPurple }}
 				/>
 			</PopoverTrigger>
 			<PopoverContent
@@ -113,6 +163,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 				mx={["0", "0", "20", "56"]}
 				position="fixed"
 			>
+				<PopoverArrow />
 				<Flex
 					justifyContent="flex-end"
 					zIndex="99"
@@ -120,6 +171,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 					pt="0rem"
 					pb="2"
 					h="max-content"
+					display={["flex", "flex", "none", "none"]}
 				>
 					<PopoverCloseButton position="relative" size="md" />
 				</Flex>
@@ -134,7 +186,6 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 						Transaction Settings
 					</Text>
 				</Flex>
-				<PopoverArrow />
 				<PopoverBody>
 					<Flex flexDirection="column" mt="4">
 						<Flex alignItems="center" flexDirection="row">
@@ -147,26 +198,12 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								Slippage tolerance
 							</Text>
 							<Flex>
-								<Tooltip
-									label="Sua transação será revertida se o preço For alterado de forma desfavorável acima dessa porcentagem."
-									position="relative"
-									bgColor={theme.bg.secondary}
-									color={theme.text.mono}
-									borderRadius="md"
-								>
-									<Text as="span" _hover={{ opacity: 0.8 }}>
-										<Flex pb="0.15rem">
-											<Icon
-												as={MdHelpOutline}
-												h="4"
-												w="4"
-												mt="0.25rem"
-												color={theme.icon.whiteGray}
-												borderRadius="full"
-											/>
-										</Flex>
-									</Text>
-								</Tooltip>
+								<TooltipComponent
+									label={translation(
+										"transactionSettings.transactionRevertSlippageHelper"
+									)}
+									icon={MdHelpOutline}
+								/>
 							</Flex>
 						</Flex>
 						<Flex flexDirection="row" py="0.5rem" alignItems="center">
@@ -229,8 +266,10 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 										value={slippageInputValue}
 										type="number"
 										color={!slippageInputIsValid ? "red" : ""}
-										onChange={e => parseSlippageCustomValue(e.target.value)}
-										placeholder="1.0%"
+										onChange={e =>
+											parseCustomTransactionSlippageValue(e.target.value)
+										}
+										placeholder={(userSlippageTolerance / 100).toFixed(2)}
 										fontWeight="normal"
 										textAlign="center"
 										_focus={{
@@ -268,26 +307,12 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							>
 								Transaction tolerance
 							</Text>
-							<Tooltip
-								label="Sua transação será revertida se ela demorar mais do que isso."
-								position="relative"
-								bgColor={theme.bg.secondary}
-								color={theme.text.mono}
-								borderRadius="md"
-							>
-								<Text as="span" _hover={{ opacity: 0.8 }}>
-									<Flex pb="0.15rem">
-										<Icon
-											as={MdHelpOutline}
-											h="4"
-											w="4"
-											mt="0.25rem"
-											color={theme.icon.whiteGray}
-											borderRadius="full"
-										/>
-									</Flex>
-								</Text>
-							</Tooltip>
+							<TooltipComponent
+								label={translation(
+									"transactionSettings.transactionRevertDeadlineHelper"
+								)}
+								icon={MdHelpOutline}
+							/>
 						</Flex>
 						<Flex flexDirection="row" py="0.5rem" alignItems="center">
 							<Input
@@ -296,23 +321,35 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								py="0.2rem"
 								px="0.4rem"
 								mr="3"
+								color={deadlineInputError ? "red" : undefined}
 								borderRadius={36}
-								placeholder="60"
+								placeholder={(
+									Number(userTransactionDeadlineValue) / 60
+								).toString()}
 								textAlign="center"
 								fontWeight="normal"
 								fontSize="md"
 								border="1px solid"
-								borderColor={theme.border.borderSettings}
+								borderColor={
+									deadlineInputError ? "#FF6871" : theme.border.borderSettings
+								}
+								value={deadlineInputValue}
 								_focus={{
 									outline: "none",
 								}}
+								onChange={e =>
+									parseCustomTransactionDeadlineValue(e.target.value)
+								}
 							/>
-							<Text color={theme.text.mono}>Minutes</Text>
+							<Text color={theme.text.mono}>
+								{translation("transactionSettings.minutes")}
+							</Text>
 						</Flex>
 						<Flex
 							alignItems={["flex-start", "center", "center", "center"]}
 							flexDirection={["column", "row", "row", "row"]}
 							mt="4"
+							h="max-content"
 						>
 							<Flex
 								pt="0.1rem"
@@ -329,28 +366,14 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								>
 									Toggle Expert Mode
 								</Text>
-								<Tooltip
-									label="Ignora os modais de confirmação e permite alta variação de preço. Use por sua conta e risco."
-									position="relative"
-									bgColor={theme.bg.secondary}
-									color={theme.text.mono}
-									borderRadius="md"
-								>
-									<Text as="span" _hover={{ opacity: 0.8 }}>
-										<Flex pb="0.15rem">
-											<Icon
-												as={MdHelpOutline}
-												h="4"
-												w="4"
-												mt="0.25rem"
-												color={theme.icon.whiteGray}
-												borderRadius="full"
-											/>
-										</Flex>
-									</Text>
-								</Tooltip>
+								<TooltipComponent
+									label={translation(
+										"transactionSettings.transactionRevertDeadlineHelper"
+									)}
+									icon={MdHelpOutline}
+								/>
 							</Flex>
-							<Flex flexDirection="row" ml={["2", "12", "12", "12"]}>
+							<Flex flexDirection="row" ml={["2", "12", "12", "12"]} mt="5">
 								<Stack align="center" direction="row">
 									<Text color={theme.text.mono}>Off</Text>
 									<Switch

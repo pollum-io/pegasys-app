@@ -16,7 +16,7 @@ export const NavButton: FunctionComponent<IButtonProps> = props => {
 
 	return (
 		<Button
-			color={active ? "white" : theme.text.header}
+			color={active ? "white" : theme.icon.whiteGray}
 			fontSize={["0.938rem", "md", "md", "md"]}
 			fontWeight="semibold"
 			bgColor={active ? theme.bg.whiteGray : "transparent"}
@@ -24,9 +24,7 @@ export const NavButton: FunctionComponent<IButtonProps> = props => {
 			borderRadius="70px"
 			transition="0.4s"
 			_hover={{
-				bgColor: theme.text.topHeaderButton,
-				color: "white",
-				borderRadius: "70px",
+				opacity: "0.9",
 			}}
 			_active={{}}
 			px={[3.5, 6, 6, 6]}

@@ -35,7 +35,8 @@ export const UseRemoveLiquidity = (
 	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
 	approvalState: IApprovalState,
-	setTxSignature: React.Dispatch<React.SetStateAction<boolean>>
+	setTxSignature: React.Dispatch<React.SetStateAction<boolean>>,
+	transactionDeadlineValue: BigNumber | number
 ) => {
 	const [signatureData, setSignatureData] = useState<{
 		v: number;
@@ -45,18 +46,16 @@ export const UseRemoveLiquidity = (
 	} | null>(null);
 	const { t } = useTranslation();
 	const { walletAddress: account, chainId, provider } = walletInfos;
-	const deadline = useTransactionDeadline();
+	const deadline = useTransactionDeadline(transactionDeadlineValue);
 	const [currencyA, currencyB] = [
 		tradeTokens[0]?.symbol === "SYS" ? NSYS : tradeTokens[0],
 		tradeTokens[1]?.symbol === "SYS" ? NSYS : tradeTokens[1],
 	];
 	const chainRouter = ROUTER_ADDRESS[chainId];
 
-	const pairContract = createContractUsingAbi(
-		pairAddress,
-		IPegasysPairABI?.abi,
-		signer
-	);
+	const pairContract =
+		pairAddress &&
+		createContractUsingAbi(pairAddress, IPegasysPairABI?.abi, signer);
 
 	const currencyBIsETH = currencyB === NSYS;
 	const oneCurrencyIsETH = currencyA === NSYS || currencyBIsETH;

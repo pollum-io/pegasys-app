@@ -10,8 +10,10 @@ import {
 	ModalHeader,
 	ModalOverlay,
 	Text,
+	useColorMode,
 } from "@chakra-ui/react";
-import { usePicasso, useWallet, useToasty } from "hooks";
+import { useToasty, useWallet as psUseWallet } from "pegasys-services";
+import { usePicasso, useWallet } from "hooks";
 import { FunctionComponent, useState, useEffect } from "react";
 import Jazzicon from "react-jazzicon";
 import { MdContentCopy, MdOutlineCallMade } from "react-icons/md";
@@ -27,17 +29,14 @@ interface IModal {
 export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
-	const {
-		walletAddress,
-		transactions,
-		currentNetworkChainId,
-		connectorSelected,
-	} = useWallet();
+	const { colorMode } = useColorMode();
+	const { transactions, connectorSelected } = useWallet();
+	const { address, chainId } = psUseWallet();
 	const { toast } = useToasty();
 	const [txs, setTxs] = useState<ITransactionResponse[]>([]);
 
 	const handleCopyToClipboard = () => {
-		copyToClipboard(walletAddress);
+		copyToClipboard(address);
 
 		toast({
 			id: "toast1",
@@ -53,7 +52,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 		Object.keys(transactions[5700]).length === 0;
 
 	const explorerURL =
-		currentNetworkChainId === 5700
+		chainId === 5700
 			? "https://tanenbaum.io/tx"
 			: "https://explorer.syscoin.org/tx";
 
@@ -153,7 +152,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									seed={Math.round(Math.random() * 10000000)}
 								/>
 							</Flex>
-							{walletAddress && shortAddress(walletAddress)}
+							{address && shortAddress(address)}
 						</Flex>
 						<Flex flexDirection="row" mt="4">
 							<Flex
@@ -180,7 +179,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								flexDirection="row"
 								alignItems="center"
 								cursor="pointer"
-								onClick={() => openWalletOnExplorer(walletAddress)}
+								onClick={() => openWalletOnExplorer(address)}
 							>
 								<Icon as={MdOutlineCallMade} color={theme.text.gray300} />
 								<Text
@@ -196,11 +195,11 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 					</Flex>
 				</ModalBody>
 				<ModalFooter
-					bgColor={theme.bg.blackGray}
+					bgColor={theme.bg.max}
 					justifyContent="flex-start"
 					borderBottomRadius={["0", "18"]}
 					h="max-content"
-					pb={["3.75rem", "3.75rem", "0", "0"]}
+					pb={["1.1rem", "1.1rem", "1.1rem", "1.1rem"]}
 				>
 					{txs.length === 0 ? (
 						<Text fontSize="sm" fontWeight="semibold" color={theme.text.mono}>
@@ -213,7 +212,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								w="100%"
 								flexDirection="row"
 								gap="12rem"
-								pb="4"
+								pb={["1.1rem", "1.1rem", "1.1rem", "1.1rem"]}
 							>
 								<Text fontSize="sm" fontWeight="semibold">
 									Recent transactions
@@ -221,34 +220,46 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								<Text
 									fontSize="sm"
 									fontWeight="semibold"
-									color={theme.text.cyan}
+									color={theme.text.cyanPurple}
 									_hover={{ cursor: "pointer", textDecoration: "underline" }}
 									onClick={() => setTxs([])}
 								>
 									Clear All
 								</Text>
 							</Flex>
+
 							<Flex flexDirection="column" gap={1} w="max-content">
-								{txs.map((item: ITransactionResponse) => (
-									// eslint-disable-next-line react/jsx-key
-									<Link
-										fontSize="sm"
-										href={`${explorerURL}/${item?.hash}`}
-										target="_blank"
-										rel="noreferrer"
-										alignItems="center"
-									>
-										{item?.summary}
-										<Icon
-											as={MdOutlineCallMade}
-											w="4"
-											h="4"
-											top="0.15rem"
-											left="0.5rem"
-											position="relative"
-										/>
-									</Link>
-								))}
+								<Flex flexDirection="row" gap="2" alignItems="center">
+									<Flex
+										w="15px"
+										h="15px"
+										className={
+											colorMode === "dark"
+												? "circleLoading"
+												: "circleLoadingLight"
+										}
+									/>
+									{txs.map((item: ITransactionResponse) => (
+										// eslint-disable-next-line react/jsx-key
+										<Link
+											fontSize="sm"
+											href={`${explorerURL}/${item?.hash}`}
+											target="_blank"
+											rel="noreferrer"
+											alignItems="center"
+										>
+											{item?.summary}
+											<Icon
+												as={MdOutlineCallMade}
+												w="4"
+												h="4"
+												top="0.15rem"
+												left="0.5rem"
+												position="relative"
+											/>
+										</Link>
+									))}
+								</Flex>
 							</Flex>
 						</Flex>
 					)}

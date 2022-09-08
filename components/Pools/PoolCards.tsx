@@ -69,7 +69,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					<Text>{poolShare || "-"}</Text>
 				</Flex>
 			</Flex>
-			<Flex gap="2" mt="1.5rem">
+			<Flex gap="2" mt="1.5rem" bgColor="red">
 				<Button
 					w="100%"
 					size="sm"
@@ -79,6 +79,8 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					bgColor="transparent"
 					color={theme.text.whitePurple}
 					fontSize="sm"
+					py={["0.2rem", "0.2rem", "1", "1"]}
+					h="2.2rem"
 					fontWeight="semibold"
 					onClick={onOpenRemoveLiquidity}
 					_hover={{
@@ -95,6 +97,8 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					bgColor={theme.bg.blueNavyLightness}
 					color={theme.text.cyan}
 					fontSize="sm"
+					py={["0.2rem", "0.2rem", "1", "1"]}
+					h="2.2rem"
 					fontWeight="semibold"
 					onClick={() => {
 						setIsCreate(false);

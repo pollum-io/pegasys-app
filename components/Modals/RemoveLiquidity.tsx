@@ -24,6 +24,8 @@ import { UseRemoveLiquidity } from "hooks/pools/useRemoveLiquidity";
 import React, { useState, useEffect } from "react";
 import { MdHelpOutline, MdArrowBack } from "react-icons/md";
 import { WrappedTokenInfo } from "types";
+import { TooltipComponent } from "components/Tooltip/TooltipComponent";
+import { useTranslation } from "react-i18next";
 import { SelectCoinModal } from "./SelectCoin";
 
 interface IModal {
@@ -42,6 +44,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 		selectedToken,
 		setSelectedToken,
 	} = props;
+	const { t: translation } = useTranslation();
 
 	const { userTokensBalance } = useTokens();
 	const {
@@ -55,6 +58,8 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 		setCurrentTxHash,
 		setApprovalState,
 		approvalState,
+		userTransactionDeadlineValue,
+		currentLpAddress,
 	} = useWallet();
 
 	const theme = usePicasso();
@@ -71,7 +76,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	};
 
 	const { onAttemptToApprove, onRemove } = UseRemoveLiquidity(
-		"0xb9a3EDE63BF1d8cC7E75352Fb7C9Db6dcaFbC8F8",
+		currentLpAddress,
 		sliderValue,
 		walletInfos,
 		signer as Signer,
@@ -83,6 +88,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 		setApprovalState,
 		approvalState,
 		setTxSignature,
+		userTransactionDeadlineValue
 	);
 
 	useEffect(() => {
@@ -139,27 +145,10 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 							Remove Liquidity
 						</Text>
 					</Flex>
-					<Tooltip
-						label="When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-						position="relative"
-						bgColor={theme.bg.blueNavy}
-						border="1px solid"
-						borderColor={theme.border.borderSettings}
-						color={theme.text.swapInfo}
-						borderRadius="md"
-						px="4"
-						py="2"
-					>
-						<Text as="span" _hover={{ opacity: 0.8 }}>
-							<Icon
-								as={MdHelpOutline}
-								h="5"
-								w="5"
-								color={theme.icon.whiteGray}
-								borderRadius="full"
-							/>
-						</Text>
-					</Tooltip>
+					<TooltipComponent
+						label={translation("navigationTabs.whenYouAddLiquidityInfo")}
+						icon={MdHelpOutline}
+					/>
 				</ModalHeader>
 				<Flex
 					bgColor={theme.bg.blueNavy}
@@ -220,8 +209,6 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						size="lg"
 						colorScheme="red"
 						onChange={(value: number) => setSliderValue(value)}
-						onMouseEnter={() => setShowTooltip(true)}
-						onMouseLeave={() => setShowTooltip(false)}
 					>
 						<SliderMark value={0} mt="1rem" ml="1.5" fontSize="sm">
 							0%
@@ -241,15 +228,8 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						<SliderTrack>
 							<SliderFilledTrack bg={theme.text.psysBalance} />
 						</SliderTrack>
-						<Tooltip
-							hasArrow
-							bg="teal.500"
-							color="white"
-							placement="top"
-							isOpen={showTooltip}
-						>
-							<SliderThumb />
-						</Tooltip>
+
+						<SliderThumb />
 					</Slider>
 				</Flex>
 
@@ -287,7 +267,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						px="6"
 						onClick={!txSignature ? onAttemptToApprove : onRemove}
 						borderRadius="67px"
-						bgColor={theme.bg.button.connectWalletSwap}
+						bgColor={theme.bg.blueNavyLightness}
 						color={theme.text.cyan}
 						fontSize="lg"
 						fontWeight="semibold"

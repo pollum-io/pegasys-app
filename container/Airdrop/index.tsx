@@ -8,12 +8,13 @@ import {
 	Text,
 	useMediaQuery,
 } from "@chakra-ui/react";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso } from "hooks";
 import { SiDiscord, SiTwitter } from "react-icons/si";
 import { FaTelegramPlane } from "react-icons/fa";
 import { useState } from "react";
 import { MdOutlineCallMade } from "react-icons/md";
 import { BorderAnimation } from "components/Airdrop/BorderAnimation";
+import { useWallet } from "pegasys-services";
 
 export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
@@ -172,7 +173,7 @@ export const AirdropContainer: NextPage = () => {
 													w="3xs"
 													h="max-content"
 													bgColor={theme.bg.blueNavyLightness}
-													color={theme.text.cyanWhite}
+													color={theme.text.cyan}
 													_hover={{ opacity: "1" }}
 													_active={{}}
 													borderRadius="full"
@@ -188,7 +189,7 @@ export const AirdropContainer: NextPage = () => {
 													w="3xs"
 													h="max-content"
 													bgColor={theme.bg.blueNavyLightness}
-													color={theme.text.cyanWhite}
+													color={theme.text.cyan}
 													_hover={{ opacity: "1" }}
 													_active={{}}
 													borderRadius="full"

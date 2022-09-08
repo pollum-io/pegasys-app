@@ -1,3 +1,5 @@
+/* eslint-disable */
+// @ts-nocheck
 import {
 	Button,
 	Flex,
@@ -9,10 +11,15 @@ import {
 	Img,
 	ModalOverlay,
 	Text,
-	Tooltip,
 } from "@chakra-ui/react";
-import { useModal, usePicasso, useTokens } from "hooks";
-import React, { useEffect, useState } from "react";
+import {
+	useModal,
+	usePicasso,
+	useTokens,
+	useWallet,
+	useAllCommonPairs,
+} from "hooks";
+import React, { useEffect, useMemo, useState } from "react";
 import {
 	MdHelpOutline,
 	MdArrowBack,
@@ -21,6 +28,10 @@ import {
 } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { WrappedTokenInfo } from "types";
+import { TooltipComponent } from "components/Tooltip/TooltipComponent";
+import { useTranslation } from "react-i18next";
+import { PoolServices, useWallet as psUseWallet } from "pegasys-services";
+import { addTransaction } from "utils";
 import { SelectCoinModal } from "./SelectCoin";
 
 interface IModal {
@@ -47,7 +58,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	} = props;
 
 	const { userTokensBalance } = useTokens();
-
+	const { t: translation } = useTranslation();
 	const theme = usePicasso();
 	const { isOpenCoin, onCloseCoin, onOpenCoin } = useModal();
 	const [buttonId, setButtonId] = useState<number>(0);
@@ -55,6 +66,32 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		inputFrom: "",
 		inputTo: "",
 	});
+
+	const {
+		userSlippageTolerance,
+		userTransactionDeadlineValue,
+		provider,
+		setTransactions,
+		transactions,
+		setCurrentLpAddress
+	} = useWallet();
+	const { address, chainId } = psUseWallet();
+
+	const walletInfo = useMemo(
+		() => ({
+			walletAddress: address,
+			chainId,
+			provider,
+		}),
+		[chainId, address, provider]
+	);
+
+	// const pairs = usePairs(
+	// 	selectedToken[0] && selectedToken[1]
+	// 		? [[selectedToken[0], selectedToken[1]]]
+	// 		: [],
+	// 	walletInfo
+	// );
 
 	const handleOnChangeTokenInputs = (
 		event: React.ChangeEvent<HTMLInputElement>
@@ -71,6 +108,35 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		}
 	};
 
+	const addLiquidity = async () => {
+		console.log("entrou");
+
+		const pairs = await useAllCommonPairs(
+			selectedToken[0],
+			selectedToken[1] ?? selectedToken[0],
+			walletInfo
+		);
+
+		const pair = pairs[0];
+
+		setCurrentLpAddress(pair.liquidityToken.address);
+
+		console.log("pair: ", pair);
+
+		const response = await PoolServices.addLiquidity({
+			tokens: selectedToken as [WrappedTokenInfo, WrappedTokenInfo],
+			values: [tokenInputValue.inputFrom, tokenInputValue.inputTo],
+			haveValue,
+			slippage: userSlippageTolerance,
+			userDeadline: userTransactionDeadlineValue,
+			pair,
+		});
+
+		console.log("response: ", response);
+
+		addTransaction(response, walletInfo, setTransactions, transactions);
+	};
+
 	useEffect(() => {
 		const defaultTokenValues = userTokensBalance.filter(
 			tokens =>
@@ -81,6 +147,10 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 		setSelectedToken([defaultTokenValues[2], defaultTokenValues[1]]);
 	}, [userTokensBalance]);
+
+	useEffect(() => {
+		console.log("selectedToken", selectedToken);
+	}, [selectedToken]);
 
 	return (
 		<Modal blockScrollOnMount isOpen={isModalOpen} onClose={onModalClose}>
@@ -122,27 +192,10 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							{isCreate ? "Create a pair" : "Add Liquidity"}
 						</Text>
 					</Flex>
-					<Tooltip
-						label="When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-						position="relative"
-						bgColor={theme.bg.blueNavy}
-						border="1px solid"
-						borderColor={theme.border.borderSettings}
-						color={theme.text.swapInfo}
-						borderRadius="md"
-						px="4"
-						py="2"
-					>
-						<Text as="span" _hover={{ opacity: 0.8 }}>
-							<Icon
-								as={MdHelpOutline}
-								h="5"
-								w="5"
-								color={theme.icon.whiteGray}
-								borderRadius="full"
-							/>
-						</Text>
-					</Tooltip>
+					<TooltipComponent
+						label={translation("navigationTabs.whenYouAddLiquidityInfo")}
+						icon={MdHelpOutline}
+					/>
 				</ModalHeader>
 				{isCreate && (
 					<Flex alignItems="center" w="100%" justifyContent="center">
@@ -151,7 +204,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							h={["100%", "max-content", "90%", "100%"]}
 							borderRadius="2xl"
 							bgColor={theme.bg.blueNavyLightnessOp}
-							color={theme.text.cyanWhite}
+							color={theme.text.cyan}
 							p="1.5rem"
 							flexDirection="column"
 							gap={3}
@@ -384,7 +437,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								borderRadius="2xl"
 								bgColor="transparent"
 								borderWidth="1px"
-								borderColor={theme.text.cyan}
+								borderColor={theme.text.cyanPurple}
 								mt="1.5rem"
 							>
 								<Text
@@ -403,8 +456,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									px="1rem"
 									borderRadius="2xl"
 									borderWidth="1px"
-									borderColor={theme.text.cyan}
-									bgColor={theme.bg.blueNavy}
+									borderColor={theme.text.cyanPurple}
+									bgColor={theme.bg.bluePink}
 								>
 									<Flex
 										fontSize="sm"
@@ -447,11 +500,12 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								py={["4", "4", "6", "6"]}
 								px="6"
 								borderRadius="67px"
-								bgColor={theme.bg.button.connectWalletSwap}
-								color={theme.text.cyanWhite}
+								bgColor={theme.bg.blueNavyLightness}
+								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"
 								_hover={{ bgColor: theme.bg.bluePurple }}
+								onClick={addLiquidity}
 							>
 								{isCreate ? "Create a pair" : "Add Liquidity"}
 							</Button>
@@ -462,12 +516,13 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					<Flex
 						flexDirection="column"
 						p="1.5rem"
-						background={theme.bg.blueGray}
+						background={theme.bg.subModal}
 						position={["relative", "relative", "absolute", "absolute"]}
 						bottom={["0", "-280", "-280", "-280"]}
 						w="100%"
-						borderTopRadius={["0", "3xl", "3xl", "3xl"]}
-						borderBottomRadius={["0", "3xl", "3xl", "3xl"]}
+						borderTopRadius={["0", "0", "3xl", "3xl"]}
+						borderBottomRadius={["0", "0", "3xl", "3xl"]}
+						color={theme.text.mono}
 					>
 						<Text fontWeight="bold" fontSize="lg">
 							Your position

@@ -5,7 +5,7 @@ import {
 	FACTORY_ADDRESS,
 	NSYS,
 } from "@pollum-io/pegasys-sdk";
-import { Signer } from "ethers";
+import { BigNumber, Signer } from "ethers";
 import { ROUTER_ADDRESS } from "helpers/consts";
 import { TFunction } from "react-i18next";
 
@@ -37,6 +37,7 @@ export async function UseDerivedSwapInfo(
 	walletInfos: IWalletHookInfos,
 	translation: TFunction<"translation", undefined>,
 	userAllowedSlippage: number,
+	transactionDeadlineValue: BigNumber | number,
 	signer: Signer,
 	recipient?: string
 ): Promise<{
@@ -136,7 +137,8 @@ export async function UseDerivedSwapInfo(
 		walletInfos.walletAddress,
 		signer as Signer,
 		walletInfos,
-		userAllowedSlippage
+		userAllowedSlippage,
+		transactionDeadlineValue
 	);
 
 	return {

@@ -173,13 +173,13 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 				<Button
 					id="unstake"
 					width={["6.5rem", "8rem", "11.5rem", "11.5rem"]}
-					height="2rem"
+					h="2.2rem"
 					bgColor="transparent"
 					border="1px solid"
 					borderColor={theme.text.cyanPurple}
 					color={theme.text.whitePurple}
 					borderRadius="full"
-					py="2"
+					py={["0.2rem", "0.2rem", "1", "1"]}
 					px="0.75rem"
 					fontSize="sm"
 					fontWeight="semibold"
@@ -197,11 +197,11 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 				<Button
 					id="stake"
 					width={["6.5rem", "8rem", "11.5rem", "11.5rem"]}
-					height="2rem"
+					h="2.2rem"
 					bgColor={theme.bg.blueNavyLightness}
 					color={theme.text.cyan}
 					borderRadius="full"
-					py="2"
+					py={["0.2rem", "0.2rem", "1", "1"]}
 					px="0.75rem"
 					fontSize="sm"
 					fontWeight="semibold"

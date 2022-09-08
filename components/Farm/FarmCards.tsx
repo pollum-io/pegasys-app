@@ -67,7 +67,6 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 					justifyContent="center"
 					w="15%"
 					h="3rem"
-					mt="0"
 					backgroundColor={theme.bg.iconTicket}
 					borderBottomRadius="full"
 				>

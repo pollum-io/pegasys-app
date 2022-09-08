@@ -1,14 +1,15 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
-import { ethers, Signer } from "ethers";
+import { BigNumber, ethers, Signer } from "ethers";
 import { convertHexToNumber, isAddress } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { IWalletInfo, ITx } from "types";
-import { useToasty } from "hooks";
+import { useToasty, useWallet, WalletFramework } from "pegasys-services";
 import {
 	INITIAL_ALLOWED_SLIPPAGE,
 	SYS_TESTNET_CHAIN_PARAMS,
 	NEVM_CHAIN_PARAMS,
 	SUPPORTED_NETWORK_CHAINS,
+	DEFAULT_DEADLINE_FROM_NOW,
 } from "../helpers/consts";
 
 export enum ApprovalState {
@@ -29,8 +30,6 @@ export interface ISubmittedAproval {
 }
 
 interface IWeb3 {
-	isConnected: boolean;
-	currentNetworkChainId: number | null;
 	provider:
 		| ethers.providers.Provider
 		| ethers.providers.Web3Provider
@@ -38,8 +37,6 @@ interface IWeb3 {
 		| Signer
 		| undefined;
 	signer: Signer | undefined;
-	setCurrentNetworkChainId: React.Dispatch<React.SetStateAction<number | null>>;
-	walletAddress: string;
 	connectWallet: (connector: AbstractConnector) => Promise<void>;
 	walletError: boolean;
 	setWalletError: React.Dispatch<React.SetStateAction<boolean>>;
@@ -53,6 +50,10 @@ interface IWeb3 {
 	setExpert: React.Dispatch<React.SetStateAction<boolean>>;
 	otherWallet: boolean;
 	setOtherWallet: React.Dispatch<React.SetStateAction<boolean>>;
+	userTransactionDeadlineValue: BigNumber | number;
+	setUserTransactionDeadlineValue: React.Dispatch<
+		React.SetStateAction<BigNumber | number>
+	>;
 	userSlippageTolerance: number;
 	setUserSlippageTolerance: React.Dispatch<React.SetStateAction<number>>;
 	setTransactions: React.Dispatch<React.SetStateAction<ITx>>;
@@ -71,6 +72,11 @@ interface IWeb3 {
 	pendingTxLength: number;
 	showCancelled: boolean;
 	setShowCancelled: React.Dispatch<React.SetStateAction<boolean>>;
+	walletAddress: string;
+	currentNetworkChainId: number;
+	isConnected: boolean;
+	setCurrentLpAddress: React.Dispatch<React.SetStateAction<string>>;
+	currentLpAddress: string;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -81,11 +87,6 @@ declare let window: any;
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
-	const [isConnected, setIsConnected] = useState(false);
-	const [currentNetworkChainId, setCurrentNetworkChainId] = useState<
-		number | null
-	>(null);
-	const [walletAddress, setAddress] = useState("");
 	const [walletError, setWalletError] = useState<boolean>(false);
 	const [signer, setSigner] = useState<Signer>();
 	const [connecting, setConnecting] = useState<boolean>(false);
@@ -95,6 +96,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [connectorSelected, setConnectorSelected] = useState<IWalletInfo>();
 	const [expert, setExpert] = useState<boolean>(false);
 	const [otherWallet, setOtherWallet] = useState<boolean>(false);
+	const [userTransactionDeadlineValue, setUserTransactionDeadlineValue] =
+		useState<BigNumber | number>(DEFAULT_DEADLINE_FROM_NOW);
 	const [showCancelled, setShowCancelled] = useState<boolean>(false);
 	const [isGovernance, setIsGovernance] = useState<boolean>(false);
 	const [userSlippageTolerance, setUserSlippageTolerance] = useState<number>(
@@ -111,12 +114,22 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		5700: {},
 	});
 	const [pendingTxLength, setPendingTxLength] = useState<number>(0);
+	const [currentLpAddress, setCurrentLpAddress] = useState<string>("");
 
 	const [approvalState, setApprovalState] = useState<IApprovalState>({
 		status: ApprovalState.UNKNOWN,
 		type: "",
 	});
 	const { toast } = useToasty();
+	const {
+		isConnected,
+		address,
+		chainId,
+		connect,
+		setChainId,
+		setIsConnected,
+		setAddress,
+	} = useWallet();
 
 	const connectToSysRpcIfNotConnected = () => {
 		const rpcProvider = new ethers.providers.JsonRpcProvider(
@@ -131,7 +144,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		setSigner(rpcSigner);
 	};
 	const rpcUrl =
-		currentNetworkChainId === 5700
+		chainId === 5700
 			? "https://tanenbaum.io/api"
 			: "https://explorer.syscoin.org/api";
 
@@ -149,12 +162,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		setSigner(web3Signer);
 	};
 
-	const defaultActionsWhenConnectWallet = () => {
-		setIsConnected(!!window?.ethereum?.selectedAddress);
-		setAddress(isAddress(window?.ethereum?.selectedAddress));
+	const defaultActionsWhenConnectWallet = async () => {
+		await connect();
 		getSignerIfConnected();
 		setWalletError(false);
-		setCurrentNetworkChainId(Number(window?.ethereum?.networkVersion));
 	};
 
 	const connectWallet = async (connector: AbstractConnector) => {
@@ -191,24 +202,22 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		if (approvalState.status === ApprovalState.PENDING) {
 			const timer = setInterval(async () => {
 				const getTx = await fetch(
-					`${rpcUrl}?module=account&action=pendingtxlist&address=${walletAddress}`
+					`${rpcUrl}?module=account&action=pendingtxlist&address=${address}`
 				).then(result => result.json());
 
 				const hash = `${currentTxHash}`;
 				setPendingTxLength(Number(getTx?.result?.length));
 				provider?.getTransaction(hash).then(result => {
 					if (
-						result.from.toLowerCase() === walletAddress.toLowerCase() &&
+						result.from.toLowerCase() === address.toLowerCase() &&
 						result.confirmations !== 0
 					) {
 						setTransactions({
 							...transactions,
-							[Number(currentNetworkChainId)]: {
-								...transactions[currentNetworkChainId === 57 ? 57 : 5700],
+							[chainId]: {
+								...transactions[chainId === 57 ? 57 : 5700],
 								[hash]: {
-									...transactions[currentNetworkChainId === 57 ? 57 : 5700][
-										hash
-									],
+									...transactions[chainId === 57 ? 57 : 5700][hash],
 									...result,
 									hash,
 								},
@@ -282,7 +291,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		getCurrentConnectorProvider?.on("chainChanged", (chainId: string) => {
 			const convertedChainId = convertHexToNumber(chainId);
-			setCurrentNetworkChainId(convertedChainId);
+			setChainId(convertedChainId);
 			setWalletError(
 				Boolean(SUPPORTED_NETWORK_CHAINS.includes(convertedChainId))
 			);
@@ -317,12 +326,13 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		if (isConnected && verifySysNetwork) {
 			getSignerIfConnected();
 		}
-	}, [currentNetworkChainId]);
+	}, [chainId]);
 
 	const providerValue = useMemo(
 		() => ({
+			walletAddress: address,
+			currentNetworkChainId: chainId,
 			isConnected,
-			walletAddress,
 			provider,
 			signer,
 			connectWallet,
@@ -330,14 +340,14 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setWalletError,
 			setConnectorSelected,
 			connectorSelected,
-			currentNetworkChainId,
-			setCurrentNetworkChainId,
 			connecting,
 			setConnecting,
 			setExpert,
 			expert,
 			otherWallet,
 			setOtherWallet,
+			userTransactionDeadlineValue,
+			setUserTransactionDeadlineValue,
 			userSlippageTolerance,
 			setUserSlippageTolerance,
 			transactions,
@@ -356,16 +366,26 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			pendingTxLength,
 			showCancelled,
 			setShowCancelled,
+			currentLpAddress,
+			setCurrentLpAddress,
 		}),
 		[
-			isConnected,
-			walletAddress,
 			provider,
 			signer,
 			connectWallet,
 			walletError,
 			connectorSelected,
+			expert,
+			otherWallet,
+			userTransactionDeadlineValue,
 			userSlippageTolerance,
+			transactions,
+			approvalState,
+			approvalSubmitted,
+			currentTxHash,
+			isGovernance,
+			pendingTxLength,
+			showCancelled,
 		]
 	);
 

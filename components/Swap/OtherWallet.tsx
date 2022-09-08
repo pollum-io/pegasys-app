@@ -1,4 +1,4 @@
-import { Flex, Input, Text } from "@chakra-ui/react";
+import { Flex, Input, Text, useColorMode } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import React, { FunctionComponent } from "react";
 import { MdOutlineArrowDownward } from "react-icons/md";
@@ -6,14 +6,15 @@ import { BiTrashAlt } from "react-icons/bi";
 
 export const OtherWallet: FunctionComponent = () => {
 	const theme = usePicasso();
+	const { colorMode } = useColorMode();
 
 	return (
 		<Flex flexDirection="column">
-			<Flex justifyContent="center" py="1rem">
-				<MdOutlineArrowDownward size={26} color={theme.text.cyanPurple} />
+			<Flex justifyContent="center" py="0.5rem">
+				<MdOutlineArrowDownward size={22} color={theme.text.cyanPurple} />
 			</Flex>
 			<Flex flexDirection="column">
-				<Text>Send to address</Text>
+				<Text fontWeight="500">Send to address</Text>
 			</Flex>
 			<Flex
 				mt="0.406rem"
@@ -27,8 +28,9 @@ export const OtherWallet: FunctionComponent = () => {
 					mt=""
 					w="full"
 					h="2.875rem"
-					bgColor={theme.bg.blueNavy}
-					border="none"
+					bgColor={theme.bg.blueNavyLight}
+					border="1px solid"
+					borderColor={colorMode === "light" ? "#E8ECF0" : "transparent"}
 					flexDirection="row"
 					borderRadius="0.313rem"
 				>
@@ -36,9 +38,14 @@ export const OtherWallet: FunctionComponent = () => {
 						fontSize="1rem"
 						border="none"
 						placeholder="Wallet Address"
+						_placeholder={{
+							color: theme.border.borderSettings,
+							fontWeight: "normal",
+							opacity: "0.8",
+						}}
 						textAlign="left"
 						type="text"
-						h="2.875rem"
+						h="100%"
 						_focus={{ outline: "none" }}
 					/>
 				</Flex>
@@ -47,10 +54,12 @@ export const OtherWallet: FunctionComponent = () => {
 					_hover={{ cursor: "pointer" }}
 					w="3.75rem"
 					h="2.875rem"
-					bgColor={theme.bg.blueNavy}
+					bgColor={theme.bg.blueNavyLight}
 					flexDirection="row"
 					borderRadius="0.313rem"
 					justifyContent="center"
+					border="1px solid"
+					borderColor={colorMode === "light" ? "#E8ECF0" : "transparent"}
 				>
 					<Flex mt="0.6rem">
 						<BiTrashAlt size={23} color="#9FA6B0" />

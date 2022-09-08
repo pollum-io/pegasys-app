@@ -68,7 +68,7 @@ export const ManageToken: React.FC<IModal> = props => {
 							h="max-content"
 							borderRadius="67px"
 							bgColor={theme.bg.blueNavyLightness}
-							color={theme.text.cyanWhite}
+							color={theme.text.cyan}
 							fontSize="sm"
 							fontWeight="semibold"
 							onClick={onOpenConfirmList}

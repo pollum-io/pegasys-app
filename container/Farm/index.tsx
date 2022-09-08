@@ -125,7 +125,7 @@ export const FarmContainer: NextPage = () => {
 								borderRadius="full"
 								w={["20rem", "28rem", "20rem", "20rem"]}
 								h="2.2rem"
-								py={["0.1rem", "0.1rem", "1", "1"]}
+								py={["0.2rem", "0.2rem", "1", "1"]}
 								pl="10"
 								_focus={{ outline: "none" }}
 								_hover={{}}
@@ -155,7 +155,7 @@ export const FarmContainer: NextPage = () => {
 									fontWeight="semibold"
 									alignItems="center"
 									justifyContent="justify-content"
-									py="1.5"
+									py={["0.2rem", "0.2rem", "1", "1"]}
 									pl="4"
 									pr="4"
 									w="max-content"
