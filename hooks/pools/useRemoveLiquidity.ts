@@ -11,6 +11,7 @@ import { useTransactionDeadline } from "hooks/swap/useTransactionDeadline";
 import { ITx, IWalletHookInfos, WrappedTokenInfo } from "types";
 import {
 	addTransaction,
+	calculateGasMargin,
 	calculateSlippageAmount,
 	createContractUsingAbi,
 	getBalanceOfSingleCall,
@@ -47,23 +48,22 @@ export const UseRemoveLiquidity = (
 	const { t } = useTranslation();
 	const { walletAddress: account, chainId, provider } = walletInfos;
 	const deadline = useTransactionDeadline(transactionDeadlineValue);
-	const [currencyA, currencyB] = [
-		tradeTokens[0]?.symbol === "SYS" ? NSYS : tradeTokens[0],
-		tradeTokens[1]?.symbol === "SYS" ? NSYS : tradeTokens[1],
-	];
+	const [currencyA, currencyB] = [tradeTokens[0], tradeTokens[1]];
 	const chainRouter = ROUTER_ADDRESS[chainId];
 
 	const pairContract =
 		pairAddress &&
 		createContractUsingAbi(pairAddress, IPegasysPairABI?.abi, signer);
 
-	const currencyBIsETH = currencyB === NSYS;
-	const oneCurrencyIsETH = currencyA === NSYS || currencyBIsETH;
+	const currencyBIsETH = currencyB?.symbol === "SYS";
+	const oneCurrencyIsETH = currencyA?.symbol === "SYS" || currencyBIsETH;
 
 	let percentToRemove: Percent = new Percent(sliderValue.toString(), "100");
 
 	async function onAttemptToApprove() {
-		const pair = await useAllCommonPairs(currencyA, currencyB, walletInfos);
+		const pairs = await useAllCommonPairs(currencyA, currencyB, walletInfos);
+
+		const pair = pairs[0];
 
 		const pairBalance = await getBalanceOfSingleCall(
 			pairAddress,
@@ -72,10 +72,9 @@ export const UseRemoveLiquidity = (
 			6
 		);
 
-		const pairBalanceAmount = new TokenAmount(
-			pair[0].liquidityToken,
-			pairBalance
-		);
+		const value = JSBI.BigInt(Math.floor(Number(pairBalance)));
+
+		const pairBalanceAmount = new TokenAmount(pair.liquidityToken, value);
 
 		if (
 			!pairContract ||
@@ -87,9 +86,10 @@ export const UseRemoveLiquidity = (
 		)
 			throw new Error("missing dependencies");
 		const liquidityAmount = new TokenAmount(
-			pair[0]?.liquidityToken,
+			pair?.liquidityToken,
 			percentToRemove.multiply(pairBalanceAmount.raw).quotient
 		);
+
 		if (!liquidityAmount) throw new Error("missing liquidity amount");
 
 		// try to gather a signature for permission
@@ -105,7 +105,7 @@ export const UseRemoveLiquidity = (
 			name: "Pegasys LP Token",
 			version: "1",
 			chainId,
-			verifyingContract: pair[0].liquidityToken.address,
+			verifyingContract: pair.liquidityToken.address,
 		};
 		const Permit = [
 			{ name: "owner", type: "address" },
@@ -153,6 +153,10 @@ export const UseRemoveLiquidity = (
 	}
 
 	async function onRemove() {
+		const pairs = await useAllCommonPairs(currencyA, currencyB, walletInfos);
+
+		const pair = pairs[0];
+
 		const pairBalance = await getBalanceOfSingleCall(
 			pairAddress,
 			account,
@@ -160,13 +164,11 @@ export const UseRemoveLiquidity = (
 			6
 		);
 
-		const pair = await useAllCommonPairs(currencyA, currencyB, walletInfos);
+		const value = JSBI.BigInt(Math.floor(Number(pairBalance)));
 
-		const pairBalanceAmount = new TokenAmount(
-			pair[0].liquidityToken,
-			JSBI.BigInt(pairBalance.toString())
-		);
-		const totalSupply = await getTotalSupply(pair[0].liquidityToken, signer);
+		const pairBalanceAmount = new TokenAmount(pair.liquidityToken, value);
+
+		const totalSupply = await getTotalSupply(pair.liquidityToken, signer);
 
 		const liquidityValueA =
 			pair &&
@@ -177,7 +179,7 @@ export const UseRemoveLiquidity = (
 			JSBI.greaterThanOrEqual(totalSupply.raw, pairBalanceAmount.raw)
 				? new TokenAmount(
 						currencyA,
-						pair[0].getLiquidityValue(
+						pair.getLiquidityValue(
 							currencyA,
 							totalSupply,
 							pairBalanceAmount,
@@ -195,7 +197,7 @@ export const UseRemoveLiquidity = (
 			JSBI.greaterThanOrEqual(totalSupply.raw, pairBalanceAmount.raw)
 				? new TokenAmount(
 						currencyB,
-						pair[0].getLiquidityValue(
+						pair.getLiquidityValue(
 							currencyB,
 							totalSupply,
 							pairBalanceAmount,
@@ -217,6 +219,11 @@ export const UseRemoveLiquidity = (
 				percentToRemove?.multiply(liquidityValueB?.raw).quotient
 			);
 
+		console.log({
+			currencyAmountA: currencyAmountA && currencyAmountA.toSignificant(6),
+			currencyAmountB: currencyAmountB && currencyAmountB.toSignificant(6),
+		});
+
 		if (!chainId || !provider || !account || !deadline)
 			throw new Error("missing dependencies");
 
@@ -233,7 +240,7 @@ export const UseRemoveLiquidity = (
 
 		if (!currencyA || !currencyB) throw new Error("missing tokens");
 		const liquidityAmount = new TokenAmount(
-			pair[0]?.liquidityToken,
+			pair?.liquidityToken,
 			percentToRemove.multiply(pairBalanceAmount?.raw).quotient
 		);
 		if (!liquidityAmount) throw new Error("missing liquidity amount");
@@ -254,7 +261,7 @@ export const UseRemoveLiquidity = (
 					currencyBIsETH ? currencyA?.address : currencyB?.address,
 					liquidityAmount.raw.toString(),
 					amountsMin[currencyBIsETH ? "CURRENCY_A" : "CURRENCY_B"].toString(),
-					amountsMin[currencyBIsETH ? "CURRENCY_A" : "CURRENCY_B"].toString(),
+					amountsMin[currencyBIsETH ? "CURRENCY_B" : "CURRENCY_A"].toString(),
 					account,
 					deadline.toHexString(),
 				];
@@ -285,7 +292,7 @@ export const UseRemoveLiquidity = (
 					currencyBIsETH ? currencyA?.address : currencyB?.address,
 					liquidityAmount.raw.toString(),
 					amountsMin[currencyBIsETH ? "CURRENCY_A" : "CURRENCY_B"].toString(),
-					amountsMin[currencyBIsETH ? "CURRENCY_A" : "CURRENCY_B"].toString(),
+					amountsMin[currencyBIsETH ? "CURRENCY_B" : "CURRENCY_A"].toString(),
 					account,
 					signatureData.deadline,
 					false,
@@ -317,36 +324,56 @@ export const UseRemoveLiquidity = (
 			);
 		}
 
-		const methodName = methodNames[0];
-		const safeGasEstimate = BigNumber.from("988524");
+		const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
+			methodNames.map(methodName =>
+				router?.estimateGas[methodName](...args)
+					.then(calculateGasMargin)
+					.catch(error => {
+						console.log(`estimateGas failed`, methodName, args, error);
+						return undefined;
+					})
+			)
+		);
 
-		setTxSignature(true);
-		await router[methodName](...args, {
-			gasLimit: safeGasEstimate,
-		})
-			.then((response: TransactionResponse) => {
-				addTransaction(response, walletInfos, setTransactions, transactions, {
-					summary:
-						t("removeLiquidity.remove") +
-						" " +
-						currencyAmountA?.toSignificant(3) +
-						" " +
-						currencyA?.symbol +
-						" and " +
-						currencyAmountB?.toSignificant(3) +
-						" " +
-						currencyB?.symbol,
-				});
-				setApprovalState({
-					status: ApprovalState.PENDING,
-					type: "remove-liquidity",
-				});
-				setCurrentTxHash(response?.hash);
+		const indexOfSuccessfulEstimation = safeGasEstimates.findIndex(
+			safeGasEstimate => BigNumber.isBigNumber(safeGasEstimate)
+		);
+
+		// all estimations failed...
+		if (indexOfSuccessfulEstimation === -1) {
+			console.log("This transaction would fail. Please contact support.");
+		} else {
+			const methodName = methodNames[indexOfSuccessfulEstimation];
+			const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation];
+
+			setTxSignature(true);
+			await router[methodName](...args, {
+				gasLimit: safeGasEstimate,
 			})
-			.catch((error: Error) => {
-				// we only care if the error is something _other_ than the user rejected the tx
-				console.log(error);
-			});
+				.then((response: TransactionResponse) => {
+					addTransaction(response, walletInfos, setTransactions, transactions, {
+						summary:
+							t("removeLiquidity.remove") +
+							" " +
+							currencyAmountA?.toSignificant(3) +
+							" " +
+							currencyA?.symbol +
+							" and " +
+							currencyAmountB?.toSignificant(3) +
+							" " +
+							currencyB?.symbol,
+					});
+					setApprovalState({
+						status: ApprovalState.PENDING,
+						type: "remove-liquidity",
+					});
+					setCurrentTxHash(response?.hash);
+				})
+				.catch((error: Error) => {
+					// we only care if the error is something _other_ than the user rejected the tx
+					console.log(error);
+				});
+		}
 	}
 
 	return {

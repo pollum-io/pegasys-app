@@ -30,8 +30,10 @@ export const getBalanceOfSingleCall = async (
 
 		const contractCall = await singleCall(contract, "balanceOf");
 
+		const balance = await contractCall(walletAddress);
+
 		const formattedBalance = String(
-			ethers.utils.formatUnits(contractCall, decimals)
+			ethers.utils.formatUnits(balance, decimals)
 		);
 
 		return formattedBalance;
