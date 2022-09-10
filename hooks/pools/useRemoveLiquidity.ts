@@ -23,6 +23,7 @@ import { useAllCommonPairs } from "hooks/swap/useAllCommonPairs";
 import { Token } from "@pollum-io/pegasys-sdk";
 import { ApprovalState, IApprovalState } from "contexts";
 import { useTranslation } from "react-i18next";
+import { IAmounts } from "components";
 
 export const UseRemoveLiquidity = (
 	pairAddress: string,
@@ -376,8 +377,86 @@ export const UseRemoveLiquidity = (
 		}
 	}
 
+	async function onSlide(
+		setAvailableTokensAmount: React.Dispatch<React.SetStateAction<IAmounts>>
+	) {
+		const pairs = await useAllCommonPairs(currencyA, currencyB, walletInfos);
+
+		const pair = pairs[0];
+
+		const pairBalance = await getBalanceOfSingleCall(
+			pairAddress,
+			account,
+			signer,
+			6
+		);
+
+		const value = JSBI.BigInt(Math.floor(Number(pairBalance)));
+
+		const pairBalanceAmount = new TokenAmount(pair.liquidityToken, value);
+
+		const totalSupply = await getTotalSupply(pair.liquidityToken, signer);
+
+		const liquidityValueA =
+			pair &&
+			totalSupply &&
+			pairBalanceAmount &&
+			currencyA &&
+			currencyA instanceof Token &&
+			JSBI.greaterThanOrEqual(totalSupply.raw, pairBalanceAmount.raw)
+				? new TokenAmount(
+						currencyA,
+						pair.getLiquidityValue(
+							currencyA,
+							totalSupply,
+							pairBalanceAmount,
+							false
+						).raw
+				  )
+				: undefined;
+
+		const liquidityValueB =
+			pair &&
+			totalSupply &&
+			pairBalanceAmount &&
+			currencyB &&
+			currencyB instanceof Token &&
+			JSBI.greaterThanOrEqual(totalSupply.raw, pairBalanceAmount.raw)
+				? new TokenAmount(
+						currencyB,
+						pair.getLiquidityValue(
+							currencyB,
+							totalSupply,
+							pairBalanceAmount,
+							false
+						).raw
+				  )
+				: undefined;
+
+		const currencyAmountA =
+			liquidityValueA &&
+			new TokenAmount(
+				currencyA,
+				percentToRemove?.multiply(liquidityValueA?.raw).quotient
+			);
+		const currencyAmountB =
+			liquidityValueB &&
+			new TokenAmount(
+				currencyB,
+				percentToRemove?.multiply(liquidityValueB?.raw).quotient
+			);
+
+		setAvailableTokensAmount({
+			token0: currencyAmountA?.toSignificant(6),
+			token1: currencyAmountB?.toSignificant(6),
+		});
+
+		return;
+	}
+
 	return {
 		onAttemptToApprove,
 		onRemove,
+		onSlide,
 	};
 };

@@ -35,6 +35,9 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			symbol: "SYS",
 			logoURI:
 				"https://app.pegasys.finance/static/media/syscoin_token_round.f5e7de99.png",
+			extensions: {
+				isNative: true,
+			},
 		} as TokenInfo;
 
 		const allTokens = [...tokens, SYS];

@@ -12,17 +12,23 @@ import {
 	InputLeftElement,
 	useMediaQuery,
 } from "@chakra-ui/react";
+import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
 import {
 	AddLiquidityModal,
 	ImportPoolModal,
 	RemoveLiquidity,
 } from "components";
 import { PoolCards } from "components/Pools/PoolCards";
-import { usePicasso, useModal, useWallet } from "hooks";
+import { usePicasso, useModal, useWallet, useTokens, usePairs } from "hooks";
 import { NextPage } from "next";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
-import { WrappedTokenInfo } from "types";
+import { WrappedTokenInfo, ILiquidityTokens } from "types";
+import {
+	getTokenPairs,
+	toV2LiquidityToken,
+	getBalanceOfSingleCall,
+} from "utils";
 
 export const PoolsContainer: NextPage = () => {
 	const theme = usePicasso();
@@ -39,9 +45,93 @@ export const PoolsContainer: NextPage = () => {
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const [isCreate, setIsCreate] = useState(false);
 	const [haveValue] = useState(false);
-	const { isConnected } = useWallet();
+	const {
+		isConnected,
+		currentNetworkChainId,
+		walletAddress,
+		signer,
+		provider,
+	} = useWallet();
+	const { userTokensBalance } = useTokens();
 	const [userHavePool] = useState(true);
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
+	const [lpPairs, setLpPairs] = useState<Pair[]>([]);
+	const [currPair, setCurrPair] = useState<Pair>();
+	const [sliderValue, setSliderValue] = useState<number>(0);
+	const chainId =
+		currentNetworkChainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
+
+	useMemo(async () => {
+		const allTokens = getTokenPairs(currentNetworkChainId, userTokensBalance);
+
+		const walletInfos = {
+			chainId,
+			provider,
+			walletAddress,
+		};
+
+		const tokensWithLiquidity = allTokens.map(tokens => ({
+			liquidityToken: toV2LiquidityToken(
+				tokens as [WrappedTokenInfo, Token],
+				chainId
+			),
+			tokens,
+		}));
+
+		const liquidityTokens = tokensWithLiquidity.map(
+			token => token.liquidityToken
+		);
+
+		const liquidityTokensDecimals = tokensWithLiquidity.map(
+			token => token.liquidityToken?.decimals
+		);
+
+		const liquidityBalances = await Promise.all(
+			liquidityTokens.map(async (token, index) => {
+				const result = await getBalanceOfSingleCall(
+					token?.address as string,
+					walletAddress,
+					signer,
+					liquidityTokensDecimals[index] as number
+				);
+				return { address: token?.address, balance: result };
+			})
+		);
+
+		const formattedLiquidityBalances: ILiquidityTokens =
+			liquidityBalances.reduce(
+				(acc, curr) => ({ ...acc, [`${curr.address}`]: curr }),
+				{}
+			);
+
+		const LPTokensWithBalance = tokensWithLiquidity.filter(
+			({ liquidityToken }) =>
+				parseFloat(
+					formattedLiquidityBalances[`${liquidityToken?.address}`].balance
+				) > 0
+		);
+
+		// eslint-disable-next-line
+		const v2Tokens = await usePairs(
+			LPTokensWithBalance.map(({ tokens }) => tokens),
+			walletInfos
+		);
+
+		const allV2PairsWithLiquidity = v2Tokens
+			.map(([, pair]) => pair)
+			.filter((v2Pair): v2Pair is Pair => Boolean(v2Pair));
+
+		const allUniqueV2PairsWithLiquidity = allV2PairsWithLiquidity
+			.map(pair => pair)
+			.filter(
+				(item, index) =>
+					allV2PairsWithLiquidity
+						.map(pair => pair.liquidityToken.address)
+						.indexOf(item.liquidityToken.address) === index
+			);
+
+		setLpPairs(allUniqueV2PairsWithLiquidity);
+	}, [userTokensBalance]);
 
 	return (
 		<Flex justifyContent="center" alignItems="center">
@@ -59,6 +149,9 @@ export const PoolsContainer: NextPage = () => {
 				isCreate={isCreate}
 				setSelectedToken={setSelectedToken}
 				selectedToken={selectedToken}
+				currPair={currPair}
+				setSliderValue={setSliderValue}
+				sliderValue={sliderValue}
 			/>
 			<ImportPoolModal
 				isModalOpen={isOpenImportPool}
@@ -340,7 +433,36 @@ export const PoolsContainer: NextPage = () => {
 							mt="10"
 							justifyContent={["center", "center", "unset", "unset"]}
 						>
-							<PoolCards setIsCreate={setIsCreate} />
+							{lpPairs?.length !== 0 ? (
+								lpPairs?.map(pair => (
+									<PoolCards
+										key={pair.liquidityToken.address}
+										setIsCreate={setIsCreate}
+										pair={pair}
+										userTokens={userTokensBalance}
+										setSelectedToken={setSelectedToken}
+										setCurrPair={setCurrPair}
+										setSliderValue={setSliderValue}
+									/>
+								))
+							) : (
+								<Flex
+									w="100%"
+									mt={["3rem", "3rem", "4rem", "4rem"]}
+									flexDirection="column"
+									alignItems="center"
+									justifyContent="center"
+									gap="16"
+								>
+									<Text
+										fontSize={["sm", "sm", "md", "md"]}
+										fontWeight="normal"
+										textAlign="center"
+									>
+										Unavailable liquidity tokens.
+									</Text>
+								</Flex>
+							)}
 						</Flex>
 					)}
 				</Flex>

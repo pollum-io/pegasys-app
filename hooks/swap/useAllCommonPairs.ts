@@ -11,7 +11,7 @@ export async function useAllCommonPairs(
 	walletInfos: IWalletHookInfos
 ): Promise<Pair[]> {
 	const { chainId } = walletInfos;
-	if(!currencyA || !currencyB) return [];
+	if (!currencyA || !currencyB) return [];
 
 	const bases: Token[] = chainId
 		? BASES_TO_CHECK_TRADES_AGAINST[chainId as ChainId]

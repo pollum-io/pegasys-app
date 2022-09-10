@@ -17,7 +17,7 @@ import {
 	SliderFilledTrack,
 	SliderThumb,
 } from "@chakra-ui/react";
-import { ChainId } from "@pollum-io/pegasys-sdk";
+import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
 import { useModal, usePicasso, useTokens, useWallet } from "hooks";
 import { UseRemoveLiquidity } from "hooks/pools/useRemoveLiquidity";
@@ -26,6 +26,7 @@ import { MdHelpOutline, MdArrowBack } from "react-icons/md";
 import { WrappedTokenInfo } from "types";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { useTranslation } from "react-i18next";
+import { unwrappedToken } from "utils";
 import { SelectCoinModal } from "./SelectCoin";
 
 interface IModal {
@@ -33,7 +34,15 @@ interface IModal {
 	onModalClose: () => void;
 	setSelectedToken: React.Dispatch<React.SetStateAction<WrappedTokenInfo[]>>;
 	selectedToken: WrappedTokenInfo[];
+	currPair: Pair | undefined;
 	isCreate?: boolean;
+	setSliderValue: React.Dispatch<React.SetStateAction<number>>;
+	sliderValue: number;
+}
+
+export interface IAmounts {
+	token0: string;
+	token1: string;
 }
 
 export const RemoveLiquidity: React.FC<IModal> = props => {
@@ -43,6 +52,9 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 		isCreate,
 		selectedToken,
 		setSelectedToken,
+		currPair,
+		setSliderValue,
+		sliderValue,
 	} = props;
 	const { t: translation } = useTranslation();
 
@@ -65,9 +77,12 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	const theme = usePicasso();
 	const { isOpenCoin, onCloseCoin } = useModal();
 	const [buttonId] = useState<number>(0);
-	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
 	const [txSignature, setTxSignature] = useState<boolean>(false);
+	const [availableTokensAmount, setAvailableTokensAmount] = useState<IAmounts>({
+		token0: "",
+		token1: "",
+	});
 
 	const walletInfos = {
 		provider,
@@ -75,7 +90,10 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 		chainId: currentNetworkChainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
 	};
 
-	const { onAttemptToApprove, onRemove } = UseRemoveLiquidity(
+	const currencyA = unwrappedToken(currPair?.token0 as Token);
+	const currencyB = unwrappedToken(currPair?.token1 as Token);
+
+	const { onAttemptToApprove, onRemove, onSlide } = UseRemoveLiquidity(
 		currentLpAddress,
 		sliderValue,
 		walletInfos,
@@ -182,18 +200,22 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						<Flex flexDirection="column">
 							<Flex alignItems="center" gap="2" justifyContent="space-between">
 								<Text fontSize="xl" fontWeight="medium">
-									0.000185
+									{availableTokensAmount.token0 && sliderValue !== 0
+										? availableTokensAmount.token0
+										: "0.0000000"}
 								</Text>
 								<Text fontSize="md" fontWeight="normal">
-									USDT
+									{currencyA?.symbol}
 								</Text>
 							</Flex>
 							<Flex alignItems="center" gap="2" justifyContent="space-between">
 								<Text fontSize="xl" fontWeight="medium">
-									0.00127213
+									{availableTokensAmount.token1 && sliderValue !== 0
+										? availableTokensAmount.token1
+										: "0.0000000"}
 								</Text>
 								<Text fontSize="md" fontWeight="normal">
-									SYS
+									{currencyB?.symbol}
 								</Text>
 							</Flex>
 						</Flex>
@@ -202,13 +224,16 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						color={theme.text.transactionsItems}
 						id="slider"
 						mt="9"
-						defaultValue={5}
+						defaultValue={0}
 						min={0}
 						max={100}
 						mb="6"
 						size="lg"
 						colorScheme="red"
-						onChange={(value: number) => setSliderValue(value)}
+						onChange={(value: number) => {
+							setSliderValue(value);
+							onSlide(setAvailableTokensAmount);
+						}}
 					>
 						<SliderMark value={0} mt="1rem" ml="1.5" fontSize="sm">
 							0%
@@ -252,10 +277,14 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						</Text>
 						<Flex flexDirection="column">
 							<Flex flexDirection="row">
-								<Text fontSize="sm">1 USDC = 6.84973 SYS</Text>
+								<Text fontSize="sm">
+									1 {currencyA?.symbol} = 6.84973 {currencyB?.symbol}
+								</Text>
 							</Flex>
 							<Flex flexDirection="row">
-								<Text fontSize="sm">1 SYS = 0.145991 USDC</Text>
+								<Text fontSize="sm">
+									1 {currencyB?.symbol} = 0.145991 {currencyA?.symbol}
+								</Text>
 							</Flex>
 						</Flex>
 					</Flex>
@@ -265,6 +294,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						w="100%"
 						py="6"
 						px="6"
+						disabled={sliderValue === 0}
 						onClick={!txSignature ? onAttemptToApprove : onRemove}
 						borderRadius="67px"
 						bgColor={theme.bg.blueNavyLightness}
@@ -300,7 +330,9 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						<Flex fontSize="lg" fontWeight="bold" align="center">
 							<Img src="icons/syscoin-logo.png" w="6" h="6" />
 							<Img src="icons/pegasys.png" w="6" h="6" />
-							<Text pl="2">USDT/SYS</Text>
+							<Text pl="2">
+								`${currencyA?.symbol}/${currencyB?.symbol}`
+							</Text>
 						</Flex>
 						<Text fontSize="lg" fontWeight="bold">
 							0.0000005
@@ -316,7 +348,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 							justifyContent="space-between"
 							pt="0.75rem"
 						>
-							<Text fontWeight="semibold">SYS</Text>
+							<Text fontWeight="semibold">{currencyA?.symbol}</Text>
 							<Text fontWeight="normal">0.2145005</Text>
 						</Flex>
 						<Flex
@@ -324,7 +356,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 							justifyContent="space-between"
 							pt="0.75rem"
 						>
-							<Text fontWeight="semibold">PSYS</Text>
+							<Text fontWeight="semibold">{currencyB?.symbol}</Text>
 							<Text fontWeight="normal">0.9475005</Text>
 						</Flex>
 					</Flex>

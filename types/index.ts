@@ -6,3 +6,4 @@ export * from "./ISwapCall";
 export * from "./IReturnedTradeValues";
 export * from "./ITransactionResponse";
 export * from "./IMockedDatas";
+export * from "./ILiquidityTokens";
