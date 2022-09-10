@@ -10,7 +10,7 @@ import {
 	// Token,
 	TokenAmount,
 } from "@pollum-io/pegasys-sdk";
-import { abi as IPegasysRouterABI } from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
+import IPegasysRouterABI from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
 
 import { WrappedTokenInfo } from "types";
 import { tryParseAmount, wrappedCurrencyAmount, wrappedCurrency } from "utils";
@@ -218,7 +218,7 @@ class PoolServices {
 
 		const contract = ContractFramework.getContract({
 			address: router,
-			abi: IPegasysRouterABI,
+			abi: IPegasysRouterABI.abi,
 		});
 
 		let args;

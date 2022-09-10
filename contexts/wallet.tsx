@@ -212,17 +212,18 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 						result.from.toLowerCase() === address.toLowerCase() &&
 						result.confirmations !== 0
 					) {
-						setTransactions({
-							...transactions,
-							[chainId]: {
-								...transactions[chainId === 57 ? 57 : 5700],
+						setTransactions(prevTransactions => ({
+							...prevTransactions,
+							[Number(currentNetworkChainId)]: {
+								...transactions[currentNetworkChainId === 57 ? 57 : 5700],
 								[hash]: {
 									...transactions[chainId === 57 ? 57 : 5700][hash],
 									...result,
+									finished: true,
 									hash,
 								},
 							},
-						});
+						}));
 						setPendingTxLength(Number(getTx?.result?.length));
 						setApprovalState({
 							status: ApprovalState.APPROVED,

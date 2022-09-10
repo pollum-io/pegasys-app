@@ -2,7 +2,7 @@ import { Flex, Icon, Img, Link, useColorMode } from "@chakra-ui/react";
 import React from "react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
-import { useModal, usePicasso } from "hooks";
+import { useModal, usePicasso, useWallet } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
 import { useRouter } from "next/router";
@@ -18,6 +18,7 @@ export const Header: React.FC = () => {
 	const { pathname } = useRouter();
 	const { isOpenPsysBreakdown, onOpenPsysBreakdown, onClosePsysBreakdown } =
 		useModal();
+	const { expert } = useWallet();
 
 	const links = [
 		{
@@ -92,7 +93,7 @@ export const Header: React.FC = () => {
 				</NavButton>
 			</Flex>
 			<Flex
-				w={["90%", "32rem", "32rem", "32rem"]}
+				w={["90%", "34rem", "37rem", "37rem"]}
 				h="max-content"
 				backgroundColor={theme.bg.blackAlpha}
 				borderRadius="46px 46px 0px 0px"
@@ -103,8 +104,8 @@ export const Header: React.FC = () => {
 				zIndex="99"
 				alignItems="center"
 				px={["0", "10"]}
-				pl={["1", "6", "6", "10"]}
-				pr={["0", "4", "6", "10"]}
+				pl={expert ? ["8", "6", "6", "10"] : ["1", "6", "6", "10"]}
+				pr={expert ? ["6", "6", "6", "10"] : ["0", "4", "6", "10"]}
 				py="2"
 				justifyContent={["space-around", "space-between"]}
 			>

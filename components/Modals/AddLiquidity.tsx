@@ -148,10 +148,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		setSelectedToken([defaultTokenValues[2], defaultTokenValues[1]]);
 	}, [userTokensBalance]);
 
-	useEffect(() => {
-		console.log("selectedToken", selectedToken);
-	}, [selectedToken]);
-
 	return (
 		<Modal blockScrollOnMount isOpen={isModalOpen} onClose={onModalClose}>
 			<SelectCoinModal
@@ -164,8 +160,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			<ModalOverlay />
 			<ModalContent
 				mb={["0", "0", "20rem", "20rem"]}
-				top={["1rem", "2rem", "0", "0"]}
-				position={["absolute", "absolute", "relative", "relative"]}
+				bottom={["0", "0", "0", "0"]}
+				position={["relative", "relative", "relative", "relative"]}
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
 				h={["max-content", "100%", "max-content", "max-content"]}
 				borderBottomRadius={["0px", "3xl", "3xl", "3xl"]}
