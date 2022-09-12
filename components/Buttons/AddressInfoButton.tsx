@@ -12,7 +12,7 @@ import {
 	Text,
 	useColorMode,
 } from "@chakra-ui/react";
-import { useToasty, useWallet as psUseWallet } from "pegasys-services";
+import { useToasty } from "pegasys-services";
 import { usePicasso, useWallet } from "hooks";
 import { FunctionComponent, useState, useEffect } from "react";
 import Jazzicon from "react-jazzicon";
@@ -38,7 +38,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const {
 		walletAddress: address,
 		transactions,
-		currentNetworkChainI: chainId,
+		currentNetworkChainId: chainId,
 		connectorSelected,
 		approvalState,
 	} = useWallet();
