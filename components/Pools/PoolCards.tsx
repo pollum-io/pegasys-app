@@ -70,6 +70,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		}
 		setIsCreate(false);
 		onOpenAddLiquidity();
+		setCurrPair(pair);
 		setCurrentLpAddress(`${pair?.liquidityToken.address}`);
 		setSelectedToken([wrapTokenA, wrapTokenB]);
 	};

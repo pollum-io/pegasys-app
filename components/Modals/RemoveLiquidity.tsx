@@ -284,12 +284,20 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						<Flex flexDirection="column">
 							<Flex flexDirection="row">
 								<Text fontSize="sm">
-									1 {currencyA?.symbol} = 6.84973 {currencyB?.symbol}
+									{currPair
+										? `1 ${currencyA?.symbol} = ${currPair
+												?.priceOf(currPair?.token0)
+												.toSignificant(6)} ${currencyB?.symbol}`
+										: "-"}
 								</Text>
 							</Flex>
 							<Flex flexDirection="row">
 								<Text fontSize="sm">
-									1 {currencyB?.symbol} = 0.145991 {currencyA?.symbol}
+									{currPair
+										? `1 ${currencyB?.symbol} = ${currPair
+												?.priceOf(currPair?.token1)
+												.toSignificant(6)} ${currencyA?.symbol}`
+										: "-"}
 								</Text>
 							</Flex>
 						</Flex>

@@ -33,6 +33,7 @@ import { useTranslation } from "react-i18next";
 import { PoolServices, useWallet as psUseWallet } from "pegasys-services";
 import { addTransaction } from "utils";
 import { SelectCoinModal } from "./SelectCoin";
+import { Pair } from "@pollum-io/pegasys-sdk";
 
 interface IModal {
 	isModalOpen: boolean;
@@ -44,6 +45,7 @@ interface IModal {
 	depositedTokens: IDeposited | undefined;
 	poolPercentShare: string;
 	userPoolBalance: string;
+	currPair: Pair | undefined;
 }
 interface ITokenInputValue {
 	inputFrom: string;
@@ -61,6 +63,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		depositedTokens,
 		poolPercentShare,
 		userPoolBalance,
+		currPair,
 	} = props;
 
 	const { userTokensBalance } = useTokens();
@@ -467,7 +470,11 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										gap={["2", "0", "0", "0"]}
 										textAlign="center"
 									>
-										<Text fontWeight="semibold">-</Text>
+										<Text fontWeight="semibold">
+											{currPair
+												? currPair?.priceOf(currPair.token0).toSignificant(6)
+												: "-"}
+										</Text>
 										<Text fontWeight="normal">
 											{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}{" "}
 										</Text>
@@ -478,7 +485,11 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										gap={["2", "0", "0", "0"]}
 										textAlign="center"
 									>
-										<Text fontWeight="semibold">-</Text>
+										<Text fontWeight="semibold">
+											{currPair
+												? currPair?.priceOf(currPair.token1).toSignificant(6)
+												: "-"}
+										</Text>
 										<Text fontWeight="normal">
 											{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
 										</Text>

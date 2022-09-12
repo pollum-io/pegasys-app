@@ -148,6 +148,7 @@ export const PoolsContainer: NextPage = () => {
 				depositedTokens={depositedTokens}
 				poolPercentShare={poolPercentShare}
 				userPoolBalance={userPoolBalance}
+				currPair={currPair}
 			/>
 			<RemoveLiquidity
 				isModalOpen={isOpenRemoveLiquidity}
