@@ -65,6 +65,7 @@ export async function useAllCommonPairs(
 					})
 			: [];
 
+	// eslint-disable-next-line
 	const allPairs = await usePairs(allPairCombinations, walletInfos);
 
 	// only pass along valid pairs, non-duplicated pairs

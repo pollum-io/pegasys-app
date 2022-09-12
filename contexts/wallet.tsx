@@ -214,8 +214,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 					) {
 						setTransactions(prevTransactions => ({
 							...prevTransactions,
-							[Number(currentNetworkChainId)]: {
-								...transactions[currentNetworkChainId === 57 ? 57 : 5700],
+							[Number(chainId)]: {
+								...transactions[chainId === 57 ? 57 : 5700],
 								[hash]: {
 									...transactions[chainId === 57 ? 57 : 5700][hash],
 									...result,

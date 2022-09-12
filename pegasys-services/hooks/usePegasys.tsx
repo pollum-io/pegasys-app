@@ -1,10 +1,10 @@
 import { useContext } from "react";
 
 import { PegasysContext } from "../contexts";
-import { IPegasysProviderValue } from "../dto";
+// import { IPegasysProviderValue } from "../dto";
 
-const usePegasys = (): IPegasysProviderValue => {
-	const context = useContext<IPegasysProviderValue>(PegasysContext);
+const usePegasys = (): any => {
+	const context = useContext<any>(PegasysContext);
 	return context;
 };
 

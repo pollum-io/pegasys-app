@@ -2,9 +2,9 @@ import React, { createContext, useMemo } from "react";
 
 import { WalletProvider } from "./wallet";
 import { ToastyProvider } from "./toasty";
-import { IPegasysProviderProps, IPegasysProviderValue, children } from "../dto";
+import { IPegasysProviderProps, children } from "../dto";
 
-export const PegasysContext = createContext({} as IPegasysProviderValue);
+export const PegasysContext = createContext({});
 
 const Provider: React.FC<{ children: children }> = ({ children }) => {
 	const providerValue = useMemo(() => ({}), []);
