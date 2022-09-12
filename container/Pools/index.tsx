@@ -78,7 +78,7 @@ export const PoolsContainer: NextPage = () => {
 				tokens as [WrappedTokenInfo, Token],
 				chainId
 			),
-			tokens,
+			tokens: tokens as [WrappedTokenInfo, Token],
 		}));
 
 		const liquidityTokens = tokensWithLiquidity.map(
@@ -97,21 +97,18 @@ export const PoolsContainer: NextPage = () => {
 					signer,
 					liquidityTokensDecimals[index] as number
 				);
-				return { address: token?.address, balance: result };
+				return { address: token?.address, balance: +result };
 			})
 		);
 
-		const formattedLiquidityBalances: ILiquidityTokens =
-			liquidityBalances.reduce(
-				(acc, curr) => ({ ...acc, [`${curr.address}`]: curr }),
-				{}
-			);
+		const formattedLiquidityBalances: ILiquidityTokens = liquidityBalances
+			.sort((a, b) => b.balance - a.balance)
+			.reduce((acc, curr) => ({ ...acc, [`${curr.address}`]: curr }), {});
 
-		const LPTokensWithBalance = tokensWithLiquidity.filter(
-			({ liquidityToken }) =>
-				parseFloat(
-					formattedLiquidityBalances[`${liquidityToken?.address}`].balance
-				) > 0
+		const LPTokensWithBalance = tokensWithLiquidity.sort(
+			(a, b) =>
+				formattedLiquidityBalances[`${b?.liquidityToken?.address}`].balance -
+				formattedLiquidityBalances[`${a?.liquidityToken?.address}`].balance
 		);
 
 		// eslint-disable-next-line
@@ -134,6 +131,7 @@ export const PoolsContainer: NextPage = () => {
 			);
 
 		setLpPairs(allUniqueV2PairsWithLiquidity);
+		console.log("LPTokensWithBalance", LPTokensWithBalance);
 	}, [userTokensBalance]);
 
 	return (
@@ -455,9 +453,7 @@ export const PoolsContainer: NextPage = () => {
 										setSliderValue={setSliderValue}
 										setDepositedTokens={setDepositedTokens}
 										setPoolPercentShare={setPoolPercentShare}
-										poolPercentShare={poolPercentShare}
 										setUserPoolBalance={setUserPoolBalance}
-										userPoolBalance={userPoolBalance}
 									/>
 								))
 							) : (

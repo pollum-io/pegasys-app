@@ -25,9 +25,7 @@ interface IPoolCards {
 		React.SetStateAction<IDeposited | undefined>
 	>;
 	setPoolPercentShare: React.Dispatch<React.SetStateAction<string>>;
-	poolPercentShare: string;
 	setUserPoolBalance: React.Dispatch<React.SetStateAction<string>>;
-	userPoolBalance: string;
 }
 
 export const PoolCards: FunctionComponent<IPoolCards> = props => {
@@ -41,14 +39,15 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		setCurrPair,
 		setSliderValue,
 		setDepositedTokens,
-		poolPercentShare,
 		setPoolPercentShare,
-		userPoolBalance,
 		setUserPoolBalance,
 	} = props;
 	const theme = usePicasso();
 	const { onOpenRemoveLiquidity, onOpenAddLiquidity } = useModal();
 	const { setCurrentLpAddress, signer, walletAddress } = useWallet();
+	const [poolBalance, setPoolBalance] = useState<string>("");
+	const [percentShare, setPercentShare] = useState<string>("");
+	const [trigger, setTrigger] = useState<boolean>(false);
 
 	const currencyA = unwrappedToken(pair?.token0 as Token);
 	const currencyB = unwrappedToken(pair?.token1 as Token);
@@ -64,6 +63,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		if (isRemove) {
 			onOpenRemoveLiquidity();
 			setCurrentLpAddress(`${pair?.liquidityToken.address}`);
+			setTrigger(!trigger);
 			setCurrPair(pair);
 			setSliderValue(0);
 			return;
@@ -71,6 +71,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		setIsCreate(false);
 		onOpenAddLiquidity();
 		setCurrPair(pair);
+		setTrigger(!trigger);
 		setCurrentLpAddress(`${pair?.liquidityToken.address}`);
 		setSelectedToken([wrapTokenA, wrapTokenB]);
 	};
@@ -130,8 +131,12 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			(Number(poolTokenPercentage?.toSignificant(6)) * 10 ** 6).toFixed(2)
 		);
 		setDepositedTokens({ token0: token0Deposited, token1: token1Deposited });
+		setPercentShare(
+			(Number(poolTokenPercentage?.toSignificant(6)) * 10 ** 6).toFixed(2)
+		);
+		setPoolBalance(amount);
 		setUserPoolBalance(amount);
-	}, [pair]);
+	}, [pair, trigger]);
 
 	return (
 		<Flex
@@ -156,7 +161,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					<Text fontWeight="semibold" color={theme.text.mono}>
 						Liquidity
 					</Text>
-					<Text>{userPoolBalance || "-"}</Text>
+					<Text>{poolBalance || "-"}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold" color={theme.text.mono}>
@@ -174,11 +179,12 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					<Text fontWeight="semibold" color={theme.text.mono}>
 						Your pool share
 					</Text>
-					<Text>{poolPercentShare ? `${poolPercentShare}%` : "-"}</Text>
+					<Text>{percentShare ? `${percentShare}%` : "-"}</Text>
 				</Flex>
 			</Flex>
 			<Flex gap="2" mt="1.5rem">
 				<Button
+					display={+poolBalance === 0 ? "none" : ""}
 					w="100%"
 					size="sm"
 					border="1px solid"
