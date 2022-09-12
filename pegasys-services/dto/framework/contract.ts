@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { BigNumber } from "@ethersproject/bignumber";
 import { ethers } from "ethers";
 import { TProvider, TSigner } from "./wallet";
 
@@ -13,7 +14,7 @@ export interface IContractFrameworkGetContractProps {
 }
 
 export interface IContractFrameworkEstimateGasProps {
-	value?: number;
+	value?: BigNumber;
 	args?: any[];
 	contract: TContract;
 	methodName: string;

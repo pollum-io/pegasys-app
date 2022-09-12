@@ -1,10 +1,9 @@
 import { useContext } from "react";
 
 import { WalletContext } from "../contexts";
-import { IWalletProviderValue } from "../dto";
 
-const useWallet = (): IWalletProviderValue => {
-	const context = useContext<IWalletProviderValue>(WalletContext);
+const useWallet = () => {
+	const context = useContext(WalletContext);
 	return context;
 };
 

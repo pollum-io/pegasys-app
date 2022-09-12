@@ -31,6 +31,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 		stakeDepositFee,
 		stakeYourStaked,
 		stakeYourUnclaimed,
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		stakeTokens,
 	} = props;
 	const theme = usePicasso();

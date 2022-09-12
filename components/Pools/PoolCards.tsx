@@ -26,6 +26,7 @@ import {
 import { Signer } from "ethers";
 import { formattedNum, formattedPercent } from "utils/numberFormat";
 import { pegasysClient, SYS_PRICE } from "apollo";
+import { useWallet as psUseWallet } from "pegasys-services";
 
 interface IPoolCards {
 	setIsCreate: React.Dispatch<SetStateAction<boolean>>;
@@ -71,11 +72,12 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	} = props;
 	const theme = usePicasso();
 	const { onOpenRemoveLiquidity, onOpenAddLiquidity } = useModal();
-	const { setCurrentLpAddress, signer, walletAddress, provider } = useWallet();
+	const { setCurrentLpAddress, signer, provider } = useWallet();
 	const [poolBalance, setPoolBalance] = useState<string>("");
 	const [percentShare, setPercentShare] = useState<number>(0);
 	const [sysPrice, setSysPrice] = useState<number>(0);
 	const [trigger, setTrigger] = useState<boolean>(false);
+	const { address } = psUseWallet();
 
 	const currencyA = unwrappedToken(pair?.token0 as Token);
 	const currencyB = unwrappedToken(pair?.token1 as Token);
@@ -108,7 +110,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	useMemo(async () => {
 		const pairBalance = await getBalanceOfBNSingleCall(
 			pair?.liquidityToken.address as string,
-			walletAddress,
+			address,
 			signer
 		);
 

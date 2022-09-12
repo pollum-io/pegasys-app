@@ -41,6 +41,7 @@ export const StakeActions: React.FC<IModal> = props => {
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const value = event?.target?.value;
 

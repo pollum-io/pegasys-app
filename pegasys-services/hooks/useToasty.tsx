@@ -1,10 +1,9 @@
 import { useContext } from "react";
 
 import { ToastyContext } from "../contexts";
-import { IToastyProviderValue } from "../dto";
 
-const useToasty = (): IToastyProviderValue => {
-	const context = useContext<IToastyProviderValue>(ToastyContext);
+const useToasty = () => {
+	const context = useContext(ToastyContext);
 	return context;
 };
 

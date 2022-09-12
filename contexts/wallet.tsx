@@ -72,9 +72,6 @@ interface IWeb3 {
 	pendingTxLength: number;
 	showCancelled: boolean;
 	setShowCancelled: React.Dispatch<React.SetStateAction<boolean>>;
-	walletAddress: string;
-	currentNetworkChainId: number;
-	isConnected: boolean;
 	setCurrentLpAddress: React.Dispatch<React.SetStateAction<string>>;
 	currentLpAddress: string;
 	currentSummary: string;
@@ -397,9 +394,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const providerValue = useMemo(
 		() => ({
-			walletAddress: address,
-			currentNetworkChainId: chainId,
-			isConnected,
 			provider,
 			signer,
 			connectWallet,

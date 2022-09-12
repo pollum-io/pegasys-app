@@ -19,6 +19,7 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 		title = "Should the Pegasys community participate in the Protocol Guild Pilot?",
 		status = "executed",
 		date = "Ago 16, 2022 at 9:08 AM GMT-3",
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		description,
 		proposer = "0x6856...BF99",
 		against = "390",

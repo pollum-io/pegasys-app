@@ -35,6 +35,7 @@ import {
 	IPoolsLiquidity,
 	IPoolsVolume,
 } from "types";
+import { useWallet as psUseWallet } from "pegasys-services";
 import {
 	getTokenPairs,
 	toV2LiquidityToken,
@@ -62,8 +63,12 @@ export const PoolsContainer: NextPage = () => {
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const [isCreate, setIsCreate] = useState(false);
 	const [haveValue] = useState(false);
-	const { isConnected, currentNetworkChainId, walletAddress, provider } =
-		useWallet();
+	const { provider } = useWallet();
+	const {
+		isConnected,
+		address,
+		chainId: currentNetworkChainId,
+	} = psUseWallet();
 	const { userTokensBalance } = useTokens();
 	const [userHavePool] = useState(true);
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
@@ -101,7 +106,7 @@ export const PoolsContainer: NextPage = () => {
 		const walletInfos = {
 			chainId,
 			provider,
-			walletAddress,
+			walletAddress: address,
 		};
 
 		const [{ number: oneDay }, { number: twoDays }] =
@@ -142,7 +147,6 @@ export const PoolsContainer: NextPage = () => {
 			}),
 			{}
 		);
-
 		const twoDaysPairInfos = await Promise.all(
 			pairAddresses.map(async (token: { id: string }) => {
 				const volume = await pegasysClient.query({

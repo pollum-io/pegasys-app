@@ -11,6 +11,7 @@ interface ILinkProps extends LinkProps {
 export const InfoLinks: FunctionComponent<ILinkProps> = props => {
 	const theme = usePicasso();
 	const { push } = useRouter();
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const { children, pb, href, isVote } = props;
 
 	return (
