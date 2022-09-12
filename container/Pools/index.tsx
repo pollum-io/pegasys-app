@@ -23,7 +23,7 @@ import { usePicasso, useModal, useWallet, useTokens, usePairs } from "hooks";
 import { NextPage } from "next";
 import { useMemo, useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
-import { WrappedTokenInfo, ILiquidityTokens } from "types";
+import { WrappedTokenInfo, ILiquidityTokens, IDeposited } from "types";
 import {
 	getTokenPairs,
 	toV2LiquidityToken,
@@ -58,6 +58,9 @@ export const PoolsContainer: NextPage = () => {
 	const [lpPairs, setLpPairs] = useState<Pair[]>([]);
 	const [currPair, setCurrPair] = useState<Pair>();
 	const [sliderValue, setSliderValue] = useState<number>(0);
+	const [depositedTokens, setDepositedTokens] = useState<IDeposited>();
+	const [poolPercentShare, setPoolPercentShare] = useState<string>("");
+	const [userPoolBalance, setUserPoolBalance] = useState<string>("");
 	const chainId =
 		currentNetworkChainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
 
@@ -142,6 +145,9 @@ export const PoolsContainer: NextPage = () => {
 				haveValue={haveValue}
 				setSelectedToken={setSelectedToken}
 				selectedToken={selectedToken}
+				depositedTokens={depositedTokens}
+				poolPercentShare={poolPercentShare}
+				userPoolBalance={userPoolBalance}
 			/>
 			<RemoveLiquidity
 				isModalOpen={isOpenRemoveLiquidity}
@@ -152,6 +158,9 @@ export const PoolsContainer: NextPage = () => {
 				currPair={currPair}
 				setSliderValue={setSliderValue}
 				sliderValue={sliderValue}
+				depositedTokens={depositedTokens}
+				poolPercentShare={poolPercentShare}
+				userPoolBalance={userPoolBalance}
 			/>
 			<ImportPoolModal
 				isModalOpen={isOpenImportPool}
@@ -443,6 +452,11 @@ export const PoolsContainer: NextPage = () => {
 										setSelectedToken={setSelectedToken}
 										setCurrPair={setCurrPair}
 										setSliderValue={setSliderValue}
+										setDepositedTokens={setDepositedTokens}
+										setPoolPercentShare={setPoolPercentShare}
+										poolPercentShare={poolPercentShare}
+										setUserPoolBalance={setUserPoolBalance}
+										userPoolBalance={userPoolBalance}
 									/>
 								))
 							) : (

@@ -9,7 +9,7 @@ import {
 	Token,
 	TokenAmount,
 } from "@pollum-io/pegasys-sdk";
-import { WrappedTokenInfo } from "types";
+import { WrappedTokenInfo, IDeposited } from "types";
 import { Signer } from "ethers";
 
 interface IPoolCards {
@@ -20,12 +20,14 @@ interface IPoolCards {
 	userTokens?: WrappedTokenInfo[];
 	setSelectedToken: React.Dispatch<React.SetStateAction<WrappedTokenInfo[]>>;
 	setCurrPair: React.Dispatch<React.SetStateAction<Pair | undefined>>;
-	setSliderValue: React.Dispatch<SetStateAction<number>>;
-}
-
-interface IDeposited {
-	token0: TokenAmount | undefined;
-	token1: TokenAmount | undefined;
+	setSliderValue: React.Dispatch<React.SetStateAction<number>>;
+	setDepositedTokens: React.Dispatch<
+		React.SetStateAction<IDeposited | undefined>
+	>;
+	setPoolPercentShare: React.Dispatch<React.SetStateAction<string>>;
+	poolPercentShare: string;
+	setUserPoolBalance: React.Dispatch<React.SetStateAction<string>>;
+	userPoolBalance: string;
 }
 
 export const PoolCards: FunctionComponent<IPoolCards> = props => {
@@ -38,13 +40,15 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		setSelectedToken,
 		setCurrPair,
 		setSliderValue,
+		setDepositedTokens,
+		poolPercentShare,
+		setPoolPercentShare,
+		userPoolBalance,
+		setUserPoolBalance,
 	} = props;
 	const theme = usePicasso();
 	const { onOpenRemoveLiquidity, onOpenAddLiquidity } = useModal();
 	const { setCurrentLpAddress, signer, walletAddress } = useWallet();
-	const [poolPercentShare, setPoolPercentShare] = useState<string>("");
-	const [depositedTokens, setDepositedTokens] = useState<IDeposited>();
-	const [userPoolBalance, setUserPoolBalance] = useState<string>("");
 
 	const currencyA = unwrappedToken(pair?.token0 as Token);
 	const currencyB = unwrappedToken(pair?.token1 as Token);
@@ -118,10 +122,8 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 						),
 				  ]
 				: [undefined, undefined];
-		const amount =
-			`${+pairBalanceAmount.toSignificant(6) * 10 ** 6}`.length >= 9
-				? `${+pairBalanceAmount.toSignificant(6) * 10 ** 6}`
-				: `${(+pairBalanceAmount.toSignificant(6) * 10 ** 6).toFixed(2)}`;
+
+		const amount = `${+pairBalanceAmount.toSignificant(4) * 10 ** 6}`;
 
 		setPoolPercentShare(
 			(Number(poolTokenPercentage?.toSignificant(6)) * 10 ** 6).toFixed(2)

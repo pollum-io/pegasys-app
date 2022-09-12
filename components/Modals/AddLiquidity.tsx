@@ -27,7 +27,7 @@ import {
 	MdOutlineInfo,
 } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
-import { WrappedTokenInfo } from "types";
+import { IDeposited, WrappedTokenInfo } from "types";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { useTranslation } from "react-i18next";
 import { PoolServices, useWallet as psUseWallet } from "pegasys-services";
@@ -41,6 +41,9 @@ interface IModal {
 	haveValue?: boolean;
 	setSelectedToken: React.Dispatch<React.SetStateAction<WrappedTokenInfo[]>>;
 	selectedToken: WrappedTokenInfo[];
+	depositedTokens: IDeposited | undefined;
+	poolPercentShare: string;
+	userPoolBalance: string;
 }
 interface ITokenInputValue {
 	inputFrom: string;
@@ -55,6 +58,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		haveValue,
 		selectedToken,
 		setSelectedToken,
+		depositedTokens,
+		poolPercentShare,
+		userPoolBalance,
 	} = props;
 
 	const { userTokensBalance } = useTokens();
@@ -73,7 +79,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		provider,
 		setTransactions,
 		transactions,
-		setCurrentLpAddress
+		setCurrentLpAddress,
 	} = useWallet();
 	const { address, chainId } = psUseWallet();
 
@@ -536,13 +542,15 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								</Text>
 							</Flex>
 							<Text fontSize="lg" fontWeight="bold">
-								-
+								{userPoolBalance ? userPoolBalance : "-"}
 							</Text>
 						</Flex>
 						<Flex flexDirection="column">
 							<Flex flexDirection="row" justifyContent="space-between">
 								<Text fontWeight="semibold">Your pool share:</Text>
-								<Text fontWeight="normal">-%</Text>
+								<Text fontWeight="normal">
+									{poolPercentShare ? `${poolPercentShare}%` : "-%"}
+								</Text>
 							</Flex>
 							<Flex
 								flexDirection="row"
@@ -550,7 +558,11 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								pt="0.75rem"
 							>
 								<Text fontWeight="semibold">{selectedToken[0]?.symbol}</Text>
-								<Text fontWeight="normal">-</Text>
+								<Text fontWeight="normal">
+									{depositedTokens
+										? depositedTokens.token0?.toSignificant(6)
+										: "-"}
+								</Text>
 							</Flex>
 							<Flex
 								flexDirection="row"
@@ -558,7 +570,11 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								pt="0.75rem"
 							>
 								<Text fontWeight="semibold">{selectedToken[1]?.symbol}</Text>
-								<Text fontWeight="normal">-</Text>
+								<Text fontWeight="normal">
+									{depositedTokens
+										? depositedTokens.token1?.toSignificant(6)
+										: "-"}
+								</Text>
 							</Flex>
 						</Flex>
 					</Flex>

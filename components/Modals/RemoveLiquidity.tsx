@@ -23,7 +23,7 @@ import { useModal, usePicasso, useTokens, useWallet } from "hooks";
 import { UseRemoveLiquidity } from "hooks/pools/useRemoveLiquidity";
 import React, { useState, useEffect } from "react";
 import { MdHelpOutline, MdArrowBack } from "react-icons/md";
-import { WrappedTokenInfo } from "types";
+import { IDeposited, WrappedTokenInfo } from "types";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { useTranslation } from "react-i18next";
 import { unwrappedToken } from "utils";
@@ -38,6 +38,9 @@ interface IModal {
 	isCreate?: boolean;
 	setSliderValue: React.Dispatch<React.SetStateAction<number>>;
 	sliderValue: number;
+	depositedTokens: IDeposited | undefined;
+	poolPercentShare: string;
+	userPoolBalance: string;
 }
 
 export interface IAmounts {
@@ -55,6 +58,9 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 		currPair,
 		setSliderValue,
 		sliderValue,
+		depositedTokens,
+		poolPercentShare,
+		userPoolBalance,
 	} = props;
 	const { t: translation } = useTranslation();
 
@@ -330,18 +336,18 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						<Flex fontSize="lg" fontWeight="bold" align="center">
 							<Img src="icons/syscoin-logo.png" w="6" h="6" />
 							<Img src="icons/pegasys.png" w="6" h="6" />
-							<Text pl="2">
-								`${currencyA?.symbol}/${currencyB?.symbol}`
-							</Text>
+							<Text pl="2">{`${currencyA?.symbol}/${currencyB?.symbol}`}</Text>
 						</Flex>
 						<Text fontSize="lg" fontWeight="bold">
-							0.0000005
+							{userPoolBalance || "-"}
 						</Text>
 					</Flex>
 					<Flex flexDirection="column">
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text fontWeight="semibold">Your pool share:</Text>
-							<Text fontWeight="normal">33.480024%</Text>
+							<Text fontWeight="normal">
+								{poolPercentShare ? `${poolPercentShare}%` : "-%"}
+							</Text>
 						</Flex>
 						<Flex
 							flexDirection="row"
@@ -349,7 +355,11 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 							pt="0.75rem"
 						>
 							<Text fontWeight="semibold">{currencyA?.symbol}</Text>
-							<Text fontWeight="normal">0.2145005</Text>
+							<Text fontWeight="normal">
+								{depositedTokens
+									? depositedTokens.token0?.toSignificant(6)
+									: "-"}
+							</Text>
 						</Flex>
 						<Flex
 							flexDirection="row"
@@ -357,7 +367,12 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 							pt="0.75rem"
 						>
 							<Text fontWeight="semibold">{currencyB?.symbol}</Text>
-							<Text fontWeight="normal">0.9475005</Text>
+							<Text fontWeight="normal">
+								{" "}
+								{depositedTokens
+									? depositedTokens.token1?.toSignificant(6)
+									: "-"}
+							</Text>
 						</Flex>
 					</Flex>
 				</Flex>
