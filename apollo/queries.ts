@@ -16,3 +16,70 @@ export const GET_TOKENS_GRAPH_CANDLE = gql`
 		}
 	}
 `;
+
+const PairFields = `
+  fragment PairFields on Pair {
+    id
+    txCount
+    token0 {
+      id
+      symbol
+      name
+      totalLiquidity
+      derivedSYS
+    }
+    token1 {
+      id
+      symbol
+      name
+      totalLiquidity
+      derivedSYS
+    }
+    reserve0
+    reserve1
+    reserveUSD
+    totalSupply
+    trackedReserveSYS
+    reserveSYS
+    volumeUSD
+    untrackedVolumeUSD
+    token0Price
+    token1Price
+    createdAtTimestamp
+  }
+`;
+export const PAIR_DATA = (pairAddress: string) => {
+	const queryString = `
+    ${PairFields}
+    query pairs {
+      pairs( where: { id: "${pairAddress}"} ) {
+        ...PairFields
+      }
+    }`;
+	return gql(queryString);
+};
+
+export const USER_POSITIONS = gql`
+	query liquidityPositions($user: Bytes!) {
+		liquidityPositions(where: { user: $user }) {
+			pair {
+				id
+				reserve0
+				reserve1
+				reserveUSD
+				token0 {
+					id
+					symbol
+					derivedSYS
+				}
+				token1 {
+					id
+					symbol
+					derivedSYS
+				}
+				totalSupply
+			}
+			liquidityTokenBalance
+		}
+	}
+`;

@@ -126,6 +126,10 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 		setSelectedToken([defaultTokenValues[2], defaultTokenValues[1]]);
 	}, [userTokensBalance]);
 
+	useEffect(() => {
+		setTxSignature(false);
+	}, [isModalOpen]);
+
 	return (
 		<Modal
 			blockScrollOnMount={false}

@@ -129,9 +129,7 @@ export const PoolsContainer: NextPage = () => {
 						.map(pair => pair.liquidityToken.address)
 						.indexOf(item.liquidityToken.address) === index
 			);
-
 		setLpPairs(allUniqueV2PairsWithLiquidity);
-		console.log("LPTokensWithBalance", LPTokensWithBalance);
 	}, [userTokensBalance]);
 
 	return (

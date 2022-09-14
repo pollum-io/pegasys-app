@@ -14,7 +14,7 @@ import {
 	calculateGasMargin,
 	calculateSlippageAmount,
 	createContractUsingAbi,
-	getBalanceOfSingleCall,
+	getBalanceOfBNSingleCall,
 	getContract,
 	getTotalSupply,
 } from "utils";
@@ -66,14 +66,13 @@ export const UseRemoveLiquidity = (
 
 		const pair = pairs[0];
 
-		const pairBalance = await getBalanceOfSingleCall(
+		const pairBalance = await getBalanceOfBNSingleCall(
 			pairAddress,
 			account,
-			signer,
-			6
+			signer
 		);
 
-		const value = JSBI.BigInt(Math.floor(Number(pairBalance)));
+		const value = JSBI.BigInt(pairBalance?.toString());
 
 		const pairBalanceAmount = new TokenAmount(pair.liquidityToken, value);
 
@@ -158,14 +157,13 @@ export const UseRemoveLiquidity = (
 
 		const pair = pairs[0];
 
-		const pairBalance = await getBalanceOfSingleCall(
+		const pairBalance = await getBalanceOfBNSingleCall(
 			pairAddress,
 			account,
-			signer,
-			6
+			signer
 		);
 
-		const value = JSBI.BigInt(Math.floor(Number(pairBalance)));
+		const value = JSBI.BigInt(pairBalance?.toString());
 
 		const pairBalanceAmount = new TokenAmount(pair.liquidityToken, value);
 
@@ -220,10 +218,6 @@ export const UseRemoveLiquidity = (
 				percentToRemove?.multiply(liquidityValueB?.raw).quotient
 			);
 
-		console.log({
-			currencyAmountA: currencyAmountA && currencyAmountA.toSignificant(6),
-			currencyAmountB: currencyAmountB && currencyAmountB.toSignificant(6),
-		});
 
 		if (!chainId || !provider || !account || !deadline)
 			throw new Error("missing dependencies");
@@ -347,7 +341,6 @@ export const UseRemoveLiquidity = (
 			const methodName = methodNames[indexOfSuccessfulEstimation];
 			const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation];
 
-			setTxSignature(true);
 			await router[methodName](...args, {
 				gasLimit: safeGasEstimate,
 			})
@@ -369,6 +362,7 @@ export const UseRemoveLiquidity = (
 						type: "remove-liquidity",
 					});
 					setCurrentTxHash(response?.hash);
+					setTxSignature(false);
 				})
 				.catch((error: Error) => {
 					// we only care if the error is something _other_ than the user rejected the tx
@@ -384,14 +378,13 @@ export const UseRemoveLiquidity = (
 
 		const pair = pairs[0];
 
-		const pairBalance = await getBalanceOfSingleCall(
+		const pairBalance = await getBalanceOfBNSingleCall(
 			pairAddress,
 			account,
-			signer,
-			6
+			signer
 		);
 
-		const value = JSBI.BigInt(Math.floor(Number(pairBalance)));
+		const value = JSBI.BigInt(+pairBalance);
 
 		const pairBalanceAmount = new TokenAmount(pair.liquidityToken, value);
 

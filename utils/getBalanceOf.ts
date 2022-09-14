@@ -42,6 +42,33 @@ export const getBalanceOfSingleCall = async (
 	}
 };
 
+export const getBalanceOfBNSingleCall = async (
+	tokenAddress: string,
+	walletAddress: string,
+	signerOrProvider:
+		| Signer
+		| ethers.providers.JsonRpcProvider
+		| ethers.providers.Web3Provider
+		| undefined
+) => {
+	if (!signerOrProvider) return "0";
+	try {
+		const contract = createContractUsingAbi(
+			String(tokenAddress),
+			abi20,
+			signerOrProvider
+		);
+
+		const contractCall = await singleCall(contract, "balanceOf");
+
+		const balance = await contractCall(walletAddress);
+
+		return balance;
+	} catch (err) {
+		return "0";
+	}
+};
+
 interface IAddressessAndBalances {
 	address: string;
 	balance: string;

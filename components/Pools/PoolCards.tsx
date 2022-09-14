@@ -1,8 +1,14 @@
 import { Button, Flex, Img, Text } from "@chakra-ui/react";
 import { FunctionComponent, SetStateAction, useMemo, useState } from "react";
 import { useModal, usePicasso, useWallet } from "hooks";
-import { getBalanceOfSingleCall, getTotalSupply, unwrappedToken } from "utils";
 import {
+	getBalanceOfSingleCall,
+	getTotalSupply,
+	removeScientificNotation,
+	unwrappedToken,
+} from "utils";
+import {
+	ChainId,
 	JSBI,
 	Pair,
 	Percent,
@@ -11,9 +17,9 @@ import {
 } from "@pollum-io/pegasys-sdk";
 import { WrappedTokenInfo, IDeposited } from "types";
 import { Signer } from "ethers";
+import { PAIR_DATA, pegasysClient } from "apollo";
 
 interface IPoolCards {
-	poolVolume?: string;
 	poolApr?: string;
 	setIsCreate: React.Dispatch<SetStateAction<boolean>>;
 	pair?: Pair;
@@ -30,7 +36,6 @@ interface IPoolCards {
 
 export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	const {
-		poolVolume,
 		poolApr,
 		setIsCreate,
 		pair,
@@ -44,10 +49,15 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	} = props;
 	const theme = usePicasso();
 	const { onOpenRemoveLiquidity, onOpenAddLiquidity } = useModal();
-	const { setCurrentLpAddress, signer, walletAddress } = useWallet();
+	const { setCurrentLpAddress, signer, walletAddress, currentNetworkChainId } =
+		useWallet();
 	const [poolBalance, setPoolBalance] = useState<string>("");
 	const [percentShare, setPercentShare] = useState<string>("");
+	const [volume, setVolume] = useState<string>("");
 	const [trigger, setTrigger] = useState<boolean>(false);
+
+	const chainId =
+		currentNetworkChainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
 
 	const currencyA = unwrappedToken(pair?.token0 as Token);
 	const currencyB = unwrappedToken(pair?.token1 as Token);
@@ -63,6 +73,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		if (isRemove) {
 			onOpenRemoveLiquidity();
 			setCurrentLpAddress(`${pair?.liquidityToken.address}`);
+			setSelectedToken([wrapTokenA, wrapTokenB]);
 			setTrigger(!trigger);
 			setCurrPair(pair);
 			setSliderValue(0);
@@ -125,7 +136,17 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 				  ]
 				: [undefined, undefined];
 
-		const amount = `${+pairBalanceAmount.toSignificant(4) * 10 ** 6}`;
+		const amount = `${removeScientificNotation(
+			+pairBalanceAmount.toSignificant(4) * 10 ** 6
+		)}`;
+
+		// it only works on mainnet
+		const fetchVolume = await pegasysClient.query({
+			query: PAIR_DATA(`${Pair.getAddress(wrapTokenA, wrapTokenB, chainId)}`),
+			fetchPolicy: "cache-first",
+		});
+
+		const pairVolume = fetchVolume?.data?.pairs[0]?.volumeUSD;
 
 		setPoolPercentShare(
 			(Number(poolTokenPercentage?.toSignificant(6)) * 10 ** 6).toFixed(2)
@@ -136,6 +157,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		);
 		setPoolBalance(amount);
 		setUserPoolBalance(amount);
+		setVolume(`${pairVolume || 0}`);
 	}, [pair, trigger]);
 
 	return (
@@ -167,7 +189,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					<Text fontWeight="semibold" color={theme.text.mono}>
 						Volume
 					</Text>
-					<Text>{poolVolume}</Text>
+					<Text>{volume}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold" color={theme.text.mono}>
