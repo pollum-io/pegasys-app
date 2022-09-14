@@ -41,6 +41,7 @@ interface IModal {
 	depositedTokens: IDeposited | undefined;
 	poolPercentShare: string;
 	userPoolBalance: string;
+	allTokens: WrappedTokenInfo[];
 }
 
 export interface IAmounts {
@@ -61,6 +62,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 		depositedTokens,
 		poolPercentShare,
 		userPoolBalance,
+		allTokens,
 	} = props;
 	const { t: translation } = useTranslation();
 
@@ -83,21 +85,25 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	const theme = usePicasso();
 	const { isOpenCoin, onCloseCoin } = useModal();
 	const [buttonId] = useState<number>(0);
-	const [showTooltip, setShowTooltip] = React.useState(false);
 	const [txSignature, setTxSignature] = useState<boolean>(false);
 	const [availableTokensAmount, setAvailableTokensAmount] = useState<IAmounts>({
 		token0: "",
 		token1: "",
 	});
-
+	const [receiveSys, setReceiveSys] = useState<boolean>(true);
 	const walletInfos = {
 		provider,
 		walletAddress,
 		chainId: currentNetworkChainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
 	};
+	const WSYS = allTokens?.find(token => token?.symbol === "WSYS");
+	const SYS = allTokens?.find(token => token?.symbol === "SYS");
 
 	const currencyA = unwrappedToken(currPair?.token0 as Token);
 	const currencyB = unwrappedToken(currPair?.token1 as Token);
+
+	const haveSys = [currencyA, currencyB].some(item => item?.symbol === "SYS");
+	const haveWsys = selectedToken.some(item => item?.symbol === "WSYS");
 
 	const { onAttemptToApprove, onRemove, onSlide } = UseRemoveLiquidity(
 		currentLpAddress,
@@ -129,6 +135,33 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	useEffect(() => {
 		setTxSignature(false);
 	}, [isModalOpen]);
+
+	useEffect(() => {
+		if (haveSys) {
+			if (receiveSys) {
+				if (haveWsys) {
+					const newTokens = selectedToken.map(item => {
+						if (item.symbol === "WSYS" && item) {
+							item = SYS as WrappedTokenInfo;
+							return item;
+						}
+						return item;
+					});
+					setSelectedToken(newTokens);
+					return;
+				}
+				setSelectedToken(selectedToken);
+			}
+			const newTokens = selectedToken.map(item => {
+				if (item.symbol === "SYS" && item) {
+					item = WSYS as WrappedTokenInfo;
+					return item;
+				}
+				return item;
+			});
+			setSelectedToken(newTokens);
+		}
+	}, [receiveSys]);
 
 	return (
 		<Modal
@@ -269,18 +302,25 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 				</Flex>
 
 				<Flex flexDirection="column" py="6" color={theme.text.mono}>
-					<Flex flexDirection="row" justifyContent="space-between">
-						<Text fontWeight="medium" fontSize="md">
-							Recive
-						</Text>
-						<Flex flexDirection="row">
-							<Stack align="center" direction="row">
-								<Text>WSYS</Text>
-								<Switch size="md" colorScheme="cyan" />
-								<Text>SYS</Text>
-							</Stack>
+					{haveSys && (
+						<Flex flexDirection="row" justifyContent="space-between">
+							<Text fontWeight="medium" fontSize="md">
+								Recive
+							</Text>
+							<Flex flexDirection="row">
+								<Stack align="center" direction="row">
+									<Text>WSYS</Text>
+									<Switch
+										size="md"
+										colorScheme="cyan"
+										defaultChecked
+										onChange={e => setReceiveSys(e.target.checked)}
+									/>
+									<Text>SYS</Text>
+								</Stack>
+							</Flex>
 						</Flex>
-					</Flex>
+					)}
 					<Flex flexDirection="row" justifyContent="space-between" pt="6">
 						<Text fontWeight="medium" fontSize="md">
 							Price
@@ -289,7 +329,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 							<Flex flexDirection="row">
 								<Text fontSize="sm">
 									{currPair
-										? `1 ${currencyA?.symbol} = ${currPair
+										? `1 ${selectedToken[0]?.symbol} = ${currPair
 												?.priceOf(currPair?.token0)
 												.toSignificant(6)} ${currencyB?.symbol}`
 										: "-"}
@@ -298,7 +338,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 							<Flex flexDirection="row">
 								<Text fontSize="sm">
 									{currPair
-										? `1 ${currencyB?.symbol} = ${currPair
+										? `1 ${selectedToken[1]?.symbol} = ${currPair
 												?.priceOf(currPair?.token1)
 												.toSignificant(6)} ${currencyA?.symbol}`
 										: "-"}
@@ -346,9 +386,9 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						py="1.563rem"
 					>
 						<Flex fontSize="lg" fontWeight="bold" align="center">
-							<Img src="icons/syscoin-logo.png" w="6" h="6" />
-							<Img src="icons/pegasys.png" w="6" h="6" />
-							<Text pl="2">{`${currencyA?.symbol}/${currencyB?.symbol}`}</Text>
+							<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
+							<Img src={selectedToken[1]?.logoURI} w="6" h="6" />
+							<Text pl="2">{`${selectedToken[0]?.symbol}/${selectedToken[1]?.symbol}`}</Text>
 						</Flex>
 						<Text fontSize="lg" fontWeight="bold">
 							{userPoolBalance || "-"}

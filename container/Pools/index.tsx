@@ -158,6 +158,7 @@ export const PoolsContainer: NextPage = () => {
 				depositedTokens={depositedTokens}
 				poolPercentShare={poolPercentShare}
 				userPoolBalance={userPoolBalance}
+				allTokens={userTokensBalance}
 			/>
 			<ImportPoolModal
 				isModalOpen={isOpenImportPool}
