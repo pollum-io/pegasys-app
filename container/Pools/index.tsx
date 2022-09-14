@@ -13,6 +13,7 @@ import {
 	useMediaQuery,
 } from "@chakra-ui/react";
 import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
+import { PAIR_DATA, pegasysClient } from "apollo";
 import {
 	AddLiquidityModal,
 	ImportPoolModal,
@@ -23,7 +24,12 @@ import { usePicasso, useModal, useWallet, useTokens, usePairs } from "hooks";
 import { NextPage } from "next";
 import { useMemo, useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
-import { WrappedTokenInfo, ILiquidityTokens, IDeposited } from "types";
+import {
+	WrappedTokenInfo,
+	ILiquidityTokens,
+	IDeposited,
+	IVolumeTokens,
+} from "types";
 import {
 	getTokenPairs,
 	toV2LiquidityToken,
@@ -61,8 +67,10 @@ export const PoolsContainer: NextPage = () => {
 	const [depositedTokens, setDepositedTokens] = useState<IDeposited>();
 	const [poolPercentShare, setPoolPercentShare] = useState<string>("");
 	const [userPoolBalance, setUserPoolBalance] = useState<string>("");
+	const [sortType, setSortType] = useState<string>("pool-weight");
 	const chainId =
 		currentNetworkChainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
+	const sortTypeName = sortType === "pool-weight" ? "Pool Weight" : "Volume";
 
 	useMemo(async () => {
 		const allTokens = getTokenPairs(currentNetworkChainId, userTokensBalance);
@@ -101,15 +109,43 @@ export const PoolsContainer: NextPage = () => {
 			})
 		);
 
+		const fetchVolumes = await Promise.all(
+			tokensWithLiquidity.map(async token => {
+				const volume = await pegasysClient.query({
+					query: PAIR_DATA(
+						`${Pair.getAddress(token.tokens[0], token.tokens[1], chainId)}`
+					),
+					fetchPolicy: "cache-first",
+				});
+
+				return {
+					address: token.liquidityToken?.address,
+					volume: volume?.data?.pairs[0]?.volumeUSD || "0",
+				};
+			})
+		);
+
+		const pairsVolume: IVolumeTokens = fetchVolumes.reduce(
+			(acc, curr) => ({ ...acc, [`${curr.address}`]: curr }),
+			{}
+		);
+
 		const formattedLiquidityBalances: ILiquidityTokens = liquidityBalances
 			.sort((a, b) => b.balance - a.balance)
 			.reduce((acc, curr) => ({ ...acc, [`${curr.address}`]: curr }), {});
 
-		const LPTokensWithBalance = tokensWithLiquidity.sort(
-			(a, b) =>
-				formattedLiquidityBalances[`${b?.liquidityToken?.address}`].balance -
-				formattedLiquidityBalances[`${a?.liquidityToken?.address}`].balance
-		);
+		const LPTokensWithBalance = tokensWithLiquidity.sort((a, b) => {
+			if (sortType === "pool-weight") {
+				return (
+					formattedLiquidityBalances[`${b?.liquidityToken?.address}`].balance -
+					formattedLiquidityBalances[`${a?.liquidityToken?.address}`].balance
+				);
+			}
+			return (
+				pairsVolume[`${b?.liquidityToken?.address}`].volume -
+				pairsVolume[`${a?.liquidityToken?.address}`].volume
+			);
+		});
 
 		// eslint-disable-next-line
 		const v2Tokens = await usePairs(
@@ -130,7 +166,7 @@ export const PoolsContainer: NextPage = () => {
 						.indexOf(item.liquidityToken.address) === index
 			);
 		setLpPairs(allUniqueV2PairsWithLiquidity);
-	}, [userTokensBalance]);
+	}, [userTokensBalance, sortType]);
 
 	return (
 		<Flex justifyContent="center" alignItems="center">
@@ -369,7 +405,7 @@ export const PoolsContainer: NextPage = () => {
 												borderRadius="full"
 												rightIcon={<MdExpandMore size={20} />}
 											>
-												Pool Weight
+												{sortTypeName}
 											</MenuButton>
 											<MenuList
 												bgColor={theme.bg.blueNavy}
@@ -381,32 +417,16 @@ export const PoolsContainer: NextPage = () => {
 												<MenuItem
 													color={theme.text.mono}
 													_hover={{ bgColor: theme.bg.iconBg }}
+													onClick={() => setSortType("pool-weight")}
 												>
 													Pool Weight
 												</MenuItem>
 												<MenuItem
 													color={theme.text.mono}
 													_hover={{ bgColor: theme.bg.iconBg }}
+													onClick={() => setSortType("volume")}
 												>
-													Name
-												</MenuItem>
-												<MenuItem
-													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.iconBg }}
-												>
-													Claudio
-												</MenuItem>
-												<MenuItem
-													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.iconBg }}
-												>
-													Thom
-												</MenuItem>
-												<MenuItem
-													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.iconBg }}
-												>
-													Kaue
+													Volume
 												</MenuItem>
 											</MenuList>
 										</Menu>
