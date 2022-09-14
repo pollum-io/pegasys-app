@@ -1,9 +1,9 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { BigNumber, ethers, Signer } from "ethers";
-import { convertHexToNumber, isAddress } from "utils";
+import { convertHexToNumber } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { IWalletInfo, ITx } from "types";
-import { useToasty } from "hooks";
+import { UseENS, useToasty } from "hooks";
 import {
 	INITIAL_ALLOWED_SLIPPAGE,
 	SYS_TESTNET_CHAIN_PARAMS,
@@ -158,7 +158,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const defaultActionsWhenConnectWallet = () => {
 		setIsConnected(!!window?.ethereum?.selectedAddress);
-		setAddress(isAddress(window?.ethereum?.selectedAddress));
+		setAddress(UseENS(window?.ethereum?.selectedAddress).address as string);
 		getSignerIfConnected();
 		setWalletError(false);
 		setCurrentNetworkChainId(Number(window?.ethereum?.networkVersion));
@@ -316,7 +316,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 				verifySysNetwork ? !!window?.ethereum?.selectedAddress : false
 			);
 			setAddress(
-				verifySysNetwork ? isAddress(window?.ethereum?.selectedAddress) : ""
+				verifySysNetwork
+					? (UseENS(window?.ethereum?.selectedAddress).address as string)
+					: ""
 			);
 			setWalletError(!verifySysNetwork);
 		}

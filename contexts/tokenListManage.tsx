@@ -1,5 +1,6 @@
 import { TokenInfo, TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
 import { ethers, Signer } from "ethers";
+import { SYS_LOGO } from "helpers/consts";
 import {
 	EMPTY_TOKEN_LIST,
 	INITIAL_TOKEN_LIST_STATE,
@@ -88,8 +89,7 @@ export const TokensListManageProvider: React.FC<{
 			...list.tokens.find(token => token.symbol === "WSYS"),
 			name: "Syscoin",
 			symbol: "SYS",
-			logoURI:
-				"https://app.pegasys.finance/static/media/syscoin_token_round.f5e7de99.png",
+			logoURI: SYS_LOGO,
 		} as TokenInfo;
 
 		const listWithAllTokens = [...list.tokens, SYSToken];
@@ -232,6 +232,8 @@ export const TokensListManageProvider: React.FC<{
 	useEffect(() => {
 		UseSelectedTokenList();
 	}, [tokenListManageState, isConnected, walletAddress, currentNetworkChainId]);
+
+	console.log("listCache", tokenListCache);
 
 	const tokensListManageProviderValue = useMemo(
 		() => ({

@@ -1,8 +1,8 @@
 /* eslint-disable */
 import { Trade } from "@pollum-io/pegasys-sdk";
 import { BigNumber, Signer } from "ethers";
-import { useENS } from "hooks";
-import { calculateGasMargin, isZero, shortAddress, isAddress } from "utils";
+import { UseENS } from "hooks";
+import { calculateGasMargin, isZero, shortAddress } from "utils";
 import { ITx, IWalletHookInfos } from "types";
 import { addTransaction } from "utils/addTransaction";
 import { UseBestSwapMethod } from "./useBestSwapMethod";
@@ -42,7 +42,7 @@ export function UseSwapCallback(
 		transactionDeadlineValue
 	);
 
-	const { address: recipientAddress } = useENS(walletAddress);
+	const { address: recipientAddress } = UseENS(walletAddress);
 	const recipient =
 		recipientAddress === null ? walletAddress : recipientAddress;
 
@@ -170,7 +170,7 @@ export function UseSwapCallback(
 						recipient === walletAddress
 							? base
 							: `${base} to ${
-									recipient && isAddress(recipient)
+									recipient && (UseENS(recipient).address as string)
 										? shortAddress(recipient)
 										: recipient
 							  }`;
