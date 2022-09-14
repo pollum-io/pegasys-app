@@ -13,7 +13,7 @@ import {
 	useMediaQuery,
 } from "@chakra-ui/react";
 import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
-import { PAIR_DATA, pegasysClient } from "apollo";
+import { PAIRS_CURRENT, PAIR_DATA, pegasysClient } from "apollo";
 import {
 	AddLiquidityModal,
 	ImportPoolModal,
@@ -22,7 +22,7 @@ import {
 import { PoolCards } from "components/Pools/PoolCards";
 import { usePicasso, useModal, useWallet, useTokens, usePairs } from "hooks";
 import { NextPage } from "next";
-import { useMemo, useState } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
 import {
 	WrappedTokenInfo,
@@ -34,6 +34,7 @@ import {
 	getTokenPairs,
 	toV2LiquidityToken,
 	getBalanceOfSingleCall,
+	unwrappedToken,
 } from "utils";
 
 export const PoolsContainer: NextPage = () => {
@@ -68,6 +69,7 @@ export const PoolsContainer: NextPage = () => {
 	const [poolPercentShare, setPoolPercentShare] = useState<string>("");
 	const [userPoolBalance, setUserPoolBalance] = useState<string>("");
 	const [sortType, setSortType] = useState<string>("pool-weight");
+	const [searchTokens, setSearchTokens] = useState<Pair[]>([]);
 	const chainId =
 		currentNetworkChainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
 	const sortTypeName = sortType === "pool-weight" ? "Pool Weight" : "Volume";
@@ -130,6 +132,41 @@ export const PoolsContainer: NextPage = () => {
 			{}
 		);
 
+		const fetchPairs = await pegasysClient.query({
+			query: PAIRS_CURRENT,
+			fetchPolicy: "cache-first",
+		});
+
+		const fetchPairsAddresses = await Promise.all([fetchPairs]);
+
+		const pairAdd = fetchPairsAddresses[0]?.data?.pairs;
+
+		const pairInfos = await Promise.all(
+			pairAdd.map(async (token: { id: string }) => {
+				const volume = await pegasysClient.query({
+					query: PAIR_DATA(token.id),
+					fetchPolicy: "cache-first",
+				});
+
+				return volume.data.pairs[0];
+			})
+		);
+
+		const formattedPairsInfo = pairInfos.reduce(
+			(acc, curr) => ({
+				...acc,
+				[`${curr.token0.symbol}-${curr.token1.symbol}`]: curr,
+			}),
+			{}
+		);
+
+		const commonPairs = allTokens
+			.map(
+				currency =>
+					formattedPairsInfo[`${currency[0].symbol}-${currency[1].symbol}`]
+			)
+			.filter(item => item !== undefined);
+
 		const formattedLiquidityBalances: ILiquidityTokens = liquidityBalances
 			.sort((a, b) => b.balance - a.balance)
 			.reduce((acc, curr) => ({ ...acc, [`${curr.address}`]: curr }), {});
@@ -166,7 +203,27 @@ export const PoolsContainer: NextPage = () => {
 						.indexOf(item.liquidityToken.address) === index
 			);
 		setLpPairs(allUniqueV2PairsWithLiquidity);
+		setSearchTokens(allUniqueV2PairsWithLiquidity);
 	}, [userTokensBalance, sortType]);
+
+	const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
+		const inputValue = event.target.value;
+
+		if (inputValue !== "") {
+			const results = lpPairs.filter(
+				token =>
+					unwrappedToken(token?.token0)
+						.symbol?.toLowerCase()
+						.startsWith(inputValue.toLowerCase()) ||
+					unwrappedToken(token?.token1)
+						.symbol?.toLowerCase()
+						.startsWith(inputValue.toLowerCase())
+			);
+			setSearchTokens(results);
+		} else {
+			setSearchTokens(lpPairs);
+		}
+	};
 
 	return (
 		<Flex justifyContent="center" alignItems="center">
@@ -317,6 +374,7 @@ export const PoolsContainer: NextPage = () => {
 											opacity: 1,
 											color: theme.text.input,
 										}}
+										onChange={handleInput}
 										borderRadius="full"
 										w={["18.5rem", "18rem", "20rem", "20rem"]}
 										h="2.2rem"
@@ -461,8 +519,8 @@ export const PoolsContainer: NextPage = () => {
 							mt="10"
 							justifyContent={["center", "center", "unset", "unset"]}
 						>
-							{lpPairs?.length !== 0 ? (
-								lpPairs?.map(pair => (
+							{searchTokens?.length !== 0 ? (
+								searchTokens?.map(pair => (
 									<PoolCards
 										key={pair.liquidityToken.address}
 										setIsCreate={setIsCreate}

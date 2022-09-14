@@ -2,7 +2,7 @@ import { Button, Flex, Img, Text } from "@chakra-ui/react";
 import { FunctionComponent, SetStateAction, useMemo, useState } from "react";
 import { useModal, usePicasso, useWallet } from "hooks";
 import {
-	getBalanceOfSingleCall,
+	getBalanceOfBNSingleCall,
 	getTotalSupply,
 	removeScientificNotation,
 	unwrappedToken,
@@ -62,6 +62,8 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	const currencyA = unwrappedToken(pair?.token0 as Token);
 	const currencyB = unwrappedToken(pair?.token1 as Token);
 
+	console.log({ currencyA: pair?.token0, currencyB: pair?.token1 });
+
 	const wrapTokenA = userTokens?.find(
 		token => token.symbol === currencyA.symbol
 	) as WrappedTokenInfo;
@@ -88,14 +90,13 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	};
 
 	useMemo(async () => {
-		const pairBalance = await getBalanceOfSingleCall(
+		const pairBalance = await getBalanceOfBNSingleCall(
 			pair?.liquidityToken.address as string,
 			walletAddress,
-			signer,
-			6
+			signer
 		);
 
-		const value = JSBI.BigInt(Math.floor(Number(pairBalance)));
+		const value = JSBI.BigInt(pairBalance?.toString());
 
 		const pairBalanceAmount = new TokenAmount(
 			pair?.liquidityToken as Token,
@@ -137,7 +138,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 				: [undefined, undefined];
 
 		const amount = `${removeScientificNotation(
-			+pairBalanceAmount.toSignificant(4) * 10 ** 6
+			+pairBalanceAmount.toSignificant(5)
 		)}`;
 
 		// it only works on mainnet
@@ -149,12 +150,10 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		const pairVolume = fetchVolume?.data?.pairs[0]?.volumeUSD;
 
 		setPoolPercentShare(
-			(Number(poolTokenPercentage?.toSignificant(6)) * 10 ** 6).toFixed(2)
+			Number(poolTokenPercentage?.toSignificant(6)).toFixed(2)
 		);
 		setDepositedTokens({ token0: token0Deposited, token1: token1Deposited });
-		setPercentShare(
-			(Number(poolTokenPercentage?.toSignificant(6)) * 10 ** 6).toFixed(2)
-		);
+		setPercentShare(Number(poolTokenPercentage?.toSignificant(6)).toFixed(2));
 		setPoolBalance(amount);
 		setUserPoolBalance(amount);
 		setVolume(`${pairVolume || 0}`);

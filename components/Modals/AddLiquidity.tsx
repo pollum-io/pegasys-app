@@ -31,9 +31,12 @@ import { IDeposited, WrappedTokenInfo } from "types";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { useTranslation } from "react-i18next";
 import { PoolServices, useWallet as psUseWallet } from "pegasys-services";
-import { addTransaction } from "utils";
+import { addTransaction, getTokenAllowance } from "utils";
 import { SelectCoinModal } from "./SelectCoin";
-import { Pair } from "@pollum-io/pegasys-sdk";
+import { ChainId, JSBI, Pair, TokenAmount } from "@pollum-io/pegasys-sdk";
+import { ROUTER_ADDRESS } from "helpers/consts";
+import { Signer } from "ethers";
+import { ApprovalState } from "contexts";
 
 interface IModal {
 	isModalOpen: boolean;
@@ -77,6 +80,12 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		inputFrom: "",
 		inputTo: "",
 	});
+	const [approveTokenStatus, setApproveTokenStatus] = useState<ApprovalState>(
+		ApprovalState.UNKNOWN
+	);
+	const [tokenToApp, setTokenToApp] = useState<WrappedTokenInfo>();
+	const [amountToApp, setAmountToApp] = useState<TokenAmount>();
+	const [amounts, setAmounts] = useState<TokenAmount[]>([]);
 
 	const {
 		userSlippageTolerance,
@@ -85,8 +94,15 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		setTransactions,
 		transactions,
 		setCurrentLpAddress,
+		signer,
+		setApprovalState,
+		setCurrentTxHash,
 	} = useWallet();
 	const { address, chainId } = psUseWallet();
+
+	const chain = chainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
+
+	const router = ROUTER_ADDRESS[chain];
 
 	const walletInfo = useMemo(
 		() => ({
@@ -101,7 +117,13 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		(selectedToken[0]?.symbol === "SYS" &&
 			selectedToken[1]?.symbol === "WSYS") ||
 		(selectedToken[0]?.symbol === "WSYS" && selectedToken[1]?.symbol === "SYS");
-	const emptyInput = !tokenInputValue.inputFrom || !tokenInputValue.inputTo
+
+	const emptyInput = !tokenInputValue.inputFrom || !tokenInputValue.inputTo;
+
+	const isERC20 =
+		(selectedToken[0]?.symbol !== "SYS" &&
+			selectedToken[0]?.symbol !== "PSYS") ||
+		(selectedToken[1]?.symbol !== "SYS" && selectedToken[1]?.symbol !== "PSYS");
 
 	const handleOnChangeTokenInputs = (
 		event: React.ChangeEvent<HTMLInputElement>
@@ -116,6 +138,79 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 				[event.target.name]: inputValue,
 			}));
 		}
+	};
+
+	useMemo(async () => {
+		if (isERC20) {
+			const valueA = JSBI.BigInt(+tokenInputValue.inputFrom);
+			const amountAtoApprove =
+				selectedToken[0] && new TokenAmount(selectedToken[0], valueA);
+
+			const allowanceA =
+				selectedToken[0] &&
+				(await getTokenAllowance(
+					selectedToken[0],
+					address,
+					`${router}`,
+					signer as Signer
+				));
+
+			const valueB = JSBI.BigInt(+tokenInputValue.inputFrom);
+			const amountBtoApprove =
+				selectedToken[1] && new TokenAmount(selectedToken[1], valueB);
+
+			const allowanceB =
+				selectedToken[1] &&
+				(await getTokenAllowance(
+					selectedToken[1],
+					address,
+					`${router}`,
+					signer as Signer
+				));
+
+			const isApproved =
+				!allowanceA?.lessThan(amountAtoApprove) &&
+				!allowanceB?.lessThan(amountBtoApprove);
+
+			if (isApproved) {
+				setApproveTokenStatus(ApprovalState.APPROVED);
+				return;
+			}
+			setApproveTokenStatus(ApprovalState.NOT_APPROVED);
+
+			const tokenToApprove = selectedToken.find(
+				token => token.symbol !== "SYS" && token.symbol !== "PSYS"
+			);
+
+			const amountToApprove = [amountAtoApprove, amountBtoApprove].find(
+				amount => amount.token.symbol === tokenToApprove?.symbol
+			);
+
+			setTokenToApp(tokenToApprove);
+			setAmountToApp(amountToApprove);
+			setAmounts([amountAtoApprove, amountBtoApprove]);
+		}
+	}, [tokenInputValue, isModalOpen]);
+
+	const approve = async () => {
+		await PoolServices.approve({
+			approvalState: approveTokenStatus,
+			amountToApprove: amountToApp,
+		}).then(res => {
+			if (res?.spender) {
+				setApprovalState({ type: "approve", status: ApprovalState.PENDING });
+				setCurrentTxHash(res?.hash);
+				addTransaction(
+					res?.response,
+					walletInfo,
+					setTransactions,
+					transactions,
+					{
+						summary: `Approve ${tokenToApp?.symbol}`,
+					}
+				);
+			}
+		});
 	};
 
 	const addLiquidity = async () => {
@@ -140,9 +235,11 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			pair,
 		});
 
-		console.log("response: ", response);
-
-		addTransaction(response, walletInfo, setTransactions, transactions);
+		addTransaction(response, walletInfo, setTransactions, transactions, {
+			summary: `Add ${amounts[0].toSignificant(6)} ${
+				selectedToken[0].symbol
+			} and ${amounts[1].toSignificant(6)} ${selectedToken[1].symbol}`,
+		});
 	};
 
 	useEffect(() => {
@@ -164,9 +261,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 	useEffect(() => {
 		setTokenInputValue({
-		inputFrom: "",
-		inputTo: "",
-	})
+			inputFrom: "",
+			inputTo: "",
+		});
 	}, [isModalOpen]);
 	return (
 		<Modal blockScrollOnMount isOpen={isModalOpen} onClose={onModalClose}>
@@ -542,12 +639,18 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								fontSize="lg"
 								fontWeight="semibold"
 								_hover={{ bgColor: theme.bg.bluePurple }}
-								onClick={addLiquidity}
+								onClick={
+									approveTokenStatus === ApprovalState.NOT_APPROVED
+										? approve
+										: addLiquidity
+								}
 							>
 								{isCreate
 									? "Create a pair"
 									: invalidPair
 									? "Invalid Pair"
+									: approveTokenStatus === ApprovalState.NOT_APPROVED
+									? `Approve ${tokenToApp?.symbol}`
 									: "Add Liquidity"}
 							</Button>
 						</Flex>

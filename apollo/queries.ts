@@ -83,3 +83,11 @@ export const USER_POSITIONS = gql`
 		}
 	}
 `;
+
+export const PAIRS_CURRENT = gql`
+	query pairs {
+		pairs(first: 200, orderBy: reserveUSD, orderDirection: desc) {
+			id
+		}
+	}
+`;

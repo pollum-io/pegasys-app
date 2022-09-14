@@ -40,7 +40,12 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			},
 		} as TokenInfo;
 
-		const allTokens = [...tokens, SYS];
+		const allTokens = [...tokens, SYS].filter(
+			token =>
+				token.symbol !== "AGEUR" &&
+				token.symbol !== "MAI" &&
+				token.symbol !== "QI"
+		);
 
 		if (!isConnected || !provider) {
 			const tokensWithBalance = allTokens.map(token => ({
