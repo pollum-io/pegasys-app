@@ -248,7 +248,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 										: "0.0000000"}
 								</Text>
 								<Text fontSize="md" fontWeight="normal">
-									{currencyA?.symbol}
+									{selectedToken[0]?.symbol}
 								</Text>
 							</Flex>
 							<Flex alignItems="center" gap="2" justifyContent="space-between">
@@ -258,7 +258,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 										: "0.0000000"}
 								</Text>
 								<Text fontSize="md" fontWeight="normal">
-									{currencyB?.symbol}
+									{selectedToken[1]?.symbol}
 								</Text>
 							</Flex>
 						</Flex>
@@ -305,7 +305,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 					{haveSys && (
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text fontWeight="medium" fontSize="md">
-								Recive
+								Receive
 							</Text>
 							<Flex flexDirection="row">
 								<Stack align="center" direction="row">
