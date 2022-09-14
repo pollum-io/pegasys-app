@@ -58,6 +58,10 @@ const usePicasso = () => {
 				"icons/LightPegasysLogo.png",
 				"icons/pegasys.png"
 			),
+			borderExpertMode: useColorModeValue(
+				"icons/Border-gradient-02.png",
+				"icons/Border-gradient-02.png"
+			),
 			searchIcon: useColorModeValue("#9F7AEA", "rgba(54, 180, 212, 0.5)"),
 			whiteGray: useColorModeValue("#A0AEC0", "white"),
 			theme: useColorModeValue(BsFillSunFill, BsFillMoonFill),

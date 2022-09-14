@@ -11,7 +11,7 @@ import {
 import React from "react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
-import { useModal, usePicasso } from "hooks";
+import { useModal, usePicasso, useWallet } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { HiOutlineMenu } from "react-icons/hi";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
@@ -40,6 +40,7 @@ export const Header: React.FC = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [isMobile] = useMediaQuery("(max-width: 750px)");
 	const btnRef: any = React.useRef();
+	const { expert } = useWallet();
 
 	const links = [
 		{
@@ -146,7 +147,7 @@ export const Header: React.FC = () => {
 				)}
 			</Flex>
 			<Flex
-				w={["90%", "32rem", "32rem", "32rem"]}
+				w={["90%", "34rem", "37rem", "37rem"]}
 				h="max-content"
 				backgroundColor={theme.bg.blackAlpha}
 				borderRadius="46px 46px 0px 0px"
@@ -157,8 +158,8 @@ export const Header: React.FC = () => {
 				zIndex="999"
 				alignItems="center"
 				px={["0", "10"]}
-				pl={["1", "6", "6", "10"]}
-				pr={["0", "4", "6", "10"]}
+				pl={expert ? ["8", "6", "6", "10"] : ["1", "6", "6", "10"]}
+				pr={expert ? ["6", "6", "6", "10"] : ["0", "4", "6", "10"]}
 				py="2"
 				justifyContent={["space-around", "space-between"]}
 			>

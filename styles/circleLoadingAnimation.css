@@ -7,23 +7,33 @@
 	border: 2px solid #fff;
 	border-radius: 50%;
 	animation: circleLoading 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-	border-color: rgb(4, 205, 255) #666666 #666666 #666666;
+	border-color:  #00D9EF #666666 #666666 #666666;
 }
-.circleLoadingLight {
-	box-sizing: border-box;
-	display: block;
-	position: relative;
-	width: 22px;
-	height: 22px;
-	border: 2px solid #fff;
-	border-radius: 50%;
-	animation: circleLoading 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-	border-color: #665EE1 rgba(0, 0, 0, 0.08) rgba(0, 0, 0, 0.08) rgba(0, 0, 0, 0.08);
+#smallPendingDark {
+	width: 13px;
+	height: 13px;
+	border-color:  #00D9EF rgba(255, 255, 255, 0.48) rgba(255, 255, 255, 0.48) rgba(255, 255, 255, 0.48);
 }
-#walletLoading {
-	bottom: 97px;
-	left: 106px;
-	right: 100px;
+#smallPendingLight {
+	width: 13px;
+	height: 13px;
+	border-color:  #00D9EF rgba(255, 255, 255, 0.48) rgba(255, 255, 255, 0.48) rgba(255, 255, 255, 0.48);
+}
+#walletLoadingDark {
+	border-color:  #00D9EF rgba(255, 255, 255, 0.24) rgba(255, 255, 255, 0.24) rgba(255, 255, 255, 0.24);
+}
+#walletLoadingLight {
+	border-color:  #00D9EF  rgba(0, 0, 0, 0.08)  rgba(0, 0, 0, 0.08)  rgba(0, 0, 0, 0.08);
+}
+#pendingTransactionsDark {
+	width: 15px;
+	height: 15px;
+	border-color:  #00D9EF rgba(255, 255, 255, 0.24) rgba(255, 255, 255, 0.24) rgba(255, 255, 255, 0.24);
+}
+#pendingTransactionsLight {
+	width: 15px;
+	height: 15px;
+	border-color:  #665EE1  #FFFFFF  #FFFFFF  #FFFFFF;
 }
 .circleLoading:nth-child(1) {
 	animation-delay: -0.45s;

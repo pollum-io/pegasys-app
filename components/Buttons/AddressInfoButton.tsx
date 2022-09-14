@@ -17,8 +17,13 @@ import { FunctionComponent, useState, useEffect } from "react";
 import Jazzicon from "react-jazzicon";
 import { MdContentCopy, MdOutlineCallMade } from "react-icons/md";
 import { shortAddress, copyToClipboard, openWalletOnExplorer } from "utils";
-import { AiOutlineClose } from "react-icons/ai";
+import {
+	AiOutlineCheckCircle,
+	AiOutlineClose,
+	AiOutlineCloseCircle,
+} from "react-icons/ai";
 import { ITransactionResponse } from "types";
+import { ApprovalState } from "contexts";
 
 interface IModal {
 	isOpen: boolean;
@@ -34,7 +39,9 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 		transactions,
 		currentNetworkChainId,
 		connectorSelected,
+		approvalState,
 	} = useWallet();
+	const isPending = approvalState.status === ApprovalState.PENDING;
 	const { toast } = useToasty();
 	const [txs, setTxs] = useState<ITransactionResponse[]>([]);
 
@@ -69,7 +76,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 
 			setTxs(currentTxs);
 		}
-	}, [transactions]);
+	}, [transactions, isEmpty, transactions[57], transactions[5700], isPending]);
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -233,38 +240,59 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								</Text>
 							</Flex>
 
-							<Flex flexDirection="column" gap={1} w="max-content">
-								<Flex flexDirection="row" gap="2" alignItems="center">
+							<Flex flexDirection="column" gap={1} w="100%">
+								{txs.map((item: ITransactionResponse) => (
+									// eslint-disable-next-line react/jsx-key
 									<Flex
-										w="15px"
-										h="15px"
-										className={
-											colorMode === "dark"
-												? "circleLoading"
-												: "circleLoadingLight"
-										}
-									/>
-									{txs.map((item: ITransactionResponse) => (
-										// eslint-disable-next-line react/jsx-key
-										<Link
-											fontSize="sm"
-											href={`${explorerURL}/${item?.hash}`}
-											target="_blank"
-											rel="noreferrer"
-											alignItems="center"
-										>
-											{item?.summary}
-											<Icon
-												as={MdOutlineCallMade}
-												w="4"
-												h="4"
-												top="0.15rem"
-												left="0.5rem"
-												position="relative"
+										alignItems="center"
+										justifyContent="flex-start"
+										w="100%"
+									>
+										{isPending && !item?.finished && (
+											<Flex
+												className="circleLoading"
+												id={
+													colorMode === "dark"
+														? "pendingTransactionsDark"
+														: "pendingTransactionsLight"
+												}
 											/>
-										</Link>
-									))}
-								</Flex>
+										)}
+										<Flex
+											justifyContent="space-between"
+											w="100%"
+											alignItems="center"
+											pl={!item.finished ? "2" : "0"}
+										>
+											<Link
+												fontSize="sm"
+												href={`${explorerURL}/${item?.hash}`}
+												target="_blank"
+												rel="noreferrer"
+												alignItems="center"
+											>
+												{item?.summary}
+												<Icon
+													as={MdOutlineCallMade}
+													w="4"
+													h="4"
+													top="0.15rem"
+													left="0.5rem"
+													position="relative"
+												/>
+											</Link>
+											{item?.finished && (
+												<Flex>
+													{item.confirmations === 1 ? (
+														<AiOutlineCheckCircle color="#25855A" />
+													) : (
+														<AiOutlineCloseCircle color="#E53E3E" />
+													)}
+												</Flex>
+											)}
+										</Flex>
+									</Flex>
+								))}
 							</Flex>
 						</Flex>
 					)}

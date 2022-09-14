@@ -13,8 +13,7 @@ interface IButtonProps extends ButtonProps {
 export const AddressButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	const { children, pending, ...rest } = props;
-	const { walletError } = useWallet();
-	const [isExpertMode] = useState(false);
+	const { walletError, expert } = useWallet();
 
 	return (
 		<Button
@@ -32,7 +31,7 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 			px={["3", "3", "4", "4"]}
 			position={["absolute", "relative"]}
 			bottom={["12", "8", "10", "10"]}
-			right={isExpertMode ? ["43%", "0", "0", "0"] : ["30%", "0", "0", "0"]}
+			right={expert ? ["40%", "0", "0", "0"] : ["26%", "0", "0", "0"]}
 			textTransform="uppercase"
 			overflow="hidden"
 			opacity="0.85"
@@ -57,9 +56,6 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 					{children}
 				</>
 			)}
-			<Flex display={["flex", "none", "none", "none"]} zIndex="-99">
-				<ExpertMode />
-			</Flex>
 		</Button>
 	);
 };
