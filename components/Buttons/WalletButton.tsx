@@ -100,7 +100,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 				</>
 			)}
 			{isConnected && isPending && (
-				<>
+				<Flex position="relative">
 					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
 
 					<Flex
@@ -131,7 +131,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 					>
 						{shortAddress(walletAddress)}
 					</AddressButton>
-				</>
+				</Flex>
 			)}
 		</>
 	);

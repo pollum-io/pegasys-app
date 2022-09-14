@@ -29,9 +29,9 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 			borderRadius={84}
 			fontWeight={500}
 			py={["2", "2", "2", "2"]}
-			px={["3", "3", "3", "3"]}
+			px={["3", "3", "4", "4"]}
 			position={["absolute", "relative"]}
-			bottom={["12", "8", "8", "8"]}
+			bottom={["12", "8", "10", "10"]}
 			right={isExpertMode ? ["43%", "0", "0", "0"] : ["30%", "0", "0", "0"]}
 			textTransform="uppercase"
 			overflow="hidden"

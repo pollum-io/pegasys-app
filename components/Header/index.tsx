@@ -1,9 +1,19 @@
-import { Flex, Icon, Img, Link, useColorMode } from "@chakra-ui/react";
+import {
+	Flex,
+	Icon,
+	Img,
+	Link,
+	Text,
+	useColorMode,
+	useDisclosure,
+	useMediaQuery,
+} from "@chakra-ui/react";
 import React from "react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
 import { useModal, usePicasso } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
+import { HiOutlineMenu } from "react-icons/hi";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
 import { useRouter } from "next/router";
 import { NavButton } from "./NavButton";
@@ -11,13 +21,25 @@ import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
 import { MenuLinks } from "./MenuLink";
 import { SettingsButton } from "./SettingsButton";
+import { Painter } from "./Painter";
+import { DrawerMenu } from "./DrawerMenu";
 
 export const Header: React.FC = () => {
-	const { toggleColorMode } = useColorMode();
+	const { toggleColorMode, colorMode } = useColorMode();
 	const theme = usePicasso();
 	const { pathname } = useRouter();
-	const { isOpenPsysBreakdown, onOpenPsysBreakdown, onClosePsysBreakdown } =
-		useModal();
+	const {
+		isOpenPsysBreakdown,
+		onOpenPsysBreakdown,
+		onClosePsysBreakdown,
+		onOpenDrawerMenu,
+		isOpenDrawerMenu,
+		onCloseDrawerMenu,
+	} = useModal();
+
+	const { isOpen, onOpen, onClose } = useDisclosure();
+	const [isMobile] = useMediaQuery("(max-width: 750px)");
+	const btnRef: any = React.useRef();
 
 	const links = [
 		{
@@ -42,54 +64,86 @@ export const Header: React.FC = () => {
 		<Flex
 			p="4"
 			mt="1"
+			mb="16"
 			alignItems="center"
 			justifyContent="center"
 			flexDirection="column"
 		>
-			<PsysBreakdown
-				isOpen={isOpenPsysBreakdown}
-				onClose={onClosePsysBreakdown}
-			/>
-			<Link href="/">
-				<Img
-					w={["7", "8", "6", "6"]}
-					h={["7", "8", "6", "6"]}
-					src={theme.icon.pegasysLogo}
-					ml={["4", "4", "4", "4"]}
-					mt={["1.5", "1", "2", "1.5"]}
-					position="absolute"
-					left="0"
+			<Flex id="header" alignItems="flex-start" w="100%" flexDirection="row">
+				<PsysBreakdown
+					isOpen={isOpenPsysBreakdown}
+					onClose={onClosePsysBreakdown}
 				/>
-			</Link>
-			<Flex
-				gap={["0", "1", "1", "1"]}
-				bgColor={theme.bg.topHeader}
-				opacity="0.95"
-				borderRadius="20"
-				ml={["7", "0", "0", "0"]}
-			>
-				{links.map((item, index) => (
-					<NavButton
-						key={item.name + Number(index)}
-						href={item.url}
-						active={pathname === item.url}
+				<Link href="/">
+					<Img
+						w={["7", "8", "8", "8"]}
+						h={["7", "8", "8", "8"]}
+						src={theme.icon.pegasysLogo}
+						ml={["4", "4", "4", "4"]}
+						mt={["1.5", "1", "0", "0"]}
+						position="absolute"
+						left="0"
+					/>
+				</Link>
+				{isMobile ? (
+					<Flex
+						alignItems="center"
+						gap="1"
+						position="absolute"
+						right="0"
+						zIndex="docked"
+						mr={["4", "4", "4", "4"]}
+						mt={["2", "2", "0", "0"]}
 					>
-						{item.name}
-					</NavButton>
-				))}
-				<NavButton
-					href="/"
-					color={theme.icon.whiteGray}
-					display={{
-						base: "none",
-						sm: "none",
-						md: "flex",
-						lg: "flex",
-					}}
-				>
-					Charts
-					<Icon as={MdOutlineCallMade} w="5" h="5" ml="2" />
-				</NavButton>
+						<Text fontWeight="semibold">Menu</Text>
+						<Painter />
+						<Icon
+							ref={btnRef}
+							onClick={onOpenDrawerMenu}
+							as={HiOutlineMenu}
+							zIndex="99"
+							w="6"
+							h="6"
+							style={
+								colorMode === "dark"
+									? { stroke: "url(#dark-gradient)" }
+									: { stroke: "url(#light-gradient)" }
+							}
+						/>
+						<DrawerMenu isOpen={isOpenDrawerMenu} onClose={onCloseDrawerMenu} />
+					</Flex>
+				) : (
+					<Flex
+						gap={["0", "1", "1", "1"]}
+						bgColor={theme.bg.topHeader}
+						opacity="0.95"
+						borderRadius="20"
+						ml={["7", "0", "0", "0"]}
+					>
+						{links.map((item, index) => (
+							<NavButton
+								key={item.name + Number(index)}
+								href={item.url}
+								active={pathname === item.url}
+							>
+								{item.name}
+							</NavButton>
+						))}
+						<NavButton
+							href="/"
+							color={theme.icon.whiteGray}
+							display={{
+								base: "none",
+								sm: "none",
+								md: "flex",
+								lg: "flex",
+							}}
+						>
+							Charts
+							<Icon as={MdOutlineCallMade} w="5" h="5" ml="2" />
+						</NavButton>
+					</Flex>
+				)}
 			</Flex>
 			<Flex
 				w={["90%", "32rem", "32rem", "32rem"]}
@@ -100,7 +154,7 @@ export const Header: React.FC = () => {
 				boxShadow={theme.border.headerBorderShadow}
 				position="fixed"
 				bottom="0"
-				zIndex="99"
+				zIndex="999"
 				alignItems="center"
 				px={["0", "10"]}
 				pl={["1", "6", "6", "10"]}
@@ -122,7 +176,7 @@ export const Header: React.FC = () => {
 							color: theme.text.cyanPurple,
 						}}
 						aria-label="Theme"
-						icon={<theme.icon.theme />}
+						icon={<theme.icon.theme size="20px" />}
 						onClick={() => toggleColorMode()}
 					/>
 					<MenuLinks />

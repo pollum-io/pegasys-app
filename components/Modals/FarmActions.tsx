@@ -314,7 +314,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								Deposited PLP Liquidity: 0.000001
 							</Text>
 							<Flex>
-								<InputGroup size="md">
+								<InputGroup size="lg">
 									<Input
 										placeholder="0.0"
 										border="1px solid"
@@ -359,6 +359,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									defaultValue={5}
 									min={0}
 									max={100}
+									size="md"
 									mb="4"
 									w="85%"
 									colorScheme="teal"

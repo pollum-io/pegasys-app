@@ -33,7 +33,6 @@ export const TooltipComponent: FunctionComponent<ITooltipComponent> = props => {
 			bgColor={theme.bg.secondary}
 			hasArrow={hasArrow}
 			label={label}
-			shouldWrapChildren
 			placement={placement}
 			alignItems="center"
 		>

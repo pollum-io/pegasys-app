@@ -23,13 +23,7 @@ export const FarmContainer: NextPage = () => {
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	return (
-		<Flex
-			w="100%"
-			h="100%"
-			alignItems="flex-start"
-			justifyContent="center"
-			pt={["10", "10", "20", "20"]}
-		>
+		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
 			<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
 				<Flex
 					flexDirection="column"

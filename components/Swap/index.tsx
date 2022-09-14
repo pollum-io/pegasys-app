@@ -133,7 +133,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	// REACT STATES //
 
 	const [isLoadingGraphCandles, setIsLoadingGraphCandles] =
-		useState<boolean>(false);
+		useState<boolean>(true);
 
 	const [tokensGraphCandleData, setTokensGraphCandleData] = useState<
 		IChartComponentData[]
@@ -544,11 +544,17 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		return null;
 	}, [expert]);
 
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setIsLoadingGraphCandles(false);
+			clearTimeout(timer);
+		}, 10500);
+	}, [isLoadingGraphCandles]);
+
 	// END REACT HOOKS //
 
 	return (
 		<Flex
-			pt={["6", "6", "16", "16"]}
 			justifyContent="center"
 			fontFamily="inter"
 			fontStyle="normal"
@@ -641,7 +647,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								? theme.text.red400
 								: "#ff000000"
 						}
-						transition="0.7s"
+						transition="500ms ease-in-out"
 					>
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
@@ -706,27 +712,46 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						</Flex>
 					</Flex>
 					{tokenInputValue.currentInputTyped === "inputFrom" && (
-						<Flex flexDirection="row" gap="1" justifyContent="center">
-							{parseFloat(tokenInputValue.inputFrom.value) >
-								parseFloat(selectedToken[0]?.balance) && (
-								<Text
-									fontSize="sm"
-									pt="2"
-									textAlign="center"
-									color={theme.text.red400}
-									fontWeight="semibold"
-								>
-									{translation("swapHooks.insufficient")}
-									{selectedToken[0]?.symbol}
-									{translation("swapHooks.balance")}.
-								</Text>
-							)}
+						<Flex flexDirection="row" gap="1">
+							<Collapse
+								in={
+									parseFloat(tokenInputValue.inputFrom.value) >
+									parseFloat(selectedToken[0]?.balance)
+								}
+							>
+								<Flex gap="1">
+									<Text
+										fontSize="sm"
+										pt="2"
+										textAlign="center"
+										color={theme.text.red400}
+										fontWeight="semibold"
+									>
+										{translation("swapHooks.insufficient")}
+										{selectedToken[0]?.symbol}
+										{translation("swapHooks.balance")}.
+									</Text>
+									<Text
+										fontSize="sm"
+										pt="2"
+										textAlign="center"
+										color={theme.text.red400}
+										fontWeight="medium"
+									>
+										{translation("swapHooks.validAmount")}.
+									</Text>
+								</Flex>
+							</Collapse>
 						</Flex>
 					)}
 					{tokenInputValue.currentInputTyped === "inputTo" && (
 						<Flex flexDirection="row" gap="1" justifyContent="center">
-							{parseFloat(tokenInputValue.inputFrom.value) >
-								parseFloat(selectedToken[0]?.balance) && (
+							<Collapse
+								in={
+									parseFloat(tokenInputValue.inputFrom.value) >
+									parseFloat(selectedToken[0]?.balance)
+								}
+							>
 								<Text
 									fontSize="sm"
 									pt="2"
@@ -737,8 +762,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									{translation("swapHooks.insufficient")}
 									{selectedToken[0]?.symbol}
 									{translation("swapHooks.balance")}.
+									{translation("swapHooks.validAmount")}.
 								</Text>
-							)}
+							</Collapse>
 						</Flex>
 					)}
 					<Flex
@@ -761,7 +787,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								? theme.text.red400
 								: "#ff000000"
 						}
-						transition="0.7s"
+						transition="500ms ease-in-out"
 					>
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
@@ -810,10 +836,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					<Flex
 						flexDirection="column"
 						gap="1"
-						justifyContent="center"
-						alignItems="center"
+						justifyContent="flex-start"
+						alignItems="flex-start"
 					>
-						{isConnected && verifyIfHaveInsufficientLiquidity && !isWrap && (
+						<Collapse
+							in={isConnected && verifyIfHaveInsufficientLiquidity && !isWrap}
+						>
 							<Text
 								fontSize="sm"
 								pt="2"
@@ -823,7 +851,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							>
 								{translation("swapPage.insufficientLiquidity")}
 							</Text>
-						)}
+						</Collapse>
 					</Flex>
 					<Collapse
 						in={
@@ -998,7 +1026,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						flexDirection="column"
 						p="1.5rem"
 						background={theme.bg.blueNavy}
-						w={["20rem", "20rem", "25rem", "25rem"]}
+						w={["20rem", "28rem", "28rem", "28rem"]}
 						borderRadius="xl"
 						mt="7"
 						mb={["2", "2", "2", "10rem"]}
@@ -1006,7 +1034,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					>
 						<Flex flexDirection="column">
 							<Flex flexDirection="row" justifyContent="space-between">
-								<Flex>
+								<Flex alignItems="center">
 									<Text fontWeight="normal" mr="1" fontSize="sm">
 										{translation("swap.minimumReceived")}
 									</Text>
@@ -1028,7 +1056,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								justifyContent="space-between"
 								pt="0.75rem"
 							>
-								<Flex>
+								<Flex alignItems="center">
 									<Text fontWeight="normal" mr="1" fontSize="sm">
 										{translation("swap.priceImpact")}
 									</Text>
@@ -1045,8 +1073,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								flexDirection="row"
 								justifyContent="space-between"
 								pt="0.75rem"
+								alignItems="baseline"
 							>
-								<Flex w={["70%", "70%", "max-content", "max-content"]}>
+								<Flex
+									w={["70%", "70%", "max-content", "max-content"]}
+									alignItems={["baseline", "baseline", "center", "center"]}
+								>
 									<Text
 										fontWeight="normal"
 										mr="1"
@@ -1075,9 +1107,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 										<Flex
 											flexDirection="row"
 											justifyContent="space-between"
-											pt="1rem"
+											pt={["1rem", "1rem", "0", "0"]}
 										>
-											<Flex>
+											<Flex alignItems="center">
 												<Text fontSize="sm" mr="1" fontWeight="normal">
 													{translation("swap.route")}
 												</Text>
@@ -1246,47 +1278,42 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					direction="column"
 					justifyContent="center"
 					maxW={isLoadingGraphCandles ? "475px" : ""}
-					borderBottom={`${isLoadingGraphCandles && "1px solid"}`}
-					borderRight={`${isLoadingGraphCandles && "1px solid"}`}
-					borderColor={`${isLoadingGraphCandles && "rgba(255,255,255, .25)"}`}
-					borderRadius={`${isLoadingGraphCandles && "5px"}`}
 				>
-					<Skeleton
-						w="100%"
-						h="315px"
-						isLoaded={!isLoadingGraphCandles}
-						fadeDuration={1.5}
-						speed={1.3}
-						background="transparent"
-						opacity={`${isLoadingGraphCandles && 0.1}`}
-						startColor="#8A15E6"
-						endColor="#19EBCE"
-						borderRadius="5px"
-					>
-						{tokensGraphCandleData?.length === 0 && !isLoadingGraphCandles ? (
-							<>
-								<Text
-									textAlign="center"
-									color={theme.text.mono}
-									fontWeight="medium"
-									fontSize="md"
-								>
-									Data not found for this pair of tokens.
-								</Text>
+					{isLoadingGraphCandles && tokensGraphCandleData?.length >= 1 ? (
+						<Flex
+							flexDirection="column"
+							justifyContent="center"
+							align="center"
+							gap="3"
+							mt="10"
+							ml="8"
+							color={theme.text.mono}
+						>
+							<Img src="icons/pegasys.png" className="blob" w="35%" h="35%" />
+						</Flex>
+					) : tokensGraphCandleData?.length === 0 && isLoadingGraphCandles ? (
+						<Flex flexDirection="column" ml="9">
+							<Text
+								textAlign="center"
+								color={theme.text.mono}
+								fontWeight="medium"
+								fontSize="md"
+							>
+								Data not found for this pair of tokens.
+							</Text>
 
-								<Text
-									textAlign="center"
-									color={theme.text.mono}
-									fontWeight="normal"
-									fontSize="sm"
-								>
-									Please try again with another pair.
-								</Text>
-							</>
-						) : (
-							<ChartComponent data={tokensGraphCandleData} />
-						)}
-					</Skeleton>
+							<Text
+								textAlign="center"
+								color={theme.text.mono}
+								fontWeight="normal"
+								fontSize="sm"
+							>
+								Please try again with another pair.
+							</Text>
+						</Flex>
+					) : (
+						<ChartComponent data={tokensGraphCandleData} />
+					)}
 				</Flex>
 			</Flex>
 		</Flex>
