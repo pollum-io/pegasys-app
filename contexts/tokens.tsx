@@ -1,15 +1,14 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ethers } from "ethers";
-import { TokenAddressMap, WrappedTokenInfo } from "types";
-import { useWallet, ApprovalState, useTokensListManage, UseENS } from "hooks";
+import { WrappedTokenInfo } from "types";
+import { useWallet, ApprovalState } from "hooks";
 import { getDefaultTokens } from "networks";
 import {
 	getBalanceOfMultiCall,
-	getBalanceOfSingleCall,
+	getProviderBalance,
 	truncateNumberDecimalsPlaces,
 } from "utils";
-import { TokenInfo, TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
-import { EMPTY_TOKEN_LIST, tokenListCache } from "helpers/tokenListHelpers";
+import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
 
 interface ITokensContext {
 	userTokensBalance: WrappedTokenInfo[];
@@ -24,7 +23,6 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		WrappedTokenInfo[]
 	>([]);
 
-	const { tokenListManageState } = useTokensListManage();
 	const {
 		isConnected,
 		provider,
@@ -65,15 +63,15 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		const tokensDecimals = allTokens.map(token => token.decimals);
 
-		const providerTokenBalance = await provider
-			?.getBalance(walletAddress)
-			.then(result => result.toString());
+		const { providerBalanceFormattedValue } = await getProviderBalance(
+			provider,
+			walletAddress
+		);
 
-		if (!providerTokenBalance) return "0";
+		if (!providerBalanceFormattedValue) return "0";
 
-		const formattedValue = ethers.utils.formatEther(providerTokenBalance);
 		const truncatedValue = String(
-			truncateNumberDecimalsPlaces(parseFloat(formattedValue), 3)
+			truncateNumberDecimalsPlaces(parseFloat(providerBalanceFormattedValue), 3)
 		);
 
 		const contractBalances = await getBalanceOfMultiCall(
@@ -116,165 +114,14 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		return {};
 	};
 
-	const listToTokenMap = async (list: TokenList): Promise<TokenAddressMap> => {
-		const verifyCurrentList = tokenListCache?.get(list);
-
-		if (verifyCurrentList && !isConnected) return verifyCurrentList;
-
-		const SYSToken: TokenInfo = {
-			...list.tokens.find(token => token.symbol === "WSYS"),
-			name: "Syscoin",
-			symbol: "SYS",
-			logoURI:
-				"https://app.pegasys.finance/static/media/syscoin_token_round.f5e7de99.png",
-		} as TokenInfo;
-
-		const listWithAllTokens = [...list.tokens, SYSToken];
-
-		if (!isConnected || !provider) {
-			const mapAroundList = listWithAllTokens.reduce<TokenAddressMap>(
-				(tokenMap, tokenInfo) => {
-					const tokenInfoWithBalance = {
-						...tokenInfo,
-						balance: "0",
-					};
-
-					const token = new WrappedTokenInfo(tokenInfoWithBalance);
-
-					if (tokenMap[token.chainId][token.address] !== undefined)
-						console.log(
-							"Duplicated token",
-							tokenMap[token.chainId][token.address]
-						);
-					return {
-						...tokenMap,
-						[token.chainId]: {
-							...tokenMap[token.chainId],
-							[token.address]: token,
-						},
-					};
-				},
-				{ ...EMPTY_TOKEN_LIST }
-			);
-
-			tokenListCache?.set(list, mapAroundList);
-
-			return mapAroundList;
-		}
-
-		const validateAddress = UseENS(walletAddress);
-
-		const providerTokenBalance = await provider
-			?.getBalance(validateAddress.address as string)
-			.then(result => result.toString());
-
-		const providerBalanceFormattedValue = ethers.utils.formatEther(
-			providerTokenBalance as string
-		);
-
-		const mapAroundList = listWithAllTokens.reduce<TokenAddressMap>(
-			(tokenMap, tokenInfo) => {
-				const eachTokenBalancePromise = new Promise(resolve => {
-					setTimeout(() => {
-						resolve(
-							Number(tokenInfo.chainId) === Number(currentNetworkChainId) &&
-								getBalanceOfSingleCall(
-									tokenInfo.address,
-									validateAddress.address as string,
-									provider,
-									tokenInfo.decimals
-								)
-						);
-					}, 100);
-				});
-
-				const eachTokenBalanceResult = eachTokenBalancePromise.then(
-					(result: any) => console.log(result.toString())
-				);
-
-				const token = new WrappedTokenInfo({
-					...tokenInfo,
-					balance:
-						tokenInfo.symbol === "SYS"
-							? providerBalanceFormattedValue
-							: String(eachTokenBalanceResult),
-				});
-
-				if (tokenMap[token.chainId][token.address] !== undefined)
-					console.log(
-						"Duplicated token",
-						tokenMap[token.chainId][token.address]
-					);
-				return {
-					...tokenMap,
-					[token.chainId]: {
-						...tokenMap[token.chainId],
-						[token.address]: token,
-					},
-				};
-			},
-			{ ...EMPTY_TOKEN_LIST }
-		);
-
-		tokenListCache?.set(list, mapAroundList);
-
-		return mapAroundList;
-	};
-
-	const useTokenList = (urls: string[] | undefined): TokenAddressMap => {
-		const lists = tokenListManageState.byUrl;
-
-		const tokenList = {} as {
-			[chainId: string]: { [tokenAddress: string]: WrappedTokenInfo };
-		};
-
-		const formattedUrls = ([] as string[]).concat(urls || []);
-
-		formattedUrls.forEach(url => {
-			const currentUrl = lists[url]?.current;
-
-			if (url && currentUrl) {
-				try {
-					listToTokenMap(currentUrl).then(data => {
-						// eslint-disable-next-line
-						for (const [chainId, tokens] of Object.entries(data)) {
-							tokenList[chainId] = tokenList[chainId] || {};
-
-							tokenList[chainId] = {
-								...tokenList[chainId],
-								...tokens,
-							};
-						}
-					});
-				} catch (error) {
-					console.log("Could not show token list due to error", error);
-				}
-			}
-		});
-		return tokenList as TokenAddressMap;
-	};
-
-	const UseSelectedListUrl = (): string[] | undefined =>
-		([] as string[]).concat(tokenListManageState?.selectedListUrl || []);
-
-	const UseSelectedTokenList = (): TokenAddressMap =>
-		useTokenList(UseSelectedListUrl());
-
-	useEffect(() => {
-		getDefaultListToken();
-	}, [isConnected, currentNetworkChainId, walletAddress]);
-
 	useEffect(() => {
 		if (approvalState.status === ApprovalState.APPROVED) {
 			getDefaultListToken();
+			return;
 		}
-	}, [approvalState]);
 
-	useEffect(() => {
-		UseSelectedTokenList();
-	}, [tokenListManageState, isConnected, walletAddress, currentNetworkChainId]);
-
-	console.log("listCache", tokenListCache);
+		getDefaultListToken();
+	}, [isConnected, currentNetworkChainId, walletAddress, approvalState.status]);
 
 	const tokensProviderValue = useMemo(
 		() => ({

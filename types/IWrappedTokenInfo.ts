@@ -2,7 +2,7 @@ import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
 import { Token } from "@pollum-io/pegasys-sdk";
 
 export interface ITokenInfoBalance extends TokenInfo {
-	balance: string;
+	balance: string | Promise<string>;
 	id?: number;
 }
 
@@ -25,7 +25,7 @@ export class WrappedTokenInfo extends Token {
 		return this.tokenInfo.logoURI;
 	}
 
-	public get balance(): string {
+	public get balance(): string | Promise<string> {
 		return this.tokenInfo.balance;
 	}
 

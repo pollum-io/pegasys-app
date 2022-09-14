@@ -25,3 +25,4 @@ export * from "./truncateNumberDecimalsPlaces";
 export * from "./priceImpactSeverity";
 export * from "./maxAmountSpend";
 export * from "./returnConvertedUrl";
+export * from "./provider";
