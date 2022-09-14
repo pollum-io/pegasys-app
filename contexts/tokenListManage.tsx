@@ -15,6 +15,10 @@ interface ITokensListManageContext {
 	tokenListManageState: ListsState;
 }
 
+interface ITokenInfoWithBalance extends TokenInfo {
+	balance: string;
+}
+
 export const TokensListManageContext = createContext(
 	{} as ITokensListManageContext
 );
@@ -75,26 +79,6 @@ export const TokensListManageProvider: React.FC<{
 		return tokenListResponse;
 	};
 
-	const getTokenBalanceByAddress = async (
-		tokenAddress: string,
-		walletAddress: string,
-		provider:
-			| ethers.providers.Provider
-			| ethers.providers.Web3Provider
-			| ethers.providers.JsonRpcProvider
-			| Signer,
-		tokenDecimals: number
-	) => {
-		const balance = await getBalanceOfSingleCall(
-			tokenAddress,
-			walletAddress,
-			provider,
-			tokenDecimals
-		);
-
-		return balance;
-	};
-
 	const listToTokenMap = async (list: TokenList): Promise<TokenAddressMap> => {
 		const verifyCurrentList = tokenListCache?.get(list);
 
@@ -144,22 +128,39 @@ export const TokensListManageProvider: React.FC<{
 		const { providerBalanceFormattedValue, validatedAddress } =
 			await getProviderBalance(provider, walletAddress);
 
-		const mapAroundList = listWithAllTokens.reduce<TokenAddressMap>(
+		const listWithBalances = await Promise.all(
+			listWithAllTokens.map(async token => {
+				if (token.symbol === "SYS") {
+					return {
+						...token,
+						balance: providerBalanceFormattedValue,
+					};
+				}
+
+				if (Number(token.chainId === Number(currentNetworkChainId))) {
+					const getTokenBalance = await getBalanceOfSingleCall(
+						token.address,
+						validatedAddress as string,
+						provider as Signer,
+						token.decimals
+					);
+
+					return {
+						...token,
+						balance: getTokenBalance,
+					} as ITokenInfoWithBalance;
+				}
+
+				return {
+					...token,
+					balance: "0",
+				} as ITokenInfoWithBalance;
+			})
+		);
+
+		const mapAroundList = listWithBalances.reduce<TokenAddressMap>(
 			(tokenMap, tokenInfo) => {
-				const token = new WrappedTokenInfo({
-					...tokenInfo,
-					balance:
-						tokenInfo.symbol === "SYS"
-							? providerBalanceFormattedValue
-							: tokenInfo.chainId === currentNetworkChainId
-							? getTokenBalanceByAddress(
-									tokenInfo.address,
-									validatedAddress as string,
-									provider,
-									tokenInfo.decimals
-							  ).then(result => result.toString())
-							: "0",
-				});
+				const token = new WrappedTokenInfo(tokenInfo);
 
 				if (tokenMap[token.chainId][token.address] !== undefined)
 					console.log(
@@ -220,8 +221,6 @@ export const TokensListManageProvider: React.FC<{
 
 	const UseSelectedTokenList = (): TokenAddressMap =>
 		useTokenList(UseSelectedListUrl());
-
-	console.log("listCache", tokenListCache);
 
 	useEffect(() => {
 		if (!tokenListManageState?.byUrl) return;
