@@ -145,6 +145,7 @@ export const PoolsContainer: NextPage = () => {
 				poolPercentShare={poolPercentShare}
 				userPoolBalance={userPoolBalance}
 				currPair={currPair}
+				setIsCreate={setIsCreate}
 			/>
 			<RemoveLiquidity
 				isModalOpen={isOpenRemoveLiquidity}

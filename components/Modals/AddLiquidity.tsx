@@ -39,6 +39,7 @@ interface IModal {
 	isModalOpen: boolean;
 	onModalClose: () => void;
 	isCreate?: boolean;
+	setIsCreate: React.Dispatch<React.SetStateAction<boolean>>;
 	haveValue?: boolean;
 	setSelectedToken: React.Dispatch<React.SetStateAction<WrappedTokenInfo[]>>;
 	selectedToken: WrappedTokenInfo[];
@@ -64,6 +65,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		poolPercentShare,
 		userPoolBalance,
 		currPair,
+		setIsCreate,
 	} = props;
 
 	const { userTokensBalance } = useTokens();
@@ -95,12 +97,11 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		[chainId, address, provider]
 	);
 
-	// const pairs = usePairs(
-	// 	selectedToken[0] && selectedToken[1]
-	// 		? [[selectedToken[0], selectedToken[1]]]
-	// 		: [],
-	// 	walletInfo
-	// );
+	const invalidPair =
+		(selectedToken[0]?.symbol === "SYS" &&
+			selectedToken[1]?.symbol === "WSYS") ||
+		(selectedToken[0]?.symbol === "WSYS" && selectedToken[1]?.symbol === "SYS");
+	const emptyInput = !tokenInputValue.inputFrom || !tokenInputValue.inputTo
 
 	const handleOnChangeTokenInputs = (
 		event: React.ChangeEvent<HTMLInputElement>
@@ -130,8 +131,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 		setCurrentLpAddress(pair.liquidityToken.address);
 
-		console.log("pair: ", pair);
-
 		const response = await PoolServices.addLiquidity({
 			tokens: selectedToken as [WrappedTokenInfo, WrappedTokenInfo],
 			values: [tokenInputValue.inputFrom, tokenInputValue.inputTo],
@@ -157,6 +156,18 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		setSelectedToken([defaultTokenValues[2], defaultTokenValues[1]]);
 	}, [userTokensBalance]);
 
+	useEffect(() => {
+		if (tokenInputValue.inputFrom && tokenInputValue.inputTo) {
+			setIsCreate(false);
+		}
+	}, [tokenInputValue]);
+
+	useEffect(() => {
+		setTokenInputValue({
+		inputFrom: "",
+		inputTo: "",
+	})
+	}, [isModalOpen]);
 	return (
 		<Modal blockScrollOnMount isOpen={isModalOpen} onClose={onModalClose}>
 			<SelectCoinModal
@@ -258,7 +269,10 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							justifyContent="space-between"
 							border="1px solid"
 							borderColor={
-								tokenInputValue.inputFrom > selectedToken[0]?.balance
+								parseFloat(tokenInputValue.inputFrom) >
+									parseFloat(selectedToken[0]?.balance) ||
+								parseFloat(tokenInputValue.inputFrom) >
+									parseFloat(selectedToken[0]?.balance)
 									? theme.text.red400
 									: "#ff000000"
 							}
@@ -318,7 +332,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								/>
 							</Flex>
 						</Flex>
-						{tokenInputValue.inputFrom > selectedToken[0]?.balance && (
+						{parseFloat(tokenInputValue.inputFrom) >
+							parseFloat(selectedToken[0]?.balance) && (
 							<Flex flexDirection="row" gap="1" justifyContent="center">
 								<Text
 									fontSize="sm"
@@ -353,7 +368,10 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							justifyContent="space-between"
 							border="1px solid"
 							borderColor={
-								tokenInputValue.inputTo > selectedToken[1]?.balance
+								parseFloat(tokenInputValue.inputTo) >
+									parseFloat(selectedToken[1]?.balance) ||
+								parseFloat(tokenInputValue.inputTo) >
+									parseFloat(selectedToken[1]?.balance)
 									? theme.text.red400
 									: "#ff000000"
 							}
@@ -415,7 +433,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								/>
 							</Flex>
 						</Flex>
-						{tokenInputValue.inputTo > selectedToken[1]?.balance && (
+						{parseFloat(tokenInputValue.inputTo) >
+							parseFloat(selectedToken[1]?.balance) && (
 							<Flex flexDirection="row" gap="1" justifyContent="center">
 								<Text
 									fontSize="sm"
@@ -436,76 +455,80 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								</Text>
 							</Flex>
 						)}
-						{tokenInputValue.inputTo && tokenInputValue.inputFrom && (
-							<Flex
-								flexDirection="column"
-								borderRadius="2xl"
-								bgColor="transparent"
-								borderWidth="1px"
-								borderColor={theme.text.cyanPurple}
-								mt="1.5rem"
-							>
-								<Text
-									fontSize="md"
-									fontWeight="medium"
-									px="1.375rem"
-									py="0.5rem"
-									color={theme.text.mono}
-								>
-									Prices and pool share
-								</Text>
+						{tokenInputValue.inputTo &&
+							tokenInputValue.inputFrom &&
+							!invalidPair && (
 								<Flex
-									flexDirection={["row", "row", "row", "row"]}
-									justifyContent="space-between"
-									py="0.5rem"
-									px="1rem"
+									flexDirection="column"
 									borderRadius="2xl"
+									bgColor="transparent"
 									borderWidth="1px"
 									borderColor={theme.text.cyanPurple}
-									bgColor={theme.bg.bluePink}
+									mt="1.5rem"
 								>
-									<Flex
-										fontSize="sm"
-										flexDirection={["column", "column", "column", "column"]}
-										gap={["2", "0", "0", "0"]}
-										textAlign="center"
+									<Text
+										fontSize="md"
+										fontWeight="medium"
+										px="1.375rem"
+										py="0.5rem"
+										color={theme.text.mono}
 									>
-										<Text fontWeight="semibold">
-											{currPair
-												? currPair?.priceOf(currPair.token0).toSignificant(6)
-												: "-"}
-										</Text>
-										<Text fontWeight="normal">
-											{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}{" "}
-										</Text>
-									</Flex>
+										Prices and pool share
+									</Text>
 									<Flex
-										fontSize="sm"
-										flexDirection={["column", "column", "column", "column"]}
-										gap={["2", "0", "0", "0"]}
-										textAlign="center"
+										flexDirection={["row", "row", "row", "row"]}
+										justifyContent="space-between"
+										py="0.5rem"
+										px="1rem"
+										borderRadius="2xl"
+										borderWidth="1px"
+										borderColor={theme.text.cyanPurple}
+										bgColor={theme.bg.bluePink}
 									>
-										<Text fontWeight="semibold">
-											{currPair
-												? currPair?.priceOf(currPair.token1).toSignificant(6)
-												: "-"}
-										</Text>
-										<Text fontWeight="normal">
-											{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
-										</Text>
-									</Flex>
-									<Flex
-										fontSize="sm"
-										gap={["2", "0", "0", "0"]}
-										flexDirection={["column", "column", "column", "column"]}
-										textAlign="center"
-									>
-										<Text fontWeight="semibold">-</Text>
-										<Text fontWeight="normal">Share of Pool</Text>
+										<Flex
+											fontSize="sm"
+											flexDirection={["column", "column", "column", "column"]}
+											gap={["2", "0", "0", "0"]}
+											textAlign="center"
+										>
+											<Text fontWeight="semibold">
+												{currPair
+													? currPair?.priceOf(currPair.token0).toSignificant(6)
+													: "-"}
+											</Text>
+											<Text fontWeight="normal">
+												{selectedToken[0]?.symbol} per{" "}
+												{selectedToken[1]?.symbol}{" "}
+											</Text>
+										</Flex>
+										<Flex
+											fontSize="sm"
+											flexDirection={["column", "column", "column", "column"]}
+											gap={["2", "0", "0", "0"]}
+											textAlign="center"
+										>
+											<Text fontWeight="semibold">
+												{currPair
+													? currPair?.priceOf(currPair.token1).toSignificant(6)
+													: "-"}
+											</Text>
+											<Text fontWeight="normal">
+												{selectedToken[1]?.symbol} per{" "}
+												{selectedToken[0]?.symbol}
+											</Text>
+										</Flex>
+										<Flex
+											fontSize="sm"
+											gap={["2", "0", "0", "0"]}
+											flexDirection={["column", "column", "column", "column"]}
+											textAlign="center"
+										>
+											<Text fontWeight="semibold">-</Text>
+											<Text fontWeight="normal">Share of Pool</Text>
+										</Flex>
 									</Flex>
 								</Flex>
-							</Flex>
-						)}
+							)}
 						<Flex>
 							<Button
 								w="100%"
@@ -513,6 +536,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								py={["4", "4", "6", "6"]}
 								px="6"
 								borderRadius="67px"
+								disabled={invalidPair || emptyInput}
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
 								fontSize="lg"
@@ -520,12 +544,18 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								_hover={{ bgColor: theme.bg.bluePurple }}
 								onClick={addLiquidity}
 							>
-								{isCreate ? "Create a pair" : "Add Liquidity"}
+								{isCreate
+									? "Create a pair"
+									: invalidPair
+									? "Invalid Pair"
+									: "Add Liquidity"}
 							</Button>
 						</Flex>
 					</Flex>
 				</Flex>
-				{tokenInputValue.inputTo && tokenInputValue.inputFrom ? (
+				{tokenInputValue.inputTo &&
+				tokenInputValue.inputFrom &&
+				!invalidPair ? (
 					<Flex
 						flexDirection="column"
 						p="1.5rem"

@@ -366,6 +366,7 @@ export const UseRemoveLiquidity = (
 				})
 				.catch((error: Error) => {
 					// we only care if the error is something _other_ than the user rejected the tx
+					setTxSignature(false);
 					console.log(error);
 				});
 		}
