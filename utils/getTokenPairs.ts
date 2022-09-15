@@ -23,8 +23,10 @@ export function getTokenPairs(chainId: ChainId, allTokens: WrappedTokenInfo[]) {
 	const DAI = allTokens.find(item => item.symbol === "DAI");
 	const WETH = allTokens.find(item => item.symbol === "WETH");
 	const BUSD = allTokens.find(item => item.symbol === "BUSD");
+	const WBTC = allTokens.find(item => item.symbol === "WBTC");
+	const BNB = allTokens.find(item => item.symbol === "BNB");
 
-	const customPairs = [TUSD, USDT, USDC, DAI, WETH, BUSD];
+	const customPairs = [TUSD, USDT, USDC, DAI, WETH, BUSD, BNB, WBTC];
 
 	const allCustomPairs = customPairs.flatMap((v, i) =>
 		customPairs.slice(i + 1).map(w => [v, w])
