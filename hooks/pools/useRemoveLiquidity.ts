@@ -167,7 +167,11 @@ export const UseRemoveLiquidity = (
 
 		const pairBalanceAmount = new TokenAmount(pair.liquidityToken, value);
 
-		const totalSupply = await getTotalSupply(pair.liquidityToken, signer);
+		const totalSupply = await getTotalSupply(
+			pair.liquidityToken,
+			signer,
+			provider
+		);
 
 		const liquidityValueA =
 			pair &&
@@ -217,7 +221,6 @@ export const UseRemoveLiquidity = (
 				currencyB,
 				percentToRemove?.multiply(liquidityValueB?.raw).quotient
 			);
-
 
 		if (!chainId || !provider || !account || !deadline)
 			throw new Error("missing dependencies");
@@ -389,7 +392,11 @@ export const UseRemoveLiquidity = (
 
 		const pairBalanceAmount = new TokenAmount(pair.liquidityToken, value);
 
-		const totalSupply = await getTotalSupply(pair.liquidityToken, signer);
+		const totalSupply = await getTotalSupply(
+			pair.liquidityToken,
+			signer,
+			provider
+		);
 
 		const liquidityValueA =
 			pair &&

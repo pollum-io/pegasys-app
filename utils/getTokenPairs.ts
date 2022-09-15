@@ -17,6 +17,19 @@ export function getTokenPairs(chainId: ChainId, allTokens: WrappedTokenInfo[]) {
 		{}
 	);
 
+	const TUSD = allTokens.find(item => item.symbol === "TUSD");
+	const USDT = allTokens.find(item => item.symbol === "USDT");
+	const USDC = allTokens.find(item => item.symbol === "USDC");
+	const DAI = allTokens.find(item => item.symbol === "DAI");
+	const WETH = allTokens.find(item => item.symbol === "WETH");
+	const BUSD = allTokens.find(item => item.symbol === "BUSD");
+
+	const customPairs = [TUSD, USDT, USDC, DAI, WETH, BUSD];
+
+	const allCustomPairs = customPairs.flatMap((v, i) =>
+		customPairs.slice(i + 1).map(w => [v, w])
+	);
+
 	// pairs for every token against every base
 	const generatedPairs = chainId
 		? flatMap(Object.keys(tokens), tokenAddress => {
@@ -37,16 +50,23 @@ export function getTokenPairs(chainId: ChainId, allTokens: WrappedTokenInfo[]) {
 		  })
 		: [];
 
+	const mixPairs =
+		chainId === ChainId.NEVM
+			? [...generatedPairs, ...allCustomPairs]
+			: [...generatedPairs];
+
 	// dedupes pairs of tokens in the combined list
-	const keyed = generatedPairs.reduce<{
+	const keyed = mixPairs?.reduce<{
 		[key: string]: [Token, Token];
 	}>((memo, [tokenA, tokenB]) => {
 		const sorted =
-			tokenA instanceof WrappedTokenInfo && tokenA.sortsBefore(tokenB);
+			tokenA instanceof WrappedTokenInfo && tokenA.sortsBefore(tokenB as Token);
 		const key = sorted
-			? `${tokenA.address}:${tokenB.address}`
-			: `${tokenB.address}:${tokenA.address}`;
+			? `${tokenA?.address}:${tokenB?.address}`
+			: `${tokenB?.address}:${tokenA?.address}`;
 		if (memo[key]) return memo;
+		// eslint-disable-next-line
+		// @ts-ignore
 		memo[key] = sorted ? [tokenA, tokenB] : [tokenB, tokenA];
 		return memo;
 	}, {});

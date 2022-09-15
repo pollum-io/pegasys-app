@@ -49,8 +49,13 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	} = props;
 	const theme = usePicasso();
 	const { onOpenRemoveLiquidity, onOpenAddLiquidity } = useModal();
-	const { setCurrentLpAddress, signer, walletAddress, currentNetworkChainId } =
-		useWallet();
+	const {
+		setCurrentLpAddress,
+		signer,
+		walletAddress,
+		currentNetworkChainId,
+		provider,
+	} = useWallet();
 	const [poolBalance, setPoolBalance] = useState<string>("");
 	const [percentShare, setPercentShare] = useState<string>("");
 	const [volume, setVolume] = useState<string>("");
@@ -61,8 +66,6 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 
 	const currencyA = unwrappedToken(pair?.token0 as Token);
 	const currencyB = unwrappedToken(pair?.token1 as Token);
-
-	console.log({ currencyA: pair?.token0, currencyB: pair?.token1 });
 
 	const wrapTokenA = userTokens?.find(
 		token => token.symbol === currencyA.symbol
@@ -105,7 +108,8 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 
 		const totalSupply = await getTotalSupply(
 			pair?.liquidityToken as Token,
-			signer as Signer
+			signer as Signer,
+			provider
 		);
 
 		const poolTokenPercentage =
