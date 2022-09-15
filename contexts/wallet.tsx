@@ -194,6 +194,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			});
 	};
 
+	console.log("transactions", transactions);
+
 	useMemo(() => {
 		if (approvalState.status === ApprovalState.PENDING) {
 			const timer = setInterval(async () => {
@@ -208,8 +210,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 						result.from.toLowerCase() === walletAddress.toLowerCase() &&
 						result.confirmations !== 0
 					) {
-						setTransactions({
-							...transactions,
+						setTransactions(prevTransactions => ({
+							...prevTransactions,
 							[Number(currentNetworkChainId)]: {
 								...transactions[currentNetworkChainId === 57 ? 57 : 5700],
 								[hash]: {
@@ -217,10 +219,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 										hash
 									],
 									...result,
+									finished: true,
 									hash,
 								},
 							},
-						});
+						}));
 						setPendingTxLength(Number(getTx?.result?.length));
 						setApprovalState({
 							status: ApprovalState.APPROVED,

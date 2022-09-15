@@ -72,6 +72,7 @@ export function UseWrapCallback(
 									transactions,
 									{
 										summary: `Wrap ${inputAmount.toSignificant(6)} SYS to WSYS`,
+										finished: false,
 									}
 								);
 								setApprovalState({
@@ -106,6 +107,7 @@ export function UseWrapCallback(
 										summary: `Unwrap ${inputAmount.toSignificant(
 											6
 										)} WSYS to SYS`,
+										finished: false,
 									}
 								);
 								setApprovalState({

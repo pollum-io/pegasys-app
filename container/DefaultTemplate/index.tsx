@@ -42,9 +42,9 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 							>
 								<Flex
 									width="100%"
-									height={["100%", "40%", "40%", "40%"]}
+									height={["100%", "100%", "40%", "40%"]}
 									margin="0 auto"
-									top={["-10rem", "-10rem", "-5rem", "-5rem"]}
+									top={["-20rem", "-20rem", "-5rem", "-5rem"]}
 									position="fixed"
 									background={
 										colorMode === "dark"
@@ -79,10 +79,11 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 
 								<Header />
 								<Flex
+									id="footer-blur"
 									w="100vw"
 									h="9%"
 									position="fixed"
-									bottom="-5"
+									bottom={["25", "25", "-5", "-5"]}
 									background={colorMode === "dark" ? "#03060c" : "#ffffff"}
 									zIndex="40"
 									filter="blur(35px)"

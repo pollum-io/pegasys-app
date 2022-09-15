@@ -12,7 +12,6 @@ import { AddressInfoButton } from "components/Buttons";
 import { shortAddress } from "utils";
 import { ExpertMode } from "components/Header/ExpertMode";
 import { ApprovalState } from "contexts";
-import { Circles } from "react-loading-icons";
 import { AddressButton } from "./AddressButton";
 
 export const WalletButton: FunctionComponent<ButtonProps> = props => {
@@ -62,10 +61,10 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						w="max-content"
 						h="max-content"
 						py={["2", "2", "2", "2"]}
-						px={["6", "6", "8", "8"]}
+						px={["4", "4", "4", "4"]}
 						position={["absolute", "relative"]}
-						bottom={["12", "10"]}
-						left={["25%", "0", "0", "0"]}
+						bottom={["12", "8", "8", "8"]}
+						left={["28%", "0", "0", "0"]}
 						onClick={onOpenSelectWalletModal}
 						{...rest}
 					>
@@ -94,9 +93,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 					>
 						{shortAddress(walletAddress)}
 					</AddressButton>
-					<Flex display={["none", "flex", "flex", "flex"]} zIndex="-99">
-						<ExpertMode />
-					</Flex>
+					<ExpertMode />
 				</>
 			)}
 			{isConnected && isPending && (
@@ -123,7 +120,12 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						<Text fontSize="14px" color="white">
 							{pendingTxLength}
 						</Text>
-						<Flex className="circleLoadingPending" />
+						<Flex
+							className="circleLoading"
+							id={
+								colorMode === "dark" ? "smallPendingDark" : "smallPendingLight"
+							}
+						/>
 					</Flex>
 					<AddressButton
 						onClick={walletError ? onOpenSelectWalletModal : onOpenAddress}

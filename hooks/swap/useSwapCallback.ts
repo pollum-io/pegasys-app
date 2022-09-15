@@ -182,6 +182,7 @@ export function UseSwapCallback(
 
 					addTransaction(response, walletInfos, setTransactions, transactions, {
 						summary: withVersion,
+						finished: false,
 					});
 
 					setApprovalState({ status: ApprovalState.PENDING, type: txType });
