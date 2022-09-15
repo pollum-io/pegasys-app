@@ -386,30 +386,6 @@ export const PoolsContainer: NextPage = () => {
 								</InputGroup>
 							</Flex>
 							<Flex gap="4" alignItems="flex-end">
-								<Button
-									fontSize="sm"
-									fontWeight="semibold"
-									py={["0.2rem", "0.2rem", "1", "1"]}
-									px="1.5rem"
-									h="2.2rem"
-									size="sm"
-									bgColor="transparent"
-									borderWidth="1px"
-									borderColor={theme.text.cyanPurple}
-									color={theme.text.whitePurple}
-									borderRadius="full"
-									_hover={{
-										borderColor: theme.text.cyanLightPurple,
-										color: theme.text.cyanLightPurple,
-									}}
-									_active={{}}
-									onClick={() => {
-										setIsCreate(true);
-										onOpenAddLiquidity();
-									}}
-								>
-									Create a Pair
-								</Button>
 								<Flex
 									flexDirection="column"
 									alignItems={[
@@ -493,67 +469,47 @@ export const PoolsContainer: NextPage = () => {
 							</Flex>
 						</Flex>
 					</Flex>
-					{!isConnected ? (
-						<Flex
-							w="100%"
-							mt={["3rem", "3rem", "4rem", "4rem"]}
-							flexDirection="column"
-							alignItems="center"
-							justifyContent="center"
-							gap="16"
-						>
-							<Text
-								fontSize={["sm", "sm", "md", "md"]}
-								fontWeight="normal"
-								textAlign="center"
+					<Flex
+						flexWrap="wrap"
+						gap="7"
+						zIndex="1"
+						mt="10"
+						justifyContent={["center", "center", "unset", "unset"]}
+					>
+						{searchTokens?.length !== 0 ? (
+							searchTokens?.map(pair => (
+								<PoolCards
+									key={pair.liquidityToken.address}
+									setIsCreate={setIsCreate}
+									pair={pair}
+									userTokens={userTokensBalance}
+									setSelectedToken={setSelectedToken}
+									setCurrPair={setCurrPair}
+									setSliderValue={setSliderValue}
+									setDepositedTokens={setDepositedTokens}
+									setPoolPercentShare={setPoolPercentShare}
+									setUserPoolBalance={setUserPoolBalance}
+								/>
+							))
+						) : (
+							<Flex
+								w="100%"
+								mt={["3rem", "3rem", "4rem", "4rem"]}
+								flexDirection="column"
+								alignItems="center"
+								justifyContent="center"
+								gap="16"
 							>
-								Please connect your wallet in the button bellow to be able to
-								view your liquidity.
-							</Text>
-						</Flex>
-					) : (
-						<Flex
-							flexWrap="wrap"
-							gap="7"
-							zIndex="1"
-							mt="10"
-							justifyContent={["center", "center", "unset", "unset"]}
-						>
-							{searchTokens?.length !== 0 ? (
-								searchTokens?.map(pair => (
-									<PoolCards
-										key={pair.liquidityToken.address}
-										setIsCreate={setIsCreate}
-										pair={pair}
-										userTokens={userTokensBalance}
-										setSelectedToken={setSelectedToken}
-										setCurrPair={setCurrPair}
-										setSliderValue={setSliderValue}
-										setDepositedTokens={setDepositedTokens}
-										setPoolPercentShare={setPoolPercentShare}
-										setUserPoolBalance={setUserPoolBalance}
-									/>
-								))
-							) : (
-								<Flex
-									w="100%"
-									mt={["3rem", "3rem", "4rem", "4rem"]}
-									flexDirection="column"
-									alignItems="center"
-									justifyContent="center"
-									gap="16"
+								<Text
+									fontSize={["sm", "sm", "md", "md"]}
+									fontWeight="normal"
+									textAlign="center"
 								>
-									<Text
-										fontSize={["sm", "sm", "md", "md"]}
-										fontWeight="normal"
-										textAlign="center"
-									>
-										Unavailable liquidity tokens.
-									</Text>
-								</Flex>
-							)}
-						</Flex>
-					)}
+									Unavailable liquidity tokens.
+								</Text>
+							</Flex>
+						)}
+					</Flex>
 				</Flex>
 			</Flex>
 		</Flex>
