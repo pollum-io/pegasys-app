@@ -48,11 +48,13 @@ const PairFields = `
     createdAtTimestamp
   }
 `;
-export const PAIR_DATA = (pairAddress: string) => {
+export const PAIR_DATA = (pairAddress: string, block?: number) => {
 	const queryString = `
     ${PairFields}
     query pairs {
-      pairs( where: { id: "${pairAddress}"} ) {
+      pairs(${
+				block ? `block: {number: ${block}}` : ``
+			} where: { id: "${pairAddress}"} ) {
         ...PairFields
       }
     }`;
@@ -91,3 +93,16 @@ export const PAIRS_CURRENT = gql`
 		}
 	}
 `;
+
+export const GET_BLOCKS = (timestamps: number[]) => {
+	let queryString = "query blocks {";
+	queryString += timestamps.map(
+		timestamp => `t${timestamp}:blocks(first: 1, orderBy: timestamp, orderDirection: desc, where: { timestamp_gt: ${timestamp}, timestamp_lt: ${
+			timestamp + 600
+		} }) {
+      number
+    }`
+	);
+	queryString += "}";
+	return gql(queryString);
+};

@@ -29,12 +29,14 @@ import {
 	ILiquidityTokens,
 	IDeposited,
 	IVolumeTokens,
+	ICommonPairs,
 } from "types";
 import {
 	getTokenPairs,
 	toV2LiquidityToken,
 	getBalanceOfSingleCall,
 	unwrappedToken,
+	getBlocksFromTimestamps,
 } from "utils";
 
 export const PoolsContainer: NextPage = () => {
@@ -73,6 +75,7 @@ export const PoolsContainer: NextPage = () => {
 	const chainId =
 		currentNetworkChainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
 	const sortTypeName = sortType === "pool-weight" ? "Pool Weight" : "Volume";
+	const [pairInfo, setPairInfo] = useState<ICommonPairs>();
 
 	useMemo(async () => {
 		const allTokens = getTokenPairs(currentNetworkChainId, userTokensBalance);
@@ -82,6 +85,8 @@ export const PoolsContainer: NextPage = () => {
 			provider,
 			walletAddress,
 		};
+
+		const [{ number: b1 }] = await getBlocksFromTimestamps();
 
 		const tokensWithLiquidity = allTokens.map(tokens => ({
 			liquidityToken: toV2LiquidityToken(
@@ -144,7 +149,7 @@ export const PoolsContainer: NextPage = () => {
 		const pairInfos = await Promise.all(
 			pairAdd.map(async (token: { id: string }) => {
 				const volume = await pegasysClient.query({
-					query: PAIR_DATA(token.id),
+					query: PAIR_DATA(token.id, b1),
 					fetchPolicy: "cache-first",
 				});
 
@@ -166,6 +171,16 @@ export const PoolsContainer: NextPage = () => {
 					formattedPairsInfo[`${currency[0].symbol}-${currency[1].symbol}`]
 			)
 			.filter(item => item !== undefined);
+
+		const formattedCommonPairs: ICommonPairs = commonPairs.reduce(
+			(acc, curr) => ({
+				...acc,
+				[`${curr?.token0?.symbol === "WSYS" ? "SYS" : curr?.token0?.symbol}-${
+					curr?.token1?.symbol === "WSYS" ? "SYS" : curr?.token1?.symbol
+				}`]: curr,
+			}),
+			{}
+		);
 
 		const formattedLiquidityBalances: ILiquidityTokens = liquidityBalances
 			.sort((a, b) => b.balance - a.balance)
@@ -204,6 +219,7 @@ export const PoolsContainer: NextPage = () => {
 			);
 		setLpPairs(allUniqueV2PairsWithLiquidity);
 		setSearchTokens(allUniqueV2PairsWithLiquidity);
+		setPairInfo(formattedCommonPairs);
 	}, [userTokensBalance, sortType]);
 
 	const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
@@ -508,6 +524,7 @@ export const PoolsContainer: NextPage = () => {
 										setDepositedTokens={setDepositedTokens}
 										setPoolPercentShare={setPoolPercentShare}
 										setUserPoolBalance={setUserPoolBalance}
+										pairInfo={pairInfo}
 									/>
 								))
 							) : (

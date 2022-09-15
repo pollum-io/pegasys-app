@@ -15,7 +15,7 @@ import {
 	Token,
 	TokenAmount,
 } from "@pollum-io/pegasys-sdk";
-import { WrappedTokenInfo, IDeposited } from "types";
+import { WrappedTokenInfo, IDeposited, ICommonPairs } from "types";
 import { Signer } from "ethers";
 import { PAIR_DATA, pegasysClient } from "apollo";
 
@@ -32,6 +32,7 @@ interface IPoolCards {
 	>;
 	setPoolPercentShare: React.Dispatch<React.SetStateAction<string>>;
 	setUserPoolBalance: React.Dispatch<React.SetStateAction<string>>;
+	pairInfo: ICommonPairs | undefined;
 }
 
 export const PoolCards: FunctionComponent<IPoolCards> = props => {
@@ -46,6 +47,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		setDepositedTokens,
 		setPoolPercentShare,
 		setUserPoolBalance,
+		pairInfo,
 	} = props;
 	const theme = usePicasso();
 	const { onOpenRemoveLiquidity, onOpenAddLiquidity } = useModal();
@@ -186,13 +188,27 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					<Text fontWeight="semibold" color={theme.text.mono}>
 						Liquidity
 					</Text>
-					<Text>{poolBalance || "-"}</Text>
+					<Text>
+						{(pairInfo &&
+							pairInfo[`${currencyA.symbol}-${currencyB.symbol}`] &&
+							Number(
+								pairInfo[`${currencyA.symbol}-${currencyB.symbol}`]?.reserveUSD
+							).toFixed(8)) ||
+							"-"}
+					</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold" color={theme.text.mono}>
 						Volume
 					</Text>
-					<Text>{volume}</Text>
+					<Text>
+						{(pairInfo &&
+							pairInfo[`${currencyA.symbol}-${currencyB.symbol}`] &&
+							Number(
+								pairInfo[`${currencyA.symbol}-${currencyB.symbol}`]?.volumeUSD
+							).toFixed(8)) ||
+							"-"}
+					</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold" color={theme.text.mono}>

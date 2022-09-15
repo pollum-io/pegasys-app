@@ -9,3 +9,4 @@ export * from "./IMockedDatas";
 export * from "./ILiquidityTokens";
 export * from "./IDeposit";
 export * from "./IVolumeTokens";
+export * from "./ICommonPairs";
