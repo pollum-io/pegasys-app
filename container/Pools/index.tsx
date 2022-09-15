@@ -469,47 +469,67 @@ export const PoolsContainer: NextPage = () => {
 							</Flex>
 						</Flex>
 					</Flex>
-					<Flex
-						flexWrap="wrap"
-						gap="7"
-						zIndex="1"
-						mt="10"
-						justifyContent={["center", "center", "unset", "unset"]}
-					>
-						{searchTokens?.length !== 0 ? (
-							searchTokens?.map(pair => (
-								<PoolCards
-									key={pair.liquidityToken.address}
-									setIsCreate={setIsCreate}
-									pair={pair}
-									userTokens={userTokensBalance}
-									setSelectedToken={setSelectedToken}
-									setCurrPair={setCurrPair}
-									setSliderValue={setSliderValue}
-									setDepositedTokens={setDepositedTokens}
-									setPoolPercentShare={setPoolPercentShare}
-									setUserPoolBalance={setUserPoolBalance}
-								/>
-							))
-						) : (
-							<Flex
-								w="100%"
-								mt={["3rem", "3rem", "4rem", "4rem"]}
-								flexDirection="column"
-								alignItems="center"
-								justifyContent="center"
-								gap="16"
+					{!isConnected ? (
+						<Flex
+							w="100%"
+							mt={["3rem", "3rem", "4rem", "4rem"]}
+							flexDirection="column"
+							alignItems="center"
+							justifyContent="center"
+							gap="16"
+						>
+							<Text
+								fontSize={["sm", "sm", "md", "md"]}
+								fontWeight="normal"
+								textAlign="center"
 							>
-								<Text
-									fontSize={["sm", "sm", "md", "md"]}
-									fontWeight="normal"
-									textAlign="center"
+								Please connect your wallet in the button bellow to be able to
+								view your liquidity.
+							</Text>
+						</Flex>
+					) : (
+						<Flex
+							flexWrap="wrap"
+							gap="7"
+							zIndex="1"
+							mt="10"
+							justifyContent={["center", "center", "unset", "unset"]}
+						>
+							{searchTokens?.length !== 0 ? (
+								searchTokens?.map(pair => (
+									<PoolCards
+										key={pair.liquidityToken.address}
+										setIsCreate={setIsCreate}
+										pair={pair}
+										userTokens={userTokensBalance}
+										setSelectedToken={setSelectedToken}
+										setCurrPair={setCurrPair}
+										setSliderValue={setSliderValue}
+										setDepositedTokens={setDepositedTokens}
+										setPoolPercentShare={setPoolPercentShare}
+										setUserPoolBalance={setUserPoolBalance}
+									/>
+								))
+							) : (
+								<Flex
+									w="100%"
+									mt={["3rem", "3rem", "4rem", "4rem"]}
+									flexDirection="column"
+									alignItems="center"
+									justifyContent="center"
+									gap="16"
 								>
-									Unavailable liquidity tokens.
-								</Text>
-							</Flex>
-						)}
-					</Flex>
+									<Text
+										fontSize={["sm", "sm", "md", "md"]}
+										fontWeight="normal"
+										textAlign="center"
+									>
+										Unavailable liquidity tokens.
+									</Text>
+								</Flex>
+							)}
+						</Flex>
+					)}
 				</Flex>
 			</Flex>
 		</Flex>
