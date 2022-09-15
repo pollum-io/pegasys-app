@@ -445,6 +445,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	// REACT HOOKS SESSION //
 
 	useEffect(() => {
+		console.log(tokensGraphCandleData, "tokensGraphCandleData");
+	}, [tokensGraphCandleData]);
+
+	useEffect(() => {
 		if (!userTokensBalance) return;
 
 		const getTokensBySymbol = userTokensBalance?.filter(
@@ -1152,147 +1156,95 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				borderRadius={30}
 				border="1px solid transparent;"
 			>
-				<Flex
-					gap="2"
-					justifyContent="center"
-					flexDirection={["column", "row", "row", "row"]}
-					alignItems="center"
-					mb={`${
-						!isLoadingGraphCandles && tokensGraphCandleData?.length === 0 && "5"
-					}`}
-				>
-					<Flex>
-						{[0, 1].map(
-							(
-								_,
-								index // Array with number of elements to display in the screen
-							) => (
-								<SkeletonCircle
-									key={_ + Number(index)}
-									isLoaded={!isLoadingGraphCandles}
-									mr={`${isLoadingGraphCandles && "0.5"}`}
-									fadeDuration={1.5}
-									speed={1.3}
-									background="transparent"
-									opacity={`${isLoadingGraphCandles && 0.2}`}
-									startColor="#8A15E6"
-									endColor="#19EBCE"
-								>
-									<Img
-										src={
-											index === 0
-												? tokensPairPosition[0]?.tokenInfo?.logoURI
-												: tokensPairPosition[1]?.tokenInfo?.logoURI
-										}
-										w="7"
-										h="7"
-										mr="0.5"
-									/>
-								</SkeletonCircle>
-							)
-						)}
-
-						<Skeleton
-							isLoaded={!isLoadingGraphCandles}
-							ml={`${isLoadingGraphCandles && "1.5"}`}
-							fadeDuration={1.5}
-							speed={1.3}
-							background="transparent"
-							opacity={`${isLoadingGraphCandles && 0.2}`}
-							startColor="#8A15E6"
-							endColor="#19EBCE"
-						>
-							<Text fontWeight="700" fontSize="xl" ml="2.5">
-								{tokensPairPosition[0]?.symbol} /{" "}
-								{tokensPairPosition[1]?.symbol}
-							</Text>
-						</Skeleton>
-					</Flex>
-					<Skeleton
-						h={`${isLoadingGraphCandles && "32px"}`}
-						isLoaded={!isLoadingGraphCandles}
-						fadeDuration={1.5}
-						speed={1.3}
-						background="transparent"
-						opacity={`${isLoadingGraphCandles && 0.2}`}
-						startColor="#8A15E6"
-						endColor="#19EBCE"
-					>
-						<Text pl="2" fontSize="lg" fontWeight="400">
-							{tokensGraphCandleData?.length === 0
-								? "-"
-								: `${parseFloat(
-										String(tokensGraphCandleData[0]?.close)
-								  ).toFixed(2)} ${tokensPairPosition[1]?.symbol}`}
-						</Text>
-					</Skeleton>
-				</Flex>
-
-				<Flex
-					my={`${
-						tokensGraphCandleData.length === 0 && !isLoadingGraphCandles
-							? "0"
-							: "6"
-					}`}
-					justifyContent="center"
-				>
-					{isLoadingGraphCandles ? (
+				{!isLoadingGraphCandles && (
+					<Flex flexDirection="column">
 						<Flex
-							w="100%"
-							maxW={`${isLoadingGraphCandles && "70%"}`}
+							gap="2"
+							justifyContent="center"
+							flexDirection={["column", "row", "row", "row"]}
 							alignItems="center"
-							justifyContent={`${
-								isLoadingGraphCandles ? "space-evenly" : "center"
+							mb={`${
+								!isLoadingGraphCandles &&
+								tokensGraphCandleData?.length === 0 &&
+								"5"
 							}`}
 						>
-							{[1, 2, 3, 4, 5].map(
-								(
-									_,
-									index // Array with number of elements to display in the screen
-								) => (
-									<SkeletonCircle
-										key={_ + Number(index)}
-										w="40px"
-										h="40px"
-										fadeDuration={1.5}
-										speed={1.3}
-										background="transparent"
-										opacity={`${isLoadingGraphCandles && 0.2}`}
-										startColor="#8A15E6"
-										endColor="#19EBCE"
-									/>
-								)
+							<Flex>
+								{[0, 1].map(
+									(
+										_,
+										index // Array with number of elements to display in the screen
+									) => (
+										<Img
+											key={_ + Number(index)}
+											src={
+												index === 0
+													? tokensPairPosition[0]?.tokenInfo?.logoURI
+													: tokensPairPosition[1]?.tokenInfo?.logoURI
+											}
+											w="7"
+											h="7"
+											mr="0.5"
+										/>
+									)
+								)}
+
+								<Text fontWeight="700" fontSize="xl" ml="2.5">
+									{tokensPairPosition[0]?.symbol} /{" "}
+									{tokensPairPosition[1]?.symbol}
+								</Text>
+							</Flex>
+
+							<Text pl="2" fontSize="lg" fontWeight="400">
+								{tokensGraphCandleData?.length === 0
+									? "-"
+									: `${parseFloat(
+											String(tokensGraphCandleData[0]?.close)
+									  ).toFixed(2)} ${tokensPairPosition[1]?.symbol}`}
+							</Text>
+						</Flex>
+						<Flex
+							my={`${
+								tokensGraphCandleData.length === 0 && !isLoadingGraphCandles
+									? "0"
+									: "6"
+							}`}
+							justifyContent="center"
+						>
+							{tokensGraphCandleData.length !== 0 && (
+								<FilterButton
+									periodStateValue={tokensGraphCandlePeriod}
+									setPeriod={setTokensGraphCandlePeriod}
+								/>
 							)}
 						</Flex>
-					) : (
-						tokensGraphCandleData.length !== 0 && (
-							<FilterButton
-								periodStateValue={tokensGraphCandlePeriod}
-								setPeriod={setTokensGraphCandlePeriod}
-							/>
-						)
-					)}
-				</Flex>
+					</Flex>
+				)}
 
 				<Flex
 					direction="column"
 					justifyContent="center"
 					maxW={isLoadingGraphCandles ? "475px" : ""}
 				>
-					{isLoadingGraphCandles && tokensGraphCandleData?.length >= 1 ? (
+					{isLoadingGraphCandles ? (
 						<Flex
 							flexDirection="column"
 							justifyContent="center"
 							align="center"
 							gap="3"
-							mt="10"
+							mt={["0rem", "9rem", "9rem", "9rem"]}
 							ml="8"
 							color={theme.text.mono}
 						>
-							<Img src="icons/pegasys.png" className="blob" w="35%" h="35%" />
+							<Img
+								src="icons/pegasysSemFundo.png"
+								className="blob"
+								w="25%"
+								h="25%"
+							/>
 						</Flex>
-					) : tokensGraphCandleData?.length === 0 && isLoadingGraphCandles ? (
-						<Flex flexDirection="column" ml="9">
+					) : tokensGraphCandleData?.length === 0 ? (
+						<Flex flexDirection="column" ml="0">
 							<Text
 								textAlign="center"
 								color={theme.text.mono}

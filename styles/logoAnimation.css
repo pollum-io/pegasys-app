@@ -1,6 +1,6 @@
 .blob {
 	transform: scale(1);
-	animation: pulse 4s infinite;
+	animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
