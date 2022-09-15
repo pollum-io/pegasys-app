@@ -61,14 +61,39 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 		const watchAccounts = async () => {
 			const newAddress = await WalletFramework.getAddress();
 
-			setAddress(newAddress);
+			console.log("accounts");
+			console.log(newAddress);
+
+			if (newAddress !== address) {
+				setAddress(newAddress);
+			}
+		};
+
+		const watchChains = async () => {
+			const newChain = await WalletFramework.getChain();
+
+			if (newChain !== chainId) {
+				setChainId(newChain ?? 0);
+			}
 		};
 
 		const provider = WalletFramework.getProvider();
 
-		provider?.on("accountsChanged", () => {
+		console.log("provider: ", provider);
+
+		provider?.addListener("accountsChanged", () => {
+			// console.log("accountsChanged: ");
 			watchAccounts();
 		});
+
+		provider?.addListener("chainChanged", () => {
+			// console.log("chainChanged: ");
+			watchChains();
+		});
+
+		return () => {
+			provider?.removeAllListeners();
+		};
 	}, []);
 
 	const providerValue = useMemo(

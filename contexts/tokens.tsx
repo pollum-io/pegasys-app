@@ -31,6 +31,8 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 	const getDefaultListToken = async () => {
 		const { tokens } = await getDefaultTokens(chainId as number);
 
+		console.log("tokens", tokens);
+
 		const WSYS = tokens.find(token => token.symbol === "WSYS");
 
 		const SYS: TokenInfo = {

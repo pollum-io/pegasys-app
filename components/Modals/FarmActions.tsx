@@ -20,24 +20,90 @@ import {
 	Text,
 	Tooltip,
 } from "@chakra-ui/react";
-import { usePicasso } from "hooks";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import { usePicasso, useTokens } from "hooks";
+import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { MdArrowBack, MdOutlineInfo } from "react-icons/md";
+
+import { FarmServices, useWallet, IStakeInfo } from "pegasys-services";
+import { CurrencyAmount, JSBI } from "@pollum-io/pegasys-sdk";
+import { tryParseAmount } from "utils";
 
 interface IModal {
 	isOpen: boolean;
 	onClose: () => void;
 	buttonId: string;
 	setButtonId: Dispatch<SetStateAction<string>>;
+	stakeInfo: IStakeInfo;
 }
 
 export const FarmActions: React.FC<IModal> = props => {
-	const { isOpen, onClose, buttonId, setButtonId } = props;
+	const { isOpen, onClose, buttonId, setButtonId, stakeInfo } = props;
+
 	const theme = usePicasso();
 	const [confirmDepoist] = useState(false);
+	const [depositValue, setDepositValue] = useState<string>("");
+	const [withdrawnValue, setWithdrawnValue] = useState<string>("");
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
+	const { address } = useWallet();
+	const { userTokensBalance } = useTokens();
+
+	const onWithdraw = async () => {
+		const parsedInput: CurrencyAmount | undefined = tryParseAmount(
+			withdrawnValue,
+			stakeInfo.lpToken
+		);
+
+		const parsedAmount =
+			parsedInput &&
+			stakeInfo.availableLpTokens &&
+			JSBI.lessThanOrEqual(parsedInput.raw, stakeInfo.availableLpTokens.raw)
+				? parsedInput
+				: undefined;
+
+		await FarmServices.withdraw(
+			stakeInfo.poolId,
+			parsedAmount?.raw.toString(16) ?? "0",
+			address
+		);
+	};
+
+	const onClaim = async () => {
+		await FarmServices.claim(stakeInfo.poolId, address);
+	};
+
+	const onDeposit = async () => {
+		// to do approve generic
+
+		const parsedInput: CurrencyAmount | undefined = tryParseAmount(
+			depositValue,
+			stakeInfo.lpToken
+		);
+
+		const parsedAmount =
+			parsedInput &&
+			stakeInfo.availableLpTokens &&
+			JSBI.lessThanOrEqual(parsedInput.raw, stakeInfo.availableLpTokens.raw)
+				? parsedInput
+				: undefined;
+
+		await FarmServices.deposit(
+			stakeInfo.poolId,
+			parsedAmount?.raw.toString(16) ?? "0",
+			address
+		);
+	};
+
+	const tokenBLogo = useMemo(() => {
+		const tokenBWrapped = userTokensBalance.find(
+			ut =>
+				ut.address === stakeInfo.tokenB.address &&
+				stakeInfo.tokenB.chainId === ut.chainId
+		);
+
+		return tokenBWrapped?.logoURI ?? "";
+	}, [userTokensBalance, stakeInfo.tokenB]);
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -198,18 +264,18 @@ export const FarmActions: React.FC<IModal> = props => {
 						<Flex flexDirection="column">
 							<Flex gap="2">
 								<Flex>
-									<Img src="icons/syscoin-logo.png" w="6" h="6" />
-									<Img src="icons/pegasys.png" w="6" h="6" />
+									<Img src={stakeInfo.tokenA.logoURI} w="6" h="6" />
+									<Img src={tokenBLogo} w="6" h="6" />
 								</Flex>
 								<Flex>
 									<Text fontSize="lg" fontWeight="bold">
-										SYS
+										{stakeInfo.tokenA.name}
 									</Text>
 									<Text fontSize="lg" fontWeight="bold">
 										:
 									</Text>
 									<Text fontSize="lg" fontWeight="bold">
-										PSYS
+										{stakeInfo.tokenB.name}
 									</Text>
 								</Flex>
 							</Flex>
@@ -220,7 +286,10 @@ export const FarmActions: React.FC<IModal> = props => {
 								color={theme.text.mono}
 							>
 								<Text fontWeight="normal">
-									Available to deposit: 0.00000000001
+									Available to deposit:{" "}
+									{stakeInfo.availableLpTokens.toFixed(0, {
+										groupSeparator: ",",
+									})}
 								</Text>
 								{!confirmDepoist ? (
 									<Flex>
@@ -236,6 +305,8 @@ export const FarmActions: React.FC<IModal> = props => {
 												_focus={{
 													outline: "none",
 												}}
+												value={depositValue}
+												onChange={e => setDepositValue(e.target.value)}
 											/>
 											<InputRightAddon
 												// eslint-disable-next-line react/no-children-prop
@@ -254,6 +325,11 @@ export const FarmActions: React.FC<IModal> = props => {
 													color: theme.text.cyan,
 													cursor: "pointer",
 												}}
+												onClick={() =>
+													setDepositValue(
+														stakeInfo.availableLpTokens.raw.toString()
+													)
+												}
 											/>
 										</InputGroup>
 									</Flex>
@@ -282,7 +358,11 @@ export const FarmActions: React.FC<IModal> = props => {
 									</Flex>
 								)}
 								<Text fontWeight="normal" pt="1.5rem">
-									Weekly Rewards: 0 PSYS / Week
+									Weekly Rewards:{" "}
+									{stakeInfo.totalRewardRatePerWeek.toFixed(0, {
+										groupSeparator: ",",
+									})}{" "}
+									PSYS / Week
 								</Text>
 								<Text fontWeight="normal">Extra Reward: 0 PSYS / Week</Text>
 							</Flex>
@@ -303,6 +383,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								}}
 								_active={{}}
 								borderRadius="full"
+								onClick={onDeposit}
 							>
 								Approve
 							</Button>
@@ -311,7 +392,10 @@ export const FarmActions: React.FC<IModal> = props => {
 					{buttonId === "withdraw" && (
 						<Flex flexDirection="column">
 							<Text fontWeight="normal" mb="2">
-								Deposited PLP Liquidity: 0.000001
+								Deposited PLP Liquidity:{" "}
+								{stakeInfo.stakedAmount.toFixed(0, {
+									groupSeparator: ",",
+								})}
 							</Text>
 							<Flex>
 								<InputGroup size="lg">
@@ -326,6 +410,8 @@ export const FarmActions: React.FC<IModal> = props => {
 										_focus={{
 											outline: "none",
 										}}
+										value={withdrawnValue}
+										onChange={e => setWithdrawnValue(e.target.value)}
 									/>
 									<InputRightAddon
 										// eslint-disable-next-line react/no-children-prop
@@ -349,7 +435,10 @@ export const FarmActions: React.FC<IModal> = props => {
 							</Flex>
 							<Collapse in={sliderValue === 100} animateOpacity>
 								<Text fontWeight="normal" mt="2">
-									Uncalimed PSYS: 0.01819
+									Unclaimed PSYS:{" "}
+									{stakeInfo.unclaimedPSYS.toFixed(0, {
+										groupSeparator: ",",
+									})}
 								</Text>
 							</Collapse>
 							<Flex justify="center">
@@ -433,6 +522,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									_hover={{ opacity: "1", bgColor: theme.bg.bluePurple }}
 									_active={{}}
 									borderRadius="full"
+									onClick={onWithdraw}
 								>
 									Withdraw
 								</Button>
@@ -454,7 +544,9 @@ export const FarmActions: React.FC<IModal> = props => {
 								<Flex flexDirection="row" alignItems="center">
 									<Img src="icons/pegasys.png" w="6" h="6" />
 									<Text fontSize="2xl" fontWeight="semibold" pl="2">
-										0.132323
+										{stakeInfo.unclaimedPSYS.toFixed(0, {
+											groupSeparator: ",",
+										})}
 									</Text>
 								</Flex>
 								<Flex flexDirection="row">
@@ -474,6 +566,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								_hover={{ opacity: "1", bgColor: theme.bg.bluePurple }}
 								_active={{}}
 								borderRadius="full"
+								onClick={onClaim}
 							>
 								Claim PSYS
 							</Button>

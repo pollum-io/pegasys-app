@@ -13,14 +13,36 @@ import {
 	Box,
 	useMediaQuery,
 } from "@chakra-ui/react";
-import { FarmCards } from "components/Farm/FarmCards";
+import { FarmCards } from "components";
 import { usePicasso } from "hooks";
 import { NextPage } from "next";
 import { MdOutlineCallMade, MdSearch, MdExpandMore } from "react-icons/md";
+import { useEffect, useState } from "react";
+
+const sortData = {
+	apr: "APR",
+	poolWeight: "Pool Weight",
+};
 
 export const FarmContainer: NextPage = () => {
 	const theme = usePicasso();
+	const [search, setSearch] = useState<string>("");
+	const [filter, setFilter] = useState<string>("");
+	const [sort, setSort] = useState<keyof typeof sortData>("apr");
+	const [timeoutid, setTimeoutid] = useState<NodeJS.Timeout>(
+		setTimeout(() => {}, 0)
+	);
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
+
+	useEffect(() => {
+		clearTimeout(timeoutid);
+
+		const id = setTimeout(() => {
+			setFilter(search);
+		}, 700);
+
+		setTimeoutid(id);
+	}, [search]);
 
 	return (
 		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
@@ -123,6 +145,8 @@ export const FarmContainer: NextPage = () => {
 								pl="10"
 								_focus={{ outline: "none" }}
 								_hover={{}}
+								value={search}
+								onChange={e => setSearch(e.target.value)}
 							/>
 							<Flex
 								pt="1rem"
@@ -164,7 +188,7 @@ export const FarmContainer: NextPage = () => {
 									borderRadius="full"
 								>
 									<Flex alignItems="center" color="white">
-										APR
+										{sortData[sort]}
 										<Icon as={MdExpandMore} w="5" h="5" ml="8" />
 									</Flex>
 								</MenuButton>
@@ -175,11 +199,14 @@ export const FarmContainer: NextPage = () => {
 									p="4"
 									fontSize="sm"
 								>
-									<MenuItem>Pool Weight</MenuItem>
-									<MenuItem>Name</MenuItem>
-									<MenuItem>Claudio</MenuItem>
-									<MenuItem>Thom</MenuItem>
-									<MenuItem>Kaue</MenuItem>
+									{Object.keys(sortData).map((key, i) => (
+										<MenuItem
+											onClick={() => setSort(key as keyof typeof sortData)}
+											key={i}
+										>
+											{sortData[key as keyof typeof sortData]}
+										</MenuItem>
+									))}
 								</MenuList>
 							</Menu>
 						</Flex>
@@ -194,7 +221,7 @@ export const FarmContainer: NextPage = () => {
 					mb="10rem"
 					sx={{ columnCount: [1, 1, 2, 2], columnGap: "35px" }}
 				>
-					<FarmCards />
+					<FarmCards filter={filter} sort={sort} />
 				</Box>
 			</Flex>
 		</Flex>

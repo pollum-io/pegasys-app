@@ -1,4 +1,7 @@
 import { BigNumber, ethers } from "ethers";
+import { abi as MINICHEF_ABI } from "@pollum-io/pegasys-protocol/artifacts/contracts/earn/MiniChefV2.sol/MiniChefV2.json";
+import { abi as STAKING_REWARDS_ABI } from "@pollum-io/pegasys-protocol/artifacts/contracts/earn/StakingRewards.sol/StakingRewards.json";
+import { abi as IPegasysPairABI } from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/interfaces/IPegasysPair.sol/IPegasysPair.json";
 
 import Wallet from "./wallet";
 import ERC20_ABI from "../abis/erc20.json";
@@ -8,6 +11,7 @@ import {
 	TContract,
 	IContractFrameworkCallProps,
 } from "../dto";
+import { MINICHEF_ADDRESS } from "../constants";
 
 class ContractFramework {
 	static getContract(props: IContractFrameworkGetContractProps): TContract {
@@ -60,6 +64,24 @@ class ContractFramework {
 		const contract = this.getContract({
 			abi: ERC20_ABI,
 			address,
+		});
+
+		return contract;
+	}
+
+	static StakingContract(address: string) {
+		const contract = this.getContract({
+			abi: address === MINICHEF_ADDRESS ? MINICHEF_ABI : STAKING_REWARDS_ABI,
+			address,
+		});
+
+		return contract;
+	}
+
+	static PairContract(address: string) {
+		const contract = this.getContract({
+			address,
+			abi: IPegasysPairABI,
 		});
 
 		return contract;

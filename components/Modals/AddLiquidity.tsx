@@ -145,12 +145,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		[chainId, address, provider]
 	);
 
-	const pairs = useAllCommonPairs(
-		selectedToken[0],
-		selectedToken[1] ?? selectedToken[0],
-		walletInfo
-	);
-
 	const invalidPair =
 		(selectedToken[0]?.symbol === "SYS" &&
 			selectedToken[1]?.symbol === "WSYS") ||

@@ -1,1 +1,4 @@
 export { default as PoolServices } from "./pool";
+export { default as FarmServices } from "./farm";
+export { default as LpTokenServices } from "./lpToken";
+export { default as TokenServices } from "./token";
