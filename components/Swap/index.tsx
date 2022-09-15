@@ -445,10 +445,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	// REACT HOOKS SESSION //
 
 	useEffect(() => {
-		console.log(tokensGraphCandleData, "tokensGraphCandleData");
-	}, [tokensGraphCandleData]);
-
-	useEffect(() => {
 		if (!userTokensBalance) return;
 
 		const getTokensBySymbol = userTokensBalance?.filter(
