@@ -6,7 +6,11 @@ import {
 	FOUR_HOURS_IN_SECONDS,
 	ONE_WEEK_IN_SECONDS,
 } from "helpers/consts";
-import { IPeriodsMockedData, ISlippageMockedValues } from "types";
+import {
+	IPeriodsMockedData,
+	ISlippageMockedValues,
+	ILiquidityCardsMockedData,
+} from "types";
 
 export const mockedSlippageValues: ISlippageMockedValues[] = [
 	{
@@ -53,5 +57,56 @@ export const periodsMockedData: IPeriodsMockedData[] = [
 		id: 6,
 		inputValue: "1w",
 		period: ONE_WEEK_IN_SECONDS,
+	},
+];
+
+export const liquidityCardsMockedData: ILiquidityCardsMockedData[] = [
+	{
+		id: 0,
+		firstAsset: "SYS",
+		secondAsset: "PSYS",
+		firstIcon: "icons/syscoin-logo.png",
+		secondIcon: "icons/pegasys.png",
+		apr: "1%",
+		poolShare: "< 0.015%",
+		value: "$0.1433",
+		firstPooledTokens: "0.0325644",
+		secondPooledTokens: "0.6598744",
+	},
+	{
+		id: 1,
+		firstAsset: "SYS",
+		secondAsset: "PSYS",
+		firstIcon: "icons/syscoin-logo.png",
+		secondIcon: "icons/pegasys.png",
+		apr: "2%",
+		poolShare: "< 0.015%",
+		value: "$0.3",
+		firstPooledTokens: "0.0325644",
+		secondPooledTokens: "0.6598744",
+	},
+	{
+		id: 2,
+		firstAsset: "SYS",
+		secondAsset: "PSYS",
+		firstIcon: "icons/syscoin-logo.png",
+		secondIcon: "icons/pegasys.png",
+		apr: "3%",
+		poolShare: "< 0.015%",
+		value: "$0.4",
+		firstPooledTokens: "0.0325644",
+		secondPooledTokens: "0.6598744",
+	},
+	{
+		id: 3,
+		firstAsset: "SYS",
+		secondAsset: "PSYS",
+		firstIcon: "icons/syscoin-logo.png",
+		secondIcon: "icons/pegasys.png",
+		apr: "4%",
+		poolShare: "< 0.015%",
+		value: "$0.5",
+		firstPooledTokens: "0.0325644",
+		secondPooledTokens: "0.6598744",
 	},
 ];

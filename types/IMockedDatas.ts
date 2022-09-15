@@ -8,3 +8,16 @@ export interface ISlippageMockedValues {
 	id: number;
 	valueInBips: number;
 }
+
+export interface ILiquidityCardsMockedData {
+	id: number;
+	firstAsset: string;
+	secondAsset: string;
+	firstIcon: string;
+	secondIcon: string;
+	apr: string;
+	poolShare: string;
+	value: string;
+	firstPooledTokens: string;
+	secondPooledTokens: string;
+}
