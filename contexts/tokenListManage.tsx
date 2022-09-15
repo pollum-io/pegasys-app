@@ -1,12 +1,13 @@
 import { TokenInfo, TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
-import { ethers, Signer } from "ethers";
+import { Signer } from "ethers";
 import { SYS_LOGO } from "helpers/consts";
 import {
 	EMPTY_TOKEN_LIST,
 	INITIAL_TOKEN_LIST_STATE,
+	NEW_TOKEN_LIST_STATE,
 	tokenListCache,
 } from "helpers/tokenListHelpers";
-import { ApprovalState, UseENS, useWallet } from "hooks";
+import { useWallet } from "hooks";
 import { getTokenListByUrl } from "networks";
 import React, { createContext, useMemo, useState, useEffect } from "react";
 import { ListsState, TokenAddressMap, WrappedTokenInfo } from "types";
@@ -14,6 +15,9 @@ import { getBalanceOfSingleCall, getProviderBalance } from "utils";
 
 interface ITokensListManageContext {
 	tokenListManageState: ListsState;
+	UseSelectedListUrl: () => string[] | undefined;
+	UseSelectedTokenList: () => TokenAddressMap;
+	removeListFromSelectedListArray: (listUrl: string) => void;
 }
 
 interface ITokenInfoWithBalance extends TokenInfo {
@@ -31,13 +35,8 @@ export const TokensListManageProvider: React.FC<{
 		INITIAL_TOKEN_LIST_STATE
 	);
 
-	const {
-		isConnected,
-		provider,
-		walletAddress,
-		currentNetworkChainId,
-		approvalState,
-	} = useWallet();
+	const { isConnected, provider, walletAddress, currentNetworkChainId } =
+		useWallet();
 
 	const fetchAndFulfilledTokenListManage = async (listUrl: string) => {
 		const tokenListResponse = await getTokenListByUrl(listUrl);
@@ -222,6 +221,15 @@ export const TokensListManageProvider: React.FC<{
 	const UseSelectedTokenList = (): TokenAddressMap =>
 		useTokenList(UseSelectedListUrl());
 
+	const removeListFromSelectedListArray = (listUrl: string) => {
+		setTokenListManageState(prevState => ({
+			...prevState,
+			...prevState?.selectedListUrl?.filter(
+				listValues => listValues !== listUrl
+			),
+		}));
+	};
+
 	useEffect(() => {
 		if (!tokenListManageState?.byUrl) return;
 		Object.keys(tokenListManageState?.byUrl).forEach(url =>
@@ -238,6 +246,9 @@ export const TokensListManageProvider: React.FC<{
 	const tokensListManageProviderValue = useMemo(
 		() => ({
 			tokenListManageState,
+			UseSelectedListUrl,
+			UseSelectedTokenList,
+			removeListFromSelectedListArray,
 		}),
 		[tokenListManageState]
 	);

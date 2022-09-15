@@ -12,8 +12,10 @@ import {
 	Switch,
 	Text,
 } from "@chakra-ui/react";
-import { useModal, usePicasso } from "hooks";
+import { useModal, usePicasso, useTokensListManage } from "hooks";
+import { useMemo } from "react";
 import { MdArrowBack, MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { TokenListNameOrigin } from "utils";
 import { ConfirmList } from "./ConfirmList";
 
 interface IModal {
@@ -21,11 +23,86 @@ interface IModal {
 	onClose: () => void;
 }
 
+interface IShowListComponent {
+	listUrl: string;
+}
+
+const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
+	const {
+		tokenListManageState: { byUrl: currentTokenLists },
+		UseSelectedListUrl,
+		removeListFromSelectedListArray,
+	} = useTokensListManage();
+
+	const { current: currentList } = currentTokenLists[listUrl];
+
+	const selectedListUrl = UseSelectedListUrl();
+
+	const isListSelected = (selectedListUrl || []).includes(listUrl);
+
+	return (
+		<Flex
+			flexDirection="row"
+			mt="4"
+			justifyContent="space-between"
+			alignItems="center"
+		>
+			<Flex gap="4" alignItems="center">
+				<Img src={currentList?.logoURI} w="5" h="5" />
+				<Flex flexDirection="column">
+					<Text fontWeight="semibold">{currentList?.name}</Text>
+					<Flex
+						display="inline-block"
+						maxW="160px"
+						overflow="hidden"
+						textOverflow="ellipsis"
+						whiteSpace="nowrap"
+					>
+						<TokenListNameOrigin listUrl={listUrl} />
+					</Flex>
+				</Flex>
+			</Flex>
+			<Flex gap="4" pr="6">
+				<Icon as={MdOutlineKeyboardArrowDown} w="5" h="5" />
+				<Switch size="md" colorScheme="cyan" isChecked={isListSelected} />
+			</Flex>
+		</Flex>
+	);
+};
+
 export const ManageToken: React.FC<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 	const { onOpenConfirmList, isOpenConfirmList, onCloseConfirmList } =
 		useModal();
+
+	const {
+		tokenListManageState: { byUrl: currentTokenLists },
+	} = useTokensListManage();
+
+	const sortedLists = useMemo(() => {
+		const listsUrls = Object.keys(currentTokenLists);
+
+		return listsUrls
+			.filter(listUrl => Boolean(currentTokenLists[listUrl].current))
+			.sort((value1: string, value2: string) => {
+				const { current: list1 } = currentTokenLists[value1];
+				const { current: list2 } = currentTokenLists[value2];
+
+				if (list1 && list2) {
+					return list1.name.toLowerCase() < list2.name.toLowerCase()
+						? -1
+						: list1.name.toLowerCase() === list2.name.toLowerCase()
+						? 0
+						: 1;
+				}
+
+				if (list1) return -1;
+				if (list2) return 1;
+
+				return 0;
+			});
+	}, [currentTokenLists]);
 
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
@@ -79,42 +156,10 @@ export const ManageToken: React.FC<IModal> = props => {
 							Add
 						</Button>
 					</Flex>
-					<Flex
-						flexDirection="row"
-						mt="4"
-						justifyContent="space-between"
-						alignItems="center"
-					>
-						<Flex gap="4" alignItems="center">
-							<Img src="icons/syscoin-logo.png" w="5" h="5" />
-							<Flex flexDirection="column">
-								<Text fontWeight="semibold">Pegasys Default</Text>
-								<Text>raw.githubuserconten...</Text>
-							</Flex>
-						</Flex>
-						<Flex gap="4" pr="6">
-							<Icon as={MdOutlineKeyboardArrowDown} w="5" h="5" />
-							<Switch size="md" colorScheme="cyan" />
-						</Flex>
-					</Flex>
-					<Flex
-						flexDirection="row"
-						mt="4"
-						justifyContent="space-between"
-						alignItems="center"
-					>
-						<Flex gap="4" alignItems="center">
-							<Img src="icons/syscoin-logo.png" w="5" h="5" />
-							<Flex flexDirection="column">
-								<Text fontWeight="semibold">Pegasys Default</Text>
-								<Text>raw.githubuserconten...</Text>
-							</Flex>
-						</Flex>
-						<Flex gap="4" pr="6">
-							<Icon as={MdOutlineKeyboardArrowDown} w="5" h="5" />
-							<Switch size="md" colorScheme="cyan" />
-						</Flex>
-					</Flex>
+
+					{sortedLists.map(listUrl => (
+						<ShowListComponent listUrl={listUrl} key={listUrl} />
+					))}
 				</ModalBody>
 			</ModalContent>
 		</Modal>

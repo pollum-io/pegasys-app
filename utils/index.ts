@@ -26,3 +26,4 @@ export * from "./priceImpactSeverity";
 export * from "./maxAmountSpend";
 export * from "./returnConvertedUrl";
 export * from "./provider";
+export * from "./tokenListComponent";
