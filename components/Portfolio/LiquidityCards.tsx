@@ -1,17 +1,68 @@
 import { Flex, useColorMode, Text, Image, Button } from "@chakra-ui/react";
-import { FunctionComponent } from "react";
+import { useMemo, useState } from "react";
 import { usePicasso } from "hooks";
 import { liquidityCardsMockedData } from "helpers/mockedData";
+import { usePaginator } from "chakra-paginator";
+import { ILiquidityCardsMockedData } from "types";
 import { PaginationComponent } from "./Pagination";
 
 export const LiquidityCards: React.FunctionComponent = () => {
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
 
+	const quantityPerPage = 1;
+
+	const quantityOfPages = Math.ceil(
+		liquidityCardsMockedData.length / quantityPerPage
+	);
+
+	const [cardsSliced, setCardsSliced] = useState<ILiquidityCardsMockedData[]>(
+		[]
+	);
+
+	const { currentPage, setCurrentPage } = usePaginator({
+		initialState: { currentPage: 1 },
+	});
+
+	const handlePaginate = (
+		// type component 1 || type component 2 || type component 3
+		arrayValue:
+			| ILiquidityCardsMockedData[]
+			| ILiquidityCardsMockedData[]
+			| ILiquidityCardsMockedData[],
+		pageSize: number,
+		currentPage: number,
+		setCardsSliced: React.Dispatch<
+			React.SetStateAction<
+				| ILiquidityCardsMockedData[]
+				| ILiquidityCardsMockedData[]
+				| ILiquidityCardsMockedData[]
+			>
+		>
+	) => {
+		const sliced = arrayValue.slice(
+			(currentPage - 1) * pageSize,
+			currentPage * pageSize
+		);
+
+		setCardsSliced(sliced);
+
+		return sliced;
+	};
+
+	useMemo(() => {
+		handlePaginate(
+			liquidityCardsMockedData,
+			quantityPerPage,
+			currentPage,
+			setCardsSliced
+		);
+	}, [currentPage, liquidityCardsMockedData]);
+
 	return (
 		// eslint-disable-next-line
 		<>
-			{liquidityCardsMockedData?.map(cardsValue => (
+			{cardsSliced?.map(cardsValue => (
 				<Flex
 					key={cardsValue.id}
 					flexDirection={["column", "column", "row", "row"]}
@@ -263,9 +314,13 @@ export const LiquidityCards: React.FunctionComponent = () => {
 							</Button>
 						</Flex>
 					</Flex>
-					<PaginationComponent componentData={liquidityCardsMockedData} />
 				</Flex>
 			))}
+			<PaginationComponent
+				quantityOfPages={quantityOfPages}
+				currentPage={currentPage}
+				setCurrentPage={setCurrentPage}
+			/>
 		</>
 	);
 };

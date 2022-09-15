@@ -1,22 +1,45 @@
 import { Flex } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { Table } from "react-chakra-pagination";
+import {
+	Paginator,
+	Container,
+	Previous,
+	Next,
+	PageGroup,
+} from "chakra-paginator";
 
 interface IPaginationComponent {
-	componentData: any;
+	quantityOfPages: number;
+	currentPage: number;
+	setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const PaginationComponent: React.FunctionComponent<
 	IPaginationComponent
 > = props => {
-	const [currentPage, setCurrentPage] = useState<number>(1);
-	const { componentData } = props;
+	const { quantityOfPages, currentPage, setCurrentPage } = props;
 
-	if (!componentData) return null;
+	const handlePageChange = (nextPage: number) => {
+		setCurrentPage(nextPage);
+	};
 
-	const tableData = [];
-
-	const tableHeader = [];
-
-	return <h1>Hello</h1>;
+	return (
+		<Paginator
+			pagesQuantity={quantityOfPages}
+			currentPage={currentPage}
+			onPageChange={handlePageChange}
+		>
+			<Container align="center" justify="space-between" w="full" p={4}>
+				<Previous>
+					Previous
+					{/* Or an icon from `react-icons` */}
+				</Previous>
+				<PageGroup isInline align="center" />
+				<Next>
+					Next
+					{/* Or an icon from `react-icons` */}
+				</Next>
+			</Container>
+		</Paginator>
+	);
 };
