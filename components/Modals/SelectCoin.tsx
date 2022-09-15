@@ -82,16 +82,16 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 		const orderedList: WrappedTokenInfo[] = [];
 		if (order === "desc") {
 			array?.forEach((token: WrappedTokenInfo) => {
-				const firstToken = new BigNumber(array[0]?.balance);
-				const tokenBalance = new BigNumber(token.balance);
+				const firstToken = new BigNumber(array[0]?.balance as string);
+				const tokenBalance = new BigNumber(token.balance as string);
 				if (!array[0] || firstToken.isLessThanOrEqualTo(tokenBalance))
 					return orderedList.unshift(token);
 				return orderedList.push(token);
 			});
 		} else {
 			array.forEach((token: WrappedTokenInfo) => {
-				const firstToken = new BigNumber(array[0].balance);
-				const tokenBalance = new BigNumber(token.balance);
+				const firstToken = new BigNumber(array[0].balance as string);
+				const tokenBalance = new BigNumber(token.balance as string);
 				if (
 					!array[array.length - 1] ||
 					firstToken.isLessThanOrEqualTo(tokenBalance)
@@ -113,8 +113,10 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				return obj;
 			})
 			.sort(
-				(valueA: { balance: string }, valueB: { balance: string }) =>
-					Number(valueB.balance) - Number(valueA.balance)
+				(
+					valueA: { balance: string | Promise<string> },
+					valueB: { balance: string | Promise<string> }
+				) => Number(valueB.balance) - Number(valueA.balance)
 			);
 
 		setDefaultTokens(orderedTokens);
@@ -280,7 +282,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 									<Img src={token.logoURI} borderRadius="full" w="6" h="6" />
 									{token.symbol}
 								</Flex>
-								<Text fontWeight="normal">{token.balance}</Text>
+								<Text fontWeight="normal">{token.balance as string}</Text>
 							</Flex>
 						</Button>
 					))}

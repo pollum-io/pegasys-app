@@ -9,7 +9,6 @@ import {
 	Img,
 	ModalOverlay,
 	Text,
-	Tooltip,
 } from "@chakra-ui/react";
 import { useModal, usePicasso, useTokens } from "hooks";
 import React, { useEffect, useState } from "react";
@@ -217,7 +216,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								alignItems="flex-end"
 							>
 								<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-									Balance: {selectedToken[0]?.balance}
+									{`Balance: ${selectedToken[0]?.balance}`}
 								</Text>
 								<Input
 									fontSize="xl"
@@ -312,7 +311,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								alignItems="flex-end"
 							>
 								<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-									Balance: {selectedToken[1]?.balance}
+									{`Balance: ${selectedToken[1]?.balance}`}
 								</Text>
 								<Input
 									fontSize="xl"
