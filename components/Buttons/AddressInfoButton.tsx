@@ -50,7 +50,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 
 		toast({
 			id: "toast1",
-			position: "top",
+			position: "top-right",
 			status: "success",
 			title: "Successfully copied",
 			description: "Address sucessfully copied to clipboard!",
@@ -84,11 +84,13 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 			<ModalContent
 				borderRadius={18}
 				borderBottomRadius={["0", "18"]}
-				my={["0", "40", "40", "0"]}
+				my={["0", "40", "40", "40"]}
 				mb={["0", "0", "24rem", "24rem"]}
 				h="max-content"
 				position="absolute"
 				bottom={["0", "0", "none", "none"]}
+				mx="0"
+				p="0"
 			>
 				<ModalHeader
 					borderTopRadius={18}

@@ -29,7 +29,7 @@ export const SelectWallets: React.FC<IModal> = props => {
 				borderRadius="1.875rem"
 				my={["0", "0", "40", "40"]}
 				bgColor={theme.bg.blueNavy}
-				w={["100vw", "100vw", "50%", "md"]}
+				w={["100vw", "100vw", "50%", "sm"]}
 				h="max-content"
 				p="6"
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}

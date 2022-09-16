@@ -27,12 +27,7 @@ export const AirdropContainer: NextPage = () => {
 	const [isClaimed] = useState(true);
 
 	return (
-		<Flex
-			alignItems="flex-start"
-			justifyContent="center"
-			pt={["8", "8", "20", "20"]}
-			mb="6.2rem"
-		>
+		<Flex alignItems="flex-start" justifyContent="center" mb="6.2rem">
 			<Flex
 				flexDirection="column"
 				w={["18rem", "md", "2xl", "2xl"]}
