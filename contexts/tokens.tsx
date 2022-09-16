@@ -1,5 +1,4 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
-import { ethers } from "ethers";
 import { WrappedTokenInfo } from "types";
 import { useWallet, ApprovalState } from "hooks";
 import { getDefaultTokens } from "networks";

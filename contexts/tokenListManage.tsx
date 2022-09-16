@@ -1,6 +1,6 @@
 import { TokenInfo, TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
 import { Signer } from "ethers";
-import { SYS_LOGO } from "helpers/consts";
+import { DEFAULT_TOKEN_LISTS_SELECTED, SYS_LOGO } from "helpers/consts";
 import {
 	EMPTY_TOKEN_LIST,
 	INITIAL_TOKEN_LIST_STATE,
@@ -17,7 +17,9 @@ interface ITokensListManageContext {
 	tokenListManageState: ListsState;
 	UseSelectedListUrl: () => string[] | undefined;
 	UseSelectedTokenList: () => TokenAddressMap;
-	removeListFromSelectedListArray: (listUrl: string) => void;
+	removeListFromListState: (listUrl: string) => void;
+	addListToListState: (listUrl: string) => void;
+	toggleListByUrl: (listUrl: string, shouldToggle: boolean) => void;
 }
 
 interface ITokenInfoWithBalance extends TokenInfo {
@@ -34,6 +36,8 @@ export const TokensListManageProvider: React.FC<{
 	const [tokenListManageState, setTokenListManageState] = useState<ListsState>(
 		INITIAL_TOKEN_LIST_STATE
 	);
+
+	console.log("tokenListManageState", tokenListManageState);
 
 	const { isConnected, provider, walletAddress, currentNetworkChainId } =
 		useWallet();
@@ -221,13 +225,66 @@ export const TokensListManageProvider: React.FC<{
 	const UseSelectedTokenList = (): TokenAddressMap =>
 		useTokenList(UseSelectedListUrl());
 
-	const removeListFromSelectedListArray = (listUrl: string) => {
-		setTokenListManageState(prevState => ({
-			...prevState,
-			...prevState?.selectedListUrl?.filter(
-				listValues => listValues !== listUrl
-			),
-		}));
+	const removeListFromListState = (listUrl: string) => {
+		setTokenListManageState(prevState => {
+			if (prevState.byUrl[listUrl]) delete prevState.byUrl[listUrl];
+
+			const existValueInList = ([] as string[]).concat(
+				prevState.selectedListUrl || []
+			);
+			const findInList = existValueInList.indexOf(listUrl);
+
+			if (findInList !== -1) {
+				if (existValueInList?.length === 1) {
+					prevState.selectedListUrl = DEFAULT_TOKEN_LISTS_SELECTED;
+				} else {
+					existValueInList.splice(findInList, 1);
+					prevState.selectedListUrl = DEFAULT_TOKEN_LISTS_SELECTED;
+				}
+			}
+
+			return prevState;
+		});
+	};
+
+	const addListToListState = (listUrl: string) => {
+		setTokenListManageState(prevState => {
+			if (!prevState.byUrl[listUrl]) {
+				prevState.byUrl[listUrl] = NEW_TOKEN_LIST_STATE;
+			}
+
+			return prevState;
+		});
+	};
+
+	const toggleListByUrl = (listUrl: string, shouldToggle: boolean) => {
+		setTokenListManageState(prevState => {
+			const existingSelectedList = ([] as string[]).concat(
+				prevState?.selectedListUrl || []
+			);
+
+			if (shouldToggle) {
+				existingSelectedList.push(listUrl);
+
+				prevState.selectedListUrl = existingSelectedList;
+			} else {
+				const elementInListIndex = existingSelectedList.indexOf(listUrl);
+
+				if (elementInListIndex !== -1) {
+					if (existingSelectedList?.length === 1) {
+						prevState.selectedListUrl = DEFAULT_TOKEN_LISTS_SELECTED;
+					} else {
+						existingSelectedList.splice(elementInListIndex, 1);
+						prevState.selectedListUrl = existingSelectedList;
+					}
+				}
+			}
+
+			if (!prevState.byUrl[listUrl])
+				prevState.byUrl[listUrl] = NEW_TOKEN_LIST_STATE;
+
+			return prevState;
+		});
 	};
 
 	useEffect(() => {
@@ -240,17 +297,26 @@ export const TokensListManageProvider: React.FC<{
 	useEffect(() => {
 		UseSelectedTokenList();
 	}, [tokenListManageState, isConnected, walletAddress, currentNetworkChainId]);
-
-	console.log("listCache", tokenListCache);
+	//
+	// console.log("listCache", tokenListCache);
 
 	const tokensListManageProviderValue = useMemo(
 		() => ({
 			tokenListManageState,
 			UseSelectedListUrl,
 			UseSelectedTokenList,
-			removeListFromSelectedListArray,
+			removeListFromListState,
+			addListToListState,
+			toggleListByUrl,
 		}),
-		[tokenListManageState]
+		[
+			tokenListManageState,
+			UseSelectedListUrl,
+			UseSelectedTokenList,
+			removeListFromListState,
+			addListToListState,
+			toggleListByUrl,
+		]
 	);
 
 	return (

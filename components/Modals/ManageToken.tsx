@@ -13,7 +13,7 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { useModal, usePicasso, useTokensListManage } from "hooks";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { MdArrowBack, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { TokenListNameOrigin } from "utils";
 import { ConfirmList } from "./ConfirmList";
@@ -29,16 +29,30 @@ interface IShowListComponent {
 
 const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 	const {
+		tokenListManageState,
 		tokenListManageState: { byUrl: currentTokenLists },
 		UseSelectedListUrl,
-		removeListFromSelectedListArray,
+		removeListFromListState,
+		addListToListState,
+		toggleListByUrl,
 	} = useTokensListManage();
 
 	const { current: currentList } = currentTokenLists[listUrl];
 
-	const selectedListUrl = UseSelectedListUrl();
+	const selectedListUrl = useMemo(
+		() => UseSelectedListUrl(),
+		[listUrl, tokenListManageState.selectedListUrl, tokenListManageState]
+	);
 
-	const isListSelected = (selectedListUrl || []).includes(listUrl);
+	const isListSelected = useMemo(
+		() => (selectedListUrl || []).includes(listUrl),
+		[listUrl, selectedListUrl, tokenListManageState.selectedListUrl]
+	);
+
+	const toggleList = useCallback(
+		() => toggleListByUrl(listUrl, !isListSelected),
+		[listUrl, tokenListManageState.selectedListUrl, isListSelected]
+	);
 
 	return (
 		<Flex
@@ -64,7 +78,13 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 			</Flex>
 			<Flex gap="4" pr="6">
 				<Icon as={MdOutlineKeyboardArrowDown} w="5" h="5" />
-				<Switch size="md" colorScheme="cyan" isChecked={isListSelected} />
+				<Switch
+					size="md"
+					colorScheme="cyan"
+					isChecked={isListSelected}
+					name={`${currentList?.name}`}
+					onChange={() => toggleList()}
+				/>
 			</Flex>
 		</Flex>
 	);
@@ -77,6 +97,7 @@ export const ManageToken: React.FC<IModal> = props => {
 		useModal();
 
 	const {
+		tokenListManageState,
 		tokenListManageState: { byUrl: currentTokenLists },
 	} = useTokensListManage();
 
@@ -102,7 +123,7 @@ export const ManageToken: React.FC<IModal> = props => {
 
 				return 0;
 			});
-	}, [currentTokenLists]);
+	}, [tokenListManageState.selectedListUrl, currentTokenLists]);
 
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>

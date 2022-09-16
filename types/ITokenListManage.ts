@@ -7,7 +7,7 @@ export type TokenAddressMap = Readonly<{
 }>;
 
 export interface ListsState {
-	readonly byUrl: {
+	byUrl: {
 		[url: string]: {
 			readonly current: TokenList | null;
 			readonly pendingUpdate: TokenList | null;
@@ -16,8 +16,8 @@ export interface ListsState {
 		};
 	};
 	// this contains the default list of lists from the last time the updateVersion was called, i.e. the app was reloaded
-	readonly lastInitializedDefaultListOfLists?: string[];
-	readonly selectedListUrl: string[] | null;
+	lastInitializedDefaultListOfLists?: string[];
+	selectedListUrl: string[] | null;
 }
 
 export type NewListState = ListsState["byUrl"][string];
