@@ -92,7 +92,6 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 						alignItems="center"
 						mb="6"
 						justifyContent="center"
-						pr="4rem"
 					>
 						<Flex flexDirection="column" gap="14" pr="2">
 							<Text textAlign="right" fontWeight="semibold">

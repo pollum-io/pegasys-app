@@ -314,12 +314,7 @@ export const PoolsContainer: NextPage = () => {
 				isModalOpen={isOpenImportPool}
 				onModalClose={onCloseImportPool}
 			/>
-			<Flex
-				alignItems="flex-start"
-				justifyContent="center"
-				pt={["10", "10", "20", "20"]}
-				mb="6.2rem"
-			>
+			<Flex alignItems="flex-start" justifyContent="center" mb="6.2rem">
 				<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
 					<Flex
 						flexDirection="column"
@@ -379,11 +374,16 @@ export const PoolsContainer: NextPage = () => {
 						</Flex>
 					</Flex>
 					<Flex
-						alignItems="flex-start"
+						id="a"
+						alignItems={["flex-start", "flex-start", "baseline", "baseline"]}
 						my={["1", "4", "8", "8"]}
-						justifyContent="flex-start"
+						justifyContent="space-between"
 						w="100%"
-						flexDirection="column"
+						flexDirection={
+							isConnected
+								? ["column", "column", "column", "column"]
+								: ["column", "column", "row", "row"]
+						}
 						zIndex="docked"
 					>
 						<Flex
@@ -402,17 +402,25 @@ export const PoolsContainer: NextPage = () => {
 							</Text>
 						</Flex>
 						<Flex
-							justifyContent="space-between"
+							id="b"
+							justifyContent={
+								isConnected
+									? [
+											"space-between",
+											"space-between",
+											"space-between",
+											"space-between",
+									  ]
+									: ["space-between", "space-between", "flex-end", "flex-end"]
+							}
 							flexDirection={["column-reverse", "column-reverse", "row", "row"]}
 							zIndex="docked"
 							w="100%"
-							mt={["4", "0", "2", "2"]}
-							alignItems={["center", "center", "flex-end", "flex-end"]}
-							gap="5"
+							mt={["4", "6", "2", "2"]}
+							gap={["7", "none", "none", "none"]}
+							alignItems={["flex-start", "flex-start", "flex-end", "flex-end"]}
 						>
-							<Flex
-								visibility={userHavePool && isConnected ? "visible" : "hidden"}
-							>
+							<Flex display={userHavePool && isConnected ? "flex" : "none"}>
 								<InputGroup alignItems="center">
 									<InputLeftElement
 										pl="0.625rem"
@@ -432,7 +440,7 @@ export const PoolsContainer: NextPage = () => {
 										}}
 										onChange={handleInput}
 										borderRadius="full"
-										w={["18.5rem", "18rem", "20rem", "20rem"]}
+										w={["18.5rem", "27rem", "20rem", "20rem"]}
 										h="2.2rem"
 										py={["0.2rem", "0.2rem", "1", "1"]}
 										pl="10"
@@ -456,7 +464,7 @@ export const PoolsContainer: NextPage = () => {
 											fontSize="sm"
 											fontWeight="semibold"
 											py={["0.2rem", "0.2rem", "1", "1"]}
-											px="1.5rem"
+											px={["1.7rem", "1.5rem", "1.5rem", "1.5rem"]}
 											size="sm"
 											h="2.2rem"
 											bgColor={theme.bg.blueNavyLightness}
@@ -532,7 +540,7 @@ export const PoolsContainer: NextPage = () => {
 							flexDirection="column"
 							alignItems="center"
 							justifyContent="center"
-							gap="16"
+							mb={["3rem", "3rem", "4rem", "4rem"]}
 						>
 							<Text
 								fontSize={["sm", "sm", "md", "md"]}

@@ -150,6 +150,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 					_expanded={{ color: theme.text.cyanPurple }}
 				/>
 			</PopoverTrigger>
+			<PopoverArrow bg="red" />
 			<PopoverContent
 				_focus={{
 					outline: "none",
@@ -163,7 +164,6 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 				mx={["0", "0", "20", "56"]}
 				position="fixed"
 			>
-				<PopoverArrow />
 				<Flex
 					justifyContent="flex-end"
 					zIndex="99"
@@ -188,7 +188,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 				</Flex>
 				<PopoverBody>
 					<Flex flexDirection="column" mt="4">
-						<Flex alignItems="center" flexDirection="row">
+						<Flex alignItems="center" flexDirection="row" w="max-content">
 							<Text
 								fontSize="md"
 								pr="1"
