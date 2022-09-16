@@ -8,7 +8,6 @@ import {
 	unwrappedToken,
 } from "utils";
 import {
-	ChainId,
 	JSBI,
 	Pair,
 	Percent,
@@ -17,11 +16,9 @@ import {
 } from "@pollum-io/pegasys-sdk";
 import { WrappedTokenInfo, IDeposited, ICommonPairs } from "types";
 import { Signer } from "ethers";
-import { PAIR_DATA, pegasysClient } from "apollo";
 import { formattedNum, formattedPercent } from "utils/numberFormat";
 
 interface IPoolCards {
-	poolApr?: string;
 	setIsCreate: React.Dispatch<SetStateAction<boolean>>;
 	pair?: Pair;
 	userTokens?: WrappedTokenInfo[];
@@ -38,7 +35,6 @@ interface IPoolCards {
 
 export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	const {
-		poolApr,
 		setIsCreate,
 		pair,
 		userTokens,
@@ -52,20 +48,10 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	} = props;
 	const theme = usePicasso();
 	const { onOpenRemoveLiquidity, onOpenAddLiquidity } = useModal();
-	const {
-		setCurrentLpAddress,
-		signer,
-		walletAddress,
-		currentNetworkChainId,
-		provider,
-	} = useWallet();
+	const { setCurrentLpAddress, signer, walletAddress, provider } = useWallet();
 	const [poolBalance, setPoolBalance] = useState<string>("");
 	const [percentShare, setPercentShare] = useState<string>("");
-	const [volume, setVolume] = useState<string>("");
 	const [trigger, setTrigger] = useState<boolean>(false);
-
-	const chainId =
-		currentNetworkChainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
 
 	const currencyA = unwrappedToken(pair?.token0 as Token);
 	const currencyB = unwrappedToken(pair?.token1 as Token);
@@ -148,14 +134,6 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			+pairBalanceAmount.toSignificant(5)
 		)}`;
 
-		// it only works on mainnet
-		const fetchVolume = await pegasysClient.query({
-			query: PAIR_DATA(`${Pair.getAddress(wrapTokenA, wrapTokenB, chainId)}`),
-			fetchPolicy: "cache-first",
-		});
-
-		const pairVolume = fetchVolume?.data?.pairs[0]?.volumeUSD;
-
 		setPoolPercentShare(
 			Number(poolTokenPercentage?.toSignificant(6)).toFixed(2)
 		);
@@ -163,7 +141,6 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		setPercentShare(Number(poolTokenPercentage?.toSignificant(6)).toFixed(2));
 		setPoolBalance(amount);
 		setUserPoolBalance(amount);
-		setVolume(`${pairVolume || 0}`);
 	}, [pair, trigger]);
 
 	const reserveUSD =
@@ -234,17 +211,27 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					<Text fontWeight="semibold" color={theme.text.mono}>
 						APR
 					</Text>
-					<Text>{apr}</Text>
+					<Text>{apr || "0%"}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text
 						fontWeight="semibold"
-						color={percentShare === "0.00" ? theme.text.manageInput : ""}
+						color={
+							percentShare === "0.00" && percentShare
+								? theme.text.manageInput
+								: ""
+						}
 					>
 						Your pool share
 					</Text>
-					<Text color={percentShare === "0.00" ? theme.text.manageInput : ""}>
-						{percentShare !== "0.00" ? `${percentShare}%` : "-"}
+					<Text
+						color={
+							percentShare === "0.00" && percentShare
+								? theme.text.manageInput
+								: ""
+						}
+					>
+						{percentShare !== "0.00" && percentShare ? `${percentShare}%` : "-"}
 					</Text>
 				</Flex>
 			</Flex>
