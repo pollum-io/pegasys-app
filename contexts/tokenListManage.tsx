@@ -37,8 +37,6 @@ export const TokensListManageProvider: React.FC<{
 		INITIAL_TOKEN_LIST_STATE
 	);
 
-	console.log("tokenListManageState", tokenListManageState);
-
 	const { isConnected, provider, walletAddress, currentNetworkChainId } =
 		useWallet();
 
@@ -243,7 +241,7 @@ export const TokensListManageProvider: React.FC<{
 				}
 			}
 
-			return prevState;
+			return { ...prevState };
 		});
 	};
 
@@ -253,7 +251,7 @@ export const TokensListManageProvider: React.FC<{
 				prevState.byUrl[listUrl] = NEW_TOKEN_LIST_STATE;
 			}
 
-			return prevState;
+			return { ...prevState };
 		});
 	};
 
@@ -283,21 +281,26 @@ export const TokensListManageProvider: React.FC<{
 			if (!prevState.byUrl[listUrl])
 				prevState.byUrl[listUrl] = NEW_TOKEN_LIST_STATE;
 
-			return prevState;
+			return { ...prevState };
 		});
 	};
 
 	useEffect(() => {
+		UseSelectedTokenList();
+
 		if (!tokenListManageState?.byUrl) return;
 		Object.keys(tokenListManageState?.byUrl).forEach(url =>
 			fetchAndFulfilledTokenListManage(url)
 		);
-	}, [tokenListManageState?.byUrl]);
+	}, [
+		tokenListManageState.byUrl,
+		tokenListManageState.lastInitializedDefaultListOfLists,
+		tokenListManageState.selectedListUrl,
+		isConnected,
+		walletAddress,
+		currentNetworkChainId,
+	]);
 
-	useEffect(() => {
-		UseSelectedTokenList();
-	}, [tokenListManageState, isConnected, walletAddress, currentNetworkChainId]);
-	//
 	// console.log("listCache", tokenListCache);
 
 	const tokensListManageProviderValue = useMemo(
@@ -311,6 +314,9 @@ export const TokensListManageProvider: React.FC<{
 		}),
 		[
 			tokenListManageState,
+			tokenListManageState.byUrl,
+			tokenListManageState.lastInitializedDefaultListOfLists,
+			tokenListManageState.selectedListUrl,
 			UseSelectedListUrl,
 			UseSelectedTokenList,
 			removeListFromListState,
