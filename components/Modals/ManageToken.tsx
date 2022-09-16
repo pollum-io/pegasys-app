@@ -41,17 +41,14 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 
 	const selectedListUrl = useMemo(
 		() => UseSelectedListUrl(),
-		[listUrl, tokenListManageState.selectedListUrl, tokenListManageState]
+		[listUrl, tokenListManageState.selectedListUrl]
 	);
 
-	const isListSelected = useMemo(
-		() => (selectedListUrl || []).includes(listUrl),
-		[listUrl, selectedListUrl, tokenListManageState.selectedListUrl]
-	);
+	const isListSelected = (selectedListUrl || []).includes(listUrl);
 
 	const toggleList = useCallback(
 		() => toggleListByUrl(listUrl, !isListSelected),
-		[listUrl, tokenListManageState.selectedListUrl, isListSelected]
+		[listUrl, isListSelected]
 	);
 
 	return (
