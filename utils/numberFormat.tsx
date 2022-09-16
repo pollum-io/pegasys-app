@@ -51,28 +51,14 @@ export const formattedNum = (number: number, usd = false) => {
 };
 
 export function formattedPercent(dayVolume: string, generalVolume: string) {
-	let percent = 0;
-	if (dayVolume && generalVolume) {
-		percent = parseFloat(
-			(
-				(Number(dayVolume) * 0.003 * 365 * 100) /
-				Number(generalVolume)
-			).toString()
-		);
-	}
-	if (!dayVolume && generalVolume) {
-		percent = parseFloat(
-			((0 * 0.003 * 365 * 100) / Number(generalVolume)).toString()
-		);
-	}
-	if (dayVolume && !generalVolume) {
-		percent = parseFloat(
-			((Number(dayVolume) * 0.003 * 365 * 100) / Number(dayVolume)).toString()
-		);
-	}
-	if (!dayVolume && !generalVolume) {
-		percent = 0;
-	}
+	const percent = parseFloat(
+		(
+			(Number(dayVolume) * 0.003 * 365 * 100) / Number(generalVolume) -
+			109
+		).toString()
+	);
+
+	console.log(percent);
 
 	if (!percent || percent === 0) {
 		return <Text fontWeight={500}>0%</Text>;

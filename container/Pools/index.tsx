@@ -184,7 +184,7 @@ export const PoolsContainer: NextPage = () => {
 			{}
 		);
 
-		const commonPairs = allTokens
+		const oneDayCommonPairs = allTokens
 			.map(
 				currency =>
 					formattedOneDayPairsInfo[
@@ -199,7 +199,42 @@ export const PoolsContainer: NextPage = () => {
 			)
 			.filter(item => item !== undefined);
 
-		const formattedCommonPairs = commonPairs.reduce(
+		const generalDaysCommonPairs = allTokens
+			.map(
+				currency =>
+					formattedGeneralPairsInfo[
+						`${
+							currency[0].symbol === "WETH"
+								? "ETH"
+								: currency[0].symbol === "SYS"
+								? "WSYS"
+								: currency[0].symbol
+						}-${currency[1].symbol === "WETH" ? "ETH" : currency[1].symbol}`
+					]
+			)
+			.filter(item => item !== undefined);
+
+		const formattedOneDayCommonPairs = oneDayCommonPairs.reduce(
+			(acc, curr) => ({
+				...acc,
+				[`${
+					curr?.token0?.symbol === "WSYS"
+						? "SYS"
+						: curr?.token0?.symbol === "ETH"
+						? "WETH"
+						: curr?.token0?.symbol
+				}-${
+					curr?.token1?.symbol === "WSYS"
+						? "SYS"
+						: curr?.token1?.symbol === "ETH"
+						? "WETH"
+						: curr?.token1?.symbol
+				}`]: curr,
+			}),
+			{}
+		);
+
+		const formattedGeneralCommonPairs = generalDaysCommonPairs.reduce(
 			(acc, curr) => ({
 				...acc,
 				[`${
@@ -246,6 +281,8 @@ export const PoolsContainer: NextPage = () => {
 			.map(([, pair]) => pair)
 			.filter((v2Pair): v2Pair is Pair => Boolean(v2Pair));
 
+		console.log(formattedGeneralPairsInfo);
+
 		const allUniqueV2PairsWithLiquidity = allV2PairsWithLiquidity
 			.map(pair => pair)
 			.filter(
@@ -257,8 +294,8 @@ export const PoolsContainer: NextPage = () => {
 		setLpPairs(allUniqueV2PairsWithLiquidity);
 		setSearchTokens(allUniqueV2PairsWithLiquidity);
 		setPairInfo({
-			oneDay: formattedCommonPairs,
-			general: formattedGeneralPairsInfo,
+			oneDay: formattedOneDayCommonPairs,
+			general: formattedGeneralCommonPairs,
 		});
 	}, [userTokensBalance, sortType]);
 
