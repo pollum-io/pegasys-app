@@ -86,7 +86,7 @@ export const PoolsContainer: NextPage = () => {
 			walletAddress,
 		};
 
-		const [{ number: b1 }] = await getBlocksFromTimestamps();
+		const [{ number: oneDay }] = await getBlocksFromTimestamps();
 
 		const tokensWithLiquidity = allTokens.map(tokens => ({
 			liquidityToken: toV2LiquidityToken(
@@ -95,47 +95,6 @@ export const PoolsContainer: NextPage = () => {
 			),
 			tokens: tokens as [WrappedTokenInfo, Token],
 		}));
-
-		const liquidityTokens = tokensWithLiquidity.map(
-			token => token.liquidityToken
-		);
-
-		const liquidityTokensDecimals = tokensWithLiquidity.map(
-			token => token.liquidityToken?.decimals
-		);
-
-		const liquidityBalances = await Promise.all(
-			liquidityTokens.map(async (token, index) => {
-				const result = await getBalanceOfSingleCall(
-					token?.address as string,
-					walletAddress,
-					signer,
-					liquidityTokensDecimals[index] as number
-				);
-				return { address: token?.address, balance: +result };
-			})
-		);
-
-		const fetchVolumes = await Promise.all(
-			tokensWithLiquidity.map(async token => {
-				const volume = await pegasysClient.query({
-					query: PAIR_DATA(
-						`${Pair.getAddress(token.tokens[0], token.tokens[1], chainId)}`
-					),
-					fetchPolicy: "cache-first",
-				});
-
-				return {
-					address: token.liquidityToken?.address,
-					volume: volume?.data?.pairs[0]?.volumeUSD || "0",
-				};
-			})
-		);
-
-		const pairsVolume: IVolumeTokens = fetchVolumes.reduce(
-			(acc, curr) => ({ ...acc, [`${curr.address}`]: curr }),
-			{}
-		);
 
 		const fetchPairs = await pegasysClient.query({
 			query: PAIRS_CURRENT,
@@ -149,7 +108,7 @@ export const PoolsContainer: NextPage = () => {
 		const oneDayPairInfos = await Promise.all(
 			pairAdd.map(async (token: { id: string }) => {
 				const volume = await pegasysClient.query({
-					query: PAIR_DATA(token.id, b1),
+					query: PAIR_DATA(token.id, oneDay),
 					fetchPolicy: "cache-first",
 				});
 
@@ -254,20 +213,40 @@ export const PoolsContainer: NextPage = () => {
 			{}
 		);
 
-		const formattedLiquidityBalances: ILiquidityTokens = liquidityBalances
-			.sort((a, b) => b.balance - a.balance)
-			.reduce((acc, curr) => ({ ...acc, [`${curr.address}`]: curr }), {});
-
 		const LPTokensWithBalance = tokensWithLiquidity.sort((a, b) => {
 			if (sortType === "pool-weight") {
 				return (
-					formattedLiquidityBalances[`${b?.liquidityToken?.address}`].balance -
-					formattedLiquidityBalances[`${a?.liquidityToken?.address}`].balance
+					Number(
+						formattedOneDayCommonPairs[
+							`${
+								b?.tokens[0].symbol === "WSYS" ? "SYS" : b?.tokens[0].symbol
+							}-${b?.tokens[1].symbol === "WSYS" ? "SYS" : b?.tokens[1].symbol}`
+						]?.reserveUSD
+					) -
+					Number(
+						formattedOneDayCommonPairs[
+							`${
+								a?.tokens[0].symbol === "WSYS" ? "SYS" : a?.tokens[0].symbol
+							}-${a?.tokens[1].symbol === "WSYS" ? "SYS" : a?.tokens[1].symbol}`
+						]?.reserveUSD
+					)
 				);
 			}
 			return (
-				pairsVolume[`${b?.liquidityToken?.address}`].volume -
-				pairsVolume[`${a?.liquidityToken?.address}`].volume
+				Number(
+					formattedOneDayCommonPairs[
+						`${b?.tokens[0].symbol === "WSYS" ? "SYS" : b?.tokens[0].symbol}-${
+							b?.tokens[1].symbol === "WSYS" ? "SYS" : b?.tokens[1].symbol
+						}`
+					]?.volumeUSD
+				) -
+				Number(
+					formattedOneDayCommonPairs[
+						`${a?.tokens[0].symbol === "WSYS" ? "SYS" : a?.tokens[0].symbol}-${
+							a?.tokens[1].symbol === "WSYS" ? "SYS" : a?.tokens[1].symbol
+						}`
+					]?.volumeUSD
+				)
 			);
 		});
 
@@ -280,8 +259,6 @@ export const PoolsContainer: NextPage = () => {
 		const allV2PairsWithLiquidity = v2Tokens
 			.map(([, pair]) => pair)
 			.filter((v2Pair): v2Pair is Pair => Boolean(v2Pair));
-
-		console.log(formattedGeneralPairsInfo);
 
 		const allUniqueV2PairsWithLiquidity = allV2PairsWithLiquidity
 			.map(pair => pair)

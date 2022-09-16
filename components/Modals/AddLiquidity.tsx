@@ -210,7 +210,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					}
 				);
 			}
-		});
+		}).catch(err => console.log(err));
 	};
 
 	const addLiquidity = async () => {

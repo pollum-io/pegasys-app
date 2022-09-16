@@ -58,8 +58,6 @@ export function formattedPercent(dayVolume: string, generalVolume: string) {
 		).toString()
 	);
 
-	console.log(percent);
-
 	if (!percent || percent === 0) {
 		return <Text fontWeight={500}>0%</Text>;
 	}

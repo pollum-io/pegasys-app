@@ -237,10 +237,15 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					<Text>{apr}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
-					<Text fontWeight="semibold" color={theme.text.mono}>
+					<Text
+						fontWeight="semibold"
+						color={percentShare === "0.00" ? theme.text.manageInput : ""}
+					>
 						Your pool share
 					</Text>
-					<Text>{percentShare ? `${percentShare}%` : "-"}</Text>
+					<Text color={percentShare === "0.00" ? theme.text.manageInput : ""}>
+						{percentShare !== "0.00" ? `${percentShare}%` : "-"}
+					</Text>
 				</Flex>
 			</Flex>
 			<Flex gap="2" mt="1.5rem">
