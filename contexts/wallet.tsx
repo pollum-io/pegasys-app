@@ -194,8 +194,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			});
 	};
 
-	console.log("transactions", transactions);
-
 	useMemo(() => {
 		if (approvalState.status === ApprovalState.PENDING) {
 			const timer = setInterval(async () => {

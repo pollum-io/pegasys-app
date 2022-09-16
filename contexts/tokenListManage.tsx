@@ -237,7 +237,7 @@ export const TokensListManageProvider: React.FC<{
 					prevState.selectedListUrl = DEFAULT_TOKEN_LISTS_SELECTED;
 				} else {
 					existValueInList.splice(findInList, 1);
-					prevState.selectedListUrl = DEFAULT_TOKEN_LISTS_SELECTED;
+					prevState.selectedListUrl = existValueInList;
 				}
 			}
 
