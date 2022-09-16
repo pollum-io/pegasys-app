@@ -133,7 +133,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	// REACT STATES //
 
 	const [isLoadingGraphCandles, setIsLoadingGraphCandles] =
-		useState<boolean>(true);
+		useState<boolean>(false);
 
 	const [tokensGraphCandleData, setTokensGraphCandleData] = useState<
 		IChartComponentData[]
@@ -543,13 +543,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		}
 		return null;
 	}, [expert]);
-
-	useEffect(() => {
-		const timer = setTimeout(() => {
-			setIsLoadingGraphCandles(false);
-			clearTimeout(timer);
-		}, 10500);
-	}, [isLoadingGraphCandles]);
 
 	// END REACT HOOKS //
 

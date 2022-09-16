@@ -16,15 +16,18 @@ export async function getTokensGraphCandle(
 
 	setIsLoadingCandles(true);
 
-	const result = await apolloClient.query({
-		query: GET_TOKENS_GRAPH_CANDLE,
-		variables: {
-			token0: token0?.address,
-			token1: token1?.address,
-			period,
-		},
-		fetchPolicy: "cache-first",
-	});
+	const result = await apolloClient
+		.query({
+			query: GET_TOKENS_GRAPH_CANDLE,
+			variables: {
+				token0: token0?.address,
+				token1: token1?.address,
+				period,
+			},
+			fetchPolicy: "cache-first",
+		})
+		.catch(() => setIsLoadingCandles(false))
+		.finally(() => setIsLoadingCandles(false));
 
 	return result?.data?.candles;
 }
