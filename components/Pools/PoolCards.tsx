@@ -18,6 +18,7 @@ import {
 import { WrappedTokenInfo, IDeposited, ICommonPairs } from "types";
 import { Signer } from "ethers";
 import { PAIR_DATA, pegasysClient } from "apollo";
+import { formattedNum, formattedPercent } from "utils/numberFormat";
 
 interface IPoolCards {
 	poolApr?: string;
@@ -165,6 +166,34 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		setVolume(`${pairVolume || 0}`);
 	}, [pair, trigger]);
 
+	const reserveUSD =
+		pairInfo &&
+		pairInfo.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`] &&
+		formattedNum(
+			Number(
+				pairInfo.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`]?.reserveUSD
+			),
+			true
+		);
+
+	const volumeUSD =
+		pairInfo &&
+		pairInfo.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`] &&
+		formattedNum(
+			Number(
+				pairInfo.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`]?.volumeUSD
+			),
+			true
+		);
+
+	const apr =
+		pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`] &&
+		pairInfo?.general?.[`${currencyA.symbol}-${currencyB.symbol}`] &&
+		formattedPercent(
+			pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`]?.volumeUSD,
+			pairInfo?.general?.[`${currencyA.symbol}-${currencyB.symbol}`]?.volumeUSD
+		);
+
 	return (
 		<Flex
 			flexDirection="column"
@@ -173,6 +202,11 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			borderRadius="xl"
 			border="1px solid rgb(86,190,216, 0.4)"
 			background={theme.bg.blackAlpha}
+			display={
+				pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`]
+					? ""
+					: "none"
+			}
 		>
 			<Flex gap="2">
 				<Flex>
@@ -188,33 +222,19 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					<Text fontWeight="semibold" color={theme.text.mono}>
 						Liquidity
 					</Text>
-					<Text>
-						{(pairInfo &&
-							pairInfo[`${currencyA.symbol}-${currencyB.symbol}`] &&
-							Number(
-								pairInfo[`${currencyA.symbol}-${currencyB.symbol}`]?.reserveUSD
-							).toFixed(8)) ||
-							"-"}
-					</Text>
+					<Text>{reserveUSD || "-"}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold" color={theme.text.mono}>
 						Volume
 					</Text>
-					<Text>
-						{(pairInfo &&
-							pairInfo[`${currencyA.symbol}-${currencyB.symbol}`] &&
-							Number(
-								pairInfo[`${currencyA.symbol}-${currencyB.symbol}`]?.volumeUSD
-							).toFixed(8)) ||
-							"-"}
-					</Text>
+					<Text>{volumeUSD || "-"}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold" color={theme.text.mono}>
 						APR
 					</Text>
-					<Text>{poolApr}</Text>
+					<Text>{apr}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold" color={theme.text.mono}>

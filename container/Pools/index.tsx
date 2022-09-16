@@ -146,7 +146,7 @@ export const PoolsContainer: NextPage = () => {
 
 		const pairAdd = fetchPairsAddresses[0]?.data?.pairs;
 
-		const pairInfos = await Promise.all(
+		const oneDayPairInfos = await Promise.all(
 			pairAdd.map(async (token: { id: string }) => {
 				const volume = await pegasysClient.query({
 					query: PAIR_DATA(token.id, b1),
@@ -157,7 +157,26 @@ export const PoolsContainer: NextPage = () => {
 			})
 		);
 
-		const formattedPairsInfo = pairInfos.reduce(
+		const formattedOneDayPairsInfo = oneDayPairInfos.reduce(
+			(acc, curr) => ({
+				...acc,
+				[`${curr.token0.symbol}-${curr.token1.symbol}`]: curr,
+			}),
+			{}
+		);
+
+		const generalPairInfos = await Promise.all(
+			pairAdd.map(async (token: { id: string }) => {
+				const volume = await pegasysClient.query({
+					query: PAIR_DATA(token.id),
+					fetchPolicy: "cache-first",
+				});
+
+				return volume.data.pairs[0];
+			})
+		);
+
+		const formattedGeneralPairsInfo = generalPairInfos.reduce(
 			(acc, curr) => ({
 				...acc,
 				[`${curr.token0.symbol}-${curr.token1.symbol}`]: curr,
@@ -168,15 +187,33 @@ export const PoolsContainer: NextPage = () => {
 		const commonPairs = allTokens
 			.map(
 				currency =>
-					formattedPairsInfo[`${currency[0].symbol}-${currency[1].symbol}`]
+					formattedOneDayPairsInfo[
+						`${
+							currency[0].symbol === "WETH"
+								? "ETH"
+								: currency[0].symbol === "SYS"
+								? "WSYS"
+								: currency[0].symbol
+						}-${currency[1].symbol === "WETH" ? "ETH" : currency[1].symbol}`
+					]
 			)
 			.filter(item => item !== undefined);
 
-		const formattedCommonPairs: ICommonPairs = commonPairs.reduce(
+		const formattedCommonPairs = commonPairs.reduce(
 			(acc, curr) => ({
 				...acc,
-				[`${curr?.token0?.symbol === "WSYS" ? "SYS" : curr?.token0?.symbol}-${
-					curr?.token1?.symbol === "WSYS" ? "SYS" : curr?.token1?.symbol
+				[`${
+					curr?.token0?.symbol === "WSYS"
+						? "SYS"
+						: curr?.token0?.symbol === "ETH"
+						? "WETH"
+						: curr?.token0?.symbol
+				}-${
+					curr?.token1?.symbol === "WSYS"
+						? "SYS"
+						: curr?.token1?.symbol === "ETH"
+						? "WETH"
+						: curr?.token1?.symbol
 				}`]: curr,
 			}),
 			{}
@@ -219,7 +256,10 @@ export const PoolsContainer: NextPage = () => {
 			);
 		setLpPairs(allUniqueV2PairsWithLiquidity);
 		setSearchTokens(allUniqueV2PairsWithLiquidity);
-		setPairInfo(formattedCommonPairs);
+		setPairInfo({
+			oneDay: formattedCommonPairs,
+			general: formattedGeneralPairsInfo,
+		});
 	}, [userTokensBalance, sortType]);
 
 	const handleInput = (event: ChangeEvent<HTMLInputElement>) => {

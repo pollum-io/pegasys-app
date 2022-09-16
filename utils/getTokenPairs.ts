@@ -25,11 +25,29 @@ export function getTokenPairs(chainId: ChainId, allTokens: WrappedTokenInfo[]) {
 	const BUSD = allTokens.find(item => item.symbol === "BUSD");
 	const WBTC = allTokens.find(item => item.symbol === "WBTC");
 	const BNB = allTokens.find(item => item.symbol === "BNB");
+	const WSYS = allTokens.find(item => item.symbol === "WSYS");
+	const PSYS = allTokens.find(item => item.symbol === "PSYS");
 
-	const customPairs = [TUSD, USDT, USDC, DAI, WETH, BUSD, BNB, WBTC];
+	const customPairs = [
+		TUSD,
+		USDT,
+		USDC,
+		DAI,
+		WETH,
+		BUSD,
+		BNB,
+		WBTC,
+		WSYS,
+		PSYS,
+	];
 
 	const allCustomPairs = customPairs.flatMap((v, i) =>
-		customPairs.slice(i + 1).map(w => [v, w])
+		customPairs.slice(i + 1).map(w => {
+			if (v?.symbol === "PSYS" && w?.symbol === "WSYS") {
+				return [w, v];
+			}
+			return [v, w];
+		})
 	);
 
 	// pairs for every token against every base
