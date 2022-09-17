@@ -19,11 +19,17 @@ import {
 	Text,
 	useColorMode,
 } from "@chakra-ui/react";
-import { useModal, usePicasso, useTokensListManage } from "hooks";
-import { useCallback, useMemo } from "react";
+import {
+	parseENSAddress,
+	useModal,
+	usePicasso,
+	useTokensListManage,
+} from "hooks";
+import { useCallback, useMemo, useState } from "react";
 import { MdArrowBack, MdOutlineKeyboardArrowDown } from "react-icons/md";
-import { TokenListNameOrigin } from "utils";
+import { returnConvertedUrl, TokenListNameOrigin } from "utils";
 import { useTranslation } from "react-i18next";
+import { getTokenListByUrl } from "networks";
 import { ConfirmList } from "./ConfirmList";
 
 interface IModal {
@@ -41,7 +47,6 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 		tokenListManageState: { byUrl: currentTokenLists },
 		UseSelectedListUrl,
 		removeListFromListState,
-		addListToListState,
 		toggleListByUrl,
 	} = useTokensListManage();
 
@@ -180,13 +185,23 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 export const ManageToken: React.FC<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
+
+	const [listUrlInput, setListUrlInput] = useState<string>("");
+	const [addErrorMessage, setAddErrorMessage] = useState<string | null>(null);
+
 	const { onOpenConfirmList, isOpenConfirmList, onCloseConfirmList } =
 		useModal();
 
 	const {
 		tokenListManageState,
 		tokenListManageState: { byUrl: currentTokenLists },
+		addListToListState,
+		removeListFromListState,
 	} = useTokensListManage();
+
+	const currentlyAddingList = Boolean(
+		currentTokenLists[listUrlInput]?.loadingRequestId
+	);
 
 	const sortedLists = useMemo(() => {
 		const listsUrls = Object.keys(currentTokenLists);
@@ -212,9 +227,41 @@ export const ManageToken: React.FC<IModal> = props => {
 			});
 	}, [tokenListManageState]);
 
+	const validateCurrentUrl = (listUrl: string): boolean =>
+		returnConvertedUrl(listUrl).length > 0 || Boolean(parseENSAddress(listUrl));
+
+	const handleAddList = useCallback(() => {
+		if (currentlyAddingList) return;
+
+		const urlValid = validateCurrentUrl(listUrlInput);
+
+		if (!urlValid) {
+			setAddErrorMessage("Invalid URL, try again with a correct one!");
+			onCloseConfirmList();
+			return;
+		}
+
+		getTokenListByUrl(listUrlInput)
+			.then(res => {
+				if (res?.response && res?.id) {
+					addListToListState(listUrlInput);
+					onCloseConfirmList();
+				}
+			})
+			.catch(error => {
+				removeListFromListState(listUrlInput);
+				onCloseConfirmList();
+				setAddErrorMessage(error.message);
+			});
+	}, [currentlyAddingList, listUrlInput]);
+
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
-			<ConfirmList isOpen={isOpenConfirmList} onClose={onCloseConfirmList} />
+			<ConfirmList
+				isOpen={isOpenConfirmList}
+				onClose={onCloseConfirmList}
+				handleAddList={handleAddList}
+			/>
 			<ModalOverlay />
 			<ModalContent
 				borderRadius="3xl"
@@ -246,6 +293,7 @@ export const ManageToken: React.FC<IModal> = props => {
 							bgColor={theme.bg.blackAlpha}
 							_focus={{ outline: "none" }}
 							_hover={{}}
+							onChange={event => setListUrlInput(event.target.value)}
 						/>
 						<Button
 							py="2"
@@ -260,10 +308,12 @@ export const ManageToken: React.FC<IModal> = props => {
 							_hover={{
 								bgColor: theme.bg.bluePurple,
 							}}
+							disabled={listUrlInput.length === 0}
 						>
 							Add
 						</Button>
 					</Flex>
+					{addErrorMessage !== null && <Text>{`${addErrorMessage}`}</Text>}
 
 					{sortedLists?.map(listUrl => (
 						<ShowListComponent listUrl={listUrl} key={listUrl} />
