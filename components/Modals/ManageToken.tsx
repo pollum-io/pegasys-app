@@ -17,6 +17,7 @@ import {
 	PopoverTrigger,
 	Switch,
 	Text,
+	useColorMode,
 } from "@chakra-ui/react";
 import { useModal, usePicasso, useTokensListManage } from "hooks";
 import { useCallback, useMemo } from "react";
@@ -47,6 +48,8 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 	const { t: translation } = useTranslation();
 
 	const theme = usePicasso();
+
+	const { colorMode } = useColorMode();
 
 	const { current: currentList } =
 		currentTokenLists[listUrl] || currentTokenLists;
@@ -103,8 +106,34 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 							_expanded={{ color: theme.text.cyanPurple }}
 						/>
 					</PopoverTrigger>
-					<PopoverContent maxW="max-content" px={2}>
-						<PopoverBody lineHeight="35px">
+					<PopoverContent
+						_focus={{
+							outline: "none",
+						}}
+						w={["100vw", "100vw", "max-content", "max-content"]}
+						background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+						borderBottomRadius={["none", "none", "xl", "xl"]}
+						borderTopRadius={["2xl", "2xl", "xl", "xl"]}
+						p="0"
+						top={["3.5rem", "3.3rem", "0", "0"]}
+						position="relative"
+						right="0"
+						border={["none", "1px solid transparent"]}
+						boxShadow={
+							colorMode === "light"
+								? "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
+								: "0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4)"
+						}
+						px={2}
+					>
+						<PopoverBody
+							display="flex"
+							flexDirection="column"
+							zIndex="99"
+							px="0"
+							py={["0", "0", "1", "1"]}
+							lineHeight="35px"
+						>
 							<Text>
 								{`v${currentList?.version?.major}.${currentList?.version?.minor}.${currentList?.version?.patch}`}
 							</Text>
