@@ -17,6 +17,7 @@ import {
 import { WrappedTokenInfo, IDeposited, ICommonPairs } from "types";
 import { Signer } from "ethers";
 import { formattedNum, formattedPercent } from "utils/numberFormat";
+import { pegasysClient, SYS_PRICE } from "apollo";
 
 interface IPoolCards {
 	setIsCreate: React.Dispatch<SetStateAction<boolean>>;
@@ -51,6 +52,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	const { setCurrentLpAddress, signer, walletAddress, provider } = useWallet();
 	const [poolBalance, setPoolBalance] = useState<string>("");
 	const [percentShare, setPercentShare] = useState<string>("");
+	const [sysPrice, setSysPrice] = useState<number>(0);
 	const [trigger, setTrigger] = useState<boolean>(false);
 
 	const currencyA = unwrappedToken(pair?.token0 as Token);
@@ -95,6 +97,12 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			value
 		);
 
+		const fetchSysPrice = await pegasysClient.query({
+			query: SYS_PRICE(),
+			fetchPolicy: "cache-first",
+		});
+
+		const sysPrice = fetchSysPrice?.data?.bundles[0]?.sysPrice;
 		const totalSupply = await getTotalSupply(
 			pair?.liquidityToken as Token,
 			signer as Signer,
@@ -141,15 +149,17 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		setPercentShare(Number(poolTokenPercentage?.toSignificant(6)).toFixed(2));
 		setPoolBalance(amount);
 		setUserPoolBalance(amount);
+		setSysPrice(+sysPrice);
 	}, [pair, trigger]);
 
 	const reserveUSD =
 		pairInfo &&
-		pairInfo.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`] &&
+		pairInfo.general?.[`${currencyA.symbol}-${currencyB.symbol}`] &&
 		formattedNum(
 			Number(
-				pairInfo.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`]?.reserveUSD
-			),
+				pairInfo.general?.[`${currencyA.symbol}-${currencyB.symbol}`]
+					?.trackedReserveSYS
+			) * sysPrice,
 			true
 		);
 
@@ -158,8 +168,12 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		pairInfo.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`] &&
 		formattedNum(
 			Number(
-				pairInfo.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`]?.volumeUSD
-			),
+				pairInfo.general?.[`${currencyA.symbol}-${currencyB.symbol}`]?.volumeUSD
+			) -
+				Number(
+					pairInfo.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`]
+						?.volumeUSD
+				),
 			true
 		);
 
@@ -168,7 +182,12 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		pairInfo?.general?.[`${currencyA.symbol}-${currencyB.symbol}`] &&
 		formattedPercent(
 			pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`]?.volumeUSD,
-			pairInfo?.general?.[`${currencyA.symbol}-${currencyB.symbol}`]?.volumeUSD
+			`${
+				Number(
+					pairInfo.general?.[`${currencyA.symbol}-${currencyB.symbol}`]
+						?.trackedReserveSYS
+				) * sysPrice
+			}`
 		);
 
 	return (

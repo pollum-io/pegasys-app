@@ -52,10 +52,7 @@ export const formattedNum = (number: number, usd = false) => {
 
 export function formattedPercent(dayVolume: string, generalVolume: string) {
 	const percent = parseFloat(
-		(
-			(Number(dayVolume) * 0.003 * 365 * 100) / Number(generalVolume) -
-			109
-		).toString()
+		((Number(dayVolume) * 0.003 * 365 * 100) / Number(generalVolume)).toString()
 	);
 
 	if (!percent || percent === 0) {

@@ -86,7 +86,8 @@ export const PoolsContainer: NextPage = () => {
 			walletAddress,
 		};
 
-		const [{ number: oneDay }] = await getBlocksFromTimestamps();
+		const [{ number: oneDay }, { number: twoDays }] =
+			await getBlocksFromTimestamps();
 
 		const tokensWithLiquidity = allTokens.map(tokens => ({
 			liquidityToken: toV2LiquidityToken(
@@ -108,7 +109,27 @@ export const PoolsContainer: NextPage = () => {
 		const oneDayPairInfos = await Promise.all(
 			pairAdd.map(async (token: { id: string }) => {
 				const volume = await pegasysClient.query({
-					query: PAIR_DATA(token.id, oneDay),
+					query: PAIR_DATA(token.id, Number(oneDay)),
+					fetchPolicy: "cache-first",
+				});
+
+				return volume.data.pairs[0];
+			})
+		);
+		console.log({ oneDayPairInfos, oneDay });
+
+		const formattedOneDayPairsInfo = oneDayPairInfos.reduce(
+			(acc, curr) => ({
+				...acc,
+				[`${curr.token0.symbol}-${curr.token1.symbol}`]: curr,
+			}),
+			{}
+		);
+
+		const twoDaysPairInfos = await Promise.all(
+			pairAdd.map(async (token: { id: string }) => {
+				const volume = await pegasysClient.query({
+					query: PAIR_DATA(token.id, twoDays),
 					fetchPolicy: "cache-first",
 				});
 
@@ -116,7 +137,7 @@ export const PoolsContainer: NextPage = () => {
 			})
 		);
 
-		const formattedOneDayPairsInfo = oneDayPairInfos.reduce(
+		const formattedTwoDaysPairsInfo = twoDaysPairInfos.reduce(
 			(acc, curr) => ({
 				...acc,
 				[`${curr.token0.symbol}-${curr.token1.symbol}`]: curr,
@@ -158,6 +179,21 @@ export const PoolsContainer: NextPage = () => {
 			)
 			.filter(item => item !== undefined);
 
+		const twoDaysCommonPairs = allTokens
+			.map(
+				currency =>
+					formattedTwoDaysPairsInfo[
+						`${
+							currency[0].symbol === "WETH"
+								? "ETH"
+								: currency[0].symbol === "SYS"
+								? "WSYS"
+								: currency[0].symbol
+						}-${currency[1].symbol === "WETH" ? "ETH" : currency[1].symbol}`
+					]
+			)
+			.filter(item => item !== undefined);
+
 		const generalDaysCommonPairs = allTokens
 			.map(
 				currency =>
@@ -174,6 +210,26 @@ export const PoolsContainer: NextPage = () => {
 			.filter(item => item !== undefined);
 
 		const formattedOneDayCommonPairs = oneDayCommonPairs.reduce(
+			(acc, curr) => ({
+				...acc,
+				[`${
+					curr?.token0?.symbol === "WSYS"
+						? "SYS"
+						: curr?.token0?.symbol === "ETH"
+						? "WETH"
+						: curr?.token0?.symbol
+				}-${
+					curr?.token1?.symbol === "WSYS"
+						? "SYS"
+						: curr?.token1?.symbol === "ETH"
+						? "WETH"
+						: curr?.token1?.symbol
+				}`]: curr,
+			}),
+			{}
+		);
+
+		const formattedTwoDaysCommonPairs = twoDaysCommonPairs.reduce(
 			(acc, curr) => ({
 				...acc,
 				[`${
@@ -272,6 +328,7 @@ export const PoolsContainer: NextPage = () => {
 		setSearchTokens(allUniqueV2PairsWithLiquidity);
 		setPairInfo({
 			oneDay: formattedOneDayCommonPairs,
+			twoDays: formattedTwoDaysCommonPairs,
 			general: formattedGeneralCommonPairs,
 		});
 	}, [userTokensBalance, sortType]);

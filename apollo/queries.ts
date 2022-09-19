@@ -61,6 +61,17 @@ export const PAIR_DATA = (pairAddress: string, block?: number) => {
 	return gql(queryString);
 };
 
+export const SYS_PRICE = () => {
+	const queryString = ` query bundles {
+      bundles(where: { id: 1 }) {
+        id
+        sysPrice
+      }
+    }
+  `;
+	return gql(queryString);
+};
+
 export const USER_POSITIONS = gql`
 	query liquidityPositions($user: Bytes!) {
 		liquidityPositions(where: { user: $user }) {

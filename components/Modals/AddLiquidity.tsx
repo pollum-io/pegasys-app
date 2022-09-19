@@ -196,21 +196,23 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		await PoolServices.approve({
 			approvalState: approveTokenStatus,
 			amountToApprove: amountToApp,
-		}).then(res => {
-			if (res?.spender) {
-				setApprovalState({ type: "approve", status: ApprovalState.PENDING });
-				setCurrentTxHash(res?.hash);
-				addTransaction(
-					res?.response,
-					walletInfo,
-					setTransactions,
-					transactions,
-					{
-						summary: `Approve ${tokenToApp?.symbol}`,
-					}
-				);
-			}
-		}).catch(err => console.log(err));
+		})
+			.then(res => {
+				if (res?.spender) {
+					setApprovalState({ type: "approve", status: ApprovalState.PENDING });
+					setCurrentTxHash(res?.hash);
+					addTransaction(
+						res?.response,
+						walletInfo,
+						setTransactions,
+						transactions,
+						{
+							summary: `Approve ${tokenToApp?.symbol}`,
+						}
+					);
+				}
+			})
+			.catch(err => console.log(err));
 	};
 
 	const addLiquidity = async () => {
@@ -234,11 +236,11 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			userDeadline: userTransactionDeadlineValue,
 			pair,
 		});
-
+		setApprovalState({ type: "add-liquidity", status: ApprovalState.PENDING });
 		addTransaction(response, walletInfo, setTransactions, transactions, {
-			summary: `Add ${amounts[0].toSignificant(6)} ${
-				selectedToken[0].symbol
-			} and ${amounts[1].toSignificant(6)} ${selectedToken[1].symbol}`,
+			summary: `Add ${amounts[0]?.toSignificant(6)} ${
+				selectedToken[0]?.symbol
+			} and ${amounts[1]?.toSignificant(6)} ${selectedToken[1]?.symbol}`,
 		});
 	};
 
