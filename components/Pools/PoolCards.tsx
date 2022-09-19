@@ -177,11 +177,24 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			true
 		);
 
+	const currentDayVolume =
+		parseFloat(
+			`${
+				pairInfo?.general?.[`${currencyA.symbol}-${currencyB.symbol}`]
+					?.volumeUSD
+			}`
+		) -
+		parseFloat(
+			`${
+				pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`]?.volumeUSD
+			}`
+		);
+
 	const apr =
 		pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`] &&
 		pairInfo?.general?.[`${currencyA.symbol}-${currencyB.symbol}`] &&
 		formattedPercent(
-			pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`]?.volumeUSD,
+			`${currentDayVolume}`,
 			`${
 				Number(
 					pairInfo.general?.[`${currencyA.symbol}-${currencyB.symbol}`]

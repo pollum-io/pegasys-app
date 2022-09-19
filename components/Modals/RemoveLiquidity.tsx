@@ -363,7 +363,11 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 							bgColor: theme.bg.bluePurple,
 						}}
 					>
-						{isCreate ? "Create a pair" : "Remove Liquidity"}
+						{isCreate
+							? "Create a pair"
+							: !txSignature
+							? "Sign"
+							: "Remove Liquidity"}
 					</Button>
 				</Flex>
 				<Flex

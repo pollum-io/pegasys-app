@@ -55,7 +55,7 @@ export function formattedPercent(dayVolume: string, generalVolume: string) {
 		((Number(dayVolume) * 0.003 * 365 * 100) / Number(generalVolume)).toString()
 	);
 
-	if (!percent || percent === 0) {
+	if (!percent || percent === 0 || generalVolume === "0") {
 		return <Text fontWeight={500}>0%</Text>;
 	}
 

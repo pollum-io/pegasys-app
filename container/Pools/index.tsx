@@ -22,19 +22,12 @@ import {
 import { PoolCards } from "components/Pools/PoolCards";
 import { usePicasso, useModal, useWallet, useTokens, usePairs } from "hooks";
 import { NextPage } from "next";
-import { ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
-import {
-	WrappedTokenInfo,
-	ILiquidityTokens,
-	IDeposited,
-	IVolumeTokens,
-	ICommonPairs,
-} from "types";
+import { WrappedTokenInfo, IDeposited, ICommonPairs } from "types";
 import {
 	getTokenPairs,
 	toV2LiquidityToken,
-	getBalanceOfSingleCall,
 	unwrappedToken,
 	getBlocksFromTimestamps,
 } from "utils";
@@ -54,13 +47,8 @@ export const PoolsContainer: NextPage = () => {
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const [isCreate, setIsCreate] = useState(false);
 	const [haveValue] = useState(false);
-	const {
-		isConnected,
-		currentNetworkChainId,
-		walletAddress,
-		signer,
-		provider,
-	} = useWallet();
+	const { isConnected, currentNetworkChainId, walletAddress, provider } =
+		useWallet();
 	const { userTokensBalance } = useTokens();
 	const [userHavePool] = useState(true);
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
@@ -116,7 +104,6 @@ export const PoolsContainer: NextPage = () => {
 				return volume.data.pairs[0];
 			})
 		);
-		console.log({ oneDayPairInfos, oneDay });
 
 		const formattedOneDayPairsInfo = oneDayPairInfos.reduce(
 			(acc, curr) => ({
@@ -269,42 +256,7 @@ export const PoolsContainer: NextPage = () => {
 			{}
 		);
 
-		const LPTokensWithBalance = tokensWithLiquidity.sort((a, b) => {
-			if (sortType === "pool-weight") {
-				return (
-					Number(
-						formattedOneDayCommonPairs[
-							`${
-								b?.tokens[0].symbol === "WSYS" ? "SYS" : b?.tokens[0].symbol
-							}-${b?.tokens[1].symbol === "WSYS" ? "SYS" : b?.tokens[1].symbol}`
-						]?.reserveUSD
-					) -
-					Number(
-						formattedOneDayCommonPairs[
-							`${
-								a?.tokens[0].symbol === "WSYS" ? "SYS" : a?.tokens[0].symbol
-							}-${a?.tokens[1].symbol === "WSYS" ? "SYS" : a?.tokens[1].symbol}`
-						]?.reserveUSD
-					)
-				);
-			}
-			return (
-				Number(
-					formattedOneDayCommonPairs[
-						`${b?.tokens[0].symbol === "WSYS" ? "SYS" : b?.tokens[0].symbol}-${
-							b?.tokens[1].symbol === "WSYS" ? "SYS" : b?.tokens[1].symbol
-						}`
-					]?.volumeUSD
-				) -
-				Number(
-					formattedOneDayCommonPairs[
-						`${a?.tokens[0].symbol === "WSYS" ? "SYS" : a?.tokens[0].symbol}-${
-							a?.tokens[1].symbol === "WSYS" ? "SYS" : a?.tokens[1].symbol
-						}`
-					]?.volumeUSD
-				)
-			);
-		});
+		const LPTokensWithBalance = tokensWithLiquidity;
 
 		// eslint-disable-next-line
 		const v2Tokens = await usePairs(
@@ -331,7 +283,44 @@ export const PoolsContainer: NextPage = () => {
 			twoDays: formattedTwoDaysCommonPairs,
 			general: formattedGeneralCommonPairs,
 		});
-	}, [userTokensBalance, sortType]);
+	}, [userTokensBalance]);
+
+	useEffect(() => {
+		setSearchTokens(prevState =>
+			prevState.sort((a, b) => {
+				const currencyAa = unwrappedToken(a?.token0 as Token);
+				const currencyBa = unwrappedToken(a?.token1 as Token);
+
+				const currencyAb = unwrappedToken(b?.token0 as Token);
+				const currencyBb = unwrappedToken(b?.token1 as Token);
+				if (sortType === "pool-weight") {
+					return (
+						Number(
+							pairInfo?.general?.[`${currencyAb.symbol}-${currencyBb.symbol}`]
+								?.reserveUSD
+						) -
+						Number(
+							pairInfo?.general?.[`${currencyAa.symbol}-${currencyBa.symbol}`]
+								?.reserveUSD
+						)
+					);
+				}
+				if (sortType === "volume") {
+					return (
+						Number(
+							pairInfo?.general?.[`${currencyAb.symbol}-${currencyBb.symbol}`]
+								?.volumeUSD
+						) -
+						Number(
+							pairInfo?.general?.[`${currencyAa.symbol}-${currencyBa.symbol}`]
+								?.volumeUSD
+						)
+					);
+				}
+				return 0;
+			})
+		);
+	}, [sortType]);
 
 	const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
 		const inputValue = event.target.value;
@@ -630,7 +619,7 @@ export const PoolsContainer: NextPage = () => {
 							mt="10"
 							justifyContent={["center", "center", "unset", "unset"]}
 						>
-							{searchTokens?.length !== 0 ? (
+							{searchTokens?.length !== 0 && pairInfo ? (
 								searchTokens?.map(pair => (
 									<PoolCards
 										key={pair.liquidityToken.address}
