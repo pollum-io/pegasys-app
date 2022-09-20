@@ -48,34 +48,37 @@ export const TokensListManageProvider: React.FC<{
 			tokenListManageState?.byUrl[listUrl]?.loadingRequestId;
 
 		if (!currentList) {
-			// eslint-disable-next-line
-			setTokenListManageState(prevState => ({
-				...((prevState.byUrl[listUrl] = {
+			setTokenListManageState(prevState => {
+				prevState.byUrl[listUrl] = {
 					...prevState?.byUrl[listUrl],
 					current: tokenListResponse?.response as TokenList,
 					error: null,
 					loadingRequestId: tokenListResponse?.id as string,
 					pendingUpdate: null,
-				}),
-				prevState),
-			}));
+				};
+				prevState.selectedListUrl = prevState?.selectedListUrl
+					?.filter(list => list !== listUrl)
+					.concat(listUrl) as string[];
+
+				return { ...prevState };
+			});
 		}
 
 		if (
 			currentList &&
 			(loadingRequestId === "" || loadingRequestId === tokenListResponse?.id)
 		) {
-			// eslint-disable-next-line
-			setTokenListManageState(prevState => ({
-				...((prevState.byUrl[listUrl] = {
+			setTokenListManageState(prevState => {
+				prevState.byUrl[listUrl] = {
 					...prevState?.byUrl[listUrl],
 					loadingRequestId: null,
 					error: null,
 					current: currentList,
 					pendingUpdate: tokenListResponse?.response as TokenList,
-				}),
-				prevState),
-			}));
+				};
+
+				return { ...prevState };
+			});
 		}
 
 		return tokenListResponse;
@@ -93,7 +96,11 @@ export const TokensListManageProvider: React.FC<{
 			logoURI: SYS_LOGO,
 		} as TokenInfo;
 
-		const listWithAllTokens = [...list.tokens, SYSToken];
+		const validateDefaultName = ["Pegasys Default", "Tanenbaum Tokens"];
+
+		const listWithAllTokens = validateDefaultName.includes(list.name)
+			? [...list.tokens, SYSToken]
+			: list.tokens;
 
 		if (!isConnected || !provider) {
 			const mapAroundList = listWithAllTokens.reduce<TokenAddressMap>(
@@ -293,6 +300,7 @@ export const TokensListManageProvider: React.FC<{
 			fetchAndFulfilledTokenListManage(url)
 		);
 	}, [
+		tokenListManageState,
 		tokenListManageState.byUrl,
 		tokenListManageState.lastInitializedDefaultListOfLists,
 		tokenListManageState.selectedListUrl,
@@ -301,7 +309,8 @@ export const TokensListManageProvider: React.FC<{
 		currentNetworkChainId,
 	]);
 
-	// console.log("listCache", tokenListCache);
+	console.log("listCache", tokenListCache);
+	console.log("tokenListState", tokenListManageState);
 
 	const tokensListManageProviderValue = useMemo(
 		() => ({
