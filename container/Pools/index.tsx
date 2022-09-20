@@ -11,6 +11,7 @@ import {
 	Text,
 	InputLeftElement,
 	useMediaQuery,
+	useColorMode,
 } from "@chakra-ui/react";
 import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
 import { PAIRS_CURRENT, PAIR_DATA, pegasysClient } from "apollo";
@@ -22,7 +23,7 @@ import {
 import { PoolCards } from "components/Pools/PoolCards";
 import { usePicasso, useModal, useWallet, useTokens, usePairs } from "hooks";
 import { NextPage } from "next";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
 import { WrappedTokenInfo, IDeposited, ICommonPairs } from "types";
 import {
@@ -43,6 +44,8 @@ export const PoolsContainer: NextPage = () => {
 		isOpenAddLiquidity,
 		onCloseAddLiquidity,
 	} = useModal();
+
+	const { colorMode } = useColorMode();
 
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const [isCreate, setIsCreate] = useState(false);
@@ -275,7 +278,24 @@ export const PoolsContainer: NextPage = () => {
 					allV2PairsWithLiquidity
 						.map(pair => pair.liquidityToken.address)
 						.indexOf(item.liquidityToken.address) === index
-			);
+			)
+			.sort((a, b) => {
+				const currencyAa = unwrappedToken(a?.token0 as Token);
+				const currencyBa = unwrappedToken(a?.token1 as Token);
+
+				const currencyAb = unwrappedToken(b?.token0 as Token);
+				const currencyBb = unwrappedToken(b?.token1 as Token);
+				return (
+					Number(
+						pairInfo?.general?.[`${currencyAb.symbol}-${currencyBb.symbol}`]
+							?.volumeUSD
+					) -
+					Number(
+						pairInfo?.general?.[`${currencyAa.symbol}-${currencyBa.symbol}`]
+							?.volumeUSD
+					)
+				);
+			});
 		setLpPairs(allUniqueV2PairsWithLiquidity);
 		setSearchTokens(allUniqueV2PairsWithLiquidity);
 		setPairInfo({
@@ -285,7 +305,8 @@ export const PoolsContainer: NextPage = () => {
 		});
 	}, [userTokensBalance]);
 
-	useEffect(() => {
+	useMemo(() => {
+		console.log("entrou auqi");
 		setSearchTokens(prevState =>
 			prevState.sort((a, b) => {
 				const currencyAa = unwrappedToken(a?.token0 as Token);

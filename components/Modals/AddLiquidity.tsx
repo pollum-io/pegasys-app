@@ -19,7 +19,7 @@ import {
 	useWallet,
 	useAllCommonPairs,
 } from "hooks";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
 	MdHelpOutline,
 	MdArrowBack,
@@ -27,16 +27,30 @@ import {
 	MdOutlineInfo,
 } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
-import { IDeposited, WrappedTokenInfo } from "types";
+import { IDeposited, IInputValues, WrappedTokenInfo } from "types";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { useTranslation } from "react-i18next";
 import { PoolServices, useWallet as psUseWallet } from "pegasys-services";
-import { addTransaction, getTokenAllowance } from "utils";
+import {
+	addTransaction,
+	getTokenAllowance,
+	getTotalSupply,
+	tryParseAmount,
+	wrappedCurrencyAmount,
+	maxAmountSpend,
+} from "utils";
 import { SelectCoinModal } from "./SelectCoin";
-import { ChainId, JSBI, Pair, TokenAmount } from "@pollum-io/pegasys-sdk";
-import { ROUTER_ADDRESS } from "helpers/consts";
+import {
+	ChainId,
+	JSBI,
+	Pair,
+	Percent,
+	TokenAmount,
+} from "@pollum-io/pegasys-sdk";
+import { ONE_BIPS, ROUTER_ADDRESS } from "helpers/consts";
 import { Signer } from "ethers";
 import { ApprovalState } from "contexts";
+import { parseUnits } from "@ethersproject/units";
 
 interface IModal {
 	isModalOpen: boolean;
@@ -52,8 +66,11 @@ interface IModal {
 	currPair: Pair | undefined;
 }
 interface ITokenInputValue {
-	inputFrom: string;
-	inputTo: string;
+	inputFrom: IInputValues;
+	inputTo: IInputValues;
+	typedValue: string;
+	currentInputTyped: string;
+	lastInputTyped: number | undefined;
 }
 
 export const AddLiquidityModal: React.FC<IModal> = props => {
@@ -71,21 +88,33 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		setIsCreate,
 	} = props;
 
+	const initialTokenInputValue = {
+		inputFrom: {
+			value: "",
+		},
+		inputTo: {
+			value: "",
+		},
+		typedValue: "",
+		currentInputTyped: "",
+		lastInputTyped: undefined,
+	};
+
 	const { userTokensBalance } = useTokens();
 	const { t: translation } = useTranslation();
 	const theme = usePicasso();
 	const { isOpenCoin, onCloseCoin, onOpenCoin } = useModal();
 	const [buttonId, setButtonId] = useState<number>(0);
-	const [tokenInputValue, setTokenInputValue] = useState<ITokenInputValue>({
-		inputFrom: "",
-		inputTo: "",
-	});
+	const [tokenInputValue, setTokenInputValue] = useState<ITokenInputValue>(
+		initialTokenInputValue
+	);
 	const [approveTokenStatus, setApproveTokenStatus] = useState<ApprovalState>(
 		ApprovalState.UNKNOWN
 	);
 	const [tokenToApp, setTokenToApp] = useState<WrappedTokenInfo>();
 	const [amountToApp, setAmountToApp] = useState<TokenAmount>();
 	const [amounts, setAmounts] = useState<TokenAmount[]>([]);
+	const [currPoolShare, setCurrPoolShare] = useState<string>("");
 
 	const {
 		userSlippageTolerance,
@@ -97,6 +126,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		signer,
 		setApprovalState,
 		setCurrentTxHash,
+		isConnected,
 	} = useWallet();
 	const { address, chainId } = psUseWallet();
 
@@ -118,7 +148,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			selectedToken[1]?.symbol === "WSYS") ||
 		(selectedToken[0]?.symbol === "WSYS" && selectedToken[1]?.symbol === "SYS");
 
-	const emptyInput = !tokenInputValue.inputFrom || !tokenInputValue.inputTo;
+	const emptyInput =
+		!tokenInputValue.inputFrom.value || !tokenInputValue.inputTo.value;
 
 	const isERC20 =
 		(selectedToken[0]?.symbol !== "SYS" &&
@@ -128,21 +159,161 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const handleOnChangeTokenInputs = (
 		event: React.ChangeEvent<HTMLInputElement>
 	) => {
+		if (!isConnected) return;
+
 		const regexPreventLetters = /^(?!,$)[\d,.]+$/;
 
-		const inputValue = event?.target?.value;
+		const inputValue = event?.currentTarget?.value;
+
+		const typedInput = event?.currentTarget.name;
 
 		if (inputValue === "" || regexPreventLetters.test(inputValue)) {
-			setTokenInputValue(prevState => ({
-				...prevState,
-				[event.target.name]: inputValue,
-			}));
+			const inputFrom: IInputValues = {
+				value: typedInput === "inputFrom" ? inputValue : "",
+			};
+
+			const inputTo: IInputValues = {
+				value: typedInput === "inputTo" ? inputValue : "",
+			};
+
+			setTokenInputValue({
+				inputFrom,
+				inputTo,
+				typedValue: inputValue,
+				currentInputTyped: typedInput,
+				lastInputTyped: typedInput === "inputFrom" ? 0 : 1,
+			});
+			return;
 		}
 	};
 
+	const currencyBalances = {
+		inputFrom: tryParseAmount(selectedToken[0]?.balance, selectedToken[0]),
+		inputTo: tryParseAmount(selectedToken[1]?.balance, selectedToken[1]),
+	};
+
+	const maxAmounts = {
+		inputFrom: maxAmountSpend(currencyBalances?.inputFrom),
+		inputTo: maxAmountSpend(currencyBalances?.inputTo),
+	};
+
+	const handleMaxInput = useCallback(
+		(typedInput: string) => {
+			setTokenInputValue(prevState => {
+				if (typedInput === "inputFrom") {
+					return {
+						...prevState,
+						inputFrom: {
+							value: maxAmounts?.inputFrom?.toExact() as string,
+						},
+						lastInputTyped: 0,
+						currentInputTyped: "inputFrom",
+						typedValue: maxAmounts?.inputFrom?.toExact() as string,
+					};
+				}
+				return {
+					...prevState,
+					inputTo: {
+						value: maxAmounts?.inputTo?.toExact() as string,
+					},
+					lastInputTyped: 1,
+					currentInputTyped: "inputTo",
+					typedValue: maxAmounts?.inputTo?.toExact() as string,
+				};
+			});
+		},
+		[maxAmounts]
+	);
+
+	const showMaxInput = Boolean(
+		!tokenInputValue.inputFrom.value && !tokenInputValue.inputTo.value
+	);
+
 	useMemo(async () => {
-		if (isERC20) {
-			const valueA = JSBI.BigInt(+tokenInputValue.inputFrom);
+		const {
+			inputTo: { value: inputToValue },
+			inputFrom: { value: inputFromValue },
+			currentInputTyped,
+		} = tokenInputValue;
+
+		if (currentInputTyped === "inputFrom" && currPair) {
+			const parseInputValue = tryParseAmount(inputFromValue, selectedToken[0]);
+			const wrappedAmountValue = wrappedCurrencyAmount(
+				parseInputValue,
+				chainId
+			);
+			const quoteValue =
+				wrappedAmountValue &&
+				currPair?.priceOf(currPair?.token0)?.quote(wrappedAmountValue);
+
+			tokenInputValue.inputTo.value =
+				inputFromValue && quoteValue ? quoteValue?.toSignificant(6) : "";
+		}
+
+		if (currentInputTyped === "inputTo" && currPair) {
+			const parseInputValue = tryParseAmount(inputToValue, selectedToken[1]);
+			const wrappedAmountValue = wrappedCurrencyAmount(
+				parseInputValue,
+				chainId
+			);
+			const quoteValue =
+				wrappedAmountValue &&
+				currPair?.priceOf(currPair?.token1)?.quote(wrappedAmountValue);
+
+			tokenInputValue.inputFrom.value =
+				inputToValue && quoteValue ? quoteValue?.toSignificant(6) : "";
+		}
+	}, [tokenInputValue]);
+
+	useMemo(async () => {
+		const totalSupply =
+			currPair &&
+			(await getTotalSupply(
+				currPair?.liquidityToken,
+				signer as Signer,
+				provider
+			));
+		const currencyAmountA = tryParseAmount(
+			tokenInputValue.inputFrom.value,
+			selectedToken[0]
+		);
+		const currencyAmountB = tryParseAmount(
+			tokenInputValue.inputTo.value,
+			selectedToken[1]
+		);
+
+		const [tokenAmountA, tokenAmountB] = [
+			wrappedCurrencyAmount(currencyAmountA, chainId),
+			wrappedCurrencyAmount(currencyAmountB, chainId),
+		];
+
+		const liquidityMinted =
+			currPair &&
+			tokenAmountA &&
+			tokenAmountB &&
+			currPair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB);
+
+		const poolPercentageShare =
+			liquidityMinted &&
+			totalSupply &&
+			new Percent(liquidityMinted?.raw, totalSupply?.add(liquidityMinted).raw);
+
+		setCurrPoolShare(
+			poolPercentageShare?.lessThan(ONE_BIPS)
+				? "<0.01%"
+				: `${poolPercentageShare?.toFixed(2)}%` ?? "0%"
+		);
+	}, [tokenInputValue]);
+
+	useMemo(async () => {
+		if (
+			isERC20 &&
+			tokenInputValue.inputFrom.value &&
+			tokenInputValue.inputTo.value
+		) {
+			const valueA = JSBI.BigInt(
+				parseUnits(tokenInputValue.inputFrom.value, selectedToken[0].decimals)
+			);
 			const amountAtoApprove =
 				selectedToken[0] && new TokenAmount(selectedToken[0], valueA);
 
@@ -155,7 +326,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					signer as Signer
 				));
 
-			const valueB = JSBI.BigInt(+tokenInputValue.inputFrom);
+			const valueB = JSBI.BigInt(
+				parseUnits(tokenInputValue.inputTo.value, selectedToken[1].decimals)
+			);
 			const amountBtoApprove =
 				selectedToken[1] && new TokenAmount(selectedToken[1], valueB);
 
@@ -230,7 +403,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 		const response = await PoolServices.addLiquidity({
 			tokens: selectedToken as [WrappedTokenInfo, WrappedTokenInfo],
-			values: [tokenInputValue.inputFrom, tokenInputValue.inputTo],
+			values: [tokenInputValue.inputFrom.value, tokenInputValue.inputTo.value],
 			haveValue,
 			slippage: userSlippageTolerance,
 			userDeadline: userTransactionDeadlineValue,
@@ -256,16 +429,13 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	}, [userTokensBalance]);
 
 	useEffect(() => {
-		if (tokenInputValue.inputFrom && tokenInputValue.inputTo) {
+		if (tokenInputValue.inputFrom.value && tokenInputValue.inputTo.value) {
 			setIsCreate(false);
 		}
 	}, [tokenInputValue]);
 
 	useEffect(() => {
-		setTokenInputValue({
-			inputFrom: "",
-			inputTo: "",
-		});
+		setTokenInputValue(initialTokenInputValue);
 	}, [isModalOpen]);
 	return (
 		<Modal blockScrollOnMount isOpen={isModalOpen} onClose={onModalClose}>
@@ -368,9 +538,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							justifyContent="space-between"
 							border="1px solid"
 							borderColor={
-								parseFloat(tokenInputValue.inputFrom) >
+								parseFloat(tokenInputValue.inputFrom.value) >
 									parseFloat(selectedToken[0]?.balance) ||
-								parseFloat(tokenInputValue.inputFrom) >
+								parseFloat(tokenInputValue.inputFrom.value) >
 									parseFloat(selectedToken[0]?.balance)
 									? theme.text.red400
 									: "#ff000000"
@@ -405,6 +575,22 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									<Icon as={IoIosArrowDown} />
 								</Flex>
 							</Flex>
+							{showMaxInput && (
+								<Flex
+									ml="2"
+									h="fit-content"
+									position="relative"
+									top="30px"
+									onClick={() => handleMaxInput("inputFrom")}
+								>
+									<Text
+										color={theme.text.cyanPurple}
+										_hover={{ cursor: "pointer", opacity: "0.8" }}
+									>
+										Max
+									</Text>
+								</Flex>
+							)}
 							<Flex
 								flexDirection="column"
 								color={theme.text.swapInfo}
@@ -426,12 +612,12 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									_active={{ border: "none" }}
 									name="inputFrom"
 									onChange={handleOnChangeTokenInputs}
-									value={tokenInputValue.inputFrom}
+									value={tokenInputValue.inputFrom.value}
 									_focus={{ outline: "none" }}
 								/>
 							</Flex>
 						</Flex>
-						{parseFloat(tokenInputValue.inputFrom) >
+						{parseFloat(tokenInputValue.inputFrom.value) >
 							parseFloat(selectedToken[0]?.balance) && (
 							<Flex flexDirection="row" gap="1" justifyContent="center">
 								<Text
@@ -467,9 +653,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							justifyContent="space-between"
 							border="1px solid"
 							borderColor={
-								parseFloat(tokenInputValue.inputTo) >
+								parseFloat(tokenInputValue.inputTo.value) >
 									parseFloat(selectedToken[1]?.balance) ||
-								parseFloat(tokenInputValue.inputTo) >
+								parseFloat(tokenInputValue.inputTo.value) >
 									parseFloat(selectedToken[1]?.balance)
 									? theme.text.red400
 									: "#ff000000"
@@ -504,6 +690,22 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									<Icon as={IoIosArrowDown} />
 								</Flex>
 							</Flex>
+							{showMaxInput && (
+								<Flex
+									ml="2"
+									h="fit-content"
+									position="relative"
+									top="30px"
+									onClick={() => handleMaxInput("inputTo")}
+								>
+									<Text
+										color={theme.text.cyanPurple}
+										_hover={{ cursor: "pointer", opacity: "0.8" }}
+									>
+										Max
+									</Text>
+								</Flex>
+							)}
 							<Flex
 								flexDirection="column"
 								color={theme.text.swapInfo}
@@ -527,12 +729,12 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										outline: "none",
 									}}
 									name="inputTo"
-									value={tokenInputValue.inputTo}
+									value={tokenInputValue.inputTo.value}
 									onChange={handleOnChangeTokenInputs}
 								/>
 							</Flex>
 						</Flex>
-						{parseFloat(tokenInputValue.inputTo) >
+						{parseFloat(tokenInputValue.inputTo.value) >
 							parseFloat(selectedToken[1]?.balance) && (
 							<Flex flexDirection="row" gap="1" justifyContent="center">
 								<Text
@@ -554,8 +756,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								</Text>
 							</Flex>
 						)}
-						{tokenInputValue.inputTo &&
-							tokenInputValue.inputFrom &&
+						{tokenInputValue.inputTo.value &&
+							tokenInputValue.inputFrom.value &&
 							!invalidPair && (
 								<Flex
 									flexDirection="column"
@@ -622,7 +824,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 											flexDirection={["column", "column", "column", "column"]}
 											textAlign="center"
 										>
-											<Text fontWeight="semibold">-</Text>
+											<Text fontWeight="semibold">
+												{currPoolShare ? currPoolShare : "-"}
+											</Text>
 											<Text fontWeight="normal">Share of Pool</Text>
 										</Flex>
 									</Flex>
@@ -658,8 +862,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						</Flex>
 					</Flex>
 				</Flex>
-				{tokenInputValue.inputTo &&
-				tokenInputValue.inputFrom &&
+				{tokenInputValue.inputTo.value &&
+				tokenInputValue.inputFrom.value &&
 				!invalidPair ? (
 					<Flex
 						flexDirection="column"
