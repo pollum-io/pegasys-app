@@ -92,7 +92,7 @@ class PoolServices {
 		let args;
 		let value: any;
 
-		const isAnyNSYS = tokens.find(c => c === NSYS);
+		const isAnyNSYS = tokens.find(c => c.symbol === "SYS");
 
 		const [tokenA, tokenB] = tokens;
 
@@ -136,7 +136,7 @@ class PoolServices {
 		let methodName: string;
 
 		if (isAnyNSYS) {
-			const tokenBIsETH = tokenB === NSYS;
+			const tokenBIsETH = tokenB.symbol === "SYS";
 
 			methodName = "addLiquiditySYS";
 

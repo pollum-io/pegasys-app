@@ -73,7 +73,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	const { onOpenRemoveLiquidity, onOpenAddLiquidity } = useModal();
 	const { setCurrentLpAddress, signer, walletAddress, provider } = useWallet();
 	const [poolBalance, setPoolBalance] = useState<string>("");
-	const [percentShare, setPercentShare] = useState<string>("");
+	const [percentShare, setPercentShare] = useState<number>(0);
 	const [sysPrice, setSysPrice] = useState<number>(0);
 	const [trigger, setTrigger] = useState<boolean>(false);
 
@@ -168,7 +168,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			Number(poolTokenPercentage?.toSignificant(6)).toFixed(2)
 		);
 		setDepositedTokens({ token0: token0Deposited, token1: token1Deposited });
-		setPercentShare(Number(poolTokenPercentage?.toSignificant(6)).toFixed(2));
+		setPercentShare(Number(poolTokenPercentage?.toSignificant(6)));
 		setPoolBalance(amount);
 		setUserPoolBalance(amount);
 		setSysPrice(+sysPrice);
@@ -303,7 +303,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold" color={theme.text.mono}>
-						Volume
+						Volume (24h)
 					</Text>
 					<Text>{volumeUSD || "-"}</Text>
 				</Flex>
@@ -317,21 +317,21 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					<Text
 						fontWeight="semibold"
 						color={
-							percentShare === "0.00" && percentShare
-								? theme.text.manageInput
-								: ""
+							percentShare === 0 && percentShare ? theme.text.manageInput : ""
 						}
 					>
 						Your pool share
 					</Text>
 					<Text
 						color={
-							percentShare === "0.00" && percentShare
-								? theme.text.manageInput
-								: ""
+							percentShare === 0 && percentShare ? theme.text.manageInput : ""
 						}
 					>
-						{percentShare !== "0.00" && percentShare ? `${percentShare}%` : "-"}
+						{percentShare !== 0 && percentShare
+							? percentShare > 0 && percentShare < 1
+								? "<0.01%"
+								: `${percentShare}%`
+							: "-"}
 					</Text>
 				</Flex>
 			</Flex>

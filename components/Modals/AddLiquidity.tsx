@@ -125,6 +125,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		setCurrentLpAddress,
 		signer,
 		setApprovalState,
+		approvalState,
 		setCurrentTxHash,
 		isConnected,
 	} = useWallet();
@@ -147,6 +148,10 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		(selectedToken[0]?.symbol === "SYS" &&
 			selectedToken[1]?.symbol === "WSYS") ||
 		(selectedToken[0]?.symbol === "WSYS" && selectedToken[1]?.symbol === "SYS");
+
+	const isPending = approvalState.status === ApprovalState.PENDING;
+
+	const isApproved = approvalState.type === "approve" && approvalState.status === ApprovalState.APPROVED;
 
 	const emptyInput =
 		!tokenInputValue.inputFrom.value || !tokenInputValue.inputTo.value;
@@ -373,6 +378,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			.then(res => {
 				if (res?.spender) {
 					setApprovalState({ type: "approve", status: ApprovalState.PENDING });
+					setApproveTokenStatus(ApprovalState.APPROVED);
 					setCurrentTxHash(res?.hash);
 					addTransaction(
 						res?.response,
@@ -838,14 +844,14 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								py={["4", "4", "6", "6"]}
 								px="6"
 								borderRadius="67px"
-								disabled={invalidPair || emptyInput}
+								disabled={invalidPair || emptyInput || isPending}
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
 								fontSize="lg"
 								fontWeight="semibold"
 								_hover={{ bgColor: theme.bg.bluePurple }}
 								onClick={
-									approveTokenStatus === ApprovalState.NOT_APPROVED
+									approveTokenStatus === ApprovalState.NOT_APPROVED && !isApproved
 										? approve
 										: addLiquidity
 								}
@@ -854,7 +860,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									? "Create a pair"
 									: invalidPair
 									? "Invalid Pair"
-									: approveTokenStatus === ApprovalState.NOT_APPROVED
+									: approveTokenStatus === ApprovalState.NOT_APPROVED && !isApproved
 									? `Approve ${tokenToApp?.symbol}`
 									: "Add Liquidity"}
 							</Button>
@@ -898,7 +904,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							<Flex flexDirection="row" justifyContent="space-between">
 								<Text fontWeight="semibold">Your pool share:</Text>
 								<Text fontWeight="normal">
-									{poolPercentShare ? `${poolPercentShare}%` : "-%"}
+									{poolPercentShare === "0.00"
+										? "<0.01%"
+										: `${poolPercentShare}%`}
 								</Text>
 							</Flex>
 							<Flex
