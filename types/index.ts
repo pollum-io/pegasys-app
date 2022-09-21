@@ -10,3 +10,7 @@ export * from "./ILiquidityTokens";
 export * from "./IDeposit";
 export * from "./IVolumeTokens";
 export * from "./ICommonPairs";
+export * from "./IApr";
+export * from "./IPoolsWithLiquidity";
+export * from "./IPoolsVolume";
+export * from "./IPoolsLiquidity";

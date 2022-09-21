@@ -389,7 +389,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	};
 
 	const addLiquidity = async () => {
-		console.log("entrou");
 
 		const pairs = await useAllCommonPairs(
 			selectedToken[0],

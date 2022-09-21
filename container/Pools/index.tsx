@@ -25,7 +25,15 @@ import { usePicasso, useModal, useWallet, useTokens, usePairs } from "hooks";
 import { NextPage } from "next";
 import { ChangeEvent, useMemo, useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
-import { WrappedTokenInfo, IDeposited, ICommonPairs } from "types";
+import {
+	WrappedTokenInfo,
+	IDeposited,
+	ICommonPairs,
+	IPoolsApr,
+	IPoolsWithLiquidity,
+	IPoolsLiquidity,
+	IPoolsVolume,
+} from "types";
 import {
 	getTokenPairs,
 	toV2LiquidityToken,
@@ -61,12 +69,27 @@ export const PoolsContainer: NextPage = () => {
 	const [depositedTokens, setDepositedTokens] = useState<IDeposited>();
 	const [poolPercentShare, setPoolPercentShare] = useState<string>("");
 	const [userPoolBalance, setUserPoolBalance] = useState<string>("");
-	const [sortType, setSortType] = useState<string>("pool-weight");
+	const [sortType, setSortType] = useState<string>("your-pools");
 	const [searchTokens, setSearchTokens] = useState<Pair[]>([]);
+	const [poolsApr, setPoolsApr] = useState<IPoolsApr>();
+	const [poolsWithLiquidity, setPoolsWithLiquidity] =
+		useState<IPoolsWithLiquidity>();
+	const [poolsLiquidity, setPoolsLiquidity] = useState<IPoolsLiquidity>();
+	const [poolsVolume, setPoolsVolume] = useState<IPoolsVolume>();
+	const [pairInfo, setPairInfo] = useState<ICommonPairs>();
+	const [notFound, setNotFound] = useState<boolean>(false);
+
 	const chainId =
 		currentNetworkChainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
-	const sortTypeName = sortType === "pool-weight" ? "Pool Weight" : "Volume";
-	const [pairInfo, setPairInfo] = useState<ICommonPairs>();
+
+	const sortTypeName =
+		sortType === "pool-weight"
+			? "Pool Weight"
+			: sortType === "apr"
+			? "APR"
+			: sortType === "your-pools"
+			? "Your Pools"
+			: "Volume";
 
 	useMemo(async () => {
 		const allTokens = getTokenPairs(currentNetworkChainId, userTokensBalance);
@@ -259,11 +282,9 @@ export const PoolsContainer: NextPage = () => {
 			{}
 		);
 
-		const LPTokensWithBalance = tokensWithLiquidity;
-
 		// eslint-disable-next-line
 		const v2Tokens = await usePairs(
-			LPTokensWithBalance.map(({ tokens }) => tokens),
+			tokensWithLiquidity.map(({ tokens }) => tokens),
 			walletInfos
 		);
 
@@ -306,42 +327,57 @@ export const PoolsContainer: NextPage = () => {
 	}, [userTokensBalance]);
 
 	useMemo(() => {
-		console.log("entrou auqi");
-		setSearchTokens(prevState =>
-			prevState.sort((a, b) => {
-				const currencyAa = unwrappedToken(a?.token0 as Token);
-				const currencyBa = unwrappedToken(a?.token1 as Token);
+		if (searchTokens.length !== 0) {
+			setSearchTokens(prevState =>
+				prevState.sort((a, b) => {
+					const currencyAa = unwrappedToken(a?.token0 as Token);
+					const currencyBa = unwrappedToken(a?.token1 as Token);
 
-				const currencyAb = unwrappedToken(b?.token0 as Token);
-				const currencyBb = unwrappedToken(b?.token1 as Token);
-				if (sortType === "pool-weight") {
-					return (
-						Number(
-							pairInfo?.general?.[`${currencyAb.symbol}-${currencyBb.symbol}`]
-								?.reserveUSD
-						) -
-						Number(
-							pairInfo?.general?.[`${currencyAa.symbol}-${currencyBa.symbol}`]
-								?.reserveUSD
-						)
-					);
-				}
-				if (sortType === "volume") {
-					return (
-						Number(
-							pairInfo?.general?.[`${currencyAb.symbol}-${currencyBb.symbol}`]
-								?.volumeUSD
-						) -
-						Number(
-							pairInfo?.general?.[`${currencyAa.symbol}-${currencyBa.symbol}`]
-								?.volumeUSD
-						)
-					);
-				}
-				return 0;
-			})
-		);
-	}, [sortType]);
+					const currencyAb = unwrappedToken(b?.token0 as Token);
+					const currencyBb = unwrappedToken(b?.token1 as Token);
+					if (sortType === "pool-weight") {
+						return (
+							Number(
+								poolsLiquidity?.[`${currencyAb.symbol}-${currencyBb.symbol}`]
+							) -
+							Number(
+								poolsLiquidity?.[`${currencyAa.symbol}-${currencyBa.symbol}`]
+							)
+						);
+					}
+					if (sortType === "volume") {
+						return (
+							Number(
+								poolsVolume?.[`${currencyAb.symbol}-${currencyBb.symbol}`]
+							) -
+							Number(poolsVolume?.[`${currencyAa.symbol}-${currencyBa.symbol}`])
+						);
+					}
+					if (sortType === "apr") {
+						return (
+							Number(poolsApr?.[`${currencyAb.symbol}-${currencyBb.symbol}`]) -
+							Number(poolsApr?.[`${currencyAa.symbol}-${currencyBa.symbol}`])
+						);
+					}
+					if (sortType === "your-pools") {
+						return (
+							Number(
+								poolsWithLiquidity?.[
+									`${currencyAb.symbol}-${currencyBb.symbol}`
+								]
+							) -
+							Number(
+								poolsWithLiquidity?.[
+									`${currencyAa.symbol}-${currencyBa.symbol}`
+								]
+							)
+						);
+					}
+					return 0;
+				})
+			);
+		}
+	}, [searchTokens, userTokensBalance, sortType, poolsLiquidity]);
 
 	const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
 		const inputValue = event.target.value;
@@ -357,8 +393,10 @@ export const PoolsContainer: NextPage = () => {
 						.startsWith(inputValue.toLowerCase())
 			);
 			setSearchTokens(results);
+			setNotFound(results.length === 0);
 		} else {
 			setSearchTokens(lpPairs);
+			setNotFound(false);
 		}
 	};
 
@@ -607,6 +645,20 @@ export const PoolsContainer: NextPage = () => {
 												>
 													Volume
 												</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+													onClick={() => setSortType("apr")}
+												>
+													APR
+												</MenuItem>
+												<MenuItem
+													color={theme.text.mono}
+													_hover={{ bgColor: theme.bg.iconBg }}
+													onClick={() => setSortType("your-pools")}
+												>
+													Your Pools
+												</MenuItem>
 											</MenuList>
 										</Menu>
 									)}
@@ -640,7 +692,7 @@ export const PoolsContainer: NextPage = () => {
 							mt="10"
 							justifyContent={["center", "center", "unset", "unset"]}
 						>
-							{searchTokens?.length !== 0 && pairInfo ? (
+							{searchTokens?.length !== 0 && !notFound ? (
 								searchTokens?.map(pair => (
 									<PoolCards
 										key={pair.liquidityToken.address}
@@ -653,10 +705,14 @@ export const PoolsContainer: NextPage = () => {
 										setDepositedTokens={setDepositedTokens}
 										setPoolPercentShare={setPoolPercentShare}
 										setUserPoolBalance={setUserPoolBalance}
+										setPoolsApr={setPoolsApr}
+										setPoolsWithLiquidity={setPoolsWithLiquidity}
+										setPoolsLiquidity={setPoolsLiquidity}
+										setPoolsVolume={setPoolsVolume}
 										pairInfo={pairInfo}
 									/>
 								))
-							) : (
+							) : notFound ? (
 								<Flex
 									w="100%"
 									mt={["3rem", "3rem", "4rem", "4rem"]}
@@ -672,6 +728,26 @@ export const PoolsContainer: NextPage = () => {
 									>
 										Unavailable liquidity tokens.
 									</Text>
+								</Flex>
+							) : (
+								<Flex
+									w="100%"
+									mt={["3rem", "3rem", "4rem", "4rem"]}
+									flexDirection="column"
+									alignItems="center"
+									justifyContent="center"
+									gap="16"
+								>
+									<Flex
+										className="circleLoading"
+										width="80px !important"
+										height="80px !important"
+										id={
+											colorMode === "dark"
+												? "pendingTransactionsDark"
+												: "pendingTransactionsLight"
+										}
+									/>
 								</Flex>
 							)}
 						</Flex>

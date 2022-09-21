@@ -14,7 +14,15 @@ import {
 	Token,
 	TokenAmount,
 } from "@pollum-io/pegasys-sdk";
-import { WrappedTokenInfo, IDeposited, ICommonPairs } from "types";
+import {
+	WrappedTokenInfo,
+	IDeposited,
+	ICommonPairs,
+	IPoolsApr,
+	IPoolsWithLiquidity,
+	IPoolsLiquidity,
+	IPoolsVolume,
+} from "types";
 import { Signer } from "ethers";
 import { formattedNum, formattedPercent } from "utils/numberFormat";
 import { pegasysClient, SYS_PRICE } from "apollo";
@@ -31,6 +39,16 @@ interface IPoolCards {
 	>;
 	setPoolPercentShare: React.Dispatch<React.SetStateAction<string>>;
 	setUserPoolBalance: React.Dispatch<React.SetStateAction<string>>;
+	setPoolsApr: React.Dispatch<React.SetStateAction<IPoolsApr | undefined>>;
+	setPoolsWithLiquidity: React.Dispatch<
+		React.SetStateAction<IPoolsWithLiquidity | undefined>
+	>;
+	setPoolsLiquidity: React.Dispatch<
+		React.SetStateAction<IPoolsLiquidity | undefined>
+	>;
+	setPoolsVolume: React.Dispatch<
+		React.SetStateAction<IPoolsVolume | undefined>
+	>;
 	pairInfo: ICommonPairs | undefined;
 }
 
@@ -45,6 +63,10 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		setDepositedTokens,
 		setPoolPercentShare,
 		setUserPoolBalance,
+		setPoolsApr,
+		setPoolsWithLiquidity,
+		setPoolsLiquidity,
+		setPoolsVolume,
 		pairInfo,
 	} = props;
 	const theme = usePicasso();
@@ -202,6 +224,52 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 				) * sysPrice
 			}`
 		);
+
+	useMemo(() => {
+		if (pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`]) {
+			setPoolsApr(prevState => {
+				const value = parseFloat(
+					(
+						(Number(currentDayVolume) * 0.003 * 365 * 100) /
+						(Number(
+							pairInfo?.general?.[`${currencyA.symbol}-${currencyB.symbol}`]
+								?.trackedReserveSYS
+						) *
+							sysPrice)
+					).toString()
+				);
+
+				return {
+					...prevState,
+					[`${currencyA.symbol}-${currencyB.symbol}`]: value,
+				};
+			});
+			setPoolsWithLiquidity(prevState => ({
+				...prevState,
+				[`${currencyA.symbol}-${currencyB.symbol}`]: +poolBalance,
+			}));
+			setPoolsLiquidity(prevState => ({
+				...prevState,
+				[`${currencyA.symbol}-${currencyB.symbol}`]:
+					Number(
+						pairInfo.general?.[`${currencyA.symbol}-${currencyB.symbol}`]
+							?.trackedReserveSYS
+					) * sysPrice,
+			}));
+			setPoolsVolume(prevState => ({
+				...prevState,
+				[`${currencyA.symbol}-${currencyB.symbol}`]:
+					Number(
+						pairInfo.general?.[`${currencyA.symbol}-${currencyB.symbol}`]
+							?.volumeUSD
+					) -
+					Number(
+						pairInfo.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`]
+							?.volumeUSD
+					),
+			}));
+		}
+	}, [sysPrice]);
 
 	return (
 		<Flex
