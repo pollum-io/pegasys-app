@@ -269,7 +269,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					),
 			}));
 		}
-	}, [sysPrice]);
+	}, [sysPrice, poolBalance]);
 
 	return (
 		<Flex

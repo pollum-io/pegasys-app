@@ -151,7 +151,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 	const isPending = approvalState.status === ApprovalState.PENDING;
 
-	const isApproved = approvalState.type === "approve" && approvalState.status === ApprovalState.APPROVED;
+	const isApproved =
+		approvalState.type === "approve" &&
+		approvalState.status === ApprovalState.APPROVED;
 
 	const emptyInput =
 		!tokenInputValue.inputFrom.value || !tokenInputValue.inputTo.value;
@@ -209,11 +211,11 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					return {
 						...prevState,
 						inputFrom: {
-							value: maxAmounts?.inputFrom?.toExact() as string,
+							value: maxAmounts?.inputFrom?.toExact().replaceAll(",", ".") as string,
 						},
 						lastInputTyped: 0,
 						currentInputTyped: "inputFrom",
-						typedValue: maxAmounts?.inputFrom?.toExact() as string,
+						typedValue: maxAmounts?.inputFrom?.toExact().replaceAll(",", ".") as string,
 					};
 				}
 				return {
@@ -580,22 +582,22 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									<Icon as={IoIosArrowDown} />
 								</Flex>
 							</Flex>
-							{showMaxInput && (
-								<Flex
-									ml="2"
-									h="fit-content"
-									position="relative"
-									top="30px"
-									onClick={() => handleMaxInput("inputFrom")}
+
+							<Flex
+								ml="2"
+								h="fit-content"
+								position="relative"
+								top="30px"
+								onClick={() => handleMaxInput("inputFrom")}
+							>
+								<Text
+									color={theme.text.cyanPurple}
+									_hover={{ cursor: "pointer", opacity: "0.8" }}
 								>
-									<Text
-										color={theme.text.cyanPurple}
-										_hover={{ cursor: "pointer", opacity: "0.8" }}
-									>
-										Max
-									</Text>
-								</Flex>
-							)}
+									Max
+								</Text>
+							</Flex>
+
 							<Flex
 								flexDirection="column"
 								color={theme.text.swapInfo}
@@ -695,22 +697,20 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									<Icon as={IoIosArrowDown} />
 								</Flex>
 							</Flex>
-							{showMaxInput && (
-								<Flex
-									ml="2"
-									h="fit-content"
-									position="relative"
-									top="30px"
-									onClick={() => handleMaxInput("inputTo")}
+							<Flex
+								ml="2"
+								h="fit-content"
+								position="relative"
+								top="30px"
+								onClick={() => handleMaxInput("inputTo")}
+							>
+								<Text
+									color={theme.text.cyanPurple}
+									_hover={{ cursor: "pointer", opacity: "0.8" }}
 								>
-									<Text
-										color={theme.text.cyanPurple}
-										_hover={{ cursor: "pointer", opacity: "0.8" }}
-									>
-										Max
-									</Text>
-								</Flex>
-							)}
+									Max
+								</Text>
+							</Flex>
 							<Flex
 								flexDirection="column"
 								color={theme.text.swapInfo}
@@ -851,7 +851,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								fontWeight="semibold"
 								_hover={{ bgColor: theme.bg.bluePurple }}
 								onClick={
-									approveTokenStatus === ApprovalState.NOT_APPROVED && !isApproved
+									approveTokenStatus === ApprovalState.NOT_APPROVED &&
+									!isApproved
 										? approve
 										: addLiquidity
 								}
@@ -860,7 +861,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									? "Create a pair"
 									: invalidPair
 									? "Invalid Pair"
-									: approveTokenStatus === ApprovalState.NOT_APPROVED && !isApproved
+									: approveTokenStatus === ApprovalState.NOT_APPROVED &&
+									  !isApproved
 									? `Approve ${tokenToApp?.symbol}`
 									: "Add Liquidity"}
 							</Button>

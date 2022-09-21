@@ -69,7 +69,7 @@ export const PoolsContainer: NextPage = () => {
 	const [depositedTokens, setDepositedTokens] = useState<IDeposited>();
 	const [poolPercentShare, setPoolPercentShare] = useState<string>("");
 	const [userPoolBalance, setUserPoolBalance] = useState<string>("");
-	const [sortType, setSortType] = useState<string>("your-pools");
+	const [sortType, setSortType] = useState<string>("pool-weight");
 	const [searchTokens, setSearchTokens] = useState<Pair[]>([]);
 	const [poolsApr, setPoolsApr] = useState<IPoolsApr>();
 	const [poolsWithLiquidity, setPoolsWithLiquidity] =
@@ -361,7 +361,15 @@ export const PoolsContainer: NextPage = () => {
 				})
 			);
 		}
-	}, [searchTokens, userTokensBalance, sortType, poolsLiquidity]);
+	}, [
+		searchTokens,
+		userTokensBalance,
+		sortType,
+		poolsWithLiquidity,
+		poolsApr,
+		poolsVolume,
+		poolsLiquidity,
+	]);
 
 	const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
 		const inputValue = event.target.value;
