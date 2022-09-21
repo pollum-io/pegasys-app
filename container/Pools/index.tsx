@@ -118,10 +118,10 @@ export const PoolsContainer: NextPage = () => {
 
 		const fetchPairsAddresses = await Promise.all([fetchPairs]);
 
-		const pairAdd = fetchPairsAddresses[0]?.data?.pairs;
+		const pairAddresses = fetchPairsAddresses[0]?.data?.pairs;
 
 		const oneDayPairInfos = await Promise.all(
-			pairAdd.map(async (token: { id: string }) => {
+			pairAddresses.map(async (token: { id: string }) => {
 				const volume = await pegasysClient.query({
 					query: PAIR_DATA(token.id, Number(oneDay)),
 					fetchPolicy: "cache-first",
@@ -140,7 +140,7 @@ export const PoolsContainer: NextPage = () => {
 		);
 
 		const twoDaysPairInfos = await Promise.all(
-			pairAdd.map(async (token: { id: string }) => {
+			pairAddresses.map(async (token: { id: string }) => {
 				const volume = await pegasysClient.query({
 					query: PAIR_DATA(token.id, twoDays),
 					fetchPolicy: "cache-first",
@@ -159,7 +159,7 @@ export const PoolsContainer: NextPage = () => {
 		);
 
 		const generalPairInfos = await Promise.all(
-			pairAdd.map(async (token: { id: string }) => {
+			pairAddresses.map(async (token: { id: string }) => {
 				const volume = await pegasysClient.query({
 					query: PAIR_DATA(token.id),
 					fetchPolicy: "cache-first",
@@ -299,24 +299,8 @@ export const PoolsContainer: NextPage = () => {
 					allV2PairsWithLiquidity
 						.map(pair => pair.liquidityToken.address)
 						.indexOf(item.liquidityToken.address) === index
-			)
-			.sort((a, b) => {
-				const currencyAa = unwrappedToken(a?.token0 as Token);
-				const currencyBa = unwrappedToken(a?.token1 as Token);
+			);
 
-				const currencyAb = unwrappedToken(b?.token0 as Token);
-				const currencyBb = unwrappedToken(b?.token1 as Token);
-				return (
-					Number(
-						pairInfo?.general?.[`${currencyAb.symbol}-${currencyBb.symbol}`]
-							?.volumeUSD
-					) -
-					Number(
-						pairInfo?.general?.[`${currencyAa.symbol}-${currencyBa.symbol}`]
-							?.volumeUSD
-					)
-				);
-			});
 		setLpPairs(allUniqueV2PairsWithLiquidity);
 		setSearchTokens(allUniqueV2PairsWithLiquidity);
 		setPairInfo({
