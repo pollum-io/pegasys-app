@@ -211,11 +211,11 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					return {
 						...prevState,
 						inputFrom: {
-							value: maxAmounts?.inputFrom?.toExact().replaceAll(",", ".") as string,
+							value: maxAmounts?.inputFrom?.toExact() as string,
 						},
 						lastInputTyped: 0,
 						currentInputTyped: "inputFrom",
-						typedValue: maxAmounts?.inputFrom?.toExact().replaceAll(",", ".") as string,
+						typedValue: maxAmounts?.inputFrom?.toExact() as string,
 					};
 				}
 				return {
@@ -397,7 +397,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	};
 
 	const addLiquidity = async () => {
-
 		const pairs = await useAllCommonPairs(
 			selectedToken[0],
 			selectedToken[1] ?? selectedToken[0],
@@ -614,7 +613,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									textAlign="right"
 									mt="2"
 									px="1.5"
-									type="number"
 									_placeholder={{ color: theme.text.whiteGray }}
 									_active={{ border: "none" }}
 									name="inputFrom"
@@ -727,7 +725,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									textAlign="right"
 									mt="2"
 									px="1.5"
-									type="number"
 									_placeholder={{ color: theme.text.whiteGray }}
 									_active={{ border: "none" }}
 									_focus={{
