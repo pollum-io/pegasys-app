@@ -2,9 +2,9 @@ import { ChainId } from "@pollum-io/pegasys-sdk";
 import { TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
 import { WrappedTokenInfo } from "types";
 
-export type TokenAddressMap = Readonly<{
-	[chainId in ChainId]: Readonly<{ [tokenAddress: string]: WrappedTokenInfo }>;
-}>;
+export type TokenAddressMap = {
+	[chainId in ChainId]: { [tokenAddress: string]: WrappedTokenInfo };
+};
 
 export interface ListsState {
 	byUrl: {

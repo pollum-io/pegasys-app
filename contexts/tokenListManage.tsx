@@ -37,6 +37,10 @@ export const TokensListManageProvider: React.FC<{
 		INITIAL_TOKEN_LIST_STATE
 	);
 
+	const [currentTokensToDisplay, setCurrentTokensToDisplay] = useState<
+		WrappedTokenInfo[]
+	>([]);
+
 	const { isConnected, provider, walletAddress, currentNetworkChainId } =
 		useWallet();
 
@@ -292,6 +296,28 @@ export const TokensListManageProvider: React.FC<{
 		});
 	};
 
+	const handleTokensToDisplay = () => {
+		if (!tokenListManageState?.byUrl || !tokenListManageState?.selectedListUrl)
+			return;
+
+		tokenListManageState?.selectedListUrl.filter((listUrl, index) => {
+			const tokenListValuesByUrl = String(
+				Object.keys(tokenListManageState?.byUrl)[index]
+			);
+			const getCurrentList = tokenListCache?.get(
+				tokenListManageState.byUrl[listUrl].current as TokenList
+			);
+
+			if (listUrl === tokenListValuesByUrl && getCurrentList) {
+				const transformList = Object.assign(getCurrentList);
+
+				const findTokensByChain = transformList[57 as number]; // aqui é achado os tokens dentro do WeakMap, validem se os valores ja existem no array antes de adicionar
+			}
+
+			return getCurrentList; // ignora aqui, foi só pro lint nao apitar erro
+		});
+	};
+
 	useEffect(() => {
 		UseSelectedTokenList();
 
@@ -299,6 +325,8 @@ export const TokensListManageProvider: React.FC<{
 		Object.keys(tokenListManageState?.byUrl).forEach(url =>
 			fetchAndFulfilledTokenListManage(url)
 		);
+
+		handleTokensToDisplay();
 	}, [
 		tokenListManageState,
 		tokenListManageState.byUrl,
@@ -308,9 +336,6 @@ export const TokensListManageProvider: React.FC<{
 		walletAddress,
 		currentNetworkChainId,
 	]);
-
-	console.log("listCache", tokenListCache);
-	console.log("tokenListState", tokenListManageState);
 
 	const tokensListManageProviderValue = useMemo(
 		() => ({
