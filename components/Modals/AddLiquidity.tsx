@@ -442,6 +442,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 	useEffect(() => {
 		setTokenInputValue(initialTokenInputValue);
+		setApproveTokenStatus(ApprovalState.UNKNOWN);
 	}, [isModalOpen]);
 	return (
 		<Modal blockScrollOnMount isOpen={isModalOpen} onClose={onModalClose}>
