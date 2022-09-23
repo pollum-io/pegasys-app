@@ -48,6 +48,7 @@ export function useApproveCallback(
 	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
 	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
 	setApproveTokenStatus: React.Dispatch<React.SetStateAction<ApprovalState>>,
+	onCloseTransaction: () => void,
 	amountToApprove?: { [field in Field]?: TokenAmount },
 	spender?: string,
 	signer?: Signer
@@ -134,9 +135,11 @@ export function useApproveCallback(
 				}));
 				setCurrentTxHash(`${response?.hash}`);
 				setCurrentInputTokenName(`${currentAmountToApprove?.currency?.symbol}`);
+				onCloseTransaction();
 			})
 			.catch((error: IError) => {
 				if (error?.code === 4001) {
+					onCloseTransaction();
 					toast({
 						status: "error",
 						title: "Transaction rejected by user.",
@@ -164,6 +167,7 @@ export function useApproveCallbackFromTrade(
 	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
 	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
 	setApproveTokenStatus: React.Dispatch<React.SetStateAction<ApprovalState>>,
+	onCloseTransaction: () => void,
 	allowedSlippage = 0
 ) {
 	const { chainId } = walletInfos;
@@ -183,6 +187,7 @@ export function useApproveCallbackFromTrade(
 		setCurrentTxHash,
 		setCurrentInputTokenName,
 		setApproveTokenStatus,
+		onCloseTransaction,
 		amountToApprove,
 		chainId ? ROUTER_ADDRESS[chainId] : ROUTER_ADDRESS[ChainId.NEVM],
 		signer

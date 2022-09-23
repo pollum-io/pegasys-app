@@ -18,6 +18,7 @@ import { PAIRS_CURRENT, PAIR_DATA, pegasysClient } from "apollo";
 import {
 	AddLiquidityModal,
 	ImportPoolModal,
+	LoadingTransition,
 	RemoveLiquidity,
 } from "components";
 import { PoolCards } from "components/Pools/PoolCards";
@@ -51,6 +52,9 @@ export const PoolsContainer: NextPage = () => {
 		onOpenAddLiquidity,
 		isOpenAddLiquidity,
 		onCloseAddLiquidity,
+		isOpenTransaction,
+		onOpenTransaction,
+		onCloseTransaction,
 	} = useModal();
 
 	const { colorMode } = useColorMode();
@@ -69,7 +73,7 @@ export const PoolsContainer: NextPage = () => {
 	const [depositedTokens, setDepositedTokens] = useState<IDeposited>();
 	const [poolPercentShare, setPoolPercentShare] = useState<string>("");
 	const [userPoolBalance, setUserPoolBalance] = useState<string>("");
-	const [sortType, setSortType] = useState<string>("pool-weight");
+	const [sortType, setSortType] = useState<string>("liquidity");
 	const [searchTokens, setSearchTokens] = useState<Pair[]>([]);
 	const [poolsApr, setPoolsApr] = useState<IPoolsApr>();
 	const [poolsWithLiquidity, setPoolsWithLiquidity] =
@@ -83,8 +87,8 @@ export const PoolsContainer: NextPage = () => {
 		currentNetworkChainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
 
 	const sortTypeName =
-		sortType === "pool-weight"
-			? "Pool Weight"
+		sortType === "liquidity"
+			? "Liquidity"
 			: sortType === "apr"
 			? "APR"
 			: sortType === "your-pools"
@@ -319,7 +323,7 @@ export const PoolsContainer: NextPage = () => {
 
 					const currencyAb = unwrappedToken(b?.token0 as Token);
 					const currencyBb = unwrappedToken(b?.token1 as Token);
-					if (sortType === "pool-weight") {
+					if (sortType === "liquidity") {
 						return (
 							Number(
 								poolsLiquidity?.[`${currencyAb.symbol}-${currencyBb.symbol}`]
@@ -406,6 +410,8 @@ export const PoolsContainer: NextPage = () => {
 				userPoolBalance={userPoolBalance}
 				currPair={currPair}
 				setIsCreate={setIsCreate}
+				openPendingTx={onOpenTransaction}
+				closePendingTx={onCloseTransaction}
 			/>
 			<RemoveLiquidity
 				isModalOpen={isOpenRemoveLiquidity}
@@ -420,10 +426,16 @@ export const PoolsContainer: NextPage = () => {
 				poolPercentShare={poolPercentShare}
 				userPoolBalance={userPoolBalance}
 				allTokens={userTokensBalance}
+				openPendingTx={onOpenTransaction}
+				closePendingTx={onCloseTransaction}
 			/>
 			<ImportPoolModal
 				isModalOpen={isOpenImportPool}
 				onModalClose={onCloseImportPool}
+			/>
+			<LoadingTransition
+				isOpen={isOpenTransaction}
+				onClose={onCloseTransaction}
 			/>
 			<Flex alignItems="flex-start" justifyContent="center" mb="6.2rem">
 				<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
@@ -626,9 +638,9 @@ export const PoolsContainer: NextPage = () => {
 												<MenuItem
 													color={theme.text.mono}
 													_hover={{ bgColor: theme.bg.iconBg }}
-													onClick={() => setSortType("pool-weight")}
+													onClick={() => setSortType("liquidity")}
 												>
-													Pool Weight
+													Liquidity
 												</MenuItem>
 												<MenuItem
 													color={theme.text.mono}

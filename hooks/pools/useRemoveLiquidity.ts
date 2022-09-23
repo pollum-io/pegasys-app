@@ -38,7 +38,8 @@ export const UseRemoveLiquidity = (
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
 	approvalState: IApprovalState,
 	setTxSignature: React.Dispatch<React.SetStateAction<boolean>>,
-	transactionDeadlineValue: BigNumber | number
+	transactionDeadlineValue: BigNumber | number,
+	closePendingTx: () => void
 ) => {
 	const [signatureData, setSignatureData] = useState<{
 		v: number;
@@ -143,8 +144,10 @@ export const UseRemoveLiquidity = (
 						deadline: deadline.toNumber(),
 					});
 					setTxSignature(true);
+					closePendingTx();
 				})
 				.catch(error => {
+					closePendingTx();
 					// for all errors other than 4001 (EIP-1193 user rejected request), fall back to manual approve
 					if (error?.code !== 4001) {
 						console.log(error?.code);
@@ -366,8 +369,10 @@ export const UseRemoveLiquidity = (
 					});
 					setCurrentTxHash(response?.hash);
 					setTxSignature(false);
+					closePendingTx();
 				})
 				.catch((error: Error) => {
+					closePendingTx();
 					// we only care if the error is something _other_ than the user rejected the tx
 					setTxSignature(false);
 					console.log(error);

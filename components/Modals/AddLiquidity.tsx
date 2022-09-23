@@ -64,6 +64,8 @@ interface IModal {
 	poolPercentShare: string;
 	userPoolBalance: string;
 	currPair: Pair | undefined;
+	openPendingTx: () => void;
+	closePendingTx: () => void;
 }
 interface ITokenInputValue {
 	inputFrom: IInputValues;
@@ -86,6 +88,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		userPoolBalance,
 		currPair,
 		setIsCreate,
+		openPendingTx,
+		closePendingTx,
 	} = props;
 
 	const initialTokenInputValue = {
@@ -391,6 +395,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							summary: `Approve ${tokenToApp?.symbol}`,
 						}
 					);
+					closePendingTx();
 				}
 			})
 			.catch(err => console.log(err));
@@ -407,20 +412,32 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 		setCurrentLpAddress(pair.liquidityToken.address);
 
-		const response = await PoolServices.addLiquidity({
+		await PoolServices.addLiquidity({
 			tokens: selectedToken as [WrappedTokenInfo, WrappedTokenInfo],
 			values: [tokenInputValue.inputFrom.value, tokenInputValue.inputTo.value],
 			haveValue,
 			slippage: userSlippageTolerance,
 			userDeadline: userTransactionDeadlineValue,
 			pair,
-		});
-		setApprovalState({ type: "add-liquidity", status: ApprovalState.PENDING });
-		addTransaction(response, walletInfo, setTransactions, transactions, {
-			summary: `Add ${amounts[0]?.toSignificant(6)} ${
-				selectedToken[0]?.symbol
-			} and ${amounts[1]?.toSignificant(6)} ${selectedToken[1]?.symbol}`,
-		});
+		})
+			.then(res => {
+				console.log({ res });
+				setCurrentTxHash(res?.hash);
+				setApprovalState({
+					type: "add-liquidity",
+					status: ApprovalState.PENDING,
+				});
+				addTransaction(res, walletInfo, setTransactions, transactions, {
+					summary: `Add ${tokenInputValue.inputFrom.value} ${
+						selectedToken[0]?.symbol
+					} and ${tokenInputValue.inputTo.value} ${selectedToken[1]?.symbol}`,
+				});
+				closePendingTx();
+			})
+			.catch((err) => {
+				console.log(err);
+				closePendingTx();
+			});
 	};
 
 	useEffect(() => {
@@ -851,8 +868,16 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								onClick={
 									approveTokenStatus === ApprovalState.NOT_APPROVED &&
 									!isApproved
-										? approve
-										: addLiquidity
+										? () => {
+												approve();
+												openPendingTx();
+												onModalClose();
+										  }
+										: () => {
+												addLiquidity();
+												openPendingTx();
+												onModalClose();
+										  }
 								}
 							>
 								{isCreate

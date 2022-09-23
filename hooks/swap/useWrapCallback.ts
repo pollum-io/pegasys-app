@@ -25,7 +25,8 @@ export function UseWrapCallback(
 	transactions: ITx,
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
 	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
-	signer: Signer
+	signer: Signer,
+	onCloseTransaction: () => void
 ): {
 	wrapType: WrapType;
 	execute?: undefined | (() => Promise<void>);
@@ -80,7 +81,9 @@ export function UseWrapCallback(
 									type: "wrap",
 								});
 								setCurrentTxHash(`${txReceipt?.hash}`);
+								onCloseTransaction();
 							} catch (error) {
+								onCloseTransaction();
 								throw new Error("Could not deposit");
 							}
 					  }
@@ -115,7 +118,9 @@ export function UseWrapCallback(
 									type: "wrap",
 								});
 								setCurrentTxHash(`${txReceipt?.hash}`);
+								onCloseTransaction();
 							} catch (error) {
+								onCloseTransaction();
 								throw new Error("Could not withdraw");
 							}
 					  }

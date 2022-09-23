@@ -40,6 +40,8 @@ interface IModal {
 	poolPercentShare: string;
 	userPoolBalance: string;
 	allTokens: WrappedTokenInfo[];
+	openPendingTx: () => void;
+	closePendingTx: () => void;
 }
 
 export interface IAmounts {
@@ -61,6 +63,8 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 		poolPercentShare,
 		userPoolBalance,
 		allTokens,
+		openPendingTx,
+		closePendingTx,
 	} = props;
 	const { t: translation } = useTranslation();
 
@@ -116,7 +120,8 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 		setApprovalState,
 		approvalState,
 		setTxSignature,
-		userTransactionDeadlineValue
+		userTransactionDeadlineValue,
+		closePendingTx
 	);
 
 	useEffect(() => {
@@ -399,7 +404,15 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						py="6"
 						px="6"
 						disabled={sliderValue === 0}
-						onClick={!txSignature ? onAttemptToApprove : onRemove}
+						onClick={
+							!txSignature
+								? onAttemptToApprove
+								: () => {
+										onRemove();
+										openPendingTx();
+										onModalClose();
+								  }
+						}
 						borderRadius="67px"
 						bgColor={theme.bg.blueNavyLightness}
 						color={theme.text.cyan}
@@ -448,7 +461,9 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text fontWeight="semibold">Your pool share:</Text>
 							<Text fontWeight="normal">
-								{poolPercentShare ? `${poolPercentShare}%` : "-%"}
+								{poolPercentShare === "0.00"
+									? "<0.01%"
+									: `${poolPercentShare}%`}
 							</Text>
 						</Flex>
 						<Flex

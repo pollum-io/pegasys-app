@@ -33,7 +33,11 @@ import React, {
 } from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
-import { SelectCoinModal, SelectWallets } from "components/Modals";
+import {
+	LoadingTransition,
+	SelectCoinModal,
+	SelectWallets,
+} from "components/Modals";
 import { ChainId, CurrencyAmount, JSBI, Trade } from "@pollum-io/pegasys-sdk";
 import {
 	ISwapTokenInputValue,
@@ -85,6 +89,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		onOpenConfirmSwap,
 		isOpenConfirmSwap,
 		onCloseConfirmSwap,
+		onOpenTransaction,
+		isOpenTransaction,
+		onCloseTransaction,
 	} = useModal();
 
 	const {
@@ -275,7 +282,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			setCurrentInputTokenName,
 			txType,
 			toast,
-			transactions
+			transactions,
+			onCloseTransaction
 		);
 
 	const { realizedLPFee } = computeTradePriceBreakdown(
@@ -361,7 +369,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		transactions,
 		setApprovalState,
 		setCurrentTxHash,
-		signer as Signer
+		signer as Signer,
+		onCloseTransaction
 	);
 
 	const handleSwapInfo = async () => {
@@ -412,6 +421,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setCurrentTxHash,
 		setCurrentInputTokenName,
 		setApproveTokenStatus,
+		onCloseTransaction,
 		userSlippageTolerance
 	);
 
@@ -592,6 +602,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				tokenInputValue={tokenInputValue}
 				minimumReceived={minimumReceived}
 				liquidityFee={realizedLPFee}
+				openPendingTx={onOpenTransaction}
+			/>
+			<LoadingTransition
+				isOpen={isOpenTransaction}
+				onClose={onCloseTransaction}
 			/>
 			<Flex alignItems="center" flexDirection="column">
 				<Flex

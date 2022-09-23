@@ -29,7 +29,8 @@ export function UseSwapCallback(
 	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
 	txType: string,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
-	transactions: ITx
+	transactions: ITx,
+	onCloseTransaction: () => void,
 ) {
 	const { walletAddress, chainId: chain } = walletInfos;
 
@@ -188,12 +189,14 @@ export function UseSwapCallback(
 					setApprovalState({ status: ApprovalState.PENDING, type: txType });
 					setCurrentTxHash(`${response?.hash}`);
 					setCurrentInputTokenName(`${inputSymbol}`);
+					onCloseTransaction();
 
 					return response.hash;
 				})
 				.catch((error: any) => {
 					// if the user rejected the tx, pass this along
 					if (error?.code === 4001) {
+						onCloseTransaction();
 						// throw new Error("Transaction rejected.");
 						toast({
 							status: "error",
@@ -201,6 +204,7 @@ export function UseSwapCallback(
 							description: `Transaction rejected. Code: ${error?.code}`,
 						});
 					} else {
+						onCloseTransaction();
 						// otherwise, the error was unexpected and we need to convey that
 						console.error(`Swap failed`, error, methodName, args, value);
 						toast({
