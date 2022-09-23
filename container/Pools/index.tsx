@@ -124,7 +124,7 @@ export const PoolsContainer: NextPage = () => {
 			pairAddresses.map(async (token: { id: string }) => {
 				const volume = await pegasysClient.query({
 					query: PAIR_DATA(token.id, Number(oneDay)),
-					fetchPolicy: "cache-first",
+					fetchPolicy: "network-only",
 				});
 
 				return volume.data.pairs[0];
@@ -143,7 +143,7 @@ export const PoolsContainer: NextPage = () => {
 			pairAddresses.map(async (token: { id: string }) => {
 				const volume = await pegasysClient.query({
 					query: PAIR_DATA(token.id, twoDays),
-					fetchPolicy: "cache-first",
+					fetchPolicy: "network-only",
 				});
 
 				return volume.data.pairs[0];
@@ -162,7 +162,7 @@ export const PoolsContainer: NextPage = () => {
 			pairAddresses.map(async (token: { id: string }) => {
 				const volume = await pegasysClient.query({
 					query: PAIR_DATA(token.id),
-					fetchPolicy: "cache-first",
+					fetchPolicy: "network-only",
 				});
 
 				return volume.data.pairs[0];
