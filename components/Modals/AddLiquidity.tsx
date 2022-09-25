@@ -9,7 +9,6 @@ import {
 	Img,
 	ModalOverlay,
 	Text,
-	Tooltip,
 } from "@chakra-ui/react";
 import { useModal, usePicasso, useTokens } from "hooks";
 import React, { useEffect, useState } from "react";

@@ -21,3 +21,20 @@ export interface ILiquidityCardsMockedData {
 	firstPooledTokens: string;
 	secondPooledTokens: string;
 }
+
+export interface IWalletStatsCardsMockedData {
+	id: number;
+	asset: string;
+	icon: string;
+	price: string;
+	balance: string;
+	value: string;
+}
+export interface ITransactionCardsMockedData {
+	id: number;
+	type: string;
+	totalValue: string;
+	totalAmount: string;
+	tokenAmount: string;
+	time: string;
+}

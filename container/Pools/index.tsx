@@ -71,7 +71,7 @@ export const PoolsContainer: NextPage = () => {
 						zIndex="docked"
 						position="relative"
 						borderRadius="xl"
-						backgroundColor={theme.bg.whiteGray}
+						backgroundColor="red"
 					>
 						<Img
 							borderRadius="xl"

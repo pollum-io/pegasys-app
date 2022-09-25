@@ -9,9 +9,7 @@ import {
 	Input,
 	Stack,
 	Switch,
-	Icon,
 	PopoverArrow,
-	Tooltip,
 	PopoverCloseButton,
 } from "@chakra-ui/react";
 import React, { FunctionComponent, ReactNode, useState } from "react";

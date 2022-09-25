@@ -1,16 +1,32 @@
 import { Flex, useColorMode, Text, Image, Button } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
-import { usePicasso } from "hooks";
+import { usePicasso, useModal } from "hooks";
 import { liquidityCardsMockedData } from "helpers/mockedData";
 import { usePaginator } from "chakra-paginator";
-import { ILiquidityCardsMockedData } from "types";
+import {
+	ILiquidityCardsMockedData,
+	ITransactionCardsMockedData,
+	IWalletStatsCardsMockedData,
+} from "types";
+import { AddLiquidityModal, RemoveLiquidity } from "components";
 import { PaginationComponent } from "./Pagination";
+import { handlePaginate } from "./HandlePaginate";
 
 export const LiquidityCards: React.FunctionComponent = () => {
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
+	const [isCreate, setIsCreate] = useState(false);
+	const [haveValue] = useState(false);
+	const {
+		isOpenRemoveLiquidity,
+		onCloseRemoveLiquidity,
+		onOpenAddLiquidity,
+		isOpenAddLiquidity,
+		onCloseAddLiquidity,
+		onOpenRemoveLiquidity,
+	} = useModal();
 
-	const quantityPerPage = 1;
+	const quantityPerPage = 5;
 
 	const quantityOfPages = Math.ceil(
 		liquidityCardsMockedData.length / quantityPerPage
@@ -24,38 +40,18 @@ export const LiquidityCards: React.FunctionComponent = () => {
 		initialState: { currentPage: 1 },
 	});
 
-	const handlePaginate = (
-		// type component 1 || type component 2 || type component 3
-		arrayValue:
-			| ILiquidityCardsMockedData[]
-			| ILiquidityCardsMockedData[]
-			| ILiquidityCardsMockedData[],
-		pageSize: number,
-		currentPage: number,
-		setCardsSliced: React.Dispatch<
-			React.SetStateAction<
-				| ILiquidityCardsMockedData[]
-				| ILiquidityCardsMockedData[]
-				| ILiquidityCardsMockedData[]
-			>
-		>
-	) => {
-		const sliced = arrayValue.slice(
-			(currentPage - 1) * pageSize,
-			currentPage * pageSize
-		);
-
-		setCardsSliced(sliced);
-
-		return sliced;
-	};
-
 	useMemo(() => {
 		handlePaginate(
 			liquidityCardsMockedData,
 			quantityPerPage,
 			currentPage,
-			setCardsSliced
+			setCardsSliced as React.Dispatch<
+				React.SetStateAction<
+					| ILiquidityCardsMockedData[]
+					| IWalletStatsCardsMockedData[]
+					| ITransactionCardsMockedData[]
+				>
+			>
 		);
 	}, [currentPage, liquidityCardsMockedData]);
 
@@ -69,23 +65,38 @@ export const LiquidityCards: React.FunctionComponent = () => {
 					justifyContent="center"
 					w="100%"
 					px={["1.5rem", "2rem", "2.5rem", "8rem"]}
+					h="max-content"
 				>
+					<AddLiquidityModal
+						isModalOpen={isOpenAddLiquidity}
+						onModalClose={onCloseAddLiquidity}
+						isCreate={isCreate}
+						haveValue={haveValue}
+					/>
+					<RemoveLiquidity
+						isModalOpen={isOpenRemoveLiquidity}
+						onModalClose={onCloseRemoveLiquidity}
+						isCreate={isCreate}
+						haveValue={haveValue}
+					/>
 					<Flex
 						display={["flex", "none", "none", "none"]}
-						bgColor="rgba(255, 255, 255, 0.16)"
+						bgColor={theme.bg.poolShare}
 						borderTopRadius="12px"
 						w="max-content"
-						h="max-content"
-						py="1"
+						h="2rem"
+						pt="1"
 						px="2"
 						fontSize="12px"
 						fontWeight="normal"
+						position="relative"
+						bottom="-0.65rem"
 					>
 						Pool Share {cardsValue.poolShare}
 					</Flex>
 
 					<Flex
-						zIndex="base"
+						zIndex="0"
 						gap={["2", "2", "0", "0"]}
 						flexDirection={["column", "column", "row", "row"]}
 						w="100%"
@@ -95,15 +106,15 @@ export const LiquidityCards: React.FunctionComponent = () => {
 								: theme.bg.blackAlpha
 						}
 						pl={["4", "6", "6", "6"]}
-						pr={["4", "6", "0", "0"]}
-						py={["4", "3", "3", "3"]}
+						pr={["1", "5", "0", "0"]}
+						py={["2", "3", "3", "3"]}
 						border="1px solid transparent"
 						borderRadius="0.75rem"
-						mb="2"
+						position="relative"
 					>
 						<Flex
 							flexDirection="row"
-							alignItems={["flex-top", "flex-top", "center", "center"]}
+							alignItems={["flex-start", "flex-start", "center", "center"]}
 							justifyContent="space-between"
 							color={theme.text.mono}
 							w={["100%", "100%", "", "90%"]}
@@ -111,44 +122,29 @@ export const LiquidityCards: React.FunctionComponent = () => {
 							<Flex
 								gap={["1", "2", "0", "0"]}
 								alignItems={["flex-start", "flex-start", "center", "center"]}
-								w={["75%", "53%", "30.2%", "29.2%"]}
+								w={["85%", "58%", "32%", "29.2%"]}
 								h="100%"
 								flexDirection={["column", "column", "row", "row"]}
 							>
-								{}
-
 								<Flex
-									flexDirection={["row", "row", "row", "row"]}
-									alignItems={["flex-start", "flex-start", "center", "center"]}
+									flexDirection="row"
+									alignItems={["center", "center", "center", "center"]}
 									gap={["3", "3", "2", "2"]}
 								>
 									<Flex>
-										<Image src={cardsValue.firstIcon} h="2.76rem" w="2.76rem" />
-										<Image
-											src={cardsValue.secondIcon}
-											h="2.76rem"
-											w="2.76rem"
-										/>
+										<Image src={cardsValue.firstIcon} h="9" w="9" />
+										<Image src={cardsValue.secondIcon} h="9" w="9" />
 									</Flex>
-									<Flex
-										flexDirection={["column", "column", "row", "row"]}
-										h={["2.76rem", "", "", ""]}
-										justifyContent={[
-											"space-between",
-											"normal",
-											"normal",
-											"normal",
-										]}
-										alignItems={["normal", "normal", "center", "center"]}
-									>
+									<Flex flexDirection={["column", "column", "row", "row"]}>
 										<Text
 											fontWeight="bold"
-											fontSize={["14px", "16px", "14px", "14px"]}
+											fontSize={["14px", "14px", "14px", "14px"]}
 										>
-											{cardsValue.firstAsset} / {cardsValue.secondAsset}
+											{cardsValue.firstAsset}/{cardsValue.secondAsset}
 										</Text>
+
 										<Text
-											fontSize={["12px", "14px", "0", "0"]}
+											fontSize={["14px", "14px", "0", "0"]}
 											display={["flex", "flex", "none", "none"]}
 										>
 											Value {cardsValue.value}
@@ -166,8 +162,8 @@ export const LiquidityCards: React.FunctionComponent = () => {
 										w="max-content"
 									>
 										<Text
-											fontWeight="bold"
-											fontSize={["14px", "16px", "14px", "14px"]}
+											fontWeight="500"
+											fontSize={["12px", "14px", "14px", "14px"]}
 										>
 											Pooled Tokens
 										</Text>
@@ -189,12 +185,12 @@ export const LiquidityCards: React.FunctionComponent = () => {
 								alignItems={["flex-end", "center", "center", "center"]}
 								w={["20%", "45%", "68%", "73.2%"]}
 								justifyContent={[
-									"flex-end",
+									"flex-start",
 									"space-between",
 									"space-between",
 									"space-between",
 								]}
-								h="100%"
+								h={["2.4rem", "2.3rem", "max-content", "max-content"]}
 								pr={["0", "0", "0.7rem", "2.2rem"]}
 							>
 								<Flex
@@ -222,12 +218,19 @@ export const LiquidityCards: React.FunctionComponent = () => {
 								>
 									<Text fontSize="14px">{cardsValue.value}</Text>
 								</Flex>
+
 								<Flex
-									justifyContent="flex-start"
-									fontSize={["14px", "16px", "14px", "14px"]}
+									order={[0, 1, 0, 0]}
+									justifyContent={[
+										"",
+										"space-between",
+										"space-between",
+										"space-between",
+									]}
 									flexDirection={["column", "column", "row", "row"]}
 									w="3rem"
-									alignItems={["flex-end", "normal", "normal", "normal"]}
+									alignItems={["flex-start", "flex-start", "center", "center"]}
+									h="100%"
 									color={[
 										theme.text.cyanPurple,
 										theme.text.cyanPurple,
@@ -235,24 +238,26 @@ export const LiquidityCards: React.FunctionComponent = () => {
 										theme.text.mono,
 									]}
 								>
-									<Text>{cardsValue.apr}</Text>
+									<Text fontSize="14px">{cardsValue.apr}</Text>
 									<Text
 										display={["flex", "flex", "none", "none"]}
-										fontSize={["14px", "16px", "14px", "14px"]}
+										fontSize="14px"
 									>
 										APR
 									</Text>
 								</Flex>
 								<Flex
-									alignItems={["flex-end", "flex-end", "normal", "normal"]}
-									justifyContent="flex-start"
+									alignItems={["flex-start", "flex-start", "normal", "normal"]}
+									justifyContent="space-between"
 									flexDirection="column"
-									w={["", "50%", "5rem", "5rem"]}
+									w="5rem"
+									h="100%"
+									color={theme.text.mono}
 								>
 									<Text
-										display={["none", "flex", "none", "none"]}
-										fontSize="16px"
 										order={[0, 1, 0, 0]}
+										display={["none", "flex", "none", "none"]}
+										fontSize="14px"
 									>
 										Pool Share
 									</Text>
@@ -268,16 +273,17 @@ export const LiquidityCards: React.FunctionComponent = () => {
 						</Flex>
 						<Flex
 							gap={["3", "3", "2", "2"]}
-							mt={["", "0.5rem", "0", "0"]}
+							mt={["0.5rem", "0.5rem", "0", "0"]}
 							justifyContent={["center", "center", "normal", "normal"]}
 							flexDirection={["row", "row", "column", "column"]}
-							alignItems="center"
+							alignItems={["center", "center", "flex-start", "flex-start"]}
 							w={["100%", "100%", "15%", "10%"]}
-							px={["", "4rem", "0", "0"]}
+							pl={["0", "6", "6", "6"]}
+							pr={["3", "5", "0", "0"]}
 						>
 							<Button
 								justifyContent="center"
-								w={["55%", "60%", "80%", "80%"]}
+								w={["50%", "50%", "80%", "70%"]}
 								h="max-content"
 								py={["1", "0.3rem", "1", "1"]}
 								px="10%"
@@ -292,11 +298,12 @@ export const LiquidityCards: React.FunctionComponent = () => {
 									borderColor: theme.text.cyanLightPurple,
 									color: theme.text.cyanLightPurple,
 								}}
+								onClick={onOpenRemoveLiquidity}
 							>
 								Remove
 							</Button>
 							<Button
-								w={["55%", "60%", "80%", "80%"]}
+								w={["50%", "50%", "80%", "70%"]}
 								h="max-content"
 								py={["1", "0.3rem", "1", "1"]}
 								px="10%"
@@ -308,6 +315,10 @@ export const LiquidityCards: React.FunctionComponent = () => {
 								fontWeight="semibold"
 								_hover={{
 									bgColor: theme.bg.bluePurple,
+								}}
+								onClick={() => {
+									setIsCreate(false);
+									onOpenAddLiquidity();
 								}}
 							>
 								Add

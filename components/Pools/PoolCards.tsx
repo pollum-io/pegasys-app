@@ -14,13 +14,13 @@ interface IPoolCards {
 
 export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	const {
+		poolTokens,
 		poolOf,
 		poolLiquidity,
 		poolVolume,
 		poolApr,
 		poolShare,
 		setIsCreate,
-		poolTokens,
 	} = props;
 	const theme = usePicasso();
 	const { onOpenRemoveLiquidity, onOpenAddLiquidity } = useModal();

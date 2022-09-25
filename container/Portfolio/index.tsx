@@ -3,23 +3,10 @@ import { usePicasso, useWallet } from "hooks";
 import {
 	Button,
 	Flex,
-	HStack,
-	Icon,
-	Image,
-	Img,
 	Input,
 	InputGroup,
 	InputLeftElement,
-	Table,
-	TableCaption,
-	TableContainer,
-	Tbody,
-	Td,
 	Text,
-	Tfoot,
-	Th,
-	Thead,
-	Tr,
 	useColorMode,
 } from "@chakra-ui/react";
 import { MdSearch } from "react-icons/md";
@@ -31,12 +18,8 @@ import { TransactionCards } from "components/Portfolio/TransactionCards";
 export const PortfolioContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [buttonId, setButtonId] = useState<string>("all");
-	const [currentPage, setCurrentPage] = useState(1);
-	const [postsPerPage, setPostsPerPage] = useState(2);
 	const { colorMode } = useColorMode();
 	const { isConnected } = useWallet();
-	const lastPostIndex = currentPage * postsPerPage;
-	const firstPostIndex = lastPostIndex - postsPerPage;
 
 	return (
 		<Flex justifyContent="center" alignItems="center" w="100%">
@@ -56,26 +39,35 @@ export const PortfolioContainer: NextPage = () => {
 					display={isConnected ? ["none", "none", "flex", "flex"] : "none"}
 				>
 					<Flex w="max-content" gap="6" fontSize="18px">
-						<Text _hover={{ color: "white", cursor: "pointer" }}>Wallet</Text>
-						<Text _hover={{ color: "white", cursor: "pointer" }}>
+						<Text
+							_hover={{ color: theme.text.whiteGrayHover, cursor: "pointer" }}
+						>
+							Wallet
+						</Text>
+						<Text
+							_hover={{ color: theme.text.whiteGrayHover, cursor: "pointer" }}
+						>
 							Liquidity
 						</Text>
-						<Text _hover={{ color: "white", cursor: "pointer" }}>
+						<Text
+							_hover={{ color: theme.text.whiteGrayHover, cursor: "pointer" }}
+						>
 							Transactions
 						</Text>
 					</Flex>
 				</Flex>
 				<Flex
-					w={["96.2%", "80%", "80%", "70%"]}
+					w={["94%", "28rem", "46rem", "61rem"]}
 					justifyContent="flex-start"
 					zIndex="docked"
 					mt="16"
 				>
 					<Flex
+						color={theme.text.mono}
 						w="100%"
 						h="max-content"
-						py={["2", "2", "6", "6"]}
-						pl={["6", "2rem", "20", "9.5rem"]}
+						py={["3", "3", "6", "6"]}
+						pl={["6", "2rem", "4rem", "9.5rem"]}
 						position="relative"
 						border="1px solid transparent"
 						borderRightRadius="xl"
@@ -90,9 +82,9 @@ export const PortfolioContainer: NextPage = () => {
 						<Flex
 							alignItems={["flex-start", "flex-start", "center", "center"]}
 							justifyContent="space-between"
-							gap={["4", "4", "7", "7"]}
 							flexDirection={["column", "column", "row", "row"]}
 							w="96%"
+							gap={["4", "4", "0", "0"]}
 						>
 							<Flex>
 								<Text
@@ -104,73 +96,80 @@ export const PortfolioContainer: NextPage = () => {
 								</Text>
 							</Flex>
 							<Flex
-								flexDirection={["row", "row", "column", "column"]}
-								alignItems={[
-									"center",
-									"flex-center",
-									"flex-start",
-									"flex-start",
-								]}
-								w={["100%", "100%", "max-content", "max-content"]}
-								gap={["2rem", "2.5rem", "0", "0"]}
-								justifyContent={isConnected ? "normal" : "space-between"}
+								justifyContent="space-between"
+								w={["100%", "100%", "70%", "65%"]}
+								flexDirection={["column", "column", "row", "row"]}
+								gap={["2", "2", "0", "0"]}
 							>
-								<Text
-									fontWeight="semibold"
-									fontSize={["20px", "20px", "24px", "24px"]}
-									order={[1, 1, 0, 0]}
+								<Flex
+									flexDirection={["row", "row", "column", "column"]}
+									alignItems={[
+										"center",
+										"flex-center",
+										"flex-start",
+										"flex-start",
+									]}
+									w={["100%", "100%", "max-content", "max-content"]}
+									gap={["2.05rem", "4.35rem", "0", "0"]}
+									justifyContent="normal"
 								>
-									{isConnected ? "$1.21" : "-"}
-								</Text>
-								<Text fontSize={["12px", "14px", "14px", "14px"]}>
-									Total Value Swapped
-								</Text>
-							</Flex>
-							<Flex
-								flexDirection={["row", "row", "column", "column"]}
-								alignItems={[
-									"center",
-									"flex-center",
-									"flex-start",
-									"flex-start",
-								]}
-								w={["100%", "100%", "max-content", "max-content"]}
-								gap={["4.1rem", "4.9rem", "0", "0"]}
-								justifyContent={isConnected ? "normal" : "space-between"}
-							>
-								<Text
-									fontWeight="semibold"
-									fontSize={["20px", "20px", "24px", "24px"]}
-									order={[1, 1, 0, 0]}
+									<Text
+										fontWeight="semibold"
+										fontSize={["20px", "20px", "24px", "24px"]}
+										order={[1, 1, 0, 0]}
+									>
+										{isConnected ? "$1.21" : "-"}
+									</Text>
+									<Text fontSize={["12px", "14px", "14px", "14px"]}>
+										Total Value Swapped
+									</Text>
+								</Flex>
+								<Flex
+									flexDirection={["row", "row", "column", "column"]}
+									alignItems={[
+										"center",
+										"flex-center",
+										"flex-start",
+										"flex-start",
+									]}
+									w={["100%", "100%", "max-content", "max-content"]}
+									gap={["4.1rem", "6.75rem", "0", "0"]}
+									justifyContent="normal"
 								>
-									{isConnected ? "$0.0036" : "-"}
-								</Text>
-								<Text fontSize={["12px", "14px", "14px", "14px"]}>
-									Total Fees Paid
-								</Text>
-							</Flex>
-							<Flex
-								flexDirection={["row", "row", "column", "column"]}
-								alignItems={[
-									"center",
-									"flex-center",
-									"flex-start",
-									"flex-start",
-								]}
-								w={["100%", "100%", "max-content", "max-content"]}
-								gap={["3.05rem", "3.7rem", "0", "0"]}
-								justifyContent={isConnected ? "normal" : "space-between"}
-							>
-								<Text
-									fontWeight="semibold"
-									fontSize={["20px", "20px", "24px", "24px"]}
-									order={[1, 1, 0, 0]}
+									<Text
+										fontWeight="semibold"
+										fontSize={["20px", "20px", "24px", "24px"]}
+										order={[1, 1, 0, 0]}
+									>
+										{isConnected ? "$0.0036" : "-"}
+									</Text>
+									<Text fontSize={["12px", "14px", "14px", "14px"]}>
+										Total Fees Paid
+									</Text>
+								</Flex>
+								<Flex
+									flexDirection={["row", "row", "column", "column"]}
+									alignItems={[
+										"center",
+										"flex-center",
+										"flex-start",
+										"flex-start",
+									]}
+									w={["100%", "100%", "max-content", "max-content"]}
+									gap={["3.05rem", "5.5rem", "0", "0"]}
+									justifyContent="normal"
 								>
-									{isConnected ? "12" : "-"}
-								</Text>
-								<Text fontSize={["12px", "14px", "14px", "14px"]}>
-									Total Transactions
-								</Text>
+									<Text
+										fontWeight="semibold"
+										fontSize={["20px", "20px", "24px", "24px"]}
+										order={[1, 1, 0, 0]}
+									>
+										{isConnected ? "12" : "-"}
+									</Text>
+									<Text fontSize={["12px", "14px", "14px", "14px"]}>
+										Total Transactions
+									</Text>
+								</Flex>
 							</Flex>
 						</Flex>
 					</Flex>
@@ -181,11 +180,9 @@ export const PortfolioContainer: NextPage = () => {
 							w="100%"
 							justifyContent="flex-start"
 							mt="4rem"
-							mb="0.5rem"
-							px={["1rem", "2rem", "5rem", "8rem"]}
+							pl={["6", "2rem", "4rem", "9.5rem"]}
 						>
 							<Text
-								pl="6"
 								color={theme.text.whitePurple}
 								fontWeight="600"
 								fontSize="20px"
@@ -196,56 +193,48 @@ export const PortfolioContainer: NextPage = () => {
 						<Flex
 							w="100%"
 							justifyContent="center"
-							px={["1rem", "2rem", "5rem", "8rem"]}
+							px={["1.5rem", "2rem", "2.5rem", "8rem"]}
 							color={theme.text.mono}
+							mt="3rem"
+							display={["none", "none", "flex", "flex"]}
+							fontSize="14px"
 						>
-							<Flex
-								alignItems="center"
-								w="100%"
-								pl="6"
-								justifyContent="space-between"
-							>
+							<Flex alignItems="center" w="100%" pl={["4", "4", "6", "6"]}>
+								<Flex alignItems="center" w={["55%", "40%", "24.1%", "24%"]}>
+									<Flex>
+										<Text>Asset</Text>
+									</Flex>
+								</Flex>
 								<Flex
-									flexDirection="row"
-									alignItems="center"
+									flexDirection={["column", "row", "row", "row"]}
+									alignItems={["flex-start", "center", "center", "center"]}
 									justifyContent="space-between"
-									w="90%"
+									w={["45%", "56%", "71.9%", "72%"]}
 								>
-									<Flex
-										flexDirection="row"
-										alignItems="center"
-										justifyContent="space-between"
-										w={["45%", "45%", "41%", "34.2%"]}
-										pr="1.95rem"
-										fontSize="14px"
-									>
-										<Text>Assets</Text>
+									<Flex w="10rem">
 										<Text display={["none", "flex", "flex", "flex"]}>
 											Price
 										</Text>
 									</Flex>
 									<Flex
-										flexDirection="row"
-										alignItems="center"
-										justifyContent="space-between"
-										w={["45%", "42%", "45%", "43.2%"]}
-										fontSize="14px"
+										w="6rem"
+										display={["none", "flex", "flex", "flex"]}
+										mr="1.9rem"
 									>
-										<Text display={["none", "flex", "flex", "flex"]}>
-											Balance
-										</Text>
-										<Text pr={["0", "0.2rem", "0.2rem", "0.2rem"]}>Value</Text>
+										<Text>Balance</Text>
+									</Flex>
+									<Flex w="6rem">
+										<Text>Value</Text>
 									</Flex>
 								</Flex>
 							</Flex>
 						</Flex>
 						<Flex flexDirection="column" mt="1rem">
 							<WalletStatsCards />
-							<WalletStatsCards />
 						</Flex>
 
 						<Flex
-							w={["96.2%", "75%", "70%", "60%"]}
+							w={["94%", "25rem", "40.75rem", "52.75rem"]}
 							justifyContent="flex-start"
 							zIndex="docked"
 							mt="6rem"
@@ -254,8 +243,8 @@ export const PortfolioContainer: NextPage = () => {
 							<Flex
 								w="100%"
 								h="max-content"
-								py={["2", "2", "6", "6"]}
-								pl={["6", "10", "20", "9.5rem"]}
+								py={["3", "3", "4", "4"]}
+								pl={["6", "2.2rem", "4rem", "9.5rem"]}
 								position="relative"
 								border="1px solid transparent"
 								borderRightRadius="xl"
@@ -270,11 +259,14 @@ export const PortfolioContainer: NextPage = () => {
 								<Flex
 									alignItems={["flex-start", "flex-start", "center", "center"]}
 									justifyContent="space-between"
-									gap={["4", "4", "7", "7"]}
 									flexDirection={["column", "column", "row", "row"]}
-									w="96%"
+									w="92%"
+									gap={["4", "4", "0", "0"]}
 								>
-									<Flex>
+									<Flex
+										w={["max-content", "max-content", "8rem", "8rem"]}
+										h="max-content"
+									>
 										<Text
 											fontWeight="semibold"
 											fontSize={["20px", "20px", "24px", "24px"]}
@@ -284,50 +276,67 @@ export const PortfolioContainer: NextPage = () => {
 										</Text>
 									</Flex>
 									<Flex
-										flexDirection={["row", "row", "column", "column"]}
-										alignItems={[
-											"center",
-											"flex-center",
-											"flex-start",
-											"flex-start",
-										]}
-										gap={["2rem", "2rem", "0", "0"]}
+										justifyContent="space-between"
+										w={["100%", "100%", "70%", "65%"]}
+										h="100%"
+										pt={["0", "0", "1.5", "1.5"]}
+										flexDirection={["column", "column", "row", "row"]}
+										gap={["2", "2", "0", "0"]}
 									>
-										<Text
-											fontWeight="semibold"
-											fontSize={["20px", "20px", "24px", "24px"]}
-											order={[1, 1, 0, 0]}
+										<Flex
+											flexDirection={["row", "row", "column", "column"]}
+											alignItems={[
+												"center",
+												"flex-center",
+												"flex-start",
+												"flex-start",
+											]}
+											gap={["1.5rem", "2rem", "0", "0"]}
+											justifyContent={[
+												"flex-start",
+												"flex-start",
+												"center",
+												"center",
+											]}
+											h="max-content"
 										>
-											{isConnected ? "$0.03" : "-"}
-										</Text>
-										<Text fontSize={["12px", "14px", "14px", "14px"]}>
-											Liquidity (Incluiding fees)
-										</Text>
-									</Flex>
-									<Flex
-										flexDirection={["row", "row", "column", "column"]}
-										alignItems={[
-											"center",
-											"flex-center",
-											"flex-start",
-											"flex-start",
-										]}
-										gap={["1.8rem", "1.75rem", "0", "0"]}
-									>
-										<Text
-											fontWeight="semibold"
-											fontSize={["20px", "20px", "24px", "24px"]}
-											order={[1, 1, 0, 0]}
-											color="#38A169"
+											<Text
+												fontWeight="semibold"
+												fontSize={["20px", "20px", "24px", "24px"]}
+												order={[1, 1, 0, 0]}
+											>
+												{isConnected ? "$0.03" : "-"}
+											</Text>
+											<Text fontSize={["12px", "14px", "14px", "14px"]}>
+												Liquidity (Incluiding fees)
+											</Text>
+										</Flex>
+										<Flex
+											flexDirection={["row", "row", "column", "column"]}
+											alignItems={[
+												"center",
+												"flex-center",
+												"flex-start",
+												"flex-start",
+											]}
+											gap={["1.3rem", "1.75rem", "0", "0"]}
+											h="max-content"
 										>
-											{isConnected ? "$0.0036" : "-"}
-										</Text>
-										<Text
-											fontSize={["12px", "14px", "14px", "14px"]}
-											color="#38A169"
-										>
-											Fees Earned (Cumulative)
-										</Text>
+											<Text
+												fontWeight="semibold"
+												fontSize={["20px", "20px", "24px", "24px"]}
+												order={[1, 1, 0, 0]}
+												color="#38A169"
+											>
+												{isConnected ? "$0.0036" : "-"}
+											</Text>
+											<Text
+												fontSize={["12px", "14px", "14px", "14px"]}
+												color="#38A169"
+											>
+												Fees Earned (Cumulative)
+											</Text>
+										</Flex>
 									</Flex>
 								</Flex>
 							</Flex>
@@ -369,14 +378,14 @@ export const PortfolioContainer: NextPage = () => {
 										pr={["0", "0", "0", "0.1rem"]}
 									>
 										<Text>Pool Tokens</Text>
-										<Text pl={["", "", "2.7rem", "2.6rem"]}>Value</Text>
+										<Text pl={["", "", "2.7rem", "2.7rem"]}>Value</Text>
 										<Text pl={["", "", "2.4rem", "2.4rem"]}>APR</Text>
-										<Text pr={["", "", "1.3rem", "2.7rem"]}>Pool Share</Text>
+										<Text pr={["", "", "1.3rem", "2.65rem"]}>Pool Share</Text>
 									</Flex>
 								</Flex>
 							</Flex>
 						</Flex>
-						<Flex flexDirection="column" mt="1rem" gap="2">
+						<Flex flexDirection="column" mt="1rem" gap={["0", "2", "2", "2"]}>
 							<LiquidityCards />
 						</Flex>
 
@@ -385,7 +394,7 @@ export const PortfolioContainer: NextPage = () => {
 							borderTopRadius="3xl"
 							w="100%"
 							border="1px solid transparent"
-							mt="8rem"
+							mt={["4rem", "4rem", "7rem", "7rem"]}
 							flexDirection="column"
 							h="100%"
 						>
@@ -411,8 +420,17 @@ export const PortfolioContainer: NextPage = () => {
 									flexDirection={["column", "column", "row", "row"]}
 									gap={["4", "4", "0", "0"]}
 								>
-									<Flex w={["100%", "100%", "100%", "50%"]}>
-										<Flex>
+									<Flex w={["100%", "100%", "100%", "50%"]} pr="4">
+										<Flex
+											w="100%"
+											justifyContent={[
+												"space-between",
+												"normal",
+												"normal",
+												"normal",
+											]}
+											gap="1"
+										>
 											<Button
 												onClick={() => setButtonId("all")}
 												px="6"
@@ -502,7 +520,7 @@ export const PortfolioContainer: NextPage = () => {
 
 									<InputGroup
 										alignItems="center"
-										w={["100%", "100%", "30rem", "20rem"]}
+										w={["100%", "100%", "30rem", "25rem"]}
 									>
 										<InputLeftElement
 											pl="0.625rem"
@@ -543,45 +561,39 @@ export const PortfolioContainer: NextPage = () => {
 									alignItems="center"
 									w="100%"
 									justifyContent="space-between"
-									pl="6"
 								>
 									<Flex
 										flexDirection="row"
 										justifyContent="space-between"
-										w="96%"
+										w="100%"
+										pl="6"
 									>
 										<Flex
 											flexDirection="row"
 											alignItems="center"
 											justifyContent="flex-start"
-											w={["45%", "45%", "30.2%", "34.2%"]}
+											w={["45%", "45%", "27.5%", "33.6%"]}
 										/>
 
 										<Flex
 											flexDirection="row"
 											alignItems="center"
 											justifyContent="space-between"
-											w={["45%", "42%", "68%", "100%"]}
+											w={["45%", "42%", "72.6%", "100%"]}
 											fontSize="14px"
 										>
-											<Text display={["none", "flex", "flex", "flex"]}>
-												Total Value
-											</Text>
-											<Text
-												display={["none", "flex", "flex", "flex"]}
-												pr="1.8rem"
-											>
-												Total Amount
-											</Text>
-											<Text
-												display={["none", "flex", "flex", "flex"]}
-												pr="0.9rem"
-											>
-												Token Amount
-											</Text>
-											<Text pr={["0", "0.2rem", "2.55rem", "2.55rem"]}>
-												Time
-											</Text>
+											<Flex w="5rem">
+												<Text>Total Value</Text>
+											</Flex>
+											<Flex w="8rem" mr={["0.5rem", "0", "0", "0"]}>
+												<Text>Total Amount</Text>
+											</Flex>
+											<Flex w="8rem">
+												<Text>Token Amount</Text>
+											</Flex>
+											<Flex w="6rem" mr={["0", "0.2rem", "1.1rem", "1.35rem"]}>
+												<Text>Time</Text>
+											</Flex>
 										</Flex>
 									</Flex>
 								</Flex>
@@ -591,7 +603,6 @@ export const PortfolioContainer: NextPage = () => {
 								mt={["2rem", "2rem", "1rem", "1rem"]}
 								mb="20rem"
 							>
-								<TransactionCards />
 								<TransactionCards />
 							</Flex>
 						</Flex>
