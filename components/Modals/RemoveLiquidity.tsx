@@ -146,9 +146,8 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	}, [isModalOpen]);
 
 	useMemo(() => {
-		if (isModalOpen) {
-			if (slideValidation) onSlide(setAvailableTokensAmount, sliderValue);
-		}
+		if (isModalOpen && slideValidation)
+			onSlide(setAvailableTokensAmount, sliderValue);
 	}, [sliderValue]);
 
 	useEffect(() => {
