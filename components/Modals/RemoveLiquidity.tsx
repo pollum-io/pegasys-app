@@ -10,7 +10,6 @@ import {
 	Stack,
 	Switch,
 	Slider,
-	SliderMark,
 	SliderTrack,
 	SliderFilledTrack,
 	SliderThumb,
@@ -19,7 +18,7 @@ import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
 import { useModal, usePicasso, useTokens, useWallet } from "hooks";
 import { UseRemoveLiquidity } from "hooks/pools/useRemoveLiquidity";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { MdHelpOutline, MdArrowBack } from "react-icons/md";
 import { IDeposited, WrappedTokenInfo } from "types";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
@@ -107,6 +106,13 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	const haveSys = [currencyA, currencyB].some(item => item?.symbol === "SYS");
 	const haveWsys = selectedToken.some(item => item?.symbol === "WSYS");
 
+	const slideValidation =
+		sliderValue === 0 ||
+		sliderValue === 25 ||
+		sliderValue === 50 ||
+		sliderValue === 75 ||
+		sliderValue === 100;
+
 	const { onAttemptToApprove, onRemove, onSlide } = UseRemoveLiquidity(
 		currentLpAddress,
 		sliderValue,
@@ -138,6 +144,12 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	useEffect(() => {
 		setTxSignature(false);
 	}, [isModalOpen]);
+
+	useMemo(() => {
+		if (isModalOpen) {
+			if (slideValidation) onSlide(setAvailableTokensAmount, sliderValue);
+		}
+	}, [sliderValue]);
 
 	useEffect(() => {
 		if (haveSys) {
@@ -270,87 +282,71 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						id="slider"
 						mt="9"
 						defaultValue={0}
+						value={sliderValue}
 						min={0}
 						max={100}
-						mb="6"
+						mb="2"
 						size="lg"
 						colorScheme="red"
 						onChange={(value: number) => {
 							setSliderValue(value);
-							onSlide(setAvailableTokensAmount);
+							onSlide(setAvailableTokensAmount, value);
 							setTxSignature(false);
 						}}
 					>
-						<SliderMark
-							value={0}
-							mt="1rem"
-							ml="1.5"
-							fontSize="sm"
-							// eslint-disable-next-line
-							// @ts-ignore
-							pointerEvents="unset !important"
-							onClick={() => setSliderValue(0)}
-						>
-							0%
-						</SliderMark>
-						<SliderMark
-							value={25}
-							cursor="pointer"
-							mt="1rem"
-							ml="-2.5"
-							fontSize="sm"
-							// eslint-disable-next-line
-							// @ts-ignore
-							pointerEvents="unset !important"
-							onClick={() => setSliderValue(25)}
-						>
-							25%
-						</SliderMark>
-						<SliderMark
-							value={50}
-							cursor="pointer"
-							mt="1rem"
-							ml="-2.5"
-							fontSize="sm"
-							// eslint-disable-next-line
-							// @ts-ignore
-							pointerEvents="unset !important"
-							onClick={() => setSliderValue(50)}
-						>
-							50%
-						</SliderMark>
-						<SliderMark
-							value={75}
-							cursor="pointer"
-							mt="1rem"
-							ml="-2.5"
-							fontSize="sm"
-							// eslint-disable-next-line
-							// @ts-ignore
-							pointerEvents="unset !important"
-							onClick={() => setSliderValue(75)}
-						>
-							75%
-						</SliderMark>
-						<SliderMark
-							value={100}
-							cursor="pointer"
-							mt="1rem"
-							ml="-8"
-							fontSize="sm"
-							// eslint-disable-next-line
-							// @ts-ignore
-							pointerEvents="unset !important"
-							onClick={() => setSliderValue(100)}
-						>
-							100%
-						</SliderMark>
 						<SliderTrack>
 							<SliderFilledTrack bg={theme.text.psysBalance} />
 						</SliderTrack>
 
 						<SliderThumb />
 					</Slider>
+					<Flex w="100%" justifyContent="space-between">
+						<Flex
+							cursor="pointer"
+							fontSize="sm"
+							ml="1.5"
+							color={theme.text.transactionsItems}
+							onClick={() => setSliderValue(0)}
+						>
+							0%
+						</Flex>
+						<Flex
+							cursor="pointer"
+							ml="-2.5"
+							fontSize="sm"
+							color={theme.text.transactionsItems}
+							onClick={() => setSliderValue(25)}
+						>
+							25%
+						</Flex>
+						<Flex
+							cursor="pointer"
+							ml="-2.5"
+							fontSize="sm"
+							color={theme.text.transactionsItems}
+							onClick={() => setSliderValue(50)}
+						>
+							50%
+						</Flex>
+						<Flex
+							cursor="pointer"
+							ml="-2.5"
+							fontSize="sm"
+							color={theme.text.transactionsItems}
+							onClick={() => setSliderValue(75)}
+						>
+							75%
+						</Flex>
+						<Flex
+							cursor="pointer"
+							ml="-8"
+							fontSize="sm"
+							color={theme.text.transactionsItems}
+							onClick={() => setSliderValue(100)}
+						>
+							100%
+						</Flex>
+					</Flex>
 				</Flex>
 
 				<Flex flexDirection="column" py="6" color={theme.text.mono}>

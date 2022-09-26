@@ -63,8 +63,6 @@ export const UseRemoveLiquidity = (
 
 	let percentToRemove: Percent = new Percent(sliderValue.toString(), "100");
 
-	console.log("sliderValue", sliderValue.toString());
-
 	async function onAttemptToApprove() {
 		const pairs = await useAllCommonPairs(currencyA, currencyB, walletInfos);
 
@@ -393,8 +391,10 @@ export const UseRemoveLiquidity = (
 	}
 
 	async function onSlide(
-		setAvailableTokensAmount: React.Dispatch<React.SetStateAction<IAmounts>>
+		setAvailableTokensAmount: React.Dispatch<React.SetStateAction<IAmounts>>,
+		sliderValue: number
 	) {
+		let percent = new Percent(sliderValue.toString(), "100")
 		const pairs = await useAllCommonPairs(currencyA, currencyB, walletInfos);
 
 		const pair = pairs[0];
@@ -455,13 +455,13 @@ export const UseRemoveLiquidity = (
 			liquidityValueA &&
 			new TokenAmount(
 				currencyA,
-				percentToRemove?.multiply(liquidityValueA?.raw).quotient
+				percent?.multiply(liquidityValueA?.raw).quotient
 			);
 		const currencyAmountB =
 			liquidityValueB &&
 			new TokenAmount(
 				currencyB,
-				percentToRemove?.multiply(liquidityValueB?.raw).quotient
+				percent?.multiply(liquidityValueB?.raw).quotient
 			);
 
 		setAvailableTokensAmount({
