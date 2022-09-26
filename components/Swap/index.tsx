@@ -1238,12 +1238,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							ml="8"
 							color={theme.text.mono}
 						>
-							<Img
-								src="icons/pegasysSemFundo.png"
-								className="blob"
-								w="25%"
-								h="25%"
-							/>
+							<Img src="icons/loading.gif" className="blob" w="25%" h="25%" />
 						</Flex>
 					) : tokensGraphCandleData?.length === 0 ? (
 						<Flex flexDirection="column" ml="0">
