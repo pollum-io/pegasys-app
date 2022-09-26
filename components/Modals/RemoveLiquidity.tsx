@@ -278,6 +278,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						onChange={(value: number) => {
 							setSliderValue(value);
 							onSlide(setAvailableTokensAmount);
+							setTxSignature(false);
 						}}
 					>
 						<SliderMark

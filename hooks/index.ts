@@ -1,6 +1,6 @@
 export * from "./useModal";
 export * from "./usePicasso";
-// export * from "./useToasty";
+export * from "./useToasty";
 export * from "./useWallet";
 export * from "./useTokens";
 export * from "./swap/useTrade";

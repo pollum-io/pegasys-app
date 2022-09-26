@@ -19,11 +19,11 @@ import {
 	getTotalSupply,
 } from "utils";
 import { useState } from "react";
-import { useAllCommonPairs } from "hooks/swap/useAllCommonPairs";
 import { Token } from "@pollum-io/pegasys-sdk";
 import { ApprovalState, IApprovalState } from "contexts";
 import { useTranslation } from "react-i18next";
 import { IAmounts } from "components";
+import { useToasty, useAllCommonPairs } from "hooks";
 
 export const UseRemoveLiquidity = (
 	pairAddress: string,
@@ -50,6 +50,7 @@ export const UseRemoveLiquidity = (
 	const { t } = useTranslation();
 	const { walletAddress: account, chainId, provider } = walletInfos;
 	const deadline = useTransactionDeadline(transactionDeadlineValue);
+	const { toast } = useToasty();
 	const [currencyA, currencyB] = [tradeTokens[0], tradeTokens[1]];
 	const chainRouter = ROUTER_ADDRESS[chainId];
 
@@ -61,6 +62,8 @@ export const UseRemoveLiquidity = (
 	const oneCurrencyIsETH = currencyA?.symbol === "SYS" || currencyBIsETH;
 
 	let percentToRemove: Percent = new Percent(sliderValue.toString(), "100");
+
+	console.log("sliderValue", sliderValue.toString());
 
 	async function onAttemptToApprove() {
 		const pairs = await useAllCommonPairs(currencyA, currencyB, walletInfos);
@@ -148,7 +151,11 @@ export const UseRemoveLiquidity = (
 				})
 				.catch(error => {
 					closePendingTx();
-					// for all errors other than 4001 (EIP-1193 user rejected request), fall back to manual approve
+					toast({
+						status: "error",
+						title: "Transaction error.",
+						description: `Code: ${error?.code}`,
+					});
 					if (error?.code !== 4001) {
 						console.log(error?.code);
 					}
@@ -376,6 +383,11 @@ export const UseRemoveLiquidity = (
 					// we only care if the error is something _other_ than the user rejected the tx
 					setTxSignature(false);
 					console.log(error);
+					toast({
+						status: "error",
+						title: "Transaction error.",
+						description: `Code: ${error?.code}`,
+					});
 				});
 		}
 	}

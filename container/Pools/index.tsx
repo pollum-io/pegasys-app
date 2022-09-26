@@ -478,23 +478,31 @@ export const PoolsContainer: NextPage = () => {
 								in real time and can be claimed by withdrawing your liquidity.
 							</Text>
 						</Flex>
-						<Flex
-							alignItems="center"
-							justifyContent="center"
-							flexDirection="row"
-							bgColor={theme.bg.whiteGray}
-							zIndex="0"
-							position="relative"
-							top="2"
-							borderBottomRadius="xl"
-							py="0.531rem"
-							gap="2.5"
-						>
-							<Text fontWeight="medium" fontSize="xs" color="white">
-								View Your Staked Liquidity
-							</Text>
-							<MdOutlineCallMade size={18} color="white" />
-						</Flex>
+						{walletAddress && (
+							<Flex
+								alignItems="center"
+								justifyContent="center"
+								flexDirection="row"
+								bgColor={theme.bg.whiteGray}
+								zIndex="0"
+								position="relative"
+								top="2"
+								borderBottomRadius="xl"
+								py="0.531rem"
+								gap="2.5"
+								cursor="pointer"
+								onClick={() =>
+									window.open(
+										`https://info.pegasys.finance/account/${walletAddress}`
+									)
+								}
+							>
+								<Text fontWeight="medium" fontSize="xs" color="white">
+									View Your Staked Liquidity
+								</Text>
+								<MdOutlineCallMade size={18} color="white" />
+							</Flex>
+						)}
 					</Flex>
 					<Flex
 						id="a"
