@@ -28,7 +28,8 @@ export const userHasAvailableClaim = async (
 	);
 	const fetchIsClaimed = await singleCall(airDropContract, "isClaimed");
 
-	const isClaimedResult = await fetchIsClaimed(Number(userClaimData?.index));
+	const isClaimedResult =
+		userClaimData && (await fetchIsClaimed(Number(userClaimData?.index)));
 
 	return Boolean(userClaimData && isClaimedResult === false);
 };
@@ -38,12 +39,14 @@ export const userUnclaimedAmount = async (
 	chainId: ChainId,
 	signer: Signer
 ) => {
-	const psys = chainId ? PSYS[chainId] : undefined;
-	if (!psys) return undefined;
-	const canClaim = await userHasAvailableClaim(address, chainId, signer);
 	// eslint-disable-next-line
 	// @ts-ignore
 	const userClaimData = AirdropInfo.claims[address || ""];
+	const psys = chainId ? PSYS[chainId] : undefined;
+	const canClaim = await userHasAvailableClaim(address, chainId, signer);
+
+	if (!psys) return undefined;
+	if (!userClaimData) return new TokenAmount(psys, JSBI.BigInt(0));
 	if (!canClaim && psys) {
 		return new TokenAmount(psys, JSBI.BigInt(0));
 	}
