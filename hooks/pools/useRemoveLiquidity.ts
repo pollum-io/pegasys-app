@@ -35,6 +35,7 @@ export const UseRemoveLiquidity = (
 	setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
 	transactions: ITx,
 	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
+	setCurrentSummary: React.Dispatch<React.SetStateAction<string>>,
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
 	approvalState: IApprovalState,
 	setTxSignature: React.Dispatch<React.SetStateAction<boolean>>,
@@ -151,8 +152,10 @@ export const UseRemoveLiquidity = (
 					closePendingTx();
 					toast({
 						status: "error",
-						title: "Transaction error.",
-						description: `Code: ${error?.code}`,
+						title: "Transaction error",
+						description: `${error?.message.substring(
+							error?.message.indexOf(":") + 1
+						)} Code: ${error?.code}`,
 					});
 					if (error?.code !== 4001) {
 						console.log(error?.code);
@@ -367,7 +370,19 @@ export const UseRemoveLiquidity = (
 							currencyAmountB?.toSignificant(3) +
 							" " +
 							currencyB?.symbol,
+						finished: false,
 					});
+					setCurrentSummary(
+						t("removeLiquidity.remove") +
+							" " +
+							currencyAmountA?.toSignificant(3) +
+							" " +
+							currencyA?.symbol +
+							" and " +
+							currencyAmountB?.toSignificant(3) +
+							" " +
+							currencyB?.symbol
+					);
 					setApprovalState({
 						status: ApprovalState.PENDING,
 						type: "remove-liquidity",
@@ -383,8 +398,10 @@ export const UseRemoveLiquidity = (
 					console.log(error);
 					toast({
 						status: "error",
-						title: "Transaction error.",
-						description: `Code: ${error?.code}`,
+						title: "Transaction error",
+						description: `${error?.message.substring(
+							error?.message.indexOf(":") + 1
+						)} Code: ${error?.code}`,
 					});
 				});
 		}
@@ -394,7 +411,7 @@ export const UseRemoveLiquidity = (
 		setAvailableTokensAmount: React.Dispatch<React.SetStateAction<IAmounts>>,
 		sliderValue: number
 	) {
-		let percent = new Percent(sliderValue.toString(), "100")
+		let percent = new Percent(sliderValue.toString(), "100");
 		const pairs = await useAllCommonPairs(currencyA, currencyB, walletInfos);
 
 		const pair = pairs[0];

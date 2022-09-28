@@ -131,6 +131,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		setApprovalState,
 		approvalState,
 		setCurrentTxHash,
+		setCurrentSummary,
 		isConnected,
 	} = useWallet();
 	const { address, chainId } = psUseWallet();
@@ -393,8 +394,10 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						transactions,
 						{
 							summary: `Approve ${tokenToApp?.symbol}`,
+							finished: false,
 						}
 					);
+					setCurrentSummary(`Approve ${tokenToApp?.symbol}`);
 					closePendingTx();
 				}
 			})
@@ -428,13 +431,15 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					status: ApprovalState.PENDING,
 				});
 				addTransaction(res, walletInfo, setTransactions, transactions, {
-					summary: `Add ${tokenInputValue.inputFrom.value} ${
-						selectedToken[0]?.symbol
-					} and ${tokenInputValue.inputTo.value} ${selectedToken[1]?.symbol}`,
+					summary: `Add ${tokenInputValue.inputFrom.value} ${selectedToken[0]?.symbol} and ${tokenInputValue.inputTo.value} ${selectedToken[1]?.symbol}`,
+					finished: false,
 				});
 				closePendingTx();
+				setCurrentSummary(
+					`Add ${tokenInputValue.inputFrom.value} ${selectedToken[0]?.symbol} and ${tokenInputValue.inputTo.value} ${selectedToken[1]?.symbol}`
+				);
 			})
-			.catch((err) => {
+			.catch(err => {
 				console.log(err);
 				closePendingTx();
 			});

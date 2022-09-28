@@ -97,7 +97,9 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			const truncatedBalance =
 				balanceItems &&
 				String(
-					truncateNumberDecimalsPlaces(parseFloat(balanceItems.balance), 3)
+					+balanceItems.balance > 0 && +balanceItems.balance < 1
+						? parseFloat(balanceItems.balance)
+						: truncateNumberDecimalsPlaces(parseFloat(balanceItems.balance), 3)
 				);
 
 			return {

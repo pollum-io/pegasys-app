@@ -46,6 +46,7 @@ export function useApproveCallback(
 	transactions: ITx,
 	setApprovalSubmitted: React.Dispatch<React.SetStateAction<ISubmittedAproval>>,
 	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
+	setCurrentSummary: React.Dispatch<React.SetStateAction<string>>,
 	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
 	setApproveTokenStatus: React.Dispatch<React.SetStateAction<ApprovalState>>,
 	onCloseTransaction: () => void,
@@ -125,6 +126,9 @@ export function useApproveCallback(
 					approval: { tokenAddress: token?.address, spender },
 					finished: false,
 				});
+				setCurrentSummary(
+					`Approve ${currentAmountToApprove?.currency?.symbol}`
+				);
 				setApprovalState({ status: ApprovalState.PENDING, type: "approve" });
 				setApprovalSubmitted(prevState => ({
 					status: true,
@@ -165,6 +169,7 @@ export function useApproveCallbackFromTrade(
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
 	setApprovalSubmitted: React.Dispatch<React.SetStateAction<ISubmittedAproval>>,
 	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
+	setCurrentSummary: React.Dispatch<React.SetStateAction<string>>,
 	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
 	setApproveTokenStatus: React.Dispatch<React.SetStateAction<ApprovalState>>,
 	onCloseTransaction: () => void,
@@ -185,6 +190,7 @@ export function useApproveCallbackFromTrade(
 		transactions,
 		setApprovalSubmitted,
 		setCurrentTxHash,
+		setCurrentSummary,
 		setCurrentInputTokenName,
 		setApproveTokenStatus,
 		onCloseTransaction,

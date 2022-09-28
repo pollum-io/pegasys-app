@@ -611,29 +611,7 @@ export const PoolsContainer: NextPage = () => {
 										"flex-start",
 									]}
 								>
-									{userHavePool && !isConnected ? (
-										<Button
-											fontSize="sm"
-											fontWeight="semibold"
-											py={["0.2rem", "0.2rem", "1", "1"]}
-											px={["1.7rem", "1.5rem", "1.5rem", "1.5rem"]}
-											size="sm"
-											h="2.2rem"
-											bgColor={theme.bg.blueNavyLightness}
-											color={theme.text.cyan}
-											_hover={{
-												bgColor: theme.bg.bluePurple,
-											}}
-											_active={{}}
-											onClick={() => {
-												setIsCreate(false);
-												onOpenAddLiquidity();
-											}}
-											borderRadius="full"
-										>
-											Add Liquidity
-										</Button>
-									) : (
+									{isConnected && (
 										<Menu>
 											<Text fontSize="sm" pb="2">
 												Sort by
@@ -765,7 +743,7 @@ export const PoolsContainer: NextPage = () => {
 							) : (
 								<Flex
 									w="100%"
-									mt={["3rem", "3rem", "4rem", "4rem"]}
+									mt={["3rem", "3rem", "4rem", "-1rem"]}
 									flexDirection="column"
 									alignItems="center"
 									justifyContent="center"
@@ -773,8 +751,8 @@ export const PoolsContainer: NextPage = () => {
 								>
 									<Flex
 										className="circleLoading"
-										width="80px !important"
-										height="80px !important"
+										width="60px !important"
+										height="60px !important"
 										id={
 											colorMode === "dark"
 												? "pendingTransactionsDark"

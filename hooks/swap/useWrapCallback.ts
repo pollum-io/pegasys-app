@@ -25,6 +25,7 @@ export function UseWrapCallback(
 	transactions: ITx,
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
 	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
+	setCurrentSummary: React.Dispatch<React.SetStateAction<string>>,
 	signer: Signer,
 	onCloseTransaction: () => void
 ): {
@@ -81,6 +82,9 @@ export function UseWrapCallback(
 									type: "wrap",
 								});
 								setCurrentTxHash(`${txReceipt?.hash}`);
+								setCurrentSummary(
+									`Wrap ${inputAmount.toSignificant(6)} SYS to WSYS`
+								);
 								onCloseTransaction();
 							} catch (error) {
 								onCloseTransaction();
@@ -112,6 +116,9 @@ export function UseWrapCallback(
 										)} WSYS to SYS`,
 										finished: false,
 									}
+								);
+								setCurrentSummary(
+									`Unwrap ${inputAmount.toSignificant(6)} WSYS to SYS`
 								);
 								setApprovalState({
 									status: ApprovalState.PENDING,

@@ -2,8 +2,8 @@ import React, { useEffect, createContext, useState, useMemo } from "react";
 import { BigNumber, ethers, Signer } from "ethers";
 import { convertHexToNumber, isAddress } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { IWalletInfo, ITx } from "types";
-import { useToasty, useWallet, WalletFramework } from "pegasys-services";
+import { IWalletInfo, ITx, IPersistTxs } from "types";
+import { useToasty, useWallet } from "pegasys-services";
 import {
 	INITIAL_ALLOWED_SLIPPAGE,
 	SYS_TESTNET_CHAIN_PARAMS,
@@ -77,6 +77,8 @@ interface IWeb3 {
 	isConnected: boolean;
 	setCurrentLpAddress: React.Dispatch<React.SetStateAction<string>>;
 	currentLpAddress: string;
+	currentSummary: string;
+	setCurrentSummary: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -115,6 +117,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	});
 	const [pendingTxLength, setPendingTxLength] = useState<number>(0);
 	const [currentLpAddress, setCurrentLpAddress] = useState<string>("");
+	const [currentSummary, setCurrentSummary] = useState<string>("");
 
 	const [approvalState, setApprovalState] = useState<IApprovalState>({
 		status: ApprovalState.UNKNOWN,
@@ -199,15 +202,33 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	};
 
 	useMemo(() => {
-		if (approvalState.status === ApprovalState.PENDING) {
+		if (approvalState.status === ApprovalState.PENDING && isConnected) {
 			const timer = setInterval(async () => {
 				const getTx = await fetch(
 					`${rpcUrl}?module=account&action=pendingtxlist&address=${address}`
 				).then(result => result.json());
-
 				const hash = `${currentTxHash}`;
+				const summary = `${currentSummary}`;
+				const storageTxs = JSON.parse(`${localStorage.getItem("txs")}`);
+				const storageHash = localStorage.getItem("currentTxHash");
+
 				setPendingTxLength(Number(getTx?.result?.length));
 				provider?.getTransaction(hash).then(result => {
+					localStorage.setItem(
+						"txs",
+						JSON.stringify({
+							...JSON.parse(`${localStorage.getItem("txs")}`),
+							[result.hash]: {
+								...result,
+								summary: storageTxs
+									? storageTxs[`${hash || storageHash}`].summary
+									: summary,
+								chainId,
+								txType: approvalState.type,
+								finished: false,
+							},
+						})
+					);
 					if (
 						result.from.toLowerCase() === address.toLowerCase() &&
 						result.confirmations !== 0
@@ -215,10 +236,15 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 						setTransactions(prevTransactions => ({
 							...prevTransactions,
 							[Number(chainId)]: {
-								...transactions[chainId === 57 ? 57 : 5700],
+								...prevTransactions[chainId === 57 ? 57 : 5700],
 								[hash]: {
-									...transactions[chainId === 57 ? 57 : 5700][hash],
+									...prevTransactions[chainId === 57 ? 57 : 5700][hash],
 									...result,
+									chainId,
+									summary: storageTxs
+										? storageTxs[`${hash || storageHash}`].summary
+										: summary,
+									txType: approvalState.type,
 									finished: true,
 									hash,
 								},
@@ -229,6 +255,19 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 							status: ApprovalState.APPROVED,
 							type: approvalState.type,
 						});
+						localStorage.setItem(
+							"txs",
+							JSON.stringify({
+								...JSON.parse(`${localStorage.getItem("txs")}`),
+								[result.hash]: {
+									...result,
+									summary: storageTxs
+										? storageTxs[`${hash || storageHash}`].summary
+										: summary,
+									finished: true,
+								},
+							})
+						);
 						if (approvalState.type === "approve-swap") {
 							setApprovalSubmitted(prevState => ({
 								...prevState,
@@ -244,7 +283,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 				});
 			}, 10000);
 		}
-	}, [approvalState]);
+	}, [approvalState, currentTxHash]);
 
 	useEffect(() => {
 		if (approvalState.status === ApprovalState.APPROVED) {
@@ -267,13 +306,43 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	}, [approvalState]);
 
 	useEffect(() => {
-		const initialSubmittedValue: ISubmittedAproval = JSON.parse(
-			`${localStorage.getItem("approvalSubmitted")}`
+		const persistTxs: IPersistTxs = JSON.parse(
+			`${localStorage.getItem("txs")}`
 		);
-		if (initialSubmittedValue) {
-			setApprovalSubmitted(initialSubmittedValue);
+		if (persistTxs && isConnected) {
+			Object.values(persistTxs).map(tx => {
+				if (tx.finished === false) {
+					setTransactions(prevState => ({
+						...prevState,
+						[chainId]: {
+							...prevState[tx.chainId === 57 ? 57 : 5700],
+							[tx.hash]: tx,
+						},
+					}));
+					setApprovalState({
+						status: ApprovalState.PENDING,
+						type: `${tx.txType}`,
+					});
+					setCurrentTxHash(tx.hash);
+					return null;
+				}
+				setTransactions(prevState => ({
+					...prevState,
+					[chainId]: {
+						...prevState[tx.chainId === 57 ? 57 : 5700],
+						[tx.hash]: tx,
+					},
+				}));
+				return null;
+			});
 		}
-	}, []);
+	}, [isConnected]);
+
+	useEffect(() => {
+		if (currentTxHash) {
+			localStorage.setItem("currentTxHash", currentTxHash);
+		}
+	}, [currentTxHash]);
 
 	useEffect(() => {
 		if (approvalSubmitted && approvalState.status !== ApprovalState.UNKNOWN) {
@@ -369,6 +438,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setShowCancelled,
 			currentLpAddress,
 			setCurrentLpAddress,
+			currentSummary,
+			setCurrentSummary,
 		}),
 		[
 			provider,
