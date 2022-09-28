@@ -25,8 +25,8 @@ import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { MdArrowBack, MdOutlineInfo } from "react-icons/md";
 
-import { FarmServices, useWallet, IStakeInfo } from "pegasys-services";
-import { CurrencyAmount, JSBI } from "@pollum-io/pegasys-sdk";
+import { FarmServices, useWallet, useFarm } from "pegasys-services";
+import { CurrencyAmount, JSBI, Percent } from "@pollum-io/pegasys-sdk";
 import { tryParseAmount } from "utils";
 
 interface IModal {
@@ -34,76 +34,38 @@ interface IModal {
 	onClose: () => void;
 	buttonId: string;
 	setButtonId: Dispatch<SetStateAction<string>>;
-	stakeInfo: IStakeInfo;
 }
 
 export const FarmActions: React.FC<IModal> = props => {
-	const { isOpen, onClose, buttonId, setButtonId, stakeInfo } = props;
-
+	const { isOpen, onClose, buttonId, setButtonId } = props;
 	const theme = usePicasso();
 	const [confirmDepoist] = useState(false);
-	const [depositValue, setDepositValue] = useState<string>("");
-	const [withdrawnValue, setWithdrawnValue] = useState<string>("");
+	// const [depositValue, setDepositValue] = useState<string>("");
+	// const [withdrawnValue, setWithdrawnValue] = useState<string>("");
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
-	const { address } = useWallet();
+	// const { address } = useWallet();
 	const { userTokensBalance } = useTokens();
-
-	const onWithdraw = async () => {
-		const parsedInput: CurrencyAmount | undefined = tryParseAmount(
-			withdrawnValue,
-			stakeInfo.lpToken
-		);
-
-		const parsedAmount =
-			parsedInput &&
-			stakeInfo.availableLpTokens &&
-			JSBI.lessThanOrEqual(parsedInput.raw, stakeInfo.availableLpTokens.raw)
-				? parsedInput
-				: undefined;
-
-		await FarmServices.withdraw(
-			stakeInfo.poolId,
-			parsedAmount?.raw.toString(16) ?? "0",
-			address
-		);
-	};
-
-	const onClaim = async () => {
-		await FarmServices.claim(stakeInfo.poolId, address);
-	};
-
-	const onDeposit = async () => {
-		// to do approve generic
-
-		const parsedInput: CurrencyAmount | undefined = tryParseAmount(
-			depositValue,
-			stakeInfo.lpToken
-		);
-
-		const parsedAmount =
-			parsedInput &&
-			stakeInfo.availableLpTokens &&
-			JSBI.lessThanOrEqual(parsedInput.raw, stakeInfo.availableLpTokens.raw)
-				? parsedInput
-				: undefined;
-
-		await FarmServices.deposit(
-			stakeInfo.poolId,
-			parsedAmount?.raw.toString(16) ?? "0",
-			address
-		);
-	};
+	const {
+		selectedPair,
+		depositTypedValue,
+		setDepositTypedValue,
+		withdrawnTypedValue,
+		setWithdrawnTypedValue,
+		onClaim,
+		onDeposit,
+		onWithdraw,
+	} = useFarm();
 
 	const tokenBLogo = useMemo(() => {
 		const tokenBWrapped = userTokensBalance.find(
 			ut =>
-				ut.address === stakeInfo.tokenB.address &&
-				stakeInfo.tokenB.chainId === ut.chainId
+				ut.address === selectedPair?.tokenB.address &&
+				selectedPair?.tokenB.chainId === ut.chainId
 		);
 
 		return tokenBWrapped?.logoURI ?? "";
-	}, [userTokensBalance, stakeInfo.tokenB]);
+	}, [userTokensBalance, selectedPair?.tokenB]);
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -264,18 +226,18 @@ export const FarmActions: React.FC<IModal> = props => {
 						<Flex flexDirection="column">
 							<Flex gap="2">
 								<Flex>
-									<Img src={stakeInfo.tokenA.logoURI} w="6" h="6" />
+									<Img src={selectedPair?.tokenA.logoURI} w="6" h="6" />
 									<Img src={tokenBLogo} w="6" h="6" />
 								</Flex>
 								<Flex>
 									<Text fontSize="lg" fontWeight="bold">
-										{stakeInfo.tokenA.name}
+										{selectedPair?.tokenA.name}
 									</Text>
 									<Text fontSize="lg" fontWeight="bold">
 										:
 									</Text>
 									<Text fontSize="lg" fontWeight="bold">
-										{stakeInfo.tokenB.name}
+										{selectedPair?.tokenB.name}
 									</Text>
 								</Flex>
 							</Flex>
@@ -287,7 +249,7 @@ export const FarmActions: React.FC<IModal> = props => {
 							>
 								<Text fontWeight="normal">
 									Available to deposit:{" "}
-									{stakeInfo.availableLpTokens.toFixed(0, {
+									{selectedPair?.availableLpTokens.toFixed(10, {
 										groupSeparator: ",",
 									})}
 								</Text>
@@ -305,8 +267,8 @@ export const FarmActions: React.FC<IModal> = props => {
 												_focus={{
 													outline: "none",
 												}}
-												value={depositValue}
-												onChange={e => setDepositValue(e.target.value)}
+												value={depositTypedValue}
+												onChange={e => setDepositTypedValue(e.target.value)}
 											/>
 											<InputRightAddon
 												// eslint-disable-next-line react/no-children-prop
@@ -326,8 +288,10 @@ export const FarmActions: React.FC<IModal> = props => {
 													cursor: "pointer",
 												}}
 												onClick={() =>
-													setDepositValue(
-														stakeInfo.availableLpTokens.raw.toString()
+													setDepositTypedValue(
+														selectedPair?.availableLpTokens.toFixed(10, {
+															groupSeparator: ",",
+														}) ?? JSBI.BigInt(0).toString()
 													)
 												}
 											/>
@@ -359,7 +323,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								)}
 								<Text fontWeight="normal" pt="1.5rem">
 									Weekly Rewards:{" "}
-									{stakeInfo.totalRewardRatePerWeek.toFixed(0, {
+									{selectedPair?.totalRewardRatePerWeek.toFixed(10, {
 										groupSeparator: ",",
 									})}{" "}
 									PSYS / Week
@@ -393,7 +357,7 @@ export const FarmActions: React.FC<IModal> = props => {
 						<Flex flexDirection="column">
 							<Text fontWeight="normal" mb="2">
 								Deposited PLP Liquidity:{" "}
-								{stakeInfo.stakedAmount.toFixed(0, {
+								{selectedPair?.stakedAmount.toFixed(10, {
 									groupSeparator: ",",
 								})}
 							</Text>
@@ -410,8 +374,8 @@ export const FarmActions: React.FC<IModal> = props => {
 										_focus={{
 											outline: "none",
 										}}
-										value={withdrawnValue}
-										onChange={e => setWithdrawnValue(e.target.value)}
+										value={withdrawnTypedValue}
+										onChange={e => setWithdrawnTypedValue(e.target.value)}
 									/>
 									<InputRightAddon
 										// eslint-disable-next-line react/no-children-prop
@@ -430,13 +394,20 @@ export const FarmActions: React.FC<IModal> = props => {
 											color: theme.text.cyan,
 											cursor: "pointer",
 										}}
+										onClick={() =>
+											setWithdrawnTypedValue(
+												selectedPair?.stakedAmount.toFixed(10, {
+													groupSeparator: ",",
+												}) ?? JSBI.BigInt(0).toString()
+											)
+										}
 									/>
 								</InputGroup>
 							</Flex>
 							<Collapse in={sliderValue === 100} animateOpacity>
 								<Text fontWeight="normal" mt="2">
 									Unclaimed PSYS:{" "}
-									{stakeInfo.unclaimedPSYS.toFixed(0, {
+									{selectedPair?.unclaimedPSYS.toFixed(10, {
 										groupSeparator: ",",
 									})}
 								</Text>
@@ -452,7 +423,18 @@ export const FarmActions: React.FC<IModal> = props => {
 									mb="4"
 									w="85%"
 									colorScheme="teal"
-									onChange={(value: number) => setSliderValue(value)}
+									onChange={(value: number) => {
+										setSliderValue(value);
+										const percent = new Percent(value.toString(), "100");
+
+										const valuePercent = percent
+											.divide("100000000")
+											.multiply(
+												selectedPair?.stakedAmount.raw ?? JSBI.BigInt(0)
+											).quotient;
+
+										setWithdrawnTypedValue(valuePercent.toString());
+									}}
 									onMouseEnter={() => setShowTooltip(true)}
 									onMouseLeave={() => setShowTooltip(false)}
 								>
@@ -544,7 +526,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								<Flex flexDirection="row" alignItems="center">
 									<Img src="icons/pegasys.png" w="6" h="6" />
 									<Text fontSize="2xl" fontWeight="semibold" pl="2">
-										{stakeInfo.unclaimedPSYS.toFixed(0, {
+										{selectedPair?.unclaimedPSYS.toFixed(10, {
 											groupSeparator: ",",
 										})}
 									</Text>

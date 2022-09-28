@@ -2,7 +2,7 @@ import { Button, Flex, Img, Text } from "@chakra-ui/react";
 import { FunctionComponent, useMemo, useState } from "react";
 import { useModal, usePicasso, useTokens } from "hooks";
 import { FarmActions } from "components/Modals/FarmActions";
-import { IStakeInfo } from "pegasys-services";
+import { IStakeInfo, useFarm } from "pegasys-services";
 import { JSBI } from "@pollum-io/pegasys-sdk";
 
 const FarmCard: FunctionComponent<{ stakeInfo: IStakeInfo }> = ({
@@ -22,11 +22,18 @@ const FarmCard: FunctionComponent<{ stakeInfo: IStakeInfo }> = ({
 
 	const theme = usePicasso();
 	const { userTokensBalance } = useTokens();
+	const { setSelectedPair } = useFarm();
 
 	const { isOpenFarmActions, onOpenFarmActions, onCloseFarmActions } =
 		useModal();
 
 	const [buttonId, setButtonId] = useState<string>("");
+
+	const onClick = (id: string) => {
+		setButtonId(id);
+		setSelectedPair(stakeInfo);
+		onOpenFarmActions();
+	};
 
 	const tokenBLogo = useMemo(() => {
 		const tokenBWrapped = userTokensBalance.find(
@@ -55,7 +62,6 @@ const FarmCard: FunctionComponent<{ stakeInfo: IStakeInfo }> = ({
 				onClose={onCloseFarmActions}
 				buttonId={buttonId}
 				setButtonId={setButtonId}
-				stakeInfo={stakeInfo}
 			/>
 			<Flex justifyContent="space-between">
 				<Flex gap="2" pt="6">
@@ -128,7 +134,11 @@ const FarmCard: FunctionComponent<{ stakeInfo: IStakeInfo }> = ({
 				</Flex>
 				<Flex justifyContent="space-between" fontSize="sm">
 					<Text fontWeight="semibold">Your Unclaimed PSYS</Text>
-					<Text>{unclaimedPSYS.raw.toString()}</Text>
+					<Text>
+						{unclaimedPSYS.toFixed(6, {
+							groupSeparator: ",",
+						})}
+					</Text>
 				</Flex>
 			</Flex>
 			<Flex justifyContent="space-between" py="1" flexDirection="row">
@@ -149,10 +159,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IStakeInfo }> = ({
 						}}
 						_active={{}}
 						borderRadius="full"
-						onClick={event => {
-							setButtonId(event?.currentTarget?.id);
-							onOpenFarmActions();
-						}}
+						onClick={event => onClick(event.currentTarget.id)}
 					>
 						Withdraw
 					</Button>
@@ -174,10 +181,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IStakeInfo }> = ({
 						}}
 						_active={{}}
 						borderRadius="full"
-						onClick={event => {
-							setButtonId(event?.currentTarget?.id);
-							onOpenFarmActions();
-						}}
+						onClick={event => onClick(event.currentTarget.id)}
 					>
 						Deposit
 					</Button>
@@ -197,10 +201,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IStakeInfo }> = ({
 					borderColor={theme.text.cyanPurple}
 					fontSize="sm"
 					fontWeight="semibold"
-					onClick={event => {
-						setButtonId(event?.currentTarget?.id);
-						onOpenFarmActions();
-					}}
+					onClick={event => onClick(event.currentTarget.id)}
 					_hover={{
 						borderColor: theme.text.cyanLightPurple,
 						color: theme.text.cyanLightPurple,

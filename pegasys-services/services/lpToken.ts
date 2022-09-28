@@ -215,7 +215,7 @@ class LpTokenServices {
 		chainId: ChainId;
 		spender: string;
 		value: string;
-		deadline: BigNumber;
+		deadline: BigNumber | number;
 	}) {
 		const contract = ContractFramework.PairContract(lpAddress);
 
@@ -252,7 +252,7 @@ class LpTokenServices {
 			spender,
 			value,
 			nonce: nonce.toHexString(),
-			deadline: deadline.toNumber(),
+			deadline: typeof deadline === "number" ? deadline : deadline.toNumber(),
 		};
 
 		const data = JSON.stringify({
@@ -278,7 +278,7 @@ class LpTokenServices {
 			v: signature.v,
 			r: signature.r,
 			s: signature.s,
-			deadline: deadline.toNumber(),
+			deadline: typeof deadline === "number" ? deadline : deadline.toNumber(),
 		};
 	}
 }

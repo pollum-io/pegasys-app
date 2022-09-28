@@ -13,11 +13,14 @@ import {
 	Box,
 	useMediaQuery,
 } from "@chakra-ui/react";
-import { FarmCards } from "components";
-import { usePicasso } from "hooks";
 import { NextPage } from "next";
-import { MdOutlineCallMade, MdSearch, MdExpandMore } from "react-icons/md";
 import { useEffect, useState } from "react";
+import { MdOutlineCallMade, MdSearch, MdExpandMore } from "react-icons/md";
+
+import { FarmCard, FarmCards, SearchInput } from "components";
+import { usePicasso } from "hooks";
+
+import { useFarm } from "pegasys-services";
 
 const sortData = {
 	apr: "APR",
@@ -25,24 +28,27 @@ const sortData = {
 };
 
 export const FarmContainer: NextPage = () => {
+	const { search, setSearch, sort, setSort, pairs } = useFarm();
+
 	const theme = usePicasso();
-	const [search, setSearch] = useState<string>("");
-	const [filter, setFilter] = useState<string>("");
-	const [sort, setSort] = useState<keyof typeof sortData>("apr");
-	const [timeoutid, setTimeoutid] = useState<NodeJS.Timeout>(
-		setTimeout(() => {}, 0)
-	);
+
+	// const [search, setSearch] = useState<string>("");
+	// const [filter, setFilter] = useState<string>("");
+	// const [sort, setSort] = useState<keyof typeof sortData>("apr");
+	// const [timeoutid, setTimeoutid] = useState<NodeJS.Timeout>(
+	// 	setTimeout(() => {}, 0)
+	// );
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
-	useEffect(() => {
-		clearTimeout(timeoutid);
+	// useEffect(() => {
+	// 	clearTimeout(timeoutid);
 
-		const id = setTimeout(() => {
-			setFilter(search);
-		}, 700);
+	// 	const id = setTimeout(() => {
+	// 		setFilter(search);
+	// 	}, 700);
 
-		setTimeoutid(id);
-	}, [search]);
+	// 	setTimeoutid(id);
+	// }, [search]);
 
 	return (
 		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
@@ -133,30 +139,15 @@ export const FarmContainer: NextPage = () => {
 						w="max-content"
 						position={["absolute", "absolute", "relative", "relative"]}
 					>
-						<InputGroup right="0rem">
-							<Input
-								placeholder="Search by token name"
-								_placeholder={{ opacity: 1, color: theme.text.input }}
-								borderColor={theme.bg.blueNavyLightness}
-								borderRadius="full"
-								w={["20rem", "28rem", "20rem", "20rem"]}
-								h="2.2rem"
-								py={["0.2rem", "0.2rem", "1", "1"]}
-								pl="10"
-								_focus={{ outline: "none" }}
-								_hover={{}}
-								value={search}
-								onChange={e => setSearch(e.target.value)}
-							/>
-							<Flex
-								pt="1rem"
-								position="absolute"
-								pl="0.9rem"
-								bottom={["0.3rem", "0.3rem", "0.5rem", "0.5rem"]}
-							>
-								<MdSearch color={theme.icon.searchIcon} size={20} />
-							</Flex>
-						</InputGroup>
+						<SearchInput
+							setSearch={setSearch}
+							iconColor={theme.icon.searchIcon}
+							borderColor={theme.bg.blueNavyLightness}
+							placeholder={{
+								value: "Search by token name",
+								color: theme.text.input,
+							}}
+						/>
 						<Flex
 							id="d"
 							flexDirection={["initial", "initial", "column", "column"]}
@@ -221,7 +212,9 @@ export const FarmContainer: NextPage = () => {
 					mb="10rem"
 					sx={{ columnCount: [1, 1, 2, 2], columnGap: "35px" }}
 				>
-					<FarmCards filter={filter} sort={sort} />
+					{pairs.map((pair, index) => (
+						<FarmCard key={index} stakeInfo={pair} />
+					))}
 				</Box>
 			</Flex>
 		</Flex>
