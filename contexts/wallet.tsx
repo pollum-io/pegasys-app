@@ -76,6 +76,12 @@ interface IWeb3 {
 	pendingTxLength: number;
 	showCancelled: boolean;
 	setShowCancelled: React.Dispatch<React.SetStateAction<boolean>>;
+	votersType: string;
+	setVotersType: React.Dispatch<React.SetStateAction<string>>;
+	votesLocked: boolean;
+	setVotesLocked: React.Dispatch<React.SetStateAction<boolean>>;
+	delegatedTo: string;
+	setDelegatedTo: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const WalletContext = createContext({} as IWeb3);
@@ -94,6 +100,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [walletError, setWalletError] = useState<boolean>(false);
 	const [signer, setSigner] = useState<Signer>();
 	const [connecting, setConnecting] = useState<boolean>(false);
+	const [votesLocked, setVotesLocked] = useState<boolean>(true);
+	const [votersType, setVotersType] = useState<string>("");
+	const [delegatedTo, setDelegatedTo] = useState<string>("");
 	const [provider, setProvider] = useState<
 		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
 	>();
@@ -368,6 +377,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			pendingTxLength,
 			showCancelled,
 			setShowCancelled,
+			votersType,
+			setVotersType,
+			votesLocked,
+			setVotesLocked,
+			delegatedTo,
+			setDelegatedTo,
 		}),
 		[
 			isConnected,

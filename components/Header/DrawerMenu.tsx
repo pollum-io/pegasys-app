@@ -6,13 +6,7 @@ import {
 	DrawerHeader,
 	DrawerOverlay,
 	Flex,
-	Icon,
-	Img,
-	Link,
 	Text,
-	useColorMode,
-	useDisclosure,
-	useMediaQuery,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { MdArrowBack } from "react-icons/md";

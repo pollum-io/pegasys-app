@@ -241,7 +241,6 @@ export const PoolsContainer: NextPage = () => {
 										<Button
 											fontSize="sm"
 											fontWeight="semibold"
-											py={["0.2rem", "0.2rem", "1", "1"]}
 											px={["1.7rem", "1.5rem", "1.5rem", "1.5rem"]}
 											size="sm"
 											h="2.2rem"
@@ -268,7 +267,6 @@ export const PoolsContainer: NextPage = () => {
 												as={Button}
 												fontSize="sm"
 												fontWeight="semibold"
-												py={["0.2rem", "0.2rem", "1", "1"]}
 												px="1rem"
 												size="sm"
 												h="2.2rem"

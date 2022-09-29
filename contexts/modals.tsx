@@ -102,6 +102,18 @@ export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({
 		onClose: onCloseDrawerMenu,
 	} = useDisclosure();
 
+	const {
+		onOpen: onOpenCheckAllVotersModal,
+		isOpen: isOpenCheckAllVotersModal,
+		onClose: onCloseCheckAllVotersModal,
+	} = useDisclosure();
+
+	const {
+		onOpen: onOpenUnlockVotesModal,
+		isOpen: isOpenUnlockVotesModal,
+		onClose: onCloseUnlockVotesModal,
+	} = useDisclosure();
+
 	const modalProviderValue = useMemo(
 		() => ({
 			onOpenImportPool,
@@ -152,6 +164,12 @@ export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({
 			onOpenDrawerMenu,
 			isOpenDrawerMenu,
 			onCloseDrawerMenu,
+			onOpenCheckAllVotersModal,
+			isOpenCheckAllVotersModal,
+			onCloseCheckAllVotersModal,
+			onOpenUnlockVotesModal,
+			isOpenUnlockVotesModal,
+			onCloseUnlockVotesModal,
 		}),
 		[
 			onOpenImportPool,
@@ -202,6 +220,12 @@ export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({
 			onOpenDrawerMenu,
 			isOpenDrawerMenu,
 			onCloseDrawerMenu,
+			onOpenCheckAllVotersModal,
+			isOpenCheckAllVotersModal,
+			onCloseCheckAllVotersModal,
+			onOpenUnlockVotesModal,
+			isOpenUnlockVotesModal,
+			onCloseUnlockVotesModal,
 		]
 	);
 

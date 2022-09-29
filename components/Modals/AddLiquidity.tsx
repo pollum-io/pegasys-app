@@ -9,7 +9,6 @@ import {
 	Img,
 	ModalOverlay,
 	Text,
-	Tooltip,
 } from "@chakra-ui/react";
 import { useModal, usePicasso, useTokens } from "hooks";
 import React, { useEffect, useState } from "react";
@@ -87,7 +86,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			/>
 			<ModalOverlay />
 			<ModalContent
-				mb={["0", "0", "20rem", "20rem"]}
+				mt="10rem"
 				bottom={["0", "0", "0", "0"]}
 				position={["relative", "relative", "relative", "relative"]}
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}

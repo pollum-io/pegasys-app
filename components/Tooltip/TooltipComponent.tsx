@@ -1,4 +1,4 @@
-import { Flex, Icon, PlacementWithLogical, Tooltip } from "@chakra-ui/react";
+import { Icon, PlacementWithLogical, Tooltip } from "@chakra-ui/react";
 import React, { FunctionComponent, useState } from "react";
 import { IconType } from "react-icons/lib";
 import { usePicasso } from "hooks";
