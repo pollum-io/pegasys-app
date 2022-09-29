@@ -626,7 +626,10 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								alignItems="flex-end"
 							>
 								<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-									Balance: {selectedToken[0]?.balance}
+									Balance:{" "}
+									{selectedToken[0]?.balance?.length > 10
+										? selectedToken[0]?.balance.slice(0, -5)
+										: selectedToken[0]?.balance}
 								</Text>
 								<Input
 									fontSize="xl"
@@ -738,7 +741,10 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								alignItems="flex-end"
 							>
 								<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-									Balance: {selectedToken[1]?.balance}
+									Balance:{" "}
+									{selectedToken[1]?.balance?.length > 10
+										? selectedToken[1]?.balance.slice(0, -5)
+										: selectedToken[1]?.balance}
 								</Text>
 								<Input
 									fontSize="xl"

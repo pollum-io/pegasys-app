@@ -3,7 +3,11 @@ import { ethers } from "ethers";
 import { WrappedTokenInfo } from "types";
 import { useWallet, ApprovalState } from "hooks";
 import { getDefaultTokens } from "networks";
-import { getBalanceOfMultiCall, truncateNumberDecimalsPlaces } from "utils";
+import {
+	getBalanceOfMultiCall,
+	removeScientificNotation,
+	truncateNumberDecimalsPlaces,
+} from "utils";
 import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
 import { useWallet as psUseWallet } from "pegasys-services";
 
@@ -98,7 +102,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 				balanceItems &&
 				String(
 					+balanceItems.balance > 0 && +balanceItems.balance < 1
-						? parseFloat(balanceItems.balance)
+						? removeScientificNotation(parseFloat(balanceItems.balance))
 						: truncateNumberDecimalsPlaces(parseFloat(balanceItems.balance), 3)
 				);
 

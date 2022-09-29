@@ -220,9 +220,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 							...JSON.parse(`${localStorage.getItem("txs")}`),
 							[result.hash]: {
 								...result,
-								summary: storageTxs
-									? storageTxs[`${hash || storageHash}`].summary
-									: summary,
+								summary:
+									summary || storageTxs[`${hash || storageHash}`]?.summary,
 								chainId,
 								txType: approvalState.type,
 								finished: false,
@@ -241,9 +240,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 									...prevTransactions[chainId === 57 ? 57 : 5700][hash],
 									...result,
 									chainId,
-									summary: storageTxs
-										? storageTxs[`${hash || storageHash}`].summary
-										: summary,
+									summary:
+										summary || storageTxs[`${hash || storageHash}`]?.summary,
 									txType: approvalState.type,
 									finished: true,
 									hash,
@@ -261,9 +259,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 								...JSON.parse(`${localStorage.getItem("txs")}`),
 								[result.hash]: {
 									...result,
-									summary: storageTxs
-										? storageTxs[`${hash || storageHash}`].summary
-										: summary,
+									summary:
+										summary || storageTxs[`${hash || storageHash}`]?.summary,
 									finished: true,
 								},
 							})
