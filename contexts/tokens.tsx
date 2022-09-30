@@ -35,7 +35,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 	const getCurrentSelectedTokens = async () => {
 		const currentUrls = UseSelectedListUrl();
 		// eslint-disable-next-line
-		let genTokens: any[] = [];
+		let currentTokens: any[] = [];
 
 		const fetchTokens =
 			currentUrls &&
@@ -48,10 +48,10 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		if (!fetchTokens) return null;
 
 		for (let i = 0; i < fetchTokens?.length; i += 1) {
-			genTokens = [...genTokens, ...fetchTokens[i]];
+			currentTokens = [...currentTokens, ...fetchTokens[i]];
 		}
 
-		return genTokens;
+		return currentTokens;
 	};
 
 	const getAllTokens = async () => {
