@@ -1,6 +1,6 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { WrappedTokenInfo } from "types";
-import { useWallet, ApprovalState } from "hooks";
+import { useWallet, ApprovalState, useTokensListManage } from "hooks";
 import { getDefaultTokens } from "networks";
 import {
 	getBalanceOfMultiCall,
@@ -30,8 +30,63 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		approvalState,
 	} = useWallet();
 
+	const { UseSelectedListUrl, tokenListManageState } = useTokensListManage();
+
+	const getCurrentSelectedTokens = async () => {
+		const currentUrls = UseSelectedListUrl();
+		// eslint-disable-next-line
+		let genTokens: any[] = [];
+
+		const fetchTokens =
+			currentUrls &&
+			(await Promise.all(
+				currentUrls?.map(async url => {
+					const { tokens } = await fetch(url).then(res => res.json());
+					return tokens;
+				})
+			));
+		if (!fetchTokens) return null;
+
+		for (let i = 0; i < fetchTokens?.length; i += 1) {
+			genTokens = [...genTokens, ...fetchTokens[i]];
+		}
+
+		return genTokens;
+	};
+
+	const getAllTokens = async () => {
+		const generalTokens = await getCurrentSelectedTokens();
+		const { tokens: initialTokens } = await getDefaultTokens(
+			currentNetworkChainId as number
+		);
+		const filteredTokens = generalTokens?.filter(
+			token =>
+				token.chainId === currentNetworkChainId &&
+				token.symbol !== "AGEUR" &&
+				token.symbol !== "MAI" &&
+				token.symbol !== "QI"
+		);
+
+		if (!currentNetworkChainId)
+			return initialTokens.filter(
+				token =>
+					token.symbol !== "AGEUR" &&
+					token.symbol !== "MAI" &&
+					token.symbol !== "QI"
+			);
+
+		if (filteredTokens?.length === 0)
+			return initialTokens.filter(
+				token => token.symbol === "WSYS" || token.symbol === "PSYS"
+			);
+
+		return filteredTokens;
+	};
+
 	const getDefaultListToken = async () => {
-		const { tokens } = await getDefaultTokens(currentNetworkChainId as number);
+		const tokens = await getAllTokens();
+
+		if (!tokens) return null;
 
 		const WSYS = tokens.find(token => token.symbol === "WSYS");
 
@@ -118,9 +173,15 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			getDefaultListToken();
 			return;
 		}
-
+		getCurrentSelectedTokens();
 		getDefaultListToken();
-	}, [isConnected, currentNetworkChainId, walletAddress, approvalState.status]);
+	}, [
+		isConnected,
+		currentNetworkChainId,
+		walletAddress,
+		approvalState.status,
+		tokenListManageState,
+	]);
 
 	const tokensProviderValue = useMemo(
 		() => ({
