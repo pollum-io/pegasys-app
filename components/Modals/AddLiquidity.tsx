@@ -563,7 +563,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							px="4"
 							py="2"
 							bgColor={theme.bg.blueNavy}
-							flexDirection="row"
+							flexDirection="column"
 							justifyContent="space-between"
 							border="1px solid"
 							borderColor={
@@ -575,8 +575,22 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									: "#ff000000"
 							}
 						>
-							<Flex flexDirection="column" color={theme.text.mono}>
+							<Flex
+								flexDirection="row"
+								justifyContent={"space-between"}
+								color={theme.text.mono}
+							>
 								<Text fontSize="sm">Input</Text>
+								<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
+									Balance: {selectedToken[0]?.balance}
+								</Text>
+							</Flex>
+
+							<Flex
+								flexDirection="row"
+								justifyContent={"space-between"}
+								color={theme.text.swapInfo}
+							>
 								<Flex
 									alignItems="center"
 									justifyContent="center"
@@ -588,6 +602,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										onOpenCoin();
 										setButtonId(Number(event.currentTarget.id));
 									}}
+									ml="4"
 									borderRadius="2xl"
 									cursor="pointer"
 									_hover={{}}
@@ -603,34 +618,21 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									</Text>
 									<Icon as={IoIosArrowDown} />
 								</Flex>
-							</Flex>
-
-							<Flex
-								ml="2"
-								h="fit-content"
-								position="relative"
-								top="30px"
-								onClick={() => handleMaxInput("inputFrom")}
-							>
-								<Text
-									color={theme.text.cyanPurple}
-									_hover={{ cursor: "pointer", opacity: "0.8" }}
+								<Flex
+									ml="5"
+									h="fit-content"
+									position="relative"
+									top="14px"
+									onClick={() => handleMaxInput("inputFrom")}
 								>
-									Max
-								</Text>
-							</Flex>
+									<Text
+										color={theme.text.cyanPurple}
+										_hover={{ cursor: "pointer", opacity: "0.8" }}
+									>
+										Max
+									</Text>
+								</Flex>
 
-							<Flex
-								flexDirection="column"
-								color={theme.text.swapInfo}
-								alignItems="flex-end"
-							>
-								<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-									Balance:{" "}
-									{selectedToken[0]?.balance?.length > 10
-										? selectedToken[0]?.balance.slice(0, -5)
-										: selectedToken[0]?.balance}
-								</Text>
 								<Input
 									fontSize="xl"
 									border="none"
@@ -680,20 +682,34 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							px="4"
 							py="2"
 							bgColor={theme.bg.blueNavy}
-							flexDirection="row"
+							flexDirection="column"
 							justifyContent="space-between"
 							border="1px solid"
 							borderColor={
-								parseFloat(tokenInputValue.inputTo.value) >
+								parseFloat(tokenInputValue.inputFrom.value) >
 									parseFloat(selectedToken[1]?.balance) ||
-								parseFloat(tokenInputValue.inputTo.value) >
+								parseFloat(tokenInputValue.inputFrom.value) >
 									parseFloat(selectedToken[1]?.balance)
 									? theme.text.red400
 									: "#ff000000"
 							}
 						>
-							<Flex flexDirection="column" color={theme.text.mono}>
+							<Flex
+								flexDirection="row"
+								justifyContent={"space-between"}
+								color={theme.text.mono}
+							>
 								<Text fontSize="sm">Input</Text>
+								<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
+								Balance: {selectedToken[1]?.balance}
+								</Text>
+							</Flex>
+
+							<Flex
+								flexDirection="row"
+								justifyContent={"space-between"}
+								color={theme.text.swapInfo}
+							>
 								<Flex
 									alignItems="center"
 									justifyContent="center"
@@ -705,6 +721,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										onOpenCoin();
 										setButtonId(Number(event.currentTarget.id));
 									}}
+									ml="4"
 									borderRadius="2xl"
 									cursor="pointer"
 									_hover={{}}
@@ -720,32 +737,21 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									</Text>
 									<Icon as={IoIosArrowDown} />
 								</Flex>
-							</Flex>
-							<Flex
-								ml="2"
-								h="fit-content"
-								position="relative"
-								top="30px"
-								onClick={() => handleMaxInput("inputTo")}
-							>
-								<Text
-									color={theme.text.cyanPurple}
-									_hover={{ cursor: "pointer", opacity: "0.8" }}
+								<Flex
+									ml="5"
+									h="fit-content"
+									position="relative"
+									top="14px"
+									onClick={() => handleMaxInput("inputTo")}
 								>
-									Max
-								</Text>
-							</Flex>
-							<Flex
-								flexDirection="column"
-								color={theme.text.swapInfo}
-								alignItems="flex-end"
-							>
-								<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-									Balance:{" "}
-									{selectedToken[1]?.balance?.length > 10
-										? selectedToken[1]?.balance.slice(0, -5)
-										: selectedToken[1]?.balance}
-								</Text>
+									<Text
+										color={theme.text.cyanPurple}
+										_hover={{ cursor: "pointer", opacity: "0.8" }}
+									>
+										Max
+									</Text>
+								</Flex>
+
 								<Input
 									fontSize="xl"
 									border="none"
@@ -756,12 +762,10 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									px="1.5"
 									_placeholder={{ color: theme.text.whiteGray }}
 									_active={{ border: "none" }}
-									_focus={{
-										outline: "none",
-									}}
 									name="inputTo"
-									value={tokenInputValue.inputTo.value}
 									onChange={handleOnChangeTokenInputs}
+									value={tokenInputValue.inputTo.value}
+									_focus={{ outline: "none" }}
 								/>
 							</Flex>
 						</Flex>
@@ -940,7 +944,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							<Flex flexDirection="row" justifyContent="space-between">
 								<Text fontWeight="semibold">Your pool share:</Text>
 								<Text fontWeight="normal">
-									{poolPercentShare === "0.00"
+									{poolPercentShare === "0.00" &&
+									depositedTokens?.token0?.toSignificant(6) !== "0" &&
+									depositedTokens?.token1?.toSignificant(6) !== "0"
 										? "<0.01%"
 										: `${poolPercentShare}%`}
 								</Text>
