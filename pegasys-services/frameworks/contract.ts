@@ -2,7 +2,11 @@ import { BigNumber, ethers } from "ethers";
 import { abi as MINICHEF_ABI } from "@pollum-io/pegasys-protocol/artifacts/contracts/earn/MiniChefV2.sol/MiniChefV2.json";
 import { abi as STAKING_REWARDS_ABI } from "@pollum-io/pegasys-protocol/artifacts/contracts/earn/StakingRewards.sol/StakingRewards.json";
 import { abi as IPegasysPairABI } from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/interfaces/IPegasysPair.sol/IPegasysPair.json";
+import { abi as IPegasysRouterABI } from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
 
+import { ChainId } from "@pollum-io/pegasys-sdk";
+import { MINICHEF_ADDRESS, STAKE_ADDRESS } from "pegasys-services/constants";
+import { ROUTER_ADDRESS } from "helpers/consts";
 import Wallet from "./wallet";
 import ERC20_ABI from "../abis/erc20.json";
 import {
@@ -11,7 +15,6 @@ import {
 	TContract,
 	IContractFrameworkCallProps,
 } from "../dto";
-import { MINICHEF_ADDRESS } from "../constants";
 
 class ContractFramework {
 	static getContract(props: IContractFrameworkGetContractProps): TContract {
@@ -69,10 +72,28 @@ class ContractFramework {
 		return contract;
 	}
 
-	static StakingContract(address: string) {
+	static RouterContract(chainId: ChainId) {
 		const contract = this.getContract({
-			abi: address === MINICHEF_ADDRESS ? MINICHEF_ABI : STAKING_REWARDS_ABI,
-			address,
+			abi: IPegasysRouterABI,
+			address: ROUTER_ADDRESS[chainId],
+		});
+
+		return contract;
+	}
+
+	static FarmContract(chainId: ChainId) {
+		const contract = this.getContract({
+			abi: MINICHEF_ABI,
+			address: MINICHEF_ADDRESS,
+		});
+
+		return contract;
+	}
+
+	static StakeContract(chainId: ChainId) {
+		const contract = this.getContract({
+			abi: STAKING_REWARDS_ABI,
+			address: "0xE038E38B48F4123e1408865450E37edC78b736ED",
 		});
 
 		return contract;

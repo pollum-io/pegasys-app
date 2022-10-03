@@ -7,7 +7,7 @@ import { ContractFramework, WalletFramework } from "../frameworks";
 
 class LpTokenServices {
 	static getLpContract() {
-		const contract = ContractFramework.StakingContract(MINICHEF_ADDRESS);
+		const contract = ContractFramework.FarmContract(57);
 
 		return contract;
 	}

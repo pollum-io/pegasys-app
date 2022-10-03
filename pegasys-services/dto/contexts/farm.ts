@@ -1,5 +1,5 @@
 import { children, setType } from "../react";
-import { IStakeInfo } from "../services";
+import { IFarmInfo } from "../services";
 
 export interface IFarmProviderProps {
 	children: children;
@@ -12,9 +12,9 @@ export interface IFarmProviderValue {
 	setSort: setType<TFarmSort>;
 	search: string;
 	setSearch: setType<string>;
-	pairs: IStakeInfo[];
-	selectedPair?: IStakeInfo;
-	setSelectedPair: setType<IStakeInfo | undefined>;
+	pairs: IFarmInfo[];
+	selectedPair?: IFarmInfo;
+	setSelectedPair: setType<IFarmInfo | undefined>;
 	withdrawnTypedValue: string;
 	setWithdrawnTypedValue: (newValue: string) => void;
 	depositTypedValue: string;

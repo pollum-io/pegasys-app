@@ -17,7 +17,7 @@ import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { MdOutlineCallMade, MdSearch, MdExpandMore } from "react-icons/md";
 
-import { FarmCard, FarmCards, SearchInput } from "components";
+import { FarmCard, SearchInput } from "components";
 import { usePicasso } from "hooks";
 
 import { useFarm } from "pegasys-services";

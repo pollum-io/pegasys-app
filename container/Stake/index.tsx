@@ -5,10 +5,13 @@ import { NextPage } from "next";
 import { useState } from "react";
 import { MdOutlineCallMade } from "react-icons/md";
 
+import { useStake } from "pegasys-services";
+
 export const StakeContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [buttonId, setButtonId] = useState<string>("");
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
+	const { allStakes } = useStake();
 
 	return (
 		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
@@ -151,7 +154,9 @@ export const StakeContainer: NextPage = () => {
 					mb="24"
 					alignItems={["center", "center", "center", "center"]}
 				>
-					<StakeCards />
+					{allStakes.map((stakeInfo, index) => (
+						<StakeCards key={index} stakeInfo={stakeInfo} />
+					))}
 				</Flex>
 			</Flex>
 		</Flex>

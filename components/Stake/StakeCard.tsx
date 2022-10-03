@@ -10,6 +10,7 @@ import {
 import { FunctionComponent, useState } from "react";
 import { useModal, usePicasso } from "hooks";
 import { StakeActions } from "components/Modals/StakeActions";
+import { IStakeInfo, useStake } from "pegasys-services";
 
 interface IPoolCards {
 	stakeTokens?: [];
@@ -20,6 +21,7 @@ interface IPoolCards {
 	stakeDepositFee?: string;
 	stakeYourStaked?: string;
 	stakeYourUnclaimed?: string;
+	stakeInfo: IStakeInfo;
 }
 
 export const StakeCards: FunctionComponent<IPoolCards> = props => {
@@ -33,6 +35,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 		stakeYourUnclaimed,
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		stakeTokens,
+		stakeInfo,
 	} = props;
 	const theme = usePicasso();
 	const { isOpenStakeActions, onOpenStakeActions, onCloseStakeActions } =
@@ -40,6 +43,13 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 
 	const [buttonId, setButtonId] = useState<string>("");
 	const { colorMode } = useColorMode();
+	const { setSelectedStake } = useStake();
+
+	const onClick = (id: string) => {
+		setButtonId(id);
+		setSelectedStake(stakeInfo);
+		onOpenStakeActions();
+	};
 
 	return (
 		<Flex
@@ -92,10 +102,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					py="1"
 					fontSize="xs"
 					ml="1"
-					onClick={event => {
-						setButtonId(event?.currentTarget?.id);
-						onOpenStakeActions();
-					}}
+					onClick={event => onClick(event.currentTarget.id)}
 					_hover={{
 						borderColor: theme.text.cyanLightPurple,
 						color: theme.text.cyanLightPurple,
@@ -184,10 +191,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					px="0.75rem"
 					fontSize="sm"
 					fontWeight="semibold"
-					onClick={event => {
-						setButtonId(event?.currentTarget?.id);
-						onOpenStakeActions();
-					}}
+					onClick={event => onClick(event.currentTarget.id)}
 					_hover={{
 						borderColor: theme.text.cyanLightPurple,
 						color: theme.text.cyanLightPurple,
@@ -206,10 +210,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					px="0.75rem"
 					fontSize="sm"
 					fontWeight="semibold"
-					onClick={event => {
-						setButtonId(event?.currentTarget?.id);
-						onOpenStakeActions();
-					}}
+					onClick={event => onClick(event.currentTarget.id)}
 					_hover={{
 						bgColor: theme.bg.bluePurple,
 					}}

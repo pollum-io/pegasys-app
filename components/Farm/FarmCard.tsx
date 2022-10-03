@@ -2,10 +2,10 @@ import { Button, Flex, Img, Text } from "@chakra-ui/react";
 import { FunctionComponent, useMemo, useState } from "react";
 import { useModal, usePicasso, useTokens } from "hooks";
 import { FarmActions } from "components/Modals/FarmActions";
-import { IStakeInfo, useFarm } from "pegasys-services";
+import { IFarmInfo, useFarm } from "pegasys-services";
 import { JSBI } from "@pollum-io/pegasys-sdk";
 
-const FarmCard: FunctionComponent<{ stakeInfo: IStakeInfo }> = ({
+const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 	stakeInfo,
 }) => {
 	const {

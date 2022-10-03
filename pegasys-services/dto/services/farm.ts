@@ -2,7 +2,7 @@
 import { TokenAmount, Token } from "@pollum-io/pegasys-sdk";
 import { WrappedTokenInfo } from "types";
 
-export interface IStakeInfo {
+export interface IFarmInfo {
 	tokenA: WrappedTokenInfo;
 	tokenB: Token;
 	swapFeeApr: number;

@@ -14,7 +14,7 @@ import {
 	IFarmProviderProps,
 	IFarmProviderValue,
 	TFarmSort,
-	IStakeInfo,
+	IFarmInfo,
 } from "../dto";
 
 export const FarmContext = createContext({} as IFarmProviderValue);
@@ -22,9 +22,9 @@ export const FarmContext = createContext({} as IFarmProviderValue);
 export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 	const [withdrawnTypedValue, setWithdrawnTypedValue] = useState<string>("0");
 	const [depositTypedValue, setDepositTypedValue] = useState<string>("0");
-	const [selectedPair, setSelectedPair] = useState<IStakeInfo>();
-	const [allPairs, setAllPairs] = useState<IStakeInfo[]>([]);
-	const [pairs, setPairs] = useState<IStakeInfo[]>([]);
+	const [selectedPair, setSelectedPair] = useState<IFarmInfo>();
+	const [allPairs, setAllPairs] = useState<IFarmInfo[]>([]);
+	const [pairs, setPairs] = useState<IFarmInfo[]>([]);
 	const [sort, setSort] = useState<TFarmSort>("apr");
 	const [search, setSearch] = useState<string>("");
 	const { userTokensBalance } = useTokens();
@@ -34,7 +34,6 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 	const onlyNumbersTyped = (str: string): string => {
 		if (selectedPair) {
 			const onlyNumbers = str.replace(/\D/g, "");
-			// const onlyNumbers = str.replace(/[^\d.]+/g, "");
 
 			const tokenAmount = new TokenAmount(
 				selectedPair.lpToken,
@@ -164,7 +163,7 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 		const getAvailablePair = async () => {
 			const pairsTokens = getTokenPairs(chainId, userTokensBalance);
 
-			const stakeInfos = await FarmServices.getStakeInfos(
+			const stakeInfos = await FarmServices.getFarmInfos(
 				pairsTokens as [WrappedTokenInfo, Token][],
 				address,
 				chainId
@@ -177,7 +176,7 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 	}, [userTokensBalance]);
 
 	useEffect(() => {
-		let pairsToRender: IStakeInfo[] = [];
+		let pairsToRender: IFarmInfo[] = [];
 
 		if (search) {
 			allPairs.forEach(p => {

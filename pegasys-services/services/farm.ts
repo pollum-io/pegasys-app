@@ -2,22 +2,22 @@ import { ChainId, JSBI, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
 
 import { WrappedTokenInfo } from "types";
 
-import { IStakeInfo } from "../dto";
+import { IFarmInfo } from "../dto";
 import LpTokenServices from "./lpToken";
 import { ContractFramework } from "../frameworks";
 import { BIG_INT_SECONDS_IN_WEEK, PSYS, ZERO_ADDRESS } from "../constants";
 
 class FarmServices {
-	static async getStakeInfos(
+	static async getFarmInfos(
 		// userTokensBalance: WrappedTokenInfo[],
 		tokenPairs: Array<[WrappedTokenInfo, Token]>,
 		address: string,
 		chainId: ChainId
-	): Promise<IStakeInfo[]> {
+	): Promise<IFarmInfo[]> {
 		const lpTokens = await LpTokenServices.getLpTokens();
 		const poolMap = await LpTokenServices.getPoolMap(lpTokens);
 
-		const pairsWithLiquidityToken: IStakeInfo[] = [];
+		const pairsWithLiquidityToken: IFarmInfo[] = [];
 
 		await Promise.all(
 			tokenPairs.map(async tokenPair => {
