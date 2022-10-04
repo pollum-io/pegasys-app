@@ -23,6 +23,7 @@ import { usePicasso } from "hooks";
 import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { MdArrowBack, MdOutlineInfo } from "react-icons/md";
+import { useStake } from "pegasys-services";
 
 interface IModal {
 	isOpen: boolean;
@@ -40,6 +41,14 @@ export const StakeActions: React.FC<IModal> = props => {
 	const [isApproved] = useState("");
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
+	const {
+		claim,
+		stake,
+		unstake,
+		selectedStake,
+		stakeTypedValue,
+		setStakeTypedValue,
+	} = useStake();
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,6 +66,10 @@ export const StakeActions: React.FC<IModal> = props => {
 		}
 		return "Approve";
 	}, []);
+
+	if (!selectedStake) {
+		return null;
+	}
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -222,7 +235,12 @@ export const StakeActions: React.FC<IModal> = props => {
 								</Flex>
 							</Flex>
 							<Flex flexDirection="column" gap="2" mt="6">
-								<Text fontWeight="normal">Available to deposit: 1</Text>
+								<Text fontWeight="normal">
+									Available to deposit:{" "}
+									{selectedStake.unstakedPsysAmount.toFixed(10, {
+										groupSeparator: ",",
+									})}
+								</Text>
 								{!confirmStake ? (
 									<Flex>
 										<InputGroup size="md">
@@ -237,6 +255,10 @@ export const StakeActions: React.FC<IModal> = props => {
 												_focus={{
 													outline: "none",
 												}}
+												value={stakeTypedValue}
+												onChange={event =>
+													setStakeTypedValue(event.target.value)
+												}
 											/>
 											<InputRightAddon
 												// eslint-disable-next-line react/no-children-prop
@@ -308,7 +330,10 @@ export const StakeActions: React.FC<IModal> = props => {
 					{buttonId === "unstake" && (
 						<Flex flexDirection="column">
 							<Text fontWeight="normal" mb="2">
-								Deposited PLP Liquidity: 0.000001
+								Deposited PLP Liquidity:{" "}
+								{selectedStake.stakedAmount.toFixed(10, {
+									groupSeparator: ",",
+								})}
 							</Text>
 							<Flex>
 								<InputGroup size="md">
@@ -345,7 +370,10 @@ export const StakeActions: React.FC<IModal> = props => {
 								</InputGroup>
 							</Flex>
 							<Text fontWeight="normal" mt="2">
-								Uncalimed PSYS: 0.01819
+								Uncalimed PSYS:{" "}
+								{selectedStake.earnedAmount.toFixed(10, {
+									groupSeparator: ",",
+								})}
 							</Text>
 
 							<Flex justify="center">
@@ -428,6 +456,7 @@ export const StakeActions: React.FC<IModal> = props => {
 									_hover={{ bgColor: theme.bg.bluePurple }}
 									_active={{}}
 									borderRadius="full"
+									onClick={unstake}
 								>
 									Unstake
 								</Button>
@@ -449,7 +478,9 @@ export const StakeActions: React.FC<IModal> = props => {
 								<Flex flexDirection="row" alignItems="center">
 									<Img src="icons/pegasys.png" w="6" h="6" />
 									<Text fontSize="2xl" fontWeight="semibold" pl="2">
-										0.132323
+										{selectedStake.earnedAmount.toFixed(10, {
+											groupSeparator: ",",
+										})}
 									</Text>
 								</Flex>
 								<Flex flexDirection="row">
@@ -469,6 +500,7 @@ export const StakeActions: React.FC<IModal> = props => {
 								_hover={{ opacity: "1", bgColor: theme.bg.bluePurple }}
 								_active={{}}
 								borderRadius="full"
+								onClick={claim}
 							>
 								Claim PSYS
 							</Button>

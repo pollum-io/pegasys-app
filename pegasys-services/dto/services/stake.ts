@@ -14,4 +14,5 @@ export interface IStakeInfo {
 	totalRewardRatePerWeek: TokenAmount;
 	totalRewardRatePerSecond: TokenAmount;
 	rewardRatePerWeek: TokenAmount;
+	unstakedPsysAmount: TokenAmount;
 }

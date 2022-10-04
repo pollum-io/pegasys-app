@@ -11,6 +11,7 @@ import { FunctionComponent, useState } from "react";
 import { useModal, usePicasso } from "hooks";
 import { StakeActions } from "components/Modals/StakeActions";
 import { IStakeInfo, useStake } from "pegasys-services";
+import { JSBI } from "@pollum-io/pegasys-sdk";
 
 interface IPoolCards {
 	stakeTokens?: [];
@@ -90,26 +91,28 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 			>
 				<Img src="icons/pegasys.png" w="6" h="6" />
 				<Text color={theme.text.whitePurple}>Earn {stakeOf}</Text>
-				<Button
-					id="claim"
-					border="1px solid"
-					borderColor={theme.text.cyanPurple}
-					borderRadius="full"
-					w="max-content"
-					h="max-content"
-					color={theme.text.whitePurple}
-					bgColor="transparent"
-					py="1"
-					fontSize="xs"
-					ml="1"
-					onClick={event => onClick(event.currentTarget.id)}
-					_hover={{
-						borderColor: theme.text.cyanLightPurple,
-						color: theme.text.cyanLightPurple,
-					}}
-				>
-					Claim
-				</Button>
+				{JSBI.greaterThan(stakeInfo.earnedAmount.raw, JSBI.BigInt(0)) && (
+					<Button
+						id="claim"
+						border="1px solid"
+						borderColor={theme.text.cyanPurple}
+						borderRadius="full"
+						w="max-content"
+						h="max-content"
+						color={theme.text.whitePurple}
+						bgColor="transparent"
+						py="1"
+						fontSize="xs"
+						ml="1"
+						onClick={event => onClick(event.currentTarget.id)}
+						_hover={{
+							borderColor: theme.text.cyanLightPurple,
+							color: theme.text.cyanLightPurple,
+						}}
+					>
+						Claim
+					</Button>
+				)}
 			</Flex>
 			<Grid
 				templateColumns={[
@@ -126,7 +129,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						APR
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						1 {stakeApr}
+						{stakeInfo.apr.toString()}
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column">
@@ -180,45 +183,49 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 				alignItems="center"
 				ml={["3rem", "3rem", "0", "0"]}
 			>
-				<Button
-					id="unstake"
-					width={["6.5rem", "8rem", "11.5rem", "11.5rem"]}
-					h="2.2rem"
-					bgColor="transparent"
-					border="1px solid"
-					borderColor={theme.text.cyanPurple}
-					color={theme.text.whitePurple}
-					borderRadius="full"
-					py={["0.2rem", "0.2rem", "1", "1"]}
-					px="0.75rem"
-					fontSize="sm"
-					fontWeight="semibold"
-					onClick={event => onClick(event.currentTarget.id)}
-					_hover={{
-						borderColor: theme.text.cyanLightPurple,
-						color: theme.text.cyanLightPurple,
-					}}
-				>
-					Unstake
-				</Button>
-				<Button
-					id="stake"
-					width={["6.5rem", "8rem", "11.5rem", "11.5rem"]}
-					h="2.2rem"
-					bgColor={theme.bg.blueNavyLightness}
-					color={theme.text.cyan}
-					borderRadius="full"
-					py={["0.2rem", "0.2rem", "1", "1"]}
-					px="0.75rem"
-					fontSize="sm"
-					fontWeight="semibold"
-					onClick={event => onClick(event.currentTarget.id)}
-					_hover={{
-						bgColor: theme.bg.bluePurple,
-					}}
-				>
-					Stake
-				</Button>
+				{JSBI.greaterThan(stakeInfo.stakedAmount.raw, JSBI.BigInt(0)) && (
+					<Button
+						id="unstake"
+						width={["6.5rem", "8rem", "11.5rem", "11.5rem"]}
+						h="2.2rem"
+						bgColor="transparent"
+						border="1px solid"
+						borderColor={theme.text.cyanPurple}
+						color={theme.text.whitePurple}
+						borderRadius="full"
+						py={["0.2rem", "0.2rem", "1", "1"]}
+						px="0.75rem"
+						fontSize="sm"
+						fontWeight="semibold"
+						onClick={event => onClick(event.currentTarget.id)}
+						_hover={{
+							borderColor: theme.text.cyanLightPurple,
+							color: theme.text.cyanLightPurple,
+						}}
+					>
+						Unstake
+					</Button>
+				)}
+				{JSBI.greaterThan(stakeInfo.unstakedPsysAmount.raw, JSBI.BigInt(0)) && (
+					<Button
+						id="stake"
+						width={["6.5rem", "8rem", "11.5rem", "11.5rem"]}
+						h="2.2rem"
+						bgColor={theme.bg.blueNavyLightness}
+						color={theme.text.cyan}
+						borderRadius="full"
+						py={["0.2rem", "0.2rem", "1", "1"]}
+						px="0.75rem"
+						fontSize="sm"
+						fontWeight="semibold"
+						onClick={event => onClick(event.currentTarget.id)}
+						_hover={{
+							bgColor: theme.bg.bluePurple,
+						}}
+					>
+						Stake
+					</Button>
+				)}
 			</Flex>
 		</Flex>
 	);

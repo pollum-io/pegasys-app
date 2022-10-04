@@ -126,6 +126,16 @@ class StakeServices {
 				: JSBI.BigInt(0)
 		);
 
+		const tokenContract = ContractFramework.TokenContract(psys.address);
+
+		const unstakedPsys = await ContractFramework.call({
+			contract: tokenContract,
+			methodName: "balanceOf",
+			args: [address],
+		});
+
+		const unstakedPsysAmount = new TokenAmount(psys, unstakedPsys);
+
 		return [
 			{
 				rewardToken: psys,
@@ -138,6 +148,7 @@ class StakeServices {
 				totalStakedAmount,
 				totalStakedInPsys: totalStakedAmount,
 				apr,
+				unstakedPsysAmount,
 				totalRewardRatePerWeek,
 				totalRewardRatePerSecond,
 				rewardRatePerWeek: individualWeeklyRewardRate,
