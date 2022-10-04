@@ -1,6 +1,7 @@
 import { Text } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso } from "hooks";
+import { useWallet } from "pegasys-services";
 
 interface IButtonProps {
 	children?: ReactNode;
@@ -8,7 +9,7 @@ interface IButtonProps {
 
 export const NetworkButton: FunctionComponent<IButtonProps> = props => {
 	const { children } = props;
-	const { currentNetworkChainId, isConnected } = useWallet();
+	const { chainId, isConnected } = useWallet();
 	const theme = usePicasso();
 
 	return (
@@ -23,11 +24,7 @@ export const NetworkButton: FunctionComponent<IButtonProps> = props => {
 			_active={{}}
 		>
 			{children}
-			{isConnected
-				? currentNetworkChainId === 57
-					? "NEVM"
-					: "TANENBAUM"
-				: "NEVM"}
+			{isConnected ? (chainId === 57 ? "NEVM" : "TANENBAUM") : "NEVM"}
 		</Text>
 	);
 };

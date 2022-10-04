@@ -30,11 +30,40 @@ export const getBalanceOfSingleCall = async (
 
 		const contractCall = await singleCall(contract, "balanceOf");
 
+		const balance = await contractCall(walletAddress);
+
 		const formattedBalance = String(
-			ethers.utils.formatUnits(contractCall, decimals)
+			ethers.utils.formatUnits(balance, decimals)
 		);
 
 		return formattedBalance;
+	} catch (err) {
+		return "0";
+	}
+};
+
+export const getBalanceOfBNSingleCall = async (
+	tokenAddress: string,
+	walletAddress: string,
+	signerOrProvider:
+		| Signer
+		| ethers.providers.JsonRpcProvider
+		| ethers.providers.Web3Provider
+		| undefined
+) => {
+	if (!signerOrProvider) return "0";
+	try {
+		const contract = createContractUsingAbi(
+			String(tokenAddress),
+			abi20,
+			signerOrProvider
+		);
+
+		const contractCall = await singleCall(contract, "balanceOf");
+
+		const balance = await contractCall(walletAddress);
+
+		return balance;
 	} catch (err) {
 		return "0";
 	}
@@ -82,6 +111,33 @@ export const getBalanceOfMultiCall = async (
 
 		return addressessAndBalances as IAddressessAndBalances[];
 	} catch (error) {
+		return [];
+	}
+};
+
+export const getBalancesOf = async (
+	tokenAddress: string[],
+	walletAddress: string,
+	signerOrProvider:
+		| Signer
+		| ethers.providers.JsonRpcProvider
+		| ethers.providers.Web3Provider
+		| ethers.providers.Provider
+		| undefined,
+	decimals: number[]
+) => {
+	if (!signerOrProvider) return [];
+	try {
+		const contracts = tokenAddress.map((address: string) =>
+			createContractUsingAbi(address, abi20, signerOrProvider)
+		);
+
+		const contractCall = await multiCall(contracts, "balanceOf", walletAddress);
+
+		console.log("formatted:", contractCall);
+		return contractCall;
+	} catch (error) {
+		console.log("error", error);
 		return [];
 	}
 };
