@@ -304,6 +304,7 @@ export const TokensListManageProvider: React.FC<{
 
 		tokenListManageState?.selectedListUrl.map((listUrl, index) => {
 			const tokenListValuesByUrl = String(transformListKeys[index]);
+
 			const getCurrentList = tokenListCache?.get(
 				tokenListManageState.byUrl[listUrl].current as TokenList
 			);
@@ -320,9 +321,7 @@ export const TokensListManageProvider: React.FC<{
 					) as WrappedTokenInfo[];
 
 					const verifyIfTokenExist = currentTokensToDisplay.some(
-						(tokens, index) =>
-							tokens?.symbol === convertTokens[index]?.symbol &&
-							tokens?.name === convertTokens[index]?.name
+						(token, index) => token?.address === convertTokens[index]?.address
 					);
 
 					if (currentTokensToDisplay.length === 0) {
@@ -330,26 +329,18 @@ export const TokensListManageProvider: React.FC<{
 					}
 
 					if (currentTokensToDisplay.length > 0 && !verifyIfTokenExist) {
-						setCurrentTokensToDisplay(prevState => {
-							const validatedTokensToDisplayValue = [
-								...prevState,
-								...convertTokens,
-							];
-
-							prevState = validatedTokensToDisplayValue;
-
-							return prevState;
-						});
+						setCurrentTokensToDisplay(prevState => [
+							...prevState,
+							...convertTokens,
+						]);
 					}
 				}
 			}
-
 			return {};
 		});
 	};
 
 	console.log("tokensToDisplay", currentTokensToDisplay);
-	console.log("tokenListManageState", tokenListManageState);
 
 	useEffect(() => {
 		UseSelectedTokenList();
