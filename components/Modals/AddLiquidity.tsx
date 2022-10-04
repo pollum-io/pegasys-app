@@ -598,13 +598,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									mt="1"
 									id="0"
 									w="max-content"
-									onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-										onOpenCoin();
-										setButtonId(Number(event.currentTarget.id));
-									}}
-									ml="4"
+									ml="3"
 									borderRadius="2xl"
-									cursor="pointer"
+									cursor="default"
 									_hover={{}}
 								>
 									<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
@@ -616,10 +612,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									>
 										{selectedToken[0]?.symbol}
 									</Text>
-									<Icon as={IoIosArrowDown} />
 								</Flex>
 								<Flex
-									ml="5"
+									ml="3"
 									h="fit-content"
 									position="relative"
 									top="14px"
@@ -701,7 +696,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							>
 								<Text fontSize="sm">Input</Text>
 								<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-								Balance: {selectedToken[1]?.balance}
+									Balance: {selectedToken[1]?.balance}
 								</Text>
 							</Flex>
 
@@ -717,13 +712,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									mt="1"
 									id="1"
 									w="max-content"
-									onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-										onOpenCoin();
-										setButtonId(Number(event.currentTarget.id));
-									}}
-									ml="4"
+									ml="3"
 									borderRadius="2xl"
-									cursor="pointer"
+									cursor="default"
 									_hover={{}}
 								>
 									<Img src={selectedToken[1]?.logoURI} w="6" h="6" />
@@ -735,10 +726,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									>
 										{selectedToken[1]?.symbol}
 									</Text>
-									<Icon as={IoIosArrowDown} />
 								</Flex>
 								<Flex
-									ml="5"
+									ml="3"
 									h="fit-content"
 									position="relative"
 									top="14px"
