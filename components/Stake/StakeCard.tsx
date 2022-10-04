@@ -134,7 +134,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						Total staked (PSYS)
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						1 {stakeTotalStake}
+						{stakeInfo.totalStakedAmount.toFixed(10, { groupSeparator: "," })}
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column" pl={["0", "0", "6", "6"]}>
@@ -142,7 +142,9 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						Your rate (PSYS/Week)
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						1 {stakeYourRate}
+						{stakeInfo.rewardRatePerWeek.toFixed(10, {
+							groupSeparator: ",",
+						})}
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column">
@@ -158,7 +160,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						Your Staked PSYS
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						1 {stakeYourStaked}
+						{stakeInfo.stakedAmount.toFixed(10, { groupSeparator: "," })}
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column" pl={["0", "0", "6", "6"]}>
@@ -166,7 +168,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						Your unclaimed PSYS
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						1 {stakeYourUnclaimed}
+						{stakeInfo.earnedAmount.toFixed(10, { groupSeparator: "," })}
 					</Text>
 				</GridItem>
 			</Grid>
