@@ -300,10 +300,12 @@ export const TokensListManageProvider: React.FC<{
 		if (!tokenListManageState?.byUrl || !tokenListManageState?.selectedListUrl)
 			return;
 
-		tokenListManageState?.selectedListUrl.filter((listUrl, index) => {
-			const tokenListValuesByUrl = String(
-				Object.keys(tokenListManageState?.byUrl)[index]
-			);
+		const transformListKeys = Object.keys(tokenListManageState.byUrl);
+
+		const tokensToDisplay: WrappedTokenInfo[] = [];
+
+		tokenListManageState?.selectedListUrl.map((listUrl, index) => {
+			const tokenListValuesByUrl = String(transformListKeys[index]);
 			const getCurrentList = tokenListCache?.get(
 				tokenListManageState.byUrl[listUrl].current as TokenList
 			);
@@ -311,12 +313,34 @@ export const TokensListManageProvider: React.FC<{
 			if (listUrl === tokenListValuesByUrl && getCurrentList) {
 				const transformList = Object.assign(getCurrentList);
 
-				const findTokensByChain = transformList[57 as number]; // aqui é achado os tokens dentro do WeakMap, validem se os valores ja existem no array antes de adicionar
+				const findTokensByChain =
+					transformList[currentNetworkChainId || (57 as number)]; // aqui é achado os tokens dentro do WeakMap, validem se os valores ja existem no array antes de adicionar
+
+				if (Object.keys(findTokensByChain).length !== 0) {
+					if (currentTokensToDisplay.length === 0) {
+						setCurrentTokensToDisplay([...findTokensByChain]);
+						console.log("findTokensByChain NO 1", findTokensByChain);
+					} else {
+						// const allTokens = [currentTokensToDisplay, findTokensByChain]
+						setCurrentTokensToDisplay(prevState => {
+							console.log("findTokensByChain NO 2", findTokensByChain);
+							const newValuePush = [prevState].push(findTokensByChain);
+							const newValueConcat = [prevState].concat(findTokensByChain);
+
+							console.log("newValuePush", newValuePush);
+							console.log("newValuePush", newValueConcat);
+
+							return prevState;
+						});
+					}
+				}
 			}
 
-			return getCurrentList; // ignora aqui, foi só pro lint nao apitar erro
+			return tokenListManageState; // ignore that, only for eslint
 		});
 	};
+
+	console.log("tokensToDisplay", currentTokensToDisplay);
 
 	useEffect(() => {
 		UseSelectedTokenList();
