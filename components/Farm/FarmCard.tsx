@@ -14,10 +14,12 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 		swapFeeApr,
 		superFarmApr,
 		combinedApr,
-		stakedAmount,
+		userStakedAmount,
 		totalStakedAmount,
-		unclaimedPSYS,
-		availableLpTokens,
+		unclaimedPSYSAmount,
+		userAvailableLpTokenAmount,
+		userStakeInUsd,
+		totalStakedInUsd,
 	} = stakeInfo;
 
 	const theme = usePicasso();
@@ -95,7 +97,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold">Your Stake</Text>
-					<Text>${stakedAmount.raw.toString()}</Text>
+					<Text>${userStakedAmount.raw.toString()}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold">Swap Fee APR</Text>
@@ -135,14 +137,14 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 				<Flex justifyContent="space-between" fontSize="sm">
 					<Text fontWeight="semibold">Your Unclaimed PSYS</Text>
 					<Text>
-						{unclaimedPSYS.toFixed(6, {
+						{unclaimedPSYSAmount.toFixed(6, {
 							groupSeparator: ",",
 						})}
 					</Text>
 				</Flex>
 			</Flex>
 			<Flex justifyContent="space-between" py="1" flexDirection="row">
-				{JSBI.greaterThan(stakedAmount.raw, JSBI.BigInt(0)) && (
+				{JSBI.greaterThan(userStakedAmount.raw, JSBI.BigInt(0)) && (
 					<Button
 						id="withdraw"
 						fontSize="sm"
@@ -164,7 +166,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 						Withdraw
 					</Button>
 				)}
-				{JSBI.greaterThan(availableLpTokens.raw, JSBI.BigInt(0)) && (
+				{JSBI.greaterThan(userAvailableLpTokenAmount.raw, JSBI.BigInt(0)) && (
 					<Button
 						id="deposit"
 						fontSize="sm"
@@ -187,7 +189,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 					</Button>
 				)}
 			</Flex>
-			{JSBI.greaterThan(unclaimedPSYS.raw, JSBI.BigInt(0)) && (
+			{JSBI.greaterThan(unclaimedPSYSAmount.raw, JSBI.BigInt(0)) && (
 				<Button
 					id="claim"
 					w="100%"

@@ -1,11 +1,28 @@
-import { ChainId, JSBI, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
+import {
+	ChainId,
+	JSBI,
+	Pair,
+	Price,
+	Token,
+	TokenAmount,
+	WSYS,
+} from "@pollum-io/pegasys-sdk";
 
 import { WrappedTokenInfo } from "types";
 
 import { IFarmInfo } from "../dto";
 import LpTokenServices from "./lpToken";
 import { ContractFramework } from "../frameworks";
-import { BIG_INT_SECONDS_IN_WEEK, PSYS, ZERO_ADDRESS } from "../constants";
+import {
+	BIG_INT_SECONDS_IN_WEEK,
+	BIG_INT_TWO,
+	BIG_INT_ZERO,
+	DAI,
+	PSYS,
+	USDC,
+	USDT,
+	ZERO_ADDRESS,
+} from "../constants";
 
 class FarmServices {
 	static async getFarmInfos(
@@ -36,102 +53,261 @@ class FarmServices {
 				) {
 					delete poolMap[lpToken.address];
 
-					const rewarder = await LpTokenServices.getRewarder(poolId);
+					const contractValues: { [k: string]: any } = {};
 
-					const isSuperFarm = rewarder !== ZERO_ADDRESS;
+					await Promise.all([
+						LpTokenServices.getTotalAllocPoint().then(totalAllocPoint => {
+							contractValues.totalAllocPoint = totalAllocPoint;
+						}),
+						LpTokenServices.getRewardPerSec().then(rewardPerSecond => {
+							contractValues.rewardPerSecond = rewardPerSecond;
+						}),
+						LpTokenServices.getBalance(lpToken.address).then(totalStake => {
+							contractValues.totalStake = totalStake;
+						}),
+						LpTokenServices.getTotalSupply(lpToken.address).then(
+							totalSupply => {
+								contractValues.totalSupply = totalSupply;
+							}
+						),
+						LpTokenServices.getRewarder(poolId).then(rewarder => {
+							contractValues.rewarder = rewarder;
+						}),
+						LpTokenServices.getAllocPoint(poolId).then(allocPoint => {
+							contractValues.allocPoint = allocPoint;
+						}),
+						LpTokenServices.getUserStake(poolId, address).then(userStake => {
+							contractValues.userStake = userStake;
+						}),
+						LpTokenServices.getUserUnclaimedPSYS(poolId, address).then(
+							userUnclaimedPSYS => {
+								contractValues.userUnclaimedPSYS = userUnclaimedPSYS;
+							}
+						),
+						LpTokenServices.getAvailableLpTokens(lpToken.address, address).then(
+							userAvailableLpToken => {
+								contractValues.userAvailableLpToken = userAvailableLpToken;
+							}
+						),
+					]);
 
-					const aprs = await LpTokenServices.getAprs(poolId, isSuperFarm);
-
-					const totalStake = await LpTokenServices.getBalance(lpToken.address);
-
-					const userStake = await LpTokenServices.getUserStake(poolId, address);
-
-					const userUnclaimedPSYS = await LpTokenServices.getUserUnclaimedPSYS(
-						poolId,
-						address
+					const totalStakeJSBI = JSBI.BigInt(
+						contractValues.totalStake.toString() ?? 0
 					);
 
-					const getAllocPoint = await LpTokenServices.getAllocPoint(poolId);
+					const totalStakedAmount = new TokenAmount(lpToken, totalStakeJSBI);
 
-					const totalAllocPoint = await LpTokenServices.getTotalAllocPoint();
+					const userStakeJSBI = JSBI.BigInt(
+						contractValues.userStake.toString() ?? 0
+					);
 
-					const rewardPerSecond = await LpTokenServices.getRewardPerSec();
+					const userStakedAmount = new TokenAmount(lpToken, userStakeJSBI);
 
-					const userAvailableLpToken =
-						await LpTokenServices.getAvailableLpTokens(
-							lpToken.address,
-							address
-						);
-
-					const totalStakedAmount = new TokenAmount(
+					const userAvailableLpTokenAmount = new TokenAmount(
 						lpToken,
-						JSBI.BigInt(totalStake.toString() ?? 0)
+						JSBI.BigInt(contractValues.userAvailableLpToken.toString() ?? 0)
 					);
 
-					const stakedAmount = new TokenAmount(
+					const allocPointAmount = new TokenAmount(
 						lpToken,
-						JSBI.BigInt(userStake.toString() ?? 0)
-					);
-
-					const psys = PSYS[chainId ?? ChainId.NEVM];
-
-					const unclaimedPSYS = new TokenAmount(
-						psys,
-						JSBI.BigInt(userUnclaimedPSYS.toString() ?? 0)
-					);
-
-					const availableLpTokens = new TokenAmount(
-						lpToken,
-						JSBI.BigInt(userAvailableLpToken.toString() ?? 0)
-					);
-
-					const poolAllocPointAmount = new TokenAmount(
-						lpToken,
-						JSBI.BigInt(getAllocPoint.toString() ?? 0)
+						JSBI.BigInt(contractValues.allocPoint.toString() ?? 0)
 					);
 
 					const totalAllocPointAmount = new TokenAmount(
 						lpToken,
-						JSBI.BigInt(totalAllocPoint.toString() ?? 0)
+						JSBI.BigInt(contractValues.totalAllocPoint.toString() ?? 0)
 					);
 
-					const rewardRatePerSecAmount = new TokenAmount(
+					const psys = PSYS[chainId ?? ChainId.NEVM];
+
+					const unclaimedPSYSAmount = new TokenAmount(
 						psys,
-						JSBI.BigInt(rewardPerSecond.toString() ?? 0)
+						JSBI.BigInt(contractValues.userUnclaimedPSYS.toString() ?? 0)
 					);
 
-					const poolRewardRate = new TokenAmount(
+					const rewardPerSecAmount = new TokenAmount(
+						psys,
+						JSBI.BigInt(contractValues.rewardPerSecond.toString() ?? 0)
+					);
+
+					const poolRewardRateAmount = new TokenAmount(
 						psys,
 						JSBI.divide(
-							JSBI.multiply(
-								poolAllocPointAmount.raw,
-								rewardRatePerSecAmount.raw
-							),
+							JSBI.multiply(allocPointAmount.raw, rewardPerSecAmount.raw),
 							totalAllocPointAmount.raw
 						)
 					);
 
 					const totalRewardRatePerWeek = new TokenAmount(
 						psys,
-						JSBI.multiply(poolRewardRate.raw, BIG_INT_SECONDS_IN_WEEK)
+						JSBI.multiply(poolRewardRateAmount.raw, BIG_INT_SECONDS_IN_WEEK)
 					);
+
+					const isSuperFarm = contractValues.rewarder !== ZERO_ADDRESS;
 
 					let rewarderMultiplier: bigint | undefined;
 
 					if (isSuperFarm) {
 						rewarderMultiplier = await LpTokenServices.getRewardMultiplier(
-							rewarder
+							contractValues.rewarder
 						);
 					}
+
+					const aprs = await LpTokenServices.getAprs(poolId, isSuperFarm);
+
+					let totalStakedInUsd = new TokenAmount(DAI[chainId], BIG_INT_ZERO);
+
+					const pair = new Pair(
+						new TokenAmount(tokenPair[0], "0"),
+						new TokenAmount(tokenPair[1], "0"),
+						chainId
+					);
+
+					const usdcPair = new Pair(
+						new TokenAmount(WSYS[ChainId.NEVM], "0"),
+						new TokenAmount(USDC[ChainId.NEVM], "0"),
+						chainId
+					);
+
+					const sysPsysPair = new Pair(
+						new TokenAmount(WSYS[ChainId.NEVM], "0"),
+						new TokenAmount(psys, "0"),
+						chainId
+					);
+
+					const price = usdcPair.priceOf(WSYS[chainId]);
+					const usdPrice = new Price(
+						WSYS[ChainId.NEVM],
+						USDC[ChainId.NEVM],
+						price.denominator,
+						price.numerator
+					);
+
+					const totalSupplyJSBI = JSBI.BigInt(contractValues.totalSupply ?? 0);
+
+					if (!JSBI.equal(totalSupplyJSBI, BIG_INT_ZERO)) {
+						if (pair.involvesToken(DAI[chainId])) {
+							const pairValueInDAI = JSBI.multiply(
+								pair.reserveOf(DAI[chainId]).raw,
+								BIG_INT_TWO
+							);
+
+							const stakedValueInDAI = JSBI.divide(
+								JSBI.multiply(pairValueInDAI, totalStakeJSBI),
+								totalSupplyJSBI
+							);
+
+							totalStakedInUsd = new TokenAmount(
+								DAI[chainId],
+								stakedValueInDAI
+							);
+						} else if (pair.involvesToken(USDC[chainId])) {
+							const pairValueInUSDC = JSBI.multiply(
+								pair.reserveOf(USDC[chainId]).raw,
+								BIG_INT_TWO
+							);
+
+							const stakedValueInUSDC = JSBI.divide(
+								JSBI.multiply(pairValueInUSDC, totalStakeJSBI),
+								totalSupplyJSBI
+							);
+
+							totalStakedInUsd = new TokenAmount(
+								USDC[chainId],
+								stakedValueInUSDC
+							);
+						} else if (pair.involvesToken(USDT[chainId])) {
+							const pairValueInUSDT = JSBI.multiply(
+								pair.reserveOf(USDT[chainId]).raw,
+								BIG_INT_TWO
+							);
+
+							const stakedValueInUSDT = JSBI.divide(
+								JSBI.multiply(pairValueInUSDT, totalStakeJSBI),
+								totalSupplyJSBI
+							);
+
+							totalStakedInUsd = new TokenAmount(
+								USDT[chainId],
+								stakedValueInUSDT
+							);
+						} else if (pair.involvesToken(WSYS[chainId])) {
+							const totalStakedInWsys = new TokenAmount(
+								WSYS[ChainId.NEVM],
+								JSBI.GT(totalSupplyJSBI, 0)
+									? JSBI.divide(
+											JSBI.multiply(
+												JSBI.multiply(
+													totalStakeJSBI,
+													pair.reserveOf(WSYS[chainId]).raw
+												),
+												JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the wsys they entitle owner to
+											),
+											totalSupplyJSBI
+									  )
+									: JSBI.BigInt(0)
+							);
+
+							if (JSBI.greaterThan(totalStakedInWsys.raw, JSBI.BigInt(0))) {
+								totalStakedInUsd = usdPrice.quote(
+									totalStakedInWsys
+								) as TokenAmount;
+							}
+						} else if (pair.involvesToken(PSYS[chainId])) {
+							const oneToken = JSBI.BigInt(1000000000000000000);
+							const sysPsysRatio = JSBI.divide(
+								JSBI.multiply(
+									oneToken,
+									sysPsysPair.reserveOf(WSYS[chainId]).raw
+								),
+								sysPsysPair.reserveOf(psys).raw
+							);
+							const valueOfPsysInSys = JSBI.divide(
+								JSBI.multiply(pair.reserveOf(psys).raw, sysPsysRatio),
+								oneToken
+							);
+
+							const totalStakedInWsys = new TokenAmount(
+								WSYS[ChainId.NEVM],
+								JSBI.EQ(totalSupplyJSBI, JSBI.BigInt(0))
+									? JSBI.BigInt(0)
+									: JSBI.divide(
+											JSBI.multiply(
+												JSBI.multiply(totalStakeJSBI, valueOfPsysInSys),
+												JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the wsys they entitle owner to
+											),
+											totalSupplyJSBI
+									  )
+							);
+
+							if (totalStakedInWsys) {
+								totalStakedInUsd = usdPrice?.quote(
+									totalStakedInWsys
+								) as TokenAmount;
+							}
+						}
+					}
+
+					const userStakePercentage = JSBI.divide(
+						userStakeJSBI,
+						totalStakeJSBI
+					);
+
+					const userStakeInUsd = JSBI.multiply(
+						userStakePercentage,
+						totalStakedInUsd.raw
+					);
 
 					pairsWithLiquidityToken.push({
 						tokenA: tokenPair[0],
 						tokenB: tokenPair[1],
 						poolId,
 						totalStakedAmount,
-						stakedAmount,
-						unclaimedPSYS,
-						availableLpTokens,
+						totalStakedInUsd,
+						userStakeInUsd,
+						userStakedAmount,
+						userAvailableLpTokenAmount,
+						unclaimedPSYSAmount,
 						totalRewardRatePerWeek,
 						rewarderMultiplier,
 						lpToken,

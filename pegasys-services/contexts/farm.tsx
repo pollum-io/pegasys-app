@@ -59,8 +59,8 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 
 			const parsedAmount =
 				parsedInput &&
-				selectedPair.stakedAmount &&
-				JSBI.lessThanOrEqual(parsedInput.raw, selectedPair.stakedAmount.raw)
+				selectedPair.userStakedAmount &&
+				JSBI.lessThanOrEqual(parsedInput.raw, selectedPair.userStakedAmount.raw)
 					? parsedInput.raw
 					: JSBI.BigInt(0);
 
@@ -87,10 +87,10 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 
 			const parsedAmount =
 				parsedInput &&
-				selectedPair.availableLpTokens &&
+				selectedPair.userAvailableLpTokenAmount &&
 				JSBI.lessThanOrEqual(
 					parsedInput.raw,
-					selectedPair.availableLpTokens.raw
+					selectedPair.userAvailableLpTokenAmount.raw
 				)
 					? parsedInput.raw
 					: JSBI.BigInt(0);
@@ -160,20 +160,22 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 	};
 
 	useEffect(() => {
-		const getAvailablePair = async () => {
-			const pairsTokens = getTokenPairs(chainId, userTokensBalance);
+		if (chainId && address) {
+			const getAvailablePair = async () => {
+				const pairsTokens = getTokenPairs(chainId, userTokensBalance);
 
-			const stakeInfos = await FarmServices.getFarmInfos(
-				pairsTokens as [WrappedTokenInfo, Token][],
-				address,
-				chainId
-			);
+				const stakeInfos = await FarmServices.getFarmInfos(
+					pairsTokens as [WrappedTokenInfo, Token][],
+					address,
+					chainId
+				);
 
-			setAllPairs(stakeInfos);
-		};
+				setAllPairs(stakeInfos);
+			};
 
-		getAvailablePair();
-	}, [userTokensBalance]);
+			getAvailablePair();
+		}
+	}, [userTokensBalance, chainId, address]);
 
 	useEffect(() => {
 		let pairsToRender: IFarmInfo[] = [];
@@ -204,11 +206,13 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 			case "poolWeight":
 				pairsToRender.sort((a, b) => {
 					if (
-						JSBI.greaterThan(a.totalStakedAmount.raw, b.totalStakedAmount.raw)
+						a.totalStakedInUsd > b.totalStakedInUsd
+						// JSBI.greaterThan(a.totalStakedAmount.raw, b.totalStakedAmount.raw)
 					) {
 						return -1;
 					}
-					if (JSBI.lessThan(a.totalStakedAmount.raw, b.totalStakedAmount.raw)) {
+					if (a.totalStakedInUsd < b.totalStakedInUsd) {
+						// if (JSBI.lessThan(a.totalStakedAmount.raw, b.totalStakedAmount.raw)) {
 						return 1;
 					}
 					return 0;

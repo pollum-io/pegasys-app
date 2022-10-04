@@ -25,9 +25,8 @@ import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { MdArrowBack, MdOutlineInfo } from "react-icons/md";
 
-import { FarmServices, useWallet, useFarm } from "pegasys-services";
-import { CurrencyAmount, JSBI, Percent } from "@pollum-io/pegasys-sdk";
-import { tryParseAmount } from "utils";
+import { useFarm } from "pegasys-services";
+import { JSBI, Percent } from "@pollum-io/pegasys-sdk";
 
 interface IModal {
 	isOpen: boolean;
@@ -40,11 +39,8 @@ export const FarmActions: React.FC<IModal> = props => {
 	const { isOpen, onClose, buttonId, setButtonId } = props;
 	const theme = usePicasso();
 	const [confirmDepoist] = useState(false);
-	// const [depositValue, setDepositValue] = useState<string>("");
-	// const [withdrawnValue, setWithdrawnValue] = useState<string>("");
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
-	// const { address } = useWallet();
 	const { userTokensBalance } = useTokens();
 	const {
 		selectedPair,
@@ -66,6 +62,10 @@ export const FarmActions: React.FC<IModal> = props => {
 
 		return tokenBWrapped?.logoURI ?? "";
 	}, [userTokensBalance, selectedPair?.tokenB]);
+
+	if (!selectedPair) {
+		return null;
+	}
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -226,18 +226,18 @@ export const FarmActions: React.FC<IModal> = props => {
 						<Flex flexDirection="column">
 							<Flex gap="2">
 								<Flex>
-									<Img src={selectedPair?.tokenA.logoURI} w="6" h="6" />
+									<Img src={selectedPair.tokenA.logoURI} w="6" h="6" />
 									<Img src={tokenBLogo} w="6" h="6" />
 								</Flex>
 								<Flex>
 									<Text fontSize="lg" fontWeight="bold">
-										{selectedPair?.tokenA.name}
+										{selectedPair.tokenA.name}
 									</Text>
 									<Text fontSize="lg" fontWeight="bold">
 										:
 									</Text>
 									<Text fontSize="lg" fontWeight="bold">
-										{selectedPair?.tokenB.name}
+										{selectedPair.tokenB.name}
 									</Text>
 								</Flex>
 							</Flex>
@@ -249,7 +249,7 @@ export const FarmActions: React.FC<IModal> = props => {
 							>
 								<Text fontWeight="normal">
 									Available to deposit:{" "}
-									{selectedPair?.availableLpTokens.toFixed(10, {
+									{selectedPair.userAvailableLpTokenAmount.toFixed(10, {
 										groupSeparator: ",",
 									})}
 								</Text>
@@ -289,9 +289,12 @@ export const FarmActions: React.FC<IModal> = props => {
 												}}
 												onClick={() =>
 													setDepositTypedValue(
-														selectedPair?.availableLpTokens.toFixed(10, {
-															groupSeparator: ",",
-														}) ?? JSBI.BigInt(0).toString()
+														selectedPair.userAvailableLpTokenAmount.toFixed(
+															10,
+															{
+																groupSeparator: ",",
+															}
+														) ?? JSBI.BigInt(0).toString()
 													)
 												}
 											/>
@@ -323,7 +326,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								)}
 								<Text fontWeight="normal" pt="1.5rem">
 									Weekly Rewards:{" "}
-									{selectedPair?.totalRewardRatePerWeek.toFixed(10, {
+									{selectedPair.totalRewardRatePerWeek.toFixed(10, {
 										groupSeparator: ",",
 									})}{" "}
 									PSYS / Week
@@ -357,7 +360,7 @@ export const FarmActions: React.FC<IModal> = props => {
 						<Flex flexDirection="column">
 							<Text fontWeight="normal" mb="2">
 								Deposited PLP Liquidity:{" "}
-								{selectedPair?.stakedAmount.toFixed(10, {
+								{selectedPair.userStakedAmount.toFixed(10, {
 									groupSeparator: ",",
 								})}
 							</Text>
@@ -396,7 +399,7 @@ export const FarmActions: React.FC<IModal> = props => {
 										}}
 										onClick={() =>
 											setWithdrawnTypedValue(
-												selectedPair?.stakedAmount.toFixed(10, {
+												selectedPair.userStakedAmount.toFixed(10, {
 													groupSeparator: ",",
 												}) ?? JSBI.BigInt(0).toString()
 											)
@@ -407,7 +410,7 @@ export const FarmActions: React.FC<IModal> = props => {
 							<Collapse in={sliderValue === 100} animateOpacity>
 								<Text fontWeight="normal" mt="2">
 									Unclaimed PSYS:{" "}
-									{selectedPair?.unclaimedPSYS.toFixed(10, {
+									{selectedPair.unclaimedPSYSAmount.toFixed(10, {
 										groupSeparator: ",",
 									})}
 								</Text>
@@ -430,7 +433,7 @@ export const FarmActions: React.FC<IModal> = props => {
 										const valuePercent = percent
 											.divide("100000000")
 											.multiply(
-												selectedPair?.stakedAmount.raw ?? JSBI.BigInt(0)
+												selectedPair.userStakedAmount.raw ?? JSBI.BigInt(0)
 											).quotient;
 
 										setWithdrawnTypedValue(valuePercent.toString());
@@ -526,7 +529,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								<Flex flexDirection="row" alignItems="center">
 									<Img src="icons/pegasys.png" w="6" h="6" />
 									<Text fontSize="2xl" fontWeight="semibold" pl="2">
-										{selectedPair?.unclaimedPSYS.toFixed(10, {
+										{selectedPair.unclaimedPSYSAmount.toFixed(10, {
 											groupSeparator: ",",
 										})}
 									</Text>
