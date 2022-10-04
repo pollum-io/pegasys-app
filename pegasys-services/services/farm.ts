@@ -143,6 +143,19 @@ class FarmServices {
 						JSBI.multiply(poolRewardRateAmount.raw, BIG_INT_SECONDS_IN_WEEK)
 					);
 
+					const userRewardRatePerWeek = new TokenAmount(
+						psys,
+						JSBI.greaterThan(totalStakedAmount.raw, JSBI.BigInt(0))
+							? JSBI.divide(
+									JSBI.multiply(
+										JSBI.multiply(poolRewardRateAmount.raw, userStakeJSBI),
+										BIG_INT_SECONDS_IN_WEEK
+									),
+									totalStakeJSBI
+							  )
+							: JSBI.BigInt(0)
+					);
+
 					const isSuperFarm = contractValues.rewarder !== ZERO_ADDRESS;
 
 					let rewarderMultiplier: bigint | undefined;
@@ -309,6 +322,7 @@ class FarmServices {
 						userAvailableLpTokenAmount,
 						unclaimedPSYSAmount,
 						totalRewardRatePerWeek,
+						userRewardRatePerWeek,
 						rewarderMultiplier,
 						lpToken,
 						...aprs,

@@ -326,7 +326,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								)}
 								<Text fontWeight="normal" pt="1.5rem">
 									Weekly Rewards:{" "}
-									{selectedPair.totalRewardRatePerWeek.toFixed(10, {
+									{selectedPair.totalRewardRatePerWeek.toFixed(6, {
 										groupSeparator: ",",
 									})}{" "}
 									PSYS / Week

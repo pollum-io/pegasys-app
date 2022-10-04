@@ -18,6 +18,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 		totalStakedAmount,
 		unclaimedPSYSAmount,
 		userAvailableLpTokenAmount,
+		userRewardRatePerWeek,
 		userStakeInUsd,
 		totalStakedInUsd,
 	} = stakeInfo;
@@ -103,46 +104,49 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 					<Text fontWeight="semibold">Swap Fee APR</Text>
 					<Text>{swapFeeApr}%</Text>
 				</Flex>
-				{superFarmApr && (
-					<>
+				<>
+					{superFarmApr && (
 						<Flex justifyContent="space-between" pb="3" fontSize="sm">
 							<Text fontWeight="semibold">Super Farm APR</Text>
 							<Text>{superFarmApr}%</Text>
 						</Flex>
-						<Flex justifyContent="space-between" pb="3" fontSize="sm">
-							<Text fontWeight="semibold">Total APR</Text>
-							<Text>{combinedApr}%</Text>
-						</Flex>
-					</>
-				)}
+					)}
+					<Flex justifyContent="space-between" pb="3" fontSize="sm">
+						<Text fontWeight="semibold">Total APR</Text>
+						<Text>{combinedApr}%</Text>
+					</Flex>
+				</>
 			</Flex>
-			<Flex
-				flexDirection="column"
-				backgroundColor={theme.bg.farmRate}
-				borderRadius="0.375rem"
-				py="0.5rem"
-				px="1rem"
-				mt="0.688rem"
-				mb="1.5rem"
-			>
-				<Flex justifyContent="space-between" pb="0.75rem" fontSize="sm">
-					<Text fontWeight="semibold">Your Rate</Text>
-					<Text>
-						{stakeInfo.totalRewardRatePerWeek.toFixed(0, {
-							groupSeparator: ",",
-						})}{" "}
-						PSYS/Week
-					</Text>
+			{(JSBI.greaterThan(userRewardRatePerWeek.raw, JSBI.BigInt(0)) ||
+				JSBI.greaterThan(unclaimedPSYSAmount.raw, JSBI.BigInt(0))) && (
+				<Flex
+					flexDirection="column"
+					backgroundColor={theme.bg.farmRate}
+					borderRadius="0.375rem"
+					py="0.5rem"
+					px="1rem"
+					mt="0.688rem"
+					mb="1.5rem"
+				>
+					<Flex justifyContent="space-between" pb="0.75rem" fontSize="sm">
+						<Text fontWeight="semibold">Your Rate</Text>
+						<Text>
+							{userRewardRatePerWeek.toFixed(6, {
+								groupSeparator: ",",
+							})}{" "}
+							PSYS/Week
+						</Text>
+					</Flex>
+					<Flex justifyContent="space-between" fontSize="sm">
+						<Text fontWeight="semibold">Your Unclaimed PSYS</Text>
+						<Text>
+							{unclaimedPSYSAmount.toFixed(6, {
+								groupSeparator: ",",
+							})}
+						</Text>
+					</Flex>
 				</Flex>
-				<Flex justifyContent="space-between" fontSize="sm">
-					<Text fontWeight="semibold">Your Unclaimed PSYS</Text>
-					<Text>
-						{unclaimedPSYSAmount.toFixed(6, {
-							groupSeparator: ",",
-						})}
-					</Text>
-				</Flex>
-			</Flex>
+			)}
 			<Flex justifyContent="space-between" py="1" flexDirection="row">
 				{JSBI.greaterThan(userStakedAmount.raw, JSBI.BigInt(0)) && (
 					<Button

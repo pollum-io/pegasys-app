@@ -16,6 +16,7 @@ export interface IFarmInfo {
 	unclaimedPSYSAmount: TokenAmount;
 	userAvailableLpTokenAmount: TokenAmount;
 	totalRewardRatePerWeek: TokenAmount;
+	userRewardRatePerWeek: TokenAmount;
 	rewarderMultiplier?: bigint;
 	lpToken: Token;
 }

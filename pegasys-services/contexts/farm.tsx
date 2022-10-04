@@ -204,22 +204,22 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 
 		switch (sort) {
 			case "poolWeight":
-				pairsToRender.sort((a, b) => {
+				pairsToRender = pairsToRender.sort((a, b) => {
 					if (
-						a.totalStakedInUsd > b.totalStakedInUsd
-						// JSBI.greaterThan(a.totalStakedAmount.raw, b.totalStakedAmount.raw)
+						// a.totalStakedInUsd > b.totalStakedInUsd
+						JSBI.greaterThan(a.totalStakedAmount.raw, b.totalStakedAmount.raw)
 					) {
 						return -1;
 					}
-					if (a.totalStakedInUsd < b.totalStakedInUsd) {
-						// if (JSBI.lessThan(a.totalStakedAmount.raw, b.totalStakedAmount.raw)) {
+					// if (a.totalStakedInUsd < b.totalStakedInUsd) {
+					if (JSBI.lessThan(a.totalStakedAmount.raw, b.totalStakedAmount.raw)) {
 						return 1;
 					}
 					return 0;
 				});
 				break;
 			default:
-				pairsToRender.sort((a, b) => {
+				pairsToRender = pairsToRender.sort((a, b) => {
 					if (a.combinedApr > b.combinedApr) {
 						return -1;
 					}
