@@ -302,8 +302,6 @@ export const TokensListManageProvider: React.FC<{
 
 		const transformListKeys = Object.keys(tokenListManageState.byUrl);
 
-		const tokensToDisplay: WrappedTokenInfo[] = [];
-
 		tokenListManageState?.selectedListUrl.map((listUrl, index) => {
 			const tokenListValuesByUrl = String(transformListKeys[index]);
 			const getCurrentList = tokenListCache?.get(
@@ -317,18 +315,28 @@ export const TokensListManageProvider: React.FC<{
 					transformList[currentNetworkChainId || (57 as number)]; // aqui é achado os tokens dentro do WeakMap, validem se os valores ja existem no array antes de adicionar
 
 				if (Object.keys(findTokensByChain).length !== 0) {
-					if (currentTokensToDisplay.length === 0) {
-						setCurrentTokensToDisplay([...findTokensByChain]);
-						console.log("findTokensByChain NO 1", findTokensByChain);
-					} else {
-						// const allTokens = [currentTokensToDisplay, findTokensByChain]
-						setCurrentTokensToDisplay(prevState => {
-							console.log("findTokensByChain NO 2", findTokensByChain);
-							const newValuePush = [prevState].push(findTokensByChain);
-							const newValueConcat = [prevState].concat(findTokensByChain);
+					const convertTokens = Object.values(findTokensByChain).map(
+						token => token
+					) as WrappedTokenInfo[];
 
-							console.log("newValuePush", newValuePush);
-							console.log("newValuePush", newValueConcat);
+					const verifyIfTokenExist = currentTokensToDisplay.some(
+						(tokens, index) =>
+							tokens?.symbol === convertTokens[index]?.symbol &&
+							tokens?.name === convertTokens[index]?.name
+					);
+
+					if (currentTokensToDisplay.length === 0) {
+						setCurrentTokensToDisplay(convertTokens);
+					}
+
+					if (currentTokensToDisplay.length > 0 && !verifyIfTokenExist) {
+						setCurrentTokensToDisplay(prevState => {
+							const validatedTokensToDisplayValue = [
+								...prevState,
+								...convertTokens,
+							];
+
+							prevState = validatedTokensToDisplayValue;
 
 							return prevState;
 						});
@@ -336,11 +344,12 @@ export const TokensListManageProvider: React.FC<{
 				}
 			}
 
-			return tokenListManageState; // ignore that, only for eslint
+			return {};
 		});
 	};
 
 	console.log("tokensToDisplay", currentTokensToDisplay);
+	console.log("tokenListManageState", tokenListManageState);
 
 	useEffect(() => {
 		UseSelectedTokenList();
