@@ -12,13 +12,19 @@ import {
 	Text,
 	useColorMode,
 } from "@chakra-ui/react";
-import { usePicasso, useWallet, useToasty } from "hooks";
+import { useToasty } from "pegasys-services";
+import { usePicasso, useWallet } from "hooks";
 import { FunctionComponent, useState, useEffect } from "react";
 import Jazzicon from "react-jazzicon";
 import { MdContentCopy, MdOutlineCallMade } from "react-icons/md";
 import { shortAddress, copyToClipboard, openWalletOnExplorer } from "utils";
-import { AiOutlineClose } from "react-icons/ai";
+import {
+	AiOutlineCheckCircle,
+	AiOutlineClose,
+	AiOutlineCloseCircle,
+} from "react-icons/ai";
 import { ITransactionResponse } from "types";
+import { ApprovalState } from "contexts";
 
 interface IModal {
 	isOpen: boolean;
@@ -30,20 +36,22 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
 	const {
-		walletAddress,
+		walletAddress: address,
 		transactions,
-		currentNetworkChainId,
+		currentNetworkChainId: chainId,
 		connectorSelected,
+		approvalState,
 	} = useWallet();
+	const isPending = approvalState.status === ApprovalState.PENDING;
 	const { toast } = useToasty();
 	const [txs, setTxs] = useState<ITransactionResponse[]>([]);
 
 	const handleCopyToClipboard = () => {
-		copyToClipboard(walletAddress);
+		copyToClipboard(address);
 
 		toast({
 			id: "toast1",
-			position: "top",
+			position: "top-right",
 			status: "success",
 			title: "Successfully copied",
 			description: "Address sucessfully copied to clipboard!",
@@ -55,7 +63,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 		Object.keys(transactions[5700]).length === 0;
 
 	const explorerURL =
-		currentNetworkChainId === 5700
+		chainId === 5700
 			? "https://tanenbaum.io/tx"
 			: "https://explorer.syscoin.org/tx";
 
@@ -69,7 +77,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 
 			setTxs(currentTxs);
 		}
-	}, [transactions]);
+	}, [transactions, isEmpty, transactions[57], transactions[5700], isPending]);
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -77,11 +85,13 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 			<ModalContent
 				borderRadius={18}
 				borderBottomRadius={["0", "18"]}
-				my={["0", "40", "40", "0"]}
+				my={["0", "40", "40", "40"]}
 				mb={["0", "0", "24rem", "24rem"]}
 				h="max-content"
 				position="absolute"
 				bottom={["0", "0", "none", "none"]}
+				mx="0"
+				p="0"
 			>
 				<ModalHeader
 					borderTopRadius={18}
@@ -155,7 +165,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									seed={Math.round(Math.random() * 10000000)}
 								/>
 							</Flex>
-							{walletAddress && shortAddress(walletAddress)}
+							{address && shortAddress(address)}
 						</Flex>
 						<Flex flexDirection="row" mt="4">
 							<Flex
@@ -182,7 +192,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								flexDirection="row"
 								alignItems="center"
 								cursor="pointer"
-								onClick={() => openWalletOnExplorer(walletAddress)}
+								onClick={() => openWalletOnExplorer(address)}
 							>
 								<Icon as={MdOutlineCallMade} color={theme.text.gray300} />
 								<Text
@@ -231,38 +241,59 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								</Text>
 							</Flex>
 
-							<Flex flexDirection="column" gap={1} w="max-content">
-								<Flex flexDirection="row" gap="2" alignItems="center">
+							<Flex flexDirection="column" gap={1} w="100%">
+								{txs.map((item: ITransactionResponse) => (
+									// eslint-disable-next-line react/jsx-key
 									<Flex
-										w="15px"
-										h="15px"
-										className={
-											colorMode === "dark"
-												? "circleLoading"
-												: "circleLoadingLight"
-										}
-									/>
-									{txs.map((item: ITransactionResponse) => (
-										// eslint-disable-next-line react/jsx-key
-										<Link
-											fontSize="sm"
-											href={`${explorerURL}/${item?.hash}`}
-											target="_blank"
-											rel="noreferrer"
-											alignItems="center"
-										>
-											{item?.summary}
-											<Icon
-												as={MdOutlineCallMade}
-												w="4"
-												h="4"
-												top="0.15rem"
-												left="0.5rem"
-												position="relative"
+										alignItems="center"
+										justifyContent="flex-start"
+										w="100%"
+									>
+										{isPending && !item?.finished && (
+											<Flex
+												className="circleLoading"
+												id={
+													colorMode === "dark"
+														? "pendingTransactionsDark"
+														: "pendingTransactionsLight"
+												}
 											/>
-										</Link>
-									))}
-								</Flex>
+										)}
+										<Flex
+											justifyContent="space-between"
+											w="100%"
+											alignItems="center"
+											pl={!item.finished ? "2" : "0"}
+										>
+											<Link
+												fontSize="sm"
+												href={`${explorerURL}/${item?.hash}`}
+												target="_blank"
+												rel="noreferrer"
+												alignItems="center"
+											>
+												{item?.summary}
+												<Icon
+													as={MdOutlineCallMade}
+													w="4"
+													h="4"
+													top="0.15rem"
+													left="0.5rem"
+													position="relative"
+												/>
+											</Link>
+											{item?.finished && (
+												<Flex>
+													{item.confirmations === 1 ? (
+														<AiOutlineCheckCircle color="#25855A" />
+													) : (
+														<AiOutlineCloseCircle color="#E53E3E" />
+													)}
+												</Flex>
+											)}
+										</Flex>
+									</Flex>
+								))}
 							</Flex>
 						</Flex>
 					)}

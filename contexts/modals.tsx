@@ -96,6 +96,18 @@ export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({
 		onClose: onCloseManageToken,
 	} = useDisclosure();
 
+	const {
+		onOpen: onOpenDrawerMenu,
+		isOpen: isOpenDrawerMenu,
+		onClose: onCloseDrawerMenu,
+	} = useDisclosure();
+
+	const {
+		onOpen: onOpenTransaction,
+		isOpen: isOpenTransaction,
+		onClose: onCloseTransaction,
+	} = useDisclosure();
+
 	const modalProviderValue = useMemo(
 		() => ({
 			onOpenImportPool,
@@ -143,6 +155,12 @@ export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({
 			isOpenStakeActions,
 			onOpenStakeActions,
 			onCloseStakeActions,
+			onOpenDrawerMenu,
+			isOpenDrawerMenu,
+			onCloseDrawerMenu,
+			onOpenTransaction,
+			isOpenTransaction,
+			onCloseTransaction,
 		}),
 		[
 			onOpenImportPool,
@@ -190,6 +208,12 @@ export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({
 			isOpenStakeActions,
 			onOpenStakeActions,
 			onCloseStakeActions,
+			onOpenDrawerMenu,
+			isOpenDrawerMenu,
+			onCloseDrawerMenu,
+			onOpenTransaction,
+			isOpenTransaction,
+			onCloseTransaction,
 		]
 	);
 

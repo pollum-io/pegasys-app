@@ -11,6 +11,7 @@ import {
 	SkeletonCircle,
 	useColorMode,
 } from "@chakra-ui/react";
+import { useToasty, useWallet as psUseWallet } from "pegasys-services";
 import {
 	useModal,
 	usePicasso,
@@ -19,7 +20,6 @@ import {
 	UseDerivedSwapInfo,
 	useApproveCallbackFromTrade,
 	UseSwapCallback,
-	useToasty,
 	ApprovalState,
 	UseWrapCallback,
 	UseTokensPairSorted,
@@ -33,7 +33,11 @@ import React, {
 } from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
-import { SelectCoinModal, SelectWallets } from "components/Modals";
+import {
+	LoadingTransition,
+	SelectCoinModal,
+	SelectWallets,
+} from "components/Modals";
 import { ChainId, CurrencyAmount, JSBI, Trade } from "@pollum-io/pegasys-sdk";
 import {
 	ISwapTokenInputValue,
@@ -85,14 +89,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		onOpenConfirmSwap,
 		isOpenConfirmSwap,
 		onCloseConfirmSwap,
+		onOpenTransaction,
+		isOpenTransaction,
+		onCloseTransaction,
 	} = useModal();
 
 	const {
-		isConnected,
-		currentNetworkChainId,
 		provider,
 		signer,
-		walletAddress,
 		userSlippageTolerance,
 		setTransactions,
 		transactions,
@@ -100,11 +104,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		approvalState,
 		setApprovalSubmitted,
 		setCurrentTxHash,
+		setCurrentSummary,
 		setCurrentInputTokenName,
 		expert,
 		otherWallet,
 		userTransactionDeadlineValue,
 	} = useWallet();
+
+	const { address, chainId, isConnected } = psUseWallet();
 
 	// END HOOKS IMPORTED VALUES
 
@@ -123,8 +130,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	};
 
 	const walletInfos: IWalletHookInfos = {
-		chainId: currentNetworkChainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
-		walletAddress,
+		chainId: chainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
+		walletAddress: address,
 		provider,
 	};
 
@@ -273,10 +280,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			setTransactions,
 			setApprovalState,
 			setCurrentTxHash,
+			setCurrentSummary,
 			setCurrentInputTokenName,
 			txType,
 			toast,
-			transactions
+			transactions,
+			onCloseTransaction
 		);
 
 	const { realizedLPFee } = computeTradePriceBreakdown(
@@ -362,7 +371,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		transactions,
 		setApprovalState,
 		setCurrentTxHash,
-		signer as Signer
+		setCurrentSummary,
+		signer as Signer,
+		onCloseTransaction
 	);
 
 	const handleSwapInfo = async () => {
@@ -399,10 +410,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const approve = useApproveCallbackFromTrade(
 		returnedTradeValue?.v2Trade as Trade,
 		{
-			chainId:
-				currentNetworkChainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
+			chainId: chainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
 			provider,
-			walletAddress,
+			walletAddress: address,
 		},
 		signer as Signer,
 		tokenInputValue,
@@ -412,8 +422,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		toast,
 		setApprovalSubmitted,
 		setCurrentTxHash,
+		setCurrentSummary,
 		setCurrentInputTokenName,
 		setApproveTokenStatus,
+		onCloseTransaction,
 		userSlippageTolerance
 	);
 
@@ -548,7 +560,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	return (
 		<Flex
-			pt={["6", "6", "16", "16"]}
 			justifyContent="center"
 			fontFamily="inter"
 			fontStyle="normal"
@@ -595,6 +606,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				tokenInputValue={tokenInputValue}
 				minimumReceived={minimumReceived}
 				liquidityFee={realizedLPFee}
+				openPendingTx={onOpenTransaction}
+			/>
+			<LoadingTransition
+				isOpen={isOpenTransaction}
+				onClose={onCloseTransaction}
 			/>
 			<Flex alignItems="center" flexDirection="column">
 				<Flex
@@ -641,7 +657,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								? theme.text.red400
 								: "#ff000000"
 						}
-						transition="0.7s"
+						transition="500ms ease-in-out"
 					>
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
@@ -706,27 +722,46 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						</Flex>
 					</Flex>
 					{tokenInputValue.currentInputTyped === "inputFrom" && (
-						<Flex flexDirection="row" gap="1" justifyContent="center">
-							{parseFloat(tokenInputValue.inputFrom.value) >
-								parseFloat(selectedToken[0]?.balance) && (
-								<Text
-									fontSize="sm"
-									pt="2"
-									textAlign="center"
-									color={theme.text.red400}
-									fontWeight="semibold"
-								>
-									{translation("swapHooks.insufficient")}
-									{selectedToken[0]?.symbol}
-									{translation("swapHooks.balance")}.
-								</Text>
-							)}
+						<Flex flexDirection="row" gap="1">
+							<Collapse
+								in={
+									parseFloat(tokenInputValue.inputFrom.value) >
+									parseFloat(selectedToken[0]?.balance)
+								}
+							>
+								<Flex gap="1">
+									<Text
+										fontSize="sm"
+										pt="2"
+										textAlign="center"
+										color={theme.text.red400}
+										fontWeight="semibold"
+									>
+										{translation("swapHooks.insufficient")}
+										{selectedToken[0]?.symbol}
+										{translation("swapHooks.balance")}.
+									</Text>
+									<Text
+										fontSize="sm"
+										pt="2"
+										textAlign="center"
+										color={theme.text.red400}
+										fontWeight="medium"
+									>
+										{translation("swapHooks.validAmount")}.
+									</Text>
+								</Flex>
+							</Collapse>
 						</Flex>
 					)}
 					{tokenInputValue.currentInputTyped === "inputTo" && (
 						<Flex flexDirection="row" gap="1" justifyContent="center">
-							{parseFloat(tokenInputValue.inputFrom.value) >
-								parseFloat(selectedToken[0]?.balance) && (
+							<Collapse
+								in={
+									parseFloat(tokenInputValue.inputFrom.value) >
+									parseFloat(selectedToken[0]?.balance)
+								}
+							>
 								<Text
 									fontSize="sm"
 									pt="2"
@@ -737,8 +772,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									{translation("swapHooks.insufficient")}
 									{selectedToken[0]?.symbol}
 									{translation("swapHooks.balance")}.
+									{translation("swapHooks.validAmount")}.
 								</Text>
-							)}
+							</Collapse>
 						</Flex>
 					)}
 					<Flex
@@ -761,7 +797,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								? theme.text.red400
 								: "#ff000000"
 						}
-						transition="0.7s"
+						transition="500ms ease-in-out"
 					>
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
@@ -810,10 +846,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					<Flex
 						flexDirection="column"
 						gap="1"
-						justifyContent="center"
-						alignItems="center"
+						justifyContent="flex-start"
+						alignItems="flex-start"
 					>
-						{isConnected && verifyIfHaveInsufficientLiquidity && !isWrap && (
+						<Collapse
+							in={isConnected && verifyIfHaveInsufficientLiquidity && !isWrap}
+						>
 							<Text
 								fontSize="sm"
 								pt="2"
@@ -823,7 +861,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							>
 								{translation("swapPage.insufficientLiquidity")}
 							</Text>
-						)}
+						</Collapse>
 					</Flex>
 					<Collapse
 						in={
@@ -998,7 +1036,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						flexDirection="column"
 						p="1.5rem"
 						background={theme.bg.blueNavy}
-						w={["20rem", "20rem", "25rem", "25rem"]}
+						w={["20rem", "28rem", "28rem", "28rem"]}
 						borderRadius="xl"
 						mt="7"
 						mb={["2", "2", "2", "10rem"]}
@@ -1006,7 +1044,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					>
 						<Flex flexDirection="column">
 							<Flex flexDirection="row" justifyContent="space-between">
-								<Flex>
+								<Flex alignItems="center">
 									<Text fontWeight="normal" mr="1" fontSize="sm">
 										{translation("swap.minimumReceived")}
 									</Text>
@@ -1028,7 +1066,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								justifyContent="space-between"
 								pt="0.75rem"
 							>
-								<Flex>
+								<Flex alignItems="center">
 									<Text fontWeight="normal" mr="1" fontSize="sm">
 										{translation("swap.priceImpact")}
 									</Text>
@@ -1045,8 +1083,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								flexDirection="row"
 								justifyContent="space-between"
 								pt="0.75rem"
+								alignItems="baseline"
 							>
-								<Flex w={["70%", "70%", "max-content", "max-content"]}>
+								<Flex
+									w={["70%", "70%", "max-content", "max-content"]}
+									alignItems={["baseline", "baseline", "center", "center"]}
+								>
 									<Text
 										fontWeight="normal"
 										mr="1"
@@ -1075,9 +1117,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 										<Flex
 											flexDirection="row"
 											justifyContent="space-between"
-											pt="1rem"
+											pt={["1rem", "1rem", "0", "0"]}
 										>
-											<Flex>
+											<Flex alignItems="center">
 												<Text fontSize="sm" mr="1" fontWeight="normal">
 													{translation("swap.route")}
 												</Text>
@@ -1120,173 +1162,111 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				borderRadius={30}
 				border="1px solid transparent;"
 			>
-				<Flex
-					gap="2"
-					justifyContent="center"
-					flexDirection={["column", "row", "row", "row"]}
-					alignItems="center"
-					mb={`${
-						!isLoadingGraphCandles && tokensGraphCandleData?.length === 0 && "5"
-					}`}
-				>
-					<Flex>
-						{[0, 1].map(
-							(
-								_,
-								index // Array with number of elements to display in the screen
-							) => (
-								<SkeletonCircle
-									key={_ + Number(index)}
-									isLoaded={!isLoadingGraphCandles}
-									mr={`${isLoadingGraphCandles && "0.5"}`}
-									fadeDuration={1.5}
-									speed={1.3}
-									background="transparent"
-									opacity={`${isLoadingGraphCandles && 0.2}`}
-									startColor="#8A15E6"
-									endColor="#19EBCE"
-								>
-									<Img
-										src={
-											index === 0
-												? tokensPairPosition[0]?.tokenInfo?.logoURI
-												: tokensPairPosition[1]?.tokenInfo?.logoURI
-										}
-										w="7"
-										h="7"
-										mr="0.5"
-									/>
-								</SkeletonCircle>
-							)
-						)}
-
-						<Skeleton
-							isLoaded={!isLoadingGraphCandles}
-							ml={`${isLoadingGraphCandles && "1.5"}`}
-							fadeDuration={1.5}
-							speed={1.3}
-							background="transparent"
-							opacity={`${isLoadingGraphCandles && 0.2}`}
-							startColor="#8A15E6"
-							endColor="#19EBCE"
-						>
-							<Text fontWeight="700" fontSize="xl" ml="2.5">
-								{tokensPairPosition[0]?.symbol} /{" "}
-								{tokensPairPosition[1]?.symbol}
-							</Text>
-						</Skeleton>
-					</Flex>
-					<Skeleton
-						h={`${isLoadingGraphCandles && "32px"}`}
-						isLoaded={!isLoadingGraphCandles}
-						fadeDuration={1.5}
-						speed={1.3}
-						background="transparent"
-						opacity={`${isLoadingGraphCandles && 0.2}`}
-						startColor="#8A15E6"
-						endColor="#19EBCE"
-					>
-						<Text pl="2" fontSize="lg" fontWeight="400">
-							{tokensGraphCandleData?.length === 0
-								? "-"
-								: `${parseFloat(
-										String(tokensGraphCandleData[0]?.close)
-								  ).toFixed(2)} ${tokensPairPosition[1]?.symbol}`}
-						</Text>
-					</Skeleton>
-				</Flex>
-
-				<Flex
-					my={`${
-						tokensGraphCandleData.length === 0 && !isLoadingGraphCandles
-							? "0"
-							: "6"
-					}`}
-					justifyContent="center"
-				>
-					{isLoadingGraphCandles ? (
+				{!isLoadingGraphCandles && (
+					<Flex flexDirection="column">
 						<Flex
-							w="100%"
-							maxW={`${isLoadingGraphCandles && "70%"}`}
+							gap="2"
+							justifyContent="center"
+							flexDirection={["column", "row", "row", "row"]}
 							alignItems="center"
-							justifyContent={`${
-								isLoadingGraphCandles ? "space-evenly" : "center"
+							mb={`${
+								!isLoadingGraphCandles &&
+								tokensGraphCandleData?.length === 0 &&
+								"5"
 							}`}
 						>
-							{[1, 2, 3, 4, 5].map(
-								(
-									_,
-									index // Array with number of elements to display in the screen
-								) => (
-									<SkeletonCircle
-										key={_ + Number(index)}
-										w="40px"
-										h="40px"
-										fadeDuration={1.5}
-										speed={1.3}
-										background="transparent"
-										opacity={`${isLoadingGraphCandles && 0.2}`}
-										startColor="#8A15E6"
-										endColor="#19EBCE"
-									/>
-								)
+							<Flex>
+								{[0, 1].map(
+									(
+										_,
+										index // Array with number of elements to display in the screen
+									) => (
+										<Img
+											key={_ + Number(index)}
+											src={
+												index === 0
+													? tokensPairPosition[0]?.tokenInfo?.logoURI
+													: tokensPairPosition[1]?.tokenInfo?.logoURI
+											}
+											w="7"
+											h="7"
+											mr="0.5"
+										/>
+									)
+								)}
+
+								<Text fontWeight="700" fontSize="xl" ml="2.5">
+									{tokensPairPosition[0]?.symbol} /{" "}
+									{tokensPairPosition[1]?.symbol}
+								</Text>
+							</Flex>
+
+							<Text pl="2" fontSize="lg" fontWeight="400">
+								{tokensGraphCandleData?.length === 0
+									? "-"
+									: `${parseFloat(
+											String(tokensGraphCandleData[0]?.close)
+									  ).toFixed(2)} ${tokensPairPosition[1]?.symbol}`}
+							</Text>
+						</Flex>
+						<Flex
+							my={`${
+								tokensGraphCandleData.length === 0 && !isLoadingGraphCandles
+									? "0"
+									: "6"
+							}`}
+							justifyContent="center"
+						>
+							{tokensGraphCandleData.length !== 0 && (
+								<FilterButton
+									periodStateValue={tokensGraphCandlePeriod}
+									setPeriod={setTokensGraphCandlePeriod}
+								/>
 							)}
 						</Flex>
-					) : (
-						tokensGraphCandleData.length !== 0 && (
-							<FilterButton
-								periodStateValue={tokensGraphCandlePeriod}
-								setPeriod={setTokensGraphCandlePeriod}
-							/>
-						)
-					)}
-				</Flex>
+					</Flex>
+				)}
 
 				<Flex
 					direction="column"
 					justifyContent="center"
 					maxW={isLoadingGraphCandles ? "475px" : ""}
-					borderBottom={`${isLoadingGraphCandles && "1px solid"}`}
-					borderRight={`${isLoadingGraphCandles && "1px solid"}`}
-					borderColor={`${isLoadingGraphCandles && "rgba(255,255,255, .25)"}`}
-					borderRadius={`${isLoadingGraphCandles && "5px"}`}
 				>
-					<Skeleton
-						w="100%"
-						h="315px"
-						isLoaded={!isLoadingGraphCandles}
-						fadeDuration={1.5}
-						speed={1.3}
-						background="transparent"
-						opacity={`${isLoadingGraphCandles && 0.1}`}
-						startColor="#8A15E6"
-						endColor="#19EBCE"
-						borderRadius="5px"
-					>
-						{tokensGraphCandleData?.length === 0 && !isLoadingGraphCandles ? (
-							<>
-								<Text
-									textAlign="center"
-									color={theme.text.mono}
-									fontWeight="medium"
-									fontSize="md"
-								>
-									Data not found for this pair of tokens.
-								</Text>
+					{isLoadingGraphCandles ? (
+						<Flex
+							flexDirection="column"
+							justifyContent="center"
+							align="center"
+							gap="3"
+							mt={["0rem", "9rem", "9rem", "9rem"]}
+							ml="8"
+							color={theme.text.mono}
+						>
+							<Img src="icons/loading.gif" className="blob" w="25%" h="25%" />
+						</Flex>
+					) : tokensGraphCandleData?.length === 0 ? (
+						<Flex flexDirection="column" ml="0">
+							<Text
+								textAlign="center"
+								color={theme.text.mono}
+								fontWeight="medium"
+								fontSize="md"
+							>
+								Data not found for this pair of tokens.
+							</Text>
 
-								<Text
-									textAlign="center"
-									color={theme.text.mono}
-									fontWeight="normal"
-									fontSize="sm"
-								>
-									Please try again with another pair.
-								</Text>
-							</>
-						) : (
-							<ChartComponent data={tokensGraphCandleData} />
-						)}
-					</Skeleton>
+							<Text
+								textAlign="center"
+								color={theme.text.mono}
+								fontWeight="normal"
+								fontSize="sm"
+							>
+								Please try again with another pair.
+							</Text>
+						</Flex>
+					) : (
+						<ChartComponent data={tokensGraphCandleData} />
+					)}
 				</Flex>
 			</Flex>
 		</Flex>

@@ -29,6 +29,7 @@ interface IModal {
 	tokenInputValue: ISwapTokenInputValue;
 	minimumReceived: string | 0 | null | undefined;
 	liquidityFee?: CurrencyAmount;
+	openPendingTx: () => void;
 }
 
 export const ConfirmSwap: React.FC<IModal> = props => {
@@ -43,6 +44,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 		tokenInputValue,
 		liquidityFee,
 		minimumReceived,
+		openPendingTx,
 	} = props;
 	const theme = usePicasso();
 
@@ -92,7 +94,6 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 						alignItems="center"
 						mb="6"
 						justifyContent="center"
-						pr="4rem"
 					>
 						<Flex flexDirection="column" gap="14" pr="2">
 							<Text textAlign="right" fontWeight="semibold">
@@ -182,6 +183,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 							fontSize="lg"
 							onClick={() => {
 								if (!onTx) return;
+								openPendingTx();
 								onTx();
 								onClose();
 							}}

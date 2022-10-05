@@ -20,6 +20,7 @@ import { mockedSlippageValues } from "helpers/mockedData";
 import { useTranslation } from "react-i18next";
 import { DEFAULT_DEADLINE_FROM_NOW } from "helpers/consts";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
+import { useWallet as psUseWallet } from "pegasys-services";
 import { IconButton } from "../Buttons/IconButton";
 import { SlippageButton } from "../Buttons/SlippageButton";
 import { Languages } from "./Languages";
@@ -51,8 +52,9 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 		setUserTransactionDeadlineValue,
 		setExpert,
 		expert,
-		isConnected,
 	} = useWallet();
+
+	const { isConnected } = psUseWallet();
 
 	const { t: translation } = useTranslation();
 
@@ -146,6 +148,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 					_expanded={{ color: theme.text.cyanPurple }}
 				/>
 			</PopoverTrigger>
+			<PopoverArrow bg="red" />
 			<PopoverContent
 				_focus={{
 					outline: "none",
@@ -159,7 +162,6 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 				mx={["0", "0", "20", "56"]}
 				position="fixed"
 			>
-				<PopoverArrow />
 				<Flex
 					justifyContent="flex-end"
 					zIndex="99"
@@ -184,7 +186,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 				</Flex>
 				<PopoverBody>
 					<Flex flexDirection="column" mt="4">
-						<Flex alignItems="center" flexDirection="row">
+						<Flex alignItems="center" flexDirection="row" w="max-content">
 							<Text
 								fontSize="md"
 								pr="1"

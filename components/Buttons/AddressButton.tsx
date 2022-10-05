@@ -13,8 +13,7 @@ interface IButtonProps extends ButtonProps {
 export const AddressButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	const { children, pending, ...rest } = props;
-	const { walletError } = useWallet();
-	const [isExpertMode] = useState(false);
+	const { walletError, expert } = useWallet();
 
 	return (
 		<Button
@@ -29,10 +28,10 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 			borderRadius={84}
 			fontWeight={500}
 			py={["2", "2", "2", "2"]}
-			px={["3", "3", "3", "3"]}
+			px={["3", "4", "4", "4"]}
 			position={["absolute", "relative"]}
 			bottom={["12", "8", "8", "8"]}
-			right={isExpertMode ? ["43%", "0", "0", "0"] : ["30%", "0", "0", "0"]}
+			right={expert ? ["40%", "0", "0", "0"] : ["27%", "0", "0", "0"]}
 			textTransform="uppercase"
 			overflow="hidden"
 			opacity="0.85"
@@ -46,20 +45,15 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 				"Wrong Network"
 			) : (
 				<>
-					{!pending && (
-						<Flex pr="2" textTransform="uppercase">
-							<Jazzicon
-								diameter={18}
-								seed={Math.round(Math.random() * 10000000)}
-							/>
-						</Flex>
-					)}
+					<Flex pr="2" textTransform="uppercase">
+						<Jazzicon
+							diameter={18}
+							seed={Math.round(Math.random() * 10000000)}
+						/>
+					</Flex>
 					{children}
 				</>
 			)}
-			<Flex display={["flex", "none", "none", "none"]} zIndex="-99">
-				<ExpertMode />
-			</Flex>
 		</Button>
 	);
 };

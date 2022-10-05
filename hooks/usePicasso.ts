@@ -27,6 +27,7 @@ const usePicasso = () => {
 			topHeaderButton: useColorModeValue("#665EE1", "#081120"),
 			cyanPurple: useColorModeValue("#665EE1", "#00d9ef"),
 			mono: useColorModeValue("#1A202C", "white"), // text black and white
+			gray800White: useColorModeValue("gray.800", "white"),
 			navItem: useColorModeValue("#4A5568", "#EDF2F7"), // bottom header icons color
 			blue: useColorModeValue("white", "cyan.300"),
 			stakeMode: useColorModeValue("#A0AEC0", "rgba(255, 255, 255, 0.36)"),
@@ -59,6 +60,10 @@ const usePicasso = () => {
 				"icons/LightPegasysLogo.png",
 				"icons/pegasys.png"
 			),
+			borderExpertMode: useColorModeValue(
+				"icons/Border-gradient-02.png",
+				"icons/Border-gradient-02.png"
+			),
 			searchIcon: useColorModeValue("#9F7AEA", "rgba(54, 180, 212, 0.5)"),
 			whiteGray: useColorModeValue("#A0AEC0", "white"),
 			theme: useColorModeValue(BsFillSunFill, BsFillMoonFill),
@@ -66,6 +71,7 @@ const usePicasso = () => {
 		bg: {
 			poolShare: useColorModeValue("#E2E8F0", "rgba(255, 255, 255, 0.16)"),
 			portfolioFooter: useColorModeValue("#F7FAFC", ""),
+			hamburgerMenu: useColorModeValue("#F7FAFC", "#081120"),
 			voteGray: useColorModeValue("#E2E8F0", "#081120"),
 			candleGraphColor: useColorModeValue("#665EE1", "#2B6CB0"),
 			bluePink: useColorModeValue("#FAF5FF", "#0B172C"),
@@ -80,6 +86,10 @@ const usePicasso = () => {
 			governanceBanner: useColorModeValue(
 				"/images/backgrounds/LightGovernanceBanner.png",
 				"/images/backgrounds/GovernanceBanner.png"
+			),
+			governanceBannerMobile: useColorModeValue(
+				"/images/backgrounds/BannerGovernanceMobileLight.png",
+				"/images/backgrounds/BannerGovernanceMobileDark.png"
 			),
 			psysReward: useColorModeValue(
 				"/images/backgrounds/LightPsysReward.png",

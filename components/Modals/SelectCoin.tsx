@@ -153,7 +153,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	}, [selectedToken, isOpen]);
 
 	return (
-		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ManageToken isOpen={isOpenManageToken} onClose={onCloseManageToken} />
 			<ModalOverlay />
 			<ModalContent
@@ -277,7 +277,15 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 									<Img src={token.logoURI} borderRadius="full" w="6" h="6" />
 									{token.symbol}
 								</Flex>
-								<Text fontWeight="normal">{token.balance}</Text>
+								<Text
+									fontWeight="normal"
+									w={token.balance.length > 10 ? "115px" : ""}
+									overflow={token.balance.length > 10 ? "hidden" : ""}
+									textOverflow={token.balance.length > 10 ? "ellipsis" : ""}
+									textAlign="end"
+								>
+									{token.balance}
+								</Text>
 							</Flex>
 						</Button>
 					))}

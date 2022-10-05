@@ -1,6 +1,7 @@
 import { Token, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { Signer, Contract } from "ethers";
 import { getContract, singleCall } from "utils";
+import abi20 from "utils/abis/erc20.json";
 
 export async function getTokenAllowance(
 	token: Token,
@@ -9,7 +10,7 @@ export async function getTokenAllowance(
 	signer: Signer
 ): Promise<TokenAmount | undefined | null> {
 	if (token) {
-		const contract = await getContract(token?.address, signer);
+		const contract = await getContract(token?.address, signer, abi20);
 		const inputs = [owner, spender];
 		const allowance = await singleCall(contract as Contract, "allowance");
 		const allowanceValue = await allowance(inputs[0], inputs[1]);

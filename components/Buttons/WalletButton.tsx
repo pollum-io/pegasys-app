@@ -12,6 +12,7 @@ import { AddressInfoButton } from "components/Buttons";
 import { shortAddress } from "utils";
 import { ExpertMode } from "components/Header/ExpertMode";
 import { ApprovalState } from "contexts";
+import { useWallet as psUseWallet } from "pegasys-services";
 import { AddressButton } from "./AddressButton";
 
 export const WalletButton: FunctionComponent<ButtonProps> = props => {
@@ -29,13 +30,8 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 		onCloseAddress,
 	} = useModal();
 
-	const {
-		isConnected,
-		walletAddress,
-		walletError,
-		approvalState,
-		pendingTxLength,
-	} = useWallet();
+	const { walletError, approvalState, pendingTxLength } = useWallet();
+	const { address, isConnected } = psUseWallet();
 
 	const isPending = approvalState.status === ApprovalState.PENDING;
 	const { colorMode } = useColorMode();
@@ -61,10 +57,10 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						w="max-content"
 						h="max-content"
 						py={["2", "2", "2", "2"]}
-						px={["6", "6", "8", "8"]}
+						px={["4", "4", "4", "4"]}
 						position={["absolute", "relative"]}
-						bottom={["12", "10"]}
-						left={["25%", "0", "0", "0"]}
+						bottom={["12", "8", "8", "8"]}
+						left={["28%", "0", "0", "0"]}
 						onClick={onOpenSelectWalletModal}
 						{...rest}
 					>
@@ -80,7 +76,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						onClose={onCloseSelectSyscoin}
 					/>
 					<AddressButton onClick={walletError && onOpenSelectSyscoin}>
-						{walletAddress}
+						{address}
 					</AddressButton>
 				</>
 			)}
@@ -91,11 +87,9 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 					<AddressButton
 						onClick={walletError ? onOpenSelectWalletModal : onOpenAddress}
 					>
-						{shortAddress(walletAddress)}
+						{shortAddress(address)}
 					</AddressButton>
-					<Flex display={["none", "flex", "flex", "flex"]} zIndex="-99">
-						<ExpertMode />
-					</Flex>
+					<ExpertMode />
 				</>
 			)}
 			{isConnected && isPending && (
@@ -106,9 +100,9 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						ml="20px"
 						zIndex="2"
 						py={["2", "2", "2", "2"]}
-						position={["absolute", "relative"]}
-						left={["6", "32"]}
-						bottom={["12", "2.2rem"]}
+						position={["absolute", "absolute"]}
+						right={["25%", "10.5rem", "12rem", "12rem"]}
+						bottom="4.5rem"
 						w="2.313rem"
 						h="1.25rem"
 						borderRadius="xl"
@@ -122,13 +116,18 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						<Text fontSize="14px" color="white">
 							{pendingTxLength}
 						</Text>
-						<Flex className="circleLoadingPending" />
+						<Flex
+							className="circleLoading"
+							id={
+								colorMode === "dark" ? "smallPendingDark" : "smallPendingLight"
+							}
+						/>
 					</Flex>
 					<AddressButton
 						onClick={walletError ? onOpenSelectWalletModal : onOpenAddress}
 						pending={approvalState?.status === ApprovalState.PENDING}
 					>
-						{shortAddress(walletAddress)}
+						{shortAddress(address)}
 					</AddressButton>
 				</>
 			)}

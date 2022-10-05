@@ -8,12 +8,13 @@ import {
 	Text,
 	useMediaQuery,
 } from "@chakra-ui/react";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso } from "hooks";
 import { SiDiscord, SiTwitter } from "react-icons/si";
 import { FaTelegramPlane } from "react-icons/fa";
 import { useState } from "react";
 import { MdOutlineCallMade } from "react-icons/md";
 import { BorderAnimation } from "components/Airdrop/BorderAnimation";
+import { useWallet } from "pegasys-services";
 
 export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
@@ -27,12 +28,7 @@ export const AirdropContainer: NextPage = () => {
 	const [isClaimed] = useState(true);
 
 	return (
-		<Flex
-			alignItems="flex-start"
-			justifyContent="center"
-			pt={["8", "8", "20", "20"]}
-			mb="6.2rem"
-		>
+		<Flex alignItems="flex-start" justifyContent="center" mb="6.2rem">
 			<Flex
 				flexDirection="column"
 				w={["18rem", "md", "2xl", "2xl"]}

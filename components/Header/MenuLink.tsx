@@ -3,6 +3,7 @@ import {
 	Flex,
 	IconButton,
 	Popover,
+	PopoverArrow,
 	PopoverBody,
 	PopoverCloseButton,
 	PopoverContent,
@@ -67,7 +68,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 			<PopoverTrigger {...props}>
 				<IconButton
 					aria-label="Popover"
-					icon={<BsThreeDots />}
+					icon={<BsThreeDots size="20px" />}
 					transition="0.4s"
 					bg="transparent"
 					_hover={{
@@ -91,6 +92,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 				right="0"
 				border={["none", "1px solid transparent"]}
 			>
+				<PopoverArrow bg={theme.bg.blueNavyLight} />
 				<Flex
 					justifyContent="flex-end"
 					zIndex="99"

@@ -1,22 +1,19 @@
-import { Flex, Img, Switch, Text } from "@chakra-ui/react";
+import { Flex, Img, Switch, Text, useMediaQuery } from "@chakra-ui/react";
 import { usePicasso, useWallet } from "hooks";
 import { NextPage } from "next";
 import { VoteCards } from "components/Vote/VoteCards";
 import { ProposalDetails } from "components/Vote/ProposalDetails";
+import { useWallet as psUseWallet } from "pegasys-services";
 
 export const VoteContainer: NextPage = () => {
 	const theme = usePicasso();
-	const { isConnected } = useWallet();
+	const { isConnected } = psUseWallet();
 	const { isGovernance, showCancelled, setShowCancelled } = useWallet();
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	return (
 		<Flex justifyContent="center" alignItems="center">
-			<Flex
-				alignItems="flex-start"
-				justifyContent="center"
-				pt={["10", "10", "20", "20"]}
-				mb="6.2rem"
-			>
+			<Flex alignItems="flex-start" justifyContent="center" mb="6.2rem">
 				{!isGovernance ? (
 					<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
 						<Flex
@@ -28,7 +25,11 @@ export const VoteContainer: NextPage = () => {
 						>
 							<Img
 								borderRadius="xl"
-								src={theme.bg.governanceBanner}
+								src={
+									isMobile
+										? theme.bg.governanceBannerMobile
+										: theme.bg.governanceBanner
+								}
 								position="absolute"
 								zIndex="base"
 								w="100%"
