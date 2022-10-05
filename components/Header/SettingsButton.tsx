@@ -20,6 +20,7 @@ import { mockedSlippageValues } from "helpers/mockedData";
 import { useTranslation } from "react-i18next";
 import { DEFAULT_DEADLINE_FROM_NOW } from "helpers/consts";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
+import { useWallet as psUseWallet } from "pegasys-services";
 import { IconButton } from "../Buttons/IconButton";
 import { SlippageButton } from "../Buttons/SlippageButton";
 import { Languages } from "./Languages";
@@ -51,8 +52,9 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 		setUserTransactionDeadlineValue,
 		setExpert,
 		expert,
-		isConnected,
 	} = useWallet();
+
+	const { isConnected } = psUseWallet();
 
 	const { t: translation } = useTranslation();
 

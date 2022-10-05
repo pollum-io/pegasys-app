@@ -3,11 +3,12 @@ import { usePicasso, useWallet } from "hooks";
 import { FunctionComponent } from "react";
 import { ConnectSyscoinNetwork } from "utils/ConnectSyscoinNetwork";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { useWallet as psUseWallet } from "pegasys-services";
 
 export const SwitchToSyscoin: FunctionComponent<ButtonProps> = props => {
 	const theme = usePicasso();
-	const { connectorSelected, setWalletError, currentNetworkChainId } =
-		useWallet();
+	const { connectorSelected, setWalletError } = useWallet();
+	const { chainId } = psUseWallet();
 	const { ...rest } = props;
 
 	return (
@@ -26,7 +27,7 @@ export const SwitchToSyscoin: FunctionComponent<ButtonProps> = props => {
 				ConnectSyscoinNetwork(
 					connectorSelected as AbstractConnector,
 					setWalletError,
-					currentNetworkChainId as number
+					chainId as number
 				)
 			}
 			{...rest}

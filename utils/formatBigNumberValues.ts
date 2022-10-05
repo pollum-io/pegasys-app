@@ -1,3 +1,5 @@
+/*eslint-disable */
+// @ts-nocheck
 import { BigNumber, ethers } from "ethers";
 
 export const formatBigNumberValues = (

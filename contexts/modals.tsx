@@ -114,6 +114,12 @@ export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({
 		onClose: onCloseUnlockVotesModal,
 	} = useDisclosure();
 
+	const {
+		onOpen: onOpenTransaction,
+		isOpen: isOpenTransaction,
+		onClose: onCloseTransaction,
+	} = useDisclosure();
+
 	const modalProviderValue = useMemo(
 		() => ({
 			onOpenImportPool,
@@ -170,6 +176,9 @@ export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({
 			onOpenUnlockVotesModal,
 			isOpenUnlockVotesModal,
 			onCloseUnlockVotesModal,
+			onOpenTransaction,
+			isOpenTransaction,
+			onCloseTransaction,
 		}),
 		[
 			onOpenImportPool,
@@ -226,6 +235,9 @@ export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({
 			onOpenUnlockVotesModal,
 			isOpenUnlockVotesModal,
 			onCloseUnlockVotesModal,
+			onOpenTransaction,
+			isOpenTransaction,
+			onCloseTransaction,
 		]
 	);
 

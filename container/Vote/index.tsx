@@ -12,10 +12,11 @@ import { VoteCards } from "components/Vote/VoteCards";
 import { ProposalDetails } from "components/Vote/ProposalDetails";
 import { MdOutlineCallMade } from "react-icons/md";
 import { UnlockVotesModal } from "components/Modals/UnlockVoting";
+import { useWallet as psUseWallet } from "pegasys-services";
 
 export const VoteContainer: NextPage = () => {
 	const theme = usePicasso();
-	const { isConnected } = useWallet();
+	const { isConnected } = psUseWallet();
 	const {
 		isGovernance,
 		showCancelled,
