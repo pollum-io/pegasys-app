@@ -17,4 +17,6 @@ export interface IStakeProviderValue {
 	claim: () => Promise<void>;
 	unstake: () => Promise<void>;
 	stake: () => Promise<void>;
+	valueType: "psys" | "usd";
+	setValueType: setType<"psys" | "usd">;
 }

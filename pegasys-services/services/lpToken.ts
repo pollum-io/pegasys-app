@@ -200,8 +200,6 @@ class LpTokenServices {
 		return multiplier.length ? multiplier[0] : BigInt(0);
 	}
 
-	static async getDollarValue() {}
-
 	static async getSignature({
 		lpAddress,
 		address,
@@ -247,14 +245,16 @@ class LpTokenServices {
 			{ name: "deadline", type: "uint256" },
 		];
 
-		const deadlineFromNow = BigNumber.from(new Date().getTime() + 360000);
+		const deadlineFromNow = BigNumber.from(new Date().getTime() / 1000).add(
+			deadline
+		);
 
 		const message = {
 			owner: address,
 			spender,
 			value,
 			nonce: nonce.toHexString(),
-			deadline: deadlineFromNow.toHexString(),
+			deadline: deadlineFromNow,
 		};
 
 		const data = JSON.stringify({
@@ -280,7 +280,7 @@ class LpTokenServices {
 			v: signature.v,
 			r: signature.r,
 			s: signature.s,
-			deadline: typeof deadline === "number" ? deadline : deadline.toNumber(),
+			deadline: deadlineFromNow,
 		};
 	}
 }

@@ -119,44 +119,44 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 				</GridItem>
 				<GridItem flexDirection="column">
 					<Text fontSize="sm" color={theme.text.cyanPurple}>
-						Total staked (PSYS)
+						Total staked
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						{stakeInfo.totalStakedAmount.toFixed(10, { groupSeparator: "," })}
+						{stakeInfo.totalStakedAmount.toFixed(10, { groupSeparator: "," })}{" "}
+						PSYS
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column" pl={["0", "0", "6", "6"]}>
 					<Text fontSize="sm" color={theme.text.cyanPurple}>
-						Your rate (PSYS/Week)
+						Your rate
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
 						{stakeInfo.rewardRatePerWeek.toFixed(10, {
 							groupSeparator: ",",
-						})}
+						})}{" "}
+						(PSYS/Week)
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column">
 					<Text fontSize="sm" color={theme.text.cyanPurple}>
-						Deposit Fee
+						Your Staked
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						1%
-					</Text>
-				</GridItem>
-				<GridItem flexDirection="column">
-					<Text fontSize="sm" color={theme.text.cyanPurple}>
-						Your Staked PSYS
-					</Text>
-					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						{stakeInfo.stakedAmount.toFixed(10, { groupSeparator: "," })}
+						{stakeInfo.stakedAmount.toFixed(10, {
+							groupSeparator: ",",
+						})}{" "}
+						PSYS
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column" pl={["0", "0", "6", "6"]}>
 					<Text fontSize="sm" color={theme.text.cyanPurple}>
-						Your unclaimed PSYS
+						Your unclaimed
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						{stakeInfo.earnedAmount.toFixed(10, { groupSeparator: "," })}
+						{stakeInfo.earnedAmount.toFixed(10, {
+							groupSeparator: ",",
+						})}{" "}
+						PSYS
 					</Text>
 				</GridItem>
 			</Grid>

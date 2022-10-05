@@ -38,18 +38,7 @@ export const FarmContainer: NextPage = () => {
 	// const [sort, setSort] = useState<keyof typeof sortData>("apr");
 	// const [timeoutid, setTimeoutid] = useState<NodeJS.Timeout>(
 	// 	setTimeout(() => {}, 0)
-	// );
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
-
-	// useEffect(() => {
-	// 	clearTimeout(timeoutid);
-
-	// 	const id = setTimeout(() => {
-	// 		setFilter(search);
-	// 	}, 700);
-
-	// 	setTimeoutid(id);
-	// }, [search]);
 
 	return (
 		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">

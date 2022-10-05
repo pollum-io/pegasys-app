@@ -1,103 +1,133 @@
 import { MaxUint256 } from "@ethersproject/constants";
-import { ChainId, Currency, NSYS, TokenAmount } from "@pollum-io/pegasys-sdk";
+import { ChainId, Currency, currencyEquals, JSBI, NSYS, Price, TokenAmount, WSYS } from "@pollum-io/pegasys-sdk";
 import { ApprovalState } from "hooks";
 import { ContractFramework } from "pegasys-services/frameworks";
+import { wrappedCurrency } from "utils";
+import { BIG_INT_ZERO, DAI, USDC } from "../constants";
 
 class TokenServices {
-	static async approve(
-		// address: string,
-		amountToApprove: TokenAmount,
-		spender: string
-	) {
-		// const { account } = useActiveWeb3React();
-		// const token =
-		// 	amountToApprove instanceof TokenAmount
-		// 		? amountToApprove.token
-		// 		: undefined;
-
-		const contract = ContractFramework.TokenContract(
-			amountToApprove.token.address
+	static async usdcPrice(currency: Currency, chainId?: ChainId) {
+		let totalStakedInUsd = new TokenAmount(
+			DAI[chainId ?? ChainId.NEVM],
+			BIG_INT_ZERO
 		);
 
-		// const currentAllowance = await ContractFramework.call({
-		// 	contract,
-		// 	methodName: "allowance",
-		// 	args: [address, spender],
-		// });
-
-		// const currentAllowance = useTokenAllowance(
-		// // 	token,
-		// // 	account ?? undefined,
-		// // 	spender
-		// // );
-		// const pendingApproval = useHasPendingApproval(token?.address, spender);
-
-		// check the current approval status
-
-		// const pendingApproval = false;
-
-		// let approvalState: ApprovalState;
-
-		// if (!amountToApprove || !spender || !currentAllowance) {
-		// 	approvalState = ApprovalState.UNKNOWN;
-		// } else if (amountToApprove.currency === NSYS) {
-		// 	approvalState = ApprovalState.APPROVED;
-		// } else {
-		// 	approvalState = currentAllowance.lessThan(amountToApprove)
-		// 		? pendingApproval
-		// 			? ApprovalState.PENDING
-		// 			: ApprovalState.NOT_APPROVED
-		// 		: ApprovalState.APPROVED;
-		// }
-
-		// const tokenContract = useTokenContract(token?.address);
-		// const addTransaction = useTransactionAdder();
-
-		// const approve = useCallback(async (): Promise<void> => {
-		// if (approvalState !== ApprovalState.NOT_APPROVED) {
-		// 	console.error("approve was called unnecessarily");
-		// 	return undefined;
-		// }
-		if (!amountToApprove.token) {
-			console.error("no token");
-			return;
-		}
-
-		if (!contract) {
-			console.error("tokenContract is null");
-			return;
-		}
-
-		if (!amountToApprove) {
-			console.error("missing amount to approve");
-			return;
-		}
-
-		if (!spender) {
-			console.error("no spender");
-			return;
-		}
-
-		let useExact = false;
-		await contract.estimateGas.approve(spender, MaxUint256).catch(() => {
-			// general fallback for tokens who restrict approval amounts
-			useExact = true;
-			return contract.estimateGas.approve(
-				spender,
-				amountToApprove.raw.toString()
+		if (JSBI.equal(totalSupplyAvailable, BIG_INT_ZERO)) {
+			// Default to 0 values above avoiding division by zero errors
+		} else if (pair.involvesToken(DAI[chainId])) {
+			const pairValueInDAI = JSBI.multiply(
+				pair.reserveOf(DAI[chainId]).raw,
+				BIG_INT_TWO
 			);
-		});
-
-		await ContractFramework.call({
-			contract,
-			methodName: "approve",
-			args: [spender, useExact ? amountToApprove.raw.toString() : MaxUint256],
-		});
-
-		// return approvalState;
+			const stakedValueInDAI = JSBI.divide(
+				JSBI.multiply(pairValueInDAI, totalSupplyStaked),
+				totalSupplyAvailable
+			);
+			totalStakedInUsd = new TokenAmount(DAI[chainId], stakedValueInDAI);
+		} else if (pair.involvesToken(USDC[chainId])) {
+			const pairValueInUSDC = JSBI.multiply(
+				pair.reserveOf(USDC[chainId]).raw,
+				BIG_INT_TWO
+			);
+			const stakedValueInUSDC = JSBI.divide(
+				JSBI.multiply(pairValueInUSDC, totalSupplyStaked),
+				totalSupplyAvailable
+			);
+			totalStakedInUsd = new TokenAmount(USDC[chainId], stakedValueInUSDC);
+		} else if (pair.involvesToken(USDT[chainId])) {
+			const pairValueInUSDT = JSBI.multiply(
+				pair.reserveOf(USDT[chainId]).raw,
+				BIG_INT_TWO
+			);
+			const stakedValueInUSDT = JSBI.divide(
+				JSBI.multiply(pairValueInUSDT, totalSupplyStaked),
+				totalSupplyAvailable
+			);
+			totalStakedInUsd = new TokenAmount(USDT[chainId], stakedValueInUSDT);
+		} else if (isSysPool) {
+			const totalStakedInWsys = calculateTotalStakedAmountInSys(
+				totalSupplyStaked,
+				totalSupplyAvailable,
+				pair.reserveOf(WSYS[chainId]).raw
+			);
+			totalStakedInUsd =
+				totalStakedInWsys &&
+				(usdPrice?.quote(totalStakedInWsys) as TokenAmount);
+		} else if (isPsysPool) {
+			const totalStakedInWsys = calculateTotalStakedAmountInSysFromPsys(
+				totalSupplyStaked,
+				totalSupplyAvailable,
+				sysPsysPair.reserveOf(psys).raw,
+				sysPsysPair.reserveOf(WSYS[chainId]).raw,
+				pair.reserveOf(psys).raw
+			);
+			totalStakedInUsd =
+				totalStakedInWsys &&
+				(usdPrice?.quote(totalStakedInWsys) as TokenAmount);
+		} else {
+			// Contains no stablecoin, WSYS, nor PSYS
+			console.error(
+				`Could not identify total staked value for pair ${pair.liquidityToken.address}`
+			);
+		}
 	}
 
-	static async usdcPrice(currency: Currency, chainId?: ChainId) {}
+	static async usdPrice(currency: Currency, chainId?: ChainId) {
+		const wrapped = wrappedCurrency(currency, chainId ?? ChainId.NEVM)
+		const usdc = USDC[chainId ?? ChainId.NEVM]
+
+		const tokenPairs = [
+			[
+				chainId && wrapped && currencyEquals(WSYS[chainId], wrapped) ? undefined : currency,
+				chainId ? WSYS[chainId] : undefined
+			],
+			[wrapped?.equals(usdc) ? undefined : wrapped, chainId === ChainId.NEVM ? usdc : undefined],
+			[chainId ? WSYS[chainId] : undefined, chainId === ChainId.NEVM ? usdc : undefined]
+		]
+
+		const [[sysPairState, sysPair], [usdcPairState, usdcPair], [usdcSysPairState, usdcSysPair]] = usePairs(tokenPairs)
+
+		return useMemo(() => {
+			if (!currency || !wrapped || !chainId) {
+				return undefined
+			}
+			// handle wsys/sys
+			if (wrapped.equals(WSYS[chainId])) {
+				if (usdcPair) {
+					const price = usdcPair.priceOf(WSYS[chainId])
+					return new Price(currency, USDC, price.denominator, price.numerator)
+				} else {
+					return undefined
+				}
+			}
+			// handle usdc
+			if (wrapped.equals(usdc)) {
+				return new Price(usdc, usdc, '1', '1')
+			}
+
+			const sysPairSYSAmount = sysPair?.reserveOf(WSYS[chainId])
+			const sysPairSYSUSDCValue: JSBI =
+				sysPairSYSAmount && usdcSysPair
+					? usdcSysPair.priceOf(WSYS[chainId]).quote(sysPairSYSAmount).raw
+					: JSBI.BigInt(0)
+
+			// all other tokens
+			// first try the usdc pair
+			if (usdcPairState === PairState.EXISTS && usdcPair && usdcPair.reserveOf(USDC).greaterThan(sysPairSYSUSDCValue)) {
+				const price = usdcPair.priceOf(wrapped)
+				return new Price(currency, USDC, price.denominator, price.numerator)
+			}
+			if (sysPairState === PairState.EXISTS && sysPair && usdcSysPairState === PairState.EXISTS && usdcSysPair) {
+				if (usdcSysPair.reserveOf(USDC).greaterThan('0') && sysPair.reserveOf(WSYS[chainId]).greaterThan('0')) {
+					const sysUsdcPrice = usdcSysPair.priceOf(USDC)
+					const currencySysPrice = sysPair.priceOf(WSYS[chainId])
+					const usdcPrice = sysUsdcPrice.multiply(currencySysPrice).invert()
+					return new Price(currency, USDC, usdcPrice.denominator, usdcPrice.numerator)
+				}
+			}
+			return undefined
+		}
+	}
 }
 
 export default TokenServices;

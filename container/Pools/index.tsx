@@ -503,7 +503,7 @@ export const PoolsContainer: NextPage = () => {
 								in real time and can be claimed by withdrawing your liquidity.
 							</Text>
 						</Flex>
-						{walletAddress && (
+						{address && (
 							<Flex
 								alignItems="center"
 								justifyContent="center"
@@ -517,9 +517,7 @@ export const PoolsContainer: NextPage = () => {
 								gap="2.5"
 								cursor="pointer"
 								onClick={() =>
-									window.open(
-										`https://info.pegasys.finance/account/${walletAddress}`
-									)
+									window.open(`https://info.pegasys.finance/account/${address}`)
 								}
 							>
 								<Text fontWeight="medium" fontSize="xs" color="white">

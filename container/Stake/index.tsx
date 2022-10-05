@@ -9,17 +9,16 @@ import {
 import { StakeCards } from "components/Stake/StakeCard";
 import { usePicasso } from "hooks";
 import { NextPage } from "next";
-import { useState } from "react";
 import { MdOutlineCallMade } from "react-icons/md";
 import { useWallet as psUseWallet, useStake } from "pegasys-services";
 
 export const StakeContainer: NextPage = () => {
 	const theme = usePicasso();
-	const [buttonId, setButtonId] = useState<string>("");
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
-	const { selectedStake } = useStake();
 	const { colorMode } = useColorMode();
 	const { isConnected } = psUseWallet();
+	const { selectedStake, valueType, setValueType } = useStake();
+
 	return (
 		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
 			<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
@@ -107,14 +106,14 @@ export const StakeContainer: NextPage = () => {
 							]}
 						>
 							<Button
-								onClick={() => setButtonId("psys")}
+								onClick={() => setValueType("psys")}
 								color={
-									buttonId === "psys"
+									valueType === "psys"
 										? theme.text.farmActionsHover
 										: theme.border.borderSettings
 								}
 								bgColor={
-									buttonId === "psys"
+									valueType === "psys"
 										? theme.bg.farmActionsHover
 										: "transparent"
 								}
@@ -131,14 +130,16 @@ export const StakeContainer: NextPage = () => {
 								PSYS
 							</Button>
 							<Button
-								onClick={() => setButtonId("usd")}
+								onClick={() => setValueType("usd")}
 								color={
-									buttonId === "usd"
+									valueType === "usd"
 										? theme.text.farmActionsHover
 										: theme.border.borderSettings
 								}
 								bgColor={
-									buttonId === "usd" ? theme.bg.farmActionsHover : "transparent"
+									valueType === "usd"
+										? theme.bg.farmActionsHover
+										: "transparent"
 								}
 								borderRadius="full"
 								w="5.688rem"

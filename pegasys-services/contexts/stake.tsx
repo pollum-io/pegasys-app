@@ -15,6 +15,7 @@ export const StakeContext = createContext({} as IStakeProviderValue);
 export const StakeProvider: React.FC<IStakeProviderProps> = ({ children }) => {
 	const [unstakeTypedValue, setUnstakeTypedValue] = useState<string>("");
 	const [stakeTypedValue, setStakeTypedValue] = useState<string>("");
+	const [valueType, setValueType] = useState<"psys" | "usd">("psys");
 	const [selectedStake, setSelectedStake] = useState<IStakeInfo>();
 	const { chainId, address } = psUseWallet();
 	const { userTransactionDeadlineValue } = useWallet();
@@ -122,8 +123,16 @@ export const StakeProvider: React.FC<IStakeProviderProps> = ({ children }) => {
 			stake,
 			unstake,
 			liveRewardWeek,
+			valueType,
+			setValueType,
 		}),
-		[unstakeTypedValue, stakeTypedValue, selectedStake, liveRewardWeek]
+		[
+			unstakeTypedValue,
+			stakeTypedValue,
+			selectedStake,
+			liveRewardWeek,
+			valueType,
+		]
 	);
 
 	return (

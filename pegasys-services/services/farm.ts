@@ -399,7 +399,7 @@ class FarmServices {
 				address,
 				signatureData.deadline,
 				signatureData.v,
-				signatureData.r,
+				Number(signatureData.r),
 				signatureData.s,
 			],
 		});
