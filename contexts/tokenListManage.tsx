@@ -15,6 +15,7 @@ import { getBalanceOfSingleCall, getProviderBalance } from "utils";
 
 interface ITokensListManageContext {
 	tokenListManageState: ListsState;
+	currentTokensToDisplay: WrappedTokenInfo[];
 	UseSelectedListUrl: () => string[] | undefined;
 	UseSelectedTokenList: () => TokenAddressMap;
 	removeListFromListState: (listUrl: string) => void;
@@ -44,6 +45,70 @@ export const TokensListManageProvider: React.FC<{
 	const { isConnected, provider, walletAddress, currentNetworkChainId } =
 		useWallet();
 
+	// UTILS FUNCTIONS TO HANDLE DISPLAY TOKENS STATE //
+	const findAndReturnTokensByListUrl = (
+		listUrl: string
+	): WrappedTokenInfo[] => {
+		const getCurrentList = tokenListCache?.get(
+			tokenListManageState.byUrl[listUrl].current as TokenList
+		) as TokenAddressMap;
+
+		if (getCurrentList) {
+			const transformListObject = Object.assign(getCurrentList);
+
+			const findTokensByChain =
+				transformListObject[currentNetworkChainId || 57];
+
+			const convertFoundedTokens = Object.values(findTokensByChain).map(
+				token => token
+			) as WrappedTokenInfo[];
+
+			return convertFoundedTokens;
+		}
+
+		return [];
+	};
+
+	const handleTokensToDisplay = () => {
+		if (!tokenListManageState?.byUrl || !tokenListManageState?.selectedListUrl)
+			return;
+
+		const transformListKeys = Object.keys(tokenListManageState.byUrl);
+
+		tokenListManageState?.selectedListUrl.map((listUrl, index) => {
+			const tokenListValuesByUrl = String(transformListKeys[index]);
+
+			const getCurrentListTokens = findAndReturnTokensByListUrl(listUrl);
+
+			if (listUrl === tokenListValuesByUrl && getCurrentListTokens.length > 0) {
+				const verifyIfTokenExist = currentTokensToDisplay.filter(
+					(token, index) => token === getCurrentListTokens[index]
+				);
+
+				if (verifyIfTokenExist.length === 0) {
+					setCurrentTokensToDisplay(prevState => [
+						...prevState,
+						...getCurrentListTokens,
+					]);
+				}
+			}
+			return {};
+		});
+	};
+
+	const findAndRemoveTokenFromList = (listUrl: string) => {
+		const getCurrentListTokens = findAndReturnTokensByListUrl(listUrl);
+
+		const searchAndRemoveToken = currentTokensToDisplay.filter(
+			(token, index) => token !== getCurrentListTokens[index]
+		);
+
+		setCurrentTokensToDisplay(searchAndRemoveToken);
+	};
+
+	// END UTILS FUNCTIONS TO HANDLE DISPLAY TOKEN STATE //
+
+	// HANDLE FUNCTIONS TO FILL AND MANAGE TOKEN LIST MANAGE STATE AT ALL AND ALSO WEAK MAP LISTS //
 	const fetchAndFulfilledTokenListManage = async (listUrl: string) => {
 		const tokenListResponse = await getTokenListByUrl(listUrl);
 
@@ -228,12 +293,6 @@ export const TokensListManageProvider: React.FC<{
 		return tokenList as TokenAddressMap;
 	};
 
-	const UseSelectedListUrl = (): string[] | undefined =>
-		([] as string[]).concat(tokenListManageState?.selectedListUrl || []);
-
-	const UseSelectedTokenList = (): TokenAddressMap =>
-		useTokenList(UseSelectedListUrl());
-
 	const removeListFromListState = (listUrl: string) => {
 		setTokenListManageState(prevState => {
 			if (prevState.byUrl[listUrl]) delete prevState.byUrl[listUrl];
@@ -279,13 +338,15 @@ export const TokensListManageProvider: React.FC<{
 			} else {
 				const elementInListIndex = existingSelectedList.indexOf(listUrl);
 
-				if (elementInListIndex !== -1) {
-					if (existingSelectedList?.length === 1) {
-						prevState.selectedListUrl = DEFAULT_TOKEN_LISTS_SELECTED;
-					} else {
-						existingSelectedList.splice(elementInListIndex, 1);
-						prevState.selectedListUrl = existingSelectedList;
-					}
+				if (elementInListIndex === -1) return { ...prevState };
+
+				if (existingSelectedList?.length === 1) {
+					prevState.selectedListUrl = DEFAULT_TOKEN_LISTS_SELECTED;
+				} else {
+					findAndRemoveTokenFromList(listUrl);
+
+					existingSelectedList.splice(elementInListIndex, 1);
+					prevState.selectedListUrl = existingSelectedList;
 				}
 			}
 
@@ -296,51 +357,13 @@ export const TokensListManageProvider: React.FC<{
 		});
 	};
 
-	const handleTokensToDisplay = () => {
-		if (!tokenListManageState?.byUrl || !tokenListManageState?.selectedListUrl)
-			return;
+	const UseSelectedListUrl = (): string[] | undefined =>
+		([] as string[]).concat(tokenListManageState?.selectedListUrl || []);
 
-		const transformListKeys = Object.keys(tokenListManageState.byUrl);
+	const UseSelectedTokenList = (): TokenAddressMap =>
+		useTokenList(UseSelectedListUrl());
 
-		tokenListManageState?.selectedListUrl.map((listUrl, index) => {
-			const tokenListValuesByUrl = String(transformListKeys[index]);
-
-			const getCurrentList = tokenListCache?.get(
-				tokenListManageState.byUrl[listUrl].current as TokenList
-			);
-
-			if (listUrl === tokenListValuesByUrl && getCurrentList) {
-				const transformList = Object.assign(getCurrentList);
-
-				const findTokensByChain =
-					transformList[currentNetworkChainId || (57 as number)]; // aqui é achado os tokens dentro do WeakMap, validem se os valores ja existem no array antes de adicionar
-
-				if (Object.keys(findTokensByChain).length !== 0) {
-					const convertTokens = Object.values(findTokensByChain).map(
-						token => token
-					) as WrappedTokenInfo[];
-
-					const verifyIfTokenExist = currentTokensToDisplay.some(
-						(token, index) => token?.address === convertTokens[index]?.address
-					);
-
-					if (currentTokensToDisplay.length === 0) {
-						setCurrentTokensToDisplay(convertTokens);
-					}
-
-					if (currentTokensToDisplay.length > 0 && !verifyIfTokenExist) {
-						setCurrentTokensToDisplay(prevState => [
-							...prevState,
-							...convertTokens,
-						]);
-					}
-				}
-			}
-			return {};
-		});
-	};
-
-	console.log("tokensToDisplay", currentTokensToDisplay);
+	// HANDLE FUNCTIONS TO FILL AND MANAGE TOKEN LIST MANAGE STATE AT ALL AND ALSO WEAK MAP LISTS //
 
 	useEffect(() => {
 		UseSelectedTokenList();
@@ -364,6 +387,7 @@ export const TokensListManageProvider: React.FC<{
 	const tokensListManageProviderValue = useMemo(
 		() => ({
 			tokenListManageState,
+			currentTokensToDisplay,
 			UseSelectedListUrl,
 			UseSelectedTokenList,
 			removeListFromListState,
@@ -375,6 +399,7 @@ export const TokensListManageProvider: React.FC<{
 			tokenListManageState.byUrl,
 			tokenListManageState.lastInitializedDefaultListOfLists,
 			tokenListManageState.selectedListUrl,
+			currentTokensToDisplay,
 			UseSelectedListUrl,
 			UseSelectedTokenList,
 			removeListFromListState,
