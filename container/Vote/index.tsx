@@ -92,10 +92,9 @@ export const VoteContainer: NextPage = () => {
 									bgColor={theme.bg.whiteGray}
 									zIndex="0"
 									position="relative"
-									top="2"
+									top="4"
 									borderBottomRadius="xl"
 									py="0.531rem"
-									gap={["0", "2.5", "2.5", "2.5"]}
 									px="1rem"
 								>
 									<Text fontWeight="500" fontSize="16px" color="white">
