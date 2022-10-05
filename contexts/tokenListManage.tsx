@@ -9,7 +9,13 @@ import {
 } from "helpers/tokenListHelpers";
 import { useWallet } from "hooks";
 import { getTokenListByUrl } from "networks";
-import React, { createContext, useMemo, useState, useEffect } from "react";
+import React, {
+	createContext,
+	useMemo,
+	useState,
+	useEffect,
+	useCallback,
+} from "react";
 import { ListsState, TokenAddressMap, WrappedTokenInfo } from "types";
 import { getBalanceOfSingleCall, getProviderBalance } from "utils";
 
@@ -63,6 +69,23 @@ export const TokensListManageProvider: React.FC<{
 				token => token
 			) as WrappedTokenInfo[];
 
+			const verifyIfListHasUnecessaryTokens = convertFoundedTokens.findIndex(
+				token =>
+					token.symbol === "AGEUR" ||
+					token.symbol === "MAI" ||
+					token.symbol === "QI"
+			);
+
+			if (verifyIfListHasUnecessaryTokens !== -1) {
+				const unecessaryTokensRemoved = convertFoundedTokens.filter(
+					token =>
+						token.symbol !== "AGEUR" &&
+						token.symbol !== "MAI" &&
+						token.symbol !== "QI"
+				);
+				return unecessaryTokensRemoved;
+			}
+
 			return convertFoundedTokens;
 		}
 
@@ -80,7 +103,7 @@ export const TokensListManageProvider: React.FC<{
 
 			const getCurrentListTokens = findAndReturnTokensByListUrl(listUrl);
 
-			if (listUrl === tokenListValuesByUrl && getCurrentListTokens.length > 0) {
+			if (listUrl === tokenListValuesByUrl) {
 				const verifyIfTokenExist = currentTokensToDisplay.filter(
 					(token, index) => token === getCurrentListTokens[index]
 				);
@@ -91,6 +114,8 @@ export const TokensListManageProvider: React.FC<{
 						...getCurrentListTokens,
 					]);
 				}
+			} else {
+				setCurrentTokensToDisplay(getCurrentListTokens);
 			}
 			return {};
 		});
@@ -365,6 +390,8 @@ export const TokensListManageProvider: React.FC<{
 
 	// HANDLE FUNCTIONS TO FILL AND MANAGE TOKEN LIST MANAGE STATE AT ALL AND ALSO WEAK MAP LISTS //
 
+	console.log("currentTokensToDisplay", currentTokensToDisplay);
+
 	useEffect(() => {
 		UseSelectedTokenList();
 
@@ -372,8 +399,6 @@ export const TokensListManageProvider: React.FC<{
 		Object.keys(tokenListManageState?.byUrl).forEach(url =>
 			fetchAndFulfilledTokenListManage(url)
 		);
-
-		handleTokensToDisplay();
 	}, [
 		tokenListManageState,
 		tokenListManageState.byUrl,
@@ -383,6 +408,12 @@ export const TokensListManageProvider: React.FC<{
 		walletAddress,
 		currentNetworkChainId,
 	]);
+
+	useEffect(() => {
+		if (!tokenListManageState.selectedListUrl) return;
+		// console.log(tokenListManageState.selectedListUrl)
+		handleTokensToDisplay();
+	}, [tokenListManageState.selectedListUrl, currentNetworkChainId]);
 
 	const tokensListManageProviderValue = useMemo(
 		() => ({
