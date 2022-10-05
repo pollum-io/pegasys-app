@@ -173,7 +173,7 @@ export const PoolsContainer: NextPage = () => {
 										pb="0.3rem"
 										// eslint-disable-next-line react/no-children-prop
 										children={
-											<MdSearch color={theme.icon.searchIcon} size={20} />
+											<MdSearch color={theme.icon.inputSearchIcon} size={20} />
 										}
 									/>
 									<Input
@@ -181,7 +181,7 @@ export const PoolsContainer: NextPage = () => {
 										placeholder="Search by token name"
 										_placeholder={{
 											opacity: 1,
-											color: theme.text.input,
+											color: theme.text.inputBluePurple,
 										}}
 										borderRadius="full"
 										w={["18.5rem", "27rem", "20rem", "20rem"]}
@@ -292,31 +292,31 @@ export const PoolsContainer: NextPage = () => {
 											>
 												<MenuItem
 													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.iconBg }}
+													_hover={{ bgColor: theme.bg.neutralGray }}
 												>
 													Pool Weight
 												</MenuItem>
 												<MenuItem
 													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.iconBg }}
+													_hover={{ bgColor: theme.bg.neutralGray }}
 												>
 													Name
 												</MenuItem>
 												<MenuItem
 													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.iconBg }}
+													_hover={{ bgColor: theme.bg.neutralGray }}
 												>
 													Claudio
 												</MenuItem>
 												<MenuItem
 													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.iconBg }}
+													_hover={{ bgColor: theme.bg.neutralGray }}
 												>
 													Thom
 												</MenuItem>
 												<MenuItem
 													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.iconBg }}
+													_hover={{ bgColor: theme.bg.neutralGray }}
 												>
 													Kaue
 												</MenuItem>

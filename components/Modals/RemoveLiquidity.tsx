@@ -152,7 +152,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						</Flex>
 					</Flex>
 					<Slider
-						color={theme.text.transactionsItems}
+						color={theme.text.softGray}
 						id="slider"
 						mt="9"
 						defaultValue={5}

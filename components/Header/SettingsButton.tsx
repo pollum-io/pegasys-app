@@ -140,7 +140,6 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 				<IconButton
 					bgColor="transparent"
 					_hover={{
-						background: theme.bg.iconBg,
 						color: theme.text.cyanPurple,
 					}}
 					aria-label="Popover"
@@ -174,7 +173,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 					<PopoverCloseButton position="relative" size="md" />
 				</Flex>
 				<Flex
-					bgColor={theme.bg.transactionSettings}
+					bgColor={theme.bg.alphaLightGray}
 					borderRadius="7rem"
 					py="2"
 					justifyContent="center"
@@ -216,13 +215,13 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 									}}
 									bgColor={
 										userSlippageTolerance === slippageValue.valueInBips
-											? theme.bg.slippage
+											? theme.bg.softBluePink
 											: "transparent"
 									}
 									color={
 										userSlippageTolerance === slippageValue.valueInBips
 											? theme.text.mono
-											: theme.text.transactionsItems
+											: theme.text.softGray
 									}
 								>
 									{slippageValue.valueInBips / 100}%
@@ -230,15 +229,14 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							))}
 
 							<SlippageButton
+								_hover={{}}
 								aria-label="Slip"
 								w="30%"
 								padding="0"
 								borderRadius={36}
 								border="1px solid"
 								borderColor={
-									!slippageInputIsValid
-										? "#FF6871"
-										: theme.border.borderSettings
+									!slippageInputIsValid ? "#FF6871" : theme.text.lightGray
 								}
 							>
 								<Flex alignItems="center">
@@ -329,7 +327,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								fontSize="md"
 								border="1px solid"
 								borderColor={
-									deadlineInputError ? "#FF6871" : theme.border.borderSettings
+									deadlineInputError ? "#FF6871" : theme.text.lightGray
 								}
 								value={deadlineInputValue}
 								_focus={{
@@ -386,7 +384,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 						</Flex>
 					</Flex>
 					<Flex
-						bgColor={theme.bg.transactionSettings}
+						bgColor={theme.bg.alphaLightGray}
 						borderRadius="7rem"
 						py="2"
 						mt={["8", "8", "8", "8"]}

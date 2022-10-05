@@ -12,6 +12,7 @@ import {
 	Icon,
 	Box,
 	useMediaQuery,
+	Link,
 } from "@chakra-ui/react";
 import { FarmCards } from "components/Farm/FarmCards";
 import { usePicasso } from "hooks";
@@ -69,16 +70,26 @@ export const FarmContainer: NextPage = () => {
 						alignItems="center"
 						justifyContent="center"
 						flexDirection="row"
-						bgColor={theme.text.topHeaderButton}
+						bgColor={theme.bg.whiteGray}
 						borderBottomRadius="xl"
 						py="0.531rem"
-						gap="2.5"
 						color="white"
 					>
-						<Text fontWeight="medium" fontSize="xs">
-							View Your Staked Liquidity
-						</Text>
-						<MdOutlineCallMade size={20} />
+						<Link
+							href="info.pegasys.finance/account/wallet"
+							target="_blank"
+							rel="noreferrer"
+							_hover={{ cursor: "pointer", opacity: "0.9" }}
+							flexDirection="row"
+						>
+							<Flex gap="2.5">
+								<Text fontWeight="medium" fontSize="xs">
+									View Your Staked Liquidity
+								</Text>
+
+								<MdOutlineCallMade size={20} />
+							</Flex>
+						</Link>
 					</Flex>
 				</Flex>
 				<Flex
@@ -110,11 +121,12 @@ export const FarmContainer: NextPage = () => {
 						id="c"
 						w="max-content"
 						position={["absolute", "absolute", "relative", "relative"]}
+						zIndex="docked"
 					>
 						<InputGroup right="0rem">
 							<Input
 								placeholder="Search by token name"
-								_placeholder={{ opacity: 1, color: theme.text.input }}
+								_placeholder={{ opacity: 1, color: theme.text.inputBluePurple }}
 								borderColor={theme.bg.blueNavyLightness}
 								borderRadius="full"
 								w={["20rem", "28rem", "20rem", "20rem"]}
@@ -130,7 +142,7 @@ export const FarmContainer: NextPage = () => {
 								pl="0.9rem"
 								bottom={["0.3rem", "0.3rem", "0.5rem", "0.5rem"]}
 							>
-								<MdSearch color={theme.icon.searchIcon} size={20} />
+								<MdSearch color={theme.icon.inputSearchIcon} size={20} />
 							</Flex>
 						</InputGroup>
 						<Flex
@@ -150,8 +162,7 @@ export const FarmContainer: NextPage = () => {
 									alignItems="center"
 									justifyContent="justify-content"
 									py={["0.2rem", "0.2rem", "1", "1"]}
-									pl="4"
-									pr="4"
+									px="1rem"
 									w="max-content"
 									h="2.2rem"
 									bgColor={theme.bg.blueNavyLightness}

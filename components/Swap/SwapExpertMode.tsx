@@ -7,7 +7,7 @@ export const SwapExpertMode: FunctionComponent = () => {
 	const { otherWallet, setOtherWallet } = useWallet();
 
 	return (
-		<Flex flexDirection="column" py="1rem" border="transparent" mb="-1">
+		<Flex flexDirection="column" py="1rem" border="transparent" mb="-3">
 			<Flex flex-direction="row" fontSize="0.875rem" gap="1">
 				<Flex
 					color={theme.text.cyanPurple}

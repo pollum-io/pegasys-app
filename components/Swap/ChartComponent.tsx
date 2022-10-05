@@ -30,7 +30,7 @@ const ChartComponent = (props: IChartComponentProps) => {
 		const chart = createChart(chartContainerRef.current, {
 			layout: {
 				background: { type: ColorType.Solid, color: colors.backgroundColor },
-				textColor: theme.border.chart,
+				textColor: theme.border.lightGray,
 				fontSize: 16,
 				fontFamily: "Inter",
 			},
@@ -46,14 +46,14 @@ const ChartComponent = (props: IChartComponentProps) => {
 			},
 			rightPriceScale: {
 				visible: true,
-				borderColor: theme.border.chart,
+				borderColor: theme.border.lightGray,
 				scaleMargins: {
 					bottom: 0.05,
 				},
 			},
 			timeScale: {
 				visible: true,
-				borderColor: theme.border.chart,
+				borderColor: theme.border.lightGray,
 				timeVisible: true,
 				lockVisibleTimeRangeOnResize: true,
 			},

@@ -12,8 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import React from "react";
-import { MdArrowDownward } from "react-icons/md";
-import { AiOutlineClose } from "react-icons/ai";
+import { MdArrowDownward, MdOutlineClose } from "react-icons/md";
 import { WrappedTokenInfo, ISwapTokenInputValue } from "types";
 import { CurrencyAmount, Trade } from "@pollum-io/pegasys-sdk";
 import { FormattedPriceImpat } from "components/Swap/FormattedPriceImpact";
@@ -83,7 +82,11 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 						</Text>
 					</Flex>
 					<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
-						<AiOutlineClose size={24} />
+						<MdOutlineClose
+							size={22}
+							onClick={onClose}
+							color={theme.text.mono}
+						/>
 					</Flex>
 				</ModalHeader>
 				<ModalBody mb="4">

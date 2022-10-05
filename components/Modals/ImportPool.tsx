@@ -88,7 +88,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 						position="relative"
 						bgColor="red"
 						border="1px solid"
-						borderColor={theme.border.borderSettings}
+						borderColor={theme.text.lightGray}
 						color={theme.text.swapInfo}
 						borderRadius="md"
 					>

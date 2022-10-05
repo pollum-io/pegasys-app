@@ -22,8 +22,7 @@ import {
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { AiOutlineClose } from "react-icons/ai";
-import { MdArrowBack, MdOutlineInfo } from "react-icons/md";
+import { MdArrowBack, MdOutlineClose, MdOutlineInfo } from "react-icons/md";
 
 interface IModal {
 	isOpen: boolean;
@@ -84,13 +83,13 @@ export const FarmActions: React.FC<IModal> = props => {
 								onClick={() => setButtonId("deposit")}
 								bgColor={
 									buttonId === "deposit"
-										? theme.bg.farmActionsHover
+										? theme.bg.babyBluePurple
 										: "transparent"
 								}
 								color={
 									buttonId === "deposit"
-										? theme.text.farmActionsHover
-										: theme.border.borderSettings
+										? theme.text.darkBluePurple
+										: theme.text.lightGray
 								}
 								fontWeight="semibold"
 								_hover={{
@@ -109,13 +108,13 @@ export const FarmActions: React.FC<IModal> = props => {
 								onClick={() => setButtonId("withdraw")}
 								bgColor={
 									buttonId === "withdraw"
-										? theme.bg.farmActionsHover
+										? theme.bg.babyBluePurple
 										: "transparent"
 								}
 								color={
 									buttonId === "withdraw"
-										? theme.text.farmActionsHover
-										: theme.border.borderSettings
+										? theme.text.darkBluePurple
+										: theme.text.lightGray
 								}
 								fontWeight="semibold"
 								_hover={{
@@ -132,14 +131,12 @@ export const FarmActions: React.FC<IModal> = props => {
 								borderRadius="full"
 								onClick={() => setButtonId("claim")}
 								bgColor={
-									buttonId === "claim"
-										? theme.bg.farmActionsHover
-										: "transparent"
+									buttonId === "claim" ? theme.bg.babyBluePurple : "transparent"
 								}
 								color={
 									buttonId === "claim"
-										? theme.text.farmActionsHover
-										: theme.border.borderSettings
+										? theme.text.darkBluePurple
+										: theme.text.lightGray
 								}
 								fontWeight="semibold"
 								_hover={{
@@ -163,7 +160,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									lg: "block",
 								}}
 							>
-								<AiOutlineClose size={20} color={theme.icon.closeWhiteGray} />
+								<MdOutlineClose size={24} color={theme.icon.whiteDarkGray} />
 							</Flex>
 							<Flex
 								display={{
@@ -228,7 +225,7 @@ export const FarmActions: React.FC<IModal> = props => {
 											<Input
 												placeholder="0.0"
 												border="1px solid"
-												borderColor={theme.border.farmInput}
+												borderColor={theme.border.darkBlueGray}
 												bgColor={theme.bg.blackAlpha}
 												borderLeftRadius="full"
 												w="25rem"
@@ -241,15 +238,15 @@ export const FarmActions: React.FC<IModal> = props => {
 												// eslint-disable-next-line react/no-children-prop
 												children="max"
 												border="1px solid"
-												borderColor={theme.border.farmInput}
-												background={theme.bg.max}
+												borderColor={theme.border.darkBlueGray}
+												background={theme.bg.darkBlueGray}
 												borderRightRadius="full"
-												color={theme.text.max}
+												color={theme.text.cyanDarkGray}
 												fontSize="lg"
 												fontWeight="normal"
 												transition="100ms ease-in-out"
 												_hover={{
-													borderColor: theme.border.farmInput,
+													borderColor: theme.border.darkBlueGray,
 													bgColor: theme.bg.blueNavyLightness,
 													color: theme.text.cyan,
 													cursor: "pointer",
@@ -318,7 +315,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									<Input
 										placeholder="0.0"
 										border="1px solid"
-										borderColor={theme.border.farmInput}
+										borderColor={theme.border.darkBlueGray}
 										bgColor={theme.bg.blackAlpha}
 										borderLeftRadius="full"
 										w="25rem"
@@ -331,15 +328,15 @@ export const FarmActions: React.FC<IModal> = props => {
 										// eslint-disable-next-line react/no-children-prop
 										children="max"
 										border="1px solid"
-										borderColor={theme.border.farmInput}
-										background={theme.bg.max}
+										borderColor={theme.border.darkBlueGray}
+										background={theme.bg.darkBlueGray}
 										borderRightRadius="full"
-										color={theme.text.max}
+										color={theme.text.cyanDarkGray}
 										fontSize="lg"
 										fontWeight="normal"
 										transition="100ms ease-in-out"
 										_hover={{
-											borderColor: theme.border.farmInput,
+											borderColor: theme.border.darkBlueGray,
 											bgColor: theme.bg.blueNavyLightness,
 											color: theme.text.cyan,
 											cursor: "pointer",
@@ -388,7 +385,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									<Tooltip
 										hasArrow
 										filter="drop-shadow(0px 1px 3px rgba(0, 0, 0, 0.1)) drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.06))"
-										bgColor={theme.bg.secondary}
+										bgColor={theme.bg.blueNavyLight}
 										color={theme.text.mono}
 										placement="top"
 										isOpen={showTooltip}
@@ -442,7 +439,7 @@ export const FarmActions: React.FC<IModal> = props => {
 					{buttonId === "claim" && (
 						<Flex flexDirection="column" gap="6">
 							<Flex
-								bgColor={theme.bg.max}
+								bgColor={theme.bg.darkBlueGray}
 								flexDirection="column"
 								justifyContent="center"
 								alignItems="center"
@@ -486,8 +483,8 @@ export const FarmActions: React.FC<IModal> = props => {
 							flexDirection="row"
 							p="1.5rem"
 							background={[
-								theme.bg.iconTicket,
-								theme.bg.iconTicket,
+								theme.bg.smoothGray,
+								theme.bg.smoothGray,
 								theme.bg.subModal,
 								theme.bg.subModal,
 							]}
@@ -520,8 +517,8 @@ export const FarmActions: React.FC<IModal> = props => {
 							flexDirection="row"
 							p="1.5rem"
 							background={[
-								theme.bg.iconTicket,
-								theme.bg.iconTicket,
+								theme.bg.smoothGray,
+								theme.bg.smoothGray,
 								theme.bg.subModal,
 								theme.bg.subModal,
 							]}

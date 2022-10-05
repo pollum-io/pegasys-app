@@ -8,8 +8,8 @@ import {
 import { usePicasso, useWallet } from "hooks";
 import { FunctionComponent } from "react";
 import { SwitchToSyscoin } from "components/Buttons";
-import { AiOutlineClose } from "react-icons/ai";
 import { IoIosInformationCircle } from "react-icons/io";
+import { MdOutlineClose } from "react-icons/md";
 
 interface IModal {
 	isOpen: boolean;
@@ -36,11 +36,15 @@ export const SelectSyscoin: FunctionComponent<IModal> = props => {
 						Wrong Network
 					</Text>
 					<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
-						<AiOutlineClose size={22} />
+						<MdOutlineClose
+							size={22}
+							onClick={onClose}
+							color={theme.icon.whiteDarkGray}
+						/>
 					</Flex>
 				</Flex>
 				<Flex py="1.5rem">
-					<IoIosInformationCircle size={26} color={theme.icon.infoWhiteRed} />
+					<IoIosInformationCircle size={26} color={theme.icon.whiteRed} />
 					<Text fontSize="md" fontWeight="normal" pl="1.125rem">
 						Please connect to the appropriate Syscoin network.
 					</Text>

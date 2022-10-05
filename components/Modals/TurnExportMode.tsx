@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import React from "react";
-import { AiOutlineClose } from "react-icons/ai";
+import { MdOutlineClose } from "react-icons/md";
 
 import { RiInformationFill } from "react-icons/ri";
 
@@ -52,7 +52,11 @@ export const TurnExportMode: React.FC<IModal> = props => {
 							</Text>
 						</Flex>
 						<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
-							<AiOutlineClose size={20} />
+							<MdOutlineClose
+								size={22}
+								onClick={onClose}
+								color={theme.icon.whiteDarkGray}
+							/>
 						</Flex>
 					</Flex>
 				</ModalHeader>
