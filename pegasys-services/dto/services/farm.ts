@@ -1,4 +1,3 @@
-// import { Token } from "@pollum-io/pegasys-sdk";
 import { TokenAmount, Token, JSBI } from "@pollum-io/pegasys-sdk";
 import { WrappedTokenInfo } from "types";
 
@@ -8,7 +7,7 @@ export interface IFarmInfo {
 	swapFeeApr: number;
 	superFarmApr?: number;
 	combinedApr: number;
-	poolId: number;
+	poolId: number;	
 	userStakedAmount: TokenAmount;
 	totalStakedInUsd: TokenAmount;
 	userStakeInUsd: JSBI;
@@ -19,4 +18,5 @@ export interface IFarmInfo {
 	userRewardRatePerWeek: TokenAmount;
 	rewarderMultiplier?: bigint;
 	lpToken: Token;
+	poolRewardRateAmount: TokenAmount;
 }

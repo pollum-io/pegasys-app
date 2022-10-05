@@ -324,6 +324,7 @@ class FarmServices {
 						totalRewardRatePerWeek,
 						userRewardRatePerWeek,
 						rewarderMultiplier,
+						poolRewardRateAmount,
 						lpToken,
 						...aprs,
 					});
@@ -335,6 +336,20 @@ class FarmServices {
 	}
 
 	static async withdraw(poolId: number, amount: string, address: string) {
+		const contract = LpTokenServices.getLpContract();
+
+		await ContractFramework.call({
+			methodName: "withdraw",
+			contract,
+			args: [poolId, `0x${amount}`, address],
+		});
+	}
+
+	static async withdrawAndClaim(
+		poolId: number,
+		amount: string,
+		address: string
+	) {
 		const contract = LpTokenServices.getLpContract();
 
 		await ContractFramework.call({
@@ -354,17 +369,7 @@ class FarmServices {
 		});
 	}
 
-	static async deposit(poolId: number, amount: string, address: string) {
-		const contract = LpTokenServices.getLpContract();
-
-		await ContractFramework.call({
-			methodName: "deposit",
-			contract,
-			args: [poolId, `0x${amount}`, address],
-		});
-	}
-
-	static async depositWithPermit(
+	static async deposit(
 		poolId: number,
 		amount: string,
 		address: string,

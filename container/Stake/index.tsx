@@ -11,7 +11,7 @@ export const StakeContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [buttonId, setButtonId] = useState<string>("");
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
-	const { allStakes } = useStake();
+	const { selectedStake } = useStake();
 
 	return (
 		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
@@ -154,9 +154,7 @@ export const StakeContainer: NextPage = () => {
 					mb="24"
 					alignItems={["center", "center", "center", "center"]}
 				>
-					{allStakes.map((stakeInfo, index) => (
-						<StakeCards key={index} stakeInfo={stakeInfo} />
-					))}
+					<StakeCards stakeInfo={selectedStake} />
 				</Flex>
 			</Flex>
 		</Flex>

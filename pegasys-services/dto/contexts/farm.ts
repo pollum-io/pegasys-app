@@ -1,3 +1,4 @@
+import { TokenAmount } from "@pollum-io/pegasys-sdk";
 import { children, setType } from "../react";
 import { IFarmInfo } from "../services";
 
@@ -22,4 +23,7 @@ export interface IFarmProviderValue {
 	onClaim: () => Promise<void>;
 	onWithdraw: () => Promise<void>;
 	onDeposit: () => Promise<void>;
+	liveRewardWeek?: TokenAmount;
+	buttonId: string;
+	setButtonId: setType<string>;
 }

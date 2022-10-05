@@ -25,12 +25,12 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 
 	const theme = usePicasso();
 	const { userTokensBalance } = useTokens();
-	const { setSelectedPair } = useFarm();
+	const { setSelectedPair, setButtonId } = useFarm();
 
 	const { isOpenFarmActions, onOpenFarmActions, onCloseFarmActions } =
 		useModal();
 
-	const [buttonId, setButtonId] = useState<string>("");
+	// const [buttonId, setButtonId] = useState<string>("");
 
 	const onClick = (id: string) => {
 		setButtonId(id);
@@ -60,12 +60,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 			border="1px solid transparent;"
 			background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 		>
-			<FarmActions
-				isOpen={isOpenFarmActions}
-				onClose={onCloseFarmActions}
-				buttonId={buttonId}
-				setButtonId={setButtonId}
-			/>
+			<FarmActions isOpen={isOpenFarmActions} onClose={onCloseFarmActions} />
 			<Flex justifyContent="space-between">
 				<Flex gap="2" pt="6">
 					<Flex>
@@ -104,18 +99,18 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 					<Text fontWeight="semibold">Swap Fee APR</Text>
 					<Text>{swapFeeApr}%</Text>
 				</Flex>
-				<>
-					{superFarmApr && (
+				{superFarmApr && (
+					<>
 						<Flex justifyContent="space-between" pb="3" fontSize="sm">
 							<Text fontWeight="semibold">Super Farm APR</Text>
 							<Text>{superFarmApr}%</Text>
 						</Flex>
-					)}
-					<Flex justifyContent="space-between" pb="3" fontSize="sm">
-						<Text fontWeight="semibold">Total APR</Text>
-						<Text>{combinedApr}%</Text>
-					</Flex>
-				</>
+						<Flex justifyContent="space-between" pb="3" fontSize="sm">
+							<Text fontWeight="semibold">Total APR</Text>
+							<Text>{combinedApr}%</Text>
+						</Flex>
+					</>
+				)}
 			</Flex>
 			{(JSBI.greaterThan(userRewardRatePerWeek.raw, JSBI.BigInt(0)) ||
 				JSBI.greaterThan(unclaimedPSYSAmount.raw, JSBI.BigInt(0))) && (

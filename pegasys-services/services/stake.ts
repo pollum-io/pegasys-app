@@ -1,14 +1,16 @@
 import { ChainId, JSBI, TokenAmount, WSYS } from "@pollum-io/pegasys-sdk";
 
+import { BigNumber } from "ethers";
+import { splitSignature } from "ethers/lib/utils";
 import { IStakeInfo } from "../dto";
-import { ContractFramework } from "../frameworks";
-import { BIG_INT_SECONDS_IN_WEEK, PSYS } from "../constants";
+import { ContractFramework, WalletFramework } from "../frameworks";
+import { BIG_INT_SECONDS_IN_WEEK, PSYS, STAKE_ADDRESS } from "../constants";
 
 class StakeServices {
 	static async getStakeInfos(
 		address: string,
 		chainId: ChainId
-	): Promise<IStakeInfo[]> {
+	): Promise<IStakeInfo> {
 		const psys = PSYS[ChainId.NEVM];
 		const wsys = WSYS[ChainId.NEVM];
 
@@ -136,37 +138,25 @@ class StakeServices {
 
 		const unstakedPsysAmount = new TokenAmount(psys, unstakedPsys);
 
-		return [
-			{
-				rewardToken: psys,
-				periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,
-				isPeriodFinished,
-				earnedAmount,
-				rewardRate: individualRewardRate,
-				totalRewardRate: totalRewardRatePerWeek,
-				stakedAmount,
-				totalStakedAmount,
-				totalStakedInPsys: totalStakedAmount,
-				apr,
-				unstakedPsysAmount,
-				totalRewardRatePerWeek,
-				totalRewardRatePerSecond,
-				rewardRatePerWeek: individualWeeklyRewardRate,
-			},
-		];
+		return {
+			rewardToken: psys,
+			periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,
+			isPeriodFinished,
+			earnedAmount,
+			rewardRate: individualRewardRate,
+			totalRewardRate: totalRewardRatePerWeek,
+			stakedAmount,
+			totalStakedAmount,
+			totalStakedInPsys: totalStakedAmount,
+			apr,
+			unstakedPsysAmount,
+			totalRewardRatePerWeek,
+			totalRewardRatePerSecond,
+			rewardRatePerWeek: individualWeeklyRewardRate,
+		};
 	}
 
-	static async stake(amount: string) {
-		const contract = ContractFramework.StakeContract(ChainId.NEVM);
-
-		await ContractFramework.call({
-			methodName: "stake",
-			contract,
-			args: [`0x${amount}`],
-		});
-	}
-
-	static async unstake() {
+	static async unstakeAndClaim() {
 		const contract = ContractFramework.StakeContract(ChainId.NEVM);
 
 		await ContractFramework.call({
@@ -175,7 +165,17 @@ class StakeServices {
 		});
 	}
 
-	static async stakeWithPermit(
+	static async unstake(amount: string) {
+		const contract = ContractFramework.StakeContract(ChainId.NEVM);
+
+		await ContractFramework.call({
+			methodName: "withdraw",
+			contract,
+			args: [`0x${amount}`],
+		});
+	}
+
+	static async stake(
 		amount: string,
 		signatureData: {
 			v: number;
@@ -187,7 +187,7 @@ class StakeServices {
 		const contract = ContractFramework.StakeContract(ChainId.NEVM);
 
 		await ContractFramework.call({
-			methodName: "stake",
+			methodName: "stakeWithPermit",
 			contract,
 			args: [
 				`0x${amount}`,
@@ -206,6 +206,80 @@ class StakeServices {
 			methodName: "getReward",
 			contract,
 		});
+	}
+
+	static async getSignature({
+		address,
+		chainId,
+		value,
+		deadline,
+	}: {
+		address: string;
+		chainId: ChainId;
+		value: string;
+		deadline: BigNumber | number;
+	}) {
+		const contract = ContractFramework.PSYSContract(chainId);
+
+		const nonce = await ContractFramework.call({
+			contract,
+			methodName: "nonces",
+			args: [address],
+		});
+
+		const EIP712Domain = [
+			{ name: "name", type: "string" },
+			{ name: "chainId", type: "uint256" },
+			{ name: "verifyingContract", type: "address" },
+		];
+
+		const domain = {
+			name: "Pegasys",
+			chainId,
+			verifyingContract: PSYS[ChainId.NEVM].address,
+		};
+
+		const Permit = [
+			{ name: "owner", type: "address" },
+			{ name: "spender", type: "address" },
+			{ name: "value", type: "uint256" },
+			{ name: "nonce", type: "uint256" },
+			{ name: "deadline", type: "uint256" },
+		];
+
+		const message = {
+			owner: address,
+			spender: STAKE_ADDRESS,
+			value,
+			nonce: nonce.toHexString(),
+			deadline: typeof deadline === "number" ? deadline : deadline.toNumber(),
+		};
+
+		const data = JSON.stringify({
+			types: {
+				EIP712Domain,
+				Permit,
+			},
+			domain,
+			primaryType: "Permit",
+			message,
+		});
+
+		const provider = WalletFramework.getProvider();
+
+		const signatureRes = await provider?.send("eth_signTypedData_v4", [
+			address,
+			data,
+		]);
+
+		const signature = splitSignature(signatureRes);
+
+		return {
+			v: signature.v,
+			r: signature.r,
+			s: signature.s,
+			deadline: typeof deadline === "number" ? deadline : deadline.toNumber(),
+		};
 	}
 }
 

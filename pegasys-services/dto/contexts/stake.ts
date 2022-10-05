@@ -1,3 +1,4 @@
+import { TokenAmount } from "@pollum-io/pegasys-sdk";
 import { children, setType } from "../react";
 import { IStakeInfo } from "../services";
 
@@ -6,7 +7,7 @@ export interface IStakeProviderProps {
 }
 
 export interface IStakeProviderValue {
-	allStakes: IStakeInfo[];
+	liveRewardWeek: TokenAmount;
 	selectedStake?: IStakeInfo;
 	setSelectedStake: setType<IStakeInfo | undefined>;
 	unstakeTypedValue: string;

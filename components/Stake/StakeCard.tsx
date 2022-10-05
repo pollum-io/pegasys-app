@@ -14,30 +14,11 @@ import { IStakeInfo, useStake } from "pegasys-services";
 import { JSBI } from "@pollum-io/pegasys-sdk";
 
 interface IPoolCards {
-	stakeTokens?: [];
-	stakeOf?: string;
-	stakeApr?: string;
-	stakeTotalStake?: string;
-	stakeYourRate?: string;
-	stakeDepositFee?: string;
-	stakeYourStaked?: string;
-	stakeYourUnclaimed?: string;
-	stakeInfo: IStakeInfo;
+	stakeInfo?: IStakeInfo;
 }
 
 export const StakeCards: FunctionComponent<IPoolCards> = props => {
-	const {
-		stakeOf,
-		stakeApr,
-		stakeTotalStake,
-		stakeYourRate,
-		stakeDepositFee,
-		stakeYourStaked,
-		stakeYourUnclaimed,
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		stakeTokens,
-		stakeInfo,
-	} = props;
+	const { stakeInfo } = props;
 	const theme = usePicasso();
 	const { isOpenStakeActions, onOpenStakeActions, onCloseStakeActions } =
 		useModal();
@@ -51,6 +32,10 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 		setSelectedStake(stakeInfo);
 		onOpenStakeActions();
 	};
+
+	if (!stakeInfo) {
+		return null;
+	}
 
 	return (
 		<Flex
@@ -90,7 +75,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 				gap="2"
 			>
 				<Img src="icons/pegasys.png" w="6" h="6" />
-				<Text color={theme.text.whitePurple}>Earn {stakeOf}</Text>
+				<Text color={theme.text.whitePurple}>Earn PSYS</Text>
 				{JSBI.greaterThan(stakeInfo.earnedAmount.raw, JSBI.BigInt(0)) && (
 					<Button
 						id="claim"
@@ -129,7 +114,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						APR
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						{stakeInfo.apr.toString()}
+						{stakeInfo.apr.toString()}%
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column">
@@ -155,7 +140,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						Deposit Fee
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						1 {stakeDepositFee}%
+						1%
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column">

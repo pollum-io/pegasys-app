@@ -20,10 +20,11 @@ import {
 	Tooltip,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { MdArrowBack, MdOutlineInfo } from "react-icons/md";
-import { useStake } from "pegasys-services";
+import { PSYS, useStake } from "pegasys-services";
+import { ChainId, JSBI, Percent, TokenAmount } from "@pollum-io/pegasys-sdk";
 
 interface IModal {
 	isOpen: boolean;
@@ -35,10 +36,6 @@ interface IModal {
 export const StakeActions: React.FC<IModal> = props => {
 	const { isOpen, onClose, buttonId, setButtonId } = props;
 	const theme = usePicasso();
-	const [confirmStake] = useState(false);
-	const [inputValue, setInputValue] = useState("");
-	const [isAprroving] = useState("");
-	const [isApproved] = useState("");
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
 	const {
@@ -48,24 +45,10 @@ export const StakeActions: React.FC<IModal> = props => {
 		selectedStake,
 		stakeTypedValue,
 		setStakeTypedValue,
+		liveRewardWeek,
+		setUnstakeTypedValue,
+		unstakeTypedValue,
 	} = useStake();
-
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const value = event?.target?.value;
-
-		setInputValue(value);
-	};
-
-	const changeStakeButtonState = useMemo(() => {
-		if (isAprroving) {
-			return "Aprroving...";
-		}
-		if (isApproved) {
-			return "Confirm Stake";
-		}
-		return "Approve";
-	}, []);
 
 	if (!selectedStake) {
 		return null;
@@ -104,79 +87,94 @@ export const StakeActions: React.FC<IModal> = props => {
 						alignItems={["flex-start", "flex-start", "center", "center"]}
 					>
 						<Flex pr="7" gap="2" mt={["6", "6", "2", "2"]}>
-							<Button
-								w="max-content"
-								h="max-content"
-								py="3"
-								px={["6", "6", "8", "8"]}
-								borderRadius="full"
-								onClick={() => setButtonId("stake")}
-								bgColor={
-									buttonId === "stake"
-										? theme.bg.farmActionsHover
-										: "transparent"
-								}
-								color={
-									buttonId === "stake"
-										? theme.text.farmActionsHover
-										: theme.border.borderSettings
-								}
-								fontWeight="semibold"
-								_hover={{
-									opacity: "0.9",
-								}}
-							>
-								Stake
-							</Button>
-							<Button
-								id="1"
-								w="max-content"
-								h="max-content"
-								py="3"
-								px={["6", "6", "8", "8"]}
-								borderRadius="full"
-								onClick={() => setButtonId("unstake")}
-								bgColor={
-									buttonId === "unstake"
-										? theme.bg.farmActionsHover
-										: "transparent"
-								}
-								color={
-									buttonId === "unstake"
-										? theme.text.farmActionsHover
-										: theme.border.borderSettings
-								}
-								fontWeight="semibold"
-								_hover={{
-									opacity: "0.9",
-								}}
-							>
-								Unstake
-							</Button>
-							<Button
-								w="max-content"
-								h="max-content"
-								py="3"
-								px={["6", "6", "8", "8"]}
-								borderRadius="full"
-								onClick={() => setButtonId("claim")}
-								bgColor={
-									buttonId === "claim"
-										? theme.bg.farmActionsHover
-										: "transparent"
-								}
-								color={
-									buttonId === "claim"
-										? theme.text.farmActionsHover
-										: theme.border.borderSettings
-								}
-								fontWeight="semibold"
-								_hover={{
-									opacity: "0.9",
-								}}
-							>
-								Claim
-							</Button>
+							{JSBI.greaterThan(
+								selectedStake.unstakedPsysAmount.raw,
+								JSBI.BigInt(0)
+							) && (
+								<Button
+									w="max-content"
+									h="max-content"
+									py="3"
+									px={["6", "6", "8", "8"]}
+									borderRadius="full"
+									onClick={() => setButtonId("stake")}
+									bgColor={
+										buttonId === "stake"
+											? theme.bg.farmActionsHover
+											: "transparent"
+									}
+									color={
+										buttonId === "stake"
+											? theme.text.farmActionsHover
+											: theme.border.borderSettings
+									}
+									fontWeight="semibold"
+									_hover={{
+										opacity: "0.9",
+									}}
+								>
+									Stake
+								</Button>
+							)}
+							{JSBI.greaterThan(
+								selectedStake.stakedAmount.raw,
+								JSBI.BigInt(0)
+							) && (
+								<Button
+									id="1"
+									w="max-content"
+									h="max-content"
+									py="3"
+									px={["6", "6", "8", "8"]}
+									borderRadius="full"
+									onClick={() => setButtonId("unstake")}
+									bgColor={
+										buttonId === "unstake"
+											? theme.bg.farmActionsHover
+											: "transparent"
+									}
+									color={
+										buttonId === "unstake"
+											? theme.text.farmActionsHover
+											: theme.border.borderSettings
+									}
+									fontWeight="semibold"
+									_hover={{
+										opacity: "0.9",
+									}}
+								>
+									Unstake
+								</Button>
+							)}
+							{JSBI.greaterThan(
+								selectedStake.earnedAmount.raw,
+								JSBI.BigInt(0)
+							) && (
+								<Button
+									w="max-content"
+									h="max-content"
+									py="3"
+									px={["6", "6", "8", "8"]}
+									borderRadius="full"
+									onClick={() => setButtonId("claim")}
+									bgColor={
+										buttonId === "claim"
+											? theme.bg.farmActionsHover
+											: "transparent"
+									}
+									color={
+										buttonId === "claim"
+											? theme.text.farmActionsHover
+											: theme.border.borderSettings
+									}
+									fontWeight="semibold"
+									_hover={{
+										opacity: "0.9",
+									}}
+								>
+									Claim
+								</Button>
+							)}
 						</Flex>
 						<Flex
 							_hover={{ cursor: "pointer" }}
@@ -241,67 +239,74 @@ export const StakeActions: React.FC<IModal> = props => {
 										groupSeparator: ",",
 									})}
 								</Text>
-								{!confirmStake ? (
-									<Flex>
-										<InputGroup size="md">
-											<Input
-												placeholder="0.0"
-												border="1px solid"
-												borderColor={theme.border.farmInput}
-												bgColor={theme.bg.blackAlpha}
-												borderLeftRadius="full"
-												w="25rem"
-												_hover={{}}
-												_focus={{
-													outline: "none",
-												}}
-												value={stakeTypedValue}
-												onChange={event =>
-													setStakeTypedValue(event.target.value)
-												}
-											/>
-											<InputRightAddon
-												// eslint-disable-next-line react/no-children-prop
-												children="max"
-												border="1px solid"
-												borderColor={theme.border.farmInput}
-												background={theme.bg.max}
-												borderRightRadius="full"
-												color={theme.text.max}
-												fontSize="lg"
-												fontWeight="normal"
-												transition="100ms ease-in-out"
-												_hover={{
-													borderColor: theme.border.farmInput,
-													bgColor: theme.bg.blueNavyLightness,
-													color: theme.text.cyan,
-													cursor: "pointer",
-												}}
-											/>
-										</InputGroup>
-									</Flex>
-								) : (
-									<Flex
-										bgColor={theme.bg.whiteGray}
-										flexDirection="column"
-										justifyContent="center"
-										alignItems="center"
-										py="2"
-										gap="3"
-										borderRadius="xl"
-									>
-										<Flex flexDirection="row" alignItems="center">
-											<Img src="icons/syscoin-logo.png" w="6" h="6" />
-											<Text fontSize="2xl" fontWeight="semibold" pl="2">
-												1
-											</Text>
-										</Flex>
-										<Flex flexDirection="row">
-											<Text>USDT</Text>
-										</Flex>
-									</Flex>
-								)}
-								<Text fontWeight="normal">Weekly Rewards: 0 PSYS / Week</Text>
+								{/* {!confirmStake ? ( */}
+								<Flex>
+									<InputGroup size="md">
+										<Input
+											placeholder="0.0"
+											border="1px solid"
+											borderColor={theme.border.farmInput}
+											bgColor={theme.bg.blackAlpha}
+											borderLeftRadius="full"
+											w="25rem"
+											_hover={{}}
+											_focus={{
+												outline: "none",
+											}}
+											value={stakeTypedValue}
+											onChange={event => setStakeTypedValue(event.target.value)}
+										/>
+										<InputRightAddon
+											// eslint-disable-next-line react/no-children-prop
+											children="max"
+											border="1px solid"
+											borderColor={theme.border.farmInput}
+											background={theme.bg.max}
+											borderRightRadius="full"
+											color={theme.text.max}
+											fontSize="lg"
+											fontWeight="normal"
+											transition="100ms ease-in-out"
+											_hover={{
+												borderColor: theme.border.farmInput,
+												bgColor: theme.bg.blueNavyLightness,
+												color: theme.text.cyan,
+												cursor: "pointer",
+											}}
+											onClick={() =>
+												setStakeTypedValue(
+													selectedStake.unstakedPsysAmount.toExact() ??
+														JSBI.BigInt(0).toString()
+												)
+											}
+										/>
+									</InputGroup>
+								</Flex>
+								{/* ) 
+								 : (
+								 	<Flex
+								 		bgColor={theme.bg.whiteGray}
+								 		flexDirection="column"
+								 		justifyContent="center"
+								 		alignItems="center"
+								 		py="2"
+								 		gap="3"
+								 		borderRadius="xl"
+								 	>
+								 		<Flex flexDirection="row" alignItems="center">
+								 			<Img src="icons/syscoin-logo.png" w="6" h="6" />
+								 			<Text fontSize="2xl" fontWeight="semibold" pl="2">
+								 				1
+								 			</Text>
+								 		</Flex>
+								 		<Flex flexDirection="row">
+								 			<Text>USDT</Text>
+								 		</Flex>
+								 	</Flex>
+								 )} */}
+								<Text fontWeight="normal">
+									Weekly Rewards: {liveRewardWeek.toExact()} PSYS / Week
+								</Text>
 							</Flex>
 							<Button
 								fontSize="lg"
@@ -315,15 +320,17 @@ export const StakeActions: React.FC<IModal> = props => {
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
 								_hover={
-									inputValue
+									stakeTypedValue
 										? { bgColor: theme.bg.bluePurple }
 										: { opacity: "0.3" }
 								}
 								_active={{}}
 								borderRadius="full"
-								disabled={!inputValue}
+								disabled={!stakeTypedValue}
+								onClick={stake}
 							>
-								{changeStakeButtonState}
+								{/* {changeStakeButtonState} */}
+								Stake
 							</Button>
 						</Flex>
 					)}
@@ -348,6 +355,8 @@ export const StakeActions: React.FC<IModal> = props => {
 										_focus={{
 											outline: "none",
 										}}
+										value={unstakeTypedValue}
+										onChange={event => setUnstakeTypedValue(event.target.value)}
 									/>
 									<InputRightAddon
 										// eslint-disable-next-line react/no-children-prop
@@ -366,6 +375,12 @@ export const StakeActions: React.FC<IModal> = props => {
 											color: theme.text.cyan,
 											cursor: "pointer",
 										}}
+										onClick={() =>
+											setUnstakeTypedValue(
+												selectedStake.stakedAmount.toExact() ??
+													JSBI.BigInt(0).toString()
+											)
+										}
 									/>
 								</InputGroup>
 							</Flex>
@@ -386,7 +401,21 @@ export const StakeActions: React.FC<IModal> = props => {
 									mb="4"
 									w="85%"
 									colorScheme="teal"
-									onChange={(value: number) => setSliderValue(value)}
+									onChange={(value: number) => {
+										setSliderValue(value);
+										const percent = new Percent(value.toString(), "100");
+
+										const valuePercent = percent.multiply(
+											selectedStake.stakedAmount.raw ?? JSBI.BigInt(0)
+										).quotient;
+
+										const amount = new TokenAmount(
+											PSYS[ChainId.NEVM],
+											valuePercent
+										);
+
+										setUnstakeTypedValue(amount.toExact());
+									}}
 									onMouseEnter={() => setShowTooltip(true)}
 									onMouseLeave={() => setShowTooltip(false)}
 								>
@@ -458,7 +487,9 @@ export const StakeActions: React.FC<IModal> = props => {
 									borderRadius="full"
 									onClick={unstake}
 								>
-									Unstake
+									{unstakeTypedValue === selectedStake.stakedAmount.toExact()
+										? "Unstake & Claim"
+										: "Unstake"}
 								</Button>
 							</Flex>
 						</Flex>

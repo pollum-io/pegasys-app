@@ -21,24 +21,22 @@ import {
 	Tooltip,
 } from "@chakra-ui/react";
 import { usePicasso, useTokens } from "hooks";
-import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { MdArrowBack, MdOutlineInfo } from "react-icons/md";
 
 import { useFarm } from "pegasys-services";
-import { JSBI, Percent } from "@pollum-io/pegasys-sdk";
+import { JSBI, Percent, TokenAmount } from "@pollum-io/pegasys-sdk";
 
 interface IModal {
 	isOpen: boolean;
 	onClose: () => void;
-	buttonId: string;
-	setButtonId: Dispatch<SetStateAction<string>>;
 }
 
 export const FarmActions: React.FC<IModal> = props => {
-	const { isOpen, onClose, buttonId, setButtonId } = props;
+	const { isOpen, onClose } = props;
 	const theme = usePicasso();
-	const [confirmDepoist] = useState(false);
+	// const [confirmDepoist] = useState(false);
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
 	const { userTokensBalance } = useTokens();
@@ -51,6 +49,9 @@ export const FarmActions: React.FC<IModal> = props => {
 		onClaim,
 		onDeposit,
 		onWithdraw,
+		liveRewardWeek,
+		buttonId,
+		setButtonId,
 	} = useFarm();
 
 	const tokenBLogo = useMemo(() => {
@@ -103,79 +104,94 @@ export const FarmActions: React.FC<IModal> = props => {
 							flexDirection="row"
 							mt={["6", "6", "2", "2"]}
 						>
-							<Button
-								w="max-content"
-								h="max-content"
-								py="3"
-								px={["6", "6", "8", "8"]}
-								borderRadius="full"
-								onClick={() => setButtonId("deposit")}
-								bgColor={
-									buttonId === "deposit"
-										? theme.bg.farmActionsHover
-										: "transparent"
-								}
-								color={
-									buttonId === "deposit"
-										? theme.text.farmActionsHover
-										: theme.border.borderSettings
-								}
-								fontWeight="semibold"
-								_hover={{
-									opacity: "0.9",
-								}}
-							>
-								Deposit
-							</Button>
-							<Button
-								id="1"
-								w="max-content"
-								h="max-content"
-								py="3"
-								px={["6", "6", "8", "8"]}
-								borderRadius="full"
-								onClick={() => setButtonId("withdraw")}
-								bgColor={
-									buttonId === "withdraw"
-										? theme.bg.farmActionsHover
-										: "transparent"
-								}
-								color={
-									buttonId === "withdraw"
-										? theme.text.farmActionsHover
-										: theme.border.borderSettings
-								}
-								fontWeight="semibold"
-								_hover={{
-									opacity: "0.9",
-								}}
-							>
-								Withdraw
-							</Button>
-							<Button
-								w="max-content"
-								h="max-content"
-								py="3"
-								px={["6", "6", "8", "8"]}
-								borderRadius="full"
-								onClick={() => setButtonId("claim")}
-								bgColor={
-									buttonId === "claim"
-										? theme.bg.farmActionsHover
-										: "transparent"
-								}
-								color={
-									buttonId === "claim"
-										? theme.text.farmActionsHover
-										: theme.border.borderSettings
-								}
-								fontWeight="semibold"
-								_hover={{
-									opacity: "0.9",
-								}}
-							>
-								Claim
-							</Button>
+							{JSBI.greaterThan(
+								selectedPair.userAvailableLpTokenAmount.raw,
+								JSBI.BigInt(0)
+							) && (
+								<Button
+									w="max-content"
+									h="max-content"
+									py="3"
+									px={["6", "6", "8", "8"]}
+									borderRadius="full"
+									onClick={() => setButtonId("deposit")}
+									bgColor={
+										buttonId === "deposit"
+											? theme.bg.farmActionsHover
+											: "transparent"
+									}
+									color={
+										buttonId === "deposit"
+											? theme.text.farmActionsHover
+											: theme.border.borderSettings
+									}
+									fontWeight="semibold"
+									_hover={{
+										opacity: "0.9",
+									}}
+								>
+									Deposit
+								</Button>
+							)}
+							{JSBI.greaterThan(
+								selectedPair.userStakedAmount.raw,
+								JSBI.BigInt(0)
+							) && (
+								<Button
+									id="1"
+									w="max-content"
+									h="max-content"
+									py="3"
+									px={["6", "6", "8", "8"]}
+									borderRadius="full"
+									onClick={() => setButtonId("withdraw")}
+									bgColor={
+										buttonId === "withdraw"
+											? theme.bg.farmActionsHover
+											: "transparent"
+									}
+									color={
+										buttonId === "withdraw"
+											? theme.text.farmActionsHover
+											: theme.border.borderSettings
+									}
+									fontWeight="semibold"
+									_hover={{
+										opacity: "0.9",
+									}}
+								>
+									Withdraw
+								</Button>
+							)}
+							{JSBI.greaterThan(
+								selectedPair.unclaimedPSYSAmount.raw,
+								JSBI.BigInt(0)
+							) && (
+								<Button
+									w="max-content"
+									h="max-content"
+									py="3"
+									px={["6", "6", "8", "8"]}
+									borderRadius="full"
+									onClick={() => setButtonId("claim")}
+									bgColor={
+										buttonId === "claim"
+											? theme.bg.farmActionsHover
+											: "transparent"
+									}
+									color={
+										buttonId === "claim"
+											? theme.text.farmActionsHover
+											: theme.border.borderSettings
+									}
+									fontWeight="semibold"
+									_hover={{
+										opacity: "0.9",
+									}}
+								>
+									Claim
+								</Button>
+							)}
 						</Flex>
 						<Flex
 							_hover={{ cursor: "pointer" }}
@@ -253,54 +269,50 @@ export const FarmActions: React.FC<IModal> = props => {
 										groupSeparator: ",",
 									})}
 								</Text>
-								{!confirmDepoist ? (
-									<Flex>
-										<InputGroup size="lg">
-											<Input
-												placeholder="0.0"
-												border="1px solid"
-												borderColor={theme.border.farmInput}
-												bgColor={theme.bg.blackAlpha}
-												borderLeftRadius="full"
-												w="25rem"
-												_hover={{}}
-												_focus={{
-													outline: "none",
-												}}
-												value={depositTypedValue}
-												onChange={e => setDepositTypedValue(e.target.value)}
-											/>
-											<InputRightAddon
-												// eslint-disable-next-line react/no-children-prop
-												children="max"
-												border="1px solid"
-												borderColor={theme.border.farmInput}
-												background={theme.bg.max}
-												borderRightRadius="full"
-												color={theme.text.max}
-												fontSize="lg"
-												fontWeight="normal"
-												transition="100ms ease-in-out"
-												_hover={{
-													borderColor: theme.border.farmInput,
-													bgColor: theme.bg.blueNavyLightness,
-													color: theme.text.cyan,
-													cursor: "pointer",
-												}}
-												onClick={() =>
-													setDepositTypedValue(
-														selectedPair.userAvailableLpTokenAmount.toFixed(
-															10,
-															{
-																groupSeparator: ",",
-															}
-														) ?? JSBI.BigInt(0).toString()
-													)
-												}
-											/>
-										</InputGroup>
-									</Flex>
-								) : (
+								{/* {!confirmDepoist ? ( */}
+								<Flex>
+									<InputGroup size="lg">
+										<Input
+											placeholder="0.0"
+											border="1px solid"
+											borderColor={theme.border.farmInput}
+											bgColor={theme.bg.blackAlpha}
+											borderLeftRadius="full"
+											w="25rem"
+											_hover={{}}
+											_focus={{
+												outline: "none",
+											}}
+											value={depositTypedValue}
+											onChange={e => setDepositTypedValue(e.target.value)}
+										/>
+										<InputRightAddon
+											// eslint-disable-next-line react/no-children-prop
+											children="max"
+											border="1px solid"
+											borderColor={theme.border.farmInput}
+											background={theme.bg.max}
+											borderRightRadius="full"
+											color={theme.text.max}
+											fontSize="lg"
+											fontWeight="normal"
+											transition="100ms ease-in-out"
+											_hover={{
+												borderColor: theme.border.farmInput,
+												bgColor: theme.bg.blueNavyLightness,
+												color: theme.text.cyan,
+												cursor: "pointer",
+											}}
+											onClick={() =>
+												setDepositTypedValue(
+													selectedPair.userAvailableLpTokenAmount.toExact() ??
+														JSBI.BigInt(0).toString()
+												)
+											}
+										/>
+									</InputGroup>
+								</Flex>
+								{/* ) : (
 									<Flex
 										bgColor={theme.bg.whiteGray}
 										flexDirection="column"
@@ -323,13 +335,10 @@ export const FarmActions: React.FC<IModal> = props => {
 											<Text>PSYS</Text>
 										</Flex>
 									</Flex>
-								)}
+								)} */}
 								<Text fontWeight="normal" pt="1.5rem">
 									Weekly Rewards:{" "}
-									{selectedPair.totalRewardRatePerWeek.toFixed(6, {
-										groupSeparator: ",",
-									})}{" "}
-									PSYS / Week
+									{liveRewardWeek ? liveRewardWeek.toExact() : "0"} PSYS / Week
 								</Text>
 								<Text fontWeight="normal">Extra Reward: 0 PSYS / Week</Text>
 							</Flex>
@@ -352,7 +361,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								borderRadius="full"
 								onClick={onDeposit}
 							>
-								Approve
+								Deposit
 							</Button>
 						</Flex>
 					)}
@@ -399,9 +408,8 @@ export const FarmActions: React.FC<IModal> = props => {
 										}}
 										onClick={() =>
 											setWithdrawnTypedValue(
-												selectedPair.userStakedAmount.toFixed(10, {
-													groupSeparator: ",",
-												}) ?? JSBI.BigInt(0).toString()
+												selectedPair.userStakedAmount.toExact() ??
+													JSBI.BigInt(0).toString()
 											)
 										}
 									/>
@@ -430,13 +438,16 @@ export const FarmActions: React.FC<IModal> = props => {
 										setSliderValue(value);
 										const percent = new Percent(value.toString(), "100");
 
-										const valuePercent = percent
-											.divide("100000000")
-											.multiply(
-												selectedPair.userStakedAmount.raw ?? JSBI.BigInt(0)
-											).quotient;
+										const valuePercent = percent.multiply(
+											selectedPair.userStakedAmount.raw ?? JSBI.BigInt(0)
+										).quotient;
 
-										setWithdrawnTypedValue(valuePercent.toString());
+										const amount = new TokenAmount(
+											selectedPair.lpToken,
+											valuePercent
+										);
+
+										setWithdrawnTypedValue(amount.toExact());
 									}}
 									onMouseEnter={() => setShowTooltip(true)}
 									onMouseLeave={() => setShowTooltip(false)}

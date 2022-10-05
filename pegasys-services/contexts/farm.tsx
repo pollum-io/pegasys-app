@@ -1,15 +1,17 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
-import { JSBI, NSYS, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
+import { JSBI, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
 
 import { getTokenPairs, tryParseAmount } from "utils";
 import { WrappedTokenInfo } from "types";
 import { useTokens, useWallet } from "hooks";
 
-import { MINICHEF_ADDRESS } from "pegasys-services/constants";
-import { ApprovalState } from "contexts";
-import { ContractFramework } from "pegasys-services/frameworks";
-import { FarmServices, LpTokenServices, TokenServices } from "../services";
+import {
+	BIG_INT_SECONDS_IN_WEEK,
+	MINICHEF_ADDRESS,
+} from "pegasys-services/constants";
+import { FarmServices, LpTokenServices } from "../services";
 import { useWallet as psUseWallet } from "../hooks";
+import { onlyNumbers } from "../utils";
 import {
 	IFarmProviderProps,
 	IFarmProviderValue,
@@ -20,35 +22,25 @@ import {
 export const FarmContext = createContext({} as IFarmProviderValue);
 
 export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
-	const [withdrawnTypedValue, setWithdrawnTypedValue] = useState<string>("0");
-	const [depositTypedValue, setDepositTypedValue] = useState<string>("0");
+	const [withdrawnTypedValue, setWithdrawnTypedValue] = useState<string>("");
+	const [depositTypedValue, setDepositTypedValue] = useState<string>("");
 	const [selectedPair, setSelectedPair] = useState<IFarmInfo>();
 	const [allPairs, setAllPairs] = useState<IFarmInfo[]>([]);
 	const [pairs, setPairs] = useState<IFarmInfo[]>([]);
 	const [sort, setSort] = useState<TFarmSort>("apr");
 	const [search, setSearch] = useState<string>("");
+	const [buttonId, setButtonId] = useState<string>("");
 	const { userTokensBalance } = useTokens();
 	const { chainId, address } = psUseWallet();
 	const { userTransactionDeadlineValue } = useWallet();
 
-	const onlyNumbersTyped = (str: string): string => {
-		if (selectedPair) {
-			const onlyNumbers = str.replace(/\D/g, "");
-
-			const tokenAmount = new TokenAmount(
-				selectedPair.lpToken,
-				JSBI.BigInt(`${onlyNumbers}00000000`)
-			);
-
-			const amount = tokenAmount.toFixed(10, {
-				groupSeparator: ",",
-			});
-
-			return amount;
-		}
-
-		return "0.0000000000";
-	};
+	const parsedStakeInput = useMemo(
+		() =>
+			selectedPair
+				? tryParseAmount(depositTypedValue, selectedPair.lpToken)
+				: undefined,
+		[depositTypedValue]
+	);
 
 	const onWithdraw = async () => {
 		if (selectedPair) {
@@ -64,11 +56,13 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 					? parsedInput.raw
 					: JSBI.BigInt(0);
 
-			await FarmServices.withdraw(
-				selectedPair.poolId,
-				parsedAmount.toString(16),
-				address
-			);
+			let method = FarmServices.withdraw;
+
+			if (JSBI.equal(parsedAmount, selectedPair.userStakedAmount.raw)) {
+				method = FarmServices.withdrawAndClaim;
+			}
+
+			await method(selectedPair.poolId, parsedAmount.toString(16), address);
 		}
 	};
 
@@ -80,82 +74,31 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 
 	const onDeposit = async () => {
 		if (selectedPair) {
-			const parsedInput = tryParseAmount(
-				depositTypedValue,
-				selectedPair.lpToken
-			);
-
 			const parsedAmount =
-				parsedInput &&
+				parsedStakeInput &&
 				selectedPair.userAvailableLpTokenAmount &&
 				JSBI.lessThanOrEqual(
-					parsedInput.raw,
+					parsedStakeInput.raw,
 					selectedPair.userAvailableLpTokenAmount.raw
 				)
-					? parsedInput.raw
+					? parsedStakeInput.raw
 					: JSBI.BigInt(0);
 
-			const token =
-				parsedInput instanceof TokenAmount ? parsedInput.token : undefined;
-
-			const contract = ContractFramework.TokenContract(token?.address ?? "");
-
-			const allowance = await ContractFramework.call({
-				contract,
-				methodName: "allowance",
-				args: [address, MINICHEF_ADDRESS],
+			const signature = await LpTokenServices.getSignature({
+				lpAddress: selectedPair.lpToken.address,
+				address,
+				chainId,
+				spender: MINICHEF_ADDRESS,
+				value: parsedAmount.toString(),
+				deadline: userTransactionDeadlineValue,
 			});
 
-			const currentAllowance = new TokenAmount(token, allowance);
-
-			let approvalState: ApprovalState;
-
-			const pendingApproval = false;
-
-			if (!parsedInput || !currentAllowance) {
-				approvalState = ApprovalState.UNKNOWN;
-			} else if (parsedInput.currency === NSYS) {
-				approvalState = ApprovalState.APPROVED;
-			} else {
-				approvalState = currentAllowance.lessThan(parsedAmount)
-					? pendingApproval
-						? ApprovalState.PENDING
-						: ApprovalState.NOT_APPROVED
-					: ApprovalState.APPROVED;
-			}
-
-			if (approvalState === ApprovalState.APPROVED) {
-				await FarmServices.deposit(
-					selectedPair.poolId,
-					parsedAmount.toString(16),
-					address
-				);
-			} else {
-				if (approvalState === ApprovalState.NOT_APPROVED) {
-					await TokenServices.approve(
-						parsedInput as TokenAmount,
-						MINICHEF_ADDRESS
-					);
-				}
-
-				const signature = await LpTokenServices.getSignature({
-					lpAddress: selectedPair.lpToken.address,
-					address,
-					chainId,
-					spender: MINICHEF_ADDRESS,
-					value: parsedAmount.toString(),
-					deadline: userTransactionDeadlineValue,
-				});
-
-				if (signature) {
-					await FarmServices.depositWithPermit(
-						selectedPair.poolId,
-						parsedAmount.toString(16),
-						address,
-						signature
-					);
-				}
-			}
+			await FarmServices.deposit(
+				selectedPair.poolId,
+				parsedAmount.toString(16),
+				address,
+				signature
+			);
 		}
 	};
 
@@ -234,6 +177,29 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 		setPairs(pairsToRender);
 	}, [allPairs, sort, search]);
 
+	const liveRewardWeek = useMemo(
+		() =>
+			selectedPair
+				? new TokenAmount(
+						selectedPair.lpToken,
+						parsedStakeInput &&
+						JSBI.greaterThan(selectedPair.totalStakedAmount.raw, JSBI.BigInt(0))
+							? JSBI.divide(
+									JSBI.multiply(
+										JSBI.multiply(
+											selectedPair.poolRewardRateAmount.raw,
+											parsedStakeInput.raw
+										),
+										BIG_INT_SECONDS_IN_WEEK
+									),
+									selectedPair.totalStakedAmount.raw
+							  )
+							: JSBI.BigInt(0)
+				  )
+				: undefined,
+		[selectedPair, parsedStakeInput]
+	);
+
 	const providerValue = useMemo(
 		() => ({
 			sort,
@@ -245,21 +211,30 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 			setSelectedPair,
 			withdrawnTypedValue,
 			setWithdrawnTypedValue: (value: string) => {
-				const onlyNum = onlyNumbersTyped(value);
-
-				setWithdrawnTypedValue(onlyNum);
+				const newVal = onlyNumbers(value);
+				setWithdrawnTypedValue(newVal);
 			},
 			depositTypedValue,
 			setDepositTypedValue: (value: string) => {
-				const onlyNum = onlyNumbersTyped(value);
-
-				setDepositTypedValue(onlyNum);
+				const newVal = onlyNumbers(value);
+				setDepositTypedValue(newVal);
 			},
 			onClaim,
 			onWithdraw,
 			onDeposit,
+			liveRewardWeek,
+			buttonId,
+			setButtonId,
 		}),
-		[sort, search, pairs, selectedPair, withdrawnTypedValue, depositTypedValue]
+		[
+			sort,
+			search,
+			pairs,
+			selectedPair,
+			withdrawnTypedValue,
+			depositTypedValue,
+			buttonId,
+		]
 	);
 
 	return (
