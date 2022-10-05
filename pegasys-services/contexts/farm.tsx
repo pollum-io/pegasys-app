@@ -177,6 +177,10 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 		setPairs(pairsToRender);
 	}, [allPairs, sort, search]);
 
+	useEffect(() => {
+		console.log("userTransactionDeadlineValue: ", userTransactionDeadlineValue);
+	}, []);
+
 	const liveRewardWeek = useMemo(
 		() =>
 			selectedPair

@@ -247,12 +247,16 @@ class StakeServices {
 			{ name: "deadline", type: "uint256" },
 		];
 
+		const deadlineFromNow = BigNumber.from(new Date().getTime() + 100000).add(
+			deadline
+		);
+
 		const message = {
 			owner: address,
 			spender: STAKE_ADDRESS,
 			value,
 			nonce: nonce.toHexString(),
-			deadline: typeof deadline === "number" ? deadline : deadline.toNumber(),
+			deadline: deadlineFromNow.toHexString(),
 		};
 
 		const data = JSON.stringify({

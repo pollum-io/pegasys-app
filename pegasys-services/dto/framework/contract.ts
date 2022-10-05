@@ -18,6 +18,7 @@ export interface IContractFrameworkEstimateGasProps {
 	args?: any[];
 	contract: TContract;
 	methodName: string;
+	highGasFee?: boolean;
 }
 
 export type IContractFrameworkCallProps = IContractFrameworkEstimateGasProps;

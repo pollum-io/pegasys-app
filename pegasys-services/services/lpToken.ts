@@ -247,12 +247,14 @@ class LpTokenServices {
 			{ name: "deadline", type: "uint256" },
 		];
 
+		const deadlineFromNow = BigNumber.from(new Date().getTime() + 360000);
+
 		const message = {
 			owner: address,
 			spender,
 			value,
 			nonce: nonce.toHexString(),
-			deadline: typeof deadline === "number" ? deadline : deadline.toNumber(),
+			deadline: deadlineFromNow.toHexString(),
 		};
 
 		const data = JSON.stringify({
