@@ -142,7 +142,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 					</Flex>
 				</Flex>
 			)}
-			<Flex justifyContent="space-between" py="1" flexDirection="row">
+			<Flex gap="2" py="1" flexDirection="row">
 				{JSBI.greaterThan(userStakedAmount.raw, JSBI.BigInt(0)) && (
 					<Button
 						id="withdraw"
@@ -150,7 +150,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 						fontWeight="semibold"
 						py="0.625rem"
 						px="1.5rem"
-						w="8.125rem"
+						w="100%"
 						h="max-content"
 						bgColor={theme.bg.blueNavyLightness}
 						color={theme.text.cyan}
@@ -172,7 +172,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 						fontWeight="semibold"
 						py="0.625rem"
 						px="1.5rem"
-						w="8.125rem"
+						w="100%"
 						h="max-content"
 						bgColor={theme.bg.blueNavyLightness}
 						color={theme.text.cyan}

@@ -12,6 +12,7 @@ import {
 	Icon,
 	Box,
 	useMediaQuery,
+	useColorMode,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
@@ -31,6 +32,7 @@ export const FarmContainer: NextPage = () => {
 	const { search, setSearch, sort, setSort, pairs } = useFarm();
 
 	const theme = usePicasso();
+	const { colorMode } = useColorMode();
 
 	// const [search, setSearch] = useState<string>("");
 	// const [filter, setFilter] = useState<string>("");
@@ -203,6 +205,27 @@ export const FarmContainer: NextPage = () => {
 						</Flex>
 					</Flex>
 				</Flex>
+				{pairs.length === 0 && (
+					<Flex
+						w="100%"
+						mt={["3rem", "3rem", "4rem", "4rem"]}
+						flexDirection="column"
+						alignItems="center"
+						justifyContent="center"
+						gap="16"
+					>
+						<Flex
+							className="circleLoading"
+							width="60px !important"
+							height="60px !important"
+							id={
+								colorMode === "dark"
+									? "pendingTransactionsDark"
+									: "pendingTransactionsLight"
+							}
+						/>
+					</Flex>
+				)}
 				<Box
 					w="100%"
 					maxW="900px"

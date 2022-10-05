@@ -1,4 +1,11 @@
-import { Button, Flex, Img, Text, useMediaQuery } from "@chakra-ui/react";
+import {
+	Button,
+	Flex,
+	Img,
+	Text,
+	useMediaQuery,
+	useColorMode,
+} from "@chakra-ui/react";
 import { StakeCards } from "components/Stake/StakeCard";
 import { usePicasso } from "hooks";
 import { NextPage } from "next";
@@ -12,6 +19,7 @@ export const StakeContainer: NextPage = () => {
 	const [buttonId, setButtonId] = useState<string>("");
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const { selectedStake } = useStake();
+	const { colorMode } = useColorMode();
 
 	return (
 		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
@@ -148,6 +156,27 @@ export const StakeContainer: NextPage = () => {
 						</Flex>
 					</Flex>
 				</Flex>
+				{!selectedStake && (
+					<Flex
+						w="100%"
+						mt={["3rem", "3rem", "4rem", "4rem"]}
+						flexDirection="column"
+						alignItems="center"
+						justifyContent="center"
+						gap="16"
+					>
+						<Flex
+							className="circleLoading"
+							width="60px !important"
+							height="60px !important"
+							id={
+								colorMode === "dark"
+									? "pendingTransactionsDark"
+									: "pendingTransactionsLight"
+							}
+						/>
+					</Flex>
+				)}
 				<Flex
 					flexDirection="column"
 					gap="8"
