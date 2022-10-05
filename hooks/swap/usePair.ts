@@ -38,9 +38,11 @@ export async function usePairs(
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	return results.map((result: any, i: number) => {
 		if (!tokens[i]) return [PairState.INVALID, null];
-		if (!result) return [PairState.NOT_EXISTS, null];
 
-		const { _reserve0, _reserve1 } = result;
+		// eslint-disable-next-line
+		const reserve0 = result?._reserve0;
+		// eslint-disable-next-line
+		const reserve1 = result?._reserve1;
 
 		const [token0, token1] = UseTokensPairSorted([
 			tokens[i][0] as Token,
@@ -50,8 +52,8 @@ export async function usePairs(
 		return [
 			PairState.EXISTS,
 			new Pair(
-				new TokenAmount(token0, _reserve0?.toString()),
-				new TokenAmount(token1, _reserve1?.toString()),
+				new TokenAmount(token0, reserve0 ? reserve0?.toString() : "1"),
+				new TokenAmount(token1, reserve1 ? reserve1?.toString() : "1"),
 				chainId
 			),
 		];

@@ -89,7 +89,7 @@ const useToasty = () => {
 
 				render: ({ onClose }) => (
 					<Flex
-						h="72px"
+						h="fit-content"
 						w="356px"
 						mt="50px"
 						mr="40px"
