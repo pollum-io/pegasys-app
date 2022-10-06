@@ -19,16 +19,13 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 		unclaimedPSYSAmount,
 		userAvailableLpTokenAmount,
 		userRewardRatePerWeek,
-		userStakeInUsd,
-		totalStakedInUsd,
 	} = stakeInfo;
 
 	const theme = usePicasso();
 	const { userTokensBalance } = useTokens();
 	const { setSelectedPair, setButtonId } = useFarm();
 
-	const { isOpenFarmActions, onOpenFarmActions, onCloseFarmActions } =
-		useModal();
+	const { onOpenFarmActions } = useModal();
 
 	// const [buttonId, setButtonId] = useState<string>("");
 
@@ -60,7 +57,6 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 			border="1px solid transparent;"
 			background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 		>
-			<FarmActions isOpen={isOpenFarmActions} onClose={onCloseFarmActions} />
 			<Flex justifyContent="space-between">
 				<Flex gap="2" pt="6">
 					<Flex>

@@ -3,8 +3,6 @@ import {
 	Flex,
 	Img,
 	Text,
-	Input,
-	InputGroup,
 	Menu,
 	MenuItem,
 	MenuList,
@@ -15,13 +13,13 @@ import {
 	useColorMode,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
-import { useEffect, useState } from "react";
-import { MdOutlineCallMade, MdSearch, MdExpandMore } from "react-icons/md";
+import { MdOutlineCallMade, MdExpandMore } from "react-icons/md";
 
 import { FarmCard, SearchInput } from "components";
-import { usePicasso } from "hooks";
+import { usePicasso, useModal } from "hooks";
 
 import { useFarm, useWallet as psUseWallet } from "pegasys-services";
+import { FarmActions } from "components/Modals/FarmActions";
 
 const sortData = {
 	apr: "APR",
@@ -33,6 +31,7 @@ export const FarmContainer: NextPage = () => {
 	const { isConnected } = psUseWallet();
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
+	const { isOpenFarmActions, onCloseFarmActions } = useModal();
 
 	// const [search, setSearch] = useState<string>("");
 	// const [filter, setFilter] = useState<string>("");
@@ -54,6 +53,7 @@ export const FarmContainer: NextPage = () => {
 
 	return (
 		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
+			<FarmActions isOpen={isOpenFarmActions} onClose={onCloseFarmActions} />
 			<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
 				<Flex
 					flexDirection="column"
