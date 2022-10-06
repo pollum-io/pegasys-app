@@ -46,6 +46,8 @@ export const PaginationComponent: React.FunctionComponent<
 	return (
 		<Flex justifyContent="center">
 			{quantityOfPages > 1 && (
+				// eslint-disable-next-line
+				// @ts-ignore
 				<Paginator
 					activeStyles={activeStyles}
 					normalStyles={normalStyles}
