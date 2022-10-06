@@ -45,16 +45,10 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 					flexDirection="column"
 				>
 					<Flex flexDirection="column">
-						<Flex
-							alignItems="center"
-							justifyContent="space-between"
-							mb="1rem"
-							bgColor="red"
-						>
+						<Flex alignItems="center" justifyContent="space-between" mb="1rem">
 							<Flex
 								justifyContent="space-between"
 								w={["85%", "83%", "83%", "83%"]}
-								bgColor="blue"
 							>
 								<Text fontSize="14px" fontWeight="semibold">
 									{votersType === "favor" ? "For" : "Against"}
@@ -110,24 +104,17 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 					pr={["2rem", "2.4rem", "2.4rem", "2.4rem"]}
 					flexDirection="column"
 				>
-					<Flex bgColor="blue" flexDirection="column">
+					<Flex flexDirection="column">
 						<Flex
 							justifyContent="space-between"
 							color={theme.text.cyanPurple}
 							fontSize="14px"
 							mb="1.5rem"
-							bgColor="red"
 						>
 							<Text>2 addresses</Text>
 							<Text>Votes</Text>
 						</Flex>
-						<Flex
-							w="100%"
-							flexDirection="column"
-							fontSize="14px"
-							bgColor="green"
-							pr="0.5rem"
-						>
+						<Flex w="100%" flexDirection="column" fontSize="14px" pr="0.5rem">
 							<Flex
 								justifyContent="space-between"
 								textTransform="lowercase"
@@ -164,6 +151,7 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 							</Flex>
 						</Flex>
 						<Button
+							display={["flex", "none", "none", "none"]}
 							mt="2.5rem"
 							mb="3rem"
 							fontWeight="semibold"

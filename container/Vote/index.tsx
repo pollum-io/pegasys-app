@@ -89,7 +89,7 @@ export const VoteContainer: NextPage = () => {
 									alignItems={["flex-start", "center", "center", "center"]}
 									justifyContent="space-between"
 									flexDirection={["column", "row", "row", "row"]}
-									bgColor={theme.bg.whiteGray}
+									bgColor={theme.bg.alphaPurple}
 									zIndex="0"
 									position="relative"
 									top="4"

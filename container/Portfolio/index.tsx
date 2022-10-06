@@ -439,8 +439,8 @@ export const PortfolioContainer: NextPage = () => {
 												fontWeight="semibold"
 												color={
 													buttonId === "all"
-													? theme.text.darkBluePurple
-													: theme.text.lightGray
+														? theme.text.darkBluePurple
+														: theme.text.lightGray
 												}
 												bgColor={
 													buttonId === "all" ? theme.bg.blue600 : "transparent"
@@ -456,8 +456,8 @@ export const PortfolioContainer: NextPage = () => {
 												borderRadius="full"
 												color={
 													buttonId === "swaps"
-													? theme.text.darkBluePurple
-													: theme.text.lightGray
+														? theme.text.darkBluePurple
+														: theme.text.lightGray
 												}
 												bgColor={
 													buttonId === "swaps"
@@ -478,8 +478,8 @@ export const PortfolioContainer: NextPage = () => {
 												borderRadius="full"
 												color={
 													buttonId === "adds"
-													? theme.text.darkBluePurple
-													: theme.text.lightGray
+														? theme.text.darkBluePurple
+														: theme.text.lightGray
 												}
 												bgColor={
 													buttonId === "adds" ? theme.bg.blue600 : "transparent"
@@ -498,8 +498,8 @@ export const PortfolioContainer: NextPage = () => {
 												onClick={() => setButtonId("removes")}
 												color={
 													buttonId === "removes"
-													? theme.text.darkBluePurple
-													: theme.text.lightGray
+														? theme.text.darkBluePurple
+														: theme.text.lightGray
 												}
 												bgColor={
 													buttonId === "removes"
@@ -528,7 +528,10 @@ export const PortfolioContainer: NextPage = () => {
 											pb="0.3rem"
 											// eslint-disable-next-line react/no-children-prop
 											children={
-												<MdSearch color={theme.icon.inputSearchIcon} size={20} />
+												<MdSearch
+													color={theme.icon.inputSearchIcon}
+													size={20}
+												/>
 											}
 										/>
 										<Input
