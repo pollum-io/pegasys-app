@@ -479,7 +479,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			<ModalContent
 				mb={["0", "0", "20rem", "20rem"]}
 				bottom={["0", "0", "0", "0"]}
-				position={["relative", "relative", "relative", "relative"]}
+				position={["fixed", "fixed", "relative", "relative"]}
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
 				h={["max-content", "100%", "max-content", "max-content"]}
 				borderBottomRadius={["0px", "3xl", "3xl", "3xl"]}
@@ -509,6 +509,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					<TooltipComponent
 						label={translation("navigationTabs.whenYouAddLiquidityInfo")}
 						icon={MdHelpOutline}
+						color={theme.icon.whiteGray}
 					/>
 				</ModalHeader>
 				{isCreate && (
@@ -974,9 +975,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						bgColor={theme.bg.subModal}
 						position={["relative", "relative", "absolute", "absolute"]}
 						w="100%"
-						bottom={["0", "0", "-250", "-250"]}
-						borderTopRadius={["0", "0", "3xl", "3xl"]}
-						borderBottomRadius={["0", "0", "3xl", "3xl"]}
+						bottom={["0", "-250", "-250", "-250"]}
+						borderRadius={["0", "0", "3xl", "3xl"]}
 						alignItems="flex-start"
 						gap="2"
 					>

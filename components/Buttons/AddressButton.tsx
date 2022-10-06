@@ -17,6 +17,7 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 
 	return (
 		<Button
+			zIndex="1"
 			color="white"
 			bg={walletError ? theme.text.redError : theme.bg.button.connectWallet}
 			borderColor={theme.border.connectWallet}

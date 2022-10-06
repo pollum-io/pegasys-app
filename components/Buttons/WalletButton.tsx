@@ -4,6 +4,7 @@ import {
 	Flex,
 	Text,
 	useColorMode,
+	Collapse,
 } from "@chakra-ui/react";
 import { SelectSyscoin, SelectWallets } from "components/Modals";
 import { useModal, usePicasso, useWallet } from "hooks";
@@ -30,7 +31,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 		onCloseAddress,
 	} = useModal();
 
-	const { walletError, approvalState, pendingTxLength } = useWallet();
+	const { walletError, approvalState, pendingTxLength, expert } = useWallet();
 	const { address, isConnected } = psUseWallet();
 
 	const isPending = approvalState.status === ApprovalState.PENDING;
@@ -89,7 +90,9 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 					>
 						{shortAddress(address)}
 					</AddressButton>
-					<ExpertMode />
+					<Collapse in={expert}>
+						<ExpertMode />
+					</Collapse>
 				</>
 			)}
 			{isConnected && isPending && (

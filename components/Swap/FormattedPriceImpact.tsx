@@ -2,12 +2,15 @@ import { Percent } from "@pollum-io/pegasys-sdk";
 import { Text } from "@chakra-ui/react";
 import { ONE_BIPS } from "helpers/consts";
 import { priceImpactSeverity } from "utils";
+import { usePicasso } from "hooks";
 
 export const FormattedPriceImpat = ({
 	priceImpact,
 }: {
 	priceImpact?: Percent;
 }) => {
+	const theme = usePicasso();
+
 	const getColorBySeverity = () => {
 		const severity = priceImpactSeverity(priceImpact);
 
@@ -16,7 +19,7 @@ export const FormattedPriceImpat = ({
 			: severity === 2
 			? "#FFE270"
 			: severity === 1
-			? "#FFFFFF"
+			? theme.text.mono
 			: "#27AE60";
 	};
 

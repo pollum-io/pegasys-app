@@ -18,7 +18,7 @@ export const StakeContainer: NextPage = () => {
 					zIndex="docked"
 					position="relative"
 					borderRadius="xl"
-					backgroundColor={theme.bg.whiteGray}
+					backgroundColor={theme.bg.alphaPurple}
 				>
 					<Img
 						borderRadius="xl"
@@ -53,7 +53,7 @@ export const StakeContainer: NextPage = () => {
 						alignItems="center"
 						justifyContent="center"
 						flexDirection="row"
-						bgColor={theme.bg.whiteGray}
+						bgColor={theme.bg.alphaPurple}
 						zIndex="0"
 						position="relative"
 						top="2"
@@ -100,13 +100,11 @@ export const StakeContainer: NextPage = () => {
 								onClick={() => setButtonId("psys")}
 								color={
 									buttonId === "psys"
-										? theme.text.farmActionsHover
-										: theme.border.borderSettings
+										? theme.text.darkBluePurple
+										: theme.text.lightGray
 								}
 								bgColor={
-									buttonId === "psys"
-										? theme.bg.farmActionsHover
-										: "transparent"
+									buttonId === "psys" ? theme.bg.babyBluePurple : "transparent"
 								}
 								borderRadius="full"
 								w="5.688rem"
@@ -124,11 +122,11 @@ export const StakeContainer: NextPage = () => {
 								onClick={() => setButtonId("usd")}
 								color={
 									buttonId === "usd"
-										? theme.text.farmActionsHover
-										: theme.border.borderSettings
+										? theme.text.darkBluePurple
+										: theme.text.lightGray
 								}
 								bgColor={
-									buttonId === "usd" ? theme.bg.farmActionsHover : "transparent"
+									buttonId === "usd" ? theme.bg.babyBluePurple : "transparent"
 								}
 								borderRadius="full"
 								w="5.688rem"

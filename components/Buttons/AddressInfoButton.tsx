@@ -16,13 +16,13 @@ import { useToasty } from "pegasys-services";
 import { usePicasso, useWallet } from "hooks";
 import { FunctionComponent, useState, useEffect } from "react";
 import Jazzicon from "react-jazzicon";
-import { MdContentCopy, MdOutlineCallMade } from "react-icons/md";
-import { shortAddress, copyToClipboard, openWalletOnExplorer } from "utils";
 import {
-	AiOutlineCheckCircle,
-	AiOutlineClose,
-	AiOutlineCloseCircle,
-} from "react-icons/ai";
+	MdContentCopy,
+	MdOutlineCallMade,
+	MdOutlineClose,
+} from "react-icons/md";
+import { shortAddress, copyToClipboard, openWalletOnExplorer } from "utils";
+import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { ITransactionResponse } from "types";
 import { ApprovalState } from "contexts";
 
@@ -104,7 +104,11 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 							Account
 						</Text>
 						<Flex _hover={{ cursor: "pointer" }}>
-							<AiOutlineClose size={22} onClick={onClose} />
+							<MdOutlineClose
+								size={24}
+								onClick={onClose}
+								color={theme.icon.whiteDarkGray}
+							/>
 						</Flex>
 					</Flex>
 				</ModalHeader>
@@ -208,7 +212,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 					</Flex>
 				</ModalBody>
 				<ModalFooter
-					bgColor={theme.bg.max}
+					bgColor={theme.bg.darkBlueGray}
 					justifyContent="flex-start"
 					borderBottomRadius={["0", "18"]}
 					h="max-content"

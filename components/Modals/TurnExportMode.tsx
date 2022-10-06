@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import React from "react";
-import { AiOutlineClose } from "react-icons/ai";
+import { MdOutlineClose } from "react-icons/md";
 
 import { RiInformationFill } from "react-icons/ri";
 
@@ -36,7 +36,7 @@ export const TurnExportMode: React.FC<IModal> = props => {
 				background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
-					backgroundColor={theme.bg.whiteGray}
+					backgroundColor={theme.bg.alphaPurple}
 					borderTopRadius="3xl"
 					alignItems="baseline"
 				>
@@ -52,7 +52,11 @@ export const TurnExportMode: React.FC<IModal> = props => {
 							</Text>
 						</Flex>
 						<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
-							<AiOutlineClose size={20} />
+							<MdOutlineClose
+								size={22}
+								onClick={onClose}
+								color={theme.icon.whiteDarkGray}
+							/>
 						</Flex>
 					</Flex>
 				</ModalHeader>
@@ -67,7 +71,7 @@ export const TurnExportMode: React.FC<IModal> = props => {
 					</Flex>
 				</ModalBody>
 				<ModalFooter
-					backgroundColor={theme.bg.whiteGray}
+					backgroundColor={theme.bg.alphaPurple}
 					borderBottomRadius="3xl"
 					justifyContent="space-between"
 					alignItems="center"
