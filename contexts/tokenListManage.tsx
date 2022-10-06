@@ -94,49 +94,74 @@ export const TokensListManageProvider: React.FC<{
 		return [];
 	};
 
+	const addTokensToTokensDisplayState = (listUrl: string) => {
+		const currentReceivedTokens = findAndReturnTokensByListUrl(listUrl);
+
+		const existTokenValueInList = ([] as WrappedTokenInfo[]).concat(
+			currentTokensToDisplay || []
+		);
+
+		const tokenValueAlreadyExist = existTokenValueInList.filter(token =>
+			currentReceivedTokens.some(
+				filterTokens =>
+					token.tokenInfo.address === filterTokens.tokenInfo.address
+			)
+		);
+
+		if (tokenValueAlreadyExist.length > 0) {
+			return;
+		}
+
+		if (
+			tokenValueAlreadyExist.length === 0 &&
+			currentReceivedTokens.length > 0
+		) {
+			setCurrentTokensToDisplay(prevState => {
+				console.log("add prev State", prevState);
+				prevState = [...prevState, ...currentReceivedTokens];
+
+				return prevState;
+			});
+		}
+	};
+
+	const findAndRemoveTokenFromList = (listUrl: string) => {
+		const currentReceivedTokens = findAndReturnTokensByListUrl(listUrl);
+
+		const existValueInList = ([] as WrappedTokenInfo[]).concat(
+			...(currentTokensToDisplay || [])
+		);
+
+		const searchForTokensToRemove = existValueInList.filter(
+			(token, index) =>
+				(token?.tokenInfo?.address as string) !==
+				(currentReceivedTokens[index]?.tokenInfo?.address as string)
+		);
+
+		console.log("searchForTokensToRemove", searchForTokensToRemove);
+
+		setCurrentTokensToDisplay(prevState => {
+			console.log("remove prev State", prevState);
+
+			prevState = searchForTokensToRemove;
+
+			return prevState;
+		});
+	};
+
 	const handleTokensToDisplay = () => {
 		if (!tokenListManageState?.byUrl || !tokenListManageState?.selectedListUrl)
 			return;
 
-		const transformListKeys = Object.keys(tokenListManageState.byUrl);
+		tokenListManageState?.selectedListUrl.map(listUrl => {
+			const transformListByUrl = Object.keys(tokenListManageState.byUrl);
 
-		tokenListManageState?.selectedListUrl.map((listUrl, index) => {
-			const tokenListValuesByUrl = String(transformListKeys[index]);
+			const listExist = transformListByUrl.includes(listUrl);
 
-			const getCurrentListTokens = findAndReturnTokensByListUrl(listUrl);
+			if (listExist) addTokensToTokensDisplayState(listUrl);
 
-			if (String(listUrl) === tokenListValuesByUrl) {
-				const verifyIfTokenExist = currentTokensToDisplay.filter(
-					(token, index) => token === getCurrentListTokens[index]
-				);
-
-				if (verifyIfTokenExist.length === 0) {
-					setCurrentTokensToDisplay(prevState => [
-						...prevState,
-						...getCurrentListTokens,
-					]);
-				}
-			} else {
-				setCurrentTokensToDisplay(getCurrentListTokens);
-			}
 			return {};
 		});
-	};
-
-	const findAndRemoveTokenFromList = (listUrl: string) => {
-		const getCurrentListTokens = findAndReturnTokensByListUrl(listUrl);
-
-		console.log("getCurrentListTokens", getCurrentListTokens);
-
-		const searchAndRemoveToken = currentTokensToDisplay.filter((token, index) =>
-			getCurrentListTokens.map(
-				listToken => token?.address !== listToken?.address
-			)
-		);
-
-		console.log("searchAndRemoveToken", searchAndRemoveToken);
-
-		return searchAndRemoveToken;
 	};
 
 	// END UTILS FUNCTIONS TO HANDLE DISPLAY TOKEN STATE //
@@ -368,6 +393,8 @@ export const TokensListManageProvider: React.FC<{
 				existingSelectedList.push(listUrl);
 
 				prevState.selectedListUrl = existingSelectedList;
+
+				addTokensToTokensDisplayState(listUrl);
 			} else {
 				const elementInListIndex = existingSelectedList.indexOf(listUrl);
 
@@ -376,21 +403,9 @@ export const TokensListManageProvider: React.FC<{
 				if (existingSelectedList?.length === 1) {
 					prevState.selectedListUrl = DEFAULT_TOKEN_LISTS_SELECTED;
 				} else {
-					const tokensAfterRemove = findAndRemoveTokenFromList(listUrl);
-
-					if (tokensAfterRemove.length === 0) {
-						toast({
-							title: "Failed to remove list",
-							description: "Can't remove the only list that has tokens!",
-							status: "warning",
-						});
-
-						return { ...prevState };
-					}
-
-					setCurrentTokensToDisplay(tokensAfterRemove);
 					existingSelectedList.splice(elementInListIndex, 1);
 					prevState.selectedListUrl = existingSelectedList;
+					findAndRemoveTokenFromList(listUrl);
 				}
 			}
 
@@ -429,9 +444,9 @@ export const TokensListManageProvider: React.FC<{
 	]);
 
 	useEffect(() => {
-		if (!tokenListManageState.selectedListUrl) return;
+		if (tokenListManageState.selectedListUrl?.length === 0) return;
 		handleTokensToDisplay();
-	}, [tokenListManageState.selectedListUrl, currentNetworkChainId]);
+	}, [currentNetworkChainId, tokenListManageState.selectedListUrl]);
 
 	const tokensListManageProviderValue = useMemo(
 		() => ({
