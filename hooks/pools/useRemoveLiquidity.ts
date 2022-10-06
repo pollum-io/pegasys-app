@@ -399,9 +399,7 @@ export const UseRemoveLiquidity = (
 					toast({
 						status: "error",
 						title: "Transaction error",
-						description: `${error?.message.substring(
-							error?.message.indexOf(":") + 1
-						)} Code: ${error?.code}`,
+						description: `User denied transaction.`,
 					});
 				});
 		}

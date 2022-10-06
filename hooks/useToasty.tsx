@@ -101,6 +101,7 @@ const useToasty = () => {
 						justifyContent="space-between"
 					>
 						<Flex
+							w="100%"
 							color={theme.text.mono}
 							flexDirection="row"
 							zIndex="docked"
@@ -108,9 +109,14 @@ const useToasty = () => {
 							py="0.15rem"
 						>
 							{toastIcon}
-							<Flex flexDirection="column" ml="0.8rem">
+							<Flex w="100%" flexDirection="column" ml="0.8rem">
 								<Text font-weight="bold">{`${state?.title}`}</Text>
-								<Text fontSize="sm" font-weight="normal">
+								<Text
+									w="100%"
+									fontSize="sm"
+									fontWeight="normal"
+									flexWrap="wrap"
+								>
 									{state.description}
 								</Text>
 							</Flex>
