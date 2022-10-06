@@ -439,8 +439,8 @@ export const PortfolioContainer: NextPage = () => {
 												fontWeight="semibold"
 												color={
 													buttonId === "all"
-														? theme.text.whiteDarkPurple
-														: theme.border.borderSettings
+													? theme.text.darkBluePurple
+													: theme.text.lightGray
 												}
 												bgColor={
 													buttonId === "all" ? theme.bg.blue600 : "transparent"
@@ -456,8 +456,8 @@ export const PortfolioContainer: NextPage = () => {
 												borderRadius="full"
 												color={
 													buttonId === "swaps"
-														? theme.text.whiteDarkPurple
-														: theme.border.borderSettings
+													? theme.text.darkBluePurple
+													: theme.text.lightGray
 												}
 												bgColor={
 													buttonId === "swaps"
@@ -478,8 +478,8 @@ export const PortfolioContainer: NextPage = () => {
 												borderRadius="full"
 												color={
 													buttonId === "adds"
-														? theme.text.whiteDarkPurple
-														: theme.border.borderSettings
+													? theme.text.darkBluePurple
+													: theme.text.lightGray
 												}
 												bgColor={
 													buttonId === "adds" ? theme.bg.blue600 : "transparent"
@@ -498,8 +498,8 @@ export const PortfolioContainer: NextPage = () => {
 												onClick={() => setButtonId("removes")}
 												color={
 													buttonId === "removes"
-														? theme.text.whiteDarkPurple
-														: theme.border.borderSettings
+													? theme.text.darkBluePurple
+													: theme.text.lightGray
 												}
 												bgColor={
 													buttonId === "removes"
@@ -528,7 +528,7 @@ export const PortfolioContainer: NextPage = () => {
 											pb="0.3rem"
 											// eslint-disable-next-line react/no-children-prop
 											children={
-												<MdSearch color={theme.icon.searchIcon} size={20} />
+												<MdSearch color={theme.icon.inputSearchIcon} size={20} />
 											}
 										/>
 										<Input
@@ -537,7 +537,7 @@ export const PortfolioContainer: NextPage = () => {
 											placeholder="Search by token name"
 											_placeholder={{
 												opacity: 1,
-												color: theme.text.input,
+												color: theme.text.inputBluePurple,
 											}}
 											borderRadius="full"
 											h="2.2rem"

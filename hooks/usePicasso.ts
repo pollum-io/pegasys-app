@@ -4,6 +4,8 @@ import { BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
 const usePicasso = () => {
 	const theme = {
 		text: {
+			whiteGrayHover: useColorModeValue("gray.800", "white"),
+			whiteDarkPurple: useColorModeValue("#3B3693", "white"),
 			lightnessGray: useColorModeValue(
 				"rgba(0, 0, 0, 0.36)",
 				"rgba(255, 255, 255, 0.36)"

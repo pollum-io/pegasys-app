@@ -29,7 +29,7 @@ export const PaginationComponent: React.FunctionComponent<
 
 	const normalStyles: ButtonProps = {
 		bg: "transparent",
-		color: theme.border.borderSettings,
+		color: theme.text.lightGray,
 		_hover: { opacity: "0.9" },
 		fontSize: "14px",
 		fontWeight: "400",
