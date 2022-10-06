@@ -11,8 +11,7 @@ import { usePicasso } from "hooks";
 import { NextPage } from "next";
 import { useState } from "react";
 import { MdOutlineCallMade } from "react-icons/md";
-
-import { useStake } from "pegasys-services";
+import { useWallet as psUseWallet, useStake } from "pegasys-services";
 
 export const StakeContainer: NextPage = () => {
 	const theme = usePicasso();
@@ -20,7 +19,7 @@ export const StakeContainer: NextPage = () => {
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const { selectedStake } = useStake();
 	const { colorMode } = useColorMode();
-
+	const { isConnected } = psUseWallet();
 	return (
 		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
 			<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
@@ -156,7 +155,26 @@ export const StakeContainer: NextPage = () => {
 						</Flex>
 					</Flex>
 				</Flex>
-				{!selectedStake && (
+				{!isConnected && (
+					<Flex
+						w="100%"
+						mt={["3rem", "3rem", "4rem", "4rem"]}
+						flexDirection="column"
+						alignItems="center"
+						justifyContent="center"
+						mb={["3rem", "3rem", "4rem", "4rem"]}
+					>
+						<Text
+							fontSize={["sm", "sm", "md", "md"]}
+							fontWeight="normal"
+							textAlign="center"
+						>
+							Please connect your wallet in the button bellow to be able to view
+							your stakes.
+						</Text>
+					</Flex>
+				)}
+				{!selectedStake && isConnected && (
 					<Flex
 						w="100%"
 						mt={["3rem", "3rem", "4rem", "4rem"]}

@@ -21,7 +21,7 @@ import { MdOutlineCallMade, MdSearch, MdExpandMore } from "react-icons/md";
 import { FarmCard, SearchInput } from "components";
 import { usePicasso } from "hooks";
 
-import { useFarm } from "pegasys-services";
+import { useFarm, useWallet as psUseWallet } from "pegasys-services";
 
 const sortData = {
 	apr: "APR",
@@ -30,7 +30,7 @@ const sortData = {
 
 export const FarmContainer: NextPage = () => {
 	const { search, setSearch, sort, setSort, pairs } = useFarm();
-
+	const { isConnected } = psUseWallet();
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
 
@@ -205,7 +205,26 @@ export const FarmContainer: NextPage = () => {
 						</Flex>
 					</Flex>
 				</Flex>
-				{pairs.length === 0 && (
+				{!isConnected && (
+					<Flex
+						w="100%"
+						mt={["3rem", "3rem", "4rem", "4rem"]}
+						flexDirection="column"
+						alignItems="center"
+						justifyContent="center"
+						mb={["3rem", "3rem", "4rem", "4rem"]}
+					>
+						<Text
+							fontSize={["sm", "sm", "md", "md"]}
+							fontWeight="normal"
+							textAlign="center"
+						>
+							Please connect your wallet in the button bellow to be able to view
+							your farms.
+						</Text>
+					</Flex>
+				)}
+				{pairs.length === 0 && isConnected && (
 					<Flex
 						w="100%"
 						mt={["3rem", "3rem", "4rem", "4rem"]}
