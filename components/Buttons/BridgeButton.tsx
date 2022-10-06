@@ -27,7 +27,7 @@ export const BridgeButton: FunctionComponent<IButtonProps> = props => {
 					rightIcon={<MdExpandMore color={theme.icon.whiteGray} />}
 					_active={{}}
 					_hover={{
-						bgColor: theme.bg.whiteGray,
+						bgColor: theme.bg.alphaPurple,
 						color: "white",
 						opacity: 1,
 						borderRadius: "70px",

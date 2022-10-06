@@ -256,7 +256,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									</Flex>
 								) : (
 									<Flex
-										bgColor={theme.bg.whiteGray}
+										bgColor={theme.bg.alphaPurple}
 										flexDirection="column"
 										justifyContent="center"
 										alignItems="center"

@@ -21,7 +21,7 @@ export const VoteContainer: NextPage = () => {
 							zIndex="docked"
 							position="relative"
 							borderRadius="xl"
-							backgroundColor={theme.bg.whiteGray}
+							backgroundColor={theme.bg.alphaPurple}
 						>
 							<Img
 								borderRadius="xl"

@@ -31,7 +31,7 @@ export const FarmContainer: NextPage = () => {
 					zIndex="docked"
 					position="relative"
 					borderRadius="xl"
-					backgroundColor={theme.bg.whiteGray}
+					backgroundColor={theme.bg.alphaPurple}
 				>
 					<Img
 						borderRadius="xl"
@@ -70,7 +70,7 @@ export const FarmContainer: NextPage = () => {
 						alignItems="center"
 						justifyContent="center"
 						flexDirection="row"
-						bgColor={theme.bg.whiteGray}
+						bgColor={theme.bg.alphaPurple}
 						borderBottomRadius="xl"
 						py="0.531rem"
 						color="white"
