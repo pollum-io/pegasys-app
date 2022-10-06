@@ -1,7 +1,6 @@
 import {
 	Button,
 	Flex,
-	Icon,
 	IconButton,
 	Img,
 	Input,
@@ -9,11 +8,9 @@ import {
 	ModalBody,
 	ModalCloseButton,
 	ModalContent,
-	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
 	Text,
-	Tooltip,
 	InputGroup,
 } from "@chakra-ui/react";
 import {

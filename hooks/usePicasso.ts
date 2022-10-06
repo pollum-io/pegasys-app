@@ -4,6 +4,8 @@ import { BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
 const usePicasso = () => {
 	const theme = {
 		text: {
+			whiteGrayHover: useColorModeValue("gray.800", "white"),
+			whiteDarkPurple: useColorModeValue("#3B3693", "white"),
 			manageInput: useColorModeValue(
 				"rgba(0, 0, 0, 0.36)",
 				"rgba(255, 255, 255, 0.36)"
@@ -67,6 +69,8 @@ const usePicasso = () => {
 			theme: useColorModeValue(BsFillSunFill, BsFillMoonFill),
 		},
 		bg: {
+			poolShare: useColorModeValue("#E2E8F0", "rgba(255, 255, 255, 0.16)"),
+			portfolioFooter: useColorModeValue("#F7FAFC", ""),
 			hamburgerMenu: useColorModeValue("#F7FAFC", "#081120"),
 			voteGray: useColorModeValue("#E2E8F0", "#081120"),
 			candleGraphColor: useColorModeValue("#665EE1", "#2B6CB0"),
@@ -149,9 +153,9 @@ const usePicasso = () => {
 			blackLightness: useColorModeValue("#F7FAFC", "#081120"),
 			blueNavy: useColorModeValue("#F7FAFC", "#0B172C"), // intern modal flexes
 			blueNavyLight: useColorModeValue("#ffffff", "#0B172C"),
-			blueGray: useColorModeValue("#171F2D", "#171F2D"),
+			blueGray: useColorModeValue("#F7FAFC", "#161f29"),
 			blue100: useColorModeValue("blue.100", "blue.100"),
-			blue600: useColorModeValue("#2B6CB0", "#2B6CB0"),
+			blue600: useColorModeValue("rgba(102, 94, 225, 0.3)", "#2B6CB0"),
 			blue900: useColorModeValue("blue.900", "blue.900"),
 			blueNavyLightness: useColorModeValue("#665EE1", "rgba(21, 61, 111, 1)"),
 			blueNavyLightnessOp: useColorModeValue(

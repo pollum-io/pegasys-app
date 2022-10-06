@@ -18,7 +18,6 @@ import {
 	useTokens,
 	useWallet,
 	useAllCommonPairs,
-	useToasty,
 } from "hooks";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
@@ -120,7 +119,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const [amountToApp, setAmountToApp] = useState<TokenAmount>();
 	const [amounts, setAmounts] = useState<TokenAmount[]>([]);
 	const [currPoolShare, setCurrPoolShare] = useState<string>("");
-	const { toast } = useToasty();
 
 	const {
 		userSlippageTolerance,
@@ -441,12 +439,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					`Add ${tokenInputValue.inputFrom.value} ${selectedToken[0]?.symbol} and ${tokenInputValue.inputTo.value} ${selectedToken[1]?.symbol}`
 				);
 			})
-			.catch(error => {
-				toast({
-					status: "error",
-					title: "Transaction error",
-					description: `User denied transaction.`,
-				});
+			.catch(err => {
+				console.log(err);
 				closePendingTx();
 			});
 	};

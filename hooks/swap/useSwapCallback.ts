@@ -31,7 +31,7 @@ export function UseSwapCallback(
 	txType: string,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
 	transactions: ITx,
-	onCloseTransaction: () => void,
+	onCloseTransaction: () => void
 ) {
 	const { walletAddress, chainId: chain } = walletInfos;
 
@@ -186,7 +186,7 @@ export function UseSwapCallback(
 						summary: withVersion,
 						finished: false,
 					});
-					setCurrentSummary(withVersion)
+					setCurrentSummary(withVersion);
 					setApprovalState({ status: ApprovalState.PENDING, type: txType });
 					setCurrentTxHash(`${response?.hash}`);
 					setCurrentInputTokenName(`${inputSymbol}`);

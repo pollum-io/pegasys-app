@@ -1,4 +1,4 @@
-import { ButtonProps, Flex, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
 import { usePicasso, useWallet } from "hooks";
 
