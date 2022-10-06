@@ -12,12 +12,14 @@ interface BaseLayoutProps {
 	children?: ReactNode;
 	heightValue?: string;
 	widthValue?: string;
+	alignItemsValue?: string;
 }
 
 export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 	children,
 	heightValue,
 	widthValue,
+	alignItemsValue,
 }) => {
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
