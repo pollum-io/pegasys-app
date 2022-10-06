@@ -153,7 +153,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 		const verify = selectedToken?.filter((currentToken: WrappedTokenInfo) =>
 			filter?.some(
 				(filteredValue: WrappedTokenInfo) =>
-					filteredValue?.symbol === currentToken.symbol
+					filteredValue?.symbol === currentToken?.symbol
 			)
 		);
 

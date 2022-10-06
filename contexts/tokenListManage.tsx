@@ -7,7 +7,7 @@ import {
 	NEW_TOKEN_LIST_STATE,
 	tokenListCache,
 } from "helpers/tokenListHelpers";
-import { useWallet } from "hooks";
+import { useToasty, useWallet } from "hooks";
 import { getTokenListByUrl } from "networks";
 import React, {
 	createContext,
@@ -50,6 +50,8 @@ export const TokensListManageProvider: React.FC<{
 
 	const { isConnected, provider, walletAddress, currentNetworkChainId } =
 		useWallet();
+
+	const { toast } = useToasty();
 
 	// UTILS FUNCTIONS TO HANDLE DISPLAY TOKENS STATE //
 	const findAndReturnTokensByListUrl = (
@@ -124,11 +126,17 @@ export const TokensListManageProvider: React.FC<{
 	const findAndRemoveTokenFromList = (listUrl: string) => {
 		const getCurrentListTokens = findAndReturnTokensByListUrl(listUrl);
 
-		const searchAndRemoveToken = currentTokensToDisplay.filter(
-			(token, index) => token !== getCurrentListTokens[index]
+		console.log("getCurrentListTokens", getCurrentListTokens);
+
+		const searchAndRemoveToken = currentTokensToDisplay.filter((token, index) =>
+			getCurrentListTokens.map(
+				listToken => token?.address !== listToken?.address
+			)
 		);
 
-		setCurrentTokensToDisplay(searchAndRemoveToken);
+		console.log("searchAndRemoveToken", searchAndRemoveToken);
+
+		return searchAndRemoveToken;
 	};
 
 	// END UTILS FUNCTIONS TO HANDLE DISPLAY TOKEN STATE //
@@ -368,8 +376,19 @@ export const TokensListManageProvider: React.FC<{
 				if (existingSelectedList?.length === 1) {
 					prevState.selectedListUrl = DEFAULT_TOKEN_LISTS_SELECTED;
 				} else {
-					findAndRemoveTokenFromList(listUrl);
+					const tokensAfterRemove = findAndRemoveTokenFromList(listUrl);
 
+					if (tokensAfterRemove.length === 0) {
+						toast({
+							title: "Failed to remove list",
+							description: "Can't remove the only list that has tokens!",
+							status: "warning",
+						});
+
+						return { ...prevState };
+					}
+
+					setCurrentTokensToDisplay(tokensAfterRemove);
 					existingSelectedList.splice(elementInListIndex, 1);
 					prevState.selectedListUrl = existingSelectedList;
 				}
@@ -411,7 +430,6 @@ export const TokensListManageProvider: React.FC<{
 
 	useEffect(() => {
 		if (!tokenListManageState.selectedListUrl) return;
-		// console.log(tokenListManageState.selectedListUrl)
 		handleTokensToDisplay();
 	}, [tokenListManageState.selectedListUrl, currentNetworkChainId]);
 
