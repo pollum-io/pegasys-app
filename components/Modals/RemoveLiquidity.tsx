@@ -306,7 +306,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 							cursor="pointer"
 							fontSize="sm"
 							ml="1.5"
-							color={theme.text.transactionsItems}
+							color={theme.text.softGray}
 							onClick={() => setSliderValue(0)}
 						>
 							0%
@@ -315,7 +315,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 							cursor="pointer"
 							ml="-2.5"
 							fontSize="sm"
-							color={theme.text.transactionsItems}
+							color={theme.text.softGray}
 							onClick={() => setSliderValue(25)}
 						>
 							25%
@@ -324,7 +324,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 							cursor="pointer"
 							ml="-2.5"
 							fontSize="sm"
-							color={theme.text.transactionsItems}
+							color={theme.text.softGray}
 							onClick={() => setSliderValue(50)}
 						>
 							50%
@@ -333,7 +333,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 							cursor="pointer"
 							ml="-2.5"
 							fontSize="sm"
-							color={theme.text.transactionsItems}
+							color={theme.text.softGray}
 							onClick={() => setSliderValue(75)}
 						>
 							75%
@@ -342,7 +342,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 							cursor="pointer"
 							ml="-8"
 							fontSize="sm"
-							color={theme.text.transactionsItems}
+							color={theme.text.softGray}
 							onClick={() => setSliderValue(100)}
 						>
 							100%
