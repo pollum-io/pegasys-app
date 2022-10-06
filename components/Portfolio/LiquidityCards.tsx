@@ -8,7 +8,7 @@ import {
 	ITransactionCardsMockedData,
 	IWalletStatsCardsMockedData,
 } from "types";
-import { AddLiquidityModal, RemoveLiquidity } from "components";
+// import { AddLiquidityModal, RemoveLiquidity } from "components";
 import { PaginationComponent } from "./Pagination";
 import { handlePaginate } from "./HandlePaginate";
 
@@ -16,13 +16,13 @@ export const LiquidityCards: React.FunctionComponent = () => {
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
 	const [isCreate, setIsCreate] = useState(false);
-	const [haveValue] = useState(false);
+	// const [haveValue] = useState(false);
 	const {
-		isOpenRemoveLiquidity,
-		onCloseRemoveLiquidity,
+		// isOpenRemoveLiquidity,
+		// onCloseRemoveLiquidity,
 		onOpenAddLiquidity,
-		isOpenAddLiquidity,
-		onCloseAddLiquidity,
+		// isOpenAddLiquidity,
+		// onCloseAddLiquidity,
 		onOpenRemoveLiquidity,
 	} = useModal();
 
@@ -67,7 +67,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 					px={["1.5rem", "2rem", "2.5rem", "8rem"]}
 					h="max-content"
 				>
-					<AddLiquidityModal
+					{/* <AddLiquidityModal
 						isModalOpen={isOpenAddLiquidity}
 						onModalClose={onCloseAddLiquidity}
 						isCreate={isCreate}
@@ -78,7 +78,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 						onModalClose={onCloseRemoveLiquidity}
 						isCreate={isCreate}
 						haveValue={haveValue}
-					/>
+					/> */}
 					<Flex
 						display={["flex", "none", "none", "none"]}
 						bgColor={theme.bg.poolShare}
