@@ -103,7 +103,7 @@ export const TokensListManageProvider: React.FC<{
 
 			const getCurrentListTokens = findAndReturnTokensByListUrl(listUrl);
 
-			if (listUrl === tokenListValuesByUrl) {
+			if (String(listUrl) === tokenListValuesByUrl) {
 				const verifyIfTokenExist = currentTokensToDisplay.filter(
 					(token, index) => token === getCurrentListTokens[index]
 				);
