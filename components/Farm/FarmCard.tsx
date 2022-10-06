@@ -19,6 +19,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 		unclaimedPSYSAmount,
 		userAvailableLpTokenAmount,
 		userRewardRatePerWeek,
+		totalStakedInUsd,
 	} = stakeInfo;
 
 	const theme = usePicasso();
@@ -84,7 +85,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 						Total Staked
 					</Text>
 					<Text color={theme.text.cyanPurple}>
-						${totalStakedAmount.raw.toString()}
+						${totalStakedInUsd.toSignificant(6)}
 					</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">

@@ -32,7 +32,7 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 	const [buttonId, setButtonId] = useState<string>("");
 	const { userTokensBalance } = useTokens();
 	const { chainId, address } = psUseWallet();
-	const { userTransactionDeadlineValue } = useWallet();
+	const { userTransactionDeadlineValue, provider } = useWallet();
 
 	const parsedStakeInput = useMemo(
 		() =>
@@ -110,7 +110,8 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 				const stakeInfos = await FarmServices.getFarmInfos(
 					pairsTokens as [WrappedTokenInfo, Token][],
 					address,
-					chainId
+					chainId,
+					provider
 				);
 
 				setAllPairs(stakeInfos);

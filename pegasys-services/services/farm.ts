@@ -7,9 +7,11 @@ import {
 	TokenAmount,
 	WSYS,
 } from "@pollum-io/pegasys-sdk";
+import ethers, { Signer } from "ethers";
 
 import { WrappedTokenInfo } from "types";
 
+import { usePairs } from "hooks";
 import { IFarmInfo } from "../dto";
 import LpTokenServices from "./lpToken";
 import { ContractFramework } from "../frameworks";
@@ -29,15 +31,27 @@ class FarmServices {
 		// userTokensBalance: WrappedTokenInfo[],
 		tokenPairs: Array<[WrappedTokenInfo, Token]>,
 		address: string,
-		chainId: ChainId
+		chainId: ChainId,
+		provider:
+			| ethers.providers.Provider
+			| ethers.providers.Web3Provider
+			| ethers.providers.JsonRpcProvider
+			| Signer
+			| undefined
 	): Promise<IFarmInfo[]> {
 		const lpTokens = await LpTokenServices.getLpTokens();
 		const poolMap = await LpTokenServices.getPoolMap(lpTokens);
 
 		const pairsWithLiquidityToken: IFarmInfo[] = [];
 
+		const walletInfo = {
+			walletAddress: address,
+			chainId,
+			provider,
+		};
+
 		await Promise.all(
-			tokenPairs.map(async tokenPair => {
+			tokenPairs.map(async (tokenPair, index) => {
 				const lpToken = LpTokenServices.getLpToken(
 					tokenPair[0],
 					tokenPair[1],
@@ -45,11 +59,13 @@ class FarmServices {
 				);
 
 				const poolId = poolMap[lpToken.address];
-
+				const pairs = await usePairs(tokenPairs, walletInfo);
+				const pair = pairs[index]?.[1];
 				if (
 					poolId !== undefined &&
 					lpToken &&
-					lpTokens.includes(lpToken.address)
+					lpTokens.includes(lpToken.address) &&
+					pair
 				) {
 					delete poolMap[lpToken.address];
 
@@ -170,21 +186,15 @@ class FarmServices {
 
 					let totalStakedInUsd = new TokenAmount(DAI[chainId], BIG_INT_ZERO);
 
-					const pair = new Pair(
-						new TokenAmount(tokenPair[0], "0"),
-						new TokenAmount(tokenPair[1], "0"),
-						chainId
-					);
-
 					const usdcPair = new Pair(
-						new TokenAmount(WSYS[ChainId.NEVM], "0"),
-						new TokenAmount(USDC[ChainId.NEVM], "0"),
+						new TokenAmount(WSYS[ChainId.NEVM], "1"),
+						new TokenAmount(USDC[ChainId.NEVM], "1"),
 						chainId
 					);
 
 					const sysPsysPair = new Pair(
-						new TokenAmount(WSYS[ChainId.NEVM], "0"),
-						new TokenAmount(psys, "0"),
+						new TokenAmount(WSYS[ChainId.NEVM], "1"),
+						new TokenAmount(psys, "1"),
 						chainId
 					);
 
@@ -258,7 +268,7 @@ class FarmServices {
 											),
 											totalSupplyJSBI
 									  )
-									: JSBI.BigInt(0)
+									: JSBI.BigInt(1)
 							);
 
 							if (JSBI.greaterThan(totalStakedInWsys.raw, JSBI.BigInt(0))) {
