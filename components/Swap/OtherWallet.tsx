@@ -1,5 +1,5 @@
 import { Flex, Input, Text, useColorMode } from "@chakra-ui/react";
-import { usePicasso } from "hooks";
+import { usePicasso, useWallet } from "hooks";
 import React, { FunctionComponent } from "react";
 import { MdOutlineArrowDownward } from "react-icons/md";
 import { BiTrashAlt } from "react-icons/bi";
@@ -39,7 +39,7 @@ export const OtherWallet: FunctionComponent = () => {
 						border="none"
 						placeholder="Wallet Address"
 						_placeholder={{
-							color: theme.border.borderSettings,
+							color: theme.text.lightGray,
 							fontWeight: "normal",
 							opacity: "0.8",
 						}}

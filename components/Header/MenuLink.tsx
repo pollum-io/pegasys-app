@@ -67,13 +67,13 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 		<Popover>
 			<PopoverTrigger {...props}>
 				<IconButton
+					color={theme.icon.nightGray}
 					aria-label="Popover"
 					icon={<BsThreeDots size="20px" />}
 					transition="0.4s"
 					bg="transparent"
 					_hover={{
 						color: theme.text.cyanPurple,
-						background: theme.bg.iconBg,
 					}}
 					_expanded={{ color: theme.text.cyanPurple }}
 				/>

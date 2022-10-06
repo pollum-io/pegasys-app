@@ -1,14 +1,14 @@
-import { DefaultTemplate, StakeContainer } from "container";
+import { DefaultTemplate, PortfolioContainer } from "container";
 import type { NextPage } from "next";
 
-const Stake: NextPage = () => (
+const Portfolio: NextPage = () => (
 	<DefaultTemplate
 		widthValue="100%"
 		heightValue="100vh"
 		alignItemsValue="center"
 	>
-		<StakeContainer />
+		<PortfolioContainer />
 	</DefaultTemplate>
 );
 
-export default Stake;
+export default Portfolio;

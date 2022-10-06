@@ -20,8 +20,8 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 		title = "Should the Pegasys community participate in the Protocol Guild Pilot?",
 		status = "executed",
 		date = "Ago 16, 2022 at 9:08 AM GMT-3",
-		description,
 		proposer = "0x6856...BF99",
+		description,
 		against = "390",
 		details = "0x25aece71c96825BNJ6256vcsd3568DC98fA1",
 	} = props;

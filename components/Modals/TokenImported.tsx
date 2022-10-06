@@ -14,8 +14,11 @@ import {
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import React from "react";
-import { AiOutlineClose } from "react-icons/ai";
-import { MdContentCopy, MdOutlineCallMade } from "react-icons/md";
+import {
+	MdContentCopy,
+	MdOutlineCallMade,
+	MdOutlineClose,
+} from "react-icons/md";
 import { RiInformationFill } from "react-icons/ri";
 
 interface IModal {
@@ -48,12 +51,12 @@ export const TokenImported: React.FC<IModal> = props => {
 						alignItems="center"
 					>
 						<Flex>
-							<RiInformationFill size={24} color={theme.icon.infoWhiteRed} />
+							<RiInformationFill size={24} color={theme.icon.whiteRed} />
 						</Flex>
 						<Text
 							fontSize="lg"
 							fontWeight="semibold"
-							color={theme.icon.infoWhiteRed}
+							color={theme.icon.whiteRed}
 						>
 							Token Imported
 						</Text>
@@ -63,7 +66,11 @@ export const TokenImported: React.FC<IModal> = props => {
 							onClick={onClose}
 							p="0"
 						>
-							<AiOutlineClose size={24} />
+							<MdOutlineClose
+								size={22}
+								onClick={onClose}
+								color={theme.icon.whiteDarkGray}
+							/>
 						</Button>
 					</Flex>
 				</ModalHeader>

@@ -9,6 +9,7 @@ interface ITooltipComponent {
 	defaultIsOpen?: boolean;
 	placement?: PlacementWithLogical;
 	hasArrow?: boolean;
+	color?: string;
 }
 
 export const TooltipComponent: FunctionComponent<ITooltipComponent> = props => {
@@ -18,6 +19,7 @@ export const TooltipComponent: FunctionComponent<ITooltipComponent> = props => {
 		placement = "right",
 		hasArrow = true,
 		defaultIsOpen = false,
+		color,
 	} = props;
 
 	const theme = usePicasso();
@@ -30,7 +32,7 @@ export const TooltipComponent: FunctionComponent<ITooltipComponent> = props => {
 			borderRadius="0.25rem"
 			filter="drop-shadow(0px 1px 3px rgba(0, 0, 0, 0.1)) drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.06))"
 			color={theme.text.mono}
-			bgColor={theme.bg.secondary}
+			bgColor={theme.bg.blueNavyLight}
 			hasArrow={hasArrow}
 			label={label}
 			placement={placement}
@@ -38,7 +40,7 @@ export const TooltipComponent: FunctionComponent<ITooltipComponent> = props => {
 		>
 			<Icon
 				as={icon}
-				color={theme.icon.helpIcon}
+				color={color || theme.icon.helpIcon}
 				onMouseEnter={() => setIsLabelOpen(true)}
 				onMouseLeave={() => setIsLabelOpen(false)}
 				onClick={() => setIsLabelOpen(true)}
