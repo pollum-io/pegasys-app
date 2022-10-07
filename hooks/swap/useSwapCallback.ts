@@ -211,7 +211,7 @@ export function UseSwapCallback(
 						toast({
 							status: "error",
 							title: "Swap failed.",
-							description: `Error: ${error.message}`,
+							description: `Swap has failed`,
 						});
 						throw new Error(`Swap failed: ${error.message}`);
 					}

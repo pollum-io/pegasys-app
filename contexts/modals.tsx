@@ -103,6 +103,18 @@ export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({
 	} = useDisclosure();
 
 	const {
+		onOpen: onOpenCheckAllVotersModal,
+		isOpen: isOpenCheckAllVotersModal,
+		onClose: onCloseCheckAllVotersModal,
+	} = useDisclosure();
+
+	const {
+		onOpen: onOpenUnlockVotesModal,
+		isOpen: isOpenUnlockVotesModal,
+		onClose: onCloseUnlockVotesModal,
+	} = useDisclosure();
+
+	const {
 		onOpen: onOpenTransaction,
 		isOpen: isOpenTransaction,
 		onClose: onCloseTransaction,
@@ -158,6 +170,12 @@ export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({
 			onOpenDrawerMenu,
 			isOpenDrawerMenu,
 			onCloseDrawerMenu,
+			onOpenCheckAllVotersModal,
+			isOpenCheckAllVotersModal,
+			onCloseCheckAllVotersModal,
+			onOpenUnlockVotesModal,
+			isOpenUnlockVotesModal,
+			onCloseUnlockVotesModal,
 			onOpenTransaction,
 			isOpenTransaction,
 			onCloseTransaction,
@@ -211,6 +229,12 @@ export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({
 			onOpenDrawerMenu,
 			isOpenDrawerMenu,
 			onCloseDrawerMenu,
+			onOpenCheckAllVotersModal,
+			isOpenCheckAllVotersModal,
+			onCloseCheckAllVotersModal,
+			onOpenUnlockVotesModal,
+			isOpenUnlockVotesModal,
+			onCloseUnlockVotesModal,
 			onOpenTransaction,
 			isOpenTransaction,
 			onCloseTransaction,

@@ -477,7 +477,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			/>
 			<ModalOverlay />
 			<ModalContent
-				mb={["0", "0", "20rem", "20rem"]}
+				mt="10rem"
 				bottom={["0", "0", "0", "0"]}
 				position={["fixed", "fixed", "relative", "relative"]}
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}

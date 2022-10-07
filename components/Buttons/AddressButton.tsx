@@ -1,7 +1,6 @@
 import { Button, ButtonProps, Flex } from "@chakra-ui/react";
-import { ExpertMode } from "components/Header/ExpertMode";
 import { usePicasso, useWallet } from "hooks";
-import { FunctionComponent, ReactNode, useState } from "react";
+import { FunctionComponent, ReactNode } from "react";
 import Jazzicon from "react-jazzicon";
 
 interface IButtonProps extends ButtonProps {
