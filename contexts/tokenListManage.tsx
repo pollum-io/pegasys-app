@@ -1,3 +1,4 @@
+import { Token } from "@pollum-io/pegasys-sdk";
 import { TokenInfo, TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
 import { Signer } from "ethers";
 import { DEFAULT_TOKEN_LISTS_SELECTED, SYS_LOGO } from "helpers/consts";
@@ -9,13 +10,8 @@ import {
 } from "helpers/tokenListHelpers";
 import { useToasty, useWallet } from "hooks";
 import { getTokenListByUrl } from "networks";
-import React, {
-	createContext,
-	useMemo,
-	useState,
-	useEffect,
-	useCallback,
-} from "react";
+import { StringifyOptions } from "querystring";
+import React, { createContext, useMemo, useState, useEffect } from "react";
 import { ListsState, TokenAddressMap, WrappedTokenInfo } from "types";
 import { getBalanceOfSingleCall, getProviderBalance } from "utils";
 
@@ -44,11 +40,14 @@ export const TokensListManageProvider: React.FC<{
 		INITIAL_TOKEN_LIST_STATE
 	);
 
-	const [isFirstTime, setIsFirstTime] = useState<boolean>(true);
-
 	const [currentTokensToDisplay, setCurrentTokensToDisplay] = useState<
 		WrappedTokenInfo[]
 	>([]);
+
+	let isFirstRender = false;
+
+	const [listToAdd, setListToAdd] = useState<string>("");
+	const [listToRemove, setListToRemove] = useState<string>("");
 
 	const { isConnected, provider, walletAddress, currentNetworkChainId } =
 		useWallet();
@@ -87,9 +86,9 @@ export const TokensListManageProvider: React.FC<{
 						token.symbol !== "MAI" &&
 						token.symbol !== "QI"
 				);
+
 				return unecessaryTokensRemoved;
 			}
-
 			return convertFoundedTokens;
 		}
 
@@ -118,54 +117,50 @@ export const TokensListManageProvider: React.FC<{
 			tokenValueAlreadyExist.length === 0 &&
 			currentReceivedTokens.length > 0
 		) {
-			setCurrentTokensToDisplay(prevState => {
-				console.log("add prev State", prevState);
-				prevState = [...prevState, ...currentReceivedTokens];
-
-				return prevState;
-			});
+			setCurrentTokensToDisplay(prevState => [
+				...prevState,
+				...currentReceivedTokens,
+			]);
 		}
+
+		setListToAdd("");
 	};
 
 	const findAndRemoveTokenFromList = (listUrl: string) => {
 		const currentReceivedTokens = findAndReturnTokensByListUrl(listUrl);
 
-		// const existValueInList = ([] as WrappedTokenInfo[]).concat(
-		// 	...(currentTokensToDisplay || [])
-		// );
-		setIsFirstTime(false);
-		const searchForTokensToRemove = currentTokensToDisplay.filter(
-			(token, index) => token.address !== currentReceivedTokens[index]?.address
+		const existValueInList = ([] as WrappedTokenInfo[]).concat(
+			...(currentTokensToDisplay || [])
 		);
-		console.log("searchForTokensToRemove", {
-			searchForTokensToRemove,
-			currentReceivedTokens,
+
+		const searchForTokensToRemove = existValueInList.filter(
+			token => !currentReceivedTokens.includes(token)
+		);
+
+		setCurrentTokensToDisplay(prevState => {
+			prevState = searchForTokensToRemove;
+			return prevState;
 		});
-
-		// const searchForTokensToRemove = existValueInList.filter(
-		// 	(token, index) =>
-		// 		(token?.tokenInfo?.address as string) !==
-		// 		(currentReceivedTokens[index]?.tokenInfo?.address as string)
-		// );
-
-		setCurrentTokensToDisplay(prevState =>
-			prevState.filter(
-				(token, index) =>
-					token.address !== currentReceivedTokens[index]?.address
-			)
-		);
+		setListToRemove("");
 	};
 
 	const handleTokensToDisplay = () => {
-		if (!tokenListManageState?.byUrl || !tokenListManageState?.selectedListUrl)
+		if (
+			Object.keys(tokenListManageState?.byUrl).length === 0 ||
+			tokenListManageState?.selectedListUrl?.length === 0
+		)
 			return;
 
-		tokenListManageState?.selectedListUrl.map(listUrl => {
+		tokenListManageState?.selectedListUrl?.map((listUrl, index) => {
 			const transformListByUrl = Object.keys(tokenListManageState.byUrl);
 
 			const listExist = transformListByUrl.includes(listUrl);
 
 			if (listExist) addTokensToTokensDisplayState(listUrl);
+
+			if (index === tokenListManageState.selectedListUrl?.length) {
+				isFirstRender = true;
+			}
 
 			return {};
 		});
@@ -371,6 +366,7 @@ export const TokensListManageProvider: React.FC<{
 				if (existValueInList?.length === 1) {
 					prevState.selectedListUrl = DEFAULT_TOKEN_LISTS_SELECTED;
 				} else {
+					setListToRemove(listUrl);
 					existValueInList.splice(findInList, 1);
 					prevState.selectedListUrl = existValueInList;
 				}
@@ -388,6 +384,8 @@ export const TokensListManageProvider: React.FC<{
 
 			return { ...prevState };
 		});
+
+		setListToAdd(listUrl);
 	};
 
 	const toggleListByUrl = (listUrl: string, shouldToggle: boolean) => {
@@ -401,7 +399,7 @@ export const TokensListManageProvider: React.FC<{
 
 				prevState.selectedListUrl = existingSelectedList;
 
-				addTokensToTokensDisplayState(listUrl);
+				setListToAdd(listUrl);
 			} else {
 				const elementInListIndex = existingSelectedList.indexOf(listUrl);
 
@@ -412,7 +410,7 @@ export const TokensListManageProvider: React.FC<{
 				} else {
 					existingSelectedList.splice(elementInListIndex, 1);
 					prevState.selectedListUrl = existingSelectedList;
-					findAndRemoveTokenFromList(listUrl);
+					setListToRemove(listUrl);
 				}
 			}
 
@@ -443,20 +441,27 @@ export const TokensListManageProvider: React.FC<{
 		tokenListManageState.byUrl,
 		tokenListManageState.lastInitializedDefaultListOfLists,
 		tokenListManageState.selectedListUrl,
-		isConnected,
 		walletAddress,
 		currentNetworkChainId,
 	]);
 
 	useEffect(() => {
-		console.log({ isFirstTime });
-		if (tokenListManageState.selectedListUrl?.length === 0) return;
-		if (isFirstTime) handleTokensToDisplay();
+		if (tokenListManageState?.selectedListUrl?.length === 0) return;
+
+		if (!isFirstRender) handleTokensToDisplay();
 	}, [
 		currentNetworkChainId,
-		tokenListManageState.selectedListUrl,
-		isFirstTime,
+		tokenListManageState?.selectedListUrl,
+		isFirstRender,
 	]);
+
+	useMemo(() => {
+		if (listToAdd === "" && listToRemove === "") return;
+
+		if (listToAdd) addTokensToTokensDisplayState(listToAdd);
+
+		if (listToRemove) findAndRemoveTokenFromList(listToRemove);
+	}, [listToAdd, listToRemove]);
 
 	const tokensListManageProviderValue = useMemo(
 		() => ({
