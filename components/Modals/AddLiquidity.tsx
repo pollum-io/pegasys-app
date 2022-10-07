@@ -156,6 +156,12 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 	const isPending = approvalState.status === ApprovalState.PENDING;
 
+	const inputValidation =
+		parseFloat(tokenInputValue.inputTo.value) >
+			parseFloat(selectedToken[1]?.balance) ||
+		parseFloat(tokenInputValue.inputFrom.value) >
+			parseFloat(selectedToken[0]?.balance);
+
 	const isApproved =
 		approvalState.type === "approve" &&
 		approvalState.status === ApprovalState.APPROVED;
@@ -865,7 +871,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								py={["4", "4", "6", "6"]}
 								px="6"
 								borderRadius="67px"
-								disabled={invalidPair || emptyInput || isPending}
+								disabled={
+									invalidPair || emptyInput || isPending || inputValidation
+								}
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
 								fontSize="lg"
