@@ -528,7 +528,10 @@ export const PortfolioContainer: NextPage = () => {
 											pb="0.3rem"
 											// eslint-disable-next-line react/no-children-prop
 											children={
-												<MdSearch color={theme.icon.inputSearchIcon} size={20} />
+												<MdSearch
+													color={theme.icon.inputSearchIcon}
+													size={20}
+												/>
 											}
 										/>
 										<Input
