@@ -44,6 +44,8 @@ export const TokensListManageProvider: React.FC<{
 		INITIAL_TOKEN_LIST_STATE
 	);
 
+	const [isFirstTime, setIsFirstTime] = useState<boolean>(true);
+
 	const [currentTokensToDisplay, setCurrentTokensToDisplay] = useState<
 		WrappedTokenInfo[]
 	>([]);
@@ -128,25 +130,30 @@ export const TokensListManageProvider: React.FC<{
 	const findAndRemoveTokenFromList = (listUrl: string) => {
 		const currentReceivedTokens = findAndReturnTokensByListUrl(listUrl);
 
-		const existValueInList = ([] as WrappedTokenInfo[]).concat(
-			...(currentTokensToDisplay || [])
+		// const existValueInList = ([] as WrappedTokenInfo[]).concat(
+		// 	...(currentTokensToDisplay || [])
+		// );
+		setIsFirstTime(false);
+		const searchForTokensToRemove = currentTokensToDisplay.filter(
+			(token, index) => token.address !== currentReceivedTokens[index]?.address
 		);
-
-		const searchForTokensToRemove = existValueInList.filter(
-			(token, index) =>
-				(token?.tokenInfo?.address as string) !==
-				(currentReceivedTokens[index]?.tokenInfo?.address as string)
-		);
-
-		console.log("searchForTokensToRemove", searchForTokensToRemove);
-
-		setCurrentTokensToDisplay(prevState => {
-			console.log("remove prev State", prevState);
-
-			prevState = searchForTokensToRemove;
-
-			return prevState;
+		console.log("searchForTokensToRemove", {
+			searchForTokensToRemove,
+			currentReceivedTokens,
 		});
+
+		// const searchForTokensToRemove = existValueInList.filter(
+		// 	(token, index) =>
+		// 		(token?.tokenInfo?.address as string) !==
+		// 		(currentReceivedTokens[index]?.tokenInfo?.address as string)
+		// );
+
+		setCurrentTokensToDisplay(prevState =>
+			prevState.filter(
+				(token, index) =>
+					token.address !== currentReceivedTokens[index]?.address
+			)
+		);
 	};
 
 	const handleTokensToDisplay = () => {
@@ -424,8 +431,6 @@ export const TokensListManageProvider: React.FC<{
 
 	// HANDLE FUNCTIONS TO FILL AND MANAGE TOKEN LIST MANAGE STATE AT ALL AND ALSO WEAK MAP LISTS //
 
-	console.log("currentTokensToDisplay", currentTokensToDisplay);
-
 	useEffect(() => {
 		UseSelectedTokenList();
 
@@ -444,9 +449,14 @@ export const TokensListManageProvider: React.FC<{
 	]);
 
 	useEffect(() => {
+		console.log({ isFirstTime });
 		if (tokenListManageState.selectedListUrl?.length === 0) return;
-		handleTokensToDisplay();
-	}, [currentNetworkChainId, tokenListManageState.selectedListUrl]);
+		if (isFirstTime) handleTokensToDisplay();
+	}, [
+		currentNetworkChainId,
+		tokenListManageState.selectedListUrl,
+		isFirstTime,
+	]);
 
 	const tokensListManageProviderValue = useMemo(
 		() => ({
