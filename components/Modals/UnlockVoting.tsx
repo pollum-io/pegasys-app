@@ -140,7 +140,7 @@ export const UnlockVotesModal: FunctionComponent<IModal> = props => {
 											border="none"
 											placeholder="Wallet Address"
 											_placeholder={{
-												color: theme.border.borderSettings,
+												color: theme.text.lightGray,
 												fontWeight: "normal",
 												opacity: "0.8",
 											}}
