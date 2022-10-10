@@ -25,7 +25,7 @@ import React, { useMemo } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { MdArrowBack, MdOutlineInfo } from "react-icons/md";
 
-import { useFarm } from "pegasys-services";
+import { useFarm, useEarn } from "pegasys-services";
 import { JSBI, Percent, TokenAmount } from "@pollum-io/pegasys-sdk";
 
 interface IModal {
@@ -41,30 +41,44 @@ export const FarmActions: React.FC<IModal> = props => {
 	const [showTooltip, setShowTooltip] = React.useState(false);
 	const { userTokensBalance } = useTokens();
 	const {
-		selectedPair,
+		// selectedPair,
+		// depositTypedValue,
+		// setDepositTypedValue,
+		// withdrawnTypedValue,
+		// setWithdrawnTypedValue,
+		// onClaim,
+		// onDeposit,
+		// onWithdraw,
+		// liveRewardWeek,
+		// buttonId,
+		// setButtonId,
+		claim,
+		withdraw,
+		deposit,
+		sign,
+	} = useFarm();
+	const {
+		setButtonId,
+		buttonId,
+		withdrawTypedValue,
+		setWithdrawTypedValue,
 		depositTypedValue,
 		setDepositTypedValue,
-		withdrawnTypedValue,
-		setWithdrawnTypedValue,
-		onClaim,
-		onDeposit,
-		onWithdraw,
-		liveRewardWeek,
-		buttonId,
-		setButtonId,
-	} = useFarm();
+		selectedOpportunity,
+		signature,
+	} = useEarn();
 
 	const tokenBLogo = useMemo(() => {
 		const tokenBWrapped = userTokensBalance.find(
 			ut =>
-				ut.address === selectedPair?.tokenB.address &&
-				selectedPair?.tokenB.chainId === ut.chainId
+				ut.address === selectedOpportunity?.tokenB.address &&
+				selectedOpportunity?.tokenB.chainId === ut.chainId
 		);
 
 		return tokenBWrapped?.logoURI ?? "";
-	}, [userTokensBalance, selectedPair?.tokenB]);
+	}, [userTokensBalance, selectedOpportunity?.tokenB]);
 
-	if (!selectedPair) {
+	if (!selectedOpportunity) {
 		return null;
 	}
 
@@ -105,7 +119,7 @@ export const FarmActions: React.FC<IModal> = props => {
 							mt={["6", "6", "2", "2"]}
 						>
 							{JSBI.greaterThan(
-								selectedPair.userAvailableLpTokenAmount.raw,
+								selectedOpportunity.unstakedAmount.raw,
 								JSBI.BigInt(0)
 							) && (
 								<Button
@@ -134,7 +148,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								</Button>
 							)}
 							{JSBI.greaterThan(
-								selectedPair.userStakedAmount.raw,
+								selectedOpportunity.stakedAmount.raw,
 								JSBI.BigInt(0)
 							) && (
 								<Button
@@ -164,7 +178,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								</Button>
 							)}
 							{JSBI.greaterThan(
-								selectedPair.unclaimedPSYSAmount.raw,
+								selectedOpportunity.unclaimedAmount.raw,
 								JSBI.BigInt(0)
 							) && (
 								<Button
@@ -242,18 +256,18 @@ export const FarmActions: React.FC<IModal> = props => {
 						<Flex flexDirection="column">
 							<Flex gap="2">
 								<Flex>
-									<Img src={selectedPair.tokenA.logoURI} w="6" h="6" />
+									<Img src={selectedOpportunity.tokenA.logoURI} w="6" h="6" />
 									<Img src={tokenBLogo} w="6" h="6" />
 								</Flex>
 								<Flex>
 									<Text fontSize="lg" fontWeight="bold">
-										{selectedPair.tokenA.name}
+										{selectedOpportunity.tokenA.name}
 									</Text>
 									<Text fontSize="lg" fontWeight="bold">
 										:
 									</Text>
 									<Text fontSize="lg" fontWeight="bold">
-										{selectedPair.tokenB.name}
+										{selectedOpportunity.tokenB.name}
 									</Text>
 								</Flex>
 							</Flex>
@@ -265,7 +279,7 @@ export const FarmActions: React.FC<IModal> = props => {
 							>
 								<Text fontWeight="normal">
 									Available to deposit:{" "}
-									{selectedPair.userAvailableLpTokenAmount.toFixed(10, {
+									{selectedOpportunity.unstakedAmount.toFixed(10, {
 										groupSeparator: ",",
 									})}
 								</Text>
@@ -305,7 +319,7 @@ export const FarmActions: React.FC<IModal> = props => {
 											}}
 											onClick={() =>
 												setDepositTypedValue(
-													selectedPair.userAvailableLpTokenAmount.toExact() ??
+													selectedOpportunity.unstakedAmount.toExact() ??
 														JSBI.BigInt(0).toString()
 												)
 											}
@@ -338,7 +352,8 @@ export const FarmActions: React.FC<IModal> = props => {
 								)} */}
 								<Text fontWeight="normal" pt="1.5rem">
 									Weekly Rewards:{" "}
-									{liveRewardWeek ? liveRewardWeek.toExact() : "0"} PSYS / Week
+									{selectedOpportunity.totalRewardRatePerWeek.raw.toString()}{" "}
+									PSYS / Week
 								</Text>
 								<Text fontWeight="normal">Extra Reward: 0 PSYS / Week</Text>
 							</Flex>
@@ -359,9 +374,10 @@ export const FarmActions: React.FC<IModal> = props => {
 								}}
 								_active={{}}
 								borderRadius="full"
-								onClick={onDeposit}
+								onClick={signature ? deposit : sign}
+								disabled={!depositTypedValue}
 							>
-								Deposit
+								{signature ? "Deposit" : "Sign"}
 							</Button>
 						</Flex>
 					)}
@@ -369,7 +385,7 @@ export const FarmActions: React.FC<IModal> = props => {
 						<Flex flexDirection="column">
 							<Text fontWeight="normal" mb="2">
 								Deposited PLP Liquidity:{" "}
-								{selectedPair.userStakedAmount.toFixed(10, {
+								{selectedOpportunity.stakedAmount.toFixed(10, {
 									groupSeparator: ",",
 								})}
 							</Text>
@@ -386,8 +402,8 @@ export const FarmActions: React.FC<IModal> = props => {
 										_focus={{
 											outline: "none",
 										}}
-										value={withdrawnTypedValue}
-										onChange={e => setWithdrawnTypedValue(e.target.value)}
+										value={withdrawTypedValue}
+										onChange={e => setWithdrawTypedValue(e.target.value)}
 									/>
 									<InputRightAddon
 										// eslint-disable-next-line react/no-children-prop
@@ -407,8 +423,8 @@ export const FarmActions: React.FC<IModal> = props => {
 											cursor: "pointer",
 										}}
 										onClick={() =>
-											setWithdrawnTypedValue(
-												selectedPair.userStakedAmount.toExact() ??
+											setWithdrawTypedValue(
+												selectedOpportunity.stakedAmount.toExact() ??
 													JSBI.BigInt(0).toString()
 											)
 										}
@@ -418,7 +434,7 @@ export const FarmActions: React.FC<IModal> = props => {
 							<Collapse in={sliderValue === 100} animateOpacity>
 								<Text fontWeight="normal" mt="2">
 									Unclaimed PSYS:{" "}
-									{selectedPair.unclaimedPSYSAmount.toFixed(10, {
+									{selectedOpportunity.unclaimedAmount.toFixed(10, {
 										groupSeparator: ",",
 									})}
 								</Text>
@@ -439,15 +455,15 @@ export const FarmActions: React.FC<IModal> = props => {
 										const percent = new Percent(value.toString(), "100");
 
 										const valuePercent = percent.multiply(
-											selectedPair.userStakedAmount.raw ?? JSBI.BigInt(0)
+											selectedOpportunity.stakedAmount.raw ?? JSBI.BigInt(0)
 										).quotient;
 
 										const amount = new TokenAmount(
-											selectedPair.lpToken,
+											selectedOpportunity.stakeToken,
 											valuePercent
 										);
 
-										setWithdrawnTypedValue(amount.toExact());
+										setWithdrawTypedValue(amount.toExact());
 									}}
 									onMouseEnter={() => setShowTooltip(true)}
 									onMouseLeave={() => setShowTooltip(false)}
@@ -518,7 +534,7 @@ export const FarmActions: React.FC<IModal> = props => {
 									_hover={{ opacity: "1", bgColor: theme.bg.bluePurple }}
 									_active={{}}
 									borderRadius="full"
-									onClick={onWithdraw}
+									onClick={withdraw}
 								>
 									Withdraw
 								</Button>
@@ -540,7 +556,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								<Flex flexDirection="row" alignItems="center">
 									<Img src="icons/pegasys.png" w="6" h="6" />
 									<Text fontSize="2xl" fontWeight="semibold" pl="2">
-										{selectedPair.unclaimedPSYSAmount.toFixed(10, {
+										{selectedOpportunity.unclaimedAmount.toFixed(10, {
 											groupSeparator: ",",
 										})}
 									</Text>
@@ -562,7 +578,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								_hover={{ opacity: "1", bgColor: theme.bg.bluePurple }}
 								_active={{}}
 								borderRadius="full"
-								onClick={onClaim}
+								onClick={claim}
 							>
 								Claim PSYS
 							</Button>

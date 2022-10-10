@@ -1,6 +1,7 @@
 import { TokenAmount } from "@pollum-io/pegasys-sdk";
 import { children, setType } from "../react";
 import { IFarmInfo } from "../services";
+import { IEarnInfo } from "./earn";
 
 export interface IFarmProviderProps {
 	children: children;
@@ -13,17 +14,9 @@ export interface IFarmProviderValue {
 	setSort: setType<TFarmSort>;
 	search: string;
 	setSearch: setType<string>;
-	pairs: IFarmInfo[];
-	selectedPair?: IFarmInfo;
-	setSelectedPair: setType<IFarmInfo | undefined>;
-	withdrawnTypedValue: string;
-	setWithdrawnTypedValue: (newValue: string) => void;
-	depositTypedValue: string;
-	setDepositTypedValue: (newValue: string) => void;
-	onClaim: () => Promise<void>;
-	onWithdraw: () => Promise<void>;
-	onDeposit: () => Promise<void>;
-	liveRewardWeek?: TokenAmount;
-	buttonId: string;
-	setButtonId: setType<string>;
+	sortedPairs: IEarnInfo[];
+	claim: () => Promise<void>;
+	sign: () => Promise<void>;
+	deposit: () => Promise<void>;
+	withdraw: () => Promise<void>;
 }

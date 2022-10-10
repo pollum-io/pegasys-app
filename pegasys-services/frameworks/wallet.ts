@@ -1,6 +1,14 @@
-import { ethers } from "ethers";
+import { ChainId } from "@pollum-io/pegasys-sdk";
+import { BigNumber, ethers } from "ethers";
+import { splitSignature } from "ethers/lib/utils";
 
-import { TSigner, TProvider, IWalletFrameworkConnectionInfo } from "../dto";
+import {
+	TSigner,
+	TProvider,
+	IWalletFrameworkConnectionInfo,
+	TContract,
+} from "../dto";
+import ContractFramework from "./contract";
 
 class WalletFramework {
 	static getProvider(): TProvider | undefined {
@@ -70,6 +78,108 @@ class WalletFramework {
 		const signer = this.getSigner(provider);
 
 		return signer ?? provider;
+	}
+
+	static async getSignature({
+		address,
+		userDeadline,
+		contract,
+		value,
+		version,
+		chainId,
+		name,
+		spender,
+		verifyingContract,
+	}: {
+		address: string;
+		userDeadline: number | BigNumber;
+		value: string;
+		contract: TContract;
+		version?: string;
+		chainId: ChainId;
+		name: string;
+		spender: string;
+		verifyingContract: string;
+	}) {
+		const nonce = await ContractFramework.call({
+			contract,
+			methodName: "nonces",
+			args: [address],
+		});
+
+		const deadline = BigNumber.from(
+			Math.floor(new Date().getTime() / 1000)
+		).add(userDeadline);
+
+		const message = {
+			owner: address,
+			spender,
+			value,
+			nonce: nonce.toHexString(),
+			deadline: deadline.toNumber(),
+		};
+
+		const EIP712Domain = version
+			? [
+					{ name: "name", type: "string" },
+					{ name: "version", type: "string" },
+					{ name: "chainId", type: "uint256" },
+					{ name: "verifyingContract", type: "address" },
+			  ]
+			: [
+					{ name: "name", type: "string" },
+					{ name: "chainId", type: "uint256" },
+					{ name: "verifyingContract", type: "address" },
+			  ];
+
+		const domain: {
+			name: string;
+			chainId: number;
+			verifyingContract: string;
+			version?: string;
+		} = {
+			name,
+			chainId,
+			verifyingContract,
+		};
+
+		if (version) {
+			domain.version = version;
+		}
+
+		const Permit = [
+			{ name: "owner", type: "address" },
+			{ name: "spender", type: "address" },
+			{ name: "value", type: "uint256" },
+			{ name: "nonce", type: "uint256" },
+			{ name: "deadline", type: "uint256" },
+		];
+
+		const data = JSON.stringify({
+			types: {
+				EIP712Domain,
+				Permit,
+			},
+			domain,
+			primaryType: "Permit",
+			message,
+		});
+
+		const provider = WalletFramework.getProvider();
+
+		const signatureRes = await provider?.send("eth_signTypedData_v4", [
+			address,
+			data,
+		]);
+
+		const signature = splitSignature(signatureRes);
+
+		return {
+			v: signature.v,
+			r: signature.r,
+			s: signature.s,
+			deadline,
+		};
 	}
 }
 

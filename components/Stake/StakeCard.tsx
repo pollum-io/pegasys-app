@@ -10,7 +10,7 @@ import {
 import { FunctionComponent, useState } from "react";
 import { useModal, usePicasso } from "hooks";
 import { StakeActions } from "components/Modals/StakeActions";
-import { IStakeInfo, useStake } from "pegasys-services";
+import { IEarnInfo, IStakeInfo, useEarn, useStake } from "pegasys-services";
 import { JSBI } from "@pollum-io/pegasys-sdk";
 
 interface IPoolCards {
@@ -23,13 +23,13 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 	const { isOpenStakeActions, onOpenStakeActions, onCloseStakeActions } =
 		useModal();
 
-	const [buttonId, setButtonId] = useState<string>("");
+	// const [buttonId, setButtonId] = useState<string>("");
 	const { colorMode } = useColorMode();
-	const { setSelectedStake } = useStake();
+	const { setSelectedOpportunity, buttonId, setButtonId } = useEarn();
 
 	const onClick = (id: string) => {
 		setButtonId(id);
-		setSelectedStake(stakeInfo);
+		setSelectedOpportunity((stakeInfo as IEarnInfo | undefined) ?? null);
 		onOpenStakeActions();
 	};
 
@@ -57,8 +57,8 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 			<StakeActions
 				isOpen={isOpenStakeActions}
 				onClose={onCloseStakeActions}
-				buttonId={buttonId}
-				setButtonId={setButtonId}
+				// buttonId={buttonId}
+				// setButtonId={setButtonId}
 			/>
 			<Flex
 				id="header"
@@ -75,8 +75,10 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 				gap="2"
 			>
 				<Img src="icons/pegasys.png" w="6" h="6" />
-				<Text color={theme.text.whitePurple}>Earn PSYS</Text>
-				{JSBI.greaterThan(stakeInfo.earnedAmount.raw, JSBI.BigInt(0)) && (
+				<Text color={theme.text.whitePurple}>
+					Earn {stakeInfo.stakeToken.symbol}
+				</Text>
+				{JSBI.greaterThan(stakeInfo.unclaimedAmount.raw, JSBI.BigInt(0)) && (
 					<Button
 						id="claim"
 						border="1px solid"
@@ -123,7 +125,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
 						{stakeInfo.totalStakedAmount.toFixed(10, { groupSeparator: "," })}{" "}
-						PSYS
+						{stakeInfo.stakeToken.symbol}
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column" pl={["0", "0", "6", "6"]}>
@@ -134,7 +136,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						{stakeInfo.rewardRatePerWeek.toFixed(10, {
 							groupSeparator: ",",
 						})}{" "}
-						(PSYS/Week)
+						({stakeInfo.stakeToken.symbol}/Week)
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column">
@@ -145,7 +147,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						{stakeInfo.stakedAmount.toFixed(10, {
 							groupSeparator: ",",
 						})}{" "}
-						PSYS
+						{stakeInfo.stakeToken.symbol}
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column" pl={["0", "0", "6", "6"]}>
@@ -153,10 +155,10 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						Your unclaimed
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						{stakeInfo.earnedAmount.toFixed(10, {
+						{stakeInfo.unclaimedAmount.toFixed(10, {
 							groupSeparator: ",",
 						})}{" "}
-						PSYS
+						{stakeInfo.stakeToken.symbol}
 					</Text>
 				</GridItem>
 			</Grid>
@@ -170,7 +172,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 			>
 				{JSBI.greaterThan(stakeInfo.stakedAmount.raw, JSBI.BigInt(0)) && (
 					<Button
-						id="unstake"
+						id="withdraw"
 						width={["6.5rem", "8rem", "11.5rem", "11.5rem"]}
 						h="2.2rem"
 						bgColor="transparent"
@@ -191,9 +193,9 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						Unstake
 					</Button>
 				)}
-				{JSBI.greaterThan(stakeInfo.unstakedPsysAmount.raw, JSBI.BigInt(0)) && (
+				{JSBI.greaterThan(stakeInfo.unstakedAmount.raw, JSBI.BigInt(0)) && (
 					<Button
-						id="stake"
+						id="deposit"
 						width={["6.5rem", "8rem", "11.5rem", "11.5rem"]}
 						h="2.2rem"
 						bgColor={theme.bg.blueNavyLightness}

@@ -1,8 +1,7 @@
 import { Button, Flex, Img, Text } from "@chakra-ui/react";
-import { FunctionComponent, useMemo, useState } from "react";
+import { FunctionComponent, useMemo } from "react";
 import { useModal, usePicasso, useTokens } from "hooks";
-import { FarmActions } from "components/Modals/FarmActions";
-import { IFarmInfo, useFarm } from "pegasys-services";
+import { IFarmInfo, useEarn, TButtonId } from "pegasys-services";
 import { JSBI } from "@pollum-io/pegasys-sdk";
 import { formattedNum } from "utils/numberFormat";
 
@@ -15,25 +14,23 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 		swapFeeApr,
 		superFarmApr,
 		combinedApr,
-		userStakedAmount,
-		totalStakedAmount,
-		unclaimedPSYSAmount,
-		userAvailableLpTokenAmount,
-		userRewardRatePerWeek,
+		stakedAmount,
+		unclaimedAmount,
+		unstakedAmount,
+		rewardRatePerWeek,
 		totalStakedInUsd,
+		stakedInUsd,
 	} = stakeInfo;
 
 	const theme = usePicasso();
 	const { userTokensBalance } = useTokens();
-	const { setSelectedPair, setButtonId } = useFarm();
+	const { setSelectedOpportunity, setButtonId } = useEarn();
 
 	const { onOpenFarmActions } = useModal();
 
-	// const [buttonId, setButtonId] = useState<string>("");
-
 	const onClick = (id: string) => {
-		setButtonId(id);
-		setSelectedPair(stakeInfo);
+		setButtonId(id as TButtonId);
+		setSelectedOpportunity(stakeInfo);
 		onOpenFarmActions();
 	};
 
@@ -91,7 +88,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold">Your Stake</Text>
-					<Text>{formattedNum(+userStakedAmount.toSignificant(4), true)}</Text>
+					<Text>{formattedNum(+stakedInUsd.toString(), true)}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold">Swap Fee APR</Text>
@@ -110,8 +107,8 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 					</>
 				)}
 			</Flex>
-			{(JSBI.greaterThan(userRewardRatePerWeek.raw, JSBI.BigInt(0)) ||
-				JSBI.greaterThan(unclaimedPSYSAmount.raw, JSBI.BigInt(0))) && (
+			{(JSBI.greaterThan(rewardRatePerWeek.raw, JSBI.BigInt(0)) ||
+				JSBI.greaterThan(unclaimedAmount.raw, JSBI.BigInt(0))) && (
 				<Flex
 					flexDirection="column"
 					backgroundColor={theme.bg.farmRate}
@@ -124,7 +121,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 					<Flex justifyContent="space-between" pb="0.75rem" fontSize="sm">
 						<Text fontWeight="semibold">Your Rate</Text>
 						<Text>
-							{userRewardRatePerWeek.toFixed(6, {
+							{rewardRatePerWeek.toFixed(6, {
 								groupSeparator: ",",
 							})}{" "}
 							PSYS/Week
@@ -133,7 +130,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 					<Flex justifyContent="space-between" fontSize="sm">
 						<Text fontWeight="semibold">Your Unclaimed PSYS</Text>
 						<Text>
-							{unclaimedPSYSAmount.toFixed(6, {
+							{unclaimedAmount.toFixed(6, {
 								groupSeparator: ",",
 							})}
 						</Text>
@@ -141,7 +138,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 				</Flex>
 			)}
 			<Flex gap="2" py="1" flexDirection="row">
-				{JSBI.greaterThan(userStakedAmount.raw, JSBI.BigInt(0)) && (
+				{JSBI.greaterThan(stakedAmount.raw, JSBI.BigInt(0)) && (
 					<Button
 						id="withdraw"
 						fontSize="sm"
@@ -163,7 +160,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 						Withdraw
 					</Button>
 				)}
-				{JSBI.greaterThan(userAvailableLpTokenAmount.raw, JSBI.BigInt(0)) && (
+				{JSBI.greaterThan(unstakedAmount.raw, JSBI.BigInt(0)) && (
 					<Button
 						id="deposit"
 						fontSize="sm"
@@ -186,7 +183,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 					</Button>
 				)}
 			</Flex>
-			{JSBI.greaterThan(unclaimedPSYSAmount.raw, JSBI.BigInt(0)) && (
+			{JSBI.greaterThan(unclaimedAmount.raw, JSBI.BigInt(0)) && (
 				<Button
 					id="claim"
 					w="100%"
@@ -209,6 +206,34 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 					Claim
 				</Button>
 			)}
+			{/* {JSBI.equal(unclaimedAmount.raw, JSBI.BigInt(0)) &&
+				JSBI.equal(unclaimedAmount.raw, JSBI.BigInt(0)) &&
+				JSBI.equal(
+					unclaimedAmount.raw,
+					JSBI.BigInt(0)
+				)(
+					<Button
+						id="claim"
+						w="100%"
+						mt="1rem"
+						py="1"
+						px="6"
+						borderRadius="full"
+						bgColor="transparent"
+						borderWidth="1px"
+						color={theme.text.whitePurple}
+						borderColor={theme.text.cyanPurple}
+						fontSize="sm"
+						fontWeight="semibold"
+						onClick={event => onClick(event.currentTarget.id)}
+						_hover={{
+							borderColor: theme.text.cyanLightPurple,
+							color: theme.text.cyanLightPurple,
+						}}
+					>
+						Claim
+					</Button>
+				)} */}
 		</Flex>
 	);
 };

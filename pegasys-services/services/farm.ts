@@ -1,18 +1,17 @@
 import {
 	ChainId,
 	JSBI,
-	Pair,
 	Price,
 	Token,
 	TokenAmount,
 	WSYS,
 } from "@pollum-io/pegasys-sdk";
-import ethers, { Signer } from "ethers";
+import ethers, { BigNumber, Signer } from "ethers";
 
 import { WrappedTokenInfo } from "types";
 
 import { usePairs as getPairs } from "hooks";
-import { IFarmInfo } from "../dto";
+import { IEarnInfo } from "../dto";
 import LpTokenServices from "./lpToken";
 import { ContractFramework } from "../frameworks";
 import {
@@ -28,7 +27,6 @@ import {
 
 class FarmServices {
 	static async getFarmInfos(
-		// userTokensBalance: WrappedTokenInfo[],
 		tokenPairs: Array<[WrappedTokenInfo, Token]>,
 		address: string,
 		chainId: ChainId,
@@ -38,18 +36,26 @@ class FarmServices {
 			| ethers.providers.JsonRpcProvider
 			| Signer
 			| undefined
-	): Promise<IFarmInfo[]> {
+	): Promise<IEarnInfo[]> {
 		const lpTokens = await LpTokenServices.getLpTokens();
 		const poolMap = await LpTokenServices.getPoolMap(lpTokens);
 		const psys = PSYS[chainId ?? ChainId.NEVM];
 
-		const pairsWithLiquidityToken: IFarmInfo[] = [];
+		const pairsWithLiquidityToken: IEarnInfo[] = [];
 
 		const walletInfo = {
 			walletAddress: address,
 			chainId,
 			provider,
 		};
+
+		const pairs = await getPairs(tokenPairs, walletInfo);
+
+		const getUsdcPair = await getPairs(
+			[[WSYS[ChainId.NEVM], psys]],
+			walletInfo
+		);
+
 		await Promise.all(
 			tokenPairs.map(async (tokenPair, index) => {
 				const lpToken = LpTokenServices.getLpToken(
@@ -59,12 +65,7 @@ class FarmServices {
 				);
 
 				const poolId = poolMap[lpToken.address];
-				const pairs = await getPairs(tokenPairs, walletInfo);
 				const pair = pairs[index]?.[1];
-				const getUsdcPair = await getPairs(
-					[[WSYS[ChainId.NEVM], psys]],
-					walletInfo
-				);
 				const usdcPair = getUsdcPair[0]?.[1];
 				if (
 					poolId !== undefined &&
@@ -186,6 +187,16 @@ class FarmServices {
 						);
 					}
 
+					// const tokenMultiplier = stakingInfo?.rewardTokensMultiplier?.[index];
+
+					// const weeklyExtraRewardRate =
+					// 	stakingInfo?.getExtraTokensWeeklyRewardRate &&
+					// 	stakingInfo?.getExtraTokensWeeklyRewardRate(
+					// 		stakingInfo?.rewardRatePerWeek,
+					// 		reward?.token,
+					// 		tokenMultiplier
+					// 	);
+
 					const aprs = await LpTokenServices.getAprs(poolId, isSuperFarm);
 
 					let totalStakedInUsd = new TokenAmount(DAI[chainId], BIG_INT_ZERO);
@@ -289,7 +300,7 @@ class FarmServices {
 							);
 
 							const totalStakedInWsys = new TokenAmount(
-								WSYS[ChainId.NEVM],
+								WSYS[chainId],
 								JSBI.EQ(totalSupplyJSBI, JSBI.BigInt(0))
 									? JSBI.BigInt(0)
 									: JSBI.divide(
@@ -302,7 +313,7 @@ class FarmServices {
 							);
 
 							if (totalStakedInWsys) {
-								totalStakedInUsd = usdPrice?.quote(
+								totalStakedInUsd = usdPrice.quote(
 									totalStakedInWsys
 								) as TokenAmount;
 							}
@@ -320,20 +331,20 @@ class FarmServices {
 					);
 
 					pairsWithLiquidityToken.push({
+						stakeToken: lpToken,
+						stakedAmount: userStakedAmount,
+						rewardToken: psys,
+						unstakedAmount: userAvailableLpTokenAmount,
+						unclaimedAmount: unclaimedPSYSAmount,
+						totalStakedAmount,
+						rewardRatePerWeek: userRewardRatePerWeek,
+						totalRewardRatePerWeek,
+						stakedInUsd: userStakeInUsd,
+						totalStakedInUsd,
 						tokenA: tokenPair[0],
 						tokenB: tokenPair[1],
 						poolId,
-						totalStakedAmount,
-						totalStakedInUsd,
-						userStakeInUsd,
-						userStakedAmount,
-						userAvailableLpTokenAmount,
-						unclaimedPSYSAmount,
-						totalRewardRatePerWeek,
-						userRewardRatePerWeek,
 						rewarderMultiplier,
-						poolRewardRateAmount,
-						lpToken,
 						...aprs,
 					});
 				}
@@ -341,6 +352,36 @@ class FarmServices {
 		);
 
 		return pairsWithLiquidityToken;
+	}
+
+	// static async
+
+	// static async getExtraRewardTokens() {}
+
+	static async getExtraFarm(poolId: number) {
+		// const rewarder = await LpTokenServices.getRewarder(poolId);
+
+		// const isSuperFarm = rewarder !== ZERO_ADDRESS;
+
+		// let rewarderMultiplier: bigint | undefined;
+		// let rewarderAddress: string | undefined;
+
+		// if (isSuperFarm) {
+		// 	rewarderAddress = await LpTokenServices.getRewardTokens(rewarder);
+		// 	rewarderMultiplier = await LpTokenServices.getRewardMultiplier(rewarder);
+
+		// 	const tokenMultiplier = stakingInfo?.rewardTokensMultiplier?.[index];
+
+		// 	const weeklyExtraRewardRate =
+		// 		stakingInfo?.getExtraTokensWeeklyRewardRate &&
+		// 		stakingInfo?.getExtraTokensWeeklyRewardRate(
+		// 			stakingInfo?.rewardRatePerWeek,
+		// 			reward?.token,
+		// 			rewarderMultiplier
+		// 		);
+		// }
+
+		return undefined;
 	}
 
 	static async withdraw(poolId: number, amount: string, address: string) {
@@ -385,24 +426,26 @@ class FarmServices {
 			v: number;
 			r: string;
 			s: string;
-			deadline: number;
-		}
+			deadline: BigNumber;
+		} | null
 	) {
-		const contract = LpTokenServices.getLpContract();
+		if (signatureData) {
+			const contract = LpTokenServices.getLpContract();
 
-		await ContractFramework.call({
-			methodName: "depositWithPermit",
-			contract,
-			args: [
-				poolId,
-				`0x${amount}`,
-				address,
-				signatureData.deadline,
-				signatureData.v,
-				Number(signatureData.r),
-				signatureData.s,
-			],
-		});
+			await ContractFramework.call({
+				methodName: "depositWithPermit",
+				contract,
+				args: [
+					poolId,
+					`0x${amount}`,
+					address,
+					signatureData.deadline.toNumber(),
+					signatureData.v,
+					signatureData.r,
+					signatureData.s,
+				],
+			});
+		}
 	}
 }
 

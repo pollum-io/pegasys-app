@@ -1,4 +1,4 @@
-import { abi as REWARDERVIAMULTIPLIER_ABI } from "@pollum-io/pegasys-protocol/artifacts/contracts/earn/RewarderViaMultiplier.sol/RewarderViaMultiplier.json";
+import REWARDERVIAMULTIPLIER_ABI from "@pollum-io/pegasys-protocol/artifacts/contracts/earn/RewarderViaMultiplier.sol/RewarderViaMultiplier.json";
 import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
 import { splitSignature } from "ethers/lib/utils";
 import { BigNumber } from "ethers";
@@ -188,7 +188,7 @@ class LpTokenServices {
 
 	static async getRewardMultiplier(address: string) {
 		const contract = ContractFramework.getContract({
-			abi: REWARDERVIAMULTIPLIER_ABI,
+			abi: REWARDERVIAMULTIPLIER_ABI.abi,
 			address,
 		});
 
@@ -198,6 +198,20 @@ class LpTokenServices {
 		});
 
 		return multiplier.length ? multiplier[0] : BigInt(0);
+	}
+
+	static async getRewardTokens(address: string) {
+		const contract = ContractFramework.getContract({
+			abi: REWARDERVIAMULTIPLIER_ABI.abi,
+			address,
+		});
+
+		const rewardAddress: string[] = await ContractFramework.call({
+			contract,
+			methodName: "getRewardTokens",
+		});
+
+		return rewardAddress.length ? rewardAddress[0] : "";
 	}
 
 	static async getSignature({

@@ -1,16 +1,15 @@
 import { ChainId, JSBI, TokenAmount, WSYS } from "@pollum-io/pegasys-sdk";
 
 import { BigNumber } from "ethers";
-import { splitSignature } from "ethers/lib/utils";
-import { IStakeInfo } from "../dto";
-import { ContractFramework, WalletFramework } from "../frameworks";
-import { BIG_INT_SECONDS_IN_WEEK, PSYS, STAKE_ADDRESS } from "../constants";
+import { IEarnInfo } from "../dto";
+import { ContractFramework } from "../frameworks";
+import { BIG_INT_SECONDS_IN_WEEK, PSYS } from "../constants";
 
 class StakeServices {
 	static async getStakeInfos(
 		address: string,
 		chainId: ChainId
-	): Promise<IStakeInfo> {
+	): Promise<IEarnInfo> {
 		const psys = PSYS[ChainId.NEVM];
 		const wsys = WSYS[ChainId.NEVM];
 
@@ -139,20 +138,29 @@ class StakeServices {
 		const unstakedPsysAmount = new TokenAmount(psys, unstakedPsys);
 
 		return {
+			stakeToken: psys,
 			rewardToken: psys,
+			stakedAmount,
+			unstakedAmount: unstakedPsysAmount,
+			unclaimedAmount: earnedAmount,
+			totalStakedAmount,
+			rewardRatePerWeek: individualWeeklyRewardRate,
+			totalRewardRatePerWeek,
+			stakedInUsd: JSBI,
+			totalStakedInUsd: TokenAmount,
+
+			// rewardToken: psys,
 			periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,
 			isPeriodFinished,
-			earnedAmount,
-			rewardRate: individualRewardRate,
-			totalRewardRate: totalRewardRatePerWeek,
-			stakedAmount,
-			totalStakedAmount,
-			totalStakedInPsys: totalStakedAmount,
+			// earnedAmount,
+			// rewardRate: individualRewardRate,
+			// totalRewardRate: totalRewardRatePerWeek,
+			// totalStakedInPsys: totalStakedAmount,
 			apr,
-			unstakedPsysAmount,
-			totalRewardRatePerWeek,
-			totalRewardRatePerSecond,
-			rewardRatePerWeek: individualWeeklyRewardRate,
+			// unstakedPsysAmount,
+			// totalRewardRatePerWeek,
+			// totalRewardRatePerSecond,
+			// rewardRatePerWeek: individualWeeklyRewardRate,
 		};
 	}
 
@@ -181,7 +189,7 @@ class StakeServices {
 			v: number;
 			r: string;
 			s: string;
-			deadline: number;
+			deadline: BigNumber;
 		}
 	) {
 		const contract = ContractFramework.StakeContract(ChainId.NEVM);
@@ -191,7 +199,7 @@ class StakeServices {
 			contract,
 			args: [
 				`0x${amount}`,
-				signatureData.deadline,
+				signatureData.deadline.toNumber(),
 				signatureData.v,
 				signatureData.r,
 				signatureData.s,
@@ -206,84 +214,6 @@ class StakeServices {
 			methodName: "getReward",
 			contract,
 		});
-	}
-
-	static async getSignature({
-		address,
-		chainId,
-		value,
-		deadline,
-	}: {
-		address: string;
-		chainId: ChainId;
-		value: string;
-		deadline: BigNumber | number;
-	}) {
-		const contract = ContractFramework.PSYSContract(chainId);
-
-		const nonce = await ContractFramework.call({
-			contract,
-			methodName: "nonces",
-			args: [address],
-		});
-
-		const EIP712Domain = [
-			{ name: "name", type: "string" },
-			{ name: "chainId", type: "uint256" },
-			{ name: "verifyingContract", type: "address" },
-		];
-
-		const domain = {
-			name: "Pegasys",
-			chainId,
-			verifyingContract: PSYS[ChainId.NEVM].address,
-		};
-
-		const Permit = [
-			{ name: "owner", type: "address" },
-			{ name: "spender", type: "address" },
-			{ name: "value", type: "uint256" },
-			{ name: "nonce", type: "uint256" },
-			{ name: "deadline", type: "uint256" },
-		];
-
-		const deadlineFromNow = BigNumber.from(new Date().getTime() + 100000).add(
-			deadline
-		);
-
-		const message = {
-			owner: address,
-			spender: STAKE_ADDRESS,
-			value,
-			nonce: nonce.toHexString(),
-			deadline: deadlineFromNow.toHexString(),
-		};
-
-		const data = JSON.stringify({
-			types: {
-				EIP712Domain,
-				Permit,
-			},
-			domain,
-			primaryType: "Permit",
-			message,
-		});
-
-		const provider = WalletFramework.getProvider();
-
-		const signatureRes = await provider?.send("eth_signTypedData_v4", [
-			address,
-			data,
-		]);
-
-		const signature = splitSignature(signatureRes);
-
-		return {
-			v: signature.v,
-			r: signature.r,
-			s: signature.s,
-			deadline: typeof deadline === "number" ? deadline : deadline.toNumber(),
-		};
 	}
 }
 

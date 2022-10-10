@@ -23,34 +23,34 @@ import { usePicasso } from "hooks";
 import React, { Dispatch, SetStateAction } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { MdArrowBack, MdOutlineInfo } from "react-icons/md";
-import { PSYS, useStake } from "pegasys-services";
+import { PSYS, useEarn, useStake } from "pegasys-services";
 import { ChainId, JSBI, Percent, TokenAmount } from "@pollum-io/pegasys-sdk";
 
 interface IModal {
 	isOpen: boolean;
 	onClose: () => void;
-	buttonId: string;
-	setButtonId: Dispatch<SetStateAction<string>>;
+	// buttonId: string;
+	// setButtonId: Dispatch<SetStateAction<string>>;
 }
 
 export const StakeActions: React.FC<IModal> = props => {
-	const { isOpen, onClose, buttonId, setButtonId } = props;
+	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 	const [sliderValue, setSliderValue] = React.useState(5);
 	const [showTooltip, setShowTooltip] = React.useState(false);
+	const { claim, stake, unstake, sign } = useStake();
 	const {
-		claim,
-		stake,
-		unstake,
-		selectedStake,
-		stakeTypedValue,
-		setStakeTypedValue,
-		liveRewardWeek,
-		setUnstakeTypedValue,
-		unstakeTypedValue,
-	} = useStake();
+		selectedOpportunity,
+		withdrawTypedValue,
+		depositTypedValue,
+		setDepositTypedValue,
+		setWithdrawTypedValue,
+		signature,
+		buttonId,
+		setButtonId,
+	} = useEarn();
 
-	if (!selectedStake) {
+	if (!selectedOpportunity) {
 		return null;
 	}
 
@@ -88,7 +88,7 @@ export const StakeActions: React.FC<IModal> = props => {
 					>
 						<Flex pr="7" gap="2" mt={["6", "6", "2", "2"]}>
 							{JSBI.greaterThan(
-								selectedStake.unstakedPsysAmount.raw,
+								selectedOpportunity.unstakedAmount.raw,
 								JSBI.BigInt(0)
 							) && (
 								<Button
@@ -97,14 +97,14 @@ export const StakeActions: React.FC<IModal> = props => {
 									py="3"
 									px={["6", "6", "8", "8"]}
 									borderRadius="full"
-									onClick={() => setButtonId("stake")}
+									onClick={() => setButtonId("deposit")}
 									bgColor={
-										buttonId === "stake"
+										buttonId === "deposit"
 											? theme.bg.farmActionsHover
 											: "transparent"
 									}
 									color={
-										buttonId === "stake"
+										buttonId === "deposit"
 											? theme.text.farmActionsHover
 											: theme.border.borderSettings
 									}
@@ -117,7 +117,7 @@ export const StakeActions: React.FC<IModal> = props => {
 								</Button>
 							)}
 							{JSBI.greaterThan(
-								selectedStake.stakedAmount.raw,
+								selectedOpportunity.stakedAmount.raw,
 								JSBI.BigInt(0)
 							) && (
 								<Button
@@ -127,14 +127,14 @@ export const StakeActions: React.FC<IModal> = props => {
 									py="3"
 									px={["6", "6", "8", "8"]}
 									borderRadius="full"
-									onClick={() => setButtonId("unstake")}
+									onClick={() => setButtonId("withdraw")}
 									bgColor={
-										buttonId === "unstake"
+										buttonId === "withdraw"
 											? theme.bg.farmActionsHover
 											: "transparent"
 									}
 									color={
-										buttonId === "unstake"
+										buttonId === "withdraw"
 											? theme.text.farmActionsHover
 											: theme.border.borderSettings
 									}
@@ -147,7 +147,7 @@ export const StakeActions: React.FC<IModal> = props => {
 								</Button>
 							)}
 							{JSBI.greaterThan(
-								selectedStake.earnedAmount.raw,
+								selectedOpportunity.unclaimedAmount.raw,
 								JSBI.BigInt(0)
 							) && (
 								<Button
@@ -220,7 +220,7 @@ export const StakeActions: React.FC<IModal> = props => {
 					</Flex>
 				</ModalHeader>
 				<ModalBody>
-					{buttonId === "stake" && (
+					{buttonId === "deposit" && (
 						<Flex flexDirection="column">
 							<Flex gap="2">
 								<Flex>
@@ -235,7 +235,7 @@ export const StakeActions: React.FC<IModal> = props => {
 							<Flex flexDirection="column" gap="2" mt="6">
 								<Text fontWeight="normal">
 									Available to deposit:{" "}
-									{selectedStake.unstakedPsysAmount.toFixed(10, {
+									{selectedOpportunity.unstakedAmount.toFixed(10, {
 										groupSeparator: ",",
 									})}
 								</Text>
@@ -253,8 +253,10 @@ export const StakeActions: React.FC<IModal> = props => {
 											_focus={{
 												outline: "none",
 											}}
-											value={stakeTypedValue}
-											onChange={event => setStakeTypedValue(event.target.value)}
+											value={depositTypedValue}
+											onChange={event =>
+												setDepositTypedValue(event.target.value)
+											}
 										/>
 										<InputRightAddon
 											// eslint-disable-next-line react/no-children-prop
@@ -274,38 +276,18 @@ export const StakeActions: React.FC<IModal> = props => {
 												cursor: "pointer",
 											}}
 											onClick={() =>
-												setStakeTypedValue(
-													selectedStake.unstakedPsysAmount.toExact() ??
+												setDepositTypedValue(
+													selectedOpportunity.unstakedAmount.toExact() ??
 														JSBI.BigInt(0).toString()
 												)
 											}
 										/>
 									</InputGroup>
 								</Flex>
-								{/* ) 
-								 : (
-								 	<Flex
-								 		bgColor={theme.bg.whiteGray}
-								 		flexDirection="column"
-								 		justifyContent="center"
-								 		alignItems="center"
-								 		py="2"
-								 		gap="3"
-								 		borderRadius="xl"
-								 	>
-								 		<Flex flexDirection="row" alignItems="center">
-								 			<Img src="icons/syscoin-logo.png" w="6" h="6" />
-								 			<Text fontSize="2xl" fontWeight="semibold" pl="2">
-								 				1
-								 			</Text>
-								 		</Flex>
-								 		<Flex flexDirection="row">
-								 			<Text>USDT</Text>
-								 		</Flex>
-								 	</Flex>
-								 )} */}
 								<Text fontWeight="normal">
-									Weekly Rewards: {liveRewardWeek.toExact()} PSYS / Week
+									Weekly Rewards:{" "}
+									{selectedOpportunity.totalRewardRatePerWeek.toExact()}{" "}
+									{selectedOpportunity.stakeToken.symbol} / Week
 								</Text>
 							</Flex>
 							<Button
@@ -320,25 +302,24 @@ export const StakeActions: React.FC<IModal> = props => {
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
 								_hover={
-									stakeTypedValue
+									selectedOpportunity
 										? { bgColor: theme.bg.bluePurple }
 										: { opacity: "0.3" }
 								}
 								_active={{}}
 								borderRadius="full"
-								disabled={!stakeTypedValue}
-								onClick={stake}
+								onClick={signature ? stake : sign}
+								disabled={!depositTypedValue}
 							>
-								{/* {changeStakeButtonState} */}
-								Stake
+								{signature ? "Stake" : "Sign"}
 							</Button>
 						</Flex>
 					)}
-					{buttonId === "unstake" && (
+					{buttonId === "withdraw" && (
 						<Flex flexDirection="column">
 							<Text fontWeight="normal" mb="2">
 								Deposited PLP Liquidity:{" "}
-								{selectedStake.stakedAmount.toFixed(10, {
+								{selectedOpportunity.stakedAmount.toFixed(10, {
 									groupSeparator: ",",
 								})}
 							</Text>
@@ -355,8 +336,10 @@ export const StakeActions: React.FC<IModal> = props => {
 										_focus={{
 											outline: "none",
 										}}
-										value={unstakeTypedValue}
-										onChange={event => setUnstakeTypedValue(event.target.value)}
+										value={withdrawTypedValue}
+										onChange={event =>
+											setWithdrawTypedValue(event.target.value)
+										}
 									/>
 									<InputRightAddon
 										// eslint-disable-next-line react/no-children-prop
@@ -376,8 +359,8 @@ export const StakeActions: React.FC<IModal> = props => {
 											cursor: "pointer",
 										}}
 										onClick={() =>
-											setUnstakeTypedValue(
-												selectedStake.stakedAmount.toExact() ??
+											setWithdrawTypedValue(
+												selectedOpportunity.stakedAmount.toExact() ??
 													JSBI.BigInt(0).toString()
 											)
 										}
@@ -385,8 +368,8 @@ export const StakeActions: React.FC<IModal> = props => {
 								</InputGroup>
 							</Flex>
 							<Text fontWeight="normal" mt="2">
-								Uncalimed PSYS:{" "}
-								{selectedStake.earnedAmount.toFixed(10, {
+								Uncalimed {selectedOpportunity.stakeToken.symbol}:{" "}
+								{selectedOpportunity.unclaimedAmount.toFixed(10, {
 									groupSeparator: ",",
 								})}
 							</Text>
@@ -406,15 +389,15 @@ export const StakeActions: React.FC<IModal> = props => {
 										const percent = new Percent(value.toString(), "100");
 
 										const valuePercent = percent.multiply(
-											selectedStake.stakedAmount.raw ?? JSBI.BigInt(0)
+											selectedOpportunity.stakedAmount.raw ?? JSBI.BigInt(0)
 										).quotient;
 
 										const amount = new TokenAmount(
-											PSYS[ChainId.NEVM],
+											selectedOpportunity.stakeToken,
 											valuePercent
 										);
 
-										setUnstakeTypedValue(amount.toExact());
+										setWithdrawTypedValue(amount.toExact());
 									}}
 									onMouseEnter={() => setShowTooltip(true)}
 									onMouseLeave={() => setShowTooltip(false)}
@@ -487,9 +470,7 @@ export const StakeActions: React.FC<IModal> = props => {
 									borderRadius="full"
 									onClick={unstake}
 								>
-									{unstakeTypedValue === selectedStake.stakedAmount.toExact()
-										? "Unstake & Claim"
-										: "Unstake"}
+									unstake
 								</Button>
 							</Flex>
 						</Flex>
@@ -509,13 +490,13 @@ export const StakeActions: React.FC<IModal> = props => {
 								<Flex flexDirection="row" alignItems="center">
 									<Img src="icons/pegasys.png" w="6" h="6" />
 									<Text fontSize="2xl" fontWeight="semibold" pl="2">
-										{selectedStake.earnedAmount.toFixed(10, {
+										{selectedOpportunity.unclaimedAmount.toFixed(10, {
 											groupSeparator: ",",
 										})}
 									</Text>
 								</Flex>
 								<Flex flexDirection="row">
-									<Text>Unclaimed PSYS</Text>
+									<Text>Unclaimed {selectedOpportunity.stakeToken.symbol}</Text>
 								</Flex>
 							</Flex>
 							<Button
@@ -533,7 +514,7 @@ export const StakeActions: React.FC<IModal> = props => {
 								borderRadius="full"
 								onClick={claim}
 							>
-								Claim PSYS
+								Claim {selectedOpportunity.stakeToken.symbol}
 							</Button>
 						</Flex>
 					)}

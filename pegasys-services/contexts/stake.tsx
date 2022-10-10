@@ -1,74 +1,65 @@
-import React, { useEffect, createContext, useState, useMemo } from "react";
-import { ChainId, JSBI, TokenAmount } from "@pollum-io/pegasys-sdk";
+import React, { useEffect, createContext, useMemo, useState } from "react";
+import { ChainId } from "@pollum-io/pegasys-sdk";
 
-import { tryParseAmount } from "utils";
-import { useWallet } from "hooks";
-
-import { BIG_INT_SECONDS_IN_WEEK, PSYS } from "pegasys-services/constants";
-import { onlyNumbers } from "pegasys-services/utils";
+import { PSYS, STAKE_ADDRESS } from "pegasys-services/constants";
+import { ContractFramework } from "pegasys-services/frameworks";
 import { StakeServices } from "../services";
-import { useWallet as psUseWallet } from "../hooks";
-import { IStakeProviderProps, IStakeProviderValue, IStakeInfo } from "../dto";
+import { useWallet as psUseWallet, useEarn } from "../hooks";
+import { IStakeProviderProps, IStakeProviderValue } from "../dto";
+import { EarnProvider } from "./earn";
 
 export const StakeContext = createContext({} as IStakeProviderValue);
 
-export const StakeProvider: React.FC<IStakeProviderProps> = ({ children }) => {
-	const [unstakeTypedValue, setUnstakeTypedValue] = useState<string>("");
-	const [stakeTypedValue, setStakeTypedValue] = useState<string>("");
-	const [valueType, setValueType] = useState<"psys" | "usd">("psys");
-	const [selectedStake, setSelectedStake] = useState<IStakeInfo>();
+const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
+	const [showInUsd, setShowInUsd] = useState<boolean>(false);
 	const { chainId, address } = psUseWallet();
-	const { userTransactionDeadlineValue } = useWallet();
-
-	const parsedStakeInput = useMemo(
-		() => tryParseAmount(stakeTypedValue, PSYS[ChainId.NEVM]),
-		[stakeTypedValue]
-	);
-
-	const stake = async () => {
-		if (selectedStake) {
-			const parsedAmount =
-				parsedStakeInput &&
-				selectedStake.unstakedPsysAmount &&
-				JSBI.lessThanOrEqual(
-					parsedStakeInput.raw,
-					selectedStake.unstakedPsysAmount.raw
-				)
-					? parsedStakeInput.raw
-					: JSBI.BigInt(0);
-
-			const signature = await StakeServices.getSignature({
-				address,
-				chainId,
-				value: parsedAmount.toString(),
-				deadline: userTransactionDeadlineValue,
-			});
-
-			await StakeServices.stake(parsedAmount.toString(16), signature);
-		}
-	};
+	const {
+		signature,
+		onSign,
+		getTypedValue,
+		selectedOpportunity,
+		setEarnOpportunities,
+	} = useEarn();
 
 	const unstake = async () => {
-		if (selectedStake) {
-			const parsedInput = tryParseAmount(unstakeTypedValue, PSYS[ChainId.NEVM]);
+		const typedValue = getTypedValue();
 
-			const parsedAmount =
-				parsedInput &&
-				selectedStake.stakedAmount &&
-				JSBI.lessThanOrEqual(parsedInput.raw, selectedStake.stakedAmount.raw)
-					? parsedInput.raw
-					: JSBI.BigInt(0);
+		if (selectedOpportunity && typedValue) {
+			let method = StakeServices.unstake;
 
-			if (JSBI.equal(parsedAmount, selectedStake.stakedAmount.raw)) {
-				await StakeServices.unstakeAndClaim();
-			} else {
-				await StakeServices.unstake(parsedAmount.toString(16));
+			if (typedValue.isAllIn) {
+				method = StakeServices.unstakeAndClaim;
 			}
+
+			await method(typedValue.value.toString(16));
 		}
 	};
 
 	const claim = async () => {
-		await StakeServices.claim();
+		if (selectedOpportunity) {
+			await StakeServices.claim();
+		}
+	};
+
+	const stake = async () => {
+		const typedValue = getTypedValue(true);
+
+		if (selectedOpportunity && typedValue && signature) {
+			await StakeServices.stake(typedValue.value.toString(16), signature);
+		}
+	};
+
+	const sign = async () => {
+		if (selectedOpportunity) {
+			const contract = ContractFramework.PSYSContract(chainId);
+
+			await onSign(
+				contract,
+				"Pegasys",
+				STAKE_ADDRESS,
+				PSYS[chainId as ChainId].address
+			);
+		}
 	};
 
 	useEffect(() => {
@@ -76,63 +67,23 @@ export const StakeProvider: React.FC<IStakeProviderProps> = ({ children }) => {
 			const getStakes = async () => {
 				const stakeInfo = await StakeServices.getStakeInfos(address, chainId);
 
-				setSelectedStake(stakeInfo);
+				setEarnOpportunities([stakeInfo]);
 			};
 
 			getStakes();
 		}
 	}, [address, chainId]);
 
-	const liveRewardWeek = useMemo(
-		() =>
-			new TokenAmount(
-				PSYS[ChainId.NEVM],
-				parsedStakeInput &&
-				selectedStake &&
-				JSBI.greaterThan(selectedStake.totalStakedAmount.raw, JSBI.BigInt(0))
-					? JSBI.divide(
-							JSBI.multiply(
-								JSBI.multiply(
-									selectedStake.totalRewardRatePerSecond.raw,
-									parsedStakeInput.raw
-								),
-								BIG_INT_SECONDS_IN_WEEK
-							),
-							selectedStake.totalStakedAmount.raw
-					  )
-					: JSBI.BigInt(0)
-			),
-		[selectedStake, parsedStakeInput]
-	);
-
 	const providerValue = useMemo(
 		() => ({
-			unstakeTypedValue,
-			setUnstakeTypedValue: (value: string) => {
-				const newVal = onlyNumbers(value);
-				setUnstakeTypedValue(newVal);
-			},
-			stakeTypedValue,
-			setStakeTypedValue: (value: string) => {
-				const newVal = onlyNumbers(value);
-				setStakeTypedValue(newVal);
-			},
-			selectedStake,
-			setSelectedStake,
 			claim,
+			sign,
 			stake,
 			unstake,
-			liveRewardWeek,
-			valueType,
-			setValueType,
+			showInUsd,
+			setShowInUsd,
 		}),
-		[
-			unstakeTypedValue,
-			stakeTypedValue,
-			selectedStake,
-			liveRewardWeek,
-			valueType,
-		]
+		[sign, claim, stake, unstake, showInUsd, setShowInUsd]
 	);
 
 	return (
@@ -141,3 +92,9 @@ export const StakeProvider: React.FC<IStakeProviderProps> = ({ children }) => {
 		</StakeContext.Provider>
 	);
 };
+
+export const StakeProvider: React.FC<IStakeProviderProps> = props => (
+	<EarnProvider>
+		<Provider {...props} />
+	</EarnProvider>
+);

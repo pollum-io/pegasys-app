@@ -1,9 +1,9 @@
 import { BigNumber, ethers } from "ethers";
-import { abi as MINICHEF_ABI } from "@pollum-io/pegasys-protocol/artifacts/contracts/earn/MiniChefV2.sol/MiniChefV2.json";
-import { abi as STAKING_REWARDS_ABI } from "@pollum-io/pegasys-protocol/artifacts/contracts/earn/StakingRewards.sol/StakingRewards.json";
-import { abi as IPegasysPairABI } from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/interfaces/IPegasysPair.sol/IPegasysPair.json";
-import { abi as IPegasysRouterABI } from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
-import { abi as PSYS_ABI } from "@pollum-io/pegasys-protocol/artifacts/contracts/PegasysToken.sol/PegasysToken.json";
+import MINICHEF_ABI from "@pollum-io/pegasys-protocol/artifacts/contracts/earn/MiniChefV2.sol/MiniChefV2.json";
+import STAKING_REWARDS_ABI from "@pollum-io/pegasys-protocol/artifacts/contracts/earn/StakingRewards.sol/StakingRewards.json";
+import IPegasysPairABI from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/interfaces/IPegasysPair.sol/IPegasysPair.json";
+import IPegasysRouterABI from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
+import PSYS_ABI from "@pollum-io/pegasys-protocol/artifacts/contracts/PegasysToken.sol/PegasysToken.json";
 
 import { ChainId } from "@pollum-io/pegasys-sdk";
 import {
@@ -79,7 +79,7 @@ class ContractFramework {
 
 	static RouterContract(chainId: ChainId) {
 		const contract = this.getContract({
-			abi: IPegasysRouterABI,
+			abi: IPegasysRouterABI.abi,
 			address: ROUTER_ADDRESS[chainId],
 		});
 
@@ -88,7 +88,7 @@ class ContractFramework {
 
 	static FarmContract(chainId: ChainId) {
 		const contract = this.getContract({
-			abi: MINICHEF_ABI,
+			abi: MINICHEF_ABI.abi,
 			address: MINICHEF_ADDRESS,
 		});
 
@@ -97,7 +97,7 @@ class ContractFramework {
 
 	static StakeContract(chainId: ChainId) {
 		const contract = this.getContract({
-			abi: STAKING_REWARDS_ABI,
+			abi: STAKING_REWARDS_ABI.abi,
 			address: STAKE_ADDRESS,
 		});
 
@@ -107,7 +107,7 @@ class ContractFramework {
 	static PairContract(address: string) {
 		const contract = this.getContract({
 			address,
-			abi: IPegasysPairABI,
+			abi: IPegasysPairABI.abi,
 		});
 
 		return contract;
@@ -116,7 +116,7 @@ class ContractFramework {
 	static PSYSContract(chainId: ChainId) {
 		const contract = this.getContract({
 			address: PSYS[ChainId.NEVM].address,
-			abi: PSYS_ABI,
+			abi: PSYS_ABI.abi,
 		});
 
 		return contract;

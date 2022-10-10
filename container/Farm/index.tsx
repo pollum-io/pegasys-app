@@ -18,7 +18,7 @@ import { MdOutlineCallMade, MdExpandMore } from "react-icons/md";
 import { FarmCard, SearchInput } from "components";
 import { usePicasso, useModal } from "hooks";
 
-import { useFarm, useWallet as psUseWallet } from "pegasys-services";
+import { IFarmInfo, useFarm, useWallet as psUseWallet } from "pegasys-services";
 import { FarmActions } from "components/Modals/FarmActions";
 
 const sortData = {
@@ -27,17 +27,11 @@ const sortData = {
 };
 
 export const FarmContainer: NextPage = () => {
-	const { search, setSearch, sort, setSort, pairs } = useFarm();
+	const { setSearch, sort, setSort, sortedPairs } = useFarm();
 	const { isConnected } = psUseWallet();
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
 	const { isOpenFarmActions, onCloseFarmActions } = useModal();
-
-	// const [search, setSearch] = useState<string>("");
-	// const [filter, setFilter] = useState<string>("");
-	// const [sort, setSort] = useState<keyof typeof sortData>("apr");
-	// const [timeoutid, setTimeoutid] = useState<NodeJS.Timeout>(
-	// 	setTimeout(() => {}, 0)
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	return (
@@ -213,7 +207,7 @@ export const FarmContainer: NextPage = () => {
 						</Text>
 					</Flex>
 				)}
-				{pairs.length === 0 && isConnected && (
+				{sortedPairs.length === 0 && isConnected && (
 					<Flex
 						w="100%"
 						mt={["3rem", "3rem", "4rem", "4rem"]}
@@ -243,8 +237,8 @@ export const FarmContainer: NextPage = () => {
 					mb="10rem"
 					sx={{ columnCount: [1, 1, 2, 2], columnGap: "35px" }}
 				>
-					{pairs.map((pair, index) => (
-						<FarmCard key={index} stakeInfo={pair} />
+					{sortedPairs.map((pair, index) => (
+						<FarmCard key={index} stakeInfo={pair as IFarmInfo} />
 					))}
 				</Box>
 			</Flex>

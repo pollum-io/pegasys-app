@@ -10,14 +10,20 @@ import { StakeCards } from "components/Stake/StakeCard";
 import { usePicasso } from "hooks";
 import { NextPage } from "next";
 import { MdOutlineCallMade } from "react-icons/md";
-import { useWallet as psUseWallet, useStake } from "pegasys-services";
+import {
+	useWallet as psUseWallet,
+	useStake,
+	useEarn,
+	IStakeInfo,
+} from "pegasys-services";
 
 export const StakeContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const { colorMode } = useColorMode();
 	const { isConnected } = psUseWallet();
-	const { selectedStake, valueType, setValueType } = useStake();
+	const { showInUsd, setShowInUsd } = useStake();
+	const { selectedOpportunity, earnOpportunities } = useEarn();
 
 	return (
 		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
@@ -106,17 +112,13 @@ export const StakeContainer: NextPage = () => {
 							]}
 						>
 							<Button
-								onClick={() => setValueType("psys")}
+								onClick={() => setShowInUsd(false)}
 								color={
-									valueType === "psys"
-										? theme.text.farmActionsHover
-										: theme.border.borderSettings
+									showInUsd
+										? theme.border.borderSettings
+										: theme.text.farmActionsHover
 								}
-								bgColor={
-									valueType === "psys"
-										? theme.bg.farmActionsHover
-										: "transparent"
-								}
+								bgColor={showInUsd ? "transparent" : theme.bg.farmActionsHover}
 								borderRadius="full"
 								w="5.688rem"
 								h="max-content"
@@ -130,17 +132,13 @@ export const StakeContainer: NextPage = () => {
 								PSYS
 							</Button>
 							<Button
-								onClick={() => setValueType("usd")}
+								onClick={() => setShowInUsd(true)}
 								color={
-									valueType === "usd"
+									showInUsd
 										? theme.text.farmActionsHover
 										: theme.border.borderSettings
 								}
-								bgColor={
-									valueType === "usd"
-										? theme.bg.farmActionsHover
-										: "transparent"
-								}
+								bgColor={showInUsd ? theme.bg.farmActionsHover : "transparent"}
 								borderRadius="full"
 								w="5.688rem"
 								h="max-content"
@@ -175,7 +173,7 @@ export const StakeContainer: NextPage = () => {
 						</Text>
 					</Flex>
 				)}
-				{!selectedStake && isConnected && (
+				{!earnOpportunities.length && isConnected && (
 					<Flex
 						w="100%"
 						mt={["3rem", "3rem", "4rem", "4rem"]}
@@ -202,7 +200,9 @@ export const StakeContainer: NextPage = () => {
 					mb="24"
 					alignItems={["center", "center", "center", "center"]}
 				>
-					<StakeCards stakeInfo={selectedStake} />
+					{earnOpportunities.map((stakeInfo: unknown, index) => (
+						<StakeCards key={index} stakeInfo={stakeInfo as IStakeInfo} />
+					))}
 				</Flex>
 			</Flex>
 		</Flex>

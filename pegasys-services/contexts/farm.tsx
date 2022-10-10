@@ -1,103 +1,89 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
-import { JSBI, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
+import { JSBI, Token } from "@pollum-io/pegasys-sdk";
 
-import { getTokenPairs, tryParseAmount } from "utils";
+import { getTokenPairs } from "utils";
 import { WrappedTokenInfo } from "types";
 import { useTokens, useWallet } from "hooks";
 
-import {
-	BIG_INT_SECONDS_IN_WEEK,
-	MINICHEF_ADDRESS,
-} from "pegasys-services/constants";
-import { FarmServices, LpTokenServices } from "../services";
-import { useWallet as psUseWallet } from "../hooks";
-import { onlyNumbers } from "../utils";
+import { MINICHEF_ADDRESS } from "pegasys-services/constants";
+import { ContractFramework } from "pegasys-services/frameworks";
+import { FarmServices } from "../services";
+import { useWallet as psUseWallet, useEarn } from "../hooks";
 import {
 	IFarmProviderProps,
 	IFarmProviderValue,
 	TFarmSort,
-	IFarmInfo,
+	IEarnInfo,
 } from "../dto";
+import { EarnProvider } from "./earn";
 
 export const FarmContext = createContext({} as IFarmProviderValue);
 
-export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
-	const [withdrawnTypedValue, setWithdrawnTypedValue] = useState<string>("");
-	const [depositTypedValue, setDepositTypedValue] = useState<string>("");
-	const [selectedPair, setSelectedPair] = useState<IFarmInfo>();
-	const [allPairs, setAllPairs] = useState<IFarmInfo[]>([]);
-	const [pairs, setPairs] = useState<IFarmInfo[]>([]);
+const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	const [sort, setSort] = useState<TFarmSort>("apr");
+	const [sortedPairs, setSortPairs] = useState<IEarnInfo[]>([]);
 	const [search, setSearch] = useState<string>("");
-	const [buttonId, setButtonId] = useState<string>("");
 	const { userTokensBalance } = useTokens();
 	const { chainId, address } = psUseWallet();
-	const { userTransactionDeadlineValue, provider } = useWallet();
+	const { provider } = useWallet();
+	const {
+		signature,
+		onSign,
+		getTypedValue,
+		selectedOpportunity,
+		setEarnOpportunities,
+		earnOpportunities,
+	} = useEarn();
 
-	const parsedStakeInput = useMemo(
-		() =>
-			selectedPair
-				? tryParseAmount(depositTypedValue, selectedPair.lpToken)
-				: undefined,
-		[depositTypedValue]
-	);
+	const withdraw = async () => {
+		const typedValue = getTypedValue();
 
-	const onWithdraw = async () => {
-		if (selectedPair) {
-			const parsedInput = tryParseAmount(
-				withdrawnTypedValue,
-				selectedPair.lpToken
-			);
-
-			const parsedAmount =
-				parsedInput &&
-				selectedPair.userStakedAmount &&
-				JSBI.lessThanOrEqual(parsedInput.raw, selectedPair.userStakedAmount.raw)
-					? parsedInput.raw
-					: JSBI.BigInt(0);
-
+		if (selectedOpportunity && typedValue) {
 			let method = FarmServices.withdraw;
 
-			if (JSBI.equal(parsedAmount, selectedPair.userStakedAmount.raw)) {
+			if (typedValue.isAllIn) {
 				method = FarmServices.withdrawAndClaim;
 			}
 
-			await method(selectedPair.poolId, parsedAmount.toString(16), address);
+			await method(
+				selectedOpportunity.poolId,
+				typedValue.value.toString(16),
+				address
+			);
 		}
 	};
 
-	const onClaim = async () => {
-		if (selectedPair) {
-			await FarmServices.claim(selectedPair.poolId, address);
+	const claim = async () => {
+		if (selectedOpportunity) {
+			await FarmServices.claim(selectedOpportunity.poolId, address);
 		}
 	};
 
-	const onDeposit = async () => {
-		if (selectedPair) {
-			const parsedAmount =
-				parsedStakeInput &&
-				selectedPair.userAvailableLpTokenAmount &&
-				JSBI.lessThanOrEqual(
-					parsedStakeInput.raw,
-					selectedPair.userAvailableLpTokenAmount.raw
-				)
-					? parsedStakeInput.raw
-					: JSBI.BigInt(0);
+	const deposit = async () => {
+		const typedValue = getTypedValue(true);
 
-			const signature = await LpTokenServices.getSignature({
-				lpAddress: selectedPair.lpToken.address,
-				address,
-				chainId,
-				spender: MINICHEF_ADDRESS,
-				value: parsedAmount.toString(),
-				deadline: userTransactionDeadlineValue,
-			});
-
+		if (selectedOpportunity && typedValue && signature) {
 			await FarmServices.deposit(
-				selectedPair.poolId,
-				parsedAmount.toString(16),
+				selectedOpportunity.poolId,
+				typedValue.value.toString(16),
 				address,
 				signature
+			);
+		}
+	};
+
+	const sign = async () => {
+		if (selectedOpportunity) {
+			const contract = ContractFramework.PairContract(
+				selectedOpportunity.stakeToken.address
+			);
+
+			await onSign(
+				contract,
+				"Pegasys LP Token",
+				MINICHEF_ADDRESS,
+				selectedOpportunity.stakeToken.address,
+				"1"
 			);
 		}
 	};
@@ -114,7 +100,7 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 					provider
 				);
 
-				setAllPairs(stakeInfos);
+				setEarnOpportunities(stakeInfos);
 			};
 
 			getAvailablePair();
@@ -122,10 +108,10 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 	}, [userTokensBalance, chainId, address]);
 
 	useEffect(() => {
-		let pairsToRender: IFarmInfo[] = [];
+		let pairsToRender: IEarnInfo[] = [];
 
 		if (search) {
-			allPairs.forEach(p => {
+			earnOpportunities.forEach(p => {
 				const tokenAName = p.tokenA.name?.toLowerCase() ?? "";
 				const tokenASymbol = p.tokenA.symbol?.toLowerCase() ?? "";
 				const tokenBName = p.tokenB.name?.toLowerCase() ?? "";
@@ -143,20 +129,16 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 				}
 			});
 		} else {
-			pairsToRender = [...allPairs];
+			pairsToRender = [...earnOpportunities];
 		}
 
 		switch (sort) {
 			case "poolWeight":
 				pairsToRender = pairsToRender.sort((a, b) => {
-					if (
-						// a.totalStakedInUsd > b.totalStakedInUsd
-						JSBI.greaterThan(a.totalStakedAmount.raw, b.totalStakedAmount.raw)
-					) {
+					if (a.totalStakedInUsd > b.totalStakedInUsd) {
 						return -1;
 					}
-					// if (a.totalStakedInUsd < b.totalStakedInUsd) {
-					if (JSBI.lessThan(a.totalStakedAmount.raw, b.totalStakedAmount.raw)) {
+					if (a.totalStakedInUsd < b.totalStakedInUsd) {
 						return 1;
 					}
 					return 0;
@@ -175,35 +157,8 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 				break;
 		}
 
-		setPairs(pairsToRender);
-	}, [allPairs, sort, search]);
-
-	useEffect(() => {
-		console.log("userTransactionDeadlineValue: ", userTransactionDeadlineValue);
-	}, []);
-
-	const liveRewardWeek = useMemo(
-		() =>
-			selectedPair
-				? new TokenAmount(
-						selectedPair.lpToken,
-						parsedStakeInput &&
-						JSBI.greaterThan(selectedPair.totalStakedAmount.raw, JSBI.BigInt(0))
-							? JSBI.divide(
-									JSBI.multiply(
-										JSBI.multiply(
-											selectedPair.poolRewardRateAmount.raw,
-											parsedStakeInput.raw
-										),
-										BIG_INT_SECONDS_IN_WEEK
-									),
-									selectedPair.totalStakedAmount.raw
-							  )
-							: JSBI.BigInt(0)
-				  )
-				: undefined,
-		[selectedPair, parsedStakeInput]
-	);
+		setSortPairs(pairsToRender);
+	}, [earnOpportunities, sort, search]);
 
 	const providerValue = useMemo(
 		() => ({
@@ -211,34 +166,22 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 			setSort,
 			search,
 			setSearch,
-			pairs,
-			selectedPair,
-			setSelectedPair,
-			withdrawnTypedValue,
-			setWithdrawnTypedValue: (value: string) => {
-				const newVal = onlyNumbers(value);
-				setWithdrawnTypedValue(newVal);
-			},
-			depositTypedValue,
-			setDepositTypedValue: (value: string) => {
-				const newVal = onlyNumbers(value);
-				setDepositTypedValue(newVal);
-			},
-			onClaim,
-			onWithdraw,
-			onDeposit,
-			liveRewardWeek,
-			buttonId,
-			setButtonId,
+			sortedPairs,
+			claim,
+			sign,
+			deposit,
+			withdraw,
 		}),
 		[
 			sort,
+			setSort,
 			search,
-			pairs,
-			selectedPair,
-			withdrawnTypedValue,
-			depositTypedValue,
-			buttonId,
+			setSearch,
+			sortedPairs,
+			sign,
+			claim,
+			deposit,
+			withdraw,
 		]
 	);
 
@@ -248,3 +191,9 @@ export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => {
 		</FarmContext.Provider>
 	);
 };
+
+export const FarmProvider: React.FC<IFarmProviderProps> = ({ children }) => (
+	<EarnProvider>
+		<Provider>{children}</Provider>
+	</EarnProvider>
+);
