@@ -4,6 +4,7 @@ import {
 	Flex,
 	Text,
 	useColorMode,
+	Collapse,
 } from "@chakra-ui/react";
 import { SelectSyscoin, SelectWallets } from "components/Modals";
 import { useModal, usePicasso, useWallet } from "hooks";
@@ -12,6 +13,7 @@ import { AddressInfoButton } from "components/Buttons";
 import { shortAddress } from "utils";
 import { ExpertMode } from "components/Header/ExpertMode";
 import { ApprovalState } from "contexts";
+import { useWallet as psUseWallet } from "pegasys-services";
 import { AddressButton } from "./AddressButton";
 
 export const WalletButton: FunctionComponent<ButtonProps> = props => {
@@ -29,13 +31,8 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 		onCloseAddress,
 	} = useModal();
 
-	const {
-		isConnected,
-		walletAddress,
-		walletError,
-		approvalState,
-		pendingTxLength,
-	} = useWallet();
+	const { walletError, approvalState, pendingTxLength, expert } = useWallet();
+	const { address, isConnected } = psUseWallet();
 
 	const isPending = approvalState.status === ApprovalState.PENDING;
 	const { colorMode } = useColorMode();
@@ -80,7 +77,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						onClose={onCloseSelectSyscoin}
 					/>
 					<AddressButton onClick={walletError && onOpenSelectSyscoin}>
-						{walletAddress}
+						{address}
 					</AddressButton>
 				</>
 			)}
@@ -91,9 +88,11 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 					<AddressButton
 						onClick={walletError ? onOpenSelectWalletModal : onOpenAddress}
 					>
-						{shortAddress(walletAddress)}
+						{shortAddress(address)}
 					</AddressButton>
-					<ExpertMode />
+					<Collapse in={expert}>
+						<ExpertMode />
+					</Collapse>
 				</>
 			)}
 			{isConnected && isPending && (
@@ -131,7 +130,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						onClick={walletError ? onOpenSelectWalletModal : onOpenAddress}
 						pending={approvalState?.status === ApprovalState.PENDING}
 					>
-						{shortAddress(walletAddress)}
+						{shortAddress(address)}
 					</AddressButton>
 				</>
 			)}

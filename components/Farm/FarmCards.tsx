@@ -67,7 +67,7 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 					justifyContent="center"
 					w="15%"
 					h="3rem"
-					backgroundColor={theme.bg.iconTicket}
+					backgroundColor={theme.bg.smoothGray}
 					borderBottomRadius="full"
 				>
 					<Img src="icons/pegasys.png" w="6" h="6" mb="0.6rem" />
@@ -99,7 +99,7 @@ export const FarmCards: FunctionComponent<IPoolCards> = props => {
 			</Flex>
 			<Flex
 				flexDirection="column"
-				backgroundColor={theme.bg.farmRate}
+				backgroundColor={theme.bg.neutralGray}
 				borderRadius="0.375rem"
 				py="0.5rem"
 				px="1rem"

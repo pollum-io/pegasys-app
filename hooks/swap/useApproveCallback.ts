@@ -17,6 +17,7 @@ import {
 } from "types";
 import { Signer } from "ethers";
 import { IApprovalState, ISubmittedAproval } from "contexts";
+import abi20 from "utils/abis/erc20.json";
 
 export enum ApprovalState {
 	UNKNOWN,
@@ -45,8 +46,10 @@ export function useApproveCallback(
 	transactions: ITx,
 	setApprovalSubmitted: React.Dispatch<React.SetStateAction<ISubmittedAproval>>,
 	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
+	setCurrentSummary: React.Dispatch<React.SetStateAction<string>>,
 	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
 	setApproveTokenStatus: React.Dispatch<React.SetStateAction<ApprovalState>>,
+	onCloseTransaction: () => void,
 	amountToApprove?: { [field in Field]?: TokenAmount },
 	spender?: string,
 	signer?: Signer
@@ -77,7 +80,11 @@ export function useApproveCallback(
 	});
 
 	const approve = async (): Promise<void> => {
-		const tokenContract = await getContract(token?.address, signer as Signer);
+		const tokenContract = await getContract(
+			token?.address,
+			signer as Signer,
+			abi20
+		);
 		if (!token) {
 			throw new Error("No token informed");
 		}
@@ -119,6 +126,9 @@ export function useApproveCallback(
 					approval: { tokenAddress: token?.address, spender },
 					finished: false,
 				});
+				setCurrentSummary(
+					`Approve ${currentAmountToApprove?.currency?.symbol}`
+				);
 				setApprovalState({ status: ApprovalState.PENDING, type: "approve" });
 				setApprovalSubmitted(prevState => ({
 					status: true,
@@ -129,9 +139,11 @@ export function useApproveCallback(
 				}));
 				setCurrentTxHash(`${response?.hash}`);
 				setCurrentInputTokenName(`${currentAmountToApprove?.currency?.symbol}`);
+				onCloseTransaction();
 			})
 			.catch((error: IError) => {
 				if (error?.code === 4001) {
+					onCloseTransaction();
 					toast({
 						status: "error",
 						title: "Transaction rejected by user.",
@@ -157,8 +169,10 @@ export function useApproveCallbackFromTrade(
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
 	setApprovalSubmitted: React.Dispatch<React.SetStateAction<ISubmittedAproval>>,
 	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
+	setCurrentSummary: React.Dispatch<React.SetStateAction<string>>,
 	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
 	setApproveTokenStatus: React.Dispatch<React.SetStateAction<ApprovalState>>,
+	onCloseTransaction: () => void,
 	allowedSlippage = 0
 ) {
 	const { chainId } = walletInfos;
@@ -176,8 +190,10 @@ export function useApproveCallbackFromTrade(
 		transactions,
 		setApprovalSubmitted,
 		setCurrentTxHash,
+		setCurrentSummary,
 		setCurrentInputTokenName,
 		setApproveTokenStatus,
+		onCloseTransaction,
 		amountToApprove,
 		chainId ? ROUTER_ADDRESS[chainId] : ROUTER_ADDRESS[ChainId.NEVM],
 		signer

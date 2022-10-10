@@ -3,8 +3,13 @@ import { ethers } from "ethers";
 import { WrappedTokenInfo } from "types";
 import { useWallet, ApprovalState } from "hooks";
 import { getDefaultTokens } from "networks";
-import { getBalanceOfMultiCall, truncateNumberDecimalsPlaces } from "utils";
+import {
+	getBalanceOfMultiCall,
+	removeScientificNotation,
+	truncateNumberDecimalsPlaces,
+} from "utils";
 import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
+import { useWallet as psUseWallet } from "pegasys-services";
 
 interface ITokensContext {
 	userTokensBalance: WrappedTokenInfo[];
@@ -19,16 +24,12 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		WrappedTokenInfo[]
 	>([]);
 
-	const {
-		isConnected,
-		provider,
-		walletAddress,
-		currentNetworkChainId,
-		approvalState,
-	} = useWallet();
+	const { provider, approvalState } = useWallet();
+
+	const { isConnected, address, chainId } = psUseWallet();
 
 	const getDefaultListToken = async () => {
-		const { tokens } = await getDefaultTokens(currentNetworkChainId as number);
+		const { tokens } = await getDefaultTokens(chainId as number);
 
 		const WSYS = tokens.find(token => token.symbol === "WSYS");
 
@@ -38,9 +39,17 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			symbol: "SYS",
 			logoURI:
 				"https://app.pegasys.finance/static/media/syscoin_token_round.f5e7de99.png",
+			extensions: {
+				isNative: true,
+			},
 		} as TokenInfo;
 
-		const allTokens = [...tokens, SYS];
+		const allTokens = [...tokens, SYS].filter(
+			token =>
+				token.symbol !== "AGEUR" &&
+				token.symbol !== "MAI" &&
+				token.symbol !== "QI"
+		);
 
 		if (!isConnected || !provider) {
 			const tokensWithBalance = allTokens.map(token => ({
@@ -60,7 +69,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		const tokensDecimals = allTokens.map(token => token.decimals);
 
 		const providerTokenBalance = await provider
-			?.getBalance(walletAddress)
+			?.getBalance(address)
 			.then(result => result.toString());
 
 		if (!providerTokenBalance) return "0";
@@ -72,7 +81,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		const contractBalances = await getBalanceOfMultiCall(
 			tokensAddress,
-			walletAddress,
+			address,
 			provider,
 			tokensDecimals
 		);
@@ -92,7 +101,9 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			const truncatedBalance =
 				balanceItems &&
 				String(
-					truncateNumberDecimalsPlaces(parseFloat(balanceItems.balance), 3)
+					+balanceItems.balance > 0 && +balanceItems.balance < 1
+						? removeScientificNotation(parseFloat(balanceItems.balance))
+						: truncateNumberDecimalsPlaces(parseFloat(balanceItems.balance), 3)
 				);
 
 			return {
@@ -112,7 +123,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	useEffect(() => {
 		getDefaultListToken();
-	}, [isConnected, currentNetworkChainId, walletAddress]);
+	}, [isConnected, chainId, address]);
 
 	useEffect(() => {
 		if (approvalState.status === ApprovalState.APPROVED) {

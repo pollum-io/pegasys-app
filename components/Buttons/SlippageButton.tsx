@@ -12,7 +12,7 @@ export const SlippageButton: FunctionComponent<IButtonProps> = props => {
 
 	return (
 		<Button
-			color={theme.text.transactionsItems}
+			color={theme.text.softGray}
 			w="max-content"
 			h="max-content"
 			py="0.5rem"
@@ -22,7 +22,7 @@ export const SlippageButton: FunctionComponent<IButtonProps> = props => {
 			fontWeight="semibold"
 			bgColor="transparent"
 			_hover={{
-				background: theme.bg.slippage,
+				background: theme.bg.softBluePink,
 				color: theme.text.mono,
 			}}
 			{...rest}

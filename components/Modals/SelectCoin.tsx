@@ -1,7 +1,6 @@
 import {
 	Button,
 	Flex,
-	Icon,
 	IconButton,
 	Img,
 	Input,
@@ -9,11 +8,9 @@ import {
 	ModalBody,
 	ModalCloseButton,
 	ModalContent,
-	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
 	Text,
-	Tooltip,
 	InputGroup,
 } from "@chakra-ui/react";
 import {
@@ -181,17 +178,21 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					/>
 				</ModalHeader>
 				<ModalCloseButton
-					color={theme.icon.closeWhiteGray}
+					color={theme.icon.whiteDarkGray}
 					top="4"
 					size="md"
 					_focus={{}}
+					_hover={{}}
 				/>
 				<ModalBody>
 					<InputGroup>
 						<Input
 							borderRadius="full"
 							borderColor={theme.bg.blueNavyLightness}
-							_placeholder={{ color: theme.text.input, opacity: "0.6" }}
+							_placeholder={{
+								color: theme.text.inputBluePurple,
+								opacity: "0.6",
+							}}
 							placeholder="Search, name or paste address"
 							onChange={handleInput}
 							py={["0.1rem", "0.1rem", "1", "1"]}
@@ -205,7 +206,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							pb="0.5"
 							bottom={["0.3rem", "0.3rem", "0.5rem", "0.5rem"]}
 						>
-							<MdSearch color={theme.icon.searchIcon} size={20} />
+							<MdSearch color={theme.icon.inputSearchIcon} size={20} />
 						</Flex>
 					</InputGroup>
 					<Flex my="5" gap="2" justifyContent="space-between">
@@ -263,7 +264,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 								handleSelectToken(buttonId as number, token);
 								onClose();
 							}}
-							_hover={{ bgColor: theme.bg.max }}
+							_hover={{ bgColor: theme.bg.darkBlueGray }}
 						>
 							<Flex
 								gap="4"
@@ -280,7 +281,15 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 									<Img src={token.logoURI} borderRadius="full" w="6" h="6" />
 									{token.symbol}
 								</Flex>
-								<Text fontWeight="normal">{token.balance}</Text>
+								<Text
+									fontWeight="normal"
+									w={token.balance.length > 10 ? "115px" : ""}
+									overflow={token.balance.length > 10 ? "hidden" : ""}
+									textOverflow={token.balance.length > 10 ? "ellipsis" : ""}
+									textAlign="end"
+								>
+									{token.balance}
+								</Text>
 							</Flex>
 						</Button>
 					))}

@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { usePicasso, useWallet } from "hooks";
 import { WalletOptions } from "components/WalletOptions";
-import { AiOutlineClose } from "react-icons/ai";
+import { MdOutlineClose } from "react-icons/md";
 
 interface IModal {
 	isOpen: boolean;
@@ -44,7 +44,11 @@ export const SelectWallets: React.FC<IModal> = props => {
 								Connect to a Wallet
 							</Text>
 							<Flex _hover={{ cursor: "pointer" }}>
-								<AiOutlineClose size={22} onClick={onClose} />
+								<MdOutlineClose
+									size={23}
+									onClick={onClose}
+									color={theme.icon.whiteDarkGray}
+								/>
 							</Flex>
 						</Flex>
 						<Flex flexDirection="column" pb="5">
@@ -82,7 +86,11 @@ export const SelectWallets: React.FC<IModal> = props => {
 					>
 						<Flex justifyContent="flex-end" gap="3" align="center" pb="5">
 							<Flex _hover={{ cursor: "pointer" }}>
-								<AiOutlineClose size={22} onClick={onClose} />
+								<MdOutlineClose
+									size={23}
+									onClick={onClose}
+									color={theme.icon.whiteDarkGray}
+								/>
 							</Flex>
 						</Flex>
 						<Flex
@@ -120,7 +128,7 @@ export const SelectWallets: React.FC<IModal> = props => {
 								border="1px solid"
 								borderRadius="full"
 								fontSize="md"
-								borderColor={theme.border.wallets}
+								borderColor={theme.border.smoothGray}
 								fontWeight={500}
 								fontFamily="inter"
 								alignItems="center"

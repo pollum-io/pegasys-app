@@ -195,7 +195,14 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 		USDC[ChainId.NEVM],
 	],
 };
+const WSYS_AND_PSYS_ONLY: ChainTokenList = {
+	[ChainId.TANENBAUM]: [WSYS[ChainId.TANENBAUM], PSYS[ChainId.TANENBAUM]],
+	[ChainId.NEVM]: [WSYS[ChainId.NEVM], PSYS[ChainId.NEVM]],
+};
 
+export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
+	...WSYS_AND_PSYS_ONLY,
+};
 /**
  * Some tokens can only be swapped via certain pairs, so we override the list of bases that are considered for these
  * tokens.

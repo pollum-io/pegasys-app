@@ -52,8 +52,8 @@ export const ManageToken: React.FC<IModal> = props => {
 					<Flex flexDirection="row" alignItems="baseline" gap="3" mt="3">
 						<Input
 							borderRadius="full"
-							borderColor={theme.border.manageInput}
-							_placeholder={{ color: theme.text.manageInput, opacity: "0.6" }}
+							borderColor={theme.border.lightnessGray}
+							_placeholder={{ color: theme.text.lightnessGray, opacity: "0.6" }}
 							placeholder="https:// or ipfs://"
 							h="max-content"
 							py="1"
