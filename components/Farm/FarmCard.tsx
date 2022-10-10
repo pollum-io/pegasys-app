@@ -91,7 +91,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold">Your Stake</Text>
-					<Text>${userStakedAmount.raw.toString()}</Text>
+					<Text>{formattedNum(+userStakedAmount.toSignificant(4), true)}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold">Swap Fee APR</Text>

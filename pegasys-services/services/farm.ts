@@ -253,10 +253,10 @@ class FarmServices {
 								stakedValueInUSDT
 							);
 						} else if (pair.involvesToken(WSYS[chainId])) {
-							const totalStakedInWsys = new TokenAmount(
-								WSYS[ChainId.NEVM],
-								JSBI.GT(totalSupplyJSBI, 0)
-									? JSBI.divide(
+							const totalStakedInWsys = JSBI.GT(totalSupplyJSBI, 0)
+								? new TokenAmount(
+										WSYS[ChainId.NEVM],
+										JSBI.divide(
 											JSBI.multiply(
 												JSBI.multiply(
 													totalStakeJSBI,
@@ -265,9 +265,9 @@ class FarmServices {
 												JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the wsys they entitle owner to
 											),
 											totalSupplyJSBI
-									  )
-									: JSBI.BigInt(1)
-							);
+										)
+								  )
+								: new TokenAmount(WSYS[ChainId.NEVM], JSBI.BigInt(0));
 
 							if (JSBI.greaterThan(totalStakedInWsys.raw, JSBI.BigInt(0))) {
 								totalStakedInUsd = usdPrice.quote(
