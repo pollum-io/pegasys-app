@@ -4,6 +4,7 @@ import { useModal, usePicasso, useTokens } from "hooks";
 import { FarmActions } from "components/Modals/FarmActions";
 import { IFarmInfo, useFarm } from "pegasys-services";
 import { JSBI } from "@pollum-io/pegasys-sdk";
+import { formattedNum } from "utils/numberFormat";
 
 const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 	stakeInfo,
@@ -85,7 +86,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 						Total Staked
 					</Text>
 					<Text color={theme.text.cyanPurple}>
-						${totalStakedInUsd.toSignificant(6)}
+						{formattedNum(Number(totalStakedInUsd.toSignificant(4)), true)}
 					</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">

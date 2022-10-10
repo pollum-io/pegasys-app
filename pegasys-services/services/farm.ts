@@ -11,7 +11,7 @@ import ethers, { Signer } from "ethers";
 
 import { WrappedTokenInfo } from "types";
 
-import { usePairs } from "hooks";
+import { usePairs as getPairs } from "hooks";
 import { IFarmInfo } from "../dto";
 import LpTokenServices from "./lpToken";
 import { ContractFramework } from "../frameworks";
@@ -41,6 +41,7 @@ class FarmServices {
 	): Promise<IFarmInfo[]> {
 		const lpTokens = await LpTokenServices.getLpTokens();
 		const poolMap = await LpTokenServices.getPoolMap(lpTokens);
+		const psys = PSYS[chainId ?? ChainId.NEVM];
 
 		const pairsWithLiquidityToken: IFarmInfo[] = [];
 
@@ -49,7 +50,6 @@ class FarmServices {
 			chainId,
 			provider,
 		};
-
 		await Promise.all(
 			tokenPairs.map(async (tokenPair, index) => {
 				const lpToken = LpTokenServices.getLpToken(
@@ -59,13 +59,19 @@ class FarmServices {
 				);
 
 				const poolId = poolMap[lpToken.address];
-				const pairs = await usePairs(tokenPairs, walletInfo);
+				const pairs = await getPairs(tokenPairs, walletInfo);
 				const pair = pairs[index]?.[1];
+				const getUsdcPair = await getPairs(
+					[[WSYS[ChainId.NEVM], psys]],
+					walletInfo
+				);
+				const usdcPair = getUsdcPair[0]?.[1];
 				if (
 					poolId !== undefined &&
 					lpToken &&
 					lpTokens.includes(lpToken.address) &&
-					pair
+					pair &&
+					usdcPair
 				) {
 					delete poolMap[lpToken.address];
 
@@ -134,8 +140,6 @@ class FarmServices {
 						JSBI.BigInt(contractValues.totalAllocPoint.toString() ?? 0)
 					);
 
-					const psys = PSYS[chainId ?? ChainId.NEVM];
-
 					const unclaimedPSYSAmount = new TokenAmount(
 						psys,
 						JSBI.BigInt(contractValues.userUnclaimedPSYS.toString() ?? 0)
@@ -186,19 +190,13 @@ class FarmServices {
 
 					let totalStakedInUsd = new TokenAmount(DAI[chainId], BIG_INT_ZERO);
 
-					const usdcPair = new Pair(
-						new TokenAmount(WSYS[ChainId.NEVM], "1"),
-						new TokenAmount(USDC[ChainId.NEVM], "1"),
-						chainId
+					const getSysPsysPair = await getPairs(
+						[[WSYS[ChainId.NEVM], psys]],
+						walletInfo
 					);
+					const sysPsysPair = getSysPsysPair[0]?.[1];
 
-					const sysPsysPair = new Pair(
-						new TokenAmount(WSYS[ChainId.NEVM], "1"),
-						new TokenAmount(psys, "1"),
-						chainId
-					);
-
-					const price = usdcPair.priceOf(WSYS[chainId]);
+					const price = usdcPair.priceOf(WSYS[chainId ?? ChainId.NEVM]);
 					const usdPrice = new Price(
 						WSYS[ChainId.NEVM],
 						USDC[ChainId.NEVM],
@@ -276,7 +274,7 @@ class FarmServices {
 									totalStakedInWsys
 								) as TokenAmount;
 							}
-						} else if (pair.involvesToken(PSYS[chainId])) {
+						} else if (pair.involvesToken(PSYS[chainId]) && sysPsysPair) {
 							const oneToken = JSBI.BigInt(1000000000000000000);
 							const sysPsysRatio = JSBI.divide(
 								JSBI.multiply(
