@@ -82,7 +82,7 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 						finished: false,
 					});
 					setCurrentTxHash(hash);
-					setApprovalState({ type: "claim", status: ApprovalState.PENDING });
+					setApprovalState({ type: "stake", status: ApprovalState.PENDING });
 				}
 			);
 		}
