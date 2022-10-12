@@ -33,7 +33,7 @@ const EarnActionsHeader: React.FC<IEarnActionsHeaderProps> = ({
 			justifyContent="space-between"
 			alignItems={["flex-start", "flex-start", "center", "center"]}
 		>
-			<Flex pr="7" gap="2" mt={["6", "6", "2", "2"]}>
+			<Flex flex="1" pr="7" gap="2" mt={["6", "6", "2", "2"]}>
 				<EarnHeaderButton
 					id="deposit"
 					amount={selectedOpportunity.unstakedAmount}

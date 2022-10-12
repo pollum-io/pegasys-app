@@ -104,9 +104,12 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 	useEffect(() => {
 		if (address && chainId) {
 			const getStakes = async () => {
-				const stakeInfo = await StakeServices.getStakeInfos(address, chainId);
+				const stakeInfos = await StakeServices.getStakeOpportunities(
+					address,
+					chainId
+				);
 
-				setEarnOpportunities([stakeInfo]);
+				setEarnOpportunities(stakeInfos);
 			};
 
 			getStakes();

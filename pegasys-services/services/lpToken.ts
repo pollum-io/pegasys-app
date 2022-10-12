@@ -6,8 +6,8 @@ import { API, MINICHEF_ADDRESS } from "../constants";
 import { ContractFramework, WalletFramework } from "../frameworks";
 
 class LpTokenServices {
-	static getLpContract() {
-		const contract = ContractFramework.FarmContract(57);
+	static getLpContract(chainId?: ChainId) {
+		const contract = ContractFramework.FarmContract(chainId ?? ChainId.NEVM);
 
 		return contract;
 	}
@@ -38,7 +38,7 @@ class LpTokenServices {
 		return lpTokens;
 	}
 
-	static async getBalance(lpAddress: string) {
+	static async getBalance(lpAddress: string): Promise<bigint> {
 		const contract = ContractFramework.TokenContract(lpAddress);
 
 		const balance = await ContractFramework.call({
@@ -76,39 +76,47 @@ class LpTokenServices {
 
 	static async getAprs(
 		poolId: number,
-		isSuperFarm: boolean
+		isSuperFarm?: boolean
 	): Promise<{
 		swapFeeApr: number;
 		superFarmApr?: number;
 		combinedApr: number;
 	}> {
-		const response = await fetch(`${API}pegasys/apr/${poolId}`);
+		try {
+			const response = await fetch(`${API}pegasys/apr/${poolId}`);
 
-		const data = await response.json();
+			const data = await response.json();
 
-		const { swapFeeApr, stakingApr, combinedApr } = data;
+			const { swapFeeApr, stakingApr, combinedApr } = data;
 
-		let superFarmApr: undefined | number;
+			let superFarmApr: undefined | number;
 
-		if (isSuperFarm) {
-			superFarmApr = stakingApr;
+			if (isSuperFarm) {
+				superFarmApr = stakingApr;
+			}
+
+			return {
+				swapFeeApr,
+				superFarmApr,
+				combinedApr: superFarmApr ? combinedApr : swapFeeApr,
+			};
+		} catch (e) {
+			return {
+				swapFeeApr: 0,
+				combinedApr: 0,
+			};
 		}
-
-		return {
-			swapFeeApr,
-			superFarmApr,
-			combinedApr: superFarmApr ? combinedApr : swapFeeApr,
-		};
 	}
 
-	static async getUserStake(poolId: number, address: string) {
+	static async getUserStake(poolId: number, token: Token) {
 		const contract = this.getLpContract();
 
 		const userInfo = await ContractFramework.call({
 			contract,
 			methodName: "userInfo",
-			args: [[poolId], address],
+			args: [[poolId], token.address],
 		});
+		console.log("userinfo", userInfo);
 
 		const { amount } = userInfo as { amount: bigint };
 

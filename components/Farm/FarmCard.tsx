@@ -1,7 +1,14 @@
 import { Flex, Img, Text } from "@chakra-ui/react";
 import { FunctionComponent, useMemo } from "react";
 import { useModal, usePicasso, useTokens } from "hooks";
-import { IFarmInfo, useEarn, TButtonId } from "pegasys-services";
+import { useRouter } from "next/router";
+import {
+	IFarmInfo,
+	useEarn,
+	TButtonId,
+	BIG_INT_ONE,
+	BIG_INT_ZERO,
+} from "pegasys-services";
 import { JSBI } from "@pollum-io/pegasys-sdk";
 import { formattedNum } from "utils/numberFormat";
 import { EarnButton } from "../Earn";
@@ -27,8 +34,8 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 	const theme = usePicasso();
 	const { userTokensBalance } = useTokens();
 	const { setSelectedOpportunity, setButtonId } = useEarn();
-
 	const { onOpenFarmActions } = useModal();
+	const router = useRouter();
 
 	const onClick = (id: string) => {
 		setButtonId(id as TButtonId);
@@ -36,9 +43,17 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 		onOpenFarmActions();
 	};
 
+	const tokenALogo = useMemo(() => {
+		const tokenAWrapped = userTokensBalance.find(
+			ut => ut.address === tokenA?.address && tokenA.chainId === ut.chainId
+		);
+
+		return tokenAWrapped?.logoURI ?? "";
+	}, [userTokensBalance, tokenA]);
+
 	const tokenBLogo = useMemo(() => {
 		const tokenBWrapped = userTokensBalance.find(
-			ut => ut.address === tokenB.address && tokenB.chainId === ut.chainId
+			ut => ut.address === tokenB?.address && tokenB.chainId === ut.chainId
 		);
 
 		return tokenBWrapped?.logoURI ?? "";
@@ -61,11 +76,11 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 			<Flex justifyContent="space-between">
 				<Flex gap="2" pt="6">
 					<Flex>
-						<Img src={tokenA.tokenInfo.logoURI} w="6" h="6" />
+						<Img src={tokenALogo} w="6" h="6" />
 						<Img src={tokenBLogo} w="6" h="6" />
 					</Flex>
 					<Text className="text" fontSize="lg" fontWeight="bold">
-						{tokenA.symbol}-{tokenB.symbol}
+						{tokenA.symbol}-{tokenB?.symbol ?? ""}
 					</Text>
 				</Flex>
 				<Flex
@@ -85,12 +100,12 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 						Total Staked
 					</Text>
 					<Text color={theme.text.cyanPurple}>
-						{formattedNum(Number(totalStakedInUsd.toSignificant(4)), true)}
+						{formattedNum(totalStakedInUsd, true)}
 					</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold">Your Stake</Text>
-					<Text>{formattedNum(+stakedInUsd.toString(), true)}</Text>
+					<Text>{formattedNum(stakedInUsd, true)}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold">Swap Fee APR</Text>
@@ -161,7 +176,6 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 				</EarnButton>
 			</Flex>
 			<EarnButton
-				id="claim"
 				py="1"
 				px="6"
 				width="100%"
@@ -171,6 +185,20 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 			>
 				Claim
 			</EarnButton>
+			{JSBI.greaterThanOrEqual(BIG_INT_ZERO, stakedAmount.raw) &&
+				JSBI.greaterThanOrEqual(BIG_INT_ZERO, unstakedAmount.raw) &&
+				JSBI.greaterThanOrEqual(BIG_INT_ZERO, unclaimedAmount.raw) && (
+					<EarnButton
+						id="claim"
+						py="1"
+						px="6"
+						width="100%"
+						mt="1rem"
+						onClick={() => router.push("pools")}
+					>
+						{`Add ${tokenA.symbol}-${tokenB?.symbol} Liquidity`}
+					</EarnButton>
+				)}
 		</Flex>
 	);
 };

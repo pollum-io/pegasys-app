@@ -14,6 +14,7 @@ import {
 	IFarmProviderValue,
 	TFarmSort,
 	IEarnInfo,
+	IFarmInfo,
 } from "../dto";
 import { EarnProvider } from "./earn";
 
@@ -52,38 +53,39 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 
 		if (selectedOpportunity && typedValue) {
 			let method = FarmServices.withdraw;
+			const { poolId } = selectedOpportunity as IFarmInfo;
 
 			if (typedValue.isAllIn) {
 				method = FarmServices.withdrawAndClaim;
 			}
 
-			await method(
-				selectedOpportunity.poolId,
+			const { response, hash } = await method(
+				poolId,
 				typedValue.value.toString(16),
 				address
-			).then(({ response, hash }) => {
-				addTransaction(response, walletInfo, setTransactions, transactions, {
-					summary: "Withdraw deposited liquidity",
-					finished: false,
-				});
-				setCurrentTxHash(hash);
-				setApprovalState({ type: "withdraw", status: ApprovalState.PENDING });
-			});
+			);
+
+			// addTransaction(response, walletInfo, setTransactions, transactions, {
+			// 	summary: "Withdraw deposited liquidity",
+			// 	finished: false,
+			// });
+			// setCurrentTxHash(hash);
+			// setApprovalState({ type: "withdraw", status: ApprovalState.PENDING });
 		}
 	};
 
 	const claim = async () => {
 		if (selectedOpportunity) {
-			await FarmServices.claim(selectedOpportunity.poolId, address).then(
-				({ response, hash }) => {
-					addTransaction(response, walletInfo, setTransactions, transactions, {
-						summary: "Claim accumulated PSYS rewards",
-						finished: false,
-					});
-					setCurrentTxHash(hash);
-					setApprovalState({ type: "claim", status: ApprovalState.PENDING });
-				}
-			);
+			const { poolId } = selectedOpportunity as IFarmInfo;
+
+			await FarmServices.claim(poolId, address);
+
+			// addTransaction(response, walletInfo, setTransactions, transactions, {
+			// 	summary: "Claim accumulated PSYS rewards",
+			// 	finished: false,
+			// });
+			// setCurrentTxHash(hash);
+			// setApprovalState({ type: "claim", status: ApprovalState.PENDING });
 		}
 	};
 
@@ -91,19 +93,23 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 		const typedValue = getTypedValue(true);
 
 		if (selectedOpportunity && typedValue && signature) {
+			const { poolId } = selectedOpportunity as IFarmInfo;
+
 			await FarmServices.deposit(
-				selectedOpportunity.poolId,
+				poolId,
 				typedValue.value.toString(16),
 				address,
 				signature
-			).then(({ response, hash }) => {
-				addTransaction(response, walletInfo, setTransactions, transactions, {
-					summary: "Deposit liquidity",
-					finished: false,
-				});
-				setCurrentTxHash(hash);
-				setApprovalState({ type: "deposit", status: ApprovalState.PENDING });
-			});
+			);
+
+			// .then(({ response, hash }) => {
+			// 	addTransaction(response, walletInfo, setTransactions, transactions, {
+			// 		summary: "Deposit liquidity",
+			// 		finished: false,
+			// 	});
+			// 	setCurrentTxHash(hash);
+			// 	setApprovalState({ type: "deposit", status: ApprovalState.PENDING });
+			// });
 		}
 	};
 
@@ -128,7 +134,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 			const getAvailablePair = async () => {
 				const pairsTokens = getTokenPairs(chainId, userTokensBalance);
 
-				const stakeInfos = await FarmServices.getFarmInfos(
+				const stakeInfos = await FarmServices.getFarmOpportunities(
 					pairsTokens as [WrappedTokenInfo, Token][],
 					address,
 					chainId,
@@ -136,6 +142,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 				);
 
 				setEarnOpportunities(stakeInfos);
+				setSortPairs(stakeInfos);
 			};
 
 			getAvailablePair();
@@ -143,14 +150,14 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	}, [userTokensBalance, chainId, address]);
 
 	useEffect(() => {
-		let pairsToRender: IEarnInfo[] = [];
+		let pairsToRender: IFarmInfo[] = [];
 
 		if (search) {
 			earnOpportunities.forEach(p => {
 				const tokenAName = p.tokenA.name?.toLowerCase() ?? "";
 				const tokenASymbol = p.tokenA.symbol?.toLowerCase() ?? "";
-				const tokenBName = p.tokenB.name?.toLowerCase() ?? "";
-				const tokenBSymbol = p.tokenB.symbol?.toLowerCase() ?? "";
+				const tokenBName = p.tokenB?.name?.toLowerCase() ?? "";
+				const tokenBSymbol = p.tokenB?.symbol?.toLowerCase() ?? "";
 
 				const lowerCaseSearch = search.toLowerCase();
 
@@ -160,11 +167,11 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 					tokenASymbol.includes(lowerCaseSearch) ||
 					tokenBSymbol.includes(lowerCaseSearch)
 				) {
-					pairsToRender.push(p);
+					pairsToRender.push(p as IFarmInfo);
 				}
 			});
 		} else {
-			pairsToRender = earnOpportunities;
+			pairsToRender = earnOpportunities as IFarmInfo[];
 		}
 
 		switch (sort) {
@@ -213,6 +220,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 			search,
 			setSearch,
 			sortedPairs,
+			setSortPairs,
 			sign,
 			claim,
 			deposit,

@@ -80,7 +80,9 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				</Text>
 				{selectedOpportunity.extraRewardToken && (
 					<Text fontWeight="normal">
-						Extra Reward: 0 {selectedOpportunity.extraRewardToken.symbol} / Week
+						Extra Reward:{" "}
+						{selectedOpportunity.extraTotalRewardRatePerWeek?.toSignificant()}{" "}
+						{selectedOpportunity.extraRewardToken.symbol} / Week
 					</Text>
 				)}
 			</Flex>

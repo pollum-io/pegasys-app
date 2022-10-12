@@ -1,29 +1,10 @@
 import { JSBI, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
+import { IEarnInfo } from "../contexts";
 
-export interface IStakeInfo {
-	stakeToken: Token;
-	rewardToken: Token;
-	stakedAmount: TokenAmount;
-	unstakedAmount: TokenAmount;
-	unclaimedAmount: TokenAmount;
-	totalStakedAmount: TokenAmount;
-	rewardRatePerWeek: TokenAmount;
-	totalRewardRatePerWeek: TokenAmount;
-	stakedInUsd: JSBI;
-	totalStakedInUsd: TokenAmount;
+export interface IStakeInfo extends IEarnInfo {
 	periodFinish?: Date;
 	isPeriodFinished: boolean;
-
-	// rewardToken: Token;
-	// earnedAmount: TokenAmount;
-	// rewardRate: TokenAmount;
-	// totalRewardRate: TokenAmount;
-	// stakedAmount: TokenAmount;
-	// totalStakedAmount: TokenAmount;
-	// totalStakedInPsys: TokenAmount;
 	apr: JSBI;
-	// totalRewardRatePerWeek: TokenAmount;
-	// totalRewardRatePerSecond: TokenAmount;
-	// rewardRatePerWeek: TokenAmount;
-	// unstakedPsysAmount: TokenAmount;
+	rewardRatePerWeekInUsd: number;
+	totalRewardRatePerWeekInUsd: number;
 }

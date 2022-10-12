@@ -1,27 +1,9 @@
-import { MaxUint256 } from "@ethersproject/constants";
-import {
-	ChainId,
-	Currency,
-	currencyEquals,
-	JSBI,
-	NSYS,
-	Price,
-	TokenAmount,
-	WSYS,
-} from "@pollum-io/pegasys-sdk";
-import { ApprovalState } from "hooks";
+import { ChainId, Pair, Price, Token, WSYS } from "@pollum-io/pegasys-sdk";
+import { BIG_INT_ZERO, USDC } from "pegasys-services/constants";
 import { TContract } from "pegasys-services/dto";
 import { ContractFramework } from "pegasys-services/frameworks";
-import { wrappedCurrency } from "utils";
-import { BIG_INT_ZERO, DAI, USDC } from "../constants";
 
 class TokenServices {
-	static async getToken(address: string) {
-		const contract = ContractFramework.TokenContract(address);
-
-		const name = this.getTokenName({ contract });
-	}
-
 	static async getTokenName({
 		address,
 		contract,
@@ -39,7 +21,7 @@ class TokenServices {
 		return name ?? "";
 	}
 
-	static async getTokenNameBytes32({
+	static async getTokenSymbol({
 		address,
 		contract,
 	}: {
@@ -48,136 +30,56 @@ class TokenServices {
 	}): Promise<string> {
 		const c = contract ?? ContractFramework.TokenContract(address ?? "");
 
-		const name = await ContractFramework.call({
+		const symbol = await ContractFramework.call({
 			contract: c,
-			methodName: "name",
+			methodName: "symbol",
 		});
 
-		return name ?? "";
+		return symbol ?? "";
 	}
 
-	// static async usdcPrice(currency: Currency, chainId?: ChainId) {
-	// 	let totalStakedInUsd = new TokenAmount(
-	// 		DAI[chainId ?? ChainId.NEVM],
-	// 		BIG_INT_ZERO
-	// 	);
+	static async getTokenDecimals({
+		address,
+		contract,
+	}: {
+		address?: string;
+		contract?: TContract;
+	}): Promise<number> {
+		const c = contract ?? ContractFramework.TokenContract(address ?? "");
 
-	// 	if (JSBI.equal(totalSupplyAvailable, BIG_INT_ZERO)) {
-	// 		// Default to 0 values above avoiding division by zero errors
-	// 	} else if (pair.involvesToken(DAI[chainId])) {
-	// 		const pairValueInDAI = JSBI.multiply(
-	// 			pair.reserveOf(DAI[chainId]).raw,
-	// 			BIG_INT_TWO
-	// 		);
-	// 		const stakedValueInDAI = JSBI.divide(
-	// 			JSBI.multiply(pairValueInDAI, totalSupplyStaked),
-	// 			totalSupplyAvailable
-	// 		);
-	// 		totalStakedInUsd = new TokenAmount(DAI[chainId], stakedValueInDAI);
-	// 	} else if (pair.involvesToken(USDC[chainId])) {
-	// 		const pairValueInUSDC = JSBI.multiply(
-	// 			pair.reserveOf(USDC[chainId]).raw,
-	// 			BIG_INT_TWO
-	// 		);
-	// 		const stakedValueInUSDC = JSBI.divide(
-	// 			JSBI.multiply(pairValueInUSDC, totalSupplyStaked),
-	// 			totalSupplyAvailable
-	// 		);
-	// 		totalStakedInUsd = new TokenAmount(USDC[chainId], stakedValueInUSDC);
-	// 	} else if (pair.involvesToken(USDT[chainId])) {
-	// 		const pairValueInUSDT = JSBI.multiply(
-	// 			pair.reserveOf(USDT[chainId]).raw,
-	// 			BIG_INT_TWO
-	// 		);
-	// 		const stakedValueInUSDT = JSBI.divide(
-	// 			JSBI.multiply(pairValueInUSDT, totalSupplyStaked),
-	// 			totalSupplyAvailable
-	// 		);
-	// 		totalStakedInUsd = new TokenAmount(USDT[chainId], stakedValueInUSDT);
-	// 	} else if (isSysPool) {
-	// 		const totalStakedInWsys = calculateTotalStakedAmountInSys(
-	// 			totalSupplyStaked,
-	// 			totalSupplyAvailable,
-	// 			pair.reserveOf(WSYS[chainId]).raw
-	// 		);
-	// 		totalStakedInUsd =
-	// 			totalStakedInWsys &&
-	// 			(usdPrice?.quote(totalStakedInWsys) as TokenAmount);
-	// 	} else if (isPsysPool) {
-	// 		const totalStakedInWsys = calculateTotalStakedAmountInSysFromPsys(
-	// 			totalSupplyStaked,
-	// 			totalSupplyAvailable,
-	// 			sysPsysPair.reserveOf(psys).raw,
-	// 			sysPsysPair.reserveOf(WSYS[chainId]).raw,
-	// 			pair.reserveOf(psys).raw
-	// 		);
-	// 		totalStakedInUsd =
-	// 			totalStakedInWsys &&
-	// 			(usdPrice?.quote(totalStakedInWsys) as TokenAmount);
-	// 	} else {
-	// 		// Contains no stablecoin, WSYS, nor PSYS
-	// 		console.error(
-	// 			`Could not identify total staked value for pair ${pair.liquidityToken.address}`
-	// 		);
-	// 	}
-	// }
+		const decimals = await ContractFramework.call({
+			contract: c,
+			methodName: "decimals",
+		});
 
-	// static async usdPrice(currency: Currency, chainId?: ChainId) {
-	// 	const wrapped = wrappedCurrency(currency, chainId ?? ChainId.NEVM)
-	// 	const usdc = USDC[chainId ?? ChainId.NEVM]
+		return Number(decimals) ?? 18;
+	}
 
-	// 	const tokenPairs = [
-	// 		[
-	// 			chainId && wrapped && currencyEquals(WSYS[chainId], wrapped) ? undefined : currency,
-	// 			chainId ? WSYS[chainId] : undefined
-	// 		],
-	// 		[wrapped?.equals(usdc) ? undefined : wrapped, chainId === ChainId.NEVM ? usdc : undefined],
-	// 		[chainId ? WSYS[chainId] : undefined, chainId === ChainId.NEVM ? usdc : undefined]
-	// 	]
+	static async getToken(address: string, chainId?: ChainId) {
+		const contract = ContractFramework.TokenContract(address);
 
-	// 	const [[sysPairState, sysPair], [usdcPairState, usdcPair], [usdcSysPairState, usdcSysPair]] = usePairs(tokenPairs)
+		const name = await this.getTokenName({ contract });
+		const symbol = await this.getTokenSymbol({ contract });
+		const decimals = await this.getTokenDecimals({ contract });
 
-	// 	return useMemo(() => {
-	// 		if (!currency || !wrapped || !chainId) {
-	// 			return undefined
-	// 		}
-	// 		// handle wsys/sys
-	// 		if (wrapped.equals(WSYS[chainId])) {
-	// 			if (usdcPair) {
-	// 				const price = usdcPair.priceOf(WSYS[chainId])
-	// 				return new Price(currency, USDC, price.denominator, price.numerator)
-	// 			} else {
-	// 				return undefined
-	// 			}
-	// 		}
-	// 		// handle usdc
-	// 		if (wrapped.equals(usdc)) {
-	// 			return new Price(usdc, usdc, '1', '1')
-	// 		}
+		return new Token(chainId ?? ChainId.NEVM, address, decimals, symbol, name);
+	}
 
-	// 		const sysPairSYSAmount = sysPair?.reserveOf(WSYS[chainId])
-	// 		const sysPairSYSUSDCValue: JSBI =
-	// 			sysPairSYSAmount && usdcSysPair
-	// 				? usdcSysPair.priceOf(WSYS[chainId]).quote(sysPairSYSAmount).raw
-	// 				: JSBI.BigInt(0)
+	static async getUsdPrice(token: token, chainId?: ChainId) {
+		const wsys = WSYS[chainId ?? ChainId.NEVM];
+		const usdc = USDC[chainId ?? ChainId.NEVM];
 
-	// 		// all other tokens
-	// 		// first try the usdc pair
-	// 		if (usdcPairState === PairState.EXISTS && usdcPair && usdcPair.reserveOf(USDC).greaterThan(sysPairSYSUSDCValue)) {
-	// 			const price = usdcPair.priceOf(wrapped)
-	// 			return new Price(currency, USDC, price.denominator, price.numerator)
-	// 		}
-	// 		if (sysPairState === PairState.EXISTS && sysPair && usdcSysPairState === PairState.EXISTS && usdcSysPair) {
-	// 			if (usdcSysPair.reserveOf(USDC).greaterThan('0') && sysPair.reserveOf(WSYS[chainId]).greaterThan('0')) {
-	// 				const sysUsdcPrice = usdcSysPair.priceOf(USDC)
-	// 				const currencySysPrice = sysPair.priceOf(WSYS[chainId])
-	// 				const usdcPrice = sysUsdcPrice.multiply(currencySysPrice).invert()
-	// 				return new Price(currency, USDC, usdcPrice.denominator, usdcPrice.numerator)
-	// 			}
-	// 		}
-	// 		return undefined
-	// 	}
-	// }
+		const price = rewardTokenWsysPair?.priceOf(wsys);
+
+		const usdPrice = new Price(
+			wsys,
+			usdc,
+			price?.denominator ?? BIG_INT_ZERO,
+			price?.numerator ?? BIG_INT_ZERO
+		);
+
+		return usdPrice;
+	}
 }
 
 export default TokenServices;

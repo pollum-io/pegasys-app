@@ -12,6 +12,7 @@ import {
 	STAKE_ADDRESS,
 } from "pegasys-services/constants";
 import { ROUTER_ADDRESS } from "helpers/consts";
+import { getAddress } from "@ethersproject/address";
 import Wallet from "./wallet";
 import ERC20_ABI from "../abis/erc20.json";
 import {
@@ -26,7 +27,7 @@ class ContractFramework {
 		const providerOrSigner = props.provider ?? Wallet.getSignerOrProvider();
 
 		const contract = new ethers.Contract(
-			props.address,
+			getAddress(props.address),
 			props.abi,
 			providerOrSigner
 		);
@@ -52,7 +53,7 @@ class ContractFramework {
 	): Promise<BigNumber> {
 		const gas = await this.estimateGas(props);
 
-		const gasLimit = gas.mul(BigNumber.from(4));
+		const gasLimit = gas.mul(BigNumber.from(10));
 
 		return gasLimit;
 	}
@@ -77,10 +78,10 @@ class ContractFramework {
 		return contract;
 	}
 
-	static RouterContract(chainId: ChainId) {
+	static RouterContract(chainId?: ChainId) {
 		const contract = this.getContract({
 			abi: IPegasysRouterABI.abi,
-			address: ROUTER_ADDRESS[chainId],
+			address: ROUTER_ADDRESS[chainId ?? ChainId.NEVM],
 		});
 
 		return contract;
@@ -95,7 +96,7 @@ class ContractFramework {
 		return contract;
 	}
 
-	static StakeContract(chainId: ChainId) {
+	static StakeContract(chainId?: ChainId) {
 		const contract = this.getContract({
 			abi: STAKING_REWARDS_ABI.abi,
 			address: STAKE_ADDRESS,
@@ -115,7 +116,7 @@ class ContractFramework {
 
 	static PSYSContract(chainId: ChainId) {
 		const contract = this.getContract({
-			address: PSYS[ChainId.NEVM].address,
+			address: PSYS[chainId ?? ChainId.NEVM].address,
 			abi: PSYS_ABI.abi,
 		});
 

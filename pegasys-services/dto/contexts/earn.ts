@@ -16,12 +16,13 @@ export interface IEarnInfo {
 	totalStakedAmount: TokenAmount;
 	rewardRatePerWeek: TokenAmount;
 	totalRewardRatePerWeek: TokenAmount;
-	stakedInUsd: JSBI;
-	totalStakedInUsd: TokenAmount;
+	stakedInUsd: number;
+	totalStakedInUsd: number;
 	tokenA: Token;
 	tokenB?: Token;
 	extraRewardToken?: Token;
-	extraTotalRewardToken?: TokenAmount;
+	extraRewardRatePerWeek?: TokenAmount;
+	extraTotalRewardRatePerWeek?: TokenAmount;
 }
 
 export type TButtonId = "withdraw" | "claim" | "deposit" | null;
