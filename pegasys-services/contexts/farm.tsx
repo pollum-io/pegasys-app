@@ -1,9 +1,9 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { JSBI, Token } from "@pollum-io/pegasys-sdk";
 
-import { getTokenPairs } from "utils";
+import { addTransaction, getTokenPairs } from "utils";
 import { WrappedTokenInfo } from "types";
-import { useTokens, useWallet } from "hooks";
+import { ApprovalState, useTokens, useWallet } from "hooks";
 
 import { MINICHEF_ADDRESS } from "pegasys-services/constants";
 import { ContractFramework } from "pegasys-services/frameworks";
@@ -25,7 +25,13 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	const [search, setSearch] = useState<string>("");
 	const { userTokensBalance } = useTokens();
 	const { chainId, address } = psUseWallet();
-	const { provider } = useWallet();
+	const {
+		provider,
+		setTransactions,
+		transactions,
+		setCurrentTxHash,
+		setApprovalState,
+	} = useWallet();
 	const {
 		signature,
 		onSign,
@@ -34,6 +40,12 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 		setEarnOpportunities,
 		earnOpportunities,
 	} = useEarn();
+
+	const walletInfo = {
+		walletAddress: address,
+		chainId,
+		provider,
+	};
 
 	const withdraw = async () => {
 		const typedValue = getTypedValue();
@@ -49,13 +61,29 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 				selectedOpportunity.poolId,
 				typedValue.value.toString(16),
 				address
-			);
+			).then(({ response, hash }) => {
+				addTransaction(response, walletInfo, setTransactions, transactions, {
+					summary: "Withdraw deposited liquidity",
+					finished: false,
+				});
+				setCurrentTxHash(hash);
+				setApprovalState({ type: "withdraw", status: ApprovalState.PENDING });
+			});
 		}
 	};
 
 	const claim = async () => {
 		if (selectedOpportunity) {
-			await FarmServices.claim(selectedOpportunity.poolId, address);
+			await FarmServices.claim(selectedOpportunity.poolId, address).then(
+				({ response, hash }) => {
+					addTransaction(response, walletInfo, setTransactions, transactions, {
+						summary: "Claim accumulated PSYS rewards",
+						finished: false,
+					});
+					setCurrentTxHash(hash);
+					setApprovalState({ type: "claim", status: ApprovalState.PENDING });
+				}
+			);
 		}
 	};
 
@@ -68,7 +96,14 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 				typedValue.value.toString(16),
 				address,
 				signature
-			);
+			).then(({ response, hash }) => {
+				addTransaction(response, walletInfo, setTransactions, transactions, {
+					summary: "Deposit liquidity",
+					finished: false,
+				});
+				setCurrentTxHash(hash);
+				setApprovalState({ type: "deposit", status: ApprovalState.PENDING });
+			});
 		}
 	};
 

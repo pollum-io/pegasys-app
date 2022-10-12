@@ -1,6 +1,7 @@
 import { ChainId, JSBI, TokenAmount, WSYS } from "@pollum-io/pegasys-sdk";
 
 import { BigNumber } from "ethers";
+import { ITransactionResponse } from "types";
 import { IEarnInfo } from "../dto";
 import { ContractFramework } from "../frameworks";
 import { BIG_INT_SECONDS_IN_WEEK, PSYS } from "../constants";
@@ -165,22 +166,42 @@ class StakeServices {
 	}
 
 	static async unstakeAndClaim() {
+		let txHash = "";
+		let txResponse: ITransactionResponse | any = null;
 		const contract = ContractFramework.StakeContract(ChainId.NEVM);
 
 		await ContractFramework.call({
 			methodName: "exit",
 			contract,
+		}).then((res: ITransactionResponse) => {
+			txHash = `${res?.hash}`;
+			txResponse = res;
 		});
+
+		return {
+			hash: txHash,
+			response: txResponse,
+		};
 	}
 
 	static async unstake(amount: string) {
+		let txHash = "";
+		let txResponse: ITransactionResponse | any = null;
 		const contract = ContractFramework.StakeContract(ChainId.NEVM);
 
 		await ContractFramework.call({
 			methodName: "withdraw",
 			contract,
 			args: [`0x${amount}`],
+		}).then((res: ITransactionResponse) => {
+			txHash = `${res?.hash}`;
+			txResponse = res;
 		});
+
+		return {
+			hash: txHash,
+			response: txResponse,
+		};
 	}
 
 	static async stake(
@@ -192,6 +213,8 @@ class StakeServices {
 			deadline: BigNumber;
 		}
 	) {
+		let txHash = "";
+		let txResponse: ITransactionResponse | any = null;
 		const contract = ContractFramework.StakeContract(ChainId.NEVM);
 
 		await ContractFramework.call({
@@ -204,16 +227,34 @@ class StakeServices {
 				signatureData.r,
 				signatureData.s,
 			],
+		}).then((res: ITransactionResponse) => {
+			txHash = `${res?.hash}`;
+			txResponse = res;
 		});
+
+		return {
+			hash: txHash,
+			response: txResponse,
+		};
 	}
 
 	static async claim() {
+		let txHash = "";
+		let txResponse: ITransactionResponse | any = null;
 		const contract = ContractFramework.StakeContract(ChainId.NEVM);
 
 		await ContractFramework.call({
 			methodName: "getReward",
 			contract,
+		}).then((res: ITransactionResponse) => {
+			txHash = `${res?.hash}`;
+			txResponse = res;
 		});
+
+		return {
+			hash: txHash,
+			response: txResponse,
+		};
 	}
 }
 

@@ -8,7 +8,7 @@ import {
 } from "@pollum-io/pegasys-sdk";
 import ethers, { BigNumber, Signer } from "ethers";
 
-import { WrappedTokenInfo } from "types";
+import { WrappedTokenInfo, ITransactionResponse } from "types";
 
 import { usePairs as getPairs } from "hooks";
 import { IEarnInfo } from "../dto";
@@ -385,13 +385,23 @@ class FarmServices {
 	}
 
 	static async withdraw(poolId: number, amount: string, address: string) {
+		let txHash = "";
+		let txResponse: ITransactionResponse | any = null;
 		const contract = LpTokenServices.getLpContract();
 
 		await ContractFramework.call({
 			methodName: "withdraw",
 			contract,
 			args: [poolId, `0x${amount}`, address],
+		}).then((res: ITransactionResponse) => {
+			txHash = `${res?.hash}`;
+			txResponse = res;
 		});
+
+		return {
+			hash: txHash,
+			response: txResponse,
+		};
 	}
 
 	static async withdrawAndClaim(
@@ -399,23 +409,43 @@ class FarmServices {
 		amount: string,
 		address: string
 	) {
+		let txHash = "";
+		let txResponse: ITransactionResponse | any = null;
 		const contract = LpTokenServices.getLpContract();
 
 		await ContractFramework.call({
 			methodName: "withdrawAndHarvest",
 			contract,
 			args: [poolId, `0x${amount}`, address],
+		}).then((res: ITransactionResponse) => {
+			txHash = `${res?.hash}`;
+			txResponse = res;
 		});
+
+		return {
+			hash: txHash,
+			response: txResponse,
+		};
 	}
 
 	static async claim(poolId: number, address: string) {
+		let txHash = "";
+		let txResponse: ITransactionResponse | any = null;
 		const contract = LpTokenServices.getLpContract();
 
 		await ContractFramework.call({
 			methodName: "harvest",
 			contract,
 			args: [poolId, address],
+		}).then((res: ITransactionResponse) => {
+			txHash = `${res?.hash}`;
+			txResponse = res;
 		});
+
+		return {
+			hash: txHash,
+			response: txResponse,
+		};
 	}
 
 	static async deposit(
@@ -429,6 +459,8 @@ class FarmServices {
 			deadline: BigNumber;
 		} | null
 	) {
+		let txHash = "";
+		let txResponse: ITransactionResponse | any = null;
 		if (signatureData) {
 			const contract = LpTokenServices.getLpContract();
 
@@ -444,8 +476,20 @@ class FarmServices {
 					signatureData.r,
 					signatureData.s,
 				],
+			}).then((res: ITransactionResponse) => {
+				txHash = `${res?.hash}`;
+				txResponse = res;
 			});
+
+			return {
+				hash: txHash,
+				response: txResponse,
+			};
 		}
+		return {
+			hash: txHash,
+			response: txResponse,
+		};
 	}
 }
 
