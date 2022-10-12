@@ -129,7 +129,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 				}
 			});
 		} else {
-			pairsToRender = [...earnOpportunities];
+			pairsToRender = earnOpportunities;
 		}
 
 		switch (sort) {

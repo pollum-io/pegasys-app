@@ -1,5 +1,4 @@
 import {
-	Button,
 	Flex,
 	Grid,
 	GridItem,
@@ -7,11 +6,17 @@ import {
 	Text,
 	useColorMode,
 } from "@chakra-ui/react";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent } from "react";
 import { useModal, usePicasso } from "hooks";
 import { StakeActions } from "components/Modals/StakeActions";
-import { IEarnInfo, IStakeInfo, useEarn, useStake } from "pegasys-services";
-import { JSBI } from "@pollum-io/pegasys-sdk";
+import {
+	IEarnInfo,
+	IStakeInfo,
+	TButtonId,
+	useEarn,
+	useStake,
+} from "pegasys-services";
+import { EarnButton } from "../Earn";
 
 interface IPoolCards {
 	stakeInfo?: IStakeInfo;
@@ -23,12 +28,12 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 	const { isOpenStakeActions, onOpenStakeActions, onCloseStakeActions } =
 		useModal();
 
-	// const [buttonId, setButtonId] = useState<string>("");
 	const { colorMode } = useColorMode();
-	const { setSelectedOpportunity, buttonId, setButtonId } = useEarn();
+	const { setSelectedOpportunity, setButtonId } = useEarn();
+	const { showInUsd } = useStake();
 
 	const onClick = (id: string) => {
-		setButtonId(id);
+		setButtonId(id as TButtonId);
 		setSelectedOpportunity((stakeInfo as IEarnInfo | undefined) ?? null);
 		onOpenStakeActions();
 	};
@@ -54,12 +59,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 			}
 			background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 		>
-			<StakeActions
-				isOpen={isOpenStakeActions}
-				onClose={onCloseStakeActions}
-				// buttonId={buttonId}
-				// setButtonId={setButtonId}
-			/>
+			<StakeActions isOpen={isOpenStakeActions} onClose={onCloseStakeActions} />
 			<Flex
 				id="header"
 				bg={theme.bg.iconTicket}
@@ -78,28 +78,18 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 				<Text color={theme.text.whitePurple}>
 					Earn {stakeInfo.stakeToken.symbol}
 				</Text>
-				{JSBI.greaterThan(stakeInfo.unclaimedAmount.raw, JSBI.BigInt(0)) && (
-					<Button
-						id="claim"
-						border="1px solid"
-						borderColor={theme.text.cyanPurple}
-						borderRadius="full"
-						w="max-content"
-						h="max-content"
-						color={theme.text.whitePurple}
-						bgColor="transparent"
-						py="1"
-						fontSize="xs"
-						ml="1"
-						onClick={event => onClick(event.currentTarget.id)}
-						_hover={{
-							borderColor: theme.text.cyanLightPurple,
-							color: theme.text.cyanLightPurple,
-						}}
-					>
-						Claim
-					</Button>
-				)}
+				<EarnButton
+					id="claim"
+					py="1"
+					ml="1"
+					width="max-content"
+					height="max-content"
+					onClick={onClick}
+					amount={stakeInfo.unclaimedAmount}
+					fontSize="xs"
+				>
+					Claim
+				</EarnButton>
 			</Flex>
 			<Grid
 				templateColumns={[
@@ -124,7 +114,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						Total staked
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						{stakeInfo.totalStakedAmount.toFixed(10, { groupSeparator: "," })}{" "}
+						{stakeInfo.totalStakedAmount.toSignificant()}{" "}
 						{stakeInfo.stakeToken.symbol}
 					</Text>
 				</GridItem>
@@ -133,10 +123,8 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						Your rate
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						{stakeInfo.rewardRatePerWeek.toFixed(10, {
-							groupSeparator: ",",
-						})}{" "}
-						({stakeInfo.stakeToken.symbol}/Week)
+						{stakeInfo.rewardRatePerWeek.toSignificant()}{" "}
+						{stakeInfo.rewardToken.symbol}/Week
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column">
@@ -144,9 +132,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						Your Staked
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						{stakeInfo.stakedAmount.toFixed(10, {
-							groupSeparator: ",",
-						})}{" "}
+						{stakeInfo.stakedAmount.toSignificant()}{" "}
 						{stakeInfo.stakeToken.symbol}
 					</Text>
 				</GridItem>
@@ -155,10 +141,8 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						Your unclaimed
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						{stakeInfo.unclaimedAmount.toFixed(10, {
-							groupSeparator: ",",
-						})}{" "}
-						{stakeInfo.stakeToken.symbol}
+						{stakeInfo.unclaimedAmount.toSignificant()}{" "}
+						{stakeInfo.rewardToken.symbol}
 					</Text>
 				</GridItem>
 			</Grid>
@@ -170,49 +154,29 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 				alignItems="center"
 				ml={["3rem", "3rem", "0", "0"]}
 			>
-				{JSBI.greaterThan(stakeInfo.stakedAmount.raw, JSBI.BigInt(0)) && (
-					<Button
-						id="withdraw"
-						width={["6.5rem", "8rem", "11.5rem", "11.5rem"]}
-						h="2.2rem"
-						bgColor="transparent"
-						border="1px solid"
-						borderColor={theme.text.cyanPurple}
-						color={theme.text.whitePurple}
-						borderRadius="full"
-						py={["0.2rem", "0.2rem", "1", "1"]}
-						px="0.75rem"
-						fontSize="sm"
-						fontWeight="semibold"
-						onClick={event => onClick(event.currentTarget.id)}
-						_hover={{
-							borderColor: theme.text.cyanLightPurple,
-							color: theme.text.cyanLightPurple,
-						}}
-					>
-						Unstake
-					</Button>
-				)}
-				{JSBI.greaterThan(stakeInfo.unstakedAmount.raw, JSBI.BigInt(0)) && (
-					<Button
-						id="deposit"
-						width={["6.5rem", "8rem", "11.5rem", "11.5rem"]}
-						h="2.2rem"
-						bgColor={theme.bg.blueNavyLightness}
-						color={theme.text.cyan}
-						borderRadius="full"
-						py={["0.2rem", "0.2rem", "1", "1"]}
-						px="0.75rem"
-						fontSize="sm"
-						fontWeight="semibold"
-						onClick={event => onClick(event.currentTarget.id)}
-						_hover={{
-							bgColor: theme.bg.bluePurple,
-						}}
-					>
-						Stake
-					</Button>
-				)}
+				<EarnButton
+					id="withdraw"
+					py={["0.2rem", "0.2rem", "1", "1"]}
+					px="0.75rem"
+					width={["6.5rem", "8rem", "11.5rem", "11.5rem"]}
+					height="2.2rem"
+					onClick={onClick}
+					amount={stakeInfo.stakedAmount}
+				>
+					Unstake
+				</EarnButton>
+				<EarnButton
+					id="deposit"
+					py={["0.2rem", "0.2rem", "1", "1"]}
+					px="0.75rem"
+					width={["6.5rem", "8rem", "11.5rem", "11.5rem"]}
+					height="2.2rem"
+					onClick={onClick}
+					amount={stakeInfo.unstakedAmount}
+					solid
+				>
+					Stake
+				</EarnButton>
 			</Flex>
 		</Flex>
 	);

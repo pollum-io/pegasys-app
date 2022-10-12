@@ -1,9 +1,10 @@
-import { Button, Flex, Img, Text } from "@chakra-ui/react";
+import { Flex, Img, Text } from "@chakra-ui/react";
 import { FunctionComponent, useMemo } from "react";
 import { useModal, usePicasso, useTokens } from "hooks";
 import { IFarmInfo, useEarn, TButtonId } from "pegasys-services";
 import { JSBI } from "@pollum-io/pegasys-sdk";
 import { formattedNum } from "utils/numberFormat";
+import { EarnButton } from "../Earn";
 
 const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 	stakeInfo,
@@ -20,6 +21,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 		rewardRatePerWeek,
 		totalStakedInUsd,
 		stakedInUsd,
+		rewardToken,
 	} = stakeInfo;
 
 	const theme = usePicasso();
@@ -63,7 +65,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 						<Img src={tokenBLogo} w="6" h="6" />
 					</Flex>
 					<Text className="text" fontSize="lg" fontWeight="bold">
-						farm of
+						{tokenA.symbol}-{tokenB.symbol}
 					</Text>
 				</Flex>
 				<Flex
@@ -121,119 +123,54 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 					<Flex justifyContent="space-between" pb="0.75rem" fontSize="sm">
 						<Text fontWeight="semibold">Your Rate</Text>
 						<Text>
-							{rewardRatePerWeek.toFixed(6, {
-								groupSeparator: ",",
-							})}{" "}
-							PSYS/Week
+							{rewardRatePerWeek.toSignificant()} {rewardToken.symbol}/Week
 						</Text>
 					</Flex>
 					<Flex justifyContent="space-between" fontSize="sm">
-						<Text fontWeight="semibold">Your Unclaimed PSYS</Text>
+						<Text fontWeight="semibold">Your Unclaimed</Text>
 						<Text>
-							{unclaimedAmount.toFixed(6, {
-								groupSeparator: ",",
-							})}
+							{unclaimedAmount.toSignificant()} {rewardToken.symbol}
 						</Text>
 					</Flex>
 				</Flex>
 			)}
 			<Flex gap="2" py="1" flexDirection="row">
-				{JSBI.greaterThan(stakedAmount.raw, JSBI.BigInt(0)) && (
-					<Button
-						id="withdraw"
-						fontSize="sm"
-						fontWeight="semibold"
-						py="0.625rem"
-						px="1.5rem"
-						w="100%"
-						h="max-content"
-						bgColor={theme.bg.blueNavyLightness}
-						color={theme.text.cyan}
-						_hover={{
-							opacity: "1",
-							bgColor: theme.bg.bluePurple,
-						}}
-						_active={{}}
-						borderRadius="full"
-						onClick={event => onClick(event.currentTarget.id)}
-					>
-						Withdraw
-					</Button>
-				)}
-				{JSBI.greaterThan(unstakedAmount.raw, JSBI.BigInt(0)) && (
-					<Button
-						id="deposit"
-						fontSize="sm"
-						fontWeight="semibold"
-						py="0.625rem"
-						px="1.5rem"
-						w="100%"
-						h="max-content"
-						bgColor={theme.bg.blueNavyLightness}
-						color={theme.text.cyan}
-						_hover={{
-							opacity: "1",
-							bgColor: theme.bg.bluePurple,
-						}}
-						_active={{}}
-						borderRadius="full"
-						onClick={event => onClick(event.currentTarget.id)}
-					>
-						Deposit
-					</Button>
-				)}
-			</Flex>
-			{JSBI.greaterThan(unclaimedAmount.raw, JSBI.BigInt(0)) && (
-				<Button
-					id="claim"
-					w="100%"
-					mt="1rem"
-					py="1"
-					px="6"
-					borderRadius="full"
-					bgColor="transparent"
-					borderWidth="1px"
-					color={theme.text.whitePurple}
-					borderColor={theme.text.cyanPurple}
-					fontSize="sm"
-					fontWeight="semibold"
-					onClick={event => onClick(event.currentTarget.id)}
-					_hover={{
-						borderColor: theme.text.cyanLightPurple,
-						color: theme.text.cyanLightPurple,
-					}}
+				<EarnButton
+					id="withdraw"
+					py="0.625rem"
+					px="1.5rem"
+					width="100%"
+					height="max-content"
+					onClick={onClick}
+					amount={stakedAmount}
+					solid
 				>
-					Claim
-				</Button>
-			)}
-			{/* {JSBI.equal(unclaimedAmount.raw, JSBI.BigInt(0)) &&
-				JSBI.equal(unclaimedAmount.raw, JSBI.BigInt(0)) &&
-				JSBI.equal(
-					unclaimedAmount.raw,
-					JSBI.BigInt(0)
-				)(
-					<Button
-						id="claim"
-						w="100%"
-						mt="1rem"
-						py="1"
-						px="6"
-						borderRadius="full"
-						bgColor="transparent"
-						borderWidth="1px"
-						color={theme.text.whitePurple}
-						borderColor={theme.text.cyanPurple}
-						fontSize="sm"
-						fontWeight="semibold"
-						onClick={event => onClick(event.currentTarget.id)}
-						_hover={{
-							borderColor: theme.text.cyanLightPurple,
-							color: theme.text.cyanLightPurple,
-						}}
-					>
-						Claim
-					</Button>
-				)} */}
+					Withdraw
+				</EarnButton>
+				<EarnButton
+					id="deposit"
+					py="0.625rem"
+					px="1.5rem"
+					width="100%"
+					height="max-content"
+					onClick={onClick}
+					amount={unstakedAmount}
+					solid
+				>
+					Deposit
+				</EarnButton>
+			</Flex>
+			<EarnButton
+				id="claim"
+				py="1"
+				px="6"
+				width="100%"
+				mt="1rem"
+				onClick={onClick}
+				amount={unclaimedAmount}
+			>
+				Claim
+			</EarnButton>
 		</Flex>
 	);
 };

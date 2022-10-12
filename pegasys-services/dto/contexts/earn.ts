@@ -18,7 +18,10 @@ export interface IEarnInfo {
 	totalRewardRatePerWeek: TokenAmount;
 	stakedInUsd: JSBI;
 	totalStakedInUsd: TokenAmount;
-	[k: string]: any;
+	tokenA: Token;
+	tokenB?: Token;
+	extraRewardToken?: Token;
+	extraTotalRewardToken?: TokenAmount;
 }
 
 export type TButtonId = "withdraw" | "claim" | "deposit" | null;
