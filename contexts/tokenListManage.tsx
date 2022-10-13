@@ -65,17 +65,6 @@ export const TokensListManageProvider: React.FC<{
 			tokenListManageState.byUrl[listUrl].current as TokenList
 		) as TokenAddressMap;
 
-		const getCurrentListByState = tokenListManageState.byUrl[
-			listUrl
-		].current?.tokens.map(token => {
-			const tokenWithBalance = {
-				...token,
-				balance: "0",
-			};
-
-			return new WrappedTokenInfo(tokenWithBalance);
-		}) as WrappedTokenInfo[];
-
 		if (getCurrentListCache) {
 			const transformListObject = Object.assign(getCurrentListCache);
 
@@ -86,8 +75,19 @@ export const TokensListManageProvider: React.FC<{
 				token => token
 			) as WrappedTokenInfo[];
 
+			const convertCurrentListByState = tokenListManageState.byUrl[
+				listUrl
+			].current?.tokens.map(token => {
+				const tokenWithBalance = {
+					...token,
+					balance: "0",
+				};
+
+				return new WrappedTokenInfo(tokenWithBalance);
+			}) as WrappedTokenInfo[];
+
 			const filterExistentTokens = convertFoundedTokens.filter(convertTokens =>
-				getCurrentListByState.some(
+				convertCurrentListByState.some(
 					stateTokens =>
 						String(convertTokens?.tokenInfo?.address) ===
 						String(stateTokens?.tokenInfo?.address)
