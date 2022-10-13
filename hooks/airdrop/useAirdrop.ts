@@ -9,14 +9,19 @@ import {
 	createContractUsingAbi,
 	singleCall,
 } from "utils";
-import { Signer } from "ethers";
+import { Signer, ethers } from "ethers";
 import { ITransactionResponse, ITx, IWalletHookInfos } from "types";
 import { ApprovalState, IApprovalState } from "contexts";
 
 export const userHasAvailableClaim = async (
 	address: string,
 	chainId: ChainId,
-	signer: Signer
+	signer:
+		| ethers.providers.Provider
+		| ethers.providers.Web3Provider
+		| ethers.providers.JsonRpcProvider
+		| Signer
+		| undefined
 ) => {
 	// eslint-disable-next-line
 	// @ts-ignore
@@ -37,7 +42,12 @@ export const userHasAvailableClaim = async (
 export const userUnclaimedAmount = async (
 	address: string,
 	chainId: ChainId,
-	signer: Signer
+	signer:
+		| ethers.providers.Provider
+		| ethers.providers.Web3Provider
+		| ethers.providers.JsonRpcProvider
+		| Signer
+		| undefined
 ) => {
 	// eslint-disable-next-line
 	// @ts-ignore
@@ -56,7 +66,12 @@ export const userUnclaimedAmount = async (
 export const useClaimCallback = (
 	address: string,
 	chainId: ChainId,
-	signer: Signer,
+	signer:
+		| ethers.providers.Provider
+		| ethers.providers.Web3Provider
+		| ethers.providers.JsonRpcProvider
+		| Signer
+		| undefined,
 	walletInfos: IWalletHookInfos,
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
 	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
@@ -73,7 +88,8 @@ export const useClaimCallback = (
 	);
 
 	const claimCallback = async () => {
-		if (!address || !airDropContract || !chainId || !signer) return undefined;
+		if (!address || !airDropContract || !chainId || !signer || !userClaimData)
+			return undefined;
 		const args = [
 			userClaimData.index,
 			address,

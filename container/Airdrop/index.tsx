@@ -44,7 +44,7 @@ export const AirdropContainer: NextPage = () => {
 	const chainId =
 		currentNetworkChainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
 
-	const [isNotAvailable, setIsNotAvailable] = useState<boolean>(true);
+	const [isAvailable, setIsAvailable] = useState<boolean>(true);
 	const [isClaim, setIsClaim] = useState<boolean>(false);
 	const [isClaimed, setIsClaimed] = useState<boolean>(false);
 	const [availableClaimAmount, setAvailableClaimAmount] =
@@ -77,15 +77,15 @@ export const AirdropContainer: NextPage = () => {
 		const canClaim = await userHasAvailableClaim(
 			walletAddress,
 			chainId,
-			signer as Signer
+			provider
 		);
 		setIsClaim(canClaim);
 
-		if (!canClaim) return setIsNotAvailable(true);
+		if (!canClaim) return setIsAvailable(false);
 		const claimAmount = await userUnclaimedAmount(
 			walletAddress,
 			chainId,
-			signer as Signer
+			provider
 		);
 		setAvailableClaimAmount(claimAmount);
 
@@ -173,7 +173,7 @@ export const AirdropContainer: NextPage = () => {
 						</BorderAnimation>
 					) : (
 						<Flex w="100%">
-							{isNotAvailable && (
+							{!isAvailable && (
 								<BorderAnimation>
 									<Flex
 										gap={["4", "4", "40", "40"]}
