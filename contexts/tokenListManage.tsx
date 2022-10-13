@@ -1,4 +1,4 @@
-import { Token } from "@pollum-io/pegasys-sdk";
+import { ChainId, Token } from "@pollum-io/pegasys-sdk";
 import { TokenInfo, TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
 import { Signer } from "ethers";
 import { DEFAULT_TOKEN_LISTS_SELECTED, SYS_LOGO } from "helpers/consts";
@@ -19,7 +19,7 @@ interface ITokensListManageContext {
 	tokenListManageState: ListsState;
 	currentTokensToDisplay: WrappedTokenInfo[];
 	UseSelectedListUrl: () => string[] | undefined;
-	UseSelectedTokenList: () => TokenAddressMap;
+	UseSelectedTokenList: () => Promise<TokenAddressMap>;
 	removeListFromListState: (listUrl: string) => void;
 	addListToListState: (listUrl: string) => void;
 	toggleListByUrl: (listUrl: string, shouldToggle: boolean) => void;
@@ -340,7 +340,9 @@ export const TokensListManageProvider: React.FC<{
 		return mapAroundList;
 	};
 
-	const useTokenList = (urls: string[] | undefined): TokenAddressMap => {
+	const useTokenList = async (
+		urls: string[] | undefined
+	): Promise<TokenAddressMap> => {
 		const lists = tokenListManageState.byUrl;
 
 		const tokenList = {} as {
@@ -349,27 +351,29 @@ export const TokensListManageProvider: React.FC<{
 
 		const formattedUrls = ([] as string[]).concat(urls || []);
 
-		formattedUrls.forEach(url => {
-			const currentUrl = lists[url]?.current;
+		await Promise.all(
+			formattedUrls.map(async url => {
+				const currentUrl = lists[url]?.current;
 
-			if (url && currentUrl) {
-				try {
-					listToTokenMap(currentUrl).then(data => {
-						// eslint-disable-next-line
-						for (const [chainId, tokens] of Object.entries(data)) {
+				if (url && currentUrl) {
+					try {
+						const dataFromList = await listToTokenMap(currentUrl);
+
+						Object.entries(dataFromList).forEach(([chainId, tokens]) => {
 							tokenList[chainId] = tokenList[chainId] || {};
 
 							tokenList[chainId] = {
 								...tokenList[chainId],
 								...tokens,
 							};
-						}
-					});
-				} catch (error) {
-					console.log("Could not show token list due to error", error);
+						});
+					} catch (error) {
+						console.log("Could not show token list due to error", error);
+					}
 				}
-			}
-		});
+			})
+		);
+
 		return tokenList as TokenAddressMap;
 	};
 
@@ -444,15 +448,20 @@ export const TokensListManageProvider: React.FC<{
 	const UseSelectedListUrl = (): string[] | undefined =>
 		([] as string[]).concat(tokenListManageState?.selectedListUrl || []);
 
-	const UseSelectedTokenList = (): TokenAddressMap =>
+	const UseSelectedTokenList = (): Promise<TokenAddressMap> =>
 		useTokenList(UseSelectedListUrl());
 
 	// HANDLE FUNCTIONS TO FILL AND MANAGE TOKEN LIST MANAGE STATE AT ALL AND ALSO WEAK MAP LISTS //
 
 	useEffect(() => {
+		if (
+			Object.keys(tokenListManageState?.byUrl).length === 0 ||
+			tokenListManageState.selectedListUrl?.length === 0
+		)
+			return;
+
 		UseSelectedTokenList();
 
-		if (!tokenListManageState?.byUrl) return;
 		Object.keys(tokenListManageState?.byUrl).forEach(url =>
 			fetchAndFulfilledTokenListManage(url)
 		);
@@ -466,7 +475,11 @@ export const TokensListManageProvider: React.FC<{
 	]);
 
 	useEffect(() => {
-		const filterTokens = Object.values(tokensWithBalance[57]).filter(
+		if (listToAdd !== "" || listToRemove !== "") return;
+
+		const convertChain = Number(currentNetworkChainId || 57) as ChainId;
+
+		const filterTokens = Object.values(tokensWithBalance[convertChain]).filter(
 			tokens =>
 				tokens.symbol !== "AGEUR" &&
 				tokens.symbol !== "MAI" &&
@@ -476,8 +489,9 @@ export const TokensListManageProvider: React.FC<{
 		setCurrentTokensToDisplay(filterTokens);
 	}, [
 		currentNetworkChainId,
+		listToAdd,
+		listToRemove,
 		walletAddress,
-		tokensWithBalance,
 		tokensWithBalance[57],
 		tokensWithBalance[5700],
 	]);
