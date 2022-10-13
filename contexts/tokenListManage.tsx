@@ -61,12 +61,23 @@ export const TokensListManageProvider: React.FC<{
 	const findAndReturnTokensByListUrl = (
 		listUrl: string
 	): WrappedTokenInfo[] => {
-		const getCurrentList = tokenListCache?.get(
+		const getCurrentListCache = tokenListCache?.get(
 			tokenListManageState.byUrl[listUrl].current as TokenList
 		) as TokenAddressMap;
 
-		if (getCurrentList) {
-			const transformListObject = Object.assign(getCurrentList);
+		const getCurrentListByState = tokenListManageState.byUrl[
+			listUrl
+		].current?.tokens.map(token => {
+			const tokenWithBalance = {
+				...token,
+				balance: "0",
+			};
+
+			return new WrappedTokenInfo(tokenWithBalance);
+		}) as WrappedTokenInfo[];
+
+		if (getCurrentListCache) {
+			const transformListObject = Object.assign(getCurrentListCache);
 
 			const findTokensByChain =
 				transformListObject[currentNetworkChainId || 57];
@@ -75,7 +86,15 @@ export const TokensListManageProvider: React.FC<{
 				token => token
 			) as WrappedTokenInfo[];
 
-			const verifyIfListHasUnecessaryTokens = convertFoundedTokens.findIndex(
+			const filterExistentTokens = convertFoundedTokens.filter(convertTokens =>
+				getCurrentListByState.some(
+					stateTokens =>
+						String(convertTokens?.tokenInfo?.address) ===
+						String(stateTokens?.tokenInfo?.address)
+				)
+			);
+
+			const verifyIfListHasUnecessaryTokens = filterExistentTokens.findIndex(
 				token =>
 					token.symbol === "AGEUR" ||
 					token.symbol === "MAI" ||
@@ -83,7 +102,7 @@ export const TokensListManageProvider: React.FC<{
 			);
 
 			if (verifyIfListHasUnecessaryTokens !== -1) {
-				const unecessaryTokensRemoved = convertFoundedTokens.filter(
+				const unecessaryTokensRemoved = filterExistentTokens.filter(
 					token =>
 						token.symbol !== "AGEUR" &&
 						token.symbol !== "MAI" &&
@@ -92,7 +111,7 @@ export const TokensListManageProvider: React.FC<{
 
 				return unecessaryTokensRemoved;
 			}
-			return convertFoundedTokens;
+			return filterExistentTokens;
 		}
 
 		return [];
@@ -222,12 +241,6 @@ export const TokensListManageProvider: React.FC<{
 
 					const token = new WrappedTokenInfo(tokenInfoWithBalance);
 
-					if (tokenMap[token.chainId][token.address] !== undefined)
-						console.log(
-							"Duplicated token",
-							tokenMap[token.chainId][token.address]
-						);
-
 					setTokensWithBalance((prevState: TokenAddressMap) => {
 						prevState[token.chainId] = {
 							...prevState[token.chainId],
@@ -236,6 +249,13 @@ export const TokensListManageProvider: React.FC<{
 
 						return { ...prevState };
 					});
+
+					if (tokenMap[token.chainId][token.address] !== undefined)
+						console.log(
+							"Duplicated token",
+							tokenMap[token.chainId][token.address]
+						);
+
 					return {
 						...tokenMap,
 						[token.chainId]: {
@@ -289,12 +309,6 @@ export const TokensListManageProvider: React.FC<{
 			(tokenMap, tokenInfo) => {
 				const token = new WrappedTokenInfo(tokenInfo);
 
-				if (tokenMap[token.chainId][token.address] !== undefined)
-					console.log(
-						"Duplicated token",
-						tokenMap[token.chainId][token.address]
-					);
-
 				setTokensWithBalance((prevState: TokenAddressMap) => {
 					prevState[token.chainId] = {
 						...prevState[token.chainId],
@@ -303,6 +317,13 @@ export const TokensListManageProvider: React.FC<{
 
 					return { ...prevState };
 				});
+
+				if (tokenMap[token.chainId][token.address] !== undefined)
+					console.log(
+						"Duplicated token",
+						tokenMap[token.chainId][token.address]
+					);
+
 				return {
 					...tokenMap,
 					[token.chainId]: {
@@ -460,6 +481,8 @@ export const TokensListManageProvider: React.FC<{
 		tokensWithBalance[57],
 		tokensWithBalance[5700],
 	]);
+
+	console.log("listCache", tokenListCache);
 
 	useMemo(() => {
 		if (listToAdd === "" && listToRemove === "") return;
