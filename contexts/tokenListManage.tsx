@@ -49,6 +49,9 @@ export const TokensListManageProvider: React.FC<{
 	const [listToAdd, setListToAdd] = useState<string>("");
 	const [listToRemove, setListToRemove] = useState<string>("");
 
+	const [tokensWithBalance, setTokensWithBalance] =
+		useState<TokenAddressMap>(EMPTY_TOKEN_LIST);
+
 	const { isConnected, provider, walletAddress, currentNetworkChainId } =
 		useWallet();
 
@@ -246,6 +249,15 @@ export const TokensListManageProvider: React.FC<{
 							"Duplicated token",
 							tokenMap[token.chainId][token.address]
 						);
+
+					setTokensWithBalance((prevState: TokenAddressMap) => {
+						prevState[token.chainId] = {
+							...prevState[token.chainId],
+							[token.address]: token,
+						};
+
+						return { ...prevState };
+					});
 					return {
 						...tokenMap,
 						[token.chainId]: {
@@ -304,6 +316,15 @@ export const TokensListManageProvider: React.FC<{
 						"Duplicated token",
 						tokenMap[token.chainId][token.address]
 					);
+
+				setTokensWithBalance((prevState: TokenAddressMap) => {
+					prevState[token.chainId] = {
+						...prevState[token.chainId],
+						[token.address]: token,
+					};
+
+					return { ...prevState };
+				});
 				return {
 					...tokenMap,
 					[token.chainId]: {
@@ -453,6 +474,23 @@ export const TokensListManageProvider: React.FC<{
 		currentNetworkChainId,
 		tokenListManageState?.selectedListUrl,
 		isFirstRender,
+	]);
+
+	useEffect(() => {
+		const filterTokens = Object.values(tokensWithBalance[57]).filter(
+			tokens =>
+				tokens.symbol !== "AGEUR" &&
+				tokens.symbol !== "MAI" &&
+				tokens.symbol !== "QI"
+		);
+
+		setCurrentTokensToDisplay(filterTokens);
+	}, [
+		currentNetworkChainId,
+		walletAddress,
+		tokensWithBalance,
+		tokensWithBalance[57],
+		tokensWithBalance[5700],
 	]);
 
 	useMemo(() => {

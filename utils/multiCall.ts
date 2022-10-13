@@ -6,8 +6,6 @@ export const multiCall = async (
 	parameters?: string
 ) => {
 	try {
-		console.log("contract", contract);
-
 		const contractCalls = await Promise.all(
 			contract.map((call: Contract) => {
 				if (call instanceof Contract) {
