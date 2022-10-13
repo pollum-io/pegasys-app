@@ -44,7 +44,7 @@ export const TokensListManageProvider: React.FC<{
 		WrappedTokenInfo[]
 	>([]);
 
-	let isFirstRender = false;
+	const isFirstRender = false;
 
 	const [listToAdd, setListToAdd] = useState<string>("");
 	const [listToRemove, setListToRemove] = useState<string>("");
@@ -145,28 +145,6 @@ export const TokensListManageProvider: React.FC<{
 			return prevState;
 		});
 		setListToRemove("");
-	};
-
-	const handleTokensToDisplay = () => {
-		if (
-			Object.keys(tokenListManageState?.byUrl).length === 0 ||
-			tokenListManageState?.selectedListUrl?.length === 0
-		)
-			return;
-
-		tokenListManageState?.selectedListUrl?.map((listUrl, index) => {
-			const transformListByUrl = Object.keys(tokenListManageState.byUrl);
-
-			const listExist = transformListByUrl.includes(listUrl);
-
-			if (listExist) addTokensToTokensDisplayState(listUrl);
-
-			if (index === tokenListManageState.selectedListUrl?.length) {
-				isFirstRender = true;
-			}
-
-			return {};
-		});
 	};
 
 	// END UTILS FUNCTIONS TO HANDLE DISPLAY TOKEN STATE //
@@ -464,16 +442,6 @@ export const TokensListManageProvider: React.FC<{
 		tokenListManageState.selectedListUrl,
 		walletAddress,
 		currentNetworkChainId,
-	]);
-
-	useEffect(() => {
-		if (tokenListManageState?.selectedListUrl?.length === 0) return;
-
-		if (!isFirstRender) handleTokensToDisplay();
-	}, [
-		currentNetworkChainId,
-		tokenListManageState?.selectedListUrl,
-		isFirstRender,
 	]);
 
 	useEffect(() => {
