@@ -173,7 +173,7 @@ export const AirdropContainer: NextPage = () => {
 						</BorderAnimation>
 					) : (
 						<Flex w="100%">
-							{!isAvailable && (
+							{!isAvailable && !isClaimed && (
 								<BorderAnimation>
 									<Flex
 										gap={["4", "4", "40", "40"]}
@@ -267,7 +267,7 @@ export const AirdropContainer: NextPage = () => {
 													_active={{}}
 													borderRadius="full"
 												>
-													<Flex className="circleLoading" pr="2" />
+													<Flex className="circleLoading" pr="2" mr="2" />
 													Claiming...
 												</Button>
 											)}
