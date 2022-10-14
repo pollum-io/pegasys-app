@@ -106,55 +106,6 @@ export const TokensListManageProvider: React.FC<{
 		return [];
 	};
 
-	// const addTokensToTokensDisplayState = (listUrl: string) => {
-	// 	const currentReceivedTokens = findAndReturnTokensByListUrl(listUrl);
-
-	// 	const existTokenValueInList = ([] as WrappedTokenInfo[]).concat(
-	// 		currentTokensToDisplay || []
-	// 	);
-
-	// 	const tokenValueAlreadyExist = existTokenValueInList.filter(token =>
-	// 		currentReceivedTokens.some(
-	// 			filterTokens =>
-	// 				token.tokenInfo.address === filterTokens.tokenInfo.address
-	// 		)
-	// 	);
-
-	// 	if (tokenValueAlreadyExist.length > 0) {
-	// 		return;
-	// 	}
-
-	// 	if (
-	// 		tokenValueAlreadyExist.length === 0 &&
-	// 		currentReceivedTokens.length > 0
-	// 	) {
-	// 		setCurrentTokensToDisplay(prevState => [
-	// 			...prevState,
-	// 			...currentReceivedTokens,
-	// 		]);
-	// 	}
-
-	// 	setListToAdd("");
-	// };
-
-	// const findAndRemoveTokenFromList = (listUrl: string) => {
-	// 	const currentReceivedTokens = findAndReturnTokensByListUrl(listUrl);
-
-	// 	const existValueInList = ([] as WrappedTokenInfo[]).concat(
-	// 		...(currentTokensToDisplay || [])
-	// 	);
-
-	// 	const searchForTokensToRemove = existValueInList.filter(
-	// 		token => !currentReceivedTokens.includes(token)
-	// 	);
-
-	// 	setCurrentTokensToDisplay(prevState => {
-	// 		prevState = searchForTokensToRemove;
-	// 		return prevState;
-	// 	});
-	// 	setListToRemove("");
-	// };
-
 	// END UTILS FUNCTIONS TO HANDLE DISPLAY TOKEN STATE //
 
 	// HANDLE FUNCTIONS TO FILL AND MANAGE TOKEN LIST MANAGE STATE AT ALL AND ALSO WEAK MAP LISTS //
