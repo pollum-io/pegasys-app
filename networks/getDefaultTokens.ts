@@ -1,4 +1,5 @@
 import { TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
+import { IGetTokenListByUrl } from "types";
 import { returnConvertedUrl } from "utils/returnConvertedUrl";
 
 const getDefaultTokens = (
@@ -12,11 +13,6 @@ const getDefaultTokens = (
 			: "https://raw.githubusercontent.com/Pollum-io/pegasys-tokenlists/master/pegasys.tokenlist.json"
 	).then(res => res.json());
 };
-
-interface IGetTokenListByUrl {
-	response: TokenList;
-	id: string;
-}
 
 const getTokenListByUrl = async (
 	listUrl: string

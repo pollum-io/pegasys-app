@@ -8,3 +8,4 @@ export * from "./ITransactionResponse";
 export * from "./IMockedDatas";
 export * from "./ITokenListManage";
 export * from "./IAdressesAndBalances";
+export * from "./IGetDefaultTokens";

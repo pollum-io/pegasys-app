@@ -1202,13 +1202,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						</Flex>
 						<Flex
 							my={`${
-								tokensGraphCandleData.length === 0 && !isLoadingGraphCandles
+								tokensGraphCandleData?.length === 0 && !isLoadingGraphCandles
 									? "0"
 									: "6"
 							}`}
 							justifyContent="center"
 						>
-							{tokensGraphCandleData.length !== 0 && (
+							{tokensGraphCandleData?.length !== 0 && (
 								<FilterButton
 									periodStateValue={tokensGraphCandlePeriod}
 									setPeriod={setTokensGraphCandlePeriod}

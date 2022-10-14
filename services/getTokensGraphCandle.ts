@@ -29,5 +29,5 @@ export async function getTokensGraphCandle(
 		.catch(() => setIsLoadingCandles(false))
 		.finally(() => setIsLoadingCandles(false));
 
-	return result?.data?.candles;
+	return result?.data?.candles || [];
 }

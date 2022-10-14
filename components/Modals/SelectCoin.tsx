@@ -65,7 +65,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const { setApprovalState, approvalState } = useWallet();
 	const { t: translation } = useTranslation();
 
-	const { currentTokensToDisplay } = useTokensListManage();
+	const { userTokensBalance } = useTokens();
 
 	const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
 		const inputValue = event.target.value;
@@ -108,10 +108,9 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	};
 
 	useMemo(() => {
-		const orderedTokens = currentTokensToDisplay
+		const orderedTokens = userTokensBalance
 			.map((token, index: number) => {
-				const obj =
-					currentTokensToDisplay[currentTokensToDisplay.length - index - 1];
+				const obj = userTokensBalance[userTokensBalance.length - index - 1];
 
 				return obj;
 			})
@@ -124,7 +123,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 
 		setDefaultTokens(orderedTokens);
 		setFilter(orderedTokens);
-	}, [currentTokensToDisplay]);
+	}, [userTokensBalance]);
 
 	const handleSelectToken = useCallback(
 		(id: number, token: WrappedTokenInfo) => {

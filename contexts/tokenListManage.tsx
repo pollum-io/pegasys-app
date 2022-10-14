@@ -17,16 +17,12 @@ import { getBalanceOfSingleCall, getProviderBalance } from "utils";
 
 interface ITokensListManageContext {
 	tokenListManageState: ListsState;
-	currentTokensToDisplay: WrappedTokenInfo[];
+	currentCacheListTokensToDisplay: WrappedTokenInfo[];
 	UseSelectedListUrl: () => string[] | undefined;
 	UseSelectedTokenList: () => Promise<TokenAddressMap>;
 	removeListFromListState: (listUrl: string) => void;
 	addListToListState: (listUrl: string) => void;
 	toggleListByUrl: (listUrl: string, shouldToggle: boolean) => void;
-}
-
-interface ITokenInfoWithBalance extends TokenInfo {
-	balance: string;
 }
 
 export const TokensListManageContext = createContext(
@@ -40,20 +36,13 @@ export const TokensListManageProvider: React.FC<{
 		INITIAL_TOKEN_LIST_STATE
 	);
 
-	const [currentTokensToDisplay, setCurrentTokensToDisplay] = useState<
-		WrappedTokenInfo[]
-	>([]);
-
-	const isFirstRender = false;
+	const [currentCacheListTokensToDisplay, setCurrentCacheListTokensToDisplay] =
+		useState<WrappedTokenInfo[]>([]);
 
 	const [listToAdd, setListToAdd] = useState<string>("");
 	const [listToRemove, setListToRemove] = useState<string>("");
 
-	const [tokensWithBalance, setTokensWithBalance] =
-		useState<TokenAddressMap>(EMPTY_TOKEN_LIST);
-
-	const { isConnected, provider, walletAddress, currentNetworkChainId } =
-		useWallet();
+	const { walletAddress, currentNetworkChainId } = useWallet();
 
 	const { toast } = useToasty();
 
@@ -117,54 +106,54 @@ export const TokensListManageProvider: React.FC<{
 		return [];
 	};
 
-	const addTokensToTokensDisplayState = (listUrl: string) => {
-		const currentReceivedTokens = findAndReturnTokensByListUrl(listUrl);
+	// const addTokensToTokensDisplayState = (listUrl: string) => {
+	// 	const currentReceivedTokens = findAndReturnTokensByListUrl(listUrl);
 
-		const existTokenValueInList = ([] as WrappedTokenInfo[]).concat(
-			currentTokensToDisplay || []
-		);
+	// 	const existTokenValueInList = ([] as WrappedTokenInfo[]).concat(
+	// 		currentTokensToDisplay || []
+	// 	);
 
-		const tokenValueAlreadyExist = existTokenValueInList.filter(token =>
-			currentReceivedTokens.some(
-				filterTokens =>
-					token.tokenInfo.address === filterTokens.tokenInfo.address
-			)
-		);
+	// 	const tokenValueAlreadyExist = existTokenValueInList.filter(token =>
+	// 		currentReceivedTokens.some(
+	// 			filterTokens =>
+	// 				token.tokenInfo.address === filterTokens.tokenInfo.address
+	// 		)
+	// 	);
 
-		if (tokenValueAlreadyExist.length > 0) {
-			return;
-		}
+	// 	if (tokenValueAlreadyExist.length > 0) {
+	// 		return;
+	// 	}
 
-		if (
-			tokenValueAlreadyExist.length === 0 &&
-			currentReceivedTokens.length > 0
-		) {
-			setCurrentTokensToDisplay(prevState => [
-				...prevState,
-				...currentReceivedTokens,
-			]);
-		}
+	// 	if (
+	// 		tokenValueAlreadyExist.length === 0 &&
+	// 		currentReceivedTokens.length > 0
+	// 	) {
+	// 		setCurrentTokensToDisplay(prevState => [
+	// 			...prevState,
+	// 			...currentReceivedTokens,
+	// 		]);
+	// 	}
 
-		setListToAdd("");
-	};
+	// 	setListToAdd("");
+	// };
 
-	const findAndRemoveTokenFromList = (listUrl: string) => {
-		const currentReceivedTokens = findAndReturnTokensByListUrl(listUrl);
+	// const findAndRemoveTokenFromList = (listUrl: string) => {
+	// 	const currentReceivedTokens = findAndReturnTokensByListUrl(listUrl);
 
-		const existValueInList = ([] as WrappedTokenInfo[]).concat(
-			...(currentTokensToDisplay || [])
-		);
+	// 	const existValueInList = ([] as WrappedTokenInfo[]).concat(
+	// 		...(currentTokensToDisplay || [])
+	// 	);
 
-		const searchForTokensToRemove = existValueInList.filter(
-			token => !currentReceivedTokens.includes(token)
-		);
+	// 	const searchForTokensToRemove = existValueInList.filter(
+	// 		token => !currentReceivedTokens.includes(token)
+	// 	);
 
-		setCurrentTokensToDisplay(prevState => {
-			prevState = searchForTokensToRemove;
-			return prevState;
-		});
-		setListToRemove("");
-	};
+	// 	setCurrentTokensToDisplay(prevState => {
+	// 		prevState = searchForTokensToRemove;
+	// 		return prevState;
+	// 	});
+	// 	setListToRemove("");
+	// };
 
 	// END UTILS FUNCTIONS TO HANDLE DISPLAY TOKEN STATE //
 
@@ -216,119 +205,25 @@ export const TokensListManageProvider: React.FC<{
 	const listToTokenMap = async (list: TokenList): Promise<TokenAddressMap> => {
 		const verifyCurrentList = tokenListCache?.get(list);
 
-		if (verifyCurrentList && !isConnected) return verifyCurrentList;
+		if (verifyCurrentList) return verifyCurrentList;
 
-		const SYSToken: TokenInfo = {
-			...list.tokens.find(token => token.symbol === "WSYS"),
-			name: "Syscoin",
-			symbol: "SYS",
-			logoURI: SYS_LOGO,
-		} as TokenInfo;
-
-		const validateDefaultName = ["Pegasys Default", "Tanenbaum Tokens"];
-
-		const listWithAllTokens = validateDefaultName.includes(list.name)
-			? [...list.tokens, SYSToken]
-			: list.tokens;
-
-		if (!isConnected || !provider) {
-			const mapAroundList = listWithAllTokens.reduce<TokenAddressMap>(
-				(tokenMap, tokenInfo) => {
-					const tokenInfoWithBalance = {
-						...tokenInfo,
-						balance: "0",
-					};
-
-					const token = new WrappedTokenInfo(tokenInfoWithBalance);
-
-					setTokensWithBalance((prevState: TokenAddressMap) => {
-						prevState[token.chainId] = {
-							...prevState[token.chainId],
-							[token.address]: token,
-						};
-
-						return { ...prevState };
-					});
-
-					if (tokenMap[token.chainId][token.address] !== undefined)
-						console.log(
-							"Duplicated token",
-							tokenMap[token.chainId][token.address]
-						);
-
-					return {
-						...tokenMap,
-						[token.chainId]: {
-							...tokenMap[token.chainId],
-							[token.address]: token,
-						},
-					};
-				},
-				{ ...EMPTY_TOKEN_LIST }
-			);
-
-			tokenListCache?.set(list, mapAroundList);
-
-			return mapAroundList;
-		}
-
-		const { providerBalanceFormattedValue, validatedAddress } =
-			await getProviderBalance(provider, walletAddress);
-
-		const listWithBalances = await Promise.all(
-			listWithAllTokens.map(async token => {
-				if (token.symbol === "SYS") {
-					return {
-						...token,
-						balance: providerBalanceFormattedValue,
-					};
-				}
-
-				if (Number(token.chainId === Number(currentNetworkChainId))) {
-					const getTokenBalance = await getBalanceOfSingleCall(
-						token.address,
-						validatedAddress as string,
-						provider as Signer,
-						token.decimals
-					);
-
-					return {
-						...token,
-						balance: getTokenBalance,
-					} as ITokenInfoWithBalance;
-				}
-
-				return {
-					...token,
-					balance: "0",
-				} as ITokenInfoWithBalance;
-			})
-		);
-
-		const mapAroundList = listWithBalances.reduce<TokenAddressMap>(
+		const mapAroundList = list.tokens.reduce<TokenAddressMap>(
 			(tokenMap, tokenInfo) => {
-				const token = new WrappedTokenInfo(tokenInfo);
+				// const token = new WrappedTokenInfo(tokenInfo);
 
-				setTokensWithBalance((prevState: TokenAddressMap) => {
-					prevState[token.chainId] = {
-						...prevState[token.chainId],
-						[token.address]: token,
-					};
+				const transformChain = Number(tokenInfo.chainId) as ChainId;
 
-					return { ...prevState };
-				});
-
-				if (tokenMap[token.chainId][token.address] !== undefined)
+				if (tokenMap[transformChain][tokenInfo.address] !== undefined)
 					console.log(
 						"Duplicated token",
-						tokenMap[token.chainId][token.address]
+						tokenMap[transformChain][tokenInfo.address]
 					);
 
 				return {
 					...tokenMap,
-					[token.chainId]: {
-						...tokenMap[token.chainId],
-						[token.address]: token,
+					[transformChain]: {
+						...tokenMap[transformChain],
+						[tokenInfo.address]: tokenInfo,
 					},
 				};
 			},
@@ -390,7 +285,6 @@ export const TokensListManageProvider: React.FC<{
 				if (existValueInList?.length === 1) {
 					prevState.selectedListUrl = DEFAULT_TOKEN_LISTS_SELECTED;
 				} else {
-					setListToRemove(listUrl);
 					existValueInList.splice(findInList, 1);
 					prevState.selectedListUrl = existValueInList;
 				}
@@ -398,6 +292,8 @@ export const TokensListManageProvider: React.FC<{
 
 			return { ...prevState };
 		});
+
+		setListToRemove("");
 	};
 
 	const addListToListState = (listUrl: string) => {
@@ -409,7 +305,7 @@ export const TokensListManageProvider: React.FC<{
 			return { ...prevState };
 		});
 
-		setListToAdd(listUrl);
+		setListToAdd("");
 	};
 
 	const toggleListByUrl = (listUrl: string, shouldToggle: boolean) => {
@@ -422,8 +318,6 @@ export const TokensListManageProvider: React.FC<{
 				existingSelectedList.push(listUrl);
 
 				prevState.selectedListUrl = existingSelectedList;
-
-				setListToAdd(listUrl);
 			} else {
 				const elementInListIndex = existingSelectedList.indexOf(listUrl);
 
@@ -434,7 +328,6 @@ export const TokensListManageProvider: React.FC<{
 				} else {
 					existingSelectedList.splice(elementInListIndex, 1);
 					prevState.selectedListUrl = existingSelectedList;
-					setListToRemove(listUrl);
 				}
 			}
 
@@ -443,6 +336,8 @@ export const TokensListManageProvider: React.FC<{
 
 			return { ...prevState };
 		});
+
+		setCurrentCacheListTokensToDisplay([]);
 	};
 
 	const UseSelectedListUrl = (): string[] | undefined =>
@@ -468,48 +363,63 @@ export const TokensListManageProvider: React.FC<{
 	}, [
 		tokenListManageState,
 		tokenListManageState.byUrl,
-		tokenListManageState.lastInitializedDefaultListOfLists,
 		tokenListManageState.selectedListUrl,
 		walletAddress,
 		currentNetworkChainId,
 	]);
 
 	useEffect(() => {
-		if (listToAdd !== "" || listToRemove !== "") return;
+		if (tokenListManageState.selectedListUrl?.length === 0) return;
 
-		const convertChain = Number(currentNetworkChainId || 57) as ChainId;
+		tokenListManageState.selectedListUrl?.map(listUrl => {
+			const getListTokens = tokenListCache?.get(
+				tokenListManageState.byUrl[listUrl].current as TokenList
+			) as TokenAddressMap;
 
-		const filterTokens = Object.values(tokensWithBalance[convertChain]).filter(
-			tokens =>
-				tokens.symbol !== "AGEUR" &&
-				tokens.symbol !== "MAI" &&
-				tokens.symbol !== "QI"
-		);
+			if (getListTokens && Object.keys(getListTokens)?.length > 0) {
+				const transformToChainIdType = Number(
+					currentNetworkChainId || 57
+				) as ChainId;
 
-		setCurrentTokensToDisplay(filterTokens);
+				const getTokensByChain = Object.values(
+					getListTokens[transformToChainIdType]
+				);
+
+				const verifyTokens = currentCacheListTokensToDisplay.filter(token =>
+					getTokensByChain.some(
+						currentToken => token.address === currentToken.address
+					)
+				);
+
+				if (getTokensByChain.length > 0 && verifyTokens.length === 0) {
+					setCurrentCacheListTokensToDisplay(prevState => [
+						...prevState,
+						...getTokensByChain,
+					]);
+				}
+			}
+
+			return {};
+		});
 	}, [
-		currentNetworkChainId,
-		listToAdd,
-		listToRemove,
+		tokenListCache,
+		tokenListManageState.selectedListUrl,
 		walletAddress,
-		tokensWithBalance[57],
-		tokensWithBalance[5700],
+		currentNetworkChainId,
 	]);
-
-	console.log("listCache", tokenListCache);
 
 	useMemo(() => {
 		if (listToAdd === "" && listToRemove === "") return;
 
-		if (listToAdd) addTokensToTokensDisplayState(listToAdd);
+		if (listToAdd) addListToListState(listToAdd);
 
-		if (listToRemove) findAndRemoveTokenFromList(listToRemove);
+		if (listToRemove) removeListFromListState(listToRemove);
 	}, [listToAdd, listToRemove]);
 
 	const tokensListManageProviderValue = useMemo(
 		() => ({
 			tokenListManageState,
-			currentTokensToDisplay,
+			currentCacheListTokensToDisplay,
 			UseSelectedListUrl,
 			UseSelectedTokenList,
 			removeListFromListState,
@@ -521,7 +431,7 @@ export const TokensListManageProvider: React.FC<{
 			tokenListManageState.byUrl,
 			tokenListManageState.lastInitializedDefaultListOfLists,
 			tokenListManageState.selectedListUrl,
-			currentTokensToDisplay,
+			currentCacheListTokensToDisplay,
 			UseSelectedListUrl,
 			UseSelectedTokenList,
 			removeListFromListState,

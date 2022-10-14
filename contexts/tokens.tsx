@@ -1,13 +1,10 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
-import { WrappedTokenInfo } from "types";
+import { ITokenInfoBalance, WrappedTokenInfo } from "types";
 import { useWallet, ApprovalState, useTokensListManage } from "hooks";
 import { getDefaultTokens } from "networks";
-import {
-	getBalanceOfMultiCall,
-	getProviderBalance,
-	truncateNumberDecimalsPlaces,
-} from "utils";
+import { getBalanceOfSingleCall, getProviderBalance } from "utils";
 import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
+import { Signer } from "ethers";
 
 interface ITokensContext {
 	userTokensBalance: WrappedTokenInfo[];
@@ -22,6 +19,10 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		WrappedTokenInfo[]
 	>([]);
 
+	const [initialDefaultTokens, setInitialDefaultTokens] = useState<TokenInfo[]>(
+		[]
+	);
+
 	const {
 		isConnected,
 		provider,
@@ -30,65 +31,45 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		approvalState,
 	} = useWallet();
 
-	const { UseSelectedListUrl, tokenListManageState } = useTokensListManage();
+	const { currentCacheListTokensToDisplay, tokenListManageState } =
+		useTokensListManage();
 
-	const getCurrentSelectedTokens = async () => {
-		const currentUrls = UseSelectedListUrl();
-		// eslint-disable-next-line
-		let currentTokens: any[] = [];
+	const getInitialDefaultTokensByRequest = async () => {
+		const { tokens: initialTokens } = await getDefaultTokens(
+			(currentNetworkChainId || 57) as number
+		);
 
-		const fetchTokens =
-			currentUrls &&
-			(await Promise.all(
-				currentUrls?.map(async url => {
-					const { tokens } = await fetch(url).then(res => res.json());
-					return tokens;
-				})
-			));
-		if (!fetchTokens) return null;
-
-		for (let i = 0; i < fetchTokens?.length; i += 1) {
-			currentTokens = [...currentTokens, ...fetchTokens[i]];
-		}
-
-		return currentTokens;
+		setInitialDefaultTokens(initialTokens);
 	};
 
 	const getAllTokens = async () => {
-		const generalTokens = await getCurrentSelectedTokens();
-		const { tokens: initialTokens } = await getDefaultTokens(
-			currentNetworkChainId as number
-		);
-		const filteredTokens = generalTokens?.filter(
+		const filteredTokens = currentCacheListTokensToDisplay?.filter(
 			token =>
-				token.chainId === currentNetworkChainId &&
 				token.symbol !== "AGEUR" &&
 				token.symbol !== "MAI" &&
 				token.symbol !== "QI"
 		);
 
-		if (!currentNetworkChainId)
-			return initialTokens.filter(
-				token =>
-					token.symbol !== "AGEUR" &&
-					token.symbol !== "MAI" &&
-					token.symbol !== "QI"
-			);
-
-		if (filteredTokens?.length === 0)
-			return initialTokens.filter(
+		if (filteredTokens?.length === 0) {
+			const initialTokens = initialDefaultTokens.filter(
 				token => token.symbol === "WSYS" || token.symbol === "PSYS"
 			);
+
+			return [...initialTokens, ...filteredTokens];
+		}
 
 		return filteredTokens;
 	};
 
-	const getDefaultListToken = async () => {
+	const getDefaultUserTokensBalance = async () => {
 		const tokens = await getAllTokens();
 
-		if (!tokens) return null;
+		if (tokens.length === 0) return;
 
-		const WSYS = tokens.find(token => token.symbol === "WSYS");
+		// eslint-disable-next-line
+		const WSYS = tokens.find(
+			(token: TokenInfo | WrappedTokenInfo) => token.symbol === "WSYS"
+		) as WrappedTokenInfo | ITokenInfoBalance;
 
 		const SYS: TokenInfo = {
 			...WSYS,
@@ -107,81 +88,64 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			}));
 
 			const convertTokens = tokensWithBalance.map(
-				token => new WrappedTokenInfo(token)
+				token => new WrappedTokenInfo(token as ITokenInfoBalance)
 			);
 
 			setUserTokensBalance(convertTokens);
 		}
 
-		const tokensAddress = allTokens.map(token => token.address);
+		const { providerBalanceFormattedValue, validatedAddress } =
+			await getProviderBalance(provider, walletAddress);
 
-		const tokensDecimals = allTokens.map(token => token.decimals);
+		const tokensWithBalance = await Promise.all(
+			allTokens.map(async token => {
+				if (token.symbol === "SYS") {
+					return {
+						...token,
+						balance: providerBalanceFormattedValue || ("0" as string),
+					};
+				}
 
-		const { providerBalanceFormattedValue } = await getProviderBalance(
-			provider,
-			walletAddress
-		);
-
-		if (!providerBalanceFormattedValue) return "0";
-
-		const truncatedValue = String(
-			truncateNumberDecimalsPlaces(parseFloat(providerBalanceFormattedValue), 3)
-		);
-
-		const contractBalances = await getBalanceOfMultiCall(
-			tokensAddress,
-			walletAddress,
-			provider,
-			tokensDecimals
-		);
-
-		const tokensWithBalance = allTokens.map(token => {
-			const balanceItems = contractBalances.find(
-				balance => balance.address === token.address
-			);
-
-			if (token.symbol === "SYS") {
-				return {
-					...token,
-					balance: truncatedValue as string,
-				};
-			}
-
-			const truncatedBalance =
-				balanceItems &&
-				String(
-					truncateNumberDecimalsPlaces(parseFloat(balanceItems.balance), 3)
+				const contractBalance = await getBalanceOfSingleCall(
+					token.address,
+					validatedAddress as string,
+					provider as Signer,
+					token.decimals
 				);
 
-			return {
-				...token,
-				balance: truncatedBalance as string,
-			};
-		});
+				return {
+					...token,
+					balance: contractBalance,
+				};
+			})
+		);
 
 		const convertTokens = tokensWithBalance.map(
-			token => new WrappedTokenInfo(token)
+			token => new WrappedTokenInfo(token as ITokenInfoBalance)
 		);
 
 		setUserTokensBalance(convertTokens);
-
-		return {};
 	};
 
 	useEffect(() => {
 		if (approvalState.status === ApprovalState.APPROVED) {
-			getDefaultListToken();
+			getDefaultUserTokensBalance();
 			return;
 		}
-		getCurrentSelectedTokens();
-		getDefaultListToken();
+
+		getDefaultUserTokensBalance();
 	}, [
-		isConnected,
 		currentNetworkChainId,
 		walletAddress,
 		approvalState.status,
+		currentCacheListTokensToDisplay,
 		tokenListManageState,
+		tokenListManageState.selectedListUrl,
 	]);
+
+	useEffect(() => {
+		getInitialDefaultTokensByRequest();
+	}, []);
 
 	const tokensProviderValue = useMemo(
 		() => ({
