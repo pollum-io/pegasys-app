@@ -39,35 +39,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			(currentNetworkChainId || 57) as number
 		);
 
-		setInitialDefaultTokens(initialTokens);
-	};
-
-	const getAllTokens = async () => {
-		const filteredTokens = currentCacheListTokensToDisplay?.filter(
-			token =>
-				token.symbol !== "AGEUR" &&
-				token.symbol !== "MAI" &&
-				token.symbol !== "QI"
-		);
-
-		if (filteredTokens?.length === 0) {
-			const initialTokens = initialDefaultTokens.filter(
-				token => token.symbol === "WSYS" || token.symbol === "PSYS"
-			);
-
-			return [...initialTokens, ...filteredTokens];
-		}
-
-		return filteredTokens;
-	};
-
-	const getDefaultUserTokensBalance = async () => {
-		const tokens = await getAllTokens();
-
-		if (tokens.length === 0) return;
-
-		// eslint-disable-next-line
-		const WSYS = tokens.find(
+		const WSYS = initialTokens.find(
 			(token: TokenInfo | WrappedTokenInfo) => token.symbol === "WSYS"
 		) as WrappedTokenInfo | ITokenInfoBalance;
 
@@ -79,10 +51,58 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 				"https://app.pegasys.finance/static/media/syscoin_token_round.f5e7de99.png",
 		} as TokenInfo;
 
-		const allTokens = [...tokens, SYS];
+		const allTokens = [...initialTokens, SYS];
+
+		setInitialDefaultTokens(allTokens);
+	};
+
+	const getAllTokens = async () => {
+		if (
+			initialDefaultTokens.length === 0 &&
+			currentCacheListTokensToDisplay.length === 0
+		)
+			return [];
+
+		const defaultTokens = initialDefaultTokens?.filter(
+			token =>
+				token.symbol === "SYS" ||
+				token.symbol === "WSYS" ||
+				token.symbol === "PSYS"
+		);
+
+		if (currentCacheListTokensToDisplay.length === 0) return defaultTokens;
+
+		const [SYSExist, WSYSExist, PSYSExist] =
+			currentCacheListTokensToDisplay.filter(
+				token =>
+					token.symbol === "SYS" ||
+					token.symbol === "WSYS" ||
+					token.symbol === "PSYS"
+			);
+
+		if (SYSExist === undefined || !SYSExist)
+			currentCacheListTokensToDisplay.push(
+				defaultTokens[0] as WrappedTokenInfo
+			);
+		if (WSYSExist === undefined || !WSYSExist)
+			currentCacheListTokensToDisplay.push(
+				defaultTokens[1] as WrappedTokenInfo
+			);
+		if (PSYSExist === undefined || !PSYSExist)
+			currentCacheListTokensToDisplay.push(
+				defaultTokens[2] as WrappedTokenInfo
+			);
+
+		return currentCacheListTokensToDisplay;
+	};
+
+	const getDefaultUserTokensBalance = async () => {
+		const tokens = await getAllTokens();
+
+		if (tokens.length === 0) return;
 
 		if (!isConnected || !provider) {
-			const tokensWithBalance = allTokens.map(token => ({
+			const tokensWithBalance = tokens.map(token => ({
 				...token,
 				balance: "0",
 			}));
@@ -98,7 +118,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			await getProviderBalance(provider, walletAddress);
 
 		const tokensWithBalance = await Promise.all(
-			allTokens.map(async token => {
+			tokens.map(async token => {
 				if (token.symbol === "SYS") {
 					return {
 						...token,
