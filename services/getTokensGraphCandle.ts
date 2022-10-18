@@ -16,9 +16,6 @@ export async function getTokensGraphCandle(
 
 	setIsLoadingCandles(true);
 
-	console.log("token0?.address", token0?.address);
-	console.log("token1?.address", token1?.address);
-
 	const result = await pegasysCandlesClient
 		.query({
 			query: GET_TOKENS_GRAPH_CANDLE,
