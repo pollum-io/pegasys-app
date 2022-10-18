@@ -218,8 +218,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 				).then(result => result.json());
 				const hash = `${currentTxHash}`;
 				const summary = `${currentSummary}`;
-				const storageTxs = JSON.parse(`${localStorage.getItem("txs")}`);
-				const storageHash = localStorage.getItem("currentTxHash");
+				const storageSummary = localStorage.getItem("currentSummary");
 
 				setPendingTxLength(Number(getTx?.result?.length));
 				provider?.getTransaction(hash).then(result => {
@@ -229,9 +228,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 							...JSON.parse(`${localStorage.getItem("txs")}`),
 							[result.hash]: {
 								...result,
-								summary: storageTxs
-									? storageTxs[`${hash || storageHash}`]?.summary
-									: summary,
+								summary: storageSummary || summary,
 								chainId,
 								txType: approvalState.type,
 								finished: false,
@@ -250,9 +247,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 									...prevTransactions[chainId === 57 ? 57 : 5700][hash],
 									...result,
 									chainId,
-									summary: storageTxs
-										? storageTxs[`${hash || storageHash}`]?.summary
-										: summary,
+									summary: storageSummary || summary,
 									txType: approvalState.type,
 									finished: true,
 									hash,
@@ -270,9 +265,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 								...JSON.parse(`${localStorage.getItem("txs")}`),
 								[result.hash]: {
 									...result,
-									summary: storageTxs
-										? storageTxs[`${hash || storageHash}`]?.summary
-										: summary,
+									summary: storageSummary || summary,
 									finished: true,
 								},
 							})
@@ -348,10 +341,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	}, [isConnected]);
 
 	useEffect(() => {
-		if (currentTxHash) {
-			localStorage.setItem("currentTxHash", currentTxHash);
-		}
-	}, [currentTxHash]);
+		if (currentTxHash) localStorage.setItem("currentTxHash", currentTxHash);
+		if (currentSummary) localStorage.setItem("currentSummary", currentSummary);
+	}, [currentTxHash, currentSummary]);
 
 	useEffect(() => {
 		if (approvalSubmitted && approvalState.status !== ApprovalState.UNKNOWN) {
