@@ -1,4 +1,4 @@
-import { apolloClient, GET_TOKENS_GRAPH_CANDLE } from "apollo/index";
+import { pegasysCandlesClient, GET_TOKENS_GRAPH_CANDLE } from "apollo/index";
 import { Token } from "@pollum-io/pegasys-sdk";
 import { IChartComponentData, WrappedTokenInfo } from "types";
 
@@ -16,7 +16,10 @@ export async function getTokensGraphCandle(
 
 	setIsLoadingCandles(true);
 
-	const result = await apolloClient
+	console.log("token0?.address", token0?.address);
+	console.log("token1?.address", token1?.address);
+
+	const result = await pegasysCandlesClient
 		.query({
 			query: GET_TOKENS_GRAPH_CANDLE,
 			variables: {
@@ -29,5 +32,5 @@ export async function getTokensGraphCandle(
 		.catch(() => setIsLoadingCandles(false))
 		.finally(() => setIsLoadingCandles(false));
 
-	return result?.data?.candles;
+	return result?.data?.candles || [];
 }
