@@ -342,17 +342,10 @@ export const TokensListManageProvider: React.FC<{
 					)
 				);
 
-				const filteredTokens = getTokensByChain?.filter(
-					token =>
-						token.symbol !== "AGEUR" &&
-						token.symbol !== "MAI" &&
-						token.symbol !== "QI"
-				);
-
 				if (getTokensByChain.length > 0 && verifyTokens.length === 0) {
 					setCurrentCacheListTokensToDisplay(prevState => [
 						...prevState,
-						...filteredTokens,
+						...getTokensByChain,
 					]);
 				}
 			}
