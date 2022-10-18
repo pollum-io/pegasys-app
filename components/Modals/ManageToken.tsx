@@ -1,9 +1,11 @@
 import {
+	Accordion,
+	AccordionButton,
+	AccordionIcon,
+	AccordionItem,
+	AccordionPanel,
 	Button,
-	Divider,
 	Flex,
-	Icon,
-	IconButton,
 	Img,
 	Input,
 	Modal,
@@ -11,22 +13,18 @@ import {
 	ModalContent,
 	ModalHeader,
 	ModalOverlay,
-	Popover,
-	PopoverBody,
-	PopoverContent,
-	PopoverTrigger,
 	Switch,
 	Text,
-	useColorMode,
 } from "@chakra-ui/react";
 import {
 	parseENSAddress,
 	useModal,
 	usePicasso,
+	useToasty,
 	useTokensListManage,
 } from "hooks";
-import { useCallback, useMemo, useState } from "react";
-import { MdArrowBack, MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { MdArrowBack } from "react-icons/md";
 import { returnConvertedUrl, TokenListNameOrigin } from "utils";
 import { useTranslation } from "react-i18next";
 import { getTokenListByUrl } from "networks";
@@ -54,8 +52,6 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 
 	const theme = usePicasso();
 
-	const { colorMode } = useColorMode();
-
 	const { current: currentList } =
 		currentTokenLists[listUrl] || currentTokenLists;
 
@@ -75,110 +71,91 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 		window.open(`https://tokenlists.org/token-list?url=${listUrl}`, "_blank");
 
 	return (
-		<Flex
-			flexDirection="row"
-			mt="4"
-			justifyContent="space-between"
-			alignItems="center"
-		>
-			<Flex gap="4" alignItems="center">
-				<Img src={currentList?.logoURI} w="5" h="5" />
-				<Flex flexDirection="column">
-					<Text fontWeight="semibold">{currentList?.name}</Text>
-					<Flex
-						display="inline-block"
-						maxW="160px"
-						overflow="hidden"
-						textOverflow="ellipsis"
-						whiteSpace="nowrap"
-					>
-						<TokenListNameOrigin listUrl={listUrl} />
+		<Accordion allowMultiple>
+			<AccordionItem border="none">
+				<Flex
+					flexDirection="row"
+					mt="4"
+					justifyContent="space-between"
+					alignItems="center"
+				>
+					<Flex gap="4" alignItems="center">
+						<Img src={currentList?.logoURI} w="24px" h="24px" />
+						<Flex flexDirection="column">
+							<Text fontSize="sm" fontWeight="semibold">
+								{currentList?.name}
+							</Text>
+							<Flex
+								display="inline-block"
+								maxW="160px"
+								overflow="hidden"
+								textOverflow="ellipsis"
+								whiteSpace="nowrap"
+								fontSize="sm"
+								fontWeight="normal"
+							>
+								<TokenListNameOrigin listUrl={listUrl} />
+							</Flex>
+						</Flex>
+					</Flex>
+					<Flex alignItems="center" pr={6}>
+						<AccordionButton
+							background="none"
+							_hover={{
+								background: "none !important",
+							}}
+							_focus={{
+								background: "none !important",
+							}}
+						>
+							<AccordionIcon />
+						</AccordionButton>
+
+						<Switch
+							size="md"
+							colorScheme="cyan"
+							isChecked={isListSelected}
+							name={`${currentList?.name}`}
+							onChange={() => toggleList()}
+						/>
 					</Flex>
 				</Flex>
-			</Flex>
-			<Flex gap="4" pr="6">
-				<Popover>
-					<PopoverTrigger {...(<Flex />)}>
-						<IconButton
-							aria-label="Popover"
-							icon={<Icon as={MdOutlineKeyboardArrowDown} w="5" h="5" />}
-							transition="0.4s"
-							bg="transparent"
-							_hover={{
-								color: theme.text.cyanPurple,
-								background: theme.bg.iconBg,
-							}}
-							_expanded={{ color: theme.text.cyanPurple }}
-						/>
-					</PopoverTrigger>
-					<PopoverContent
-						_focus={{
-							outline: "none",
-						}}
-						w={["100vw", "100vw", "max-content", "max-content"]}
-						background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
-						borderBottomRadius={["none", "none", "xl", "xl"]}
-						borderTopRadius={["2xl", "2xl", "xl", "xl"]}
-						p="0"
-						top={["3.5rem", "3.3rem", "0", "0"]}
-						position="relative"
-						right="0"
-						border={["none", "1px solid transparent"]}
-						boxShadow={
-							colorMode === "light"
-								? "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
-								: "0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4)"
-						}
-						px={2}
-					>
-						<PopoverBody
-							display="flex"
-							flexDirection="column"
-							zIndex="99"
-							px="0"
-							py={["0", "0", "1", "1"]}
-							lineHeight="35px"
-						>
-							<Text>
+
+				<AccordionPanel pl={9} pr={20} py={2} border="none" display="flex">
+					<Flex w="100%" flexDirection="column" alignItems="center">
+						<Flex w="100%" justifyContent="flex-start" mb={1.5}>
+							<Text fontSize="sm">
 								{`v${currentList?.version?.major}.${currentList?.version?.minor}.${currentList?.version?.patch}`}
 							</Text>
-							<Divider orientation="horizontal" />
+						</Flex>
+
+						<Flex w="100%" justifyContent="space-between">
 							<Text
-								opacity={0.85}
+								fontSize="xs"
 								transition="200ms ease-in-out"
 								color={theme.text.cyan}
 								cursor="pointer"
 								onClick={() => openListLink(listUrl)}
-								_hover={{
-									opacity: 1,
-								}}
+								fontWeight="semibold"
 							>
 								{`${translation("searchModal.viewList")}`}
 							</Text>
+
 							<Text
-								opacity={0.85}
+								fontSize="xs"
 								transition="200ms ease-in-out"
 								color={theme.text.cyan}
 								cursor="pointer"
+								fontWeight="semibold"
 								onClick={() => removeListFromListState(listUrl)}
-								_hover={{
-									opacity: 1,
-								}}
 							>
 								{`${translation("searchModal.removeList")}`}
 							</Text>
-						</PopoverBody>
-					</PopoverContent>
-				</Popover>
-				<Switch
-					size="md"
-					colorScheme="cyan"
-					isChecked={isListSelected}
-					name={`${currentList?.name}`}
-					onChange={() => toggleList()}
-				/>
-			</Flex>
-		</Flex>
+						</Flex>
+					</Flex>
+				</AccordionPanel>
+			</AccordionItem>
+		</Accordion>
 	);
 };
 
@@ -186,11 +163,14 @@ export const ManageToken: React.FC<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
 	const [listUrlInput, setListUrlInput] = useState<string>("");
-	const [addErrorMessage, setAddErrorMessage] = useState<string | null>(null);
 
 	const { onOpenConfirmList, isOpenConfirmList, onCloseConfirmList } =
 		useModal();
+
+	const { toast } = useToasty();
 
 	const {
 		tokenListManageState,
@@ -236,7 +216,7 @@ export const ManageToken: React.FC<IModal> = props => {
 		const urlValid = validateCurrentUrl(listUrlInput);
 
 		if (!urlValid) {
-			setAddErrorMessage("Invalid URL, try again with a correct one!");
+			setErrorMessage("Invalid URL, try again with a correct one!");
 			onCloseConfirmList();
 			return;
 		}
@@ -251,9 +231,21 @@ export const ManageToken: React.FC<IModal> = props => {
 			.catch(error => {
 				removeListFromListState(listUrlInput);
 				onCloseConfirmList();
-				setAddErrorMessage(error.message);
+				setErrorMessage(error.message);
 			});
 	}, [currentlyAddingList, listUrlInput]);
+
+	useEffect(() => {
+		if (errorMessage !== null && errorMessage !== "") {
+			toast({
+				title: "Can't add list",
+				description: errorMessage,
+				status: "error",
+			});
+
+			setErrorMessage(null);
+		}
+	}, [errorMessage]);
 
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
@@ -281,7 +273,7 @@ export const ManageToken: React.FC<IModal> = props => {
 					<Text fontSize="sm" fontWeight="semibold" color={theme.text.mono}>
 						Add a List
 					</Text>
-					<Flex flexDirection="row" alignItems="baseline" gap="3" mt="3">
+					<Flex flexDirection="row" alignItems="center" gap="3" mt="1.5">
 						<Input
 							borderRadius="full"
 							borderColor={theme.border.manageInput}
@@ -290,10 +282,12 @@ export const ManageToken: React.FC<IModal> = props => {
 							h="max-content"
 							py="1"
 							px="6"
+							maxH="32px"
+							maxW="320px"
 							bgColor={theme.bg.blackAlpha}
 							_focus={{ outline: "none" }}
 							_hover={{}}
-							onChange={event => setListUrlInput(event.target.value)}
+							onChange={e => setListUrlInput(e.target.value)}
 						/>
 						<Button
 							py="2"
@@ -313,7 +307,6 @@ export const ManageToken: React.FC<IModal> = props => {
 							Add
 						</Button>
 					</Flex>
-					{addErrorMessage !== null && <Text>{`${addErrorMessage}`}</Text>}
 
 					{sortedLists?.map(listUrl => (
 						<ShowListComponent listUrl={listUrl} key={listUrl} />
