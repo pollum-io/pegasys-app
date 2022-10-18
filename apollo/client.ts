@@ -18,7 +18,7 @@ export const pegasysClient = new ApolloClient({
 
 export const blockClient = new ApolloClient({
 	link: new HttpLink({
-		uri: "https://graph.pegasys.exchange/subgraphs/name/pollum-io/syscoin-blocks",
+		uri: "https://graph.pegasys.finance/subgraphs/name/pollum-io/syscoin-blocks",
 	}),
 	cache: new InMemoryCache(),
 });
