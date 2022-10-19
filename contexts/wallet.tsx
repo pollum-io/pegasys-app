@@ -80,7 +80,7 @@ interface IWeb3 {
 	delegatedTo: string;
 	setDelegatedTo: React.Dispatch<React.SetStateAction<string>>;
 	walletAddress: string;
-	currentNetworkChainId: number;
+	currentNetworkChainId: number | null;
 	isConnected: boolean;
 	setCurrentLpAddress: React.Dispatch<React.SetStateAction<string>>;
 	currentLpAddress: string;
@@ -317,7 +317,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 				if (tx.finished === false) {
 					setTransactions(prevState => ({
 						...prevState,
-						[chainId]: {
+						[chainId as number]: {
 							...prevState[tx.chainId === 57 ? 57 : 5700],
 							[tx.hash]: tx,
 						},
@@ -331,7 +331,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 				}
 				setTransactions(prevState => ({
 					...prevState,
-					[chainId]: {
+					[chainId as number]: {
 						...prevState[tx.chainId === 57 ? 57 : 5700],
 						[tx.hash]: tx,
 					},
