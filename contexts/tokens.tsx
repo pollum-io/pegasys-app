@@ -2,9 +2,15 @@ import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ITokenInfoBalance, WrappedTokenInfo } from "types";
 import { useWallet, ApprovalState, useTokensListManage } from "hooks";
 import { getDefaultTokens } from "networks";
-import { getBalanceOfSingleCall, getProviderBalance } from "utils";
+import {
+	getBalanceOfSingleCall,
+	getProviderBalance,
+	removeScientificNotation,
+	truncateNumberDecimalsPlaces,
+} from "utils";
 import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
 import { Signer } from "ethers";
+import { useWallet as psUseWallet } from "pegasys-services";
 
 interface ITokensContext {
 	userTokensBalance: WrappedTokenInfo[];
@@ -25,11 +31,11 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const {
 		isConnected,
-		provider,
-		walletAddress,
-		currentNetworkChainId,
-		approvalState,
-	} = useWallet();
+		address: walletAddress,
+		chainId: currentNetworkChainId,
+	} = psUseWallet();
+
+	const { provider, approvalState } = useWallet();
 
 	const { currentCacheListTokensToDisplay, tokenListManageState } =
 		useTokensListManage();
@@ -105,6 +111,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			const tokensWithBalance = tokens.map(token => ({
 				...token,
 				balance: "0",
+				formattedBalance: "0",
 			}));
 
 			const convertTokens = tokensWithBalance.map(
@@ -114,8 +121,11 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			setUserTokensBalance(convertTokens);
 		}
 
-		const { providerBalanceFormattedValue, validatedAddress } =
-			await getProviderBalance(provider, walletAddress);
+		const {
+			providerBalanceFormattedValue,
+			validatedAddress,
+			providerTruncatedBalance,
+		} = await getProviderBalance(provider, walletAddress);
 
 		const tokensWithBalance = await Promise.all(
 			tokens.map(async token => {
@@ -123,6 +133,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 					return {
 						...token,
 						balance: providerBalanceFormattedValue || ("0" as string),
+						formattedBalance: providerTruncatedBalance || ("0" as string),
 					};
 				}
 
@@ -133,9 +144,18 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 					token.decimals
 				);
 
+				const trucatedContractBalance =
+					contractBalance &&
+					String(
+						+contractBalance > 0 && +contractBalance < 1
+							? removeScientificNotation(parseFloat(contractBalance))
+							: truncateNumberDecimalsPlaces(parseFloat(contractBalance))
+					);
+
 				return {
 					...token,
 					balance: contractBalance,
+					formattedBalance: trucatedContractBalance,
 				};
 			})
 		);
@@ -165,7 +185,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	useEffect(() => {
 		getInitialDefaultTokensByRequest();
-	}, []);
+	}, [currentNetworkChainId]);
 
 	const tokensProviderValue = useMemo(
 		() => ({

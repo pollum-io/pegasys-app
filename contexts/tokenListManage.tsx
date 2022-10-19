@@ -1,19 +1,17 @@
-import { ChainId, Token } from "@pollum-io/pegasys-sdk";
-import { TokenInfo, TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
-import { Signer } from "ethers";
-import { DEFAULT_TOKEN_LISTS_SELECTED, SYS_LOGO } from "helpers/consts";
+import { ChainId } from "@pollum-io/pegasys-sdk";
+import { TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
+import { DEFAULT_TOKEN_LISTS_SELECTED } from "helpers/consts";
 import {
 	EMPTY_TOKEN_LIST,
 	INITIAL_TOKEN_LIST_STATE,
 	NEW_TOKEN_LIST_STATE,
 	tokenListCache,
 } from "helpers/tokenListHelpers";
-import { useToasty, useWallet } from "hooks";
+import { useToasty } from "hooks";
 import { getTokenListByUrl } from "networks";
-import { StringifyOptions } from "querystring";
 import React, { createContext, useMemo, useState, useEffect } from "react";
 import { ListsState, TokenAddressMap, WrappedTokenInfo } from "types";
-import { getBalanceOfSingleCall, getProviderBalance } from "utils";
+import { useWallet } from "pegasys-services";
 
 interface ITokensListManageContext {
 	tokenListManageState: ListsState;
@@ -42,71 +40,8 @@ export const TokensListManageProvider: React.FC<{
 	const [listToAdd, setListToAdd] = useState<string>("");
 	const [listToRemove, setListToRemove] = useState<string>("");
 
-	const { walletAddress, currentNetworkChainId } = useWallet();
-
-	const { toast } = useToasty();
-
-	// UTILS FUNCTIONS TO HANDLE DISPLAY TOKENS STATE //
-	const findAndReturnTokensByListUrl = (
-		listUrl: string
-	): WrappedTokenInfo[] => {
-		const getCurrentListCache = tokenListCache?.get(
-			tokenListManageState.byUrl[listUrl].current as TokenList
-		) as TokenAddressMap;
-
-		if (getCurrentListCache) {
-			const transformListObject = Object.assign(getCurrentListCache);
-
-			const findTokensByChain =
-				transformListObject[currentNetworkChainId || 57];
-
-			const convertFoundedTokens = Object.values(findTokensByChain).map(
-				token => token
-			) as WrappedTokenInfo[];
-
-			const convertCurrentListByState = tokenListManageState.byUrl[
-				listUrl
-			].current?.tokens.map(token => {
-				const tokenWithBalance = {
-					...token,
-					balance: "0",
-				};
-
-				return new WrappedTokenInfo(tokenWithBalance);
-			}) as WrappedTokenInfo[];
-
-			const filterExistentTokens = convertFoundedTokens.filter(convertTokens =>
-				convertCurrentListByState.some(
-					stateTokens =>
-						String(convertTokens?.tokenInfo?.address) ===
-						String(stateTokens?.tokenInfo?.address)
-				)
-			);
-
-			const verifyIfListHasUnecessaryTokens = filterExistentTokens.findIndex(
-				token =>
-					token.symbol === "AGEUR" ||
-					token.symbol === "MAI" ||
-					token.symbol === "QI"
-			);
-
-			if (verifyIfListHasUnecessaryTokens !== -1) {
-				const unecessaryTokensRemoved = filterExistentTokens.filter(
-					token =>
-						token.symbol !== "AGEUR" &&
-						token.symbol !== "MAI" &&
-						token.symbol !== "QI"
-				);
-
-				return unecessaryTokensRemoved;
-			}
-			return filterExistentTokens;
-		}
-
-		return [];
-	};
-
-	// END UTILS FUNCTIONS TO HANDLE DISPLAY TOKEN STATE //
+	const { address: walletAddress, chainId: currentNetworkChainId } =
+		useWallet();
 
 	// HANDLE FUNCTIONS TO FILL AND MANAGE TOKEN LIST MANAGE STATE AT ALL AND ALSO WEAK MAP LISTS //
 	const fetchAndFulfilledTokenListManage = async (listUrl: string) => {

@@ -73,55 +73,52 @@ const useToasty = () => {
 
 	useEffect(() => {
 		if (!state || !(Object.keys(state).length !== 0)) return;
+		toast({
+			...state,
+			id: `${state?.id}`,
+			duration: 5000,
+			position: `${
+				(state?.position as ToastPositionWithLogical) || "top-right"
+			}`,
+			isClosable: true,
+			status: `${state?.status as AlertStatus}`,
+			title: `${state?.title as React.ReactNode}`,
+			description: `${state?.description as React.ReactNode}`,
 
-		if (!toast.isActive(`${state?.id}`)) {
-			toast({
-				...state,
-				id: `${state?.id}`,
-				duration: 5000,
-				position: `${
-					(state?.position as ToastPositionWithLogical) || "top-right"
-				}`,
-				isClosable: true,
-				status: `${state?.status as AlertStatus}`,
-				title: `${state?.title as React.ReactNode}`,
-				description: `${state?.description as React.ReactNode}`,
-
-				render: ({ onClose }) => (
+			render: ({ onClose }) => (
+				<Flex
+					h="fit-content"
+					w="356px"
+					mt="50px"
+					mr="40px"
+					p={3}
+					bg={theme.bg.blackAlpha}
+					borderRadius="0.2rem"
+					borderLeftWidth="0.25rem"
+					borderLeftColor={toastStatus}
+					justifyContent="space-between"
+				>
 					<Flex
-						h="72px"
-						w="356px"
-						mt="50px"
-						mr="40px"
-						p={3}
-						bg={theme.bg.blackAlpha}
-						borderRadius="0.2rem"
-						borderLeftWidth="0.25rem"
-						borderLeftColor={toastStatus}
-						justifyContent="space-between"
+						color={theme.text.mono}
+						flexDirection="row"
+						zIndex="docked"
+						px="0.3rem"
+						py="0.15rem"
 					>
-						<Flex
-							color={theme.text.mono}
-							flexDirection="row"
-							zIndex="docked"
-							px="0.3rem"
-							py="0.15rem"
-						>
-							{toastIcon}
-							<Flex flexDirection="column" ml="0.8rem">
-								<Text font-weight="bold">{`${state?.title}`}</Text>
-								<Text fontSize="sm" font-weight="normal">
-									{state.description}
-								</Text>
-							</Flex>
-						</Flex>
-						<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
-							<IoMdClose size={16} color={theme.text.mono} />
+						{toastIcon}
+						<Flex flexDirection="column" ml="0.8rem">
+							<Text font-weight="bold">{`${state?.title}`}</Text>
+							<Text fontSize="sm" font-weight="normal">
+								{state.description}
+							</Text>
 						</Flex>
 					</Flex>
-				),
-			});
-		}
+					<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
+						<IoMdClose size={16} color={theme.text.mono} />
+					</Flex>
+				</Flex>
+			),
+		});
 	}, [state]);
 
 	return { toastState: state, toast: setState };

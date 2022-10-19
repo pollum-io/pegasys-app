@@ -11,6 +11,7 @@ import {
 	SkeletonCircle,
 	useColorMode,
 } from "@chakra-ui/react";
+import { useToasty, useWallet as psUseWallet } from "pegasys-services";
 import {
 	useModal,
 	usePicasso,
@@ -19,7 +20,6 @@ import {
 	UseDerivedSwapInfo,
 	useApproveCallbackFromTrade,
 	UseSwapCallback,
-	useToasty,
 	ApprovalState,
 	UseWrapCallback,
 	UseTokensPairSorted,
@@ -33,7 +33,11 @@ import React, {
 } from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
-import { SelectCoinModal, SelectWallets } from "components/Modals";
+import {
+	LoadingTransition,
+	SelectCoinModal,
+	SelectWallets,
+} from "components/Modals";
 import { ChainId, CurrencyAmount, JSBI, Trade } from "@pollum-io/pegasys-sdk";
 import {
 	ISwapTokenInputValue,
@@ -85,14 +89,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		onOpenConfirmSwap,
 		isOpenConfirmSwap,
 		onCloseConfirmSwap,
+		onOpenTransaction,
+		isOpenTransaction,
+		onCloseTransaction,
 	} = useModal();
 
 	const {
-		isConnected,
-		currentNetworkChainId,
 		provider,
 		signer,
-		walletAddress,
 		userSlippageTolerance,
 		setTransactions,
 		transactions,
@@ -100,11 +104,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		approvalState,
 		setApprovalSubmitted,
 		setCurrentTxHash,
+		setCurrentSummary,
 		setCurrentInputTokenName,
 		expert,
 		otherWallet,
 		userTransactionDeadlineValue,
 	} = useWallet();
+
+	const { address, chainId, isConnected } = psUseWallet();
 
 	// END HOOKS IMPORTED VALUES
 
@@ -123,8 +130,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	};
 
 	const walletInfos: IWalletHookInfos = {
-		chainId: currentNetworkChainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
-		walletAddress,
+		chainId: chainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
+		walletAddress: address,
 		provider,
 	};
 
@@ -273,10 +280,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			setTransactions,
 			setApprovalState,
 			setCurrentTxHash,
+			setCurrentSummary,
 			setCurrentInputTokenName,
 			txType,
 			toast,
-			transactions
+			transactions,
+			onCloseTransaction
 		);
 
 	const { realizedLPFee } = computeTradePriceBreakdown(
@@ -362,7 +371,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		transactions,
 		setApprovalState,
 		setCurrentTxHash,
-		signer as Signer
+		setCurrentSummary,
+		signer as Signer,
+		onCloseTransaction
 	);
 
 	const handleSwapInfo = async () => {
@@ -399,10 +410,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const approve = useApproveCallbackFromTrade(
 		returnedTradeValue?.v2Trade as Trade,
 		{
-			chainId:
-				currentNetworkChainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
+			chainId: chainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
 			provider,
-			walletAddress,
+			walletAddress: address,
 		},
 		signer as Signer,
 		tokenInputValue,
@@ -412,8 +422,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		toast,
 		setApprovalSubmitted,
 		setCurrentTxHash,
+		setCurrentSummary,
 		setCurrentInputTokenName,
 		setApproveTokenStatus,
+		onCloseTransaction,
 		userSlippageTolerance
 	);
 
@@ -531,17 +543,17 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	]);
 
 	const isOtherWallet = useMemo(() => {
-		if (otherWallet) {
+		if (otherWallet && expert) {
 			return <OtherWallet />;
 		}
-		return null;
+		return <Flex />;
 	}, [otherWallet]);
 
 	const isExpert = useMemo(() => {
 		if (expert && isConnected) {
 			return <SwapExpertMode />;
 		}
-		return null;
+		return <Flex />;
 	}, [expert]);
 
 	// END REACT HOOKS //
@@ -594,6 +606,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				tokenInputValue={tokenInputValue}
 				minimumReceived={minimumReceived}
 				liquidityFee={realizedLPFee}
+				openPendingTx={onOpenTransaction}
+			/>
+			<LoadingTransition
+				isOpen={isOpenTransaction}
+				onClose={onCloseTransaction}
 			/>
 			<Flex alignItems="center" flexDirection="column">
 				<Flex
@@ -906,12 +923,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Flex>
 						</Flex>
 					</Collapse>
-					{isExpert}
-					{isExpert && isOtherWallet}
+					<Collapse in={expert && isConnected}>{isExpert}</Collapse>
+					<Collapse in={otherWallet && expert}>{isOtherWallet}</Collapse>
+
 					{!isERC20 && !isWrap && (
 						<Button
 							w="100%"
-							mt={isExpert ? "1rem" : "2rem"}
+							mt={isExpert ? "1.8rem" : "1.5rem"}
 							py="6"
 							px="6"
 							borderRadius="67px"
@@ -1233,12 +1251,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							ml="8"
 							color={theme.text.mono}
 						>
-							<Img
-								src="icons/pegasysSemFundo.png"
-								className="blob"
-								w="25%"
-								h="25%"
-							/>
+							<Img src="icons/loading.gif" className="blob" w="25%" h="25%" />
 						</Flex>
 					) : tokensGraphCandleData?.length === 0 ? (
 						<Flex flexDirection="column" ml="0">

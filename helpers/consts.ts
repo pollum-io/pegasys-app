@@ -15,6 +15,11 @@ export const ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
 	[ChainId.NEVM]: "0x017dAd2578372CAEE5c6CddfE35eEDB3728544C4",
 };
 
+export const AIRDROP_ADDRESS: { [chainId in ChainId]?: string } = {
+	[ChainId.TANENBAUM]: "0x0000000000000000000000000000000000000000",
+	[ChainId.NEVM]: "0x5c0543fFB580b22574D52179cB3Eba7aeF1CE293",
+};
+
 export const SUPPORTED_NETWORK_CHAINS = [
 	57, // Syscoin NEVM Mainnet
 	5700, // Syscoin Tanenbaum Testnet
@@ -190,7 +195,14 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 		USDC[ChainId.NEVM],
 	],
 };
+const WSYS_AND_PSYS_ONLY: ChainTokenList = {
+	[ChainId.TANENBAUM]: [WSYS[ChainId.TANENBAUM], PSYS[ChainId.TANENBAUM]],
+	[ChainId.NEVM]: [WSYS[ChainId.NEVM], PSYS[ChainId.NEVM]],
+};
 
+export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
+	...WSYS_AND_PSYS_ONLY,
+};
 /**
  * Some tokens can only be swapped via certain pairs, so we override the list of bases that are considered for these
  * tokens.

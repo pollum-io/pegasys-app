@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { FunctionComponent } from "react";
-import { AiOutlineClose } from "react-icons/ai";
+import { MdOutlineClose } from "react-icons/md";
 
 interface IModal {
 	isOpen: boolean;
@@ -82,7 +82,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 							Your PSYS Breakdown
 						</Text>
 						<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
-							<AiOutlineClose size={22} color="white" />
+							<MdOutlineClose size={23} onClick={onClose} color="white" />
 						</Flex>
 					</Flex>
 				</Flex>

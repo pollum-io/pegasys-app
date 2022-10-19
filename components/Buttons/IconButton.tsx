@@ -6,7 +6,7 @@ export const IconButton: FunctionComponent<IconButtonProps> = props => {
 	const theme = usePicasso();
 	return (
 		<Button
-			color={theme.text.mono}
+			color={theme.icon.nightGray}
 			transition="0.4s"
 			bgColor="transparent"
 			_hover={{

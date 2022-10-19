@@ -10,7 +10,7 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import { AiOutlineClose } from "react-icons/ai";
+import { MdOutlineClose } from "react-icons/md";
 
 import { RiInformationFill } from "react-icons/ri";
 
@@ -37,18 +37,22 @@ export const ConfirmList: React.FC<IModal> = props => {
 				>
 					<Flex gap="3">
 						<Flex>
-							<RiInformationFill size={24} color={theme.icon.infoWhiteRed} />
+							<RiInformationFill size={24} color={theme.icon.whiteRed} />
 						</Flex>
 						<Text
 							fontSize="lg"
 							fontWeight="semibold"
-							color={theme.icon.infoWhiteRed}
+							color={theme.icon.whiteRed}
 						>
 							Confirm List
 						</Text>
 					</Flex>
 					<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
-						<AiOutlineClose size={22} onClick={onClose} />
+						<MdOutlineClose
+							size={24}
+							onClick={onClose}
+							color={theme.icon.whiteDarkGray}
+						/>
 					</Flex>
 				</ModalHeader>
 				<ModalBody py="6" bgColor={theme.bg.blueNavyLight}>

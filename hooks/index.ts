@@ -15,3 +15,4 @@ export * from "./swap/useApproveCallback";
 export * from "./swap/useTransactionDeadline";
 export * from "./swap/useWrapCallback";
 export * from "./swap/useTokensPairSorted";
+export * from "./airdrop/useAirdrop";

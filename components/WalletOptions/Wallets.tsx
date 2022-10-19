@@ -36,7 +36,7 @@ export const Wallets = ({ id, header, icon, onClick }: IWalletProps) => {
 			border="1px solid"
 			borderRadius="full"
 			fontSize="md"
-			borderColor={theme.border.wallets}
+			borderColor={theme.border.smoothGray}
 			fontWeight={500}
 			id={id}
 			fontFamily="inter"

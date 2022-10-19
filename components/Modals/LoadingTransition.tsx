@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import React from "react";
-import { AiOutlineClose } from "react-icons/ai";
+import { MdOutlineClose } from "react-icons/md";
 
 interface IModal {
 	isOpen: boolean;
@@ -44,7 +44,7 @@ export const LoadingTransition: React.FC<IModal> = props => {
 					top="8"
 					right="2"
 				>
-					<AiOutlineClose size={24} />
+					<MdOutlineClose size={22} onClick={onClose} color={theme.text.mono} />
 				</Flex>
 				<Flex
 					flexDirection="column"
