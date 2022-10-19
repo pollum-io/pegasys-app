@@ -1,7 +1,6 @@
 import { ethers, Signer } from "ethers";
 import { UseENS } from "hooks";
-import { removeScientificNotation } from "utils";
-import { truncateNumberDecimalsPlaces } from "utils/truncateNumberDecimalsPlaces";
+import { removeScientificNotation, truncateNumberDecimalsPlaces } from "utils";
 
 interface IGetProviderBalance {
 	validatedAddress: string | null;
