@@ -39,7 +39,7 @@ export const getProviderBalance = async (
 
 	return {
 		validatedAddress: validateAddress.address,
-		providerTruncatedBalance,
 		providerBalanceFormattedValue,
+		providerTruncatedBalance,
 	};
 };

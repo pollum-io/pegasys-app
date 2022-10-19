@@ -278,10 +278,22 @@ export const TokensListManageProvider: React.FC<{
 				);
 
 				if (getTokensByChain.length > 0 && verifyTokens.length === 0) {
-					setCurrentCacheListTokensToDisplay(prevState => [
-						...prevState,
-						...getTokensByChain,
-					]);
+					setCurrentCacheListTokensToDisplay(prevState => {
+						if (currentNetworkChainId !== null) {
+							prevState = [
+								...prevState.filter(
+									token => Number(token.chainId) === currentNetworkChainId
+								),
+								...getTokensByChain,
+							];
+
+							return prevState;
+						}
+
+						prevState = [...prevState, ...getTokensByChain];
+
+						return prevState;
+					});
 				}
 			}
 

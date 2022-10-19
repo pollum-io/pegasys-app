@@ -42,8 +42,10 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const getInitialDefaultTokensByRequest = async () => {
 		const { tokens: initialTokens } = await getDefaultTokens(
-			(currentNetworkChainId || 57) as number
+			(currentNetworkChainId as number) || 57
 		);
+
+		console.log("ENTREI AQUI");
 
 		const WSYS = initialTokens.find(
 			(token: TokenInfo | WrappedTokenInfo) => token.symbol === "WSYS"
@@ -62,48 +64,63 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		setInitialDefaultTokens(allTokens);
 	};
 
-	const getAllTokens = async () => {
+	const getAllTokens = () => {
 		if (
 			initialDefaultTokens.length === 0 &&
 			currentCacheListTokensToDisplay.length === 0
 		)
 			return [];
 
-		const defaultTokens = initialDefaultTokens?.filter(
+		const SYSToken = initialDefaultTokens.find(
 			token =>
-				token.symbol === "SYS" ||
-				token.symbol === "WSYS" ||
-				token.symbol === "PSYS"
+				token.symbol === "SYS" &&
+				Number(token.chainId) === (currentNetworkChainId ?? 57)
+		);
+		const WSYSToken = initialDefaultTokens.find(
+			token =>
+				token.symbol === "WSYS" &&
+				Number(token.chainId) === (currentNetworkChainId ?? 57)
+		);
+		const PSYSToken = initialDefaultTokens.find(
+			token =>
+				token.symbol === "PSYS" &&
+				Number(token.chainId) === (currentNetworkChainId ?? 57)
 		);
 
-		if (currentCacheListTokensToDisplay.length === 0) return defaultTokens;
+		if (currentCacheListTokensToDisplay.length === 0)
+			return [SYSToken, WSYSToken, PSYSToken];
 
-		const [SYSExist, WSYSExist, PSYSExist] =
-			currentCacheListTokensToDisplay.filter(
-				token =>
-					token.symbol === "SYS" ||
-					token.symbol === "WSYS" ||
-					token.symbol === "PSYS"
-			);
+		const SYSExist = currentCacheListTokensToDisplay.find(
+			token => token?.symbol === "SYS"
+		);
+		const WSYSExist = currentCacheListTokensToDisplay.find(
+			token => token?.symbol === "WSYS"
+		);
+		const PSYSExist = currentCacheListTokensToDisplay.find(
+			token => token?.symbol === "PSYS"
+		);
 
-		if (SYSExist === undefined || !SYSExist)
-			currentCacheListTokensToDisplay.push(
-				defaultTokens[0] as WrappedTokenInfo
-			);
-		if (WSYSExist === undefined || !WSYSExist)
-			currentCacheListTokensToDisplay.push(
-				defaultTokens[1] as WrappedTokenInfo
-			);
-		if (PSYSExist === undefined || !PSYSExist)
-			currentCacheListTokensToDisplay.push(
-				defaultTokens[2] as WrappedTokenInfo
-			);
+		if (
+			(SYSExist === undefined || SYSExist?.address.length === 0) &&
+			SYSToken !== undefined
+		)
+			currentCacheListTokensToDisplay.push(SYSToken as WrappedTokenInfo);
+		if (
+			(WSYSExist === undefined || WSYSExist.address.length === 0) &&
+			WSYSToken !== undefined
+		)
+			currentCacheListTokensToDisplay.push(WSYSToken as WrappedTokenInfo);
+		if (
+			(PSYSExist === undefined || PSYSExist.address.length === 0) &&
+			PSYSToken !== undefined
+		)
+			currentCacheListTokensToDisplay.push(PSYSToken as WrappedTokenInfo);
 
 		return currentCacheListTokensToDisplay;
 	};
 
 	const getDefaultUserTokensBalance = async () => {
-		const tokens = await getAllTokens();
+		const tokens = getAllTokens();
 
 		if (tokens.length === 0) return;
 
@@ -129,7 +146,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		const tokensWithBalance = await Promise.all(
 			tokens.map(async token => {
-				if (token.symbol === "SYS") {
+				if (token?.symbol === "SYS") {
 					return {
 						...token,
 						balance: providerBalanceFormattedValue || ("0" as string),
@@ -138,10 +155,10 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 				}
 
 				const contractBalance = await getBalanceOfSingleCall(
-					token.address,
+					token?.address as string,
 					validatedAddress as string,
 					provider as Signer,
-					token.decimals
+					token?.decimals as number
 				);
 
 				const trucatedContractBalance =
@@ -179,7 +196,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		walletAddress,
 		approvalState.status,
 		currentCacheListTokensToDisplay,
-		tokenListManageState,
+		initialDefaultTokens,
 		tokenListManageState.selectedListUrl,
 	]);
 
