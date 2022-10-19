@@ -1,9 +1,9 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
-import { JSBI, Token } from "@pollum-io/pegasys-sdk";
+import { Token } from "@pollum-io/pegasys-sdk";
 
-import { addTransaction, getTokenPairs } from "utils";
+import { getTokenPairs } from "utils";
 import { WrappedTokenInfo } from "types";
-import { ApprovalState, useTokens, useWallet } from "hooks";
+import { useTokens, useWallet } from "hooks";
 
 import { MINICHEF_ADDRESS } from "pegasys-services/constants";
 import { ContractFramework } from "pegasys-services/frameworks";
@@ -26,13 +26,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	const [search, setSearch] = useState<string>("");
 	const { userTokensBalance } = useTokens();
 	const { chainId, address } = psUseWallet();
-	const {
-		provider,
-		setTransactions,
-		transactions,
-		setCurrentTxHash,
-		setApprovalState,
-	} = useWallet();
+	const { provider } = useWallet();
 	const {
 		signature,
 		onSign,
@@ -40,77 +34,80 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 		selectedOpportunity,
 		setEarnOpportunities,
 		earnOpportunities,
+		withdrawPercentage,
+		onContractCall,
 	} = useEarn();
 
-	const walletInfo = {
-		walletAddress: address,
-		chainId,
-		provider,
-	};
-
 	const withdraw = async () => {
-		const typedValue = getTypedValue();
+		await onContractCall(
+			async () => {
+				const typedValue = getTypedValue();
 
-		if (selectedOpportunity && typedValue) {
-			let method = FarmServices.withdraw;
-			const { poolId } = selectedOpportunity as IFarmInfo;
+				if (selectedOpportunity && typedValue) {
+					let method = FarmServices.withdraw;
+					const { poolId } = selectedOpportunity as IFarmInfo;
 
-			if (typedValue.isAllIn) {
-				method = FarmServices.withdrawAndClaim;
-			}
+					if (withdrawPercentage === 100) {
+						method = FarmServices.withdrawAndClaim;
+					}
 
-			const { response, hash } = await method(
-				poolId,
-				typedValue.value.toString(16),
-				address
-			);
+					const res = await method(
+						poolId,
+						typedValue.value.toString(16),
+						address
+					);
 
-			// addTransaction(response, walletInfo, setTransactions, transactions, {
-			// 	summary: "Withdraw deposited liquidity",
-			// 	finished: false,
-			// });
-			// setCurrentTxHash(hash);
-			// setApprovalState({ type: "withdraw", status: ApprovalState.PENDING });
-		}
+					return res;
+				}
+
+				return undefined;
+			},
+			"Withdraw deposited liquidity",
+			"withdraw"
+		);
 	};
 
 	const claim = async () => {
-		if (selectedOpportunity) {
-			const { poolId } = selectedOpportunity as IFarmInfo;
+		await onContractCall(
+			async () => {
+				if (selectedOpportunity) {
+					const { poolId } = selectedOpportunity as IFarmInfo;
 
-			await FarmServices.claim(poolId, address);
+					const res = await FarmServices.claim(poolId, address);
 
-			// addTransaction(response, walletInfo, setTransactions, transactions, {
-			// 	summary: "Claim accumulated PSYS rewards",
-			// 	finished: false,
-			// });
-			// setCurrentTxHash(hash);
-			// setApprovalState({ type: "claim", status: ApprovalState.PENDING });
-		}
+					return res;
+				}
+
+				return undefined;
+			},
+			"Claim accumulated PSYS rewards",
+			"claim"
+		);
 	};
 
 	const deposit = async () => {
-		const typedValue = getTypedValue(true);
+		await onContractCall(
+			async () => {
+				const typedValue = getTypedValue(true);
 
-		if (selectedOpportunity && typedValue && signature) {
-			const { poolId } = selectedOpportunity as IFarmInfo;
+				if (selectedOpportunity && typedValue && signature) {
+					const { poolId } = selectedOpportunity as IFarmInfo;
 
-			await FarmServices.deposit(
-				poolId,
-				typedValue.value.toString(16),
-				address,
-				signature
-			);
+					const res = await FarmServices.deposit(
+						poolId,
+						typedValue.value.toString(16),
+						address,
+						signature
+					);
 
-			// .then(({ response, hash }) => {
-			// 	addTransaction(response, walletInfo, setTransactions, transactions, {
-			// 		summary: "Deposit liquidity",
-			// 		finished: false,
-			// 	});
-			// 	setCurrentTxHash(hash);
-			// 	setApprovalState({ type: "deposit", status: ApprovalState.PENDING });
-			// });
-		}
+					return res;
+				}
+
+				return undefined;
+			},
+			"Deposit liquidity",
+			"deposit"
+		);
 	};
 
 	const sign = async () => {

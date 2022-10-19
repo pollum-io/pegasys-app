@@ -26,14 +26,19 @@ interface IModal {
 }
 
 export const FarmActions: React.FC<IModal> = props => {
-	const { isOpen, onClose } = props;
+	const { isOpen, onClose: close } = props;
 	const theme = usePicasso();
 	const { claim, withdraw, deposit, sign } = useFarm();
-	const { buttonId, selectedOpportunity } = useEarn();
+	const { buttonId, selectedOpportunity, reset } = useEarn();
 
 	if (!selectedOpportunity) {
 		return null;
 	}
+
+	const onClose = () => {
+		reset();
+		close();
+	};
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>

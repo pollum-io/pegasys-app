@@ -25,14 +25,19 @@ interface IModal {
 }
 
 export const StakeActions: React.FC<IModal> = props => {
-	const { isOpen, onClose } = props;
+	const { isOpen, onClose: close } = props;
 	const theme = usePicasso();
 	const { claim, stake, unstake, sign } = useStake();
-	const { selectedOpportunity, buttonId } = useEarn();
+	const { selectedOpportunity, buttonId, reset } = useEarn();
 
 	if (!selectedOpportunity) {
 		return null;
 	}
+
+	const onClose = () => {
+		reset();
+		close();
+	};
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>

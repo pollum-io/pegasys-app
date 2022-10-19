@@ -18,7 +18,13 @@ const EarnWithdrawAction: React.FC<IEarnWithdrawActionProps> = ({
 	buttonTitle,
 	onClose,
 }) => {
-	const { selectedOpportunity, withdrawTypedValue, buttonId } = useEarn();
+	const {
+		selectedOpportunity,
+		withdrawTypedValue,
+		buttonId,
+		withdrawPercentage,
+		loading,
+	} = useEarn();
 
 	if (
 		!selectedOpportunity ||
@@ -51,11 +57,12 @@ const EarnWithdrawAction: React.FC<IEarnWithdrawActionProps> = ({
 					height={["2.5rem", "2.5rem", "3rem", "3rem"]}
 					py="3"
 					px="1.5rem"
-					disabled={!withdrawTypedValue}
+					disabled={!withdrawTypedValue || !withdrawPercentage || loading}
 					onClick={withdraw}
 					solid
 				>
-					{buttonTitle}
+					{`${buttonTitle}
+					${withdrawPercentage === 100 ? " And Claim" : ""}`}
 				</EarnButton>
 			</Flex>
 		</Flex>

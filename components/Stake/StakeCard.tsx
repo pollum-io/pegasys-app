@@ -114,8 +114,10 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						Total staked
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						{stakeInfo.totalStakedAmount.toSignificant()}{" "}
-						{stakeInfo.stakeToken.symbol}
+						{showInUsd
+							? stakeInfo.totalStakedInUsd
+							: stakeInfo.totalStakedAmount.toSignificant()}{" "}
+						{showInUsd ? "usd" : stakeInfo.stakeToken.symbol}
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column" pl={["0", "0", "6", "6"]}>
@@ -124,7 +126,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
 						{stakeInfo.rewardRatePerWeek.toSignificant()}{" "}
-						{stakeInfo.rewardToken.symbol}/Week
+						{showInUsd ? "usd" : stakeInfo.rewardToken.symbol}/Week
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column">
@@ -132,8 +134,10 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						Your Staked
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						{stakeInfo.stakedAmount.toSignificant()}{" "}
-						{stakeInfo.stakeToken.symbol}
+						{showInUsd
+							? stakeInfo.stakedInUsd
+							: stakeInfo.stakedAmount.toSignificant()}{" "}
+						{showInUsd ? "usd" : stakeInfo.stakeToken.symbol}
 					</Text>
 				</GridItem>
 				<GridItem flexDirection="column" pl={["0", "0", "6", "6"]}>
@@ -141,8 +145,10 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						Your unclaimed
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						{stakeInfo.unclaimedAmount.toSignificant()}{" "}
-						{stakeInfo.rewardToken.symbol}
+						{showInUsd
+							? stakeInfo.unclaimedInUsd
+							: stakeInfo.unclaimedAmount.toSignificant()}{" "}
+						{showInUsd ? "usd" : stakeInfo.rewardToken.symbol}
 					</Text>
 				</GridItem>
 			</Grid>

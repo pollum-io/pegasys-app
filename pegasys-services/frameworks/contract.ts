@@ -53,7 +53,7 @@ class ContractFramework {
 	): Promise<BigNumber> {
 		const gas = await this.estimateGas(props);
 
-		const gasLimit = gas.mul(BigNumber.from(10));
+		const gasLimit = gas.mul(BigNumber.from(4));
 
 		return gasLimit;
 	}

@@ -41,11 +41,7 @@ class FarmServices {
 	}
 
 	private static async getStake(stakeToken: Token, poolId: number) {
-		console.log(stakeToken, poolId);
-
 		const stake = await LpTokenServices.getUserStake(poolId, stakeToken);
-
-		console.log(stake);
 
 		const stakeJSBI = JSBI.BigInt(stake.toString() ?? 0);
 
@@ -273,7 +269,7 @@ class FarmServices {
 				totalSupplyJSBI
 			);
 		} else if (pair.involvesToken(wsys)) {
-			const totalStakedInWsys = JSBI.GT(totalSupplyJSBI, 0)
+			const totalStakedInWsys = JSBI.GT(totalSupplyJSBI, BIG_INT_ZERO)
 				? new TokenAmount(
 						wsys,
 						JSBI.divide(
@@ -290,7 +286,7 @@ class FarmServices {
 				totalStakedInUsd = price.quote(totalStakedInWsys) as TokenAmount;
 			}
 		} else if (pair.involvesToken(psys)) {
-			const oneToken = JSBI.BigInt(1000000000000000000);
+			const oneToken = JSBI.BigInt(`1${"0".repeat(18)}`);
 
 			const sysPsysRatio = JSBI.divide(
 				JSBI.multiply(oneToken, rewardTokenWsysPair.reserveOf(wsys).raw),
@@ -311,7 +307,7 @@ class FarmServices {
 								JSBI.multiply(totalStake.raw, valueOfPsysInSys),
 								BIG_INT_TWO // this is b/c the value of LP shares are ~double the value of the wsys they entitle owner to
 							),
-							totalSupplyJSBI
+							JSBI.multiply(totalSupplyJSBI, JSBI.BigInt(10000))
 					  )
 			);
 
@@ -346,7 +342,16 @@ class FarmServices {
 			return {};
 		}
 
-		const extraRewardToken = await TokenServices.getToken(rewarder, chainId);
+		console.log(rewarder);
+
+		const extraRewardToken = new Token(
+			chainId ?? ChainId.NEVM,
+			rewarder,
+			18,
+			"LUXY",
+			"Luxy"
+		);
+		// const extraRewardToken = await TokenServices.getToken(rewarder, chainId);
 
 		const tokenMultiplier = await LpTokenServices.getRewardMultiplier(rewarder);
 
@@ -531,21 +536,19 @@ class FarmServices {
 
 	static async withdraw(poolId: number, amount: string, address: string) {
 		let txHash = "";
-		let txResponse: ITransactionResponse | any = null;
 		const contract = LpTokenServices.getLpContract();
 
-		await ContractFramework.call({
+		const res = await ContractFramework.call({
 			methodName: "withdraw",
 			contract,
 			args: [poolId, `0x${amount}`, address],
-		}).then((res: ITransactionResponse) => {
-			txHash = `${res?.hash}`;
-			txResponse = res;
 		});
+
+		txHash = `${res?.hash}`;
 
 		return {
 			hash: txHash,
-			response: txResponse,
+			response: res ?? null,
 		};
 	}
 
@@ -555,43 +558,37 @@ class FarmServices {
 		address: string
 	) {
 		let txHash = "";
-		let txResponse: ITransactionResponse | any = null;
 		const contract = LpTokenServices.getLpContract();
 
-		await ContractFramework.call({
+		const res = await ContractFramework.call({
 			methodName: "withdrawAndHarvest",
 			contract,
 			args: [poolId, `0x${amount}`, address],
-		}).then((res: ITransactionResponse) => {
-			txHash = `${res?.hash}`;
-			txResponse = res;
 		});
+
+		txHash = `${res?.hash}`;
 
 		return {
 			hash: txHash,
-			response: txResponse,
+			response: res ?? null,
 		};
 	}
 
 	static async claim(poolId: number, address: string) {
 		let txHash = "";
-		let txResponse: ITransactionResponse | any = null;
 		const contract = LpTokenServices.getLpContract();
 
-		await ContractFramework.call({
+		const res = await ContractFramework.call({
 			methodName: "harvest",
 			contract,
 			args: [poolId, address],
-		}).then((res: ITransactionResponse) => {
-			console.log(res);
-
-			txHash = `${res?.hash}`;
-			txResponse = res;
 		});
+
+		txHash = `${res?.hash}`;
 
 		return {
 			hash: txHash,
-			response: txResponse,
+			response: res ?? null,
 		};
 	}
 
@@ -607,11 +604,10 @@ class FarmServices {
 		} | null
 	) {
 		let txHash = "";
-		let txResponse: ITransactionResponse | any = null;
 		if (signatureData) {
 			const contract = LpTokenServices.getLpContract();
 
-			await ContractFramework.call({
+			const res = await ContractFramework.call({
 				methodName: "depositWithPermit",
 				contract,
 				args: [
@@ -623,19 +619,19 @@ class FarmServices {
 					signatureData.r,
 					signatureData.s,
 				],
-			}).then((res: ITransactionResponse) => {
-				txHash = `${res?.hash}`;
-				txResponse = res;
 			});
+
+			txHash = `${res?.hash}`;
 
 			return {
 				hash: txHash,
-				response: txResponse,
+				response: res ?? null,
 			};
 		}
+
 		return {
 			hash: txHash,
-			response: txResponse,
+			response: null,
 		};
 	}
 }

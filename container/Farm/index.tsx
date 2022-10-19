@@ -15,10 +15,15 @@ import {
 import { NextPage } from "next";
 import { MdOutlineCallMade, MdExpandMore } from "react-icons/md";
 
-import { FarmCard, SearchInput } from "components";
+import { FarmCard, LoadingTransition, SearchInput } from "components";
 import { usePicasso, useModal } from "hooks";
 
-import { IFarmInfo, useFarm, useWallet as psUseWallet } from "pegasys-services";
+import {
+	IFarmInfo,
+	useFarm,
+	useWallet as psUseWallet,
+	useEarn,
+} from "pegasys-services";
 import { FarmActions } from "components/Modals/FarmActions";
 
 const sortData = {
@@ -28,7 +33,8 @@ const sortData = {
 
 export const FarmContainer: NextPage = () => {
 	const { setSearch, sort, setSort, sortedPairs } = useFarm();
-	const { isConnected } = psUseWallet();
+	const { loading, signatureLoading } = useEarn();
+	const { isConnected, address } = psUseWallet();
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
 	const { isOpenFarmActions, onCloseFarmActions } = useModal();
@@ -36,6 +42,7 @@ export const FarmContainer: NextPage = () => {
 
 	return (
 		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
+			<LoadingTransition isOpen={loading || signatureLoading} />
 			<FarmActions isOpen={isOpenFarmActions} onClose={onCloseFarmActions} />
 			<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
 				<Flex
@@ -116,77 +123,84 @@ export const FarmContainer: NextPage = () => {
 							Farms
 						</Text>
 					</Flex>
-					<Flex
-						flexDirection={["column-reverse", "column-reverse", "row", "row"]}
-						alignItems="flex-end"
-						gap="4"
-						id="c"
-						w="max-content"
-						position={["absolute", "absolute", "relative", "relative"]}
-					>
-						<SearchInput
-							setSearch={setSearch}
-							iconColor={theme.icon.searchIcon}
-							borderColor={theme.bg.blueNavyLightness}
-							placeholder={{
-								value: "Search by token name",
-								color: theme.text.input,
-							}}
-						/>
+					{address && (
 						<Flex
-							id="d"
-							flexDirection={["initial", "initial", "column", "column"]}
-							alignItems={["baseline", "baseline", "flex-start", "flex-start"]}
-							justifyContent="flex-start"
+							flexDirection={["column-reverse", "column-reverse", "row", "row"]}
+							alignItems="flex-end"
+							gap="4"
+							id="c"
+							w="max-content"
+							position={["absolute", "absolute", "relative", "relative"]}
 						>
-							<Menu>
-								<Text fontSize="sm" pb="2" pr={["2", "2", "0", "0"]}>
-									Sort by
-								</Text>
-								<MenuButton
-									as={Button}
-									fontSize="sm"
-									fontWeight="semibold"
-									alignItems="center"
-									justifyContent="justify-content"
-									py={["0.2rem", "0.2rem", "1", "1"]}
-									pl="4"
-									pr="4"
-									w="max-content"
-									h="2.2rem"
-									bgColor={theme.bg.blueNavyLightness}
-									color={theme.text.mono}
-									_hover={{
-										opacity: "1",
-										bgColor: theme.bg.bluePurple,
-									}}
-									_active={{}}
-									borderRadius="full"
-								>
-									<Flex alignItems="center" color="white">
-										{sortData[sort]}
-										<Icon as={MdExpandMore} w="5" h="5" ml="8" />
-									</Flex>
-								</MenuButton>
-								<MenuList
-									bgColor={theme.bg.blueNavy}
-									color={theme.text.mono}
-									borderColor="transparent"
-									p="4"
-									fontSize="sm"
-								>
-									{Object.keys(sortData).map((key, i) => (
-										<MenuItem
-											onClick={() => setSort(key as keyof typeof sortData)}
-											key={i}
-										>
-											{sortData[key as keyof typeof sortData]}
-										</MenuItem>
-									))}
-								</MenuList>
-							</Menu>
+							<SearchInput
+								setSearch={setSearch}
+								iconColor={theme.icon.searchIcon}
+								borderColor={theme.bg.blueNavyLightness}
+								placeholder={{
+									value: "Search by token name",
+									color: theme.text.input,
+								}}
+							/>
+							<Flex
+								id="d"
+								flexDirection={["initial", "initial", "column", "column"]}
+								alignItems={[
+									"baseline",
+									"baseline",
+									"flex-start",
+									"flex-start",
+								]}
+								justifyContent="flex-start"
+							>
+								<Menu>
+									<Text fontSize="sm" pb="2" pr={["2", "2", "0", "0"]}>
+										Sort by
+									</Text>
+									<MenuButton
+										as={Button}
+										fontSize="sm"
+										fontWeight="semibold"
+										alignItems="center"
+										justifyContent="justify-content"
+										py={["0.2rem", "0.2rem", "1", "1"]}
+										pl="4"
+										pr="4"
+										w="max-content"
+										h="2.2rem"
+										bgColor={theme.bg.blueNavyLightness}
+										color={theme.text.mono}
+										_hover={{
+											opacity: "1",
+											bgColor: theme.bg.bluePurple,
+										}}
+										_active={{}}
+										borderRadius="full"
+									>
+										<Flex alignItems="center" color="white">
+											{sortData[sort]}
+											<Icon as={MdExpandMore} w="5" h="5" ml="8" />
+										</Flex>
+									</MenuButton>
+									<MenuList
+										bgColor={theme.bg.blueNavy}
+										color={theme.text.mono}
+										borderColor="transparent"
+										p="4"
+										fontSize="sm"
+									>
+										{Object.keys(sortData).map((key, i) => (
+											<MenuItem
+												onClick={() => setSort(key as keyof typeof sortData)}
+												key={i}
+											>
+												{sortData[key as keyof typeof sortData]}
+											</MenuItem>
+										))}
+									</MenuList>
+								</Menu>
+							</Flex>
 						</Flex>
-					</Flex>
+					)}
 				</Flex>
 				{!isConnected && (
 					<Flex

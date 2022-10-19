@@ -1,10 +1,11 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { JSBI } from "@pollum-io/pegasys-sdk";
 
-import { tryParseAmount } from "utils";
+import { tryParseAmount, addTransaction } from "utils";
+import { ApprovalState } from "contexts";
 import { useWallet } from "hooks";
 
-import { useWallet as psUseWallet } from "../hooks";
+import { useWallet as psUseWallet, useToasty } from "../hooks";
 import { WalletFramework } from "../frameworks";
 import { onlyNumbers } from "../utils";
 import {
@@ -23,12 +24,28 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 	const [withdrawTypedValue, setWithdrawTypedValue] = useState<string>("");
 	const [depositTypedValue, setDepositTypedValue] = useState<string>("");
 	const [signature, setSignature] = useState<TSignature>(null);
+	const [signatureLoading, setSignatureLoading] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(false);
 	const [buttonId, setButtonId] = useState<TButtonId>(null);
 	const [selectedOpportunity, setSelectedOpportunity] =
 		useState<IEarnInfo | null>(null);
 
-	const { userTransactionDeadlineValue } = useWallet();
+	const {
+		provider,
+		userTransactionDeadlineValue,
+		setTransactions,
+		transactions,
+		setCurrentTxHash,
+		setApprovalState,
+	} = useWallet();
+
 	const { chainId, address } = psUseWallet();
+	const { toast } = useToasty();
+
+	const reset = () => {
+		setWithdrawTypedValue("");
+		setDepositTypedValue("");
+	};
 
 	const getTypedValue = (isDeposit?: boolean) => {
 		if (selectedOpportunity) {
@@ -48,20 +65,74 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 					? parsedInput.raw
 					: JSBI.BigInt(0);
 
-			const isAllIn = JSBI.equal(
-				parsedAmount,
-				isDeposit
-					? selectedOpportunity.unstakedAmount.raw
-					: selectedOpportunity.stakedAmount.raw
+			const percentage = JSBI.toNumber(
+				JSBI.divide(
+					JSBI.multiply(parsedAmount, JSBI.BigInt(100)),
+					isDeposit
+						? selectedOpportunity.unstakedAmount.raw
+						: selectedOpportunity.stakedAmount.raw
+				)
 			);
 
 			return {
-				isAllIn,
+				percentage,
 				value: parsedAmount,
 			};
 		}
 
 		return undefined;
+	};
+
+	const onContractCall = async (
+		promise: () => Promise<{ hash: string; response: any } | undefined>,
+		summary: string,
+		type: string
+	) => {
+		try {
+			setLoading(true);
+
+			const walletInfo = {
+				walletAddress: address,
+				chainId,
+				provider,
+			};
+
+			const res = await promise();
+
+			if (res) {
+				const { response, hash } = res;
+
+				addTransaction(response, walletInfo, setTransactions, transactions, {
+					summary,
+					finished: false,
+				});
+				setCurrentTxHash(hash);
+
+				setApprovalState({
+					type,
+					status: ApprovalState.PENDING,
+				});
+
+				toast({
+					id: `${type}Toast`,
+					position: "top-right",
+					status: "success",
+					title: "Success",
+					description: summary,
+				});
+			}
+		} catch (e) {
+			toast({
+				id: `${type}Toast`,
+				position: "top-right",
+				status: "error",
+				title: `Error on ${type}`,
+				description: `Error on ${summary}`,
+			});
+		} finally {
+			setLoading(false);
+			reset();
+		}
 	};
 
 	const onSign = async (
@@ -71,28 +142,48 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 		verifyingContract: string,
 		version?: string
 	) => {
-		if (selectedOpportunity) {
-			const typedValue = getTypedValue(true);
+		try {
+			setSignatureLoading(true);
 
-			const s = await WalletFramework.getSignature({
-				address,
-				chainId,
-				userDeadline: userTransactionDeadlineValue,
-				contract,
-				name,
-				spender,
-				verifyingContract,
-				value: typedValue?.value.toString() ?? "",
-				version,
-			});
+			if (selectedOpportunity) {
+				const typedValue = getTypedValue(true);
 
-			setSignature(s);
+				const s = await WalletFramework.getSignature({
+					address,
+					chainId,
+					userDeadline: userTransactionDeadlineValue,
+					contract,
+					name,
+					spender,
+					verifyingContract,
+					value: typedValue?.value.toString() ?? "",
+					version,
+				});
+
+				setSignature(s);
+			}
+		} finally {
+			setSignatureLoading(false);
 		}
 	};
 
 	useEffect(() => {
 		setSignature(null);
 	}, [depositTypedValue]);
+
+	const withdrawPercentage = useMemo(() => {
+		const value = getTypedValue();
+
+		if (!value) {
+			return 0;
+		}
+
+		return value.percentage;
+	}, [
+		selectedOpportunity,
+		selectedOpportunity?.stakedAmount,
+		withdrawTypedValue,
+	]);
 
 	const providerValue = useMemo(
 		() => ({
@@ -115,14 +206,33 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 			setEarnOpportunities,
 			selectedOpportunity,
 			setSelectedOpportunity,
+			withdrawPercentage,
+			reset,
+			signatureLoading,
+			loading,
+			setLoading,
+			onContractCall,
 		}),
 		[
 			withdrawTypedValue,
+			setWithdrawTypedValue,
 			depositTypedValue,
+			setDepositTypedValue,
 			buttonId,
+			setButtonId,
+			getTypedValue,
+			onSign,
 			signature,
 			earnOpportunities,
+			setEarnOpportunities,
 			selectedOpportunity,
+			setSelectedOpportunity,
+			withdrawPercentage,
+			reset,
+			signatureLoading,
+			loading,
+			setLoading,
+			onContractCall,
 		]
 	);
 

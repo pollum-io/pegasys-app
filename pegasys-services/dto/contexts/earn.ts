@@ -51,9 +51,19 @@ export interface IEarnProviderValue {
 	) => Promise<void>;
 	getTypedValue: (
 		isDeposit?: boolean
-	) => { isAllIn: boolean; value: JSBI } | undefined;
+	) => { percentage: number; value: JSBI } | undefined;
 	earnOpportunities: IEarnInfo[];
 	setEarnOpportunities: setType<IEarnInfo[]>;
 	selectedOpportunity: IEarnInfo | null;
 	setSelectedOpportunity: setType<IEarnInfo | null>;
+	withdrawPercentage: number;
+	reset: () => void;
+	signatureLoading: boolean;
+	loading: boolean;
+	setLoading: setType<boolean>;
+	onContractCall: (
+		promise: () => Promise<{ hash: string; response: any } | undefined>,
+		summary: string,
+		type: string
+	) => Promise<void>;
 }

@@ -18,8 +18,14 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 	sign,
 	buttonTitle,
 }) => {
-	const { selectedOpportunity, signature, depositTypedValue, buttonId } =
-		useEarn();
+	const {
+		selectedOpportunity,
+		signature,
+		depositTypedValue,
+		buttonId,
+		signatureLoading,
+		loading,
+	} = useEarn();
 	const { userTokensBalance } = useTokens();
 
 	const tokenALogo = useMemo(() => {
@@ -93,11 +99,11 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				px="1.5rem"
 				mt="1.5rem"
 				mb="1rem"
-				disabled={!depositTypedValue}
+				disabled={!depositTypedValue || signatureLoading || loading}
 				onClick={signature ? deposit : sign}
 				solid
 			>
-				{signature ? buttonTitle : "Sign"}
+				{signatureLoading ? "LOADING" : signature ? buttonTitle : "Sign"}
 			</EarnButton>
 		</Flex>
 	);

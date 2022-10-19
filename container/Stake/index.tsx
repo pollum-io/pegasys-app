@@ -16,17 +16,19 @@ import {
 	useEarn,
 	IStakeInfo,
 } from "pegasys-services";
+import { LoadingTransition } from "components";
 
 export const StakeContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const { colorMode } = useColorMode();
-	const { isConnected } = psUseWallet();
+	const { isConnected, address } = psUseWallet();
 	const { showInUsd, setShowInUsd } = useStake();
-	const { selectedOpportunity, earnOpportunities } = useEarn();
+	const { earnOpportunities, loading, signatureLoading } = useEarn();
 
 	return (
 		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
+			<LoadingTransition isOpen={loading || signatureLoading} />
 			<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
 				<Flex
 					flexDirection="column"
@@ -101,57 +103,63 @@ export const StakeContainer: NextPage = () => {
 						<Text fontSize="2xl" fontWeight="semibold">
 							Current Opportunities
 						</Text>
-						<Flex
-							gap="1"
-							mt={["4", "4", "0", "0"]}
-							justifyContent={[
-								"center",
-								"center",
-								"space-between",
-								"space-between",
-							]}
-						>
-							<Button
-								onClick={() => setShowInUsd(false)}
-								color={
-									showInUsd
-										? theme.border.borderSettings
-										: theme.text.farmActionsHover
-								}
-								bgColor={showInUsd ? "transparent" : theme.bg.farmActionsHover}
-								borderRadius="full"
-								w="5.688rem"
-								h="max-content"
-								py="2"
-								px="6"
-								fontWeight="semibold"
-								_hover={{
-									opacity: "0.9",
-								}}
+						{address && (
+							<Flex
+								gap="1"
+								mt={["4", "4", "0", "0"]}
+								justifyContent={[
+									"center",
+									"center",
+									"space-between",
+									"space-between",
+								]}
 							>
-								PSYS
-							</Button>
-							<Button
-								onClick={() => setShowInUsd(true)}
-								color={
-									showInUsd
-										? theme.text.farmActionsHover
-										: theme.border.borderSettings
-								}
-								bgColor={showInUsd ? theme.bg.farmActionsHover : "transparent"}
-								borderRadius="full"
-								w="5.688rem"
-								h="max-content"
-								py="2"
-								px="6"
-								fontWeight="semibold"
-								_hover={{
-									opacity: "0.9",
-								}}
-							>
-								USD
-							</Button>
-						</Flex>
+								<Button
+									onClick={() => setShowInUsd(false)}
+									color={
+										showInUsd
+											? theme.border.borderSettings
+											: theme.text.farmActionsHover
+									}
+									bgColor={
+										showInUsd ? "transparent" : theme.bg.farmActionsHover
+									}
+									borderRadius="full"
+									w="5.688rem"
+									h="max-content"
+									py="2"
+									px="6"
+									fontWeight="semibold"
+									_hover={{
+										opacity: "0.9",
+									}}
+								>
+									PSYS
+								</Button>
+								<Button
+									onClick={() => setShowInUsd(true)}
+									color={
+										showInUsd
+											? theme.text.farmActionsHover
+											: theme.border.borderSettings
+									}
+									bgColor={
+										showInUsd ? theme.bg.farmActionsHover : "transparent"
+									}
+									borderRadius="full"
+									w="5.688rem"
+									h="max-content"
+									py="2"
+									px="6"
+									fontWeight="semibold"
+									_hover={{
+										opacity: "0.9",
+									}}
+								>
+									USD
+								</Button>
+							</Flex>
+						)}
 					</Flex>
 				</Flex>
 				{!isConnected && (

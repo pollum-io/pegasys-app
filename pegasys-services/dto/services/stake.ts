@@ -6,5 +6,6 @@ export interface IStakeInfo extends IEarnInfo {
 	isPeriodFinished: boolean;
 	apr: JSBI;
 	rewardRatePerWeekInUsd: number;
-	totalRewardRatePerWeekInUsd: number;
+	unclaimedInUsd: number;
+	// totalRewardRatePerWeekInUsd: number;
 }

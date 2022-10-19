@@ -11,7 +11,7 @@ interface IEarnClaimActionProps {
 }
 
 const EarnClaimAction: React.FC<IEarnClaimActionProps> = ({ claim }) => {
-	const { selectedOpportunity, buttonId } = useEarn();
+	const { selectedOpportunity, buttonId, loading } = useEarn();
 	const theme = usePicasso();
 
 	if (
@@ -56,6 +56,7 @@ const EarnClaimAction: React.FC<IEarnClaimActionProps> = ({ claim }) => {
 				py="3"
 				my="4"
 				onClick={claim}
+				disabled={loading}
 				solid
 			>
 				{`Claim ${selectedOpportunity.rewardToken.symbol}`}
