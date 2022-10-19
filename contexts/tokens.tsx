@@ -45,8 +45,6 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			(currentNetworkChainId as number) || 57
 		);
 
-		console.log("ENTREI AQUI");
-
 		const WSYS = initialTokens.find(
 			(token: TokenInfo | WrappedTokenInfo) => token.symbol === "WSYS"
 		) as WrappedTokenInfo | ITokenInfoBalance;
