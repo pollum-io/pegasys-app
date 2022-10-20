@@ -5,6 +5,8 @@ import { tryParseAmount, addTransaction } from "utils";
 import { ApprovalState } from "contexts";
 import { useWallet } from "hooks";
 
+import { BIG_INT_ZERO } from "pegasys-services/constants";
+import { BiGift } from "react-icons/bi";
 import { useWallet as psUseWallet, useToasty } from "../hooks";
 import { WalletFramework } from "../frameworks";
 import { onlyNumbers } from "../utils";
@@ -66,12 +68,23 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 					: JSBI.BigInt(0);
 
 			const percentage = JSBI.toNumber(
-				JSBI.divide(
-					JSBI.multiply(parsedAmount, JSBI.BigInt(100)),
-					isDeposit
-						? selectedOpportunity.unstakedAmount.raw
-						: selectedOpportunity.stakedAmount.raw
-				)
+				(isDeposit &&
+					JSBI.greaterThan(
+						selectedOpportunity.unstakedAmount.raw,
+						BIG_INT_ZERO
+					)) ||
+					(!isDeposit &&
+						JSBI.greaterThan(
+							selectedOpportunity.stakedAmount.raw,
+							BIG_INT_ZERO
+						))
+					? JSBI.divide(
+							JSBI.multiply(parsedAmount, JSBI.BigInt(100)),
+							isDeposit
+								? selectedOpportunity.unstakedAmount.raw
+								: selectedOpportunity.stakedAmount.raw
+					  )
+					: BIG_INT_ZERO
 			);
 
 			return {

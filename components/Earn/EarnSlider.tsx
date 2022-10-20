@@ -16,9 +16,9 @@ import { usePicasso } from "hooks";
 import { useEarn } from "pegasys-services";
 
 const EarnSlider: React.FC = () => {
-	const [sliderValue, setSliderValue] = useState<number>(0);
 	const [showTooltip, setShowTooltip] = useState<boolean>(false);
-	const { selectedOpportunity, setWithdrawTypedValue } = useEarn();
+	const { selectedOpportunity, setWithdrawTypedValue, withdrawPercentage } =
+		useEarn();
 	const theme = usePicasso();
 
 	if (!selectedOpportunity) {
@@ -37,7 +37,6 @@ const EarnSlider: React.FC = () => {
 				w="85%"
 				colorScheme="teal"
 				onChange={(value: number) => {
-					setSliderValue(value);
 					const percent = new Percent(value.toString(), "100");
 
 					const valuePercent = percent.multiply(
@@ -80,7 +79,7 @@ const EarnSlider: React.FC = () => {
 					color={theme.text.mono}
 					placement="top"
 					isOpen={showTooltip}
-					label={`${sliderValue}%`}
+					label={`${withdrawPercentage}%`}
 				>
 					<SliderThumb />
 				</Tooltip>

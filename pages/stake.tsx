@@ -10,5 +10,5 @@ const Stake: NextPage = () => (
 		</StakeProvider>
 	</DefaultTemplate>
 );
-g
+
 export default Stake;

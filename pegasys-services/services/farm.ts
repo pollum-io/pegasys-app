@@ -332,7 +332,7 @@ class FarmServices {
 
 	private static async getExtraReward(
 		totalRewardRatePerWeek: TokenAmount,
-		rewardRatePerWeek: TokenAmount,x'
+		rewardRatePerWeek: TokenAmount,
 		poolId: number,
 		chainId?: ChainId
 	) {
@@ -341,8 +341,6 @@ class FarmServices {
 		if (rewarder === ZERO_ADDRESS) {
 			return {};
 		}
-
-		console.log(rewarder);
 
 		const extraRewardToken = new Token(
 			chainId ?? ChainId.NEVM,
