@@ -148,6 +148,8 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	}, [isModalOpen]);
 
 	useMemo(() => {
+		setTxSignature(false);
+
 		if (isModalOpen && slideValidation)
 			onSlide(setAvailableTokensAmount, sliderValue);
 	}, [sliderValue]);
