@@ -42,7 +42,7 @@ export function UseWrapCallback(
 	const outputCurrency =
 		tradeTokens[1]?.symbol === "SYS" ? NSYS : tradeTokens[1];
 
-	const balance = tradeTokens[0]?.balance;
+	const balance = tradeTokens[0]?.balance as string;
 	// we can always parse the amount typed as the input currency, since wrapping is 1:1
 	const inputAmount = useMemo(
 		() => tryParseAmount(typedValue, inputCurrency),

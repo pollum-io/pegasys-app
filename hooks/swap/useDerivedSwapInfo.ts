@@ -15,15 +15,11 @@ import {
 	WrappedTokenInfo,
 	ISwapCall,
 } from "types";
-import {
-	computeSlippageAdjustedAmounts,
-	isAddress,
-	tryParseAmount,
-	Field,
-} from "utils";
+import { computeSlippageAdjustedAmounts, tryParseAmount, Field } from "utils";
 import { involvesAddress } from "utils/involvesAddress";
 
 import { UseBestSwapMethod } from "./useBestSwapMethod";
+import { UseENS } from "./useENS";
 import { useTradeExactIn, useTradeExactOut } from "./useTrade";
 
 const BAD_RECIPIENT_ADDRESSES: string[] = [
@@ -58,21 +54,21 @@ export async function UseDerivedSwapInfo(
 	const isExactIn: boolean = inputValues.lastInputTyped === 0;
 
 	const recipientAddress: string | undefined =
-		recipient && isAddress(recipient as string);
+		recipient && (UseENS(recipient).address as string);
 	const to: string | null =
 		(recipientAddress || walletInfos.walletAddress) ?? null;
-	const formattedTo = to && isAddress(to);
+	const formattedTo = to && (UseENS(to).address as string);
 
 	const tradeToken1 = tradeTokens[1]?.symbol === "SYS" ? NSYS : tradeTokens[1];
 	const tradeToken0 = tradeTokens[0]?.symbol === "SYS" ? NSYS : tradeTokens[0];
 
 	const currencyBalances: { [field in Field]?: CurrencyAmount } = {
 		[Field.INPUT]: tryParseAmount(
-			tradeTokens[0]?.balance,
+			tradeTokens[0]?.balance as string,
 			tradeToken0
 		) as CurrencyAmount,
 		[Field.OUTPUT]: tryParseAmount(
-			tradeTokens[1]?.balance,
+			tradeTokens[1]?.balance as string,
 			tradeToken1
 		) as CurrencyAmount,
 	};

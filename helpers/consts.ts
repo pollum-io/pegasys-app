@@ -254,9 +254,24 @@ export const MIN_ETH: JSBI = JSBI.exponentiate(
 	JSBI.BigInt(16)
 ); // .01 ETH
 
+// Candle graph periods values -> Seconds to Minutes
 export const FIVE_MINUTES_IN_SECONDS = 300;
 export const FIFTEEN_MINUTES_IN_SECONDS = 900;
 export const ONE_HOUR_IN_SECONDS = 3600;
 export const FOUR_HOURS_IN_SECONDS = 14400;
 export const ONE_DAY_IN_SECONDS = 86400;
 export const ONE_WEEK_IN_SECONDS = 604800;
+
+// Pegasys default Token List values
+
+export const PEGASYS_LIST =
+	"https://raw.githubusercontent.com/Pollum-io/pegasys-tokenlists/master/pegasys.tokenlist.json";
+export const TANENBAUM_LIST =
+	"https://raw.githubusercontent.com/Pollum-io/pegasys-tokenlists/master/tanembaum.tokenlist.json";
+
+export const DEFAULT_TOKEN_LISTS_SELECTED: string[] = [
+	PEGASYS_LIST,
+	TANENBAUM_LIST,
+];
+
+export const DEFAULT_TOKEN_LISTS: string[] = [PEGASYS_LIST, TANENBAUM_LIST];

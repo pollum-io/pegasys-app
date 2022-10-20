@@ -96,7 +96,10 @@ export const PoolsContainer: NextPage = () => {
 			: "Volume";
 
 	useMemo(async () => {
-		const allTokens = getTokenPairs(currentNetworkChainId, userTokensBalance);
+		const allTokens = getTokenPairs(
+			Number(currentNetworkChainId) as ChainId,
+			userTokensBalance
+		);
 
 		const walletInfos = {
 			chainId,

@@ -10,13 +10,13 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 	children,
 }) => {
 	const [address, setAddress] = useState<string>("");
-	const [chainId, setChainId] = useState<number>(0);
+	const [chainId, setChainId] = useState<number | null>(null);
 	const [isConnected, setIsConnected] = useState<boolean>(false);
 	const { toast } = useToasty();
 
 	const disconnect = () => {
 		setAddress("");
-		setChainId(0);
+		setChainId(null);
 		setIsConnected(false);
 		PersistentFramework.remove("wallet");
 	};

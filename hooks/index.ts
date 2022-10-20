@@ -3,6 +3,7 @@ export * from "./usePicasso";
 export * from "./useToasty";
 export * from "./useWallet";
 export * from "./useTokens";
+export * from "./useTokensListManage";
 export * from "./swap/useTrade";
 export * from "./swap/usePair";
 export * from "./swap/useSwapCallback";

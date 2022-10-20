@@ -1,9 +1,10 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { BigNumber, ethers, Signer } from "ethers";
-import { convertHexToNumber, isAddress } from "utils";
+import { convertHexToNumber } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { IWalletInfo, ITx, IPersistTxs } from "types";
 import { useToasty, useWallet } from "pegasys-services";
+import { UseENS } from "hooks";
 import {
 	INITIAL_ALLOWED_SLIPPAGE,
 	SYS_TESTNET_CHAIN_PARAMS,
@@ -79,7 +80,7 @@ interface IWeb3 {
 	delegatedTo: string;
 	setDelegatedTo: React.Dispatch<React.SetStateAction<string>>;
 	walletAddress: string;
-	currentNetworkChainId: number;
+	currentNetworkChainId: number | null;
 	isConnected: boolean;
 	setCurrentLpAddress: React.Dispatch<React.SetStateAction<string>>;
 	currentLpAddress: string;
@@ -316,7 +317,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 				if (tx.finished === false) {
 					setTransactions(prevState => ({
 						...prevState,
-						[chainId]: {
+						[chainId as number]: {
 							...prevState[tx.chainId === 57 ? 57 : 5700],
 							[tx.hash]: tx,
 						},
@@ -330,7 +331,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 				}
 				setTransactions(prevState => ({
 					...prevState,
-					[chainId]: {
+					[chainId as number]: {
 						...prevState[tx.chainId === 57 ? 57 : 5700],
 						[tx.hash]: tx,
 					},
@@ -389,7 +390,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 				verifySysNetwork ? !!window?.ethereum?.selectedAddress : false
 			);
 			setAddress(
-				verifySysNetwork ? isAddress(window?.ethereum?.selectedAddress) : ""
+				verifySysNetwork
+					? (UseENS(window?.ethereum?.selectedAddress).address as string)
+					: ""
 			);
 			setWalletError(!verifySysNetwork);
 		}

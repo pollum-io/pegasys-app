@@ -1,0 +1,45 @@
+import { ethers, Signer } from "ethers";
+import { UseENS } from "hooks";
+import { removeScientificNotation, truncateNumberDecimalsPlaces } from "utils";
+
+interface IGetProviderBalance {
+	validatedAddress: string | null;
+	providerBalanceFormattedValue: string;
+	providerTruncatedBalance: string;
+}
+
+export const getProviderBalance = async (
+	provider:
+		| ethers.providers.Provider
+		| ethers.providers.Web3Provider
+		| ethers.providers.JsonRpcProvider
+		| Signer
+		| undefined,
+	walletAddress: string
+): Promise<IGetProviderBalance> => {
+	const validateAddress = UseENS(walletAddress);
+
+	const providerTokenBalance = await provider
+		?.getBalance(validateAddress.address as string)
+		.then(result => result.toString());
+
+	const providerBalanceFormattedValue = ethers.utils.formatEther(
+		providerTokenBalance as string
+	);
+
+	const providerTruncatedBalance =
+		providerBalanceFormattedValue &&
+		String(
+			+providerBalanceFormattedValue > 0 && +providerBalanceFormattedValue < 1
+				? removeScientificNotation(parseFloat(providerBalanceFormattedValue))
+				: truncateNumberDecimalsPlaces(
+						parseFloat(providerBalanceFormattedValue)
+				  )
+		);
+
+	return {
+		validatedAddress: validateAddress.address,
+		providerBalanceFormattedValue,
+		providerTruncatedBalance,
+	};
+};

@@ -10,6 +10,7 @@ export const UseTokensPairSorted = (tokens: Token[]) => {
 			symbol: "SYS",
 			logoURI: SYS_LOGO,
 			balance: "0",
+			formattedBalance: "0",
 		});
 
 		const [tokenA, tokenB]: Token[] = [SYS, tokens[1]];
@@ -27,6 +28,7 @@ export const UseTokensPairSorted = (tokens: Token[]) => {
 			symbol: "SYS",
 			logoURI: SYS_LOGO,
 			balance: "0",
+			formattedBalance: "0",
 		});
 
 		const [tokenA, tokenB]: Token[] = [tokens[0], SYS];

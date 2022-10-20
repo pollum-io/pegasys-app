@@ -2,6 +2,7 @@ import { BigNumber, Contract, ethers, Signer } from "ethers";
 // import pegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
 import pairPegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/PegasysPair.sol/PegasysPair.json";
 import { Interface } from "@ethersproject/abi";
+import { IAddressessAndBalances } from "types";
 import abi20 from "./abis/erc20.json";
 import { createContractUsingAbi } from "./contractInstance";
 import { singleCall } from "./singleCall";
@@ -17,6 +18,7 @@ export const getBalanceOfSingleCall = async (
 		| Signer
 		| ethers.providers.JsonRpcProvider
 		| ethers.providers.Web3Provider
+		| ethers.providers.Provider
 		| undefined,
 	decimals: number
 ) => {
@@ -28,12 +30,10 @@ export const getBalanceOfSingleCall = async (
 			signerOrProvider
 		);
 
-		const contractCall = await singleCall(contract, "balanceOf");
-
-		const balance = await contractCall(walletAddress);
+		const contractCall = await singleCall(contract, "balanceOf", walletAddress);
 
 		const formattedBalance = String(
-			ethers.utils.formatUnits(balance, decimals)
+			ethers.utils.formatUnits(contractCall, decimals)
 		);
 
 		return formattedBalance;
@@ -68,11 +68,6 @@ export const getBalanceOfBNSingleCall = async (
 		return "0";
 	}
 };
-
-interface IAddressessAndBalances {
-	address: string;
-	balance: string;
-}
 
 export const getBalanceOfMultiCall = async (
 	tokenAddress: string[],
@@ -134,10 +129,8 @@ export const getBalancesOf = async (
 
 		const contractCall = await multiCall(contracts, "balanceOf", walletAddress);
 
-		console.log("formatted:", contractCall);
 		return contractCall;
 	} catch (error) {
-		console.log("error", error);
 		return [];
 	}
 };
