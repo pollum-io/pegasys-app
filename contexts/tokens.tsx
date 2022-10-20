@@ -106,20 +106,11 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			token => token?.symbol === "PSYS"
 		);
 
-		if (
-			(SYSExist === undefined || SYSExist?.address.length === 0) &&
-			SYSToken !== undefined
-		)
+		if (SYSExist === undefined && SYSToken !== undefined)
 			currentCacheListTokensToDisplay.push(SYSToken as WrappedTokenInfo);
-		if (
-			(WSYSExist === undefined || WSYSExist.address.length === 0) &&
-			WSYSToken !== undefined
-		)
+		if (WSYSExist === undefined && WSYSToken !== undefined)
 			currentCacheListTokensToDisplay.push(WSYSToken as WrappedTokenInfo);
-		if (
-			(PSYSExist === undefined || PSYSExist.address.length === 0) &&
-			PSYSToken !== undefined
-		)
+		if (PSYSExist === undefined && PSYSToken !== undefined)
 			currentCacheListTokensToDisplay.push(PSYSToken as WrappedTokenInfo);
 
 		return currentCacheListTokensToDisplay;
