@@ -11,11 +11,7 @@ class PersistentFramework {
 	static get(name: string): { [k: string]: any } | undefined {
 		const value = localStorage.getItem(name);
 
-		return value
-			? typeof value === "string"
-				? value
-				: JSON.parse(value)
-			: undefined;
+		return value ? JSON.parse(value) : undefined;
 	}
 }
 
