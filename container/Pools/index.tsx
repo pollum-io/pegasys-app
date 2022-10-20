@@ -473,7 +473,7 @@ export const PoolsContainer: NextPage = () => {
 							position="absolute"
 							zIndex="base"
 							w="100%"
-							h="85%"
+							h={walletAddress ? "85%" : "100%"}
 						/>
 						<Flex
 							zIndex="docked"

@@ -6,7 +6,6 @@ import {
 	Input,
 	Modal,
 	ModalBody,
-	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
 	ModalOverlay,
@@ -32,6 +31,7 @@ import {
 	MdArrowDownward,
 	MdArrowUpward,
 	MdSearch,
+	MdOutlineClose,
 } from "react-icons/md";
 import { WrappedTokenInfo } from "types";
 import BigNumber from "bignumber.js";
@@ -168,22 +168,26 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				position={["absolute", "absolute", "relative", "relative"]}
 				h="max-content"
 			>
-				<ModalHeader display="flex" alignItems="center" gap="3">
-					<Text fontSize="lg" fontWeight="semibold">
-						Select a token
-					</Text>
-					<TooltipComponent
-						label={translation("searchModal.findToken")}
-						icon={MdHelpOutline}
-					/>
+				<ModalHeader
+					display="flex"
+					alignItems="center"
+					gap="3"
+					justifyContent="space-between"
+				>
+					<Flex alignItems="center" gap="2">
+						<Text fontSize="lg" fontWeight="semibold">
+							Select a token
+						</Text>
+						<TooltipComponent
+							label={translation("searchModal.findToken")}
+							icon={MdHelpOutline}
+						/>
+					</Flex>
+					<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
+						<MdOutlineClose size={23} color={theme.icon.whiteDarkGray} />
+					</Flex>
 				</ModalHeader>
-				<ModalCloseButton
-					color={theme.icon.whiteDarkGray}
-					top="4"
-					size="md"
-					_focus={{}}
-					_hover={{}}
-				/>
+
 				<ModalBody>
 					<InputGroup>
 						<Input

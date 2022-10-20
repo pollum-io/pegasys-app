@@ -670,6 +670,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						<Flex alignItems="center" justifyContent="space-between">
 							<Flex w="100%" alignItems="center" mt="0.313rem">
 								<Flex
+									justifyContent=""
 									alignItems="center"
 									id="0"
 									borderRadius={12}
@@ -722,7 +723,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						</Flex>
 					</Flex>
 					{tokenInputValue.currentInputTyped === "inputFrom" && (
-						<Flex flexDirection="row" gap="1">
+						<Flex flexDirection="row" gap="1" justifyContent="center">
 							<Collapse
 								in={
 									parseFloat(tokenInputValue.inputFrom.value) >
@@ -848,6 +849,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						gap="1"
 						justifyContent="flex-start"
 						alignItems="flex-start"
+						bgColor="red"
 					>
 						<Collapse
 							in={isConnected && verifyIfHaveInsufficientLiquidity && !isWrap}
@@ -1120,7 +1122,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 											justifyContent="space-between"
 											pt={["1rem", "1rem", "0", "0"]}
 										>
-											<Flex alignItems="center">
+											<Flex alignItems="center" pt="1.5rem" pb="0.3rem">
 												<Text fontSize="sm" mr="1" fontWeight="normal">
 													{translation("swap.route")}
 												</Text>

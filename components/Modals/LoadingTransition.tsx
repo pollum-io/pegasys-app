@@ -49,12 +49,12 @@ export const LoadingTransition: React.FC<IModal> = props => {
 				<Flex
 					flexDirection="column"
 					justifyContent="center"
-					align="center"
+					alignItems="center"
 					gap="3"
 					color={theme.text.mono}
 				>
 					<Img src="icons/loading.gif" w="35%" h="35%" className="blob" />
-					<Flex flexDirection="row">
+					<Flex flexDirection="row" alignItems="baseline" gap="1">
 						<Text fontSize="2xl" fontWeight="semibold">
 							Waiting for confirmation
 						</Text>
