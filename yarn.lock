@@ -2806,18 +2806,20 @@
     tiny-warning "^1.0.3"
     tsdx "^0.14.1"
 
-"@pollum-io/pegasys-protocol@^0.0.14", "@pollum-io/pegasys-protocol@latest":
-  version "0.0.14"
-  resolved "https://registry.yarnpkg.com/@pollum-io/pegasys-protocol/-/pegasys-protocol-0.0.14.tgz#3ef1b333e93734831314df6206919831d334efc2"
-  integrity sha512-QY7oh4TXfZPc00HUgS1NamklJNpLR4qyg9Kv6QoMNmQFdsNGQ6wQha6FMor8owvzX66yERrYYhXd95QBWEZxEw==
+"@pollum-io/pegasys-protocol@0.0.15", "@pollum-io/pegasys-protocol@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@pollum-io/pegasys-protocol/-/pegasys-protocol-0.0.15.tgz#166d2f489bca261a41d67b05fb8dc0b28398f9ea"
+  integrity sha512-GZZOq+4xiSOxbjHm8rRwc6Lx8NEmgX1nn2Q1v1ZcxBUKt1SRC06O/SiLiCC5tJD1vR/6W1NdgRna/0yBv6zXyA==
+  dependencies:
+    web3 "^1.7.3"
 
-"@pollum-io/pegasys-sdk@^0.0.11":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@pollum-io/pegasys-sdk/-/pegasys-sdk-0.0.11.tgz#35095190d4fff6f26c954240314d7540321429e4"
-  integrity sha512-L1xZ+ZUghn6CLGNqa58tW4gL+qrA2c4eiYh01Dfl1Xm7KNsez5mfrm4/vnXvuEkyI21+OJtlU2QTmyvmogUACg==
+"@pollum-io/pegasys-sdk@^0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@pollum-io/pegasys-sdk/-/pegasys-sdk-0.0.12.tgz#86d8772ef052e5612744704ce319d0c431a7132c"
+  integrity sha512-9HOnLhfTq8gL6n7FXLN10nlOIl8E5BqwKi1vbjFqyJWMbvj9fIG+Km4/a2Oiz1uZY9BffdJLAuO63g5ks33jZA==
   dependencies:
     "@openzeppelin/cli" "^2.8.2"
-    "@pollum-io/pegasys-protocol" latest
+    "@pollum-io/pegasys-protocol" "0.0.15"
     big.js "^5.2.2"
     decimal.js-light "^2.5.0"
     jsbi "^3.1.1"
@@ -13390,7 +13392,7 @@ web3@1.2.2:
     web3-shh "1.2.2"
     web3-utils "1.2.2"
 
-web3@^1.2.4:
+web3@^1.2.4, web3@^1.7.3:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/web3/-/web3-1.8.0.tgz#3ca5f0b32de6a1f626407740411219035b5fde64"
   integrity sha512-sldr9stK/SALSJTgI/8qpnDuBJNMGjVR84hJ+AcdQ+MLBGLMGsCDNubCoyO6qgk1/Y9SQ7ignegOI/7BPLoiDA==
