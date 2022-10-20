@@ -10,6 +10,7 @@ import {
 	Skeleton,
 	SkeletonCircle,
 	useColorMode,
+	Tooltip,
 } from "@chakra-ui/react";
 import { useToasty, useWallet as psUseWallet } from "pegasys-services";
 import {
@@ -663,11 +664,21 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
 								{translation("swapPage.from")}
 							</Text>
-							<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-								{`${translation("header.balance")} ${
-									selectedToken[0]?.balance
-								}`}
-							</Text>
+							<Tooltip
+								label={selectedToken[0]?.balance}
+								hasArrow
+								placement="top"
+								borderRadius="0.25rem"
+								filter="drop-shadow(0px 1px 3px rgba(0, 0, 0, 0.1)) drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.06))"
+								color={theme.text.mono}
+								bgColor={theme.bg.blueNavyLight}
+							>
+								<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
+									{`${translation("header.balance")} ${
+										selectedToken[0]?.formattedBalance
+									}`}
+								</Text>
+							</Tooltip>
 						</Flex>
 						<Flex alignItems="center" justifyContent="space-between">
 							<Flex w="100%" alignItems="center" mt="0.313rem">
@@ -805,11 +816,22 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
 								{translation("swapPage.to")}
 							</Text>
-							<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-								{`${translation("header.balance")} ${
-									selectedToken[1]?.balance as string
-								}`}
-							</Text>
+
+							<Tooltip
+								label={selectedToken[1]?.balance}
+								hasArrow
+								placement="top"
+								borderRadius="0.25rem"
+								filter="drop-shadow(0px 1px 3px rgba(0, 0, 0, 0.1)) drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.06))"
+								color={theme.text.mono}
+								bgColor={theme.bg.blueNavyLight}
+							>
+								<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
+									{`${translation("header.balance")} ${
+										selectedToken[1]?.formattedBalance as string
+									}`}
+								</Text>
+							</Tooltip>
 						</Flex>
 
 						<Flex alignItems="center" justifyContent="space-between">

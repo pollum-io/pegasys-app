@@ -148,7 +148,8 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 					return {
 						...token,
 						balance: providerBalanceFormattedValue || ("0" as string),
-						formattedBalance: providerTruncatedBalance || ("0" as string),
+						formattedBalance:
+							`${providerTruncatedBalance}...` || ("0" as string),
 					};
 				}
 
@@ -170,7 +171,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 				return {
 					...token,
 					balance: contractBalance,
-					formattedBalance: trucatedContractBalance,
+					formattedBalance: `${trucatedContractBalance}...`,
 				};
 			})
 		);
