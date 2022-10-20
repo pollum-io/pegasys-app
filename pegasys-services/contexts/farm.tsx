@@ -1,5 +1,5 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
-import { Token } from "@pollum-io/pegasys-sdk";
+import { JSBI, Token } from "@pollum-io/pegasys-sdk";
 
 import { getTokenPairs } from "utils";
 import { WrappedTokenInfo } from "types";
@@ -21,7 +21,7 @@ import { EarnProvider } from "./earn";
 export const FarmContext = createContext({} as IFarmProviderValue);
 
 const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
-	const [sort, setSort] = useState<TFarmSort>("apr");
+	const [sort, setSort] = useState<TFarmSort>("yours");
 	const [sortedPairs, setSortPairs] = useState<IEarnInfo[]>([]);
 	const [search, setSearch] = useState<string>("");
 	const { userTokensBalance } = useTokens();
@@ -126,6 +126,48 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 		}
 	};
 
+	const onSort = (pairs: IFarmInfo[]) => {
+		let pairsToRender = [];
+
+		switch (sort) {
+			case "liquidity":
+				pairsToRender = pairs.sort((a, b) => {
+					if (a.totalStakedInUsd > b.totalStakedInUsd) {
+						return -1;
+					}
+					if (a.totalStakedInUsd < b.totalStakedInUsd) {
+						return 1;
+					}
+					return 0;
+				});
+				break;
+			case "apr":
+				pairsToRender = pairs.sort((a, b) => {
+					if (a.combinedApr > b.combinedApr) {
+						return -1;
+					}
+					if (a.combinedApr < b.combinedApr) {
+						return 1;
+					}
+					return 0;
+				});
+				break;
+			default:
+				pairsToRender = pairs.sort((a, b) => {
+					if (JSBI.greaterThan(a.stakedAmount.raw, b.stakedAmount.raw)) {
+						return -1;
+					}
+					if (JSBI.greaterThan(b.stakedAmount.raw, a.stakedAmount.raw)) {
+						return 1;
+					}
+					return 0;
+				});
+				break;
+		}
+
+		return pairsToRender;
+	};
+
 	useEffect(() => {
 		if (chainId && address) {
 			const getAvailablePair = async () => {
@@ -139,7 +181,10 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 				);
 
 				setEarnOpportunities(stakeInfos);
-				setSortPairs(stakeInfos);
+
+				const sorted = onSort(stakeInfos);
+
+				setSortPairs(sorted);
 			};
 
 			getAvailablePair();
@@ -171,30 +216,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 			pairsToRender = earnOpportunities as IFarmInfo[];
 		}
 
-		switch (sort) {
-			case "poolWeight":
-				pairsToRender = pairsToRender.sort((a, b) => {
-					if (a.totalStakedInUsd > b.totalStakedInUsd) {
-						return -1;
-					}
-					if (a.totalStakedInUsd < b.totalStakedInUsd) {
-						return 1;
-					}
-					return 0;
-				});
-				break;
-			default:
-				pairsToRender = pairsToRender.sort((a, b) => {
-					if (a.combinedApr > b.combinedApr) {
-						return -1;
-					}
-					if (a.swapFeeApr < b.swapFeeApr) {
-						return 1;
-					}
-					return 0;
-				});
-				break;
-		}
+		pairsToRender = onSort(pairsToRender);
 
 		setSortPairs(pairsToRender);
 	}, [earnOpportunities, sort, search]);

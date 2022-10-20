@@ -1,19 +1,16 @@
 import React, { useState } from "react";
 import {
-	Collapse,
 	Flex,
 	Slider,
 	SliderFilledTrack,
-	SliderMark,
 	SliderThumb,
 	SliderTrack,
-	Text,
 	Tooltip,
 } from "@chakra-ui/react";
-import { JSBI, Percent, TokenAmount } from "@pollum-io/pegasys-sdk";
+import { Percent, TokenAmount } from "@pollum-io/pegasys-sdk";
 
 import { usePicasso } from "hooks";
-import { useEarn } from "pegasys-services";
+import { BIG_INT_ZERO, useEarn } from "pegasys-services";
 
 const EarnSlider: React.FC = () => {
 	const [showTooltip, setShowTooltip] = useState<boolean>(false);
@@ -21,12 +18,29 @@ const EarnSlider: React.FC = () => {
 		useEarn();
 	const theme = usePicasso();
 
+	const setPercentage = (value: number) => {
+		if (selectedOpportunity) {
+			const percent = new Percent(value.toString(), "100");
+
+			const valuePercent = percent.multiply(
+				selectedOpportunity.stakedAmount.raw ?? BIG_INT_ZERO
+			).quotient;
+
+			const amount = new TokenAmount(
+				selectedOpportunity.stakeToken,
+				valuePercent
+			);
+
+			setWithdrawTypedValue(amount.toExact());
+		}
+	};
+
 	if (!selectedOpportunity) {
 		return null;
 	}
 
 	return (
-		<Flex justify="center">
+		<Flex alignItems="center" flexDirection="column">
 			<Slider
 				id="slider"
 				mt="9"
@@ -36,38 +50,11 @@ const EarnSlider: React.FC = () => {
 				mb="4"
 				w="85%"
 				colorScheme="teal"
-				onChange={(value: number) => {
-					const percent = new Percent(value.toString(), "100");
-
-					const valuePercent = percent.multiply(
-						selectedOpportunity.stakedAmount.raw ?? JSBI.BigInt(0)
-					).quotient;
-
-					const amount = new TokenAmount(
-						selectedOpportunity.stakeToken,
-						valuePercent
-					);
-
-					setWithdrawTypedValue(amount.toExact());
-				}}
+				onChange={setPercentage}
 				onMouseEnter={() => setShowTooltip(true)}
 				onMouseLeave={() => setShowTooltip(false)}
+				value={withdrawPercentage}
 			>
-				<SliderMark value={0} mt="0.5rem" ml="1.5" fontSize="sm">
-					0%
-				</SliderMark>
-				<SliderMark value={25} mt="0.5rem" ml="-2.5" fontSize="sm">
-					25%
-				</SliderMark>
-				<SliderMark value={50} mt="0.5rem" ml="-2.5" fontSize="sm">
-					50%
-				</SliderMark>
-				<SliderMark value={75} mt="0.5rem" ml="-2.5" fontSize="sm">
-					75%
-				</SliderMark>
-				<SliderMark value={100} mt="0.5rem" ml="-8" fontSize="sm">
-					100%
-				</SliderMark>
 				<SliderTrack>
 					<SliderFilledTrack bg={theme.text.psysBalance} />
 				</SliderTrack>
@@ -84,6 +71,19 @@ const EarnSlider: React.FC = () => {
 					<SliderThumb />
 				</Tooltip>
 			</Slider>
+			<Flex w="85%" justifyContent="space-between">
+				{[0, 25, 50, 75, 100].map(value => (
+					<Flex
+						key={value}
+						cursor="pointer"
+						fontSize="sm"
+						color={theme.text.softGray}
+						onClick={() => setPercentage(value)}
+					>
+						{value}%
+					</Flex>
+				))}
+			</Flex>
 		</Flex>
 	);
 };

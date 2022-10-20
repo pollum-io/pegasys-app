@@ -1,13 +1,11 @@
-import { TokenAmount } from "@pollum-io/pegasys-sdk";
 import { children, setType } from "../react";
-import { IFarmInfo } from "../services";
 import { IEarnInfo } from "./earn";
 
 export interface IFarmProviderProps {
 	children: children;
 }
 
-export type TFarmSort = "apr" | "poolWeight";
+export type TFarmSort = "apr" | "liquidity" | "yours";
 
 export interface IFarmProviderValue {
 	sort: TFarmSort;

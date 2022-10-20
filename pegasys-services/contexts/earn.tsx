@@ -125,14 +125,6 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 					type,
 					status: ApprovalState.PENDING,
 				});
-
-				toast({
-					id: `${type}Toast`,
-					position: "top-right",
-					status: "success",
-					title: "Success",
-					description: summary,
-				});
 			}
 		} catch (e) {
 			toast({

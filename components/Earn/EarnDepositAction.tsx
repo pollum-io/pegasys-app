@@ -65,9 +65,9 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				</Flex>
 				<Flex>
 					<Text fontSize="lg" fontWeight="bold">
-						{selectedOpportunity.tokenA.name}
+						{selectedOpportunity.tokenA.symbol}
 						{selectedOpportunity.tokenB
-							? `:${selectedOpportunity.tokenB.name}`
+							? `:${selectedOpportunity.tokenB.symbol}`
 							: ""}
 					</Text>
 				</Flex>

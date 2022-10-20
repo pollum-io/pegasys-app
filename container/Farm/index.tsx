@@ -28,8 +28,9 @@ import {
 import { FarmActions } from "components/Modals/FarmActions";
 
 const sortData = {
+	yours: "Your farms",
 	apr: "APR",
-	poolWeight: "Pool Weight",
+	liquidity: "Liquidity",
 };
 
 export const FarmContainer: NextPage = () => {

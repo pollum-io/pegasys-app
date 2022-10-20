@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
 	Collapse,
 	Flex,
@@ -16,6 +16,11 @@ interface IEarnInputProps {
 }
 
 const EarnInput: React.FC<IEarnInputProps> = ({ deposit }) => {
+	const [timeoutid, setTimeoutid] = useState<NodeJS.Timeout>(
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		setTimeout(() => {}, 0)
+	);
+
 	const {
 		selectedOpportunity,
 		depositTypedValue,
@@ -27,11 +32,17 @@ const EarnInput: React.FC<IEarnInputProps> = ({ deposit }) => {
 	const theme = usePicasso();
 
 	const onChange = (value: string) => {
+		// clearTimeout(timeoutid);
+
+		// const id = setTimeout(() => {
 		if (deposit) {
 			setDepositTypedValue(value);
 		} else {
 			setWithdrawTypedValue(value);
 		}
+		// }, 150);
+
+		// setTimeoutid(id);
 	};
 
 	if (!selectedOpportunity) {
@@ -54,7 +65,7 @@ const EarnInput: React.FC<IEarnInputProps> = ({ deposit }) => {
 							outline: "none",
 						}}
 						value={deposit ? depositTypedValue : withdrawTypedValue}
-						onChange={event => onChange(event.target.value)}
+						onChange={e => onChange(e.target.value)}
 					/>
 					<InputRightAddon
 						border="1px solid"

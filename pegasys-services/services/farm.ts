@@ -9,11 +9,7 @@ import {
 	WSYS,
 } from "@pollum-io/pegasys-sdk";
 
-import {
-	ITransactionResponse,
-	IWalletHookInfos,
-	WrappedTokenInfo,
-} from "types";
+import { IWalletHookInfos, WrappedTokenInfo } from "types";
 import { usePairs as getPairs } from "hooks";
 
 import { IFarmInfo } from "../dto";
@@ -509,6 +505,35 @@ class FarmServices {
 					const { swapFeeApr, superFarmApr, combinedApr } =
 						await LpTokenServices.getAprs(poolId, !!extraRewardToken);
 
+					let tokenA: Token;
+					let tokenB: Token;
+
+					if (tokenPair[0].symbol === "WSYS") {
+						const {
+							decimals,
+							address: tokenAaddress,
+							chainId,
+							name,
+						} = tokenPair[0];
+
+						tokenA = new Token(chainId, tokenAaddress, decimals, "SYS", name);
+					} else {
+						tokenA = tokenPair[0] as Token;
+					}
+
+					if (tokenPair[1].symbol === "WSYS") {
+						const {
+							decimals,
+							address: tokenBaddress,
+							chainId,
+							name,
+						} = tokenPair[1];
+
+						tokenB = new Token(chainId, tokenBaddress, decimals, "SYS", name);
+					} else {
+						tokenB = tokenPair[1] as Token;
+					}
+
 					pairsWithLiquidityToken.push({
 						stakeToken,
 						rewardToken,
@@ -520,8 +545,8 @@ class FarmServices {
 						totalRewardRatePerWeek,
 						stakedInUsd,
 						totalStakedInUsd,
-						tokenA: tokenPair[0],
-						tokenB: tokenPair[1],
+						tokenA,
+						tokenB,
 						extraRewardToken,
 						extraRewardRatePerWeek,
 						extraTotalRewardRatePerWeek,
