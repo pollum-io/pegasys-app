@@ -5,7 +5,7 @@ import { Interface } from "@ethersproject/abi";
 import { IAddressessAndBalances } from "types";
 import abi20 from "./abis/erc20.json";
 import { createContractUsingAbi } from "./contractInstance";
-import { singleCall } from "./singleCall";
+import { singleCallWithoutParams, singleCall } from "./singleCall";
 import { multiCall } from "./multiCall";
 import { formatBigNumberValues } from "./formatBigNumberValues";
 
@@ -59,7 +59,7 @@ export const getBalanceOfBNSingleCall = async (
 			signerOrProvider
 		);
 
-		const contractCall = await singleCall(contract, "balanceOf");
+		const contractCall = await singleCallWithoutParams(contract, "balanceOf");
 
 		const balance = await contractCall(walletAddress);
 
