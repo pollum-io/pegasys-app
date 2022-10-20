@@ -116,7 +116,7 @@ export const Header: React.FC = () => {
 				) : (
 					<Flex
 						gap={["0", "1", "1", "1"]}
-						bgColor={theme.bg.topHeader}
+						bgColor={theme.bg.blackAlphaTransparent}
 						opacity="0.95"
 						borderRadius="20"
 						ml={["7", "0", "0", "0"]}
@@ -173,7 +173,6 @@ export const Header: React.FC = () => {
 				<Flex>
 					<IconButton
 						_hover={{
-							background: theme.bg.iconBg,
 							color: theme.text.cyanPurple,
 						}}
 						aria-label="Theme"

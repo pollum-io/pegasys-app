@@ -21,10 +21,11 @@ export const DrawerLinks: FunctionComponent<IButtonProps> = props => {
 			borderLeftRadius="full"
 			w="100%"
 			transition="0.4s"
-			onClick={() => push(href)}
+			onClick={() => {
+				push(href);
+			}}
 			_hover={{}}
 			_active={{ background: "transparent" }}
-			_focus={{ color: theme.text.cyanPurple }}
 			justifyContent="flex-start"
 			alignItems="center"
 			pl="7"

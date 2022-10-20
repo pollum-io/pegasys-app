@@ -152,6 +152,12 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 	const isPending = approvalState.status === ApprovalState.PENDING;
 
+	const inputValidation =
+		parseFloat(tokenInputValue.inputTo.value) >
+			parseFloat(selectedToken[1]?.balance) ||
+		parseFloat(tokenInputValue.inputFrom.value) >
+			parseFloat(selectedToken[0]?.balance);
+
 	const isApproved =
 		approvalState.type === "approve" &&
 		approvalState.status === ApprovalState.APPROVED;
@@ -477,9 +483,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			/>
 			<ModalOverlay />
 			<ModalContent
-				mb={["0", "0", "20rem", "20rem"]}
+				mt="10rem"
 				bottom={["0", "0", "0", "0"]}
-				position={["relative", "relative", "relative", "relative"]}
+				position={["fixed", "fixed", "relative", "relative"]}
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
 				h={["max-content", "100%", "max-content", "max-content"]}
 				borderBottomRadius={["0px", "3xl", "3xl", "3xl"]}
@@ -509,6 +515,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					<TooltipComponent
 						label={translation("navigationTabs.whenYouAddLiquidityInfo")}
 						icon={MdHelpOutline}
+						color={theme.icon.whiteGray}
 					/>
 				</ModalHeader>
 				{isCreate && (
@@ -862,7 +869,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								py={["4", "4", "6", "6"]}
 								px="6"
 								borderRadius="67px"
-								disabled={invalidPair || emptyInput || isPending}
+								disabled={
+									invalidPair || emptyInput || isPending || inputValidation
+								}
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
 								fontSize="lg"
@@ -972,9 +981,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						bgColor={theme.bg.subModal}
 						position={["relative", "relative", "absolute", "absolute"]}
 						w="100%"
-						bottom={["0", "0", "-250", "-250"]}
-						borderTopRadius={["0", "0", "3xl", "3xl"]}
-						borderBottomRadius={["0", "0", "3xl", "3xl"]}
+						bottom={["0", "-250", "-250", "-250"]}
+						borderRadius={["0", "0", "3xl", "3xl"]}
 						alignItems="flex-start"
 						gap="2"
 					>

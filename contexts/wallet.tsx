@@ -72,6 +72,12 @@ interface IWeb3 {
 	pendingTxLength: number;
 	showCancelled: boolean;
 	setShowCancelled: React.Dispatch<React.SetStateAction<boolean>>;
+	votersType: string;
+	setVotersType: React.Dispatch<React.SetStateAction<string>>;
+	votesLocked: boolean;
+	setVotesLocked: React.Dispatch<React.SetStateAction<boolean>>;
+	delegatedTo: string;
+	setDelegatedTo: React.Dispatch<React.SetStateAction<string>>;
 	setCurrentLpAddress: React.Dispatch<React.SetStateAction<string>>;
 	currentLpAddress: string;
 	currentSummary: string;
@@ -89,6 +95,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [walletError, setWalletError] = useState<boolean>(false);
 	const [signer, setSigner] = useState<Signer>();
 	const [connecting, setConnecting] = useState<boolean>(false);
+	const [votesLocked, setVotesLocked] = useState<boolean>(true);
+	const [votersType, setVotersType] = useState<string>("");
+	const [delegatedTo, setDelegatedTo] = useState<string>("");
 	const [provider, setProvider] = useState<
 		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
 	>();
@@ -206,8 +215,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 				).then(result => result.json());
 				const hash = `${currentTxHash}`;
 				const summary = `${currentSummary}`;
-				const storageTxs = JSON.parse(`${localStorage.getItem("txs")}`);
-				const storageHash = localStorage.getItem("currentTxHash");
+				const storageSummary = localStorage.getItem("currentSummary");
 
 				setPendingTxLength(Number(getTx?.result?.length));
 				provider?.getTransaction(hash).then(result => {
@@ -217,8 +225,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 							...JSON.parse(`${localStorage.getItem("txs")}`),
 							[result.hash]: {
 								...result,
-								summary:
-									summary || storageTxs[`${hash || storageHash}`]?.summary,
+								summary: storageSummary || summary,
 								chainId,
 								txType: approvalState.type,
 								finished: false,
@@ -237,8 +244,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 									...prevTransactions[chainId === 57 ? 57 : 5700][hash],
 									...result,
 									chainId,
-									summary:
-										summary || storageTxs[`${hash || storageHash}`]?.summary,
+									summary: storageSummary || summary,
 									txType: approvalState.type,
 									finished: true,
 									hash,
@@ -256,8 +262,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 								...JSON.parse(`${localStorage.getItem("txs")}`),
 								[result.hash]: {
 									...result,
-									summary:
-										summary || storageTxs[`${hash || storageHash}`]?.summary,
+									summary: storageSummary || summary,
 									finished: true,
 								},
 							})
@@ -333,10 +338,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	}, [isConnected]);
 
 	useEffect(() => {
-		if (currentTxHash) {
-			localStorage.setItem("currentTxHash", currentTxHash);
-		}
-	}, [currentTxHash]);
+		if (currentTxHash) localStorage.setItem("currentTxHash", currentTxHash);
+		if (currentSummary) localStorage.setItem("currentSummary", currentSummary);
+	}, [currentTxHash, currentSummary]);
 
 	useEffect(() => {
 		if (approvalSubmitted && approvalState.status !== ApprovalState.UNKNOWN) {
@@ -427,6 +431,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			pendingTxLength,
 			showCancelled,
 			setShowCancelled,
+			votersType,
+			setVotersType,
+			votesLocked,
+			setVotesLocked,
+			delegatedTo,
+			setDelegatedTo,
 			currentLpAddress,
 			setCurrentLpAddress,
 			currentSummary,

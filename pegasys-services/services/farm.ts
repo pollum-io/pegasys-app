@@ -332,7 +332,7 @@ class FarmServices {
 
 	private static async getExtraReward(
 		totalRewardRatePerWeek: TokenAmount,
-		rewardRatePerWeek: TokenAmount,
+		rewardRatePerWeek: TokenAmount,x'
 		poolId: number,
 		chainId?: ChainId
 	) {

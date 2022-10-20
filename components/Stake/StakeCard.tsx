@@ -62,7 +62,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 			<StakeActions isOpen={isOpenStakeActions} onClose={onCloseStakeActions} />
 			<Flex
 				id="header"
-				bg={theme.bg.iconTicket}
+				bg={theme.bg.smoothGray}
 				justifyContent="center"
 				flexDirection="row"
 				pt="3"

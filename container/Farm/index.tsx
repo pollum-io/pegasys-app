@@ -11,6 +11,7 @@ import {
 	Box,
 	useMediaQuery,
 	useColorMode,
+	Link,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { MdOutlineCallMade, MdExpandMore } from "react-icons/md";
@@ -50,7 +51,7 @@ export const FarmContainer: NextPage = () => {
 					zIndex="docked"
 					position="relative"
 					borderRadius="xl"
-					backgroundColor={theme.bg.whiteGray}
+					backgroundColor={theme.bg.alphaPurple}
 				>
 					<Img
 						borderRadius="xl"
@@ -89,16 +90,26 @@ export const FarmContainer: NextPage = () => {
 						alignItems="center"
 						justifyContent="center"
 						flexDirection="row"
-						bgColor={theme.text.topHeaderButton}
+						bgColor={theme.bg.alphaPurple}
 						borderBottomRadius="xl"
 						py="0.531rem"
-						gap="2.5"
 						color="white"
 					>
-						<Text fontWeight="medium" fontSize="xs">
-							View Your Staked Liquidity
-						</Text>
-						<MdOutlineCallMade size={20} />
+						<Link
+							href="info.pegasys.finance/account/wallet"
+							target="_blank"
+							rel="noreferrer"
+							_hover={{ cursor: "pointer", opacity: "0.9" }}
+							flexDirection="row"
+						>
+							<Flex gap="2.5">
+								<Text fontWeight="medium" fontSize="xs">
+									View Your Staked Liquidity
+								</Text>
+
+								<MdOutlineCallMade size={20} />
+							</Flex>
+						</Link>
 					</Flex>
 				</Flex>
 				<Flex
@@ -152,7 +163,7 @@ export const FarmContainer: NextPage = () => {
 								]}
 								justifyContent="flex-start"
 							>
-								<Menu>
+w								<Menu>
 									<Text fontSize="sm" pb="2" pr={["2", "2", "0", "0"]}>
 										Sort by
 									</Text>

@@ -66,7 +66,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 				borderRadius="3xl"
 				borderBottomRadius={["0px", "3xl", "3xl", "3xl"]}
 				border="1px solid transparent;"
-				background={`linear-gradient(${theme.bg.whiteGray}, ${theme.bg.whiteGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				background={`linear-gradient(${theme.bg.alphaPurple}, ${theme.bg.alphaPurple}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
 					display="flex"
@@ -86,9 +86,8 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 						hasArrow
 						label="When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
 						position="relative"
-						bgColor="red"
 						border="1px solid"
-						borderColor={theme.border.borderSettings}
+						borderColor={theme.text.lightGray}
 						color={theme.text.swapInfo}
 						borderRadius="md"
 					>
@@ -109,7 +108,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 					<Flex
 						height="max-content"
 						width="100%"
-						bgColor={theme.bg.whiteGray}
+						bgColor={theme.bg.alphaPurple}
 						margin="0 auto"
 						position="relative"
 						flexDirection="column"
@@ -151,7 +150,7 @@ export const ImportPoolModal: React.FC<IModal> = props => {
 						<Flex
 							height="max-content"
 							width="100%"
-							bgColor={theme.bg.whiteGray}
+							bgColor={theme.bg.alphaPurple}
 							margin="0 auto"
 							position="relative"
 							flexDirection="column"

@@ -26,7 +26,7 @@ export const ConnectSyscoinNetwork = async (
 
 	const verifyCurrentNetwork = currentNetworkChainId ?? getWindowChainId;
 
-	const getConnectorProvider = await connector.getProvider();
+	const getConnectorProvider = await window?.ethereum;
 
 	if (
 		!SUPPORTED_NETWORK_CHAINS.includes(verifyCurrentNetwork as number) &&

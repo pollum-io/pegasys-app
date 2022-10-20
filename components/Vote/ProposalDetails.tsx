@@ -1,8 +1,9 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Button, Flex, Text } from "@chakra-ui/react";
 import { MdArrowBack } from "react-icons/md";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso, useWallet, useModal } from "hooks";
 import Jazzicon from "react-jazzicon";
 import { FunctionComponent } from "react";
+import { CheckAllVotersModal } from "components/Modals/CheckAllVoters";
 
 interface IProposalDetails {
 	title?: string;
@@ -19,17 +20,35 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 		title = "Should the Pegasys community participate in the Protocol Guild Pilot?",
 		status = "executed",
 		date = "Ago 16, 2022 at 9:08 AM GMT-3",
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		description,
 		proposer = "0x6856...BF99",
+		description,
 		against = "390",
 		details = "0x25aece71c96825BNJ6256vcsd3568DC98fA1",
 	} = props;
 	const theme = usePicasso();
-	const { setIsGovernance } = useWallet();
+	const { setIsGovernance, setVotersType } = useWallet();
+	const {
+		onOpenCheckAllVotersModal,
+		isOpenCheckAllVotersModal,
+		onCloseCheckAllVotersModal,
+	} = useModal();
+
+	const isFavor = () => {
+		setVotersType("favor");
+		onOpenCheckAllVotersModal();
+	};
+
+	const isAgainst = () => {
+		setVotersType("against");
+		onOpenCheckAllVotersModal();
+	};
 
 	return (
 		<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
+			<CheckAllVotersModal
+				isOpen={isOpenCheckAllVotersModal}
+				onClose={onCloseCheckAllVotersModal}
+			/>
 			<Flex
 				alignItems="flex-start"
 				my={["1", "4", "2", "2"]}
@@ -102,21 +121,47 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 								fontWeight="semibold"
 								color={theme.text.mono}
 								fontSize={["16px", "16", "24px", "24px"]}
+								mb="0.6rem"
 							>
 								{title}
 							</Text>
+							<Flex
+								justifyContent="flex-start"
+								w="full-content"
+								gap="4"
+								flexDirection="row"
+								alignItems="center"
+								mb="1.5rem"
+							>
+								<Text color={theme.text.mono} fontWeight="bold" fontSize="16px">
+									Proposer
+								</Text>
+
+								<Flex
+									textTransform="lowercase"
+									color={theme.text.mono}
+									gap="2"
+									alignItems="center"
+								>
+									<Jazzicon
+										diameter={18}
+										seed={Math.round(Math.random() * 10000000)}
+									/>
+									<Text fontSize="14px">{proposer}</Text>
+								</Flex>
+							</Flex>
 							<Flex
 								flexDirection={["column", "column", "row", "row"]}
 								bgColor="rgba(255, 255, 255, 0.04)"
 								w="100%"
 								h="max-content"
 								borderRadius="xl"
-								mt="4"
-								py="2"
-								px="3"
+								py="3"
+								px="4"
 								justifyContent="space-between"
 								color={theme.text.mono}
 								flexWrap="wrap"
+								gap="6"
 							>
 								<Flex
 									justifyContent="space-between"
@@ -144,6 +189,36 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 										bgColor="#48BB78"
 										mb={["15px", "15px", "8px", "8px"]}
 									/>
+									<Flex
+										justifyContent="space-between"
+										alignItems="center"
+										mt={["0", "0", "1.5", "1.5"]}
+									>
+										<Button
+											fontSize="12px"
+											fontWeight="normal"
+											px="0.8rem"
+											h="1.5rem"
+											bgColor={theme.bg.blueNavyLightness}
+											color={theme.text.cyan}
+											_hover={{
+												bgColor: theme.bg.bluePurple,
+											}}
+											_active={{}}
+											borderRadius="full"
+										>
+											Vote in Favor
+										</Button>
+										<Text
+											fontSize="12px"
+											_hover={{ cursor: "pointer", opacity: "0.9" }}
+											transition="100ms ease-in-out"
+											onClick={isFavor}
+											color="#718096"
+										>
+											Check all voters
+										</Text>
+									</Flex>
 								</Flex>
 								<Flex
 									justifyContent="space-between"
@@ -168,14 +243,45 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 										borderRadius="xl"
 										h="0.375rem"
 										bgColor={theme.bg.voteGray}
-										mb={["0", "0", "8px", "8px"]}
+										mb={["15px", "15px", "8px", "8px"]}
 									>
 										<Flex
 											w="3.313rem"
 											borderRadius="xl"
 											h="0.375rem"
 											bgColor="#F56565"
+											mb={["15px", "15px", "8px", "1rem"]}
 										/>
+									</Flex>
+									<Flex
+										justifyContent="space-between"
+										alignItems="center"
+										mt={["0", "0", "1.5", "1.5"]}
+									>
+										<Button
+											fontSize="12px"
+											fontWeight="normal"
+											px="0.8rem"
+											h="1.5rem"
+											bgColor={theme.bg.blueNavyLightness}
+											color={theme.text.cyan}
+											_hover={{
+												bgColor: theme.bg.bluePurple,
+											}}
+											_active={{}}
+											borderRadius="full"
+										>
+											Vote Against
+										</Button>
+										<Text
+											fontSize="12px"
+											_hover={{ cursor: "pointer", opacity: "0.9" }}
+											transition="100ms ease-in-out"
+											onClick={isAgainst}
+											color="#718096"
+										>
+											Check all voters
+										</Text>
 									</Flex>
 								</Flex>
 							</Flex>
@@ -216,7 +322,7 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 							<Text color={theme.text.mono} fontWeight="bold">
 								Description
 							</Text>
-							<Flex>
+							<Flex mb="2rem">
 								<Text color={theme.text.mono}>
 									Sponsored by GFX Labs for MiLLie Since the lorem ipsum dolor
 									sit amet, consectetur adipiscing elit. Viverra eu lectus
@@ -244,32 +350,6 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 									dolor gravida id. More info can be found on the consensus
 									check forum thread.
 								</Text>
-							</Flex>
-						</Flex>
-
-						<Flex
-							justifyContent="flex-start"
-							w="full-content"
-							gap="4"
-							flexDirection="row"
-							alignItems="center"
-							mb="1.563rem"
-						>
-							<Text color={theme.text.mono} fontWeight="bold">
-								Proposer
-							</Text>
-
-							<Flex
-								textTransform="lowercase"
-								color={theme.text.mono}
-								gap="2"
-								alignItems="center"
-							>
-								<Jazzicon
-									diameter={18}
-									seed={Math.round(Math.random() * 10000000)}
-								/>
-								<Text>{proposer}</Text>
 							</Flex>
 						</Flex>
 					</Flex>

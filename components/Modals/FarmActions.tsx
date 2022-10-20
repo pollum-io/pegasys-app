@@ -9,8 +9,6 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import React from "react";
-import { MdOutlineInfo } from "react-icons/md";
 
 import { useFarm, useEarn } from "pegasys-services";
 import {
@@ -19,6 +17,8 @@ import {
 	EarnClaimAction,
 	EarnWithdrawAction,
 } from "../Earn";
+import React, { Dispatch, SetStateAction, useState } from "react";
+import { MdArrowBack, MdOutlineClose, MdOutlineInfo } from "react-icons/md";
 
 interface IModal {
 	isOpen: boolean;
@@ -94,8 +94,8 @@ export const FarmActions: React.FC<IModal> = props => {
 							flexDirection="row"
 							p="1.5rem"
 							background={[
-								theme.bg.iconTicket,
-								theme.bg.iconTicket,
+								theme.bg.smoothGray,
+								theme.bg.smoothGray,
 								theme.bg.subModal,
 								theme.bg.subModal,
 							]}
@@ -128,8 +128,8 @@ export const FarmActions: React.FC<IModal> = props => {
 							flexDirection="row"
 							p="1.5rem"
 							background={[
-								theme.bg.iconTicket,
-								theme.bg.iconTicket,
+								theme.bg.smoothGray,
+								theme.bg.smoothGray,
 								theme.bg.subModal,
 								theme.bg.subModal,
 							]}

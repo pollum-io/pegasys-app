@@ -6,13 +6,7 @@ import {
 	DrawerHeader,
 	DrawerOverlay,
 	Flex,
-	Icon,
-	Img,
-	Link,
 	Text,
-	useColorMode,
-	useDisclosure,
-	useMediaQuery,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { MdArrowBack } from "react-icons/md";
@@ -64,7 +58,7 @@ export const DrawerMenu: React.FC<IDrawer> = props => {
 				borderRight="none"
 				borderBottom="none"
 				borderTop="none"
-				background={`linear-gradient(${theme.bg.farmActions}, ${theme.bg.farmActions}) padding-box, linear-gradient(89deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(89deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<DrawerHeader>
 					<Flex

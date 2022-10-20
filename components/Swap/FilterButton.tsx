@@ -32,7 +32,7 @@ export const FilterButton: FunctionComponent<IFilterPorps> = ({
 					bgColor={
 						id === periods.id ? theme.bg.candleGraphColor : "transparent"
 					}
-					color={id === periods.id ? "white" : theme.text.stakeMode}
+					color={id === periods.id ? "white" : theme.text.lightGray}
 					px="3"
 					py="3"
 					w="42px"

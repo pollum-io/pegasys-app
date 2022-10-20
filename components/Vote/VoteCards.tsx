@@ -47,7 +47,7 @@ export const VoteCards: FunctionComponent<IVoteCards> = props => {
 					py={["3", "3", "1", "1"]}
 				>
 					<Text
-						color={theme.text.transactionsItems}
+						color={theme.text.softGray}
 						pl="3"
 						fontSize={["14.5px", "14.5px", "14.5px", "14.5px"]}
 					>
@@ -66,7 +66,7 @@ export const VoteCards: FunctionComponent<IVoteCards> = props => {
 					borderRightRadius={["0", "0", "xl", "xl"]}
 					borderBottomRightRadius={["xl", "xl", "xl", "xl"]}
 					zIndex="99"
-					bgColor={theme.bg.farmRate}
+					bgColor={theme.bg.neutralGray}
 					w={["100%", "100%", "7.125rem", "7.125rem"]}
 					h={["25%", "25%", "100%", "100%"]}
 					justifyContent={["center", "center", "center", "center"]}
@@ -89,7 +89,7 @@ export const VoteCards: FunctionComponent<IVoteCards> = props => {
 
 					<Text
 						fontWeight="normal"
-						color={theme.text.transactionsItems}
+						color={theme.text.softGray}
 						fontSize={["0.75rem", "0.813rem", "0.813rem", "0.813rem"]}
 					>
 						{date}
