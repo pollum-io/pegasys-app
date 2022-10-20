@@ -117,6 +117,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [transactions, setTransactions] = useState<ITx>({
 		57: {},
 		5700: {},
+		2814: {},
 	});
 	const [pendingTxLength, setPendingTxLength] = useState<number>(0);
 	const [currentLpAddress, setCurrentLpAddress] = useState<string>("");
