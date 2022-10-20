@@ -11,6 +11,7 @@ import {
 	NEVM_CHAIN_PARAMS,
 	SUPPORTED_NETWORK_CHAINS,
 	DEFAULT_DEADLINE_FROM_NOW,
+	SUPPORTED_WALLETS,
 } from "../helpers/consts";
 
 export enum ApprovalState {
@@ -383,6 +384,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		if (!isConnected) {
 			connectToSysRpcIfNotConnected();
+		}
+
+		if (isConnected && !connectorSelected) {
+			setConnectorSelected(SUPPORTED_WALLETS.METAMASK);
 		}
 
 		if (connectorSelected) {
