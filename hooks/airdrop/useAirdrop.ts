@@ -7,7 +7,7 @@ import {
 	addTransaction,
 	calculateGasMargin,
 	createContractUsingAbi,
-	singleCall,
+	singleCallWithoutParams,
 } from "utils";
 import { Signer, ethers } from "ethers";
 import { ITransactionResponse, ITx, IWalletHookInfos } from "types";
@@ -31,7 +31,10 @@ export const userHasAvailableClaim = async (
 		AIRDROP_ABI,
 		signer
 	);
-	const fetchIsClaimed = await singleCall(airDropContract, "isClaimed");
+	const fetchIsClaimed = await singleCallWithoutParams(
+		airDropContract,
+		"isClaimed"
+	);
 
 	const isClaimedResult =
 		userClaimData && (await fetchIsClaimed(Number(userClaimData?.index)));
