@@ -1,5 +1,5 @@
 import { Token } from "@pollum-io/pegasys-sdk";
-import { PSYS, SYS_LOGO } from "helpers/consts";
+import { PSYS } from "helpers/consts";
 import { WrappedTokenInfo } from "types";
 
 export const UseTokensPairSorted = (tokens: Token[]) => {
@@ -8,7 +8,7 @@ export const UseTokensPairSorted = (tokens: Token[]) => {
 			...PSYS[tokens[0].chainId],
 			name: "Syscoin",
 			symbol: "SYS",
-			logoURI: SYS_LOGO,
+			logoURI: "public/icons/syslogo.png",
 			balance: "0",
 			formattedBalance: "0",
 		});
@@ -26,7 +26,7 @@ export const UseTokensPairSorted = (tokens: Token[]) => {
 			...PSYS[tokens[0].chainId],
 			name: "Syscoin",
 			symbol: "SYS",
-			logoURI: SYS_LOGO,
+			logoURI: "public/icons/syslogo.png",
 			balance: "0",
 			formattedBalance: "0",
 		});

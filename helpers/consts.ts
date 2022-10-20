@@ -7,9 +7,6 @@ type ChainTokenList = {
 	readonly [chainId in ChainId]: Token[];
 };
 
-export const SYS_LOGO =
-	"https://app.pegasys.finance/static/media/syscoin_token_round.f5e7de99.png";
-
 export const ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
 	[ChainId.TANENBAUM]: "0xE18c200A70908c89fFA18C628fE1B83aC0065EA4",
 	[ChainId.NEVM]: "0x017dAd2578372CAEE5c6CddfE35eEDB3728544C4",
