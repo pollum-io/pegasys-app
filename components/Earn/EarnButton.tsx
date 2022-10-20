@@ -18,7 +18,7 @@ interface IEarnButtonProps {
 	ml?: string;
 	my?: string;
 	mb?: string;
-	fontSize?: "xs";
+	fontSize?: string | number;
 	disabled?: boolean;
 }
 
@@ -37,7 +37,13 @@ const EarnButton: React.FC<IEarnButtonProps> = ({
 	return (
 		<Button
 			{...props}
-			fontSize={fontSize ?? "sm"}
+			fontSize={
+				fontSize
+					? typeof fontSize === "string"
+						? fontSize
+						: `${fontSize}px`
+					: "sm"
+			}
 			fontWeight="semibold"
 			borderRadius="full"
 			bgColor={solid ? theme.bg.blueNavyLightness : "transparent"}

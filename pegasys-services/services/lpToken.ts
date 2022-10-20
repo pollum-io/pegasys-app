@@ -2,6 +2,7 @@ import REWARDERVIAMULTIPLIER_ABI from "@pollum-io/pegasys-protocol/artifacts/con
 import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
 import { splitSignature } from "ethers/lib/utils";
 import { BigNumber } from "ethers";
+import { TContract } from "pegasys-services/dto";
 import { API, MINICHEF_ADDRESS } from "../constants";
 import { ContractFramework, WalletFramework } from "../frameworks";
 
@@ -108,15 +109,14 @@ class LpTokenServices {
 		}
 	}
 
-	static async getUserStake(poolId: number, token: Token) {
+	static async getUserStake(poolId: number, address: string) {
 		const contract = this.getLpContract();
 
 		const userInfo = await ContractFramework.call({
 			contract,
 			methodName: "userInfo",
-			args: [[poolId], token.address],
+			args: [[poolId], address],
 		});
-		console.log("userinfo", userInfo);
 
 		const { amount } = userInfo as { amount: bigint };
 
@@ -194,12 +194,22 @@ class LpTokenServices {
 		return allocPoint;
 	}
 
-	static async getRewardMultiplier(address: string) {
+	static async getExtraRewarder(address: string) {
 		const contract = ContractFramework.getContract({
 			abi: REWARDERVIAMULTIPLIER_ABI.abi,
 			address,
 		});
 
+		const multiplier = await this.getRewardMultiplier(contract);
+		const rewardAddress = await this.getRewardTokens(contract);
+
+		return {
+			multiplier,
+			rewardAddress,
+		};
+	}
+
+	private static async getRewardMultiplier(contract: TContract) {
 		const multiplier: bigint[] = await ContractFramework.call({
 			contract,
 			methodName: "getRewardMultipliers",
@@ -208,12 +218,7 @@ class LpTokenServices {
 		return multiplier.length ? multiplier[0] : BigInt(0);
 	}
 
-	static async getRewardTokens(address: string) {
-		const contract = ContractFramework.getContract({
-			abi: REWARDERVIAMULTIPLIER_ABI.abi,
-			address,
-		});
-
+	private static async getRewardTokens(contract: TContract) {
 		const rewardAddress: string[] = await ContractFramework.call({
 			contract,
 			methodName: "getRewardTokens",

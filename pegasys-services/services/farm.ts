@@ -40,8 +40,12 @@ class FarmServices {
 		return new TokenAmount(stakeToken, totalStakeJSBI);
 	}
 
-	private static async getStake(stakeToken: Token, poolId: number) {
-		const stake = await LpTokenServices.getUserStake(poolId, stakeToken);
+	private static async getStake(
+		stakeToken: Token,
+		poolId: number,
+		address: string
+	) {
+		const stake = await LpTokenServices.getUserStake(poolId, address);
 
 		const stakeJSBI = JSBI.BigInt(stake.toString() ?? 0);
 
@@ -342,20 +346,21 @@ class FarmServices {
 			return {};
 		}
 
-		const extraRewardToken = new Token(
-			chainId ?? ChainId.NEVM,
-			rewarder,
-			18,
-			"LUXY",
-			"Luxy"
-		);
-		// const extraRewardToken = await TokenServices.getToken(rewarder, chainId);
+		const { multiplier, rewardAddress } =
+			await LpTokenServices.getExtraRewarder(rewarder);
 
-		const tokenMultiplier = await LpTokenServices.getRewardMultiplier(rewarder);
+		if (!rewardAddress) {
+			return {};
+		}
+
+		const extraRewardToken = await TokenServices.getToken(
+			rewardAddress,
+			chainId
+		);
 
 		const TEN_EIGHTEEN = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18));
 
-		const rewardMultiplier = JSBI.BigInt(tokenMultiplier?.toString() ?? 1);
+		const rewardMultiplier = JSBI.BigInt(multiplier.toString() ?? 1);
 
 		const unadjustedRewardPerWeek = JSBI.multiply(
 			rewardMultiplier,
@@ -457,7 +462,7 @@ class FarmServices {
 						this.getTotalStake(stakeToken).then(value => {
 							values.totalStake = value;
 						}),
-						this.getStake(stakeToken, poolId).then(value => {
+						this.getStake(stakeToken, poolId, address).then(value => {
 							values.stake = value;
 						}),
 						this.getUnstake(stakeToken, address).then(value => {
@@ -501,8 +506,8 @@ class FarmServices {
 						chainId
 					);
 
-					// const { swapFeeApr, superFarmApr, combinedApr } =
-					// 	await LpTokenServices.getAprs(poolId, !!extraRewardToken);
+					const { swapFeeApr, superFarmApr, combinedApr } =
+						await LpTokenServices.getAprs(poolId, !!extraRewardToken);
 
 					pairsWithLiquidityToken.push({
 						stakeToken,
@@ -520,9 +525,9 @@ class FarmServices {
 						extraRewardToken,
 						extraRewardRatePerWeek,
 						extraTotalRewardRatePerWeek,
-						swapFeeApr: 0,
-						superFarmApr: 0,
-						combinedApr: 0,
+						swapFeeApr,
+						superFarmApr,
+						combinedApr,
 						poolId,
 					});
 				}

@@ -111,7 +111,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 					<Text fontWeight="semibold">Swap Fee APR</Text>
 					<Text>{swapFeeApr}%</Text>
 				</Flex>
-				{superFarmApr && (
+				{!!superFarmApr && (
 					<>
 						<Flex justifyContent="space-between" pb="3" fontSize="sm">
 							<Text fontWeight="semibold">Super Farm APR</Text>
@@ -124,8 +124,8 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 					</>
 				)}
 			</Flex>
-			{(JSBI.greaterThan(rewardRatePerWeek.raw, JSBI.BigInt(0)) ||
-				JSBI.greaterThan(unclaimedAmount.raw, JSBI.BigInt(0))) && (
+			{(JSBI.greaterThan(rewardRatePerWeek.raw, BIG_INT_ZERO) ||
+				JSBI.greaterThan(unclaimedAmount.raw, BIG_INT_ZERO)) && (
 				<Flex
 					flexDirection="column"
 					backgroundColor={theme.bg.farmRate}
@@ -138,7 +138,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 					<Flex justifyContent="space-between" pb="0.75rem" fontSize="sm">
 						<Text fontWeight="semibold">Your Rate</Text>
 						<Text>
-							{rewardRatePerWeek.toSignificant()} {rewardToken.symbol}/Week
+							{rewardRatePerWeek.toSignificant(6)} {rewardToken.symbol}/Week
 						</Text>
 					</Flex>
 					<Flex justifyContent="space-between" fontSize="sm">
@@ -176,6 +176,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 				</EarnButton>
 			</Flex>
 			<EarnButton
+				id="claim"
 				py="1"
 				px="6"
 				width="100%"
@@ -189,7 +190,6 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 				JSBI.greaterThanOrEqual(BIG_INT_ZERO, unstakedAmount.raw) &&
 				JSBI.greaterThanOrEqual(BIG_INT_ZERO, unclaimedAmount.raw) && (
 					<EarnButton
-						id="claim"
 						py="1"
 						px="6"
 						width="100%"

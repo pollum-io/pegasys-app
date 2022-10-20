@@ -3,10 +3,9 @@ import { JSBI } from "@pollum-io/pegasys-sdk";
 
 import { tryParseAmount, addTransaction } from "utils";
 import { ApprovalState } from "contexts";
-import { useWallet } from "hooks";
+import { useWallet, useModal } from "hooks";
 
 import { BIG_INT_ZERO } from "pegasys-services/constants";
-import { BiGift } from "react-icons/bi";
 import { useWallet as psUseWallet, useToasty } from "../hooks";
 import { WalletFramework } from "../frameworks";
 import { onlyNumbers } from "../utils";
@@ -40,6 +39,7 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 		setCurrentTxHash,
 		setApprovalState,
 	} = useWallet();
+	const { onCloseStakeActions, onCloseFarmActions } = useModal();
 
 	const { chainId, address } = psUseWallet();
 	const { toast } = useToasty();
@@ -145,6 +145,8 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 		} finally {
 			setLoading(false);
 			reset();
+			onCloseFarmActions();
+			onCloseStakeActions();
 		}
 	};
 

@@ -50,7 +50,7 @@ class StakeServices {
 
 		const stakedAmount = new TokenAmount(
 			props.stakeToken,
-			JSBI.BigInt(balance ?? BIG_INT_ZERO)
+			balance ? JSBI.BigInt(balance) : BIG_INT_ZERO
 		);
 
 		return stakedAmount;
@@ -184,15 +184,21 @@ class StakeServices {
 			methodName: "rewardRate",
 		});
 
+		console.log("rewardRate: ", rewardRate);
+
 		const totalRewardRatePerSecond = new TokenAmount(
 			props.rewardToken,
 			props.isPeriodFinished ? BIG_INT_ZERO : JSBI.BigInt(rewardRate)
 		);
 
+		console.log("totalRewardRatePerSecond: ", totalRewardRatePerSecond);
+
 		const totalRewardRatePerWeek = new TokenAmount(
 			props.rewardToken,
 			JSBI.multiply(totalRewardRatePerSecond.raw, BIG_INT_SECONDS_IN_WEEK)
 		);
+
+		console.log("totalRewardRatePerWeek: ", totalRewardRatePerWeek);
 
 		const rewardRatePerWeek = new TokenAmount(
 			props.rewardToken,
@@ -206,6 +212,8 @@ class StakeServices {
 				  )
 				: BIG_INT_ZERO
 		);
+
+		console.log("rewardRatePerWeek: ", rewardRatePerWeek);
 
 		return {
 			totalRewardRatePerSecond,
@@ -267,6 +275,13 @@ class StakeServices {
 					}),
 				]);
 
+				console.log("periodFinishMs: ", values.periodFinishMs);
+
+				const isPeriodFinished =
+					values.periodFinishMs === 0
+						? false
+						: values.periodFinishMs < Date.now();
+
 				const {
 					rewardRatePerWeek,
 					totalRewardRatePerWeek,
@@ -275,7 +290,7 @@ class StakeServices {
 					contract: stakeContract,
 					chainId,
 					rewardToken,
-					isPeriodFinished: !!values.periodFinishMs,
+					isPeriodFinished,
 					totalStaked: values.totalStake,
 					staked: values.stake,
 				});
@@ -283,7 +298,7 @@ class StakeServices {
 				const apr = await this.getApr({
 					chainId,
 					totalRewardRatePerSecond,
-					isPeriodFinished: !!values.periodFinishMs,
+					isPeriodFinished,
 					totalStaked: values.totalStake,
 				});
 

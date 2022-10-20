@@ -49,6 +49,7 @@ const EarnWithdrawAction: React.FC<IEarnWithdrawActionProps> = ({
 					py="3"
 					px="1.5rem"
 					onClick={onClose}
+					fontSize={16}
 				>
 					Cancel
 				</EarnButton>
@@ -60,6 +61,7 @@ const EarnWithdrawAction: React.FC<IEarnWithdrawActionProps> = ({
 					disabled={!withdrawTypedValue || !withdrawPercentage || loading}
 					onClick={withdraw}
 					solid
+					fontSize={16}
 				>
 					{`${buttonTitle}
 					${withdrawPercentage === 100 ? " And Claim" : ""}`}
