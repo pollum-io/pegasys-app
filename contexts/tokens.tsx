@@ -154,7 +154,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 				const contractBalance = await getBalanceOfSingleCall(
 					token?.address as string,
 					validatedAddress as string,
-					provider as Signer,
+					provider,
 					token?.decimals as number
 				);
 

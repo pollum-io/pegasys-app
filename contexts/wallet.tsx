@@ -5,6 +5,7 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import { IWalletInfo, ITx, IPersistTxs } from "types";
 import { useToasty, useWallet } from "pegasys-services";
 import { UseENS } from "hooks";
+import { TProvider, TSigner } from "pegasys-services/dto";
 import {
 	INITIAL_ALLOWED_SLIPPAGE,
 	SYS_TESTNET_CHAIN_PARAMS,
@@ -32,13 +33,8 @@ export interface ISubmittedAproval {
 }
 
 interface IWeb3 {
-	provider:
-		| ethers.providers.Provider
-		| ethers.providers.Web3Provider
-		| ethers.providers.JsonRpcProvider
-		| Signer
-		| undefined;
-	signer: Signer | undefined;
+	provider: TProvider | undefined;
+	signer: TSigner | undefined;
 	connectWallet: (connector: AbstractConnector) => Promise<void>;
 	walletError: boolean;
 	setWalletError: React.Dispatch<React.SetStateAction<boolean>>;
@@ -98,14 +94,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [walletError, setWalletError] = useState<boolean>(false);
-	const [signer, setSigner] = useState<Signer>();
 	const [connecting, setConnecting] = useState<boolean>(false);
 	const [votesLocked, setVotesLocked] = useState<boolean>(true);
 	const [votersType, setVotersType] = useState<string>("");
 	const [delegatedTo, setDelegatedTo] = useState<string>("");
-	const [provider, setProvider] = useState<
-		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
-	>();
 	const [connectorSelected, setConnectorSelected] = useState<IWalletInfo>();
 	const [expert, setExpert] = useState<boolean>(false);
 	const [otherWallet, setOtherWallet] = useState<boolean>(false);
@@ -143,6 +135,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		setChainId,
 		setIsConnected,
 		setAddress,
+		provider,
+		setProvider,
+		signer,
+		setSigner,
 	} = useWallet();
 
 	const connectToSysRpcIfNotConnected = () => {
