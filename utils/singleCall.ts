@@ -14,3 +14,15 @@ export const singleCall = async (
 		return "0";
 	}
 };
+
+export const singleCallWithoutParams = async (
+	contract: Contract,
+	methodName: string
+) => {
+	try {
+		const contractCall = await contract[methodName];
+		return contractCall;
+	} catch (error) {
+		return "0";
+	}
+};
