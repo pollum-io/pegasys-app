@@ -126,7 +126,6 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			const tokensWithBalance = tokens.map(token => ({
 				...token,
 				balance: "0",
-				formattedBalance: "0",
 			}));
 
 			const convertTokens = tokensWithBalance.map(
@@ -136,11 +135,8 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			setUserTokensBalance(convertTokens);
 		}
 
-		const {
-			providerBalanceFormattedValue,
-			validatedAddress,
-			providerTruncatedBalance,
-		} = await getProviderBalance(provider, walletAddress);
+		const { providerBalanceFormattedValue, validatedAddress } =
+			await getProviderBalance(provider, walletAddress);
 
 		const tokensWithBalance = await Promise.all(
 			tokens.map(async token => {
@@ -148,7 +144,6 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 					return {
 						...token,
 						balance: providerBalanceFormattedValue || ("0" as string),
-						formattedBalance: providerTruncatedBalance || ("0" as string),
 					};
 				}
 
@@ -159,18 +154,9 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 					token?.decimals as number
 				);
 
-				const trucatedContractBalance =
-					contractBalance &&
-					String(
-						+contractBalance > 0 && +contractBalance < 1
-							? removeScientificNotation(parseFloat(contractBalance))
-							: truncateNumberDecimalsPlaces(parseFloat(contractBalance))
-					);
-
 				return {
 					...token,
 					balance: contractBalance,
-					formattedBalance: trucatedContractBalance,
 				};
 			})
 		);

@@ -1,11 +1,9 @@
 import { ethers, Signer } from "ethers";
 import { UseENS } from "hooks";
-import { removeScientificNotation, truncateNumberDecimalsPlaces } from "utils";
 
 interface IGetProviderBalance {
 	validatedAddress: string | null;
 	providerBalanceFormattedValue: string;
-	providerTruncatedBalance: string;
 }
 
 export const getProviderBalance = async (
@@ -27,19 +25,8 @@ export const getProviderBalance = async (
 		providerTokenBalance as string
 	);
 
-	const providerTruncatedBalance =
-		providerBalanceFormattedValue &&
-		String(
-			+providerBalanceFormattedValue > 0 && +providerBalanceFormattedValue < 1
-				? removeScientificNotation(parseFloat(providerBalanceFormattedValue))
-				: truncateNumberDecimalsPlaces(
-						parseFloat(providerBalanceFormattedValue)
-				  )
-		);
-
 	return {
 		validatedAddress: validateAddress.address,
 		providerBalanceFormattedValue,
-		providerTruncatedBalance,
 	};
 };

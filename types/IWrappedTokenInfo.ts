@@ -3,7 +3,6 @@ import { Token } from "@pollum-io/pegasys-sdk";
 
 export interface ITokenInfoBalance extends TokenInfo {
 	balance: string;
-	formattedBalance: string;
 	id?: number;
 }
 
@@ -28,10 +27,6 @@ export class WrappedTokenInfo extends Token {
 
 	public get balance(): string {
 		return this.tokenInfo.balance;
-	}
-
-	public get formattedBalance(): string {
-		return this.tokenInfo.formattedBalance;
 	}
 
 	public get id(): number | undefined {

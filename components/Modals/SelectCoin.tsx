@@ -152,6 +152,8 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 		setTokenError(verify);
 	}, [selectedToken, isOpen]);
 
+	console.log("formatted", userTokensBalance);
+
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ManageToken isOpen={isOpenManageToken} onClose={onCloseManageToken} />
@@ -283,7 +285,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 								</Flex>
 								<Text
 									fontWeight="normal"
-									w={token?.balance?.length > 10 ? "115px" : ""}
+									w={token?.balance?.length > 10 ? "105px" : ""}
 									overflow={token?.balance?.length > 10 ? "hidden" : ""}
 									textOverflow={token?.balance?.length > 10 ? "ellipsis" : ""}
 									textAlign="end"
