@@ -157,6 +157,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const rpcUrl =
 		chainId === 5700
 			? "https://tanenbaum.io/api"
+			: chainId === 2814
+			? "https://explorer.testnet.rollux.com/api"
 			: "https://explorer.syscoin.org/api";
 
 	const getSignerIfConnected = async () => {
@@ -209,6 +211,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			});
 	};
 
+	const timeValue = chainId === 2814 ? 3000 : 10000;
+
 	useMemo(() => {
 		if (approvalState.status === ApprovalState.PENDING && isConnected) {
 			const timer = setInterval(async () => {
@@ -241,9 +245,13 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 						setTransactions(prevTransactions => ({
 							...prevTransactions,
 							[Number(chainId)]: {
-								...prevTransactions[chainId === 57 ? 57 : 5700],
+								...prevTransactions[
+									chainId === 57 ? 57 : chainId === 2814 ? 2814 : 5700
+								],
 								[hash]: {
-									...prevTransactions[chainId === 57 ? 57 : 5700][hash],
+									...prevTransactions[
+										chainId === 57 ? 57 : chainId === 2814 ? 2814 : 5700
+									][hash],
 									...result,
 									chainId,
 									summary: storageSummary || summary,
@@ -282,7 +290,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 						return;
 					}
 				});
-			}, 10000);
+			}, timeValue);
 		}
 	}, [approvalState, currentTxHash]);
 
@@ -316,7 +324,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 					setTransactions(prevState => ({
 						...prevState,
 						[chainId as number]: {
-							...prevState[tx.chainId === 57 ? 57 : 5700],
+							...prevState[
+								tx.chainId === 57 ? 57 : tx.chainId === 2814 ? 2814 : 5700
+							],
 							[tx.hash]: tx,
 						},
 					}));
@@ -330,7 +340,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 				setTransactions(prevState => ({
 					...prevState,
 					[chainId as number]: {
-						...prevState[tx.chainId === 57 ? 57 : 5700],
+						...prevState[
+							tx.chainId === 57 ? 57 : tx.chainId === 2814 ? 2814 : 5700
+						],
 						[tx.hash]: tx,
 					},
 				}));
@@ -341,7 +353,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	useEffect(() => {
 		if (currentTxHash) localStorage.setItem("currentTxHash", currentTxHash);
-		if (currentSummary) localStorage.setItem("currentSummary", currentSummary);
+		if (currentSummary) {
+			localStorage.setItem("currentSummary", currentSummary);
+			setPendingTxLength(1);
+		}
 	}, [currentTxHash, currentSummary]);
 
 	useEffect(() => {

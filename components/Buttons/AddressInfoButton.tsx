@@ -68,7 +68,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 			? "https://tanenbaum.io/tx"
 			: chainId === 57
 			? "https://explorer.syscoin.org/tx"
-			: "https://explorer.testnet.rollux.com/";
+			: "https://explorer.testnet.rollux.com/tx";
 
 	useEffect(() => {
 		if (!isEmpty) {
