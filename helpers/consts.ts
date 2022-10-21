@@ -8,15 +8,27 @@ type ChainTokenList = {
 };
 
 export const ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
-	[ChainId.TANENBAUM]: "0xE18c200A70908c89fFA18C628fE1B83aC0065EA4",
-	[ChainId.NEVM]: "0x017dAd2578372CAEE5c6CddfE35eEDB3728544C4",
-	[ChainId.ROLLUX]: "0x734D8ed3eF0a9F7474bE75252182a6e4ea3B1fEB",
+	[ChainId.TANENBAUM]: ethers.utils.getAddress(
+		"0xE18c200A70908c89fFA18C628fE1B83aC0065EA4"
+	),
+	[ChainId.NEVM]: ethers.utils.getAddress(
+		"0x017dAd2578372CAEE5c6CddfE35eEDB3728544C4"
+	),
+	[ChainId.ROLLUX]: ethers.utils.getAddress(
+		"0x734D8ed3eF0a9F7474bE75252182a6e4ea3B1fEB"
+	),
 };
 
 export const AIRDROP_ADDRESS: { [chainId in ChainId]?: string } = {
-	[ChainId.TANENBAUM]: "0x0000000000000000000000000000000000000000",
-	[ChainId.NEVM]: "0x5c0543fFB580b22574D52179cB3Eba7aeF1CE293",
-	[ChainId.ROLLUX]: "0x0000000000000000000000000000000000000000",
+	[ChainId.TANENBAUM]: ethers.utils.getAddress(
+		"0x0000000000000000000000000000000000000000"
+	),
+	[ChainId.NEVM]: ethers.utils.getAddress(
+		"0x5c0543fFB580b22574D52179cB3Eba7aeF1CE293"
+	),
+	[ChainId.ROLLUX]: ethers.utils.getAddress(
+		"0x0000000000000000000000000000000000000000"
+	),
 };
 
 export const SUPPORTED_NETWORK_CHAINS = [
@@ -79,7 +91,7 @@ export const PSYS: { [chainId in ChainId]: Token } = {
 	),
 	[ChainId.ROLLUX]: new Token(
 		ChainId.ROLLUX,
-		"0x2A4DC2e946b92AB4a1f7D62844EB237788F9056c",
+		ethers.utils.getAddress("0x2A4DC2e946b92AB4a1f7D62844EB237788F9056c"),
 		18,
 		"PSYS",
 		"Pegasys"
@@ -105,7 +117,7 @@ export const USDT: { [chainId in ChainId]: Token } = {
 	),
 	[ChainId.ROLLUX]: new Token(
 		ChainId.ROLLUX,
-		"0x5B0aC6194499621630ddebb30c4aBE37037b30Ec",
+		ethers.utils.getAddress("0x5B0aC6194499621630ddebb30c4aBE37037b30Ec"),
 		6,
 		"USDT",
 		"Tether USD"
@@ -129,7 +141,7 @@ export const DAI: { [chainId in ChainId]: Token } = {
 	),
 	[ChainId.ROLLUX]: new Token(
 		ChainId.ROLLUX,
-		"0x48023b16c3e81AA7F6eFFbdEB35Bb83f4f31a8fd",
+		ethers.utils.getAddress("0x48023b16c3e81AA7F6eFFbdEB35Bb83f4f31a8fd"),
 		18,
 		"DAI",
 		"Dai Stablecoin"
@@ -153,7 +165,7 @@ export const USDC: { [chainId in ChainId]: Token } = {
 	),
 	[ChainId.ROLLUX]: new Token(
 		ChainId.ROLLUX,
-		"0x50D227a0D2131B12B4432A1E044f58A4aCcBe046",
+		ethers.utils.getAddress("0x50D227a0D2131B12B4432A1E044f58A4aCcBe046"),
 		6,
 		"USDC",
 		"USD Coin"
@@ -179,7 +191,7 @@ export const WETH: { [chainId in ChainId]: Token } = {
 	),
 	[ChainId.ROLLUX]: new Token(
 		ChainId.ROLLUX,
-		"0x6aE73f43cc18Bb9ffB35204023C6C7897CA879C4",
+		ethers.utils.getAddress("0x6aE73f43cc18Bb9ffB35204023C6C7897CA879C4"),
 		18,
 		"WETH",
 		"Ether"
@@ -203,7 +215,7 @@ export const WBTC: { [chainId in ChainId]: Token } = {
 	),
 	[ChainId.ROLLUX]: new Token(
 		ChainId.ROLLUX,
-		"0x8A85F9a03DA71F8A7E06fd5b4Af4229288960252",
+		ethers.utils.getAddress("0x8A85F9a03DA71F8A7E06fd5b4Af4229288960252"),
 		8,
 		"WBTC",
 		"Wrapped Bitcoin"
