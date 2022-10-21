@@ -22,6 +22,7 @@ import {
 	RemoveLiquidity,
 } from "components";
 import { PoolCards } from "components/Pools/PoolCards";
+import { SUPPORTED_NETWORK_CHAINS } from "helpers/consts";
 import { usePicasso, useModal, useWallet, useTokens, usePairs } from "hooks";
 import { NextPage } from "next";
 import { ChangeEvent, useMemo, useState } from "react";
@@ -83,8 +84,25 @@ export const PoolsContainer: NextPage = () => {
 	const [pairInfo, setPairInfo] = useState<ICommonPairs>();
 	const [notFound, setNotFound] = useState<boolean>(false);
 
-	const chainId =
-		currentNetworkChainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
+	let currentChainId: ChainId;
+
+	const validatedCurrentChain = SUPPORTED_NETWORK_CHAINS.includes(
+		currentNetworkChainId as number
+	);
+
+	switch (currentNetworkChainId) {
+		case 57:
+			currentChainId = ChainId.NEVM;
+			break;
+		case 5700:
+			currentChainId = ChainId.TANENBAUM;
+			break;
+		case 2814:
+			currentChainId = ChainId.ROLLUX;
+			break;
+		default:
+			currentChainId = ChainId.NEVM;
+	}
 
 	const sortTypeName =
 		sortType === "liquidity"
@@ -96,13 +114,15 @@ export const PoolsContainer: NextPage = () => {
 			: "Volume";
 
 	useMemo(async () => {
+		if (userTokensBalance.length === 0) return;
+
 		const allTokens = getTokenPairs(
-			Number(currentNetworkChainId) as ChainId,
+			validatedCurrentChain ? currentChainId : ChainId.NEVM,
 			userTokensBalance
 		);
 
 		const walletInfos = {
-			chainId,
+			chainId: validatedCurrentChain ? currentChainId : ChainId.NEVM,
 			provider,
 			walletAddress,
 		};
@@ -113,7 +133,7 @@ export const PoolsContainer: NextPage = () => {
 		const tokensWithLiquidity = allTokens.map(tokens => ({
 			liquidityToken: toV2LiquidityToken(
 				tokens as [WrappedTokenInfo, Token],
-				chainId
+				validatedCurrentChain ? currentChainId : ChainId.NEVM
 			),
 			tokens: tokens as [WrappedTokenInfo, Token],
 		}));
@@ -189,12 +209,12 @@ export const PoolsContainer: NextPage = () => {
 				currency =>
 					formattedOneDayPairsInfo[
 						`${
-							currency[0].symbol === "WETH"
+							currency[0]?.symbol === "WETH"
 								? "ETH"
-								: currency[0].symbol === "SYS"
+								: currency[0]?.symbol === "SYS"
 								? "WSYS"
-								: currency[0].symbol
-						}-${currency[1].symbol === "WETH" ? "ETH" : currency[1].symbol}`
+								: currency[0]?.symbol
+						}-${currency[1]?.symbol === "WETH" ? "ETH" : currency[1]?.symbol}`
 					]
 			)
 			.filter(item => item !== undefined);
@@ -204,12 +224,12 @@ export const PoolsContainer: NextPage = () => {
 				currency =>
 					formattedTwoDaysPairsInfo[
 						`${
-							currency[0].symbol === "WETH"
+							currency[0]?.symbol === "WETH"
 								? "ETH"
-								: currency[0].symbol === "SYS"
+								: currency[0]?.symbol === "SYS"
 								? "WSYS"
-								: currency[0].symbol
-						}-${currency[1].symbol === "WETH" ? "ETH" : currency[1].symbol}`
+								: currency[0]?.symbol
+						}-${currency[1]?.symbol === "WETH" ? "ETH" : currency[1]?.symbol}`
 					]
 			)
 			.filter(item => item !== undefined);
@@ -219,12 +239,12 @@ export const PoolsContainer: NextPage = () => {
 				currency =>
 					formattedGeneralPairsInfo[
 						`${
-							currency[0].symbol === "WETH"
+							currency[0]?.symbol === "WETH"
 								? "ETH"
-								: currency[0].symbol === "SYS"
+								: currency[0]?.symbol === "SYS"
 								? "WSYS"
-								: currency[0].symbol
-						}-${currency[1].symbol === "WETH" ? "ETH" : currency[1].symbol}`
+								: currency[0]?.symbol
+						}-${currency[1]?.symbol === "WETH" ? "ETH" : currency[1]?.symbol}`
 					]
 			)
 			.filter(item => item !== undefined);
