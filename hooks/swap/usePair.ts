@@ -16,14 +16,10 @@ export async function usePairs(
 ): Promise<[PairState, Pair | null][]> {
 	const { chainId, walletAddress, provider } = walletInfos;
 
-	console.log("chainId", chainId);
-
 	const tokens = currencies.map(([currencyA, currencyB]) => [
 		wrappedCurrency(currencyA, chainId),
 		wrappedCurrency(currencyB, chainId),
 	]);
-
-	console.log("tokens", tokens);
 
 	const pairAddresses = tokens.map(([tokenA, tokenB]) =>
 		tokenA && tokenB && !tokenA.equals(tokenB)
