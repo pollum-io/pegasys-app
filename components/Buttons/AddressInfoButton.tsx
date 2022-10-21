@@ -60,12 +60,15 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 
 	const isEmpty =
 		Object.keys(transactions[57]).length === 0 &&
-		Object.keys(transactions[5700]).length === 0;
+		Object.keys(transactions[5700]).length === 0 &&
+		Object.keys(transactions[2814]).length === 0;
 
 	const explorerURL =
 		chainId === 5700
 			? "https://tanenbaum.io/tx"
-			: "https://explorer.syscoin.org/tx";
+			: chainId === 57
+			? "https://explorer.syscoin.org/tx"
+			: "https://explorer.testnet.rollux.com/";
 
 	useEffect(() => {
 		if (!isEmpty) {
@@ -73,11 +76,19 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 			const currentTxs: ITransactionResponse[] = [
 				...Object.values(transactions[5700]),
 				...Object.values(transactions[57]),
+				...Object.values(transactions[2814]),
 			];
 
 			setTxs(currentTxs);
 		}
-	}, [transactions, isEmpty, transactions[57], transactions[5700], isPending]);
+	}, [
+		transactions,
+		isEmpty,
+		transactions[57],
+		transactions[5700],
+		transactions[2814],
+		isPending,
+	]);
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
