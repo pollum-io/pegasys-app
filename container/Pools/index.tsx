@@ -589,7 +589,6 @@ export const PoolsContainer: NextPage = () => {
 										borderColor={theme.bg.blueNavyLightness}
 										placeholder="Search by token name"
 										_placeholder={{
-											opacity: 1,
 											color: theme.text.inputBluePurple,
 										}}
 										onChange={handleInput}

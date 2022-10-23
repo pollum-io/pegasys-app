@@ -20,6 +20,7 @@ const SearchInput: React.FC<ISearchInputProps> = ({
 	iconColor,
 }) => {
 	const [timeoutid, setTimeoutid] = useState<NodeJS.Timeout>(
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		setTimeout(() => {}, 0)
 	);
 
@@ -40,7 +41,7 @@ const SearchInput: React.FC<ISearchInputProps> = ({
 				_placeholder={{ opacity: 1, color: placeholder.color }}
 				borderColor={borderColor}
 				borderRadius="full"
-				w={["20rem", "28rem", "20rem", "20rem"]}
+				w={["20rem", "28rem", "16rem", "16rem"]}
 				h="2.2rem"
 				py={["0.2rem", "0.2rem", "1", "1"]}
 				pl="10"
@@ -48,12 +49,7 @@ const SearchInput: React.FC<ISearchInputProps> = ({
 				_hover={{}}
 				onChange={e => onInputChange(e.target.value)}
 			/>
-			<Flex
-				pt="1rem"
-				position="absolute"
-				pl="0.9rem"
-				bottom={["0.3rem", "0.3rem", "0.5rem", "0.5rem"]}
-			>
+			<Flex position="absolute" pl="0.9rem" bottom="0.43rem">
 				<MdSearch color={iconColor} size={20} />
 			</Flex>
 		</InputGroup>

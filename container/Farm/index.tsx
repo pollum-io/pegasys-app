@@ -145,11 +145,11 @@ export const FarmContainer: NextPage = () => {
 						>
 							<SearchInput
 								setSearch={setSearch}
-								iconColor={theme.icon.searchIcon}
+								iconColor={theme.icon.inputSearchIcon}
 								borderColor={theme.bg.blueNavyLightness}
 								placeholder={{
 									value: "Search by token name",
-									color: theme.text.input,
+									color: theme.text.inputBluePurple,
 								}}
 							/>
 							<Flex
@@ -163,7 +163,7 @@ export const FarmContainer: NextPage = () => {
 								]}
 								justifyContent="flex-start"
 							>
-w								<Menu>
+								<Menu>
 									<Text fontSize="sm" pb="2" pr={["2", "2", "0", "0"]}>
 										Sort by
 									</Text>
@@ -187,9 +187,9 @@ w								<Menu>
 										_active={{}}
 										borderRadius="full"
 									>
-										<Flex alignItems="center" color="white">
+										<Flex alignItems="center" color="white" gap="3rem">
 											{sortData[sort]}
-											<Icon as={MdExpandMore} w="5" h="5" ml="8" />
+											<Icon as={MdExpandMore} w="5" h="5" />
 										</Flex>
 									</MenuButton>
 									<MenuList

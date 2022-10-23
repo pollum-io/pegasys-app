@@ -118,12 +118,10 @@ export const StakeContainer: NextPage = () => {
 									onClick={() => setShowInUsd(false)}
 									color={
 										showInUsd
-											? theme.border.borderSettings
-											: theme.text.farmActionsHover
+											? theme.border.lightGray
+											: theme.text.darkBluePurple
 									}
-									bgColor={
-										showInUsd ? "transparent" : theme.bg.farmActionsHover
-									}
+									bgColor={showInUsd ? "transparent" : theme.bg.babyBluePurple}
 									borderRadius="full"
 									w="5.688rem"
 									h="max-content"
@@ -140,12 +138,10 @@ export const StakeContainer: NextPage = () => {
 									onClick={() => setShowInUsd(true)}
 									color={
 										showInUsd
-											? theme.text.farmActionsHover
-											: theme.border.borderSettings
+											? theme.text.darkBluePurple
+											: theme.border.lightGray
 									}
-									bgColor={
-										showInUsd ? theme.bg.farmActionsHover : "transparent"
-									}
+									bgColor={showInUsd ? theme.bg.babyBluePurple : "transparent"}
 									borderRadius="full"
 									w="5.688rem"
 									h="max-content"

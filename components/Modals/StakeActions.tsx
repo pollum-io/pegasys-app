@@ -10,14 +10,14 @@ import {
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { useEarn, useStake } from "pegasys-services";
+import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { MdArrowBack, MdOutlineClose, MdOutlineInfo } from "react-icons/md";
 import {
 	EarnActionsHeader,
 	EarnDepositAction,
 	EarnClaimAction,
 	EarnWithdrawAction,
 } from "../Earn";
-import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
-import { MdArrowBack, MdOutlineClose, MdOutlineInfo } from "react-icons/md";
 
 interface IModal {
 	isOpen: boolean;
