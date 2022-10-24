@@ -83,6 +83,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const {
 		isOpenWallet,
 		onCloseWallet,
+		isOpenSelectWalletModal,
+		onCloseSelectWalletModal,
 		onOpenCoin,
 		isOpenCoin,
 		onCloseCoin,
@@ -92,6 +94,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		onOpenTransaction,
 		isOpenTransaction,
 		onCloseTransaction,
+		onOpenSelectWalletModal,
 	} = useModal();
 
 	const {
@@ -579,7 +582,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			px={["4", "0", "0", "0"]}
 			zIndex="1"
 		>
-			<SelectWallets isOpen={isOpenWallet} onClose={onCloseWallet} />
+			<SelectWallets
+				isOpen={isOpenSelectWalletModal}
+				onClose={onCloseSelectWalletModal}
+			/>
 			<SelectCoinModal
 				isOpen={isOpenCoin}
 				onClose={onCloseCoin}
@@ -931,17 +937,27 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							py="6"
 							px="6"
 							borderRadius="67px"
-							onClick={() => {
-								onOpenConfirmSwap();
-								setTxType("swap");
-							}}
+							onClick={
+								!isConnected
+									? () => {
+											onOpenSelectWalletModal();
+									  }
+									: () => {
+											onOpenConfirmSwap();
+											setTxType("swap");
+									  }
+							}
 							bgColor={theme.bg.blueNavyLightness}
 							color={theme.text.cyan}
 							fontSize="lg"
 							fontWeight="semibold"
-							disabled={!canSubmit || Boolean(returnedTradeValue?.inputErrors)}
+							disabled={
+								!isConnected
+									? false
+									: !canSubmit || Boolean(returnedTradeValue?.inputErrors)
+							}
 							_hover={
-								canSubmit
+								canSubmit || !isConnected
 									? { bgColor: theme.bg.bluePurple }
 									: { opacity: "0.3" }
 							}
@@ -1040,7 +1056,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						p="1.5rem"
 						background={theme.bg.blueNavy}
 						w={["20rem", "28rem", "28rem", "28rem"]}
-						borderRadius="xl"
+						borderRadius="30px"
 						mt="7"
 						mb={["2", "2", "2", "10rem"]}
 						zIndex="1"

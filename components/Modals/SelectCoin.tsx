@@ -233,7 +233,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				<Flex
 					flexDirection="column"
 					w="95%"
-					h="10%"
+					h="30rem"
 					my="0"
 					pr="2"
 					pl="2"
@@ -253,6 +253,19 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 						},
 					}}
 				>
+					{filter.length === 0 && (
+						<Flex
+							ml="2rem"
+							pt="2rem"
+							color={theme.text.mono}
+							w="90%"
+							justifyContent="center"
+							fontWeight="semibold"
+							bgColor="red"
+						>
+							No Tokens Found
+						</Flex>
+					)}
 					{filter?.map((token: WrappedTokenInfo, index: number) => (
 						<Button
 							bg="transparent"

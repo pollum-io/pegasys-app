@@ -43,7 +43,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 				borderBottomRadius={["none", "none", "3xl", "3xl"]}
 				bgColor="transparent"
 				my={["0", "0", "40", "40"]}
-				w={["100vw", "100vw", "xs", "xs"]}
+				w={["100vw", "100vw", "21.125", "21.125rem"]}
 				h="md"
 				position={["absolute", "absolute", "unset", "unset"]}
 				bottom={["0.8rem", "2.9rem", "", ""]}
@@ -89,10 +89,11 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 				<ModalBody bgColor={theme.bg.blueNavyLight}>
 					<Flex alignItems="center" justifyContent="center">
 						<Img
-							src={theme.icon.pegasysLogo}
+							src="icons/loading.gif"
 							w="8"
 							h="8"
 							filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
+							className="blob"
 						/>
 						<Text
 							fontSize="2xl"
