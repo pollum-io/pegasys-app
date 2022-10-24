@@ -7,22 +7,34 @@ type ChainTokenList = {
 	readonly [chainId in ChainId]: Token[];
 };
 
-export const SYS_LOGO =
-	"https://app.pegasys.finance/static/media/syscoin_token_round.f5e7de99.png";
-
 export const ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
-	[ChainId.TANENBAUM]: "0xE18c200A70908c89fFA18C628fE1B83aC0065EA4",
-	[ChainId.NEVM]: "0x017dAd2578372CAEE5c6CddfE35eEDB3728544C4",
+	[ChainId.TANENBAUM]: ethers.utils.getAddress(
+		"0xE18c200A70908c89fFA18C628fE1B83aC0065EA4"
+	),
+	[ChainId.NEVM]: ethers.utils.getAddress(
+		"0x017dAd2578372CAEE5c6CddfE35eEDB3728544C4"
+	),
+	[ChainId.ROLLUX]: ethers.utils.getAddress(
+		"0x734D8ed3eF0a9F7474bE75252182a6e4ea3B1fEB"
+	),
 };
 
 export const AIRDROP_ADDRESS: { [chainId in ChainId]?: string } = {
-	[ChainId.TANENBAUM]: "0x0000000000000000000000000000000000000000",
-	[ChainId.NEVM]: "0x5c0543fFB580b22574D52179cB3Eba7aeF1CE293",
+	[ChainId.TANENBAUM]: ethers.utils.getAddress(
+		"0x0000000000000000000000000000000000000000"
+	),
+	[ChainId.NEVM]: ethers.utils.getAddress(
+		"0x5c0543fFB580b22574D52179cB3Eba7aeF1CE293"
+	),
+	[ChainId.ROLLUX]: ethers.utils.getAddress(
+		"0x0000000000000000000000000000000000000000"
+	),
 };
 
 export const SUPPORTED_NETWORK_CHAINS = [
 	57, // Syscoin NEVM Mainnet
 	5700, // Syscoin Tanenbaum Testnet
+	2814, // Syscoin Rollux Testnet
 ];
 
 export const NEVM_CHAIN_PARAMS = {
@@ -77,6 +89,13 @@ export const PSYS: { [chainId in ChainId]: Token } = {
 		"PSYS",
 		"Pegasys"
 	),
+	[ChainId.ROLLUX]: new Token(
+		ChainId.ROLLUX,
+		ethers.utils.getAddress("0x2A4DC2e946b92AB4a1f7D62844EB237788F9056c"),
+		18,
+		"PSYS",
+		"Pegasys"
+	),
 };
 
 // Stablecoins
@@ -92,6 +111,13 @@ export const USDT: { [chainId in ChainId]: Token } = {
 	[ChainId.NEVM]: new Token(
 		ChainId.NEVM,
 		ethers.utils.getAddress("0x922D641a426DcFFaeF11680e5358F34d97d112E1"),
+		6,
+		"USDT",
+		"Tether USD"
+	),
+	[ChainId.ROLLUX]: new Token(
+		ChainId.ROLLUX,
+		ethers.utils.getAddress("0x5B0aC6194499621630ddebb30c4aBE37037b30Ec"),
 		6,
 		"USDT",
 		"Tether USD"
@@ -113,6 +139,13 @@ export const DAI: { [chainId in ChainId]: Token } = {
 		"DAI",
 		"Dai Stablecoin"
 	),
+	[ChainId.ROLLUX]: new Token(
+		ChainId.ROLLUX,
+		ethers.utils.getAddress("0x48023b16c3e81AA7F6eFFbdEB35Bb83f4f31a8fd"),
+		18,
+		"DAI",
+		"Dai Stablecoin"
+	),
 };
 
 export const USDC: { [chainId in ChainId]: Token } = {
@@ -126,6 +159,13 @@ export const USDC: { [chainId in ChainId]: Token } = {
 	[ChainId.NEVM]: new Token(
 		ChainId.NEVM,
 		ethers.utils.getAddress("0x2bF9b864cdc97b08B6D79ad4663e71B8aB65c45c"),
+		6,
+		"USDC",
+		"USD Coin"
+	),
+	[ChainId.ROLLUX]: new Token(
+		ChainId.ROLLUX,
+		ethers.utils.getAddress("0x50D227a0D2131B12B4432A1E044f58A4aCcBe046"),
 		6,
 		"USDC",
 		"USD Coin"
@@ -149,6 +189,13 @@ export const WETH: { [chainId in ChainId]: Token } = {
 		"WETH",
 		"Ether"
 	),
+	[ChainId.ROLLUX]: new Token(
+		ChainId.ROLLUX,
+		ethers.utils.getAddress("0x6aE73f43cc18Bb9ffB35204023C6C7897CA879C4"),
+		18,
+		"WETH",
+		"Ether"
+	),
 };
 
 export const WBTC: { [chainId in ChainId]: Token } = {
@@ -163,6 +210,13 @@ export const WBTC: { [chainId in ChainId]: Token } = {
 		ChainId.NEVM,
 		ethers.utils.getAddress("0xc9BAA8cfdDe8E328787E29b4B078abf2DaDc2055"),
 		6,
+		"WBTC",
+		"Wrapped Bitcoin"
+	),
+	[ChainId.ROLLUX]: new Token(
+		ChainId.ROLLUX,
+		ethers.utils.getAddress("0x8A85F9a03DA71F8A7E06fd5b4Af4229288960252"),
+		8,
 		"WBTC",
 		"Wrapped Bitcoin"
 	),
@@ -183,6 +237,13 @@ export const LUXY: { [chainId in ChainId]: Token } = {
 		"LUXY",
 		"LUXY"
 	),
+	[ChainId.ROLLUX]: new Token(
+		ChainId.ROLLUX,
+		ethers.utils.getAddress("0x6b7a87899490ece95443e979ca9485cbe7e71522"),
+		18,
+		"LUXY",
+		"LUXY"
+	),
 };
 
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
@@ -194,10 +255,13 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 		DAI[ChainId.NEVM],
 		USDC[ChainId.NEVM],
 	],
+	[ChainId.ROLLUX]: [WSYS[ChainId.ROLLUX], PSYS[ChainId.ROLLUX]],
 };
+
 const WSYS_AND_PSYS_ONLY: ChainTokenList = {
 	[ChainId.TANENBAUM]: [WSYS[ChainId.TANENBAUM], PSYS[ChainId.TANENBAUM]],
 	[ChainId.NEVM]: [WSYS[ChainId.NEVM], PSYS[ChainId.NEVM]],
+	[ChainId.ROLLUX]: [WSYS[ChainId.ROLLUX], PSYS[ChainId.ROLLUX]],
 };
 
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
@@ -254,9 +318,32 @@ export const MIN_ETH: JSBI = JSBI.exponentiate(
 	JSBI.BigInt(16)
 ); // .01 ETH
 
+// Candle graph periods values -> Seconds to Minutes
 export const FIVE_MINUTES_IN_SECONDS = 300;
 export const FIFTEEN_MINUTES_IN_SECONDS = 900;
 export const ONE_HOUR_IN_SECONDS = 3600;
 export const FOUR_HOURS_IN_SECONDS = 14400;
 export const ONE_DAY_IN_SECONDS = 86400;
 export const ONE_WEEK_IN_SECONDS = 604800;
+
+// Pegasys default Token List values
+
+export const PEGASYS_LIST =
+	"https://raw.githubusercontent.com/Pollum-io/pegasys-tokenlists/master/pegasys.tokenlist.json";
+export const TANENBAUM_LIST =
+	"https://raw.githubusercontent.com/Pollum-io/pegasys-tokenlists/master/tanembaum.tokenlist.json";
+
+export const ROLLUX_LIST =
+	"https://static.luxy.io/ipfs/QmSY84ni9RsuWfoJtCBSjVEzAAykBqqCrPUwytQCHUrmrA";
+
+export const DEFAULT_TOKEN_LISTS_SELECTED: string[] = [
+	PEGASYS_LIST,
+	TANENBAUM_LIST,
+	ROLLUX_LIST,
+];
+
+export const DEFAULT_TOKEN_LISTS: string[] = [
+	PEGASYS_LIST,
+	TANENBAUM_LIST,
+	ROLLUX_LIST,
+];

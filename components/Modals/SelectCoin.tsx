@@ -79,16 +79,16 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 		const orderedList: WrappedTokenInfo[] = [];
 		if (order === "desc") {
 			array?.forEach((token: WrappedTokenInfo) => {
-				const firstToken = new BigNumber(array[0]?.balance);
-				const tokenBalance = new BigNumber(token.balance);
+				const firstToken = new BigNumber(array[0]?.balance as string);
+				const tokenBalance = new BigNumber(token.balance as string);
 				if (!array[0] || firstToken.isLessThanOrEqualTo(tokenBalance))
 					return orderedList.unshift(token);
 				return orderedList.push(token);
 			});
 		} else {
 			array.forEach((token: WrappedTokenInfo) => {
-				const firstToken = new BigNumber(array[0].balance);
-				const tokenBalance = new BigNumber(token.balance);
+				const firstToken = new BigNumber(array[0].balance as string);
+				const tokenBalance = new BigNumber(token.balance as string);
 				if (
 					!array[array.length - 1] ||
 					firstToken.isLessThanOrEqualTo(tokenBalance)
@@ -145,7 +145,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 		const verify = selectedToken?.filter((currentToken: WrappedTokenInfo) =>
 			filter?.some(
 				(filteredValue: WrappedTokenInfo) =>
-					filteredValue?.symbol === currentToken.symbol
+					filteredValue?.symbol === currentToken?.symbol
 			)
 		);
 
@@ -300,12 +300,12 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 								</Flex>
 								<Text
 									fontWeight="normal"
-									w={token.balance.length > 10 ? "115px" : ""}
-									overflow={token.balance.length > 10 ? "hidden" : ""}
-									textOverflow={token.balance.length > 10 ? "ellipsis" : ""}
+									w={token?.balance?.length > 10 ? "115px" : ""}
+									overflow={token?.balance?.length > 10 ? "hidden" : ""}
+									textOverflow={token?.balance?.length > 10 ? "ellipsis" : ""}
 									textAlign="end"
 								>
-									{token.balance}
+									{token?.balance as string}
 								</Text>
 							</Flex>
 						</Button>

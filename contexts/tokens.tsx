@@ -1,15 +1,17 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
-import { ethers } from "ethers";
-import { WrappedTokenInfo } from "types";
-import { useWallet, ApprovalState } from "hooks";
+import { ITokenInfoBalance, WrappedTokenInfo } from "types";
+import { useWallet, ApprovalState, useTokensListManage } from "hooks";
 import { getDefaultTokens } from "networks";
 import {
-	getBalanceOfMultiCall,
+	getBalanceOfSingleCall,
+	getProviderBalance,
 	removeScientificNotation,
 	truncateNumberDecimalsPlaces,
 } from "utils";
 import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
+import { Signer } from "ethers";
 import { useWallet as psUseWallet } from "pegasys-services";
+import { SUPPORTED_NETWORK_CHAINS } from "helpers/consts";
 
 interface ITokensContext {
 	userTokensBalance: WrappedTokenInfo[];
@@ -24,14 +26,33 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		WrappedTokenInfo[]
 	>([]);
 
+	const [initialDefaultTokens, setInitialDefaultTokens] = useState<TokenInfo[]>(
+		[]
+	);
+
+	const {
+		isConnected,
+		address: walletAddress,
+		chainId: currentNetworkChainId,
+	} = psUseWallet();
+
 	const { provider, approvalState } = useWallet();
 
-	const { isConnected, address, chainId } = psUseWallet();
+	const { currentCacheListTokensToDisplay, tokenListManageState } =
+		useTokensListManage();
 
-	const getDefaultListToken = async () => {
-		const { tokens } = await getDefaultTokens(chainId as number);
+	const validatedCurrentChain = SUPPORTED_NETWORK_CHAINS.includes(
+		currentNetworkChainId as number
+	);
 
-		const WSYS = tokens.find(token => token.symbol === "WSYS");
+	const getInitialDefaultTokensByRequest = async () => {
+		const { tokens: initialTokens } = await getDefaultTokens(
+			validatedCurrentChain ? (currentNetworkChainId as number) : 57
+		);
+
+		const WSYS = initialTokens.find(
+			(token: TokenInfo | WrappedTokenInfo) => token.symbol === "WSYS"
+		) as WrappedTokenInfo | ITokenInfoBalance;
 
 		const SYS: TokenInfo = {
 			...WSYS,
@@ -39,97 +60,146 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			symbol: "SYS",
 			logoURI:
 				"https://app.pegasys.finance/static/media/syscoin_token_round.f5e7de99.png",
-			extensions: {
-				isNative: true,
-			},
 		} as TokenInfo;
 
-		const allTokens = [...tokens, SYS].filter(
+		const allTokens = [...initialTokens, SYS];
+
+		setInitialDefaultTokens(allTokens);
+	};
+
+	const getAllTokens = () => {
+		if (
+			initialDefaultTokens.length === 0 &&
+			currentCacheListTokensToDisplay.length === 0
+		)
+			return [];
+
+		const SYSToken = initialDefaultTokens.find(
 			token =>
-				token.symbol !== "AGEUR" &&
-				token.symbol !== "MAI" &&
-				token.symbol !== "QI"
+				token.symbol === "SYS" &&
+				Number(token.chainId) ===
+					(validatedCurrentChain ? currentNetworkChainId : 57)
+		);
+		const WSYSToken = initialDefaultTokens.find(
+			token =>
+				token.symbol === "WSYS" &&
+				Number(token.chainId) ===
+					(validatedCurrentChain ? currentNetworkChainId : 57)
+		);
+		const PSYSToken = initialDefaultTokens.find(
+			token =>
+				token.symbol === "PSYS" &&
+				Number(token.chainId) ===
+					(validatedCurrentChain ? currentNetworkChainId : 57)
 		);
 
+		if (currentCacheListTokensToDisplay.length === 0)
+			return [SYSToken, WSYSToken, PSYSToken];
+
+		const SYSExist = currentCacheListTokensToDisplay.find(
+			token => token?.symbol === "SYS"
+		);
+		const WSYSExist = currentCacheListTokensToDisplay.find(
+			token => token?.symbol === "WSYS"
+		);
+		const PSYSExist = currentCacheListTokensToDisplay.find(
+			token => token?.symbol === "PSYS"
+		);
+
+		if (SYSExist === undefined && SYSToken !== undefined)
+			currentCacheListTokensToDisplay.push(SYSToken as WrappedTokenInfo);
+		if (WSYSExist === undefined && WSYSToken !== undefined)
+			currentCacheListTokensToDisplay.push(WSYSToken as WrappedTokenInfo);
+		if (PSYSExist === undefined && PSYSToken !== undefined)
+			currentCacheListTokensToDisplay.push(PSYSToken as WrappedTokenInfo);
+
+		return currentCacheListTokensToDisplay;
+	};
+
+	const getDefaultUserTokensBalance = async () => {
+		const tokens = getAllTokens();
+
+		if (tokens.length === 0) return;
+
 		if (!isConnected || !provider) {
-			const tokensWithBalance = allTokens.map(token => ({
+			const tokensWithBalance = tokens.map(token => ({
 				...token,
 				balance: "0",
+				formattedBalance: "0",
 			}));
 
 			const convertTokens = tokensWithBalance.map(
-				token => new WrappedTokenInfo(token)
+				token => new WrappedTokenInfo(token as ITokenInfoBalance)
 			);
 
 			setUserTokensBalance(convertTokens);
 		}
 
-		const tokensAddress = allTokens.map(token => token.address);
+		const {
+			providerBalanceFormattedValue,
+			validatedAddress,
+			providerTruncatedBalance,
+		} = await getProviderBalance(provider, walletAddress);
 
-		const tokensDecimals = allTokens.map(token => token.decimals);
+		const tokensWithBalance = await Promise.all(
+			tokens.map(async token => {
+				if (token?.symbol === "SYS") {
+					return {
+						...token,
+						balance: providerBalanceFormattedValue || ("0" as string),
+						formattedBalance: providerTruncatedBalance || ("0" as string),
+					};
+				}
 
-		const providerTokenBalance = await provider
-			?.getBalance(address)
-			.then(result => result.toString());
-
-		if (!providerTokenBalance) return "0";
-
-		const formattedValue = ethers.utils.formatEther(providerTokenBalance);
-		const truncatedValue = String(
-			truncateNumberDecimalsPlaces(parseFloat(formattedValue), 3)
-		);
-
-		const contractBalances = await getBalanceOfMultiCall(
-			tokensAddress,
-			address,
-			provider,
-			tokensDecimals
-		);
-
-		const tokensWithBalance = allTokens.map(token => {
-			const balanceItems = contractBalances.find(
-				balance => balance.address === token.address
-			);
-
-			if (token.symbol === "SYS") {
-				return {
-					...token,
-					balance: truncatedValue as string,
-				};
-			}
-
-			const truncatedBalance =
-				balanceItems &&
-				String(
-					+balanceItems.balance > 0 && +balanceItems.balance < 1
-						? removeScientificNotation(parseFloat(balanceItems.balance))
-						: truncateNumberDecimalsPlaces(parseFloat(balanceItems.balance), 3)
+				const contractBalance = await getBalanceOfSingleCall(
+					token?.address as string,
+					validatedAddress as string,
+					provider,
+					token?.decimals as number
 				);
 
-			return {
-				...token,
-				balance: truncatedBalance as string,
-			};
-		});
+				const trucatedContractBalance =
+					contractBalance &&
+					String(
+						+contractBalance > 0 && +contractBalance < 1
+							? removeScientificNotation(parseFloat(contractBalance))
+							: truncateNumberDecimalsPlaces(parseFloat(contractBalance))
+					);
+
+				return {
+					...token,
+					balance: contractBalance,
+					formattedBalance: trucatedContractBalance,
+				};
+			})
+		);
 
 		const convertTokens = tokensWithBalance.map(
-			token => new WrappedTokenInfo(token)
+			token => new WrappedTokenInfo(token as ITokenInfoBalance)
 		);
 
 		setUserTokensBalance(convertTokens);
-
-		return {};
 	};
 
 	useEffect(() => {
-		getDefaultListToken();
-	}, [isConnected, chainId, address]);
+		if (approvalState.status === ApprovalState.APPROVED) {
+			getDefaultUserTokensBalance();
+			return;
+		}
+
+		getDefaultUserTokensBalance();
+	}, [
+		currentNetworkChainId,
+		walletAddress,
+		approvalState.status,
+		currentCacheListTokensToDisplay,
+		initialDefaultTokens,
+		tokenListManageState.selectedListUrl,
+	]);
 
 	useEffect(() => {
-		if (approvalState.status === ApprovalState.APPROVED) {
-			getDefaultListToken();
-		}
-	}, [approvalState]);
+		getInitialDefaultTokensByRequest();
+	}, [currentNetworkChainId]);
 
 	const tokensProviderValue = useMemo(
 		() => ({

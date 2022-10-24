@@ -132,8 +132,6 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 
 	// END Transaction Deadline handlers - Validations //
 
-	// console.log('deadline', (userSlippageTolerance / 100).toFixed(2))
-
 	return (
 		<Popover placement="right">
 			<PopoverTrigger {...props}>

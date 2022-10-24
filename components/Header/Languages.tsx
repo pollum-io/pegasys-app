@@ -18,15 +18,14 @@ export const Languages: FunctionComponent = () => {
 					onClick={() => {
 						i18next.changeLanguage(lang);
 					}}
+					_hover={{ cursor: "pointer", color: theme.text.cyanPurple }}
 				>
 					<ReactCountryFlag
 						countryCode={countryFlagsNames[index]}
 						svg
 						style={{ fontSize: "1.5em" }}
 					/>
-					<Text _hover={{ cursor: "pointer", color: theme.text.cyanPurple }}>
-						{lang.toUpperCase()}
-					</Text>
+					<Text>{lang.toUpperCase()}</Text>
 				</Flex>
 			))}
 		</Flex>

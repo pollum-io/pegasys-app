@@ -7,8 +7,6 @@ import {
 	Img,
 	Input,
 	Text,
-	Skeleton,
-	SkeletonCircle,
 	useColorMode,
 } from "@chakra-ui/react";
 import { useToasty, useWallet as psUseWallet } from "pegasys-services";
@@ -54,7 +52,7 @@ import { Signer } from "ethers";
 import { computeTradePriceBreakdown, Field, maxAmountSpend } from "utils";
 import { getTokensGraphCandle } from "services/index";
 
-import { ONE_DAY_IN_SECONDS } from "helpers/consts";
+import { ONE_DAY_IN_SECONDS, SUPPORTED_NETWORK_CHAINS } from "helpers/consts";
 import { ConfirmSwap } from "components/Modals/ConfirmSwap";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { OtherWallet } from "./OtherWallet";
@@ -120,6 +118,26 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	// SOME INITIAL VALUES FOR REACT STATES //
 
+	let currentChainId: ChainId;
+
+	const validatedCurrentChain = SUPPORTED_NETWORK_CHAINS.includes(
+		chainId as number
+	);
+
+	switch (chainId) {
+		case 57:
+			currentChainId = ChainId.NEVM;
+			break;
+		case 5700:
+			currentChainId = ChainId.TANENBAUM;
+			break;
+		case 2814:
+			currentChainId = ChainId.ROLLUX;
+			break;
+		default:
+			currentChainId = ChainId.NEVM;
+	}
+
 	const initialTokenInputValue = {
 		inputFrom: {
 			value: "",
@@ -133,7 +151,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	};
 
 	const walletInfos: IWalletHookInfos = {
-		chainId: chainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
+		chainId: validatedCurrentChain ? currentChainId : ChainId.NEVM,
 		walletAddress: address,
 		provider,
 	};
@@ -196,9 +214,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		isConnected &&
 		parseFloat(tokenInputValue.typedValue) > 0 &&
 		tokenInputValue.lastInputTyped === 0
-			? parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
+			? parseFloat(selectedToken[0]?.tokenInfo?.balance as string) >=
 			  parseFloat(tokenInputValue?.inputFrom?.value)
-			: parseFloat(selectedToken[1]?.tokenInfo?.balance) >=
+			: parseFloat(selectedToken[1]?.tokenInfo?.balance as string) >=
 			  parseFloat(tokenInputValue?.inputTo?.value),
 	];
 
@@ -206,13 +224,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const wrapValidation = [
 		isConnected && parseFloat(tokenInputValue.typedValue) > 0,
-		parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
+		parseFloat(selectedToken[0]?.tokenInfo?.balance as string) >=
 			parseFloat(tokenInputValue?.inputFrom?.value),
-		parseFloat(selectedToken[0]?.tokenInfo?.balance) >=
+		parseFloat(selectedToken[0]?.tokenInfo?.balance as string) >=
 			parseFloat(tokenInputValue?.inputTo?.value),
-		parseFloat(selectedToken[1]?.tokenInfo?.balance) >=
+		parseFloat(selectedToken[1]?.tokenInfo?.balance as string) >=
 			parseFloat(tokenInputValue?.inputTo?.value),
-		parseFloat(selectedToken[1]?.tokenInfo?.balance) >=
+		parseFloat(selectedToken[1]?.tokenInfo?.balance as string) >=
 			parseFloat(tokenInputValue?.inputFrom?.value),
 	];
 
@@ -655,10 +673,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							(isConnected &&
 								tokenInputValue.currentInputTyped === "inputFrom" &&
 								parseFloat(tokenInputValue.inputFrom.value) >
-									parseFloat(selectedToken[0]?.balance)) ||
+									parseFloat(selectedToken[0]?.balance as string)) ||
 							(tokenInputValue.currentInputTyped === "inputTo" &&
 								parseFloat(tokenInputValue.inputFrom.value) >
-									parseFloat(selectedToken[0]?.balance)) ||
+									parseFloat(selectedToken[0]?.balance as string)) ||
 							(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap)
 								? theme.text.red400
 								: "#ff000000"
@@ -670,7 +688,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								{translation("swapPage.from")}
 							</Text>
 							<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-								{translation("header.balance")} {selectedToken[0]?.balance}
+								{`${translation("header.balance")} ${
+									selectedToken[0]?.balance
+								}`}
 							</Text>
 						</Flex>
 						<Flex alignItems="center" justifyContent="space-between">
@@ -700,7 +720,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 								{isConnected &&
 									!preventShowMaxButton &&
-									parseFloat(selectedToken[0]?.balance) !== 0 && (
+									parseFloat(selectedToken[0]?.balance as string) !== 0 && (
 										<Flex ml="8" onClick={() => handleMaxInput()}>
 											<Text
 												color={theme.text.cyanPurple}
@@ -714,6 +734,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 							<Input
 								fontSize="2xl"
+								maxW="160px"
+								display="inline-block"
+								overflow="hidden"
+								whiteSpace="nowrap"
+								textOverflow="ellipsis"
 								border="none"
 								placeholder="0.00"
 								textAlign="right"
@@ -733,7 +758,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							<Collapse
 								in={
 									parseFloat(tokenInputValue.inputFrom.value) >
-									parseFloat(selectedToken[0]?.balance)
+									parseFloat(selectedToken[0]?.balance as string)
 								}
 							>
 								<Flex gap="1">
@@ -766,7 +791,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							<Collapse
 								in={
 									parseFloat(tokenInputValue.inputFrom.value) >
-									parseFloat(selectedToken[0]?.balance)
+									parseFloat(selectedToken[0]?.balance as string)
 								}
 							>
 								<Text
@@ -811,7 +836,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								{translation("swapPage.to")}
 							</Text>
 							<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-								{translation("header.balance")} {selectedToken[1]?.balance}
+								{`${translation("header.balance")} ${
+									selectedToken[1]?.balance as string
+								}`}
 							</Text>
 						</Flex>
 
@@ -836,6 +863,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Flex>
 							<Input
 								fontSize="2xl"
+								maxW="160px"
+								display="inline-block"
+								overflow="hidden"
+								whiteSpace="nowrap"
+								textOverflow="ellipsis"
 								border="none"
 								placeholder="0.00"
 								textAlign="right"
@@ -1029,10 +1061,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									!canWrap ||
 									(tokenInputValue.currentInputTyped === "inputFrom" &&
 										parseFloat(tokenInputValue.typedValue) >
-											parseFloat(selectedToken[0]?.tokenInfo?.balance)) ||
+											parseFloat(
+												selectedToken[0]?.tokenInfo?.balance as string
+											)) ||
 									(tokenInputValue.currentInputTyped === "inputTo" &&
 										parseFloat(tokenInputValue.typedValue) >
-											parseFloat(selectedToken[1]?.tokenInfo?.balance))
+											parseFloat(
+												selectedToken[1]?.tokenInfo?.balance as string
+											))
 								}
 							>
 								{isConnected &&
@@ -1230,13 +1266,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						</Flex>
 						<Flex
 							my={`${
-								tokensGraphCandleData.length === 0 && !isLoadingGraphCandles
+								tokensGraphCandleData?.length === 0 && !isLoadingGraphCandles
 									? "0"
 									: "6"
 							}`}
 							justifyContent="center"
 						>
-							{tokensGraphCandleData.length !== 0 && (
+							{tokensGraphCandleData?.length !== 0 && (
 								<FilterButton
 									periodStateValue={tokensGraphCandlePeriod}
 									setPeriod={setTokensGraphCandlePeriod}

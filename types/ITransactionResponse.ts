@@ -15,6 +15,9 @@ export interface ITx {
 	5700: {
 		[hash: string]: ITransactionResponse;
 	};
+	2814: {
+		[hash: string]: ITransactionResponse;
+	};
 }
 
 export interface IPersistTxs {
