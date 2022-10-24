@@ -5,7 +5,8 @@ export function toV2LiquidityToken(
 	[tokenA, tokenB]: [WrappedTokenInfo, Token],
 	chainId: ChainId
 ) {
-	if (tokenA.chainId !== chainId) return null;
+	if (!tokenA || !tokenB || tokenA.chainId !== chainId) return null;
+
 	return new Token(
 		tokenA.chainId,
 		Pair.getAddress(tokenA, tokenB, chainId),
