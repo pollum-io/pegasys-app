@@ -727,6 +727,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 							<Input
 								fontSize="2xl"
+								maxW="160px"
+								display="inline-block"
+								overflow="hidden"
+								whiteSpace="nowrap"
+								textOverflow="ellipsis"
 								border="none"
 								placeholder="0.00"
 								textAlign="right"
@@ -851,6 +856,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Flex>
 							<Input
 								fontSize="2xl"
+								maxW="160px"
+								display="inline-block"
+								overflow="hidden"
+								whiteSpace="nowrap"
+								textOverflow="ellipsis"
 								border="none"
 								placeholder="0.00"
 								textAlign="right"
