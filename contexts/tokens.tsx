@@ -11,6 +11,7 @@ import {
 import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
 import { Signer } from "ethers";
 import { useWallet as psUseWallet } from "pegasys-services";
+import { SUPPORTED_NETWORK_CHAINS } from "helpers/consts";
 
 interface ITokensContext {
 	userTokensBalance: WrappedTokenInfo[];
@@ -40,9 +41,13 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 	const { currentCacheListTokensToDisplay, tokenListManageState } =
 		useTokensListManage();
 
+	const validatedCurrentChain = SUPPORTED_NETWORK_CHAINS.includes(
+		currentNetworkChainId as number
+	);
+
 	const getInitialDefaultTokensByRequest = async () => {
 		const { tokens: initialTokens } = await getDefaultTokens(
-			(currentNetworkChainId as number) || 57
+			validatedCurrentChain ? (currentNetworkChainId as number) : 57
 		);
 
 		const WSYS = initialTokens.find(
@@ -72,17 +77,20 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		const SYSToken = initialDefaultTokens.find(
 			token =>
 				token.symbol === "SYS" &&
-				Number(token.chainId) === (currentNetworkChainId ?? 57)
+				Number(token.chainId) ===
+					(validatedCurrentChain ? currentNetworkChainId : 57)
 		);
 		const WSYSToken = initialDefaultTokens.find(
 			token =>
 				token.symbol === "WSYS" &&
-				Number(token.chainId) === (currentNetworkChainId ?? 57)
+				Number(token.chainId) ===
+					(validatedCurrentChain ? currentNetworkChainId : 57)
 		);
 		const PSYSToken = initialDefaultTokens.find(
 			token =>
 				token.symbol === "PSYS" &&
-				Number(token.chainId) === (currentNetworkChainId ?? 57)
+				Number(token.chainId) ===
+					(validatedCurrentChain ? currentNetworkChainId : 57)
 		);
 
 		if (currentCacheListTokensToDisplay.length === 0)
@@ -98,20 +106,11 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			token => token?.symbol === "PSYS"
 		);
 
-		if (
-			(SYSExist === undefined || SYSExist?.address.length === 0) &&
-			SYSToken !== undefined
-		)
+		if (SYSExist === undefined && SYSToken !== undefined)
 			currentCacheListTokensToDisplay.push(SYSToken as WrappedTokenInfo);
-		if (
-			(WSYSExist === undefined || WSYSExist.address.length === 0) &&
-			WSYSToken !== undefined
-		)
+		if (WSYSExist === undefined && WSYSToken !== undefined)
 			currentCacheListTokensToDisplay.push(WSYSToken as WrappedTokenInfo);
-		if (
-			(PSYSExist === undefined || PSYSExist.address.length === 0) &&
-			PSYSToken !== undefined
-		)
+		if (PSYSExist === undefined && PSYSToken !== undefined)
 			currentCacheListTokensToDisplay.push(PSYSToken as WrappedTokenInfo);
 
 		return currentCacheListTokensToDisplay;
@@ -150,7 +149,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 				const contractBalance = await getBalanceOfSingleCall(
 					token?.address as string,
 					validatedAddress as string,
-					provider as Signer,
+					provider,
 					token?.decimals as number
 				);
 

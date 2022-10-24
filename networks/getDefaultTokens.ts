@@ -1,17 +1,28 @@
 import { TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
+import { PEGASYS_LIST, TANENBAUM_LIST, ROLLUX_LIST } from "helpers/consts";
 import { IGetTokenListByUrl } from "types";
 import { returnConvertedUrl } from "utils/returnConvertedUrl";
 
 const getDefaultTokens = (
 	currentNetworkConnected: number
 ): Promise<TokenList> => {
-	const isSyscoinTestnet = currentNetworkConnected === 5700;
+	let tokenListUrlByChain: string;
 
-	return fetch(
-		isSyscoinTestnet
-			? "https://raw.githubusercontent.com/Pollum-io/pegasys-tokenlists/master/tanembaum.tokenlist.json"
-			: "https://raw.githubusercontent.com/Pollum-io/pegasys-tokenlists/master/pegasys.tokenlist.json"
-	).then(res => res.json());
+	switch (currentNetworkConnected) {
+		case 57:
+			tokenListUrlByChain = PEGASYS_LIST;
+			break;
+		case 5700:
+			tokenListUrlByChain = TANENBAUM_LIST;
+			break;
+		case 2814:
+			tokenListUrlByChain = ROLLUX_LIST;
+			break;
+		default:
+			tokenListUrlByChain = PEGASYS_LIST;
+	}
+
+	return fetch(tokenListUrlByChain).then(res => res.json());
 };
 
 const getTokenListByUrl = async (

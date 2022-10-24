@@ -7,6 +7,7 @@ import { DEFAULT_TOKEN_LISTS, DEFAULT_TOKEN_LISTS_SELECTED } from "./consts";
 export const EMPTY_TOKEN_LIST: TokenAddressMap = {
 	[ChainId.TANENBAUM]: {},
 	[ChainId.NEVM]: {},
+	[ChainId.ROLLUX]: {},
 };
 
 export const NEW_TOKEN_LIST_STATE: NewListState = {
