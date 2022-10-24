@@ -1,6 +1,6 @@
 import { Button, Flex, Img, Text } from "@chakra-ui/react";
 import { FunctionComponent, SetStateAction, useMemo, useState } from "react";
-import { useModal, usePicasso, useWallet } from "hooks";
+import { useModal, usePicasso, useWallet, useTokens } from "hooks";
 import {
 	getBalanceOfBNSingleCall,
 	getTotalSupply,
@@ -72,6 +72,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	const theme = usePicasso();
 	const { onOpenRemoveLiquidity, onOpenAddLiquidity } = useModal();
 	const { setCurrentLpAddress, signer, walletAddress, provider } = useWallet();
+	const { userTokensBalance } = useTokens();
 	const [poolBalance, setPoolBalance] = useState<string>("");
 	const [percentShare, setPercentShare] = useState<number>(0);
 	const [sysPrice, setSysPrice] = useState<number>(0);
@@ -280,7 +281,9 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			border="1px solid rgb(86,190,216, 0.4)"
 			background={theme.bg.blackAlpha}
 			display={
-				pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`]
+				pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`] &&
+				userTokensBalance.map(item => item.symbol).includes(currencyA.symbol) &&
+				userTokensBalance.map(item => item.symbol).includes(currencyB.symbol)
 					? ""
 					: "none"
 			}
