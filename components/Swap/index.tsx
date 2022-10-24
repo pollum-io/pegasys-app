@@ -7,8 +7,6 @@ import {
 	Img,
 	Input,
 	Text,
-	Skeleton,
-	SkeletonCircle,
 	useColorMode,
 	SlideFade,
 } from "@chakra-ui/react";
