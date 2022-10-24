@@ -83,6 +83,7 @@ export const PoolsContainer: NextPage = () => {
 	const [poolsVolume, setPoolsVolume] = useState<IPoolsVolume>();
 	const [pairInfo, setPairInfo] = useState<ICommonPairs>();
 	const [notFound, setNotFound] = useState<boolean>(false);
+	const [allTokens, setAllTokens] = useState<[Token, Token][]>([]);
 
 	let currentChainId: ChainId;
 
@@ -116,10 +117,21 @@ export const PoolsContainer: NextPage = () => {
 	useMemo(async () => {
 		if (userTokensBalance.length === 0) return;
 
-		const allTokens = getTokenPairs(
+		const tokens = getTokenPairs(
 			validatedCurrentChain ? currentChainId : ChainId.NEVM,
 			userTokensBalance
 		);
+
+		if (
+			tokens.every(
+				token =>
+					token[0]?.chainId === currentChainId &&
+					token[1]?.chainId === currentChainId
+			) &&
+			currentNetworkChainId === currentChainId
+		) {
+			setAllTokens(tokens);
+		}
 
 		const walletInfos = {
 			chainId: validatedCurrentChain ? currentChainId : ChainId.NEVM,
@@ -133,7 +145,7 @@ export const PoolsContainer: NextPage = () => {
 		const tokensWithLiquidity = allTokens.map(tokens => ({
 			liquidityToken: toV2LiquidityToken(
 				tokens as [WrappedTokenInfo, Token],
-				validatedCurrentChain ? currentChainId : ChainId.NEVM
+				currentChainId
 			),
 			tokens: tokens as [WrappedTokenInfo, Token],
 		}));
@@ -335,7 +347,7 @@ export const PoolsContainer: NextPage = () => {
 			twoDays: formattedTwoDaysCommonPairs,
 			general: formattedGeneralCommonPairs,
 		});
-	}, [userTokensBalance]);
+	}, [userTokensBalance, currentNetworkChainId]);
 
 	useMemo(() => {
 		if (searchTokens.length !== 0) {
