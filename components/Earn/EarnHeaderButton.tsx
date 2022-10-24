@@ -32,8 +32,8 @@ const EarnHeaderButton: React.FC<IEarnHeaderButtonProps> = ({
 			px={["6", "6", "8", "8"]}
 			borderRadius="full"
 			onClick={() => setButtonId(id as TButtonId)}
-			bgColor={buttonId === id ? theme.bg.button : "transparent"}
-			color={buttonId === id ? theme.text.cyan : theme.border.darkBlueGray}
+			bgColor={buttonId === id ? theme.bg.babyBluePurple : "transparent"}
+			color={buttonId === id ? theme.text.darkBluePurple : theme.text.lightGray}
 			fontWeight="semibold"
 			_hover={{ opacity: "0.9" }}
 		/>

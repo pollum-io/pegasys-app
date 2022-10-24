@@ -45,7 +45,7 @@ const EarnInput: React.FC<IEarnInputProps> = ({ deposit }) => {
 					<Input
 						placeholder="0.0"
 						border="1px solid"
-						borderColor={theme.border.connectWallet}
+						borderColor={theme.border.darkBlueGray}
 						bgColor={theme.bg.blackAlpha}
 						borderLeftRadius="full"
 						w="25rem"
@@ -58,16 +58,15 @@ const EarnInput: React.FC<IEarnInputProps> = ({ deposit }) => {
 					/>
 					<InputRightAddon
 						border="1px solid"
-						borderColor={theme.border.connectWallet}
-						background={theme.bg.aidropBannerMobile}
+						borderColor={theme.border.darkBlueGray}
+						background={theme.bg.blackAlpha}
 						borderRightRadius="full"
 						color={theme.text.cyan}
 						fontSize="lg"
 						fontWeight="normal"
 						transition="100ms ease-in-out"
 						_hover={{
-							borderColor: theme.border.connectWallet,
-							bgColor: theme.bg.blueNavyLightness,
+							bgColor: theme.bg.blueLightPurple,
 							color: theme.text.cyan,
 							cursor: "pointer",
 						}}
