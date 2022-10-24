@@ -475,13 +475,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	// REACT HOOKS SESSION //
 
 	useEffect(() => {
-		if (!userTokensBalance) return;
+		if (userTokensBalance.length === 0) return;
 
 		const getTokensBySymbol = userTokensBalance?.filter(
-			token =>
-				token?.symbol === "WSYS" ||
-				token?.symbol === "SYS" ||
-				token?.symbol === "PSYS"
+			token => token?.symbol === "SYS" || token?.symbol === "PSYS"
 		);
 
 		const setIdToTokens = getTokensBySymbol.map((token, index: number) => ({
@@ -493,14 +490,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	}, [userTokensBalance]);
 
 	useEffect(() => {
-		const defaultTokenValues = userTokensBalance.filter(
-			tokens =>
-				tokens.symbol === "WSYS" ||
-				tokens.symbol === "SYS" ||
-				tokens.symbol === "PSYS"
-		);
+		if (userTokensBalance.length === 0) return;
 
-		setSelectedToken([defaultTokenValues[2], defaultTokenValues[1]]);
+		const SYS = userTokensBalance?.find(token => token.symbol === "SYS");
+		const PSYS = userTokensBalance?.find(token => token.symbol === "PSYS");
+
+		setSelectedToken([SYS as WrappedTokenInfo, PSYS as WrappedTokenInfo]);
 	}, [userTokensBalance]);
 
 	useEffect(() => {
