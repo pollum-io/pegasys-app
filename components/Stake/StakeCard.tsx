@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
 import { useModal, usePicasso } from "hooks";
+import { formattedNum } from "utils/numberFormat";
 import { StakeActions } from "components/Modals/StakeActions";
 import {
 	IEarnInfo,
@@ -115,7 +116,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
 						{showInUsd
-							? stakeInfo.totalStakedInUsd
+							? formattedNum(stakeInfo.totalStakedInUsd, true)
 							: stakeInfo.totalStakedAmount.toSignificant()}{" "}
 						{showInUsd ? "usd" : stakeInfo.stakeToken.symbol}
 					</Text>
@@ -125,7 +126,9 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 						Your rate
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
-						{stakeInfo.rewardRatePerWeek.toSignificant()}{" "}
+						{showInUsd
+							? formattedNum(stakeInfo.rewardRatePerWeekInUsd, true)
+							: stakeInfo.rewardRatePerWeek.toSignificant()}{" "}
 						{showInUsd ? "usd" : stakeInfo.rewardToken.symbol}/Week
 					</Text>
 				</GridItem>
@@ -135,7 +138,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
 						{showInUsd
-							? stakeInfo.stakedInUsd
+							? formattedNum(stakeInfo.stakedInUsd, true)
 							: stakeInfo.stakedAmount.toSignificant()}{" "}
 						{showInUsd ? "usd" : stakeInfo.stakeToken.symbol}
 					</Text>
@@ -146,7 +149,7 @@ export const StakeCards: FunctionComponent<IPoolCards> = props => {
 					</Text>
 					<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
 						{showInUsd
-							? stakeInfo.unclaimedInUsd
+							? formattedNum(stakeInfo.unclaimedInUsd, true)
 							: stakeInfo.unclaimedAmount.toSignificant()}{" "}
 						{showInUsd ? "usd" : stakeInfo.rewardToken.symbol}
 					</Text>

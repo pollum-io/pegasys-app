@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
 	Collapse,
 	Flex,
@@ -16,11 +16,6 @@ interface IEarnInputProps {
 }
 
 const EarnInput: React.FC<IEarnInputProps> = ({ deposit }) => {
-	const [timeoutid, setTimeoutid] = useState<NodeJS.Timeout>(
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		setTimeout(() => {}, 0)
-	);
-
 	const {
 		selectedOpportunity,
 		depositTypedValue,
@@ -32,17 +27,11 @@ const EarnInput: React.FC<IEarnInputProps> = ({ deposit }) => {
 	const theme = usePicasso();
 
 	const onChange = (value: string) => {
-		// clearTimeout(timeoutid);
-
-		// const id = setTimeout(() => {
 		if (deposit) {
 			setDepositTypedValue(value);
 		} else {
 			setWithdrawTypedValue(value);
 		}
-		// }, 150);
-
-		// setTimeoutid(id);
 	};
 
 	if (!selectedOpportunity) {
@@ -56,7 +45,7 @@ const EarnInput: React.FC<IEarnInputProps> = ({ deposit }) => {
 					<Input
 						placeholder="0.0"
 						border="1px solid"
-						borderColor={theme.border.farmInput}
+						borderColor={theme.border.connectWallet}
 						bgColor={theme.bg.blackAlpha}
 						borderLeftRadius="full"
 						w="25rem"
@@ -69,15 +58,15 @@ const EarnInput: React.FC<IEarnInputProps> = ({ deposit }) => {
 					/>
 					<InputRightAddon
 						border="1px solid"
-						borderColor={theme.border.farmInput}
-						background={theme.bg.max}
+						borderColor={theme.border.connectWallet}
+						background={theme.bg.aidropBannerMobile}
 						borderRightRadius="full"
-						color={theme.text.max}
+						color={theme.text.cyan}
 						fontSize="lg"
 						fontWeight="normal"
 						transition="100ms ease-in-out"
 						_hover={{
-							borderColor: theme.border.farmInput,
+							borderColor: theme.border.connectWallet,
 							bgColor: theme.bg.blueNavyLightness,
 							color: theme.text.cyan,
 							cursor: "pointer",

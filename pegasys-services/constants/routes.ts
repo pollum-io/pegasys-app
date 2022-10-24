@@ -1,4 +1,5 @@
 import { ChainId, Token } from "@pollum-io/pegasys-sdk";
+import { TypeOf } from "yup";
 import { ITokenRoutes } from "../dto";
 
 export const ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
@@ -6,9 +7,13 @@ export const ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
 	[ChainId.NEVM]: "0x017dAd2578372CAEE5c6CddfE35eEDB3728544C4",
 };
 
-export const MINICHEF_ADDRESS = "0x27F037100118548c63F945e284956073D1DC76dE";
+export const MINICHEF_ADDRESS: { [k: number]: string } = {
+	[ChainId.NEVM]: "0x27F037100118548c63F945e284956073D1DC76dE",
+};
 
-export const STAKE_ADDRESS = "0xE038E38B48F4123e1408865450E37edC78b736ED";
+export const STAKE_ADDRESS: { [k: number]: string } = {
+	[ChainId.NEVM]: "0xE038E38B48F4123e1408865450E37edC78b736ED",
+};
 
 export const PSYS: ITokenRoutes = {
 	[ChainId.TANENBAUM]: new Token(

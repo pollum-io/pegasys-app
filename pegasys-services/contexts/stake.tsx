@@ -1,8 +1,6 @@
 import React, { useEffect, createContext, useMemo, useState } from "react";
-import { ChainId } from "@pollum-io/pegasys-sdk";
 
-import { PSYS, STAKE_ADDRESS } from "pegasys-services/constants";
-import { ContractFramework } from "pegasys-services/frameworks";
+import { ContractFramework, RoutesFramework } from "../frameworks";
 import { StakeServices } from "../services";
 import { useWallet as psUseWallet, useEarn } from "../hooks";
 import { IStakeProviderProps, IStakeProviderValue } from "../dto";
@@ -23,19 +21,29 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 		onContractCall,
 	} = useEarn();
 
+	const stakeContract = useMemo(
+		() =>
+			ContractFramework.StakeContract({
+				chainId,
+			}),
+		[chainId]
+	);
+
 	const unstake = async () => {
 		await onContractCall(
 			async () => {
 				const typedValue = getTypedValue();
 
 				if (selectedOpportunity && typedValue) {
-					let method = StakeServices.unstake;
-
 					if (withdrawPercentage === 100) {
-						method = StakeServices.unstakeAndClaim;
+						const res = await StakeServices.unstakeAndClaim({ stakeContract });
+						return res;
 					}
 
-					const res = await method(typedValue.value.toString(16));
+					const res = await StakeServices.unstake({
+						stakeContract,
+						amount: typedValue.value.toString(16),
+					});
 
 					return res;
 				}
@@ -51,7 +59,7 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 		await onContractCall(
 			async () => {
 				if (selectedOpportunity) {
-					const res = await StakeServices.claim();
+					const res = await StakeServices.claim({ stakeContract });
 					return res;
 				}
 				return undefined;
@@ -67,10 +75,11 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 				const typedValue = getTypedValue(true);
 
 				if (selectedOpportunity && typedValue && signature) {
-					const res = await StakeServices.stake(
-						typedValue.value.toString(16),
-						signature
-					);
+					const res = await StakeServices.stake({
+						stakeContract,
+						amount: typedValue.value.toString(16),
+						signatureData: signature,
+					});
 
 					return res;
 				}
@@ -84,13 +93,13 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 
 	const sign = async () => {
 		if (selectedOpportunity) {
-			const contract = ContractFramework.PSYSContract(chainId);
+			const contract = ContractFramework.PSYSContract({ chainId });
 
 			await onSign(
 				contract,
 				"Pegasys",
-				STAKE_ADDRESS,
-				PSYS[chainId as ChainId].address
+				RoutesFramework.getStakeAddress(chainId),
+				RoutesFramework.getPsysAddress(chainId)
 			);
 		}
 	};
@@ -98,10 +107,11 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 	useEffect(() => {
 		if (address && chainId) {
 			const getStakes = async () => {
-				const stakeInfos = await StakeServices.getStakeOpportunities(
-					address,
-					chainId
-				);
+				const stakeInfos = await StakeServices.getStakeOpportunities({
+					stakeContract,
+					chainId,
+					walletAddress: address,
+				});
 
 				setEarnOpportunities(stakeInfos);
 			};

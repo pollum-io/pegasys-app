@@ -2,13 +2,7 @@ import { Flex, Img, Text } from "@chakra-ui/react";
 import { FunctionComponent, useMemo } from "react";
 import { useModal, usePicasso, useTokens } from "hooks";
 import { useRouter } from "next/router";
-import {
-	IFarmInfo,
-	useEarn,
-	TButtonId,
-	BIG_INT_ONE,
-	BIG_INT_ZERO,
-} from "pegasys-services";
+import { IFarmInfo, useEarn, TButtonId, BIG_INT_ZERO } from "pegasys-services";
 import { JSBI } from "@pollum-io/pegasys-sdk";
 import { formattedNum } from "utils/numberFormat";
 import { EarnButton } from "../Earn";
@@ -29,6 +23,7 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 		totalStakedInUsd,
 		stakedInUsd,
 		rewardToken,
+		extraRewardToken,
 	} = stakeInfo;
 
 	const theme = usePicasso();
@@ -59,6 +54,16 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 		return tokenBWrapped?.logoURI ?? "";
 	}, [userTokensBalance, tokenB]);
 
+	const extraTokenLogo = useMemo(() => {
+		const extraTokenWrapped = userTokensBalance.find(
+			ut =>
+				ut.address === extraRewardToken?.address &&
+				extraRewardToken.chainId === ut.chainId
+		);
+
+		return extraTokenWrapped?.logoURI ?? "";
+	}, [userTokensBalance, tokenB]);
+
 	return (
 		<Flex
 			w="xs"
@@ -83,16 +88,18 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 						{tokenA.symbol}-{tokenB?.symbol ?? ""}
 					</Text>
 				</Flex>
-				<Flex
-					alignItems="flex-end"
-					justifyContent="center"
-					w="15%"
-					h="3rem"
-					backgroundColor={theme.bg.smoothGray}
-					borderBottomRadius="full"
-				>
-					<Img src="icons/pegasys.png" w="6" h="6" mb="0.6rem" />
-				</Flex>
+				{!!superFarmApr && (
+					<Flex
+						alignItems="flex-end"
+						justifyContent="center"
+						w="15%"
+						h="3rem"
+						backgroundColor={theme.bg.smoothGray}
+						borderBottomRadius="full"
+					>
+						<Img src={extraTokenLogo} w="6" h="6" mb="0.6rem" />
+					</Flex>
+				)}
 			</Flex>
 			<Flex flexDirection="column" pt="6">
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">

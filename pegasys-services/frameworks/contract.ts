@@ -1,33 +1,22 @@
 import { BigNumber, ethers } from "ethers";
-import MINICHEF_ABI from "@pollum-io/pegasys-protocol/artifacts/contracts/earn/MiniChefV2.sol/MiniChefV2.json";
-import STAKING_REWARDS_ABI from "@pollum-io/pegasys-protocol/artifacts/contracts/earn/StakingRewards.sol/StakingRewards.json";
-import IPegasysPairABI from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/interfaces/IPegasysPair.sol/IPegasysPair.json";
-import IPegasysRouterABI from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
-import PSYS_ABI from "@pollum-io/pegasys-protocol/artifacts/contracts/PegasysToken.sol/PegasysToken.json";
-
-import { ChainId } from "@pollum-io/pegasys-sdk";
-import {
-	MINICHEF_ADDRESS,
-	PSYS,
-	STAKE_ADDRESS,
-} from "pegasys-services/constants";
-import { ROUTER_ADDRESS } from "helpers/consts";
-import { getAddress } from "@ethersproject/address";
 import Wallet from "./wallet";
-import ERC20_ABI from "../abis/erc20.json";
+import RoutesFramework from "./routes";
 import {
 	IContractFrameworkGetContractProps,
 	IContractFrameworkEstimateGasProps,
 	TContract,
 	IContractFrameworkCallProps,
+	IGetDefinedContract,
+	IGetSpecificContract,
 } from "../dto";
+import AbiFramework from "./abi";
 
 class ContractFramework {
 	static getContract(props: IContractFrameworkGetContractProps): TContract {
 		const providerOrSigner = props.provider ?? Wallet.getSignerOrProvider();
 
 		const contract = new ethers.Contract(
-			getAddress(props.address),
+			props.address,
 			props.abi,
 			providerOrSigner
 		);
@@ -69,55 +58,56 @@ class ContractFramework {
 		return res;
 	}
 
-	static TokenContract(address: string) {
-		const contract = this.getContract({
-			abi: ERC20_ABI,
-			address,
+	static TokenContract(props: IGetDefinedContract) {
+		return this.getContract({
+			abi: AbiFramework.getTokenABi(),
+			...props,
 		});
-
-		return contract;
 	}
 
-	static RouterContract(chainId?: ChainId) {
-		const contract = this.getContract({
-			abi: IPegasysRouterABI.abi,
-			address: ROUTER_ADDRESS[chainId ?? ChainId.NEVM],
+	static RouterContract({ chainId, provider }: IGetSpecificContract) {
+		return this.getContract({
+			abi: AbiFramework.getRouterAbi(),
+			address: RoutesFramework.getRouterAddress(chainId),
+			provider,
 		});
-
-		return contract;
 	}
 
-	static FarmContract(chainId: ChainId) {
-		const contract = this.getContract({
-			abi: MINICHEF_ABI.abi,
-			address: MINICHEF_ADDRESS,
+	static FarmContract({ chainId, provider }: IGetSpecificContract) {
+		return this.getContract({
+			abi: AbiFramework.getMinichefAbi(),
+			address: RoutesFramework.getMinichefAddress(chainId),
+			provider,
 		});
-
-		return contract;
 	}
 
-	static StakeContract(chainId?: ChainId) {
-		const contract = this.getContract({
-			abi: STAKING_REWARDS_ABI.abi,
-			address: STAKE_ADDRESS,
+	static StakeContract({ chainId, provider }: IGetSpecificContract) {
+		return this.getContract({
+			abi: AbiFramework.getStakeABi(),
+			address: RoutesFramework.getStakeAddress(chainId),
+			provider,
 		});
-
-		return contract;
 	}
 
-	static PairContract(address: string) {
-		const contract = this.getContract({
-			address,
-			abi: IPegasysPairABI.abi,
+	static PairContract(props: IGetDefinedContract) {
+		return this.getContract({
+			abi: AbiFramework.getPairABi(),
+			...props,
 		});
-
-		return contract;
 	}
 
-	static PSYSContract(chainId: ChainId) {
+	static ExtraRewardContract(props: IGetDefinedContract) {
+		return this.getContract({
+			abi: AbiFramework.getExtraRewardABi(),
+			...props,
+		});
+	}
+
+	static PSYSContract({ chainId, provider }: IGetSpecificContract) {
 		const contract = this.getContract({
-			address: PSYS[chainId ?? ChainId.NEVM].address,
-			abi: PSYS_ABI.abi,
+			address: RoutesFramework.getPsysAddress(chainId),
+			abi: AbiFramework.getPsysABi(),
+			provider,
 		});
 
 		return contract;

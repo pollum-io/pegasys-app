@@ -62,7 +62,7 @@ const EarnSlider: React.FC = () => {
 				<Tooltip
 					hasArrow
 					filter="drop-shadow(0px 1px 3px rgba(0, 0, 0, 0.1)) drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.06))"
-					bgColor={theme.bg.secondary}
+					bgColor={theme.bg.aidropBannerMobile}
 					color={theme.text.mono}
 					placement="top"
 					isOpen={showTooltip}

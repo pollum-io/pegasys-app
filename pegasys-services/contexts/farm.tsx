@@ -5,8 +5,7 @@ import { getTokenPairs } from "utils";
 import { WrappedTokenInfo } from "types";
 import { useTokens, useWallet } from "hooks";
 
-import { MINICHEF_ADDRESS } from "pegasys-services/constants";
-import { ContractFramework } from "pegasys-services/frameworks";
+import { ContractFramework, RoutesFramework } from "../frameworks";
 import { FarmServices } from "../services";
 import { useWallet as psUseWallet, useEarn } from "../hooks";
 import {
@@ -38,6 +37,14 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 		onContractCall,
 	} = useEarn();
 
+	const farmContract = useMemo(
+		() =>
+			ContractFramework.FarmContract({
+				chainId,
+			}),
+		[chainId]
+	);
+
 	const withdraw = async () => {
 		await onContractCall(
 			async () => {
@@ -51,11 +58,13 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 						method = FarmServices.withdrawAndClaim;
 					}
 
-					const res = await method(
+					const res = await method({
 						poolId,
-						typedValue.value.toString(16),
-						address
-					);
+						amount: typedValue.value.toString(16),
+						address,
+						farmContract,
+						chainId,
+					});
 
 					return res;
 				}
@@ -73,7 +82,12 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 				if (selectedOpportunity) {
 					const { poolId } = selectedOpportunity as IFarmInfo;
 
-					const res = await FarmServices.claim(poolId, address);
+					const res = await FarmServices.claim({
+						poolId,
+						address,
+						farmContract,
+						chainId,
+					});
 
 					return res;
 				}
@@ -93,12 +107,14 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 				if (selectedOpportunity && typedValue && signature) {
 					const { poolId } = selectedOpportunity as IFarmInfo;
 
-					const res = await FarmServices.deposit(
+					const res = await FarmServices.deposit({
 						poolId,
-						typedValue.value.toString(16),
+						amount: typedValue.value.toString(16),
 						address,
-						signature
-					);
+						signatureData: signature,
+						farmContract,
+						chainId,
+					});
 
 					return res;
 				}
@@ -112,14 +128,14 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 
 	const sign = async () => {
 		if (selectedOpportunity) {
-			const contract = ContractFramework.PairContract(
-				selectedOpportunity.stakeToken.address
-			);
+			const contract = ContractFramework.PairContract({
+				address: selectedOpportunity.stakeToken.address,
+			});
 
 			await onSign(
 				contract,
 				"Pegasys LP Token",
-				MINICHEF_ADDRESS,
+				RoutesFramework.getMinichefAddress(chainId),
 				selectedOpportunity.stakeToken.address,
 				"1"
 			);
@@ -173,12 +189,13 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 			const getAvailablePair = async () => {
 				const pairsTokens = getTokenPairs(chainId, userTokensBalance);
 
-				const stakeInfos = await FarmServices.getFarmOpportunities(
-					pairsTokens as [WrappedTokenInfo, Token][],
-					address,
+				const stakeInfos = await FarmServices.getFarmOpportunities({
+					tokenPairs: pairsTokens as [WrappedTokenInfo, Token][],
+					walletAddress: address,
 					chainId,
-					provider
-				);
+					provider,
+					farmContract,
+				});
 
 				setEarnOpportunities(stakeInfos);
 

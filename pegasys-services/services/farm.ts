@@ -1,22 +1,32 @@
-import ethers, { BigNumber, Signer } from "ethers";
 import {
 	ChainId,
 	JSBI,
 	Pair,
-	Price,
 	Token,
 	TokenAmount,
 	WSYS,
 } from "@pollum-io/pegasys-sdk";
 
-import { IWalletHookInfos, WrappedTokenInfo } from "types";
 import { usePairs as getPairs } from "hooks";
 
-import { IFarmInfo } from "../dto";
+import {
+	IFarmInfo,
+	IFarmServicesClaim,
+	IFarmServicesDeposit,
+	IFarmServicesGetExtraReward,
+	IFarmServicesGetFarmOpportunities,
+	IFarmServicesGetPoolRewardRate,
+	IFarmServicesGetStake,
+	IFarmServicesGetTotalStake,
+	IFarmServicesGetUnclaimed,
+	IFarmServicesGetUnstake,
+	IFarmServicesWithdraw,
+} from "../dto";
 import TokenServices from "./token";
 import LpTokenServices from "./lpToken";
 import { ContractFramework } from "../frameworks";
 import {
+	BIG_INT_ONE,
 	BIG_INT_SECONDS_IN_WEEK,
 	BIG_INT_TWO,
 	BIG_INT_ZERO,
@@ -26,74 +36,95 @@ import {
 	USDT,
 	ZERO_ADDRESS,
 } from "../constants";
+import PairServices from "./pair";
 
 class FarmServices {
-	private static async getTotalStake(stakeToken: Token) {
-		const totalStake = await LpTokenServices.getBalance(stakeToken.address);
+	private static async getTotalStake({
+		stakeToken,
+		...props
+	}: IFarmServicesGetTotalStake) {
+		const totalStake = await LpTokenServices.getBalance({
+			...props,
+			contractAddress: stakeToken.address,
+		});
 
 		const totalStakeJSBI = JSBI.BigInt(totalStake.toString() ?? 0);
 
 		return new TokenAmount(stakeToken, totalStakeJSBI);
 	}
 
-	private static async getStake(
-		stakeToken: Token,
-		poolId: number,
-		address: string
-	) {
-		const stake = await LpTokenServices.getUserStake(poolId, address);
+	private static async getStake({
+		stakeToken,
+		...props
+	}: IFarmServicesGetStake) {
+		const stake = await LpTokenServices.getUserStake(props);
 
 		const stakeJSBI = JSBI.BigInt(stake.toString() ?? 0);
 
 		return new TokenAmount(stakeToken, stakeJSBI);
 	}
 
-	private static async getUnstake(stakeToken: Token, address: string) {
-		const unstake = await LpTokenServices.getAvailableLpTokens(
-			stakeToken.address,
-			address
-		);
+	private static async getUnstake({
+		stakeToken,
+		...props
+	}: IFarmServicesGetUnstake) {
+		const unstake = await LpTokenServices.getAvailableLpTokens({
+			...props,
+			contractAddress: stakeToken.address,
+		});
 
 		const unstakeJSBI = JSBI.BigInt(unstake.toString() ?? 0);
 
 		return new TokenAmount(stakeToken, unstakeJSBI);
 	}
 
-	private static async getUnclaimed(
-		rewardToken: Token,
-		poolId: number,
-		address: string
-	) {
-		const unclaimed = await LpTokenServices.getUserUnclaimedPSYS(
-			poolId,
-			address
-		);
+	private static async getUnclaimed({
+		rewardToken,
+		...props
+	}: IFarmServicesGetUnclaimed) {
+		const unclaimed = await LpTokenServices.getUserUnclaimedPSYS(props);
 
 		const unclaimedJSBI = JSBI.BigInt(unclaimed.toString() ?? 0);
 
 		return new TokenAmount(rewardToken, unclaimedJSBI);
 	}
 
-	private static async getPoolRewardRate(
-		stakeToken: Token,
-		rewardToken: Token,
-		poolId: number
-	) {
-		const allocPoint = await LpTokenServices.getAllocPoint(poolId);
+	private static async getPoolRewardRate({
+		stakeToken,
+		rewardToken,
+		poolId,
+		chainId,
+		provider,
+		farmContract,
+	}: IFarmServicesGetPoolRewardRate) {
+		const allocPoint = await LpTokenServices.getAllocPoint({
+			poolId,
+			farmContract,
+			provider,
+			chainId,
+		});
 
 		const allocPointAmount = new TokenAmount(
 			stakeToken,
 			JSBI.BigInt(allocPoint.toString() ?? 0)
 		);
 
-		const totalAllocPoint = await LpTokenServices.getTotalAllocPoint();
+		const totalAllocPoint = await LpTokenServices.getTotalAllocPoint({
+			farmContract,
+			provider,
+			chainId,
+		});
 
 		const totalAllocPointAmount = new TokenAmount(
 			stakeToken,
 			JSBI.BigInt(totalAllocPoint.toString() ?? 0)
 		);
 
-		const rewardPerSec = await LpTokenServices.getRewardPerSec();
+		const rewardPerSec = await LpTokenServices.getRewardPerSec({
+			farmContract,
+			chainId,
+			provider,
+		});
 
 		const rewardPerSecAmount = new TokenAmount(
 			rewardToken,
@@ -169,45 +200,6 @@ class FarmServices {
 		};
 	}
 
-	private static async getRewardTokenWsysPair(
-		rewardToken: Token,
-		walletInfo: IWalletHookInfos
-	) {
-		const wsys = WSYS[walletInfo.chainId ?? ChainId.NEVM];
-
-		const getSysPsysPair = await getPairs([[wsys, rewardToken]], walletInfo);
-
-		const sysPsysPair = getSysPsysPair[0]?.[1];
-
-		return (
-			sysPsysPair ??
-			new Pair(
-				new TokenAmount(wsys, BIG_INT_ZERO),
-				new TokenAmount(rewardToken, BIG_INT_ZERO),
-				walletInfo.chainId
-			)
-		);
-	}
-
-	private static getRewardTokenWsysPrice(
-		rewardTokenWsysPair: Pair,
-		chainId?: ChainId
-	) {
-		const wsys = WSYS[chainId ?? ChainId.NEVM];
-		const usdc = USDC[chainId ?? ChainId.NEVM];
-
-		const price = rewardTokenWsysPair?.priceOf(wsys);
-
-		const usdPrice = new Price(
-			wsys,
-			usdc,
-			price?.denominator ?? BIG_INT_ZERO,
-			price?.numerator ?? BIG_INT_ZERO
-		);
-
-		return usdPrice;
-	}
-
 	private static getReservePrice(
 		reserve: TokenAmount,
 		totalStake: TokenAmount,
@@ -225,19 +217,17 @@ class FarmServices {
 
 	private static async getTotalStakeInUsd(
 		pair: Pair,
-		price: Price,
 		stakeToken: Token,
 		totalStake: TokenAmount,
-		rewardTokenWsysPair: Pair,
 		chainId?: ChainId
 	) {
 		const dai = DAI[chainId ?? ChainId.NEVM];
 
 		let totalStakedInUsd = new TokenAmount(dai, BIG_INT_ZERO);
 
-		const totalSupply = await LpTokenServices.getTotalSupply(
-			stakeToken.address
-		);
+		const totalSupply = await LpTokenServices.getTotalSupply({
+			contractAddress: stakeToken.address,
+		});
 
 		const totalSupplyJSBI = JSBI.BigInt(totalSupply ?? 0);
 
@@ -249,6 +239,8 @@ class FarmServices {
 		const usdt = USDT[chainId ?? ChainId.NEVM];
 		const wsys = WSYS[chainId ?? ChainId.NEVM];
 		const psys = PSYS[chainId ?? ChainId.NEVM];
+
+		const usdPrice = await TokenServices.getUsdcPrice(wsys, chainId);
 
 		if (pair.involvesToken(dai)) {
 			totalStakedInUsd = this.getReservePrice(
@@ -283,14 +275,21 @@ class FarmServices {
 				: new TokenAmount(wsys, BIG_INT_ZERO);
 
 			if (JSBI.greaterThan(totalStakedInWsys.raw, BIG_INT_ZERO)) {
-				totalStakedInUsd = price.quote(totalStakedInWsys) as TokenAmount;
+				totalStakedInUsd = usdPrice?.quote(totalStakedInWsys) as TokenAmount;
 			}
 		} else if (pair.involvesToken(psys)) {
+			const [[sysPsysPairState, sysPsysPair]] = await PairServices.getPairs([
+				[wsys, psys],
+			]);
+
 			const oneToken = JSBI.BigInt(`1${"0".repeat(18)}`);
 
 			const sysPsysRatio = JSBI.divide(
-				JSBI.multiply(oneToken, rewardTokenWsysPair.reserveOf(wsys).raw),
-				rewardTokenWsysPair.reserveOf(psys).raw
+				JSBI.multiply(
+					oneToken,
+					sysPsysPair?.reserveOf(wsys).raw ?? BIG_INT_ZERO
+				),
+				sysPsysPair?.reserveOf(psys).raw ?? BIG_INT_ONE
 			);
 
 			const valueOfPsysInSys = JSBI.divide(
@@ -307,11 +306,11 @@ class FarmServices {
 								JSBI.multiply(totalStake.raw, valueOfPsysInSys),
 								BIG_INT_TWO // this is b/c the value of LP shares are ~double the value of the wsys they entitle owner to
 							),
-							JSBI.multiply(totalSupplyJSBI, JSBI.BigInt(10000))
+							totalSupplyJSBI
 					  )
 			);
 
-			totalStakedInUsd = price.quote(totalStakedInWsys) as TokenAmount;
+			totalStakedInUsd = usdPrice?.quote(totalStakedInWsys) as TokenAmount;
 		}
 
 		return Number(totalStakedInUsd.toSignificant());
@@ -330,13 +329,20 @@ class FarmServices {
 		return Number(stakedInUsd.toString());
 	}
 
-	private static async getExtraReward(
-		totalRewardRatePerWeek: TokenAmount,
-		rewardRatePerWeek: TokenAmount,
-		poolId: number,
-		chainId?: ChainId
-	) {
-		const rewarder = await LpTokenServices.getRewarder(poolId);
+	private static async getExtraReward({
+		poolId,
+		provider,
+		chainId,
+		totalRewardRatePerWeek,
+		rewardRatePerWeek,
+		farmContract,
+	}: IFarmServicesGetExtraReward) {
+		const rewarder = await LpTokenServices.getRewarder({
+			poolId,
+			farmContract,
+			chainId,
+			provider,
+		});
 
 		if (rewarder === ZERO_ADDRESS) {
 			return {};
@@ -349,10 +355,10 @@ class FarmServices {
 			return {};
 		}
 
-		const extraRewardToken = await TokenServices.getToken(
-			rewardAddress,
-			chainId
-		);
+		const extraRewardToken = await TokenServices.getToken({
+			chainId,
+			contractAddress: rewardAddress,
+		});
 
 		const TEN_EIGHTEEN = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18));
 
@@ -392,37 +398,31 @@ class FarmServices {
 		};
 	}
 
-	static async getFarmOpportunities(
-		tokenPairs: Array<[WrappedTokenInfo, Token]>,
-		address: string,
-		chainId: ChainId,
-		provider?:
-			| ethers.providers.Provider
-			| ethers.providers.Web3Provider
-			| ethers.providers.JsonRpcProvider
-			| Signer
-	) {
-		const stakeTokens = await LpTokenServices.getLpTokens();
+	static async getFarmOpportunities({
+		tokenPairs,
+		walletAddress,
+		chainId,
+		provider,
+		farmContract,
+	}: IFarmServicesGetFarmOpportunities) {
+		const stakeTokens = await LpTokenServices.getLpTokens({
+			chainId,
+			farmContract,
+		});
 
-		const poolMap = await LpTokenServices.getPoolMap(stakeTokens);
+		const poolMap = await LpTokenServices.getPoolMap({
+			tokenAddresses: stakeTokens,
+			farmContract,
+			chainId,
+		});
 
 		const rewardToken = PSYS[chainId ?? ChainId.NEVM];
 
 		const walletInfo = {
-			walletAddress: address,
-			chainId,
+			walletAddress,
+			chainId: chainId ?? ChainId.NEVM,
 			provider,
 		};
-
-		const wsysRewardPair = await this.getRewardTokenWsysPair(
-			rewardToken,
-			walletInfo
-		);
-
-		const wsysRewardPrice = await this.getRewardTokenWsysPrice(
-			wsysRewardPair,
-			chainId
-		);
 
 		const pairs = await getPairs(tokenPairs, walletInfo);
 
@@ -450,21 +450,34 @@ class FarmServices {
 					const values: { [k: string]: TokenAmount } = {};
 
 					await Promise.all([
-						this.getPoolRewardRate(stakeToken, rewardToken, poolId).then(
-							value => {
-								values.poolRewardRate = value;
-							}
-						),
-						this.getTotalStake(stakeToken).then(value => {
+						this.getPoolRewardRate({
+							stakeToken,
+							rewardToken,
+							poolId,
+							farmContract,
+						}).then(value => {
+							values.poolRewardRate = value;
+						}),
+						this.getTotalStake({ stakeToken }).then(value => {
 							values.totalStake = value;
 						}),
-						this.getStake(stakeToken, poolId, address).then(value => {
+						this.getStake({
+							stakeToken,
+							poolId,
+							walletAddress,
+							farmContract,
+						}).then(value => {
 							values.stake = value;
 						}),
-						this.getUnstake(stakeToken, address).then(value => {
+						this.getUnstake({ stakeToken, walletAddress }).then(value => {
 							values.unstake = value;
 						}),
-						this.getUnclaimed(rewardToken, poolId, address).then(value => {
+						this.getUnclaimed({
+							rewardToken,
+							poolId,
+							walletAddress,
+							farmContract,
+						}).then(value => {
 							values.unclaimed = value;
 						}),
 					]);
@@ -478,10 +491,8 @@ class FarmServices {
 
 					const totalStakedInUsd = await this.getTotalStakeInUsd(
 						pair,
-						wsysRewardPrice,
 						stakeToken,
 						values.totalStake,
-						wsysRewardPair,
 						chainId
 					);
 
@@ -495,12 +506,13 @@ class FarmServices {
 						extraRewardToken,
 						extraRewardRatePerWeek,
 						extraTotalRewardRatePerWeek,
-					} = await this.getExtraReward(
+					} = await this.getExtraReward({
 						totalRewardRatePerWeek,
 						rewardRatePerWeek,
 						poolId,
-						chainId
-					);
+						chainId,
+						farmContract,
+					});
 
 					const { swapFeeApr, superFarmApr, combinedApr } =
 						await LpTokenServices.getAprs(poolId, !!extraRewardToken);
@@ -562,9 +574,16 @@ class FarmServices {
 		return pairsWithLiquidityToken;
 	}
 
-	static async withdraw(poolId: number, amount: string, address: string) {
+	static async withdraw({
+		poolId,
+		amount,
+		address,
+		chainId,
+		farmContract,
+	}: IFarmServicesWithdraw) {
 		let txHash = "";
-		const contract = LpTokenServices.getLpContract();
+		const contract =
+			farmContract ?? ContractFramework.FarmContract({ chainId });
 
 		const res = await ContractFramework.call({
 			methodName: "withdraw",
@@ -580,13 +599,16 @@ class FarmServices {
 		};
 	}
 
-	static async withdrawAndClaim(
-		poolId: number,
-		amount: string,
-		address: string
-	) {
+	static async withdrawAndClaim({
+		poolId,
+		amount,
+		address,
+		chainId,
+		farmContract,
+	}: IFarmServicesWithdraw) {
 		let txHash = "";
-		const contract = LpTokenServices.getLpContract();
+		const contract =
+			farmContract ?? ContractFramework.FarmContract({ chainId });
 
 		const res = await ContractFramework.call({
 			methodName: "withdrawAndHarvest",
@@ -602,9 +624,15 @@ class FarmServices {
 		};
 	}
 
-	static async claim(poolId: number, address: string) {
+	static async claim({
+		poolId,
+		address,
+		farmContract,
+		chainId,
+	}: IFarmServicesClaim) {
 		let txHash = "";
-		const contract = LpTokenServices.getLpContract();
+		const contract =
+			farmContract ?? ContractFramework.FarmContract({ chainId });
 
 		const res = await ContractFramework.call({
 			methodName: "harvest",
@@ -620,20 +648,18 @@ class FarmServices {
 		};
 	}
 
-	static async deposit(
-		poolId: number,
-		amount: string,
-		address: string,
-		signatureData: {
-			v: number;
-			r: string;
-			s: string;
-			deadline: BigNumber;
-		} | null
-	) {
+	static async deposit({
+		poolId,
+		amount,
+		address,
+		signatureData,
+		chainId,
+		farmContract,
+	}: IFarmServicesDeposit) {
 		let txHash = "";
 		if (signatureData) {
-			const contract = LpTokenServices.getLpContract();
+			const contract =
+				farmContract ?? ContractFramework.FarmContract({ chainId });
 
 			const res = await ContractFramework.call({
 				methodName: "depositWithPermit",

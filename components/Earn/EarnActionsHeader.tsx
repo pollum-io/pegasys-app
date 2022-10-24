@@ -70,7 +70,7 @@ const EarnActionsHeader: React.FC<IEarnActionsHeaderProps> = ({
 					right="2"
 					bottom="4"
 				>
-					<AiOutlineClose size={20} color={theme.icon.closeWhiteGray} />
+					<AiOutlineClose size={20} color={theme.icon.whiteGray} />
 				</Flex>
 				<Flex
 					display={{

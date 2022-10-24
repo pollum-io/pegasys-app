@@ -193,7 +193,9 @@ class PoolServices {
 				: undefined;
 
 		if (token) {
-			const contract = ContractFramework.TokenContract(token.address);
+			const contract = ContractFramework.TokenContract({
+				address: token.address,
+			});
 
 			const allowance = await ContractFramework.call({
 				contract,

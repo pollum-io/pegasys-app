@@ -28,7 +28,7 @@ const EarnClaimAction: React.FC<IEarnClaimActionProps> = ({ claim }) => {
 	return (
 		<Flex flexDirection="column" gap="6">
 			<Flex
-				bgColor={theme.bg.max}
+				bgColor={theme.bg.button}
 				flexDirection="column"
 				justifyContent="center"
 				alignItems="center"
