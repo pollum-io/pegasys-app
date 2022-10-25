@@ -53,7 +53,7 @@ import { Signer } from "ethers";
 import { computeTradePriceBreakdown, Field, maxAmountSpend } from "utils";
 import { getTokensGraphCandle } from "services/index";
 
-import { ONE_DAY_IN_SECONDS } from "helpers/consts";
+import { ONE_DAY_IN_SECONDS, SUPPORTED_NETWORK_CHAINS } from "helpers/consts";
 import { ConfirmSwap } from "components/Modals/ConfirmSwap";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { OtherWallet } from "./OtherWallet";
@@ -116,6 +116,26 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	// SOME INITIAL VALUES FOR REACT STATES //
 
+	let currentChainId: ChainId;
+
+	const validatedCurrentChain = SUPPORTED_NETWORK_CHAINS.includes(
+		chainId as number
+	);
+
+	switch (chainId) {
+		case 57:
+			currentChainId = ChainId.NEVM;
+			break;
+		case 5700:
+			currentChainId = ChainId.TANENBAUM;
+			break;
+		case 2814:
+			currentChainId = ChainId.ROLLUX;
+			break;
+		default:
+			currentChainId = ChainId.NEVM;
+	}
+
 	const initialTokenInputValue = {
 		inputFrom: {
 			value: "",
@@ -129,7 +149,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	};
 
 	const walletInfos: IWalletHookInfos = {
-		chainId: chainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
+		chainId: validatedCurrentChain ? currentChainId : ChainId.NEVM,
 		walletAddress: address,
 		provider,
 	};

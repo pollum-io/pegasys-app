@@ -1,13 +1,15 @@
 import { ChainId } from "@pollum-io/pegasys-sdk";
 import { TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
-import { DEFAULT_TOKEN_LISTS_SELECTED } from "helpers/consts";
+import {
+	DEFAULT_TOKEN_LISTS_SELECTED,
+	SUPPORTED_NETWORK_CHAINS,
+} from "helpers/consts";
 import {
 	EMPTY_TOKEN_LIST,
 	INITIAL_TOKEN_LIST_STATE,
 	NEW_TOKEN_LIST_STATE,
 	tokenListCache,
 } from "helpers/tokenListHelpers";
-import { useToasty } from "hooks";
 import { getTokenListByUrl } from "networks";
 import React, { createContext, useMemo, useState, useEffect } from "react";
 import { ListsState, TokenAddressMap, WrappedTokenInfo } from "types";
@@ -263,8 +265,12 @@ export const TokensListManageProvider: React.FC<{
 			) as TokenAddressMap;
 
 			if (getListTokens && Object.keys(getListTokens)?.length > 0) {
+				const validatedCurrentChain = SUPPORTED_NETWORK_CHAINS.includes(
+					currentNetworkChainId as number
+				);
+
 				const transformToChainIdType = Number(
-					currentNetworkChainId || 57
+					validatedCurrentChain ? currentNetworkChainId : 57
 				) as ChainId;
 
 				const getTokensByChain = Object.values(
@@ -279,7 +285,7 @@ export const TokensListManageProvider: React.FC<{
 
 				if (getTokensByChain.length > 0 && verifyTokens.length === 0) {
 					setCurrentCacheListTokensToDisplay(prevState => {
-						if (currentNetworkChainId !== null) {
+						if (validatedCurrentChain) {
 							prevState = [
 								...prevState.filter(
 									token => Number(token.chainId) === currentNetworkChainId
