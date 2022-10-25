@@ -8,6 +8,7 @@ import {
 	Input,
 	Text,
 	useColorMode,
+	SlideFade,
 } from "@chakra-ui/react";
 import { useToasty, useWallet as psUseWallet } from "pegasys-services";
 import {
@@ -1199,71 +1200,75 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				borderRadius={30}
 				border="1px solid transparent;"
 			>
-				{!isLoadingGraphCandles && (
-					<Flex flexDirection="column">
-						<Flex
-							gap="2"
-							justifyContent="center"
-							flexDirection={["column", "row", "row", "row"]}
-							alignItems="center"
-							mb={`${
-								!isLoadingGraphCandles &&
-								tokensGraphCandleData?.length === 0 &&
-								"5"
-							}`}
-						>
-							<Flex>
-								{[0, 1].map(
-									(
-										_,
-										index // Array with number of elements to display in the screen
-									) => (
-										<Img
-											key={_ + Number(index)}
-											src={
-												index === 0
-													? tokensPairPosition[0]?.tokenInfo?.logoURI
-													: tokensPairPosition[1]?.tokenInfo?.logoURI
-											}
-											w="7"
-											h="7"
-											mr="0.5"
-										/>
-									)
-								)}
+				<SlideFade in={!isLoadingGraphCandles} offsetY="20px">
+					{!isLoadingGraphCandles && (
+						<Flex flexDirection="column">
+							<Flex
+								gap="2"
+								justifyContent="center"
+								flexDirection={["column", "row", "row", "row"]}
+								alignItems="center"
+								mb={`${
+									!isLoadingGraphCandles &&
+									tokensGraphCandleData?.length === 0 &&
+									"5"
+								}`}
+							>
+								<Flex>
+									{[0, 1].map(
+										(
+											_,
+											index // Array with number of elements to display in the screen
+										) => (
+											<Img
+												key={_ + Number(index)}
+												src={
+													index === 0
+														? tokensPairPosition[0]?.tokenInfo?.logoURI
+														: tokensPairPosition[1]?.tokenInfo?.logoURI
+												}
+												w="7"
+												h="7"
+												mr="0.5"
+											/>
+										)
+									)}
 
-								<Text fontWeight="700" fontSize="xl" ml="2.5">
-									{tokensPairPosition[0]?.symbol} /{" "}
-									{tokensPairPosition[1]?.symbol}
+									<Text fontWeight="700" fontSize="xl" ml="2.5">
+										{tokensPairPosition[0]?.symbol} /{" "}
+										{tokensPairPosition[1]?.symbol}
+									</Text>
+								</Flex>
+
+								<Text pl="2" fontSize="lg" fontWeight="400">
+									{tokensGraphCandleData?.length === 0
+										? "-"
+										: `${parseFloat(
+												String(tokensGraphCandleData[0]?.close)
+										  ).toFixed(2)} ${tokensPairPosition[1]?.symbol}`}
 								</Text>
 							</Flex>
-
-							<Text pl="2" fontSize="lg" fontWeight="400">
-								{tokensGraphCandleData?.length === 0
-									? "-"
-									: `${parseFloat(
-											String(tokensGraphCandleData[0]?.close)
-									  ).toFixed(2)} ${tokensPairPosition[1]?.symbol}`}
-							</Text>
+							<Flex
+								my={`${
+									tokensGraphCandleData?.length === 0 && !isLoadingGraphCandles
+										? "0"
+										: "6"
+								}`}
+								justifyContent="center"
+							>
+								<SlideFade
+									in={tokensGraphCandleData?.length !== 0}
+									offsetY="20px"
+								>
+									<FilterButton
+										periodStateValue={tokensGraphCandlePeriod}
+										setPeriod={setTokensGraphCandlePeriod}
+									/>
+								</SlideFade>
+							</Flex>
 						</Flex>
-						<Flex
-							my={`${
-								tokensGraphCandleData?.length === 0 && !isLoadingGraphCandles
-									? "0"
-									: "6"
-							}`}
-							justifyContent="center"
-						>
-							{tokensGraphCandleData?.length !== 0 && (
-								<FilterButton
-									periodStateValue={tokensGraphCandlePeriod}
-									setPeriod={setTokensGraphCandlePeriod}
-								/>
-							)}
-						</Flex>
-					</Flex>
-				)}
-
+					)}
+				</SlideFade>
 				<Flex
 					direction="column"
 					justifyContent="center"
@@ -1302,7 +1307,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Text>
 						</Flex>
 					) : (
-						<ChartComponent data={tokensGraphCandleData} />
+						<SlideFade
+							in={!isLoadingGraphCandles || tokensGraphCandleData}
+							offsetY="20px"
+						>
+							<ChartComponent data={tokensGraphCandleData} />
+						</SlideFade>
 					)}
 				</Flex>
 			</Flex>
