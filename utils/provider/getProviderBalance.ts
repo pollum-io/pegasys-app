@@ -47,7 +47,7 @@ export const getProviderBalance = async (
 
 	return {
 		validatedAddress: validateAddress.address,
-		providerBalanceFormattedValue,
-		providerTruncatedBalance,
+		providerBalanceFormattedValue: `${providerBalanceFormattedValue}`,
+		providerTruncatedBalance: `${providerTruncatedBalance}`,
 	};
 };
