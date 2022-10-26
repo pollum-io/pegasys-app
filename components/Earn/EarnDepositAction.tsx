@@ -25,6 +25,7 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 		buttonId,
 		signatureLoading,
 		loading,
+		depositPercentage,
 	} = useEarn();
 	const { userTokensBalance } = useTokens();
 
@@ -99,8 +100,14 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				px="1.5rem"
 				mt="1.5rem"
 				mb="1rem"
-				disabled={!depositTypedValue || signatureLoading || loading}
+				disabled={
+					!depositTypedValue ||
+					signatureLoading ||
+					!depositPercentage ||
+					loading
+				}
 				onClick={signature ? deposit : sign}
+				fontSize={16}
 				solid
 			>
 				{signatureLoading ? "LOADING" : signature ? buttonTitle : "Sign"}

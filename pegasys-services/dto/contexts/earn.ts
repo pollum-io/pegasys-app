@@ -57,6 +57,7 @@ export interface IEarnProviderValue {
 	selectedOpportunity: IEarnInfo | null;
 	setSelectedOpportunity: setType<IEarnInfo | null>;
 	withdrawPercentage: number;
+	depositPercentage: number;
 	reset: () => void;
 	signatureLoading: boolean;
 	loading: boolean;

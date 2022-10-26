@@ -6,8 +6,8 @@ import {
 	useMediaQuery,
 	useColorMode,
 } from "@chakra-ui/react";
-import { StakeCards } from "components/Stake/StakeCard";
-import { usePicasso } from "hooks";
+import { StakeCard, LoadingTransition } from "components";
+import { useModal, usePicasso } from "hooks";
 import { NextPage } from "next";
 import { MdOutlineCallMade } from "react-icons/md";
 import {
@@ -16,7 +16,7 @@ import {
 	useEarn,
 	IStakeInfo,
 } from "pegasys-services";
-import { LoadingTransition } from "components";
+import { StakeActions } from "components/Modals/StakeActions";
 
 export const StakeContainer: NextPage = () => {
 	const theme = usePicasso();
@@ -25,10 +25,12 @@ export const StakeContainer: NextPage = () => {
 	const { isConnected, address } = psUseWallet();
 	const { showInUsd, setShowInUsd } = useStake();
 	const { earnOpportunities, loading, signatureLoading } = useEarn();
+	const { isOpenStakeActions, onCloseStakeActions } = useModal();
 
 	return (
 		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
 			<LoadingTransition isOpen={loading || signatureLoading} />
+			<StakeActions isOpen={isOpenStakeActions} onClose={onCloseStakeActions} />
 			<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
 				<Flex
 					flexDirection="column"
@@ -78,6 +80,8 @@ export const StakeContainer: NextPage = () => {
 						py="0.531rem"
 						gap="2.5"
 						color="white"
+						cursor="pointer"
+						onClick={() => window.open("https://pegasys.finance/blog/psys/")}
 					>
 						<Text fontWeight="medium" fontSize="xs">
 							Read more about PSYS
@@ -205,7 +209,7 @@ export const StakeContainer: NextPage = () => {
 					alignItems={["center", "center", "center", "center"]}
 				>
 					{earnOpportunities.map((stakeInfo: unknown, index) => (
-						<StakeCards key={index} stakeInfo={stakeInfo as IStakeInfo} />
+						<StakeCard key={index} stakeInfo={stakeInfo as IStakeInfo} />
 					))}
 				</Flex>
 			</Flex>

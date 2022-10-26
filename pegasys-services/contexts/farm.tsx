@@ -5,6 +5,7 @@ import { getTokenPairs } from "utils";
 import { WrappedTokenInfo } from "types";
 import { useTokens, useWallet } from "hooks";
 
+import { MINICHEF_ADDRESS } from "pegasys-services";
 import { ContractFramework, RoutesFramework } from "../frameworks";
 import { FarmServices } from "../services";
 import { useWallet as psUseWallet, useEarn } from "../hooks";
@@ -12,7 +13,6 @@ import {
 	IFarmProviderProps,
 	IFarmProviderValue,
 	TFarmSort,
-	IEarnInfo,
 	IFarmInfo,
 } from "../dto";
 import { EarnProvider } from "./earn";
@@ -21,7 +21,7 @@ export const FarmContext = createContext({} as IFarmProviderValue);
 
 const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	const [sort, setSort] = useState<TFarmSort>("yours");
-	const [sortedPairs, setSortPairs] = useState<IEarnInfo[]>([]);
+	const [sortedPairs, setSortPairs] = useState<IFarmInfo[]>([]);
 	const [search, setSearch] = useState<string>("");
 	const { userTokensBalance } = useTokens();
 	const { chainId, address } = psUseWallet();
@@ -185,7 +185,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	};
 
 	useEffect(() => {
-		if (chainId && address) {
+		if (chainId && address && MINICHEF_ADDRESS[chainId]) {
 			const getAvailablePair = async () => {
 				const pairsTokens = getTokenPairs(chainId, userTokensBalance);
 
@@ -235,7 +235,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 
 		pairsToRender = onSort(pairsToRender);
 
-		setSortPairs(pairsToRender);
+		setSortPairs([...pairsToRender]);
 	}, [earnOpportunities, sort, search]);
 
 	const providerValue = useMemo(

@@ -57,6 +57,7 @@ const EarnClaimAction: React.FC<IEarnClaimActionProps> = ({ claim }) => {
 				my="4"
 				onClick={claim}
 				disabled={loading}
+				fontSize={16}
 				solid
 			>
 				{`Claim ${selectedOpportunity.rewardToken.symbol}`}

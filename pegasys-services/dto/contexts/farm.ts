@@ -1,5 +1,5 @@
 import { children, setType } from "../react";
-import { IEarnInfo } from "./earn";
+import { IFarmInfo } from "../services";
 
 export interface IFarmProviderProps {
 	children: children;
@@ -12,7 +12,7 @@ export interface IFarmProviderValue {
 	setSort: setType<TFarmSort>;
 	search: string;
 	setSearch: setType<string>;
-	sortedPairs: IEarnInfo[];
+	sortedPairs: IFarmInfo[];
 	claim: () => Promise<void>;
 	sign: () => Promise<void>;
 	deposit: () => Promise<void>;

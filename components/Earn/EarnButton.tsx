@@ -10,7 +10,7 @@ interface IEarnButtonProps {
 	onClick: (id: string) => void;
 	children: string;
 	height?: string | string[];
-	width: string | string[];
+	width?: string | string[];
 	px?: string;
 	py?: string | string[];
 	amount?: TokenAmount;
@@ -27,6 +27,8 @@ const EarnButton: React.FC<IEarnButtonProps> = ({
 	onClick,
 	amount,
 	fontSize,
+	width,
+	height,
 	...props
 }) => {
 	const theme = usePicasso();
@@ -36,7 +38,8 @@ const EarnButton: React.FC<IEarnButtonProps> = ({
 
 	return (
 		<Button
-			{...props}
+			width={width ?? "100%"}
+			height={height ?? "100%"}
 			fontSize={
 				fontSize
 					? typeof fontSize === "string"
@@ -65,6 +68,7 @@ const EarnButton: React.FC<IEarnButtonProps> = ({
 			}
 			_active={{}}
 			onClick={event => onClick(event.currentTarget.id)}
+			{...props}
 		/>
 	);
 };

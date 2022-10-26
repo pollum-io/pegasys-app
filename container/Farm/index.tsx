@@ -8,7 +8,6 @@ import {
 	MenuList,
 	MenuButton,
 	Icon,
-	Box,
 	useMediaQuery,
 	useColorMode,
 	Link,
@@ -16,15 +15,10 @@ import {
 import { NextPage } from "next";
 import { MdOutlineCallMade, MdExpandMore } from "react-icons/md";
 
-import { FarmCard, LoadingTransition, SearchInput } from "components";
+import { LoadingTransition, SearchInput, FarmGrid } from "components";
 import { usePicasso, useModal } from "hooks";
 
-import {
-	IFarmInfo,
-	useFarm,
-	useWallet as psUseWallet,
-	useEarn,
-} from "pegasys-services";
+import { useFarm, useWallet as psUseWallet, useEarn } from "pegasys-services";
 import { FarmActions } from "components/Modals/FarmActions";
 
 const sortData = {
@@ -96,21 +90,23 @@ export const FarmContainer: NextPage = () => {
 						py="0.531rem"
 						color="white"
 					>
-						<Link
-							href="info.pegasys.finance/account/wallet"
-							target="_blank"
-							rel="noreferrer"
-							_hover={{ cursor: "pointer", opacity: "0.9" }}
-							flexDirection="row"
-						>
-							<Flex gap="2.5">
-								<Text fontWeight="medium" fontSize="xs">
-									View Your Staked Liquidity
-								</Text>
+						{!!address && (
+							<Link
+								href={`https://info.pegasys.finance/account/${address}`}
+								target="_blank"
+								rel="noreferrer"
+								_hover={{ cursor: "pointer", opacity: "0.9" }}
+								flexDirection="row"
+							>
+								<Flex gap="2.5">
+									<Text fontWeight="medium" fontSize="xs">
+										View Your Staked Liquidity
+									</Text>
 
-								<MdOutlineCallMade size={20} />
-							</Flex>
-						</Link>
+									<MdOutlineCallMade size={20} />
+								</Flex>
+							</Link>
+						)}
 					</Flex>
 				</Flex>
 				<Flex
@@ -254,19 +250,7 @@ export const FarmContainer: NextPage = () => {
 						/>
 					</Flex>
 				)}
-				<Box
-					w="100%"
-					maxW="900px"
-					zIndex="1"
-					justifyContent="space-between"
-					mt={["10", "10", "0", "0"]}
-					mb="10rem"
-					sx={{ columnCount: [1, 1, 2, 2], columnGap: "35px" }}
-				>
-					{sortedPairs.map((pair, index) => (
-						<FarmCard key={index} stakeInfo={pair as IFarmInfo} />
-					))}
-				</Box>
+				<FarmGrid />
 			</Flex>
 		</Flex>
 	);

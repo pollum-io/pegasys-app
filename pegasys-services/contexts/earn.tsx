@@ -192,6 +192,20 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 		withdrawTypedValue,
 	]);
 
+	const depositPercentage = useMemo(() => {
+		const value = getTypedValue(true);
+
+		if (!value) {
+			return 0;
+		}
+
+		return value.percentage;
+	}, [
+		selectedOpportunity,
+		selectedOpportunity?.stakedAmount,
+		depositTypedValue,
+	]);
+
 	const providerValue = useMemo(
 		() => ({
 			withdrawTypedValue,
@@ -219,6 +233,7 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 			loading,
 			setLoading,
 			onContractCall,
+			depositPercentage,
 		}),
 		[
 			withdrawTypedValue,
@@ -240,6 +255,7 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 			loading,
 			setLoading,
 			onContractCall,
+			depositPercentage,
 		]
 	);
 

@@ -11,8 +11,8 @@ import {
 import { usePicasso } from "hooks";
 
 import { useFarm, useEarn } from "pegasys-services";
-import React, { Dispatch, SetStateAction, useState } from "react";
-import { MdArrowBack, MdOutlineClose, MdOutlineInfo } from "react-icons/md";
+import React from "react";
+import { MdOutlineInfo } from "react-icons/md";
 import {
 	EarnActionsHeader,
 	EarnDepositAction,

@@ -1,5 +1,6 @@
 import React, { useEffect, createContext, useMemo, useState } from "react";
 
+import { STAKE_ADDRESS } from "pegasys-services";
 import { ContractFramework, RoutesFramework } from "../frameworks";
 import { StakeServices } from "../services";
 import { useWallet as psUseWallet, useEarn } from "../hooks";
@@ -105,7 +106,7 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 	};
 
 	useEffect(() => {
-		if (address && chainId) {
+		if (address && chainId && STAKE_ADDRESS[chainId]) {
 			const getStakes = async () => {
 				const stakeInfos = await StakeServices.getStakeOpportunities({
 					stakeContract,

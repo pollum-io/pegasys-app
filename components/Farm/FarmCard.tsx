@@ -142,13 +142,13 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 					mt="0.688rem"
 					mb="1.5rem"
 				>
-					<Flex justifyContent="space-between" pb="0.75rem" fontSize="sm">
+					<Flex justifyContent="space-between" py="1.5" fontSize="sm">
 						<Text fontWeight="semibold">Your Rate</Text>
 						<Text>
 							{rewardRatePerWeek.toSignificant(6)} {rewardToken.symbol}/Week
 						</Text>
 					</Flex>
-					<Flex justifyContent="space-between" fontSize="sm">
+					<Flex justifyContent="space-between" py="1.5" fontSize="sm">
 						<Text fontWeight="semibold">Your Unclaimed</Text>
 						<Text>
 							{unclaimedAmount.toSignificant()} {rewardToken.symbol}
@@ -156,12 +156,11 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 					</Flex>
 				</Flex>
 			)}
-			<Flex gap="2" py="1" flexDirection="row">
+			<Flex gap="2" py="1">
 				<EarnButton
 					id="withdraw"
 					py="0.625rem"
 					px="1.5rem"
-					width="100%"
 					height="max-content"
 					onClick={onClick}
 					amount={stakedAmount}
@@ -173,7 +172,6 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 					id="deposit"
 					py="0.625rem"
 					px="1.5rem"
-					width="100%"
 					height="max-content"
 					onClick={onClick}
 					amount={unstakedAmount}
@@ -184,10 +182,10 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 			</Flex>
 			<EarnButton
 				id="claim"
-				py="1"
-				px="6"
-				width="100%"
+				py="0.625rem"
+				px="1.5rem"
 				mt="1rem"
+				height="max-content"
 				onClick={onClick}
 				amount={unclaimedAmount}
 			>
@@ -197,9 +195,9 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 				JSBI.greaterThanOrEqual(BIG_INT_ZERO, unstakedAmount.raw) &&
 				JSBI.greaterThanOrEqual(BIG_INT_ZERO, unclaimedAmount.raw) && (
 					<EarnButton
-						py="1"
-						px="6"
-						width="100%"
+						py="0.625rem"
+						height="max-content"
+						px="1.5rem"
 						mt="1rem"
 						onClick={() => router.push("pools")}
 					>
