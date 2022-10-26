@@ -17,15 +17,23 @@ export const getProviderBalance = async (
 		| undefined,
 	walletAddress: string
 ): Promise<IGetProviderBalance> => {
+	if (!walletAddress) {
+		return {
+			validatedAddress: "",
+			providerBalanceFormattedValue: "0",
+			providerTruncatedBalance: "0",
+		};
+	}
+
 	const validateAddress = UseENS(walletAddress);
 
 	const providerTokenBalance = await provider
 		?.getBalance(validateAddress.address as string)
 		.then(result => result.toString());
 
-	const providerBalanceFormattedValue = ethers.utils.formatEther(
-		providerTokenBalance as string
-	);
+	const providerBalanceFormattedValue =
+		providerTokenBalance &&
+		ethers.utils.formatEther(providerTokenBalance as string);
 
 	const providerTruncatedBalance =
 		providerBalanceFormattedValue &&
