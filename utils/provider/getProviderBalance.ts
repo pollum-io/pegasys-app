@@ -1,6 +1,6 @@
 import { ethers, Signer } from "ethers";
 import { UseENS } from "hooks";
-import { removeScientificNotation, verifyZerosInBalanceAndFormat } from "utils";
+import { verifyZerosInBalanceAndFormat } from "utils";
 
 interface IGetProviderBalance {
 	validatedAddress: string | null;
@@ -17,15 +17,24 @@ export const getProviderBalance = async (
 		| undefined,
 	walletAddress: string
 ): Promise<IGetProviderBalance> => {
+	if (!walletAddress) {
+		return {
+			validatedAddress: "",
+			providerFullBalance: "0",
+			providerFormattedBalance: "0",
+		};
+	}
+
 	const validateAddress = UseENS(walletAddress);
 
 	const providerTokenBalance = await provider
 		?.getBalance(validateAddress.address as string)
 		.then(result => result.toString());
 
-	const providerFullBalance = ethers.utils.formatEther(
-		providerTokenBalance as string
-	);
+	const providerFullBalance =
+		(providerTokenBalance &&
+			ethers.utils.formatEther(providerTokenBalance as string)) ||
+		"0";
 
 	const finalValueFormatted = verifyZerosInBalanceAndFormat(
 		Number(providerFullBalance)

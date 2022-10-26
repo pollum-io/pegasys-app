@@ -1,5 +1,4 @@
 import {
-	Button,
 	Flex,
 	Icon,
 	Link,
@@ -144,28 +143,6 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								>
 									Connected with {connectorSelected?.name}
 								</Text>
-							</Flex>
-							<Flex>
-								<Button
-									borderRadius="full"
-									border="1px solid"
-									borderColor={theme.text.cyanPurple}
-									px="2"
-									py="0.5"
-									w="max-content"
-									h="max-content"
-									color={theme.text.whitePurple}
-									fontSize={["xs", "xs", "sm", "sm"]}
-									fontWeight="bold"
-									alignItems="center"
-									bgColor="transparent"
-									_hover={{
-										borderColor: theme.text.cyanLightPurple,
-										color: theme.text.cyanLightPurple,
-									}}
-								>
-									CHANGE
-								</Button>
 							</Flex>
 						</Flex>
 						<Flex
