@@ -676,21 +676,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
 								{translation("swapPage.from")}
 							</Text>
-							<Text
-								fontSize="md"
-								fontWeight="400"
-								color={theme.text.gray500}
-								w={selectedToken[0]?.balance?.length > 10 ? "120px" : ""}
-								overflow={
-									selectedToken[0]?.balance?.length > 10 ? "hidden" : ""
-								}
-								textOverflow={
-									selectedToken[0]?.balance?.length > 10 ? "ellipsis" : ""
-								}
-								whiteSpace="nowrap"
-							>
+							<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
 								{`${translation("header.balance")} ${
-									selectedToken[0]?.balance
+									selectedToken[0]?.formattedBalance as string
 								}`}
 							</Text>
 						</Flex>
@@ -835,21 +823,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
 								{translation("swapPage.to")}
 							</Text>
-							<Text
-								fontSize="md"
-								fontWeight="400"
-								color={theme.text.gray500}
-								w={selectedToken[1]?.balance?.length > 10 ? "120px" : ""}
-								overflow={
-									selectedToken[1]?.balance?.length > 10 ? "hidden" : ""
-								}
-								textOverflow={
-									selectedToken[1]?.balance?.length > 10 ? "ellipsis" : ""
-								}
-								whiteSpace="nowrap"
-							>
+							<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
 								{`${translation("header.balance")} ${
-									selectedToken[1]?.balance as string
+									selectedToken[1]?.formattedBalance as string
 								}`}
 							</Text>
 						</Flex>

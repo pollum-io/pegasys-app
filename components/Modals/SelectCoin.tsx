@@ -152,6 +152,8 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 		setTokenError(verify);
 	}, [selectedToken, isOpen]);
 
+	console.log("tokens", userTokensBalance);
+
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ManageToken isOpen={isOpenManageToken} onClose={onCloseManageToken} />

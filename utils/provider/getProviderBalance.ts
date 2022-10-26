@@ -1,9 +1,11 @@
 import { ethers, Signer } from "ethers";
 import { UseENS } from "hooks";
+import { removeScientificNotation, verifyZerosInBalanceAndFormat } from "utils";
 
 interface IGetProviderBalance {
 	validatedAddress: string | null;
-	providerBalanceFormattedValue: string;
+	providerFullBalance: string;
+	providerFormattedBalance: string;
 }
 
 export const getProviderBalance = async (
@@ -21,12 +23,17 @@ export const getProviderBalance = async (
 		?.getBalance(validateAddress.address as string)
 		.then(result => result.toString());
 
-	const providerBalanceFormattedValue = ethers.utils.formatEther(
+	const providerFullBalance = ethers.utils.formatEther(
 		providerTokenBalance as string
+	);
+
+	const finalValueFormatted = verifyZerosInBalanceAndFormat(
+		Number(providerFullBalance)
 	);
 
 	return {
 		validatedAddress: validateAddress.address,
-		providerBalanceFormattedValue,
+		providerFullBalance,
+		providerFormattedBalance: finalValueFormatted,
 	};
 };
