@@ -15,8 +15,10 @@ import { MaxUint256 } from "@ethersproject/constants";
 import { BigNumber } from "@ethersproject/bignumber";
 import { ContractFramework, WalletFramework } from "../frameworks";
 import {
+	IPoolServicesCalculateSlippageAmountProps,
 	IPoolServicesApproveProps,
 	IPoolServicesGetCurrencyAmountsProps,
+	IPoolServicesAddLiquidityProps,
 } from "../dto";
 import { ROUTER_ADDRESS } from "../constants";
 
@@ -69,14 +71,7 @@ class PoolServices {
 		};
 	}
 
-	static async addLiquidity(props: {
-		tokens: [WrappedTokenInfo, WrappedTokenInfo];
-		values: [string, string];
-		haveValue?: boolean;
-		pair: Pair | null;
-		slippage: number;
-		userDeadline: number | BigNumber;
-	}) {
+	static async addLiquidity(props: IPoolServicesAddLiquidityProps) {
 		const { tokens, values, haveValue, pair, slippage, userDeadline } = props;
 		const { chainId, address } = await WalletFramework.getConnectionInfo();
 
@@ -90,7 +85,7 @@ class PoolServices {
 		});
 
 		let args;
-		let value: any;
+		let value;
 
 		const isAnyNSYS = tokens.find(c => c.symbol === "SYS");
 
@@ -119,14 +114,14 @@ class PoolServices {
 		}
 
 		const amountsMin = {
-			a: this.calculateSlippageAmount(
-				parsedAmount.a,
-				haveValue ? 0 : slippage
-			)[0],
-			b: this.calculateSlippageAmount(
-				parsedAmount.b,
-				haveValue ? 0 : slippage
-			)[0],
+			a: this.calculateSlippageAmount({
+				value: parsedAmount.a,
+				slippage: haveValue ? 0 : slippage,
+			})[0],
+			b: this.calculateSlippageAmount({
+				value: parsedAmount.b,
+				slippage: haveValue ? 0 : slippage,
+			})[0],
 		};
 
 		const deadline = BigNumber.from(new Date().getTime() + 100000).add(
@@ -184,7 +179,7 @@ class PoolServices {
 	> {
 		const { amountToApprove, approvalState } = props;
 
-		const { chainId } = await WalletFramework.getConnectionInfo();
+		const { chainId, address } = await WalletFramework.getConnectionInfo();
 
 		const spender = chainId
 			? ROUTER_ADDRESS[chainId as ChainId]
@@ -198,30 +193,39 @@ class PoolServices {
 				: undefined;
 
 		if (token) {
-			const contract = ContractFramework.TokenContract(token.address);
+			const contract = ContractFramework.TokenContract({
+				address: token.address,
+			});
+
+			const allowance = await ContractFramework.call({
+				contract,
+				methodName: "allowance",
+				args: [address, spender],
+			});
+
+			const currentAllowance =
+				token && allowance
+					? new TokenAmount(token, allowance.toString())
+					: undefined;
 
 			if (approvalState !== ApprovalState.NOT_APPROVED) {
-				console.error("approve was called unnecessarily");
-				return undefined;
+				throw new Error("approve was called unnecessarily");
 			}
+
 			if (!token) {
-				console.error("no token");
-				return undefined;
+				throw new Error("no token");
 			}
 
 			if (!contract) {
-				console.error("tokenContract is null");
-				return undefined;
+				throw new Error("tokenContract is null");
 			}
 
 			if (!amountToApprove) {
-				console.error("missing amount to approve");
-				return undefined;
+				throw new Error("missing amount to approve");
 			}
 
 			if (!spender) {
-				console.error("no spender");
-				return undefined;
+				throw new Error("no spender");
 			}
 
 			let useExact = false;
@@ -254,10 +258,11 @@ class PoolServices {
 		return undefined;
 	}
 
-	static calculateSlippageAmount(
-		value: CurrencyAmount,
-		slippage: number
+	private static calculateSlippageAmount(
+		props: IPoolServicesCalculateSlippageAmountProps
 	): [JSBI, JSBI] {
+		const { slippage, value } = props;
+
 		if (slippage < 0 || slippage > 10000) {
 			throw Error(`Unexpected slippage value: ${slippage}`);
 		}

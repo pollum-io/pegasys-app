@@ -1,6 +1,6 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 
-import { ethers, Signer } from "ethers";
+import { ChainId } from "@pollum-io/pegasys-sdk";
 import { useToasty } from "../hooks";
 import {
 	IWalletProviderValue,
@@ -16,15 +16,15 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 	children,
 }) => {
 	const [address, setAddress] = useState<string>("");
-	const [chainId, setChainId] = useState<number | null>(null);
+	const [chainId, setChainId] = useState<ChainId>(ChainId.NEVM);
 	const [isConnected, setIsConnected] = useState<boolean>(false);
-	const [provider, setProvider] = useState<TProvider | undefined>();
+	const [provider, setProvider] = useState<TProvider>();
 	const [signer, setSigner] = useState<TSigner | undefined>();
 	const { toast } = useToasty();
 
 	const disconnect = () => {
 		setAddress("");
-		setChainId(null);
+		setChainId(ChainId.NEVM);
 		setIsConnected(false);
 		setProvider(undefined);
 		setSigner(undefined);
@@ -47,6 +47,34 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 			disconnect();
 		}
 	};
+
+	useEffect(() => {
+		if (provider) {
+			const watchAccounts = async () => {
+				const newAddress = await WalletFramework.getAddress();
+
+				if (newAddress !== address) {
+					setAddress(newAddress);
+				}
+			};
+
+			const watchChains = async () => {
+				const newChain = await WalletFramework.getChain();
+
+				if (newChain !== chainId) {
+					setChainId(newChain ?? 0);
+				}
+			};
+
+			provider.addListener("accountsChanged", () => {
+				watchAccounts();
+			});
+
+			provider.addListener("chainChanged", () => {
+				watchChains();
+			});
+		}
+	}, [provider]);
 
 	useEffect(() => {
 		const checkConnection = async () => {
@@ -73,17 +101,8 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 		};
 		checkConnection();
 
-		const watchAccounts = async () => {
-			const newAddress = await WalletFramework.getAddress();
-
-			setAddress(newAddress);
-		};
-
 		const provider = WalletFramework.getProvider();
-
-		provider?.on("accountsChanged", () => {
-			watchAccounts();
-		});
+		setProvider(provider);
 	}, []);
 
 	const providerValue = useMemo(

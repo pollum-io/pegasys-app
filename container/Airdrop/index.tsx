@@ -23,16 +23,14 @@ import { BorderAnimation } from "components/Airdrop/BorderAnimation";
 import { ChainId, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
 import { ApprovalState } from "contexts";
+import { useWallet as psUseWallet } from "pegasys-services";
 
 export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	const {
-		isConnected,
-		walletAddress,
 		signer,
-		currentNetworkChainId,
 		provider,
 		setCurrentTxHash,
 		setApprovalState,
@@ -40,6 +38,12 @@ export const AirdropContainer: NextPage = () => {
 		setTransactions,
 		transactions,
 	} = useWallet();
+
+	const {
+		chainId: currentNetworkChainId,
+		isConnected,
+		address: walletAddress,
+	} = psUseWallet();
 
 	const chainId =
 		currentNetworkChainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;

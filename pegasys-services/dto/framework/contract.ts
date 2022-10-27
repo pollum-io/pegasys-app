@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { BigNumber } from "@ethersproject/bignumber";
+import { ChainId } from "@pollum-io/pegasys-sdk";
 import { ethers } from "ethers";
 import { TProvider, TSigner } from "./wallet";
 
@@ -13,10 +15,21 @@ export interface IContractFrameworkGetContractProps {
 }
 
 export interface IContractFrameworkEstimateGasProps {
-	value?: number;
+	value?: BigNumber;
 	args?: any[];
 	contract: TContract;
 	methodName: string;
+	highGasFee?: boolean;
 }
 
 export type IContractFrameworkCallProps = IContractFrameworkEstimateGasProps;
+
+export interface IGetDefinedContract {
+	address: string;
+	provider?: TProvider | TSigner;
+}
+
+export interface IGetSpecificContract {
+	chainId?: ChainId;
+	provider?: TProvider | TSigner;
+}

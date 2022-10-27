@@ -36,6 +36,7 @@ import {
 	IPoolsLiquidity,
 	IPoolsVolume,
 } from "types";
+import { useWallet as psUseWallet } from "pegasys-services";
 import {
 	getTokenPairs,
 	toV2LiquidityToken,
@@ -63,8 +64,12 @@ export const PoolsContainer: NextPage = () => {
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const [isCreate, setIsCreate] = useState(false);
 	const [haveValue] = useState(false);
-	const { isConnected, currentNetworkChainId, walletAddress, provider } =
-		useWallet();
+	const { provider } = useWallet();
+	const {
+		isConnected,
+		address,
+		chainId: currentNetworkChainId,
+	} = psUseWallet();
 	const { userTokensBalance } = useTokens();
 	const [userHavePool] = useState(true);
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
@@ -136,7 +141,7 @@ export const PoolsContainer: NextPage = () => {
 		const walletInfos = {
 			chainId: validatedCurrentChain ? currentChainId : ChainId.NEVM,
 			provider,
-			walletAddress,
+			walletAddress: address,
 		};
 
 		const [{ number: oneDay }, { number: twoDays }] =
@@ -177,7 +182,6 @@ export const PoolsContainer: NextPage = () => {
 			}),
 			{}
 		);
-
 		const twoDaysPairInfos = await Promise.all(
 			pairAddresses.map(async (token: { id: string }) => {
 				const volume = await pegasysClient.query({
@@ -486,9 +490,7 @@ export const PoolsContainer: NextPage = () => {
 						zIndex="docked"
 						position="relative"
 						borderRadius="xl"
-						backgroundColor={
-							walletAddress ? theme.bg.alphaPurple : "transparent"
-						}
+						backgroundColor={address ? theme.bg.alphaPurple : "transparent"}
 					>
 						<Img
 							borderRadius="xl"
@@ -522,7 +524,7 @@ export const PoolsContainer: NextPage = () => {
 								in real time and can be claimed by withdrawing your liquidity.
 							</Text>
 						</Flex>
-						{walletAddress && (
+						{address && (
 							<Flex
 								alignItems="center"
 								justifyContent="center"
@@ -536,9 +538,7 @@ export const PoolsContainer: NextPage = () => {
 								gap="2.5"
 								cursor="pointer"
 								onClick={() =>
-									window.open(
-										`https://info.pegasys.finance/account/${walletAddress}`
-									)
+									window.open(`https://info.pegasys.finance/account/${address}`)
 								}
 							>
 								<Text fontWeight="medium" fontSize="xs" color="white">
@@ -610,7 +610,6 @@ export const PoolsContainer: NextPage = () => {
 										borderColor={theme.bg.blueNavyLightness}
 										placeholder="Search by token name"
 										_placeholder={{
-											opacity: 1,
 											color: theme.text.inputBluePurple,
 										}}
 										onChange={handleInput}

@@ -11,7 +11,7 @@ import {
 	Text,
 	useColorMode,
 } from "@chakra-ui/react";
-import { useToasty } from "pegasys-services";
+import { useToasty, useWallet as psUseWallet } from "pegasys-services";
 import { usePicasso, useWallet } from "hooks";
 import { FunctionComponent, useState, useEffect } from "react";
 import Jazzicon from "react-jazzicon";
@@ -34,15 +34,10 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
-	const {
-		walletAddress: address,
-		transactions,
-		currentNetworkChainId: chainId,
-		connectorSelected,
-		approvalState,
-	} = useWallet();
+	const { transactions, connectorSelected, approvalState } = useWallet();
 	const isPending = approvalState.status === ApprovalState.PENDING;
 	const { toast } = useToasty();
+	const { address, chainId } = psUseWallet();
 	const [txs, setTxs] = useState<ITransactionResponse[]>([]);
 
 	const handleCopyToClipboard = () => {

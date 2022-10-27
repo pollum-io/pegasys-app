@@ -93,7 +93,7 @@
 		"whenYouWithdrawSingleSideWarning": "When you withdraw, your {{ symbol }} is claimed and your PSYS is returned to you. You will no longer earn {{ symbol }} rewards on this PSYS.",
 		"withdrawAndClaim": "Retirar & resgatar",
 		"withdrewStakingToken": "Retirar {{ symbol }}!",
-		"approve": "Aprovar",
+		"sign": "Assinar",
 		"poolWeight": "Peso da piscina",
 		"extraReward": "Recompensa Extra"
 	},

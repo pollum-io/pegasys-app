@@ -24,6 +24,7 @@ import { IDeposited, WrappedTokenInfo } from "types";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { useTranslation } from "react-i18next";
 import { unwrappedToken } from "utils";
+import { useWallet as psUseWallet } from "pegasys-services";
 import { SelectCoinModal } from "./SelectCoin";
 
 interface IModal {
@@ -70,8 +71,6 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	const { userTokensBalance } = useTokens();
 	const {
 		provider,
-		walletAddress,
-		currentNetworkChainId,
 		signer,
 		userSlippageTolerance,
 		setTransactions,
@@ -84,6 +83,8 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 		currentLpAddress,
 	} = useWallet();
 
+	const { address, chainId } = psUseWallet();
+
 	const theme = usePicasso();
 	const { isOpenCoin, onCloseCoin } = useModal();
 	const [buttonId] = useState<number>(0);
@@ -95,7 +96,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	const [receiveSys, setReceiveSys] = useState<boolean>(true);
 	let currentChainId: ChainId;
 
-	switch (currentNetworkChainId) {
+	switch (chainId) {
 		case 57:
 			currentChainId = ChainId.NEVM;
 			break;
@@ -110,7 +111,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	}
 	const walletInfos = {
 		provider,
-		walletAddress,
+		walletAddress: address,
 		chainId: currentChainId,
 	};
 	const WSYS = allTokens?.find(token => token?.symbol === "WSYS");
