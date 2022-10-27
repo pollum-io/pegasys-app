@@ -102,7 +102,7 @@ export const FarmActions: React.FC<IModal> = props => {
 							]}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
-							top={["unset", "unset", "22.5rem", "22.5rem"]}
+							bottom={["unset", "unset", "-9rem", "-9rem"]}
 							borderTopRadius={["0", "0", "3xl", "3xl"]}
 							borderBottomRadius={["0", "0", "3xl", "3xl"]}
 							alignItems="flex-start"
@@ -153,7 +153,7 @@ export const FarmActions: React.FC<IModal> = props => {
 							]}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
-							top={["unset", "unset", "19.6rem", "19.6rem"]}
+							bottom={["unset", "unset", "-7rem", "-7rem"]}
 							borderTopRadius={["0", "0", "3xl", "3xl"]}
 							borderBottomRadius={["0", "0", "3xl", "3xl"]}
 							alignItems="flex-start"

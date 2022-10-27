@@ -80,7 +80,7 @@ const FarmCard: FunctionComponent<{
 		);
 
 		return extraTokenWrapped?.logoURI ?? "";
-	}, [userTokensBalance, tokenB]);
+	}, [userTokensBalance, extraRewardToken]);
 
 	return (
 		<Flex

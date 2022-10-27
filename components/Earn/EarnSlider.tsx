@@ -71,7 +71,7 @@ const EarnSlider: React.FC = () => {
 					<SliderThumb />
 				</Tooltip>
 			</Slider>
-			<Flex w="85%" justifyContent="space-between">
+			<Flex w="90%" justifyContent="space-between">
 				{[0, 25, 50, 75, 100].map(value => (
 					<Flex
 						key={value}

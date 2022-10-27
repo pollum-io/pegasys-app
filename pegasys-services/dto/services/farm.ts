@@ -60,6 +60,7 @@ export interface IFarmServicesGetExtraReward {
 	chainId?: ChainId;
 	provider?: TProvider | TSigner;
 	farmContract?: TContract;
+	unclaimed: TokenAmount;
 }
 
 export interface IFarmServicesGetFarmOpportunities {

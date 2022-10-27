@@ -336,6 +336,7 @@ class FarmServices {
 		totalRewardRatePerWeek,
 		rewardRatePerWeek,
 		farmContract,
+		unclaimed,
 	}: IFarmServicesGetExtraReward) {
 		const rewarder = await LpTokenServices.getRewarder({
 			poolId,
@@ -391,10 +392,17 @@ class FarmServices {
 			finalTotalReward
 		);
 
+		const unadjustedUnclaimed = JSBI.multiply(rewardMultiplier, unclaimed?.raw);
+
+		const finalUnclaimed = JSBI.divide(unadjustedUnclaimed, TEN_EIGHTEEN);
+
+		const extraUnclaimed = new TokenAmount(extraRewardToken, finalUnclaimed);
+
 		return {
 			extraRewardToken,
 			extraRewardRatePerWeek,
 			extraTotalRewardRatePerWeek,
+			extraUnclaimed,
 		};
 	}
 
@@ -506,12 +514,14 @@ class FarmServices {
 						extraRewardToken,
 						extraRewardRatePerWeek,
 						extraTotalRewardRatePerWeek,
+						extraUnclaimed,
 					} = await this.getExtraReward({
 						totalRewardRatePerWeek,
 						rewardRatePerWeek,
 						poolId,
 						chainId,
 						farmContract,
+						unclaimed: values.unclaimed,
 					});
 
 					const { swapFeeApr, superFarmApr, combinedApr } =
@@ -562,6 +572,7 @@ class FarmServices {
 						extraRewardToken,
 						extraRewardRatePerWeek,
 						extraTotalRewardRatePerWeek,
+						extraUnclaimed,
 						swapFeeApr,
 						superFarmApr,
 						combinedApr,
