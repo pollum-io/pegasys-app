@@ -1,4 +1,4 @@
-import { Icon, PlacementWithLogical, Tooltip } from "@chakra-ui/react";
+import { Flex, Icon, PlacementWithLogical, Tooltip } from "@chakra-ui/react";
 import React, { FunctionComponent, useState } from "react";
 import { IconType } from "react-icons/lib";
 import { usePicasso } from "hooks";
@@ -38,13 +38,15 @@ export const TooltipComponent: FunctionComponent<ITooltipComponent> = props => {
 			placement={placement}
 			alignItems="center"
 		>
-			<Icon
-				as={icon}
-				color={color || theme.icon.helpIcon}
-				onMouseEnter={() => setIsLabelOpen(true)}
-				onMouseLeave={() => setIsLabelOpen(false)}
-				onClick={() => setIsLabelOpen(true)}
-			/>
+			<Flex>
+				<Icon
+					as={icon}
+					color={color || theme.icon.helpIcon}
+					onMouseEnter={() => setIsLabelOpen(true)}
+					onMouseLeave={() => setIsLabelOpen(false)}
+					onClick={() => setIsLabelOpen(true)}
+				/>
+			</Flex>
 		</Tooltip>
 	);
 };

@@ -261,7 +261,6 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							w="90%"
 							justifyContent="center"
 							fontWeight="semibold"
-							bgColor="red"
 						>
 							No Tokens Found
 						</Flex>

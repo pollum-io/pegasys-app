@@ -883,7 +883,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						gap="1"
 						justifyContent="flex-start"
 						alignItems="flex-start"
-						bgColor="red"
 					>
 						<Collapse
 							in={isConnected && verifyIfHaveInsufficientLiquidity && !isWrap}
@@ -1226,27 +1225,21 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								"5"
 							}`}
 						>
-							<Flex>
-								{[0, 1].map(
-									(
-										_,
-										index // Array with number of elements to display in the screen
-									) => (
-										<Img
-											key={_ + Number(index)}
-											src={
-												index === 0
-													? tokensPairPosition[0]?.tokenInfo?.logoURI
-													: tokensPairPosition[1]?.tokenInfo?.logoURI
-											}
-											w="7"
-											h="7"
-											mr="0.5"
-										/>
-									)
-								)}
+							<Flex position="relative">
+								<Img
+									src={tokensPairPosition[0]?.tokenInfo?.logoURI}
+									w="7"
+									h="7"
+								/>
+								<Img
+									position="absolute"
+									src={tokensPairPosition[1]?.tokenInfo?.logoURI}
+									w="7"
+									h="7"
+									left="1.4rem"
+								/>
 
-								<Text fontWeight="700" fontSize="xl" ml="2.5">
+								<Text fontWeight="700" fontSize="xl" ml="2.2rem">
 									{tokensPairPosition[0]?.symbol} /{" "}
 									{tokensPairPosition[1]?.symbol}
 								</Text>
