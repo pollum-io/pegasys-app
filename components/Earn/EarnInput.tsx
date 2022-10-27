@@ -55,6 +55,7 @@ const EarnInput: React.FC<IEarnInputProps> = ({ deposit }) => {
 						}}
 						value={deposit ? depositTypedValue : withdrawTypedValue}
 						onChange={e => onChange(e.target.value)}
+						ref={input => input && input.focus()}
 					/>
 					<InputRightAddon
 						border="1px solid"
