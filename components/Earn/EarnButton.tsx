@@ -55,7 +55,7 @@ const EarnButton: React.FC<IEarnButtonProps> = ({
 			borderColor={solid ? undefined : theme.text.cyanPurple}
 			_hover={
 				props.disabled
-					? undefined
+					? { opacity: "0.3" }
 					: solid
 					? {
 							opacity: "1",

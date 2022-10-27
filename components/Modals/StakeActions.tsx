@@ -104,7 +104,12 @@ export const StakeActions: React.FC<IModal> = props => {
 									color={theme.text.cyanPurple}
 								/>
 							</Flex>
-							<Flex flexDirection="column" gap="6" color={theme.text.mono}>
+							<Flex
+								flexDirection="column"
+								gap="6"
+								color={theme.text.mono}
+								textAlign="justify"
+							>
 								<Text>
 									When you partially unstake your deposits, you will keep
 									earning rewards from this staking pool proportionally to your
@@ -134,7 +139,12 @@ export const StakeActions: React.FC<IModal> = props => {
 									color={theme.text.cyanPurple}
 								/>
 							</Flex>
-							<Flex flexDirection="column" gap="6" color={theme.text.mono}>
+							<Flex
+								flexDirection="column"
+								gap="6"
+								color={theme.text.mono}
+								textAlign="justify"
+							>
 								<Text>
 									Please note that when you claim without withdrawing your
 									liquidity remains in the staking pool.

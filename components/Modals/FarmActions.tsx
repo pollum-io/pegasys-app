@@ -29,7 +29,8 @@ export const FarmActions: React.FC<IModal> = props => {
 	const { isOpen, onClose: close } = props;
 	const theme = usePicasso();
 	const { claim, withdraw, deposit, sign } = useFarm();
-	const { buttonId, selectedOpportunity, reset } = useEarn();
+	const { buttonId, selectedOpportunity, withdrawPercentage, reset } =
+		useEarn();
 
 	if (!selectedOpportunity) {
 		return null;
@@ -106,6 +107,8 @@ export const FarmActions: React.FC<IModal> = props => {
 							borderBottomRadius={["0", "0", "3xl", "3xl"]}
 							alignItems="flex-start"
 							gap="2"
+							mt={withdrawPercentage === 100 ? "3rem" : "1rem"}
+							transition="500ms"
 						>
 							<Flex>
 								<Icon
@@ -115,11 +118,26 @@ export const FarmActions: React.FC<IModal> = props => {
 									color={theme.text.cyanPurple}
 								/>
 							</Flex>
-							<Flex flexDirection="column" gap="6" color={theme.text.mono}>
-								<Text>
-									Here the text would change explaining the “Exit” mode I
-									think... Need to confirm the warning content.
-								</Text>
+							<Flex
+								flexDirection="column"
+								gap="6"
+								color={theme.text.mono}
+								textAlign="justify"
+							>
+								{withdrawPercentage === 100 ? (
+									<Text>
+										When you withdraw, your PSYS is claimed and your Pegasys
+										Liquidity tokens, PLP, are returned to you. You will no
+										longer earn PSYS rewards on this liquidity. Your original
+										token liquidity will remain in its liquidity pool.
+									</Text>
+								) : (
+									<Text>
+										When you withdraw, your Pegasys Liquidity Tokens, PLP, are
+										returned to you. Your original token liquidity will remain
+										in its liquidity pool.
+									</Text>
+								)}
 							</Flex>
 						</Flex>
 					)}
@@ -149,12 +167,15 @@ export const FarmActions: React.FC<IModal> = props => {
 									color={theme.text.cyanPurple}
 								/>
 							</Flex>
-							<Flex flexDirection="column" gap="6" color={theme.text.mono}>
+							<Flex
+								flexDirection="column"
+								gap="6"
+								color={theme.text.mono}
+								textAlign="justify"
+							>
 								<Text>
-									When you withdraw, your PSYS is claimed and your Pegasys
-									Liquidity tokens, PLP, are returned to you. You will no longer
-									earn PSYS rewards on this liquidity. Your original token
-									liquidity will remain in its liquidity pool.
+									Please note that when you claim without withdrawing your
+									liquidity remains in the mining pool.
 								</Text>
 							</Flex>
 						</Flex>

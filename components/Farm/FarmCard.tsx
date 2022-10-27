@@ -82,7 +82,13 @@ const FarmCard: FunctionComponent<{ stakeInfo: IFarmInfo }> = ({
 				<Flex gap="2" pt="6">
 					<Flex>
 						<Img src={tokenALogo} w="6" h="6" />
-						<Img src={tokenBLogo} w="6" h="6" />
+						<Img
+							src={tokenBLogo}
+							w="6"
+							h="6"
+							position="relative"
+							right="0.3rem"
+						/>
 					</Flex>
 					<Text className="text" fontSize="lg" fontWeight="bold">
 						{tokenA.symbol}-{tokenB?.symbol ?? ""}
