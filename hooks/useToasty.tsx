@@ -88,7 +88,7 @@ const useToasty = () => {
 			render: ({ onClose }) => (
 				<Flex
 					h="fit-content"
-					w="356px"
+					w="100%"
 					mt="50px"
 					mr="40px"
 					p={3}
@@ -119,7 +119,7 @@ const useToasty = () => {
 				</Flex>
 			),
 		});
-	}, [state.description, state.status, state.title]);
+	}, [state]);
 
 	return { toastState: state, toast: setState };
 };

@@ -600,10 +600,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			px={["4", "0", "0", "0"]}
 			zIndex="1"
 		>
-			<SelectWallets
-				isOpen={isOpenSelectWalletModal}
-				onClose={onCloseSelectWalletModal}
-			/>
 			<SelectCoinModal
 				isOpen={isOpenCoin}
 				onClose={onCloseCoin}

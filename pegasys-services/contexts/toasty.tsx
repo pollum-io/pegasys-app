@@ -37,7 +37,7 @@ export const ToastyProvider: React.FC<IToastyProviderProps> = ({
 				),
 			});
 		}
-	}, [state, toast]);
+	}, [state]);
 
 	const providerValue = useMemo(
 		() => ({ state, toast: setState }),

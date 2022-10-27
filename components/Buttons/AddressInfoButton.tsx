@@ -94,21 +94,18 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				borderRadius={18}
-				borderBottomRadius={["0", "18"]}
 				my={["0", "40", "40", "40"]}
-				mb={["0", "0", "24rem", "24rem"]}
+				mt={["0", "0", "20rem", "20rem"]}
 				h="max-content"
 				position="absolute"
 				bottom={["0", "0", "none", "none"]}
-				mx="0"
-				p="0"
+				borderRadius="30px"
 			>
 				<ModalHeader
-					borderTopRadius={18}
 					bgColor={theme.bg.blueNavyLight}
 					pt="1.5rem"
 					pb="1rem"
+					borderTopRadius="30px"
 				>
 					<Flex alignItems="center" justifyContent="space-between">
 						<Text fontSize="lg" fontWeight="semibold">
@@ -151,7 +148,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									border="1px solid"
 									borderColor={theme.text.cyanPurple}
 									px="2"
-									py="0.5"
+									pt="0.103rem"
 									w="max-content"
 									h="max-content"
 									color={theme.text.whitePurple}
@@ -225,9 +222,9 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 				<ModalFooter
 					bgColor={theme.bg.darkBlueGray}
 					justifyContent="flex-start"
-					borderBottomRadius={["0", "18"]}
 					h="max-content"
-					pb={["1.1rem", "1.1rem", "1.1rem", "1.1rem"]}
+					pb="1.4rem"
+					borderBottomRadius="30px"
 				>
 					{txs.length === 0 ? (
 						<Text fontSize="sm" fontWeight="semibold" color={theme.text.mono}>
