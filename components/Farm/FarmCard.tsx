@@ -169,7 +169,7 @@ const FarmCard: FunctionComponent<{
 					<Flex justifyContent="space-between" py="1.5" fontSize="sm">
 						<Text fontWeight="semibold">Your Rate</Text>
 						<Text>
-							{rewardRatePerWeek.toSignificant(6)} {rewardToken.symbol}/Week
+							{rewardRatePerWeek.toFixed(8)} {rewardToken.symbol}/Week
 						</Text>
 					</Flex>
 					<Flex justifyContent="space-between" py="1.5" fontSize="sm">
