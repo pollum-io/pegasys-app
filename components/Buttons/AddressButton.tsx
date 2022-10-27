@@ -1,7 +1,6 @@
 import { Button, ButtonProps, Flex } from "@chakra-ui/react";
-import { ExpertMode } from "components/Header/ExpertMode";
 import { usePicasso, useWallet } from "hooks";
-import { FunctionComponent, ReactNode, useState } from "react";
+import { FunctionComponent, ReactNode } from "react";
 import Jazzicon from "react-jazzicon";
 
 interface IButtonProps extends ButtonProps {
@@ -17,6 +16,7 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 
 	return (
 		<Button
+			zIndex="1"
 			color="white"
 			bg={walletError ? theme.text.redError : theme.bg.button.connectWallet}
 			borderColor={theme.border.connectWallet}

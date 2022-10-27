@@ -11,7 +11,7 @@ interface IEarnClaimActionProps {
 }
 
 const EarnClaimAction: React.FC<IEarnClaimActionProps> = ({ claim }) => {
-	const { selectedOpportunity, buttonId } = useEarn();
+	const { selectedOpportunity, buttonId, loading } = useEarn();
 	const theme = usePicasso();
 
 	if (
@@ -28,7 +28,7 @@ const EarnClaimAction: React.FC<IEarnClaimActionProps> = ({ claim }) => {
 	return (
 		<Flex flexDirection="column" gap="6">
 			<Flex
-				bgColor={theme.bg.max}
+				bgColor={theme.bg.darkBlueGray}
 				flexDirection="column"
 				justifyContent="center"
 				alignItems="center"
@@ -56,6 +56,8 @@ const EarnClaimAction: React.FC<IEarnClaimActionProps> = ({ claim }) => {
 				py="3"
 				my="4"
 				onClick={claim}
+				disabled={loading}
+				fontSize={16}
 				solid
 			>
 				{`Claim ${selectedOpportunity.rewardToken.symbol}`}

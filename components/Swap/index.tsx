@@ -543,17 +543,17 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	]);
 
 	const isOtherWallet = useMemo(() => {
-		if (otherWallet) {
+		if (otherWallet && expert) {
 			return <OtherWallet />;
 		}
-		return null;
+		return <Flex />;
 	}, [otherWallet]);
 
 	const isExpert = useMemo(() => {
 		if (expert && isConnected) {
 			return <SwapExpertMode />;
 		}
-		return null;
+		return <Flex />;
 	}, [expert]);
 
 	// END REACT HOOKS //
@@ -919,12 +919,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Flex>
 						</Flex>
 					</Collapse>
-					{isExpert}
-					{isExpert && isOtherWallet}
+					<Collapse in={expert && isConnected}>{isExpert}</Collapse>
+					<Collapse in={otherWallet && expert}>{isOtherWallet}</Collapse>
+
 					{!isERC20 && !isWrap && (
 						<Button
 							w="100%"
-							mt={isExpert ? "1rem" : "2rem"}
+							mt={isExpert ? "1.8rem" : "1.5rem"}
 							py="6"
 							px="6"
 							borderRadius="67px"

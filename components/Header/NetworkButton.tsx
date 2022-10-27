@@ -15,7 +15,7 @@ export const NetworkButton: FunctionComponent<IButtonProps> = props => {
 	return (
 		<Text
 			h="max-content"
-			bg={theme.text.navItem}
+			bg={theme.icon.nightGray}
 			bgClip="text"
 			fontWeight="normal"
 			fontSize="md"

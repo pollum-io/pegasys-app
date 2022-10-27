@@ -1,37 +1,31 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { JSBI, Token } from "@pollum-io/pegasys-sdk";
 
-import { addTransaction, getTokenPairs } from "utils";
+import { getTokenPairs } from "utils";
 import { WrappedTokenInfo } from "types";
-import { ApprovalState, useTokens, useWallet } from "hooks";
+import { useTokens, useWallet } from "hooks";
 
-import { MINICHEF_ADDRESS } from "pegasys-services/constants";
-import { ContractFramework } from "pegasys-services/frameworks";
+import { MINICHEF_ADDRESS } from "pegasys-services";
+import { ContractFramework, RoutesFramework } from "../frameworks";
 import { FarmServices } from "../services";
 import { useWallet as psUseWallet, useEarn } from "../hooks";
 import {
 	IFarmProviderProps,
 	IFarmProviderValue,
 	TFarmSort,
-	IEarnInfo,
+	IFarmInfo,
 } from "../dto";
 import { EarnProvider } from "./earn";
 
 export const FarmContext = createContext({} as IFarmProviderValue);
 
 const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
-	const [sort, setSort] = useState<TFarmSort>("apr");
-	const [sortedPairs, setSortPairs] = useState<IEarnInfo[]>([]);
+	const [sort, setSort] = useState<TFarmSort>("yours");
+	const [sortedPairs, setSortPairs] = useState<IFarmInfo[]>([]);
 	const [search, setSearch] = useState<string>("");
 	const { userTokensBalance } = useTokens();
 	const { chainId, address } = psUseWallet();
-	const {
-		provider,
-		setTransactions,
-		transactions,
-		setCurrentTxHash,
-		setApprovalState,
-	} = useWallet();
+	const { provider } = useWallet();
 	const {
 		signature,
 		onSign,
@@ -39,137 +33,121 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 		selectedOpportunity,
 		setEarnOpportunities,
 		earnOpportunities,
+		withdrawPercentage,
+		onContractCall,
 	} = useEarn();
 
-	const walletInfo = {
-		walletAddress: address,
-		chainId,
-		provider,
-	};
+	const farmContract = useMemo(
+		() =>
+			ContractFramework.FarmContract({
+				chainId,
+			}),
+		[chainId]
+	);
 
 	const withdraw = async () => {
-		const typedValue = getTypedValue();
+		await onContractCall(
+			async () => {
+				const typedValue = getTypedValue();
 
-		if (selectedOpportunity && typedValue) {
-			let method = FarmServices.withdraw;
+				if (selectedOpportunity && typedValue) {
+					let method = FarmServices.withdraw;
+					const { poolId } = selectedOpportunity as IFarmInfo;
 
-			if (typedValue.isAllIn) {
-				method = FarmServices.withdrawAndClaim;
-			}
+					if (withdrawPercentage === 100) {
+						method = FarmServices.withdrawAndClaim;
+					}
 
-			await method(
-				selectedOpportunity.poolId,
-				typedValue.value.toString(16),
-				address
-			).then(({ response, hash }) => {
-				addTransaction(response, walletInfo, setTransactions, transactions, {
-					summary: "Withdraw deposited liquidity",
-					finished: false,
-				});
-				setCurrentTxHash(hash);
-				setApprovalState({ type: "withdraw", status: ApprovalState.PENDING });
-			});
-		}
+					const res = await method({
+						poolId,
+						amount: typedValue.value.toString(16),
+						address,
+						farmContract,
+						chainId,
+					});
+
+					return res;
+				}
+
+				return undefined;
+			},
+			"Withdraw deposited liquidity",
+			"withdraw"
+		);
 	};
 
 	const claim = async () => {
-		if (selectedOpportunity) {
-			await FarmServices.claim(selectedOpportunity.poolId, address).then(
-				({ response, hash }) => {
-					addTransaction(response, walletInfo, setTransactions, transactions, {
-						summary: "Claim accumulated PSYS rewards",
-						finished: false,
+		await onContractCall(
+			async () => {
+				if (selectedOpportunity) {
+					const { poolId } = selectedOpportunity as IFarmInfo;
+
+					const res = await FarmServices.claim({
+						poolId,
+						address,
+						farmContract,
+						chainId,
 					});
-					setCurrentTxHash(hash);
-					setApprovalState({ type: "claim", status: ApprovalState.PENDING });
+
+					return res;
 				}
-			);
-		}
+
+				return undefined;
+			},
+			"Claim accumulated PSYS rewards",
+			"claim"
+		);
 	};
 
 	const deposit = async () => {
-		const typedValue = getTypedValue(true);
+		await onContractCall(
+			async () => {
+				const typedValue = getTypedValue(true);
 
-		if (selectedOpportunity && typedValue && signature) {
-			await FarmServices.deposit(
-				selectedOpportunity.poolId,
-				typedValue.value.toString(16),
-				address,
-				signature
-			).then(({ response, hash }) => {
-				addTransaction(response, walletInfo, setTransactions, transactions, {
-					summary: "Deposit liquidity",
-					finished: false,
-				});
-				setCurrentTxHash(hash);
-				setApprovalState({ type: "deposit", status: ApprovalState.PENDING });
-			});
-		}
+				if (selectedOpportunity && typedValue && signature) {
+					const { poolId } = selectedOpportunity as IFarmInfo;
+
+					const res = await FarmServices.deposit({
+						poolId,
+						amount: typedValue.value.toString(16),
+						address,
+						signatureData: signature,
+						farmContract,
+						chainId,
+					});
+
+					return res;
+				}
+
+				return undefined;
+			},
+			"Deposit liquidity",
+			"deposit"
+		);
 	};
 
 	const sign = async () => {
 		if (selectedOpportunity) {
-			const contract = ContractFramework.PairContract(
-				selectedOpportunity.stakeToken.address
-			);
+			const contract = ContractFramework.PairContract({
+				address: selectedOpportunity.stakeToken.address,
+			});
 
 			await onSign(
 				contract,
 				"Pegasys LP Token",
-				MINICHEF_ADDRESS,
+				RoutesFramework.getMinichefAddress(chainId),
 				selectedOpportunity.stakeToken.address,
 				"1"
 			);
 		}
 	};
 
-	useEffect(() => {
-		if (chainId && address) {
-			const getAvailablePair = async () => {
-				const pairsTokens = getTokenPairs(chainId, userTokensBalance);
-
-				const stakeInfos = await FarmServices.getFarmInfos(
-					pairsTokens as [WrappedTokenInfo, Token][],
-					address,
-					chainId,
-					provider
-				);
-
-				setEarnOpportunities(stakeInfos);
-			};
-
-			getAvailablePair();
-		}
-	}, [userTokensBalance, chainId, address]);
-
-	useEffect(() => {
-		let pairsToRender: IEarnInfo[] = [];
-
-		if (search) {
-			earnOpportunities.forEach(p => {
-				const tokenAName = p.tokenA.name?.toLowerCase() ?? "";
-				const tokenASymbol = p.tokenA.symbol?.toLowerCase() ?? "";
-				const tokenBName = p.tokenB.name?.toLowerCase() ?? "";
-				const tokenBSymbol = p.tokenB.symbol?.toLowerCase() ?? "";
-
-				const lowerCaseSearch = search.toLowerCase();
-
-				if (
-					tokenAName.includes(lowerCaseSearch) ||
-					tokenBName.includes(lowerCaseSearch) ||
-					tokenASymbol.includes(lowerCaseSearch) ||
-					tokenBSymbol.includes(lowerCaseSearch)
-				) {
-					pairsToRender.push(p);
-				}
-			});
-		} else {
-			pairsToRender = earnOpportunities;
-		}
+	const onSort = (pairs: IFarmInfo[]) => {
+		let pairsToRender = [];
 
 		switch (sort) {
-			case "poolWeight":
-				pairsToRender = pairsToRender.sort((a, b) => {
+			case "liquidity":
+				pairsToRender = pairs.sort((a, b) => {
 					if (a.totalStakedInUsd > b.totalStakedInUsd) {
 						return -1;
 					}
@@ -179,12 +157,23 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 					return 0;
 				});
 				break;
-			default:
-				pairsToRender = pairsToRender.sort((a, b) => {
+			case "apr":
+				pairsToRender = pairs.sort((a, b) => {
 					if (a.combinedApr > b.combinedApr) {
 						return -1;
 					}
-					if (a.swapFeeApr < b.swapFeeApr) {
+					if (a.combinedApr < b.combinedApr) {
+						return 1;
+					}
+					return 0;
+				});
+				break;
+			default:
+				pairsToRender = pairs.sort((a, b) => {
+					if (JSBI.greaterThan(a.stakedAmount.raw, b.stakedAmount.raw)) {
+						return -1;
+					}
+					if (JSBI.greaterThan(b.stakedAmount.raw, a.stakedAmount.raw)) {
 						return 1;
 					}
 					return 0;
@@ -192,7 +181,61 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 				break;
 		}
 
-		setSortPairs(pairsToRender);
+		return pairsToRender;
+	};
+
+	useEffect(() => {
+		if (chainId && address && MINICHEF_ADDRESS[chainId]) {
+			const getAvailablePair = async () => {
+				const pairsTokens = getTokenPairs(chainId, userTokensBalance);
+
+				const stakeInfos = await FarmServices.getFarmOpportunities({
+					tokenPairs: pairsTokens as [WrappedTokenInfo, Token][],
+					walletAddress: address,
+					chainId,
+					provider,
+					farmContract,
+				});
+
+				setEarnOpportunities(stakeInfos);
+
+				const sorted = onSort(stakeInfos);
+
+				setSortPairs(sorted);
+			};
+
+			getAvailablePair();
+		}
+	}, [userTokensBalance, chainId, address]);
+
+	useEffect(() => {
+		let pairsToRender: IFarmInfo[] = [];
+
+		if (search) {
+			earnOpportunities.forEach(p => {
+				const tokenAName = p.tokenA.name?.toLowerCase() ?? "";
+				const tokenASymbol = p.tokenA.symbol?.toLowerCase() ?? "";
+				const tokenBName = p.tokenB?.name?.toLowerCase() ?? "";
+				const tokenBSymbol = p.tokenB?.symbol?.toLowerCase() ?? "";
+
+				const lowerCaseSearch = search.toLowerCase();
+
+				if (
+					tokenAName.includes(lowerCaseSearch) ||
+					tokenBName.includes(lowerCaseSearch) ||
+					tokenASymbol.includes(lowerCaseSearch) ||
+					tokenBSymbol.includes(lowerCaseSearch)
+				) {
+					pairsToRender.push(p as IFarmInfo);
+				}
+			});
+		} else {
+			pairsToRender = earnOpportunities as IFarmInfo[];
+		}
+
+		pairsToRender = onSort(pairsToRender);
+
+		setSortPairs([...pairsToRender]);
 	}, [earnOpportunities, sort, search]);
 
 	const providerValue = useMemo(
@@ -213,6 +256,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 			search,
 			setSearch,
 			sortedPairs,
+			setSortPairs,
 			sign,
 			claim,
 			deposit,

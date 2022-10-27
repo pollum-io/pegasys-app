@@ -1,6 +1,6 @@
 import { ChainId } from "@pollum-io/pegasys-sdk";
 import { BigNumber, ethers } from "ethers";
-import { splitSignature } from "ethers/lib/utils";
+import { getAddress, splitSignature } from "ethers/lib/utils";
 
 import {
 	TSigner,
@@ -65,7 +65,7 @@ class WalletFramework {
 			const accounts = await provider.listAccounts();
 
 			if (accounts.length) {
-				return accounts[0];
+				return getAddress(accounts[0]);
 			}
 		}
 
@@ -140,7 +140,7 @@ class WalletFramework {
 		} = {
 			name,
 			chainId,
-			verifyingContract,
+			verifyingContract: getAddress(verifyingContract),
 		};
 
 		if (version) {

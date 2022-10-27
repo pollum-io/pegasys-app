@@ -10,7 +10,7 @@ interface IEarnButtonProps {
 	onClick: (id: string) => void;
 	children: string;
 	height?: string | string[];
-	width: string | string[];
+	width?: string | string[];
 	px?: string;
 	py?: string | string[];
 	amount?: TokenAmount;
@@ -18,7 +18,7 @@ interface IEarnButtonProps {
 	ml?: string;
 	my?: string;
 	mb?: string;
-	fontSize?: "xs";
+	fontSize?: string | number;
 	disabled?: boolean;
 }
 
@@ -27,6 +27,8 @@ const EarnButton: React.FC<IEarnButtonProps> = ({
 	onClick,
 	amount,
 	fontSize,
+	width,
+	height,
 	...props
 }) => {
 	const theme = usePicasso();
@@ -36,8 +38,15 @@ const EarnButton: React.FC<IEarnButtonProps> = ({
 
 	return (
 		<Button
-			{...props}
-			fontSize={fontSize ?? "sm"}
+			width={width ?? "100%"}
+			height={height ?? "100%"}
+			fontSize={
+				fontSize
+					? typeof fontSize === "string"
+						? fontSize
+						: `${fontSize}px`
+					: "sm"
+			}
 			fontWeight="semibold"
 			borderRadius="full"
 			bgColor={solid ? theme.bg.blueNavyLightness : "transparent"}
@@ -45,7 +54,9 @@ const EarnButton: React.FC<IEarnButtonProps> = ({
 			border={solid ? undefined : "1px solid"}
 			borderColor={solid ? undefined : theme.text.cyanPurple}
 			_hover={
-				solid
+				props.disabled
+					? { opacity: "0.3" }
+					: solid
 					? {
 							opacity: "1",
 							bgColor: theme.bg.bluePurple,
@@ -57,6 +68,7 @@ const EarnButton: React.FC<IEarnButtonProps> = ({
 			}
 			_active={{}}
 			onClick={event => onClick(event.currentTarget.id)}
+			{...props}
 		/>
 	);
 };

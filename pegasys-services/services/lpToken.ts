@@ -1,21 +1,28 @@
-import REWARDERVIAMULTIPLIER_ABI from "@pollum-io/pegasys-protocol/artifacts/contracts/earn/RewarderViaMultiplier.sol/RewarderViaMultiplier.json";
 import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
-import { splitSignature } from "ethers/lib/utils";
-import { BigNumber } from "ethers";
-import { API, MINICHEF_ADDRESS } from "../constants";
-import { ContractFramework, WalletFramework } from "../frameworks";
+
+import { API } from "../constants";
+import { ContractFramework, RoutesFramework } from "../frameworks";
+import {
+	ILpServicesGetUserUnclaimedPSYS,
+	ILpServicesGetAvailableLpTokens,
+	ILpServicesGetTotalAllocPoint,
+	ILpServicesGetBalanceProps,
+	ILpServicesGetRewardPerSec,
+	ILpServicesGetTotalSupply,
+	ILpServicesGetAllocPoint,
+	ILpServicesGetUserStake,
+	ILpServicesGetLpTokens,
+	ILpServicesGetRewarder,
+	ILpServicesGetPoolMap,
+	TContract,
+} from "../dto";
 
 class LpTokenServices {
-	static getLpContract() {
-		const contract = ContractFramework.FarmContract(57);
-
-		return contract;
-	}
-
-	static async getPoolMap(
-		tokenAddresses?: string[]
-	): Promise<{ [key: string]: number }> {
-		const lpTokens = tokenAddresses ?? (await this.getLpTokens());
+	static async getPoolMap({
+		tokenAddresses,
+		...props
+	}: ILpServicesGetPoolMap): Promise<{ [key: string]: number }> {
+		const lpTokens = tokenAddresses ?? (await this.getLpTokens(props));
 
 		const poolMap: { [key: string]: number } = {};
 
@@ -27,8 +34,17 @@ class LpTokenServices {
 		return poolMap;
 	}
 
-	static async getLpTokens(): Promise<string[]> {
-		const contract = this.getLpContract();
+	static async getLpTokens({
+		chainId,
+		provider,
+		farmContract,
+	}: ILpServicesGetLpTokens): Promise<string[]> {
+		const contract =
+			farmContract ??
+			ContractFramework.FarmContract({
+				chainId,
+				provider,
+			});
 
 		const lpTokens = await ContractFramework.call({
 			contract,
@@ -38,22 +54,32 @@ class LpTokenServices {
 		return lpTokens;
 	}
 
-	static async getBalance(lpAddress: string) {
-		const contract = ContractFramework.TokenContract(lpAddress);
+	static async getBalance({
+		chainId,
+		lpContract,
+		contractAddress,
+		provider,
+	}: ILpServicesGetBalanceProps): Promise<bigint> {
+		const contract =
+			lpContract ??
+			ContractFramework.TokenContract({
+				address: contractAddress ?? "",
+				provider,
+			});
 
 		const balance = await ContractFramework.call({
 			contract,
 			methodName: "balanceOf",
-			args: [MINICHEF_ADDRESS],
+			args: [RoutesFramework.getMinichefAddress(chainId)],
 		});
 
 		return balance;
 	}
 
-	static getLpToken(tokenA: Token, tokenB: Token, chainId: number) {
+	static getLpToken(tokenA: Token, tokenB: Token, chainId?: number) {
 		const lpToken = new Token(
-			chainId,
-			Pair.getAddress(tokenA, tokenB, chainId),
+			chainId ?? ChainId.NEVM,
+			Pair.getAddress(tokenA, tokenB, chainId ?? ChainId.NEVM),
 			18,
 			"PLP",
 			"Pegasys LP Token"
@@ -62,8 +88,18 @@ class LpTokenServices {
 		return lpToken;
 	}
 
-	static async getRewarder(poolId: number) {
-		const contract = this.getLpContract();
+	static async getRewarder({
+		farmContract,
+		chainId,
+		provider,
+		poolId,
+	}: ILpServicesGetRewarder) {
+		const contract =
+			farmContract ??
+			ContractFramework.FarmContract({
+				chainId,
+				provider,
+			});
 
 		const rewarder = await ContractFramework.call({
 			contract,
@@ -76,38 +112,56 @@ class LpTokenServices {
 
 	static async getAprs(
 		poolId: number,
-		isSuperFarm: boolean
+		isSuperFarm?: boolean
 	): Promise<{
 		swapFeeApr: number;
 		superFarmApr?: number;
 		combinedApr: number;
 	}> {
-		const response = await fetch(`${API}pegasys/apr/${poolId}`);
+		try {
+			const response = await fetch(`${API}pegasys/apr/${poolId}`);
 
-		const data = await response.json();
+			const data = await response.json();
 
-		const { swapFeeApr, stakingApr, combinedApr } = data;
+			const { swapFeeApr, stakingApr, combinedApr } = data;
 
-		let superFarmApr: undefined | number;
+			let superFarmApr: undefined | number;
 
-		if (isSuperFarm) {
-			superFarmApr = stakingApr;
+			if (isSuperFarm) {
+				superFarmApr = stakingApr;
+			}
+
+			return {
+				swapFeeApr,
+				superFarmApr,
+				combinedApr: superFarmApr ? combinedApr : swapFeeApr,
+			};
+		} catch (e) {
+			return {
+				swapFeeApr: 0,
+				combinedApr: 0,
+			};
 		}
-
-		return {
-			swapFeeApr,
-			superFarmApr,
-			combinedApr: superFarmApr ? combinedApr : swapFeeApr,
-		};
 	}
 
-	static async getUserStake(poolId: number, address: string) {
-		const contract = this.getLpContract();
+	static async getUserStake({
+		farmContract,
+		chainId,
+		provider,
+		poolId,
+		walletAddress,
+	}: ILpServicesGetUserStake) {
+		const contract =
+			farmContract ??
+			ContractFramework.FarmContract({
+				chainId,
+				provider,
+			});
 
 		const userInfo = await ContractFramework.call({
 			contract,
 			methodName: "userInfo",
-			args: [[poolId], address],
+			args: [[poolId], walletAddress],
 		});
 
 		const { amount } = userInfo as { amount: bigint };
@@ -115,32 +169,62 @@ class LpTokenServices {
 		return amount;
 	}
 
-	static async getUserUnclaimedPSYS(poolId: number, address: string) {
-		const contract = LpTokenServices.getLpContract();
+	static async getUserUnclaimedPSYS({
+		farmContract,
+		chainId,
+		provider,
+		poolId,
+		walletAddress,
+	}: ILpServicesGetUserUnclaimedPSYS) {
+		const contract =
+			farmContract ??
+			ContractFramework.FarmContract({
+				chainId,
+				provider,
+			});
 
 		const unclaimedPSYS = await ContractFramework.call({
 			contract,
 			methodName: "pendingReward",
-			args: [[poolId], address],
+			args: [[poolId], walletAddress],
 		});
 
 		return unclaimedPSYS;
 	}
 
-	static async getAvailableLpTokens(lpAddress: string, address: string) {
-		const contract = ContractFramework.TokenContract(lpAddress);
+	static async getAvailableLpTokens({
+		walletAddress,
+		lpContract,
+		contractAddress,
+		provider,
+	}: ILpServicesGetAvailableLpTokens) {
+		const contract =
+			lpContract ??
+			ContractFramework.TokenContract({
+				address: contractAddress ?? "",
+				provider,
+			});
 
 		const balance = await ContractFramework.call({
 			contract,
 			methodName: "balanceOf",
-			args: [address],
+			args: [walletAddress],
 		});
 
 		return balance;
 	}
 
-	static async getTotalSupply(lpAddress: string) {
-		const contract = ContractFramework.TokenContract(lpAddress);
+	static async getTotalSupply({
+		lpContract,
+		provider,
+		contractAddress,
+	}: ILpServicesGetTotalSupply) {
+		const contract =
+			lpContract ??
+			ContractFramework.TokenContract({
+				address: contractAddress ?? "",
+				provider,
+			});
 
 		const totalSupply = await ContractFramework.call({
 			contract,
@@ -150,8 +234,17 @@ class LpTokenServices {
 		return totalSupply;
 	}
 
-	static async getTotalAllocPoint() {
-		const contract = LpTokenServices.getLpContract();
+	static async getTotalAllocPoint({
+		farmContract,
+		chainId,
+		provider,
+	}: ILpServicesGetTotalAllocPoint) {
+		const contract =
+			farmContract ??
+			ContractFramework.FarmContract({
+				chainId,
+				provider,
+			});
 
 		const totalAllocPoint = await ContractFramework.call({
 			contract,
@@ -161,8 +254,17 @@ class LpTokenServices {
 		return totalAllocPoint;
 	}
 
-	static async getRewardPerSec() {
-		const contract = LpTokenServices.getLpContract();
+	static async getRewardPerSec({
+		farmContract,
+		chainId,
+		provider,
+	}: ILpServicesGetRewardPerSec) {
+		const contract =
+			farmContract ??
+			ContractFramework.FarmContract({
+				chainId,
+				provider,
+			});
 
 		const rewardPerSecond = await ContractFramework.call({
 			contract,
@@ -172,8 +274,18 @@ class LpTokenServices {
 		return rewardPerSecond;
 	}
 
-	static async getAllocPoint(poolId: number) {
-		const contract = LpTokenServices.getLpContract();
+	static async getAllocPoint({
+		poolId,
+		farmContract,
+		chainId,
+		provider,
+	}: ILpServicesGetAllocPoint) {
+		const contract =
+			farmContract ??
+			ContractFramework.FarmContract({
+				chainId,
+				provider,
+			});
 
 		const poolInfo = await ContractFramework.call({
 			contract,
@@ -186,12 +298,21 @@ class LpTokenServices {
 		return allocPoint;
 	}
 
-	static async getRewardMultiplier(address: string) {
-		const contract = ContractFramework.getContract({
-			abi: REWARDERVIAMULTIPLIER_ABI.abi,
+	static async getExtraRewarder(address: string) {
+		const contract = ContractFramework.ExtraRewardContract({
 			address,
 		});
 
+		const multiplier = await this.getRewardMultiplier(contract);
+		const rewardAddress = await this.getRewardTokens(contract);
+
+		return {
+			multiplier,
+			rewardAddress,
+		};
+	}
+
+	private static async getRewardMultiplier(contract: TContract) {
 		const multiplier: bigint[] = await ContractFramework.call({
 			contract,
 			methodName: "getRewardMultipliers",
@@ -200,102 +321,13 @@ class LpTokenServices {
 		return multiplier.length ? multiplier[0] : BigInt(0);
 	}
 
-	static async getRewardTokens(address: string) {
-		const contract = ContractFramework.getContract({
-			abi: REWARDERVIAMULTIPLIER_ABI.abi,
-			address,
-		});
-
+	private static async getRewardTokens(contract: TContract) {
 		const rewardAddress: string[] = await ContractFramework.call({
 			contract,
 			methodName: "getRewardTokens",
 		});
 
 		return rewardAddress.length ? rewardAddress[0] : "";
-	}
-
-	static async getSignature({
-		lpAddress,
-		address,
-		chainId,
-		spender,
-		value,
-		deadline,
-	}: {
-		lpAddress: string;
-		address: string;
-		chainId: ChainId;
-		spender: string;
-		value: string;
-		deadline: BigNumber | number;
-	}) {
-		const contract = ContractFramework.PairContract(lpAddress);
-
-		const nonce = await ContractFramework.call({
-			contract,
-			methodName: "nonces",
-			args: [address],
-		});
-
-		const EIP712Domain = [
-			{ name: "name", type: "string" },
-			{ name: "version", type: "string" },
-			{ name: "chainId", type: "uint256" },
-			{ name: "verifyingContract", type: "address" },
-		];
-
-		const domain = {
-			name: "Pegasys LP Token",
-			version: "1",
-			chainId,
-			verifyingContract: lpAddress,
-		};
-
-		const Permit = [
-			{ name: "owner", type: "address" },
-			{ name: "spender", type: "address" },
-			{ name: "value", type: "uint256" },
-			{ name: "nonce", type: "uint256" },
-			{ name: "deadline", type: "uint256" },
-		];
-
-		const deadlineFromNow = BigNumber.from(new Date().getTime() / 1000).add(
-			deadline
-		);
-
-		const message = {
-			owner: address,
-			spender,
-			value,
-			nonce: nonce.toHexString(),
-			deadline: deadlineFromNow,
-		};
-
-		const data = JSON.stringify({
-			types: {
-				EIP712Domain,
-				Permit,
-			},
-			domain,
-			primaryType: "Permit",
-			message,
-		});
-
-		const provider = WalletFramework.getProvider();
-
-		const signatureRes = await provider?.send("eth_signTypedData_v4", [
-			address,
-			data,
-		]);
-
-		const signature = splitSignature(signatureRes);
-
-		return {
-			v: signature.v,
-			r: signature.r,
-			s: signature.s,
-			deadline: deadlineFromNow,
-		};
 	}
 }
 

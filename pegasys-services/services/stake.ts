@@ -1,82 +1,151 @@
 import { ChainId, JSBI, TokenAmount, WSYS } from "@pollum-io/pegasys-sdk";
 
-import { BigNumber } from "ethers";
-import { ITransactionResponse } from "types";
-import { IEarnInfo } from "../dto";
 import { ContractFramework } from "../frameworks";
-import { BIG_INT_SECONDS_IN_WEEK, PSYS } from "../constants";
+import {
+	BIG_INT_ONE,
+	BIG_INT_SECONDS_IN_WEEK,
+	BIG_INT_TWO,
+	BIG_INT_ZERO,
+	PSYS,
+} from "../constants";
+import {
+	IStakeInfo,
+	IStakeServicesClaim,
+	IStakeServicesStake,
+	IStakeServicesGetApr,
+	IStakeServicesUnstake,
+	IStakeServicesGetUnstake,
+	IStakeServicesGetUnclaimed,
+	IStakeServicesGetStakeReward,
+	IStakeServicesGetPeriodFinish,
+	IStakeServicesGetStakedAmount,
+	IStakeServicesUnstakeAndClaim,
+	IStakeServicesGetTotalStakedAmount,
+	IStakeServicesGetStakeOpportunities,
+	IStakeServicesGetDollarValues,
+} from "../dto";
+import PairServices from "./pair";
+import TokenServices from "./token";
 
 class StakeServices {
-	static async getStakeInfos(
-		address: string,
-		chainId: ChainId
-	): Promise<IEarnInfo> {
-		const psys = PSYS[ChainId.NEVM];
-		const wsys = WSYS[ChainId.NEVM];
-
-		const contract = ContractFramework.StakeContract(chainId);
-
-		const balance = await ContractFramework.call({
-			contract,
-			methodName: "balanceOf",
-			args: [address],
-		});
-
-		const earned = await ContractFramework.call({
-			contract,
-			methodName: "earned",
-			args: [address],
-		});
+	private static async getTotalStakedAmount({
+		stakeContract,
+		chainId,
+		stakeToken,
+		provider,
+	}: IStakeServicesGetTotalStakedAmount) {
+		const contract =
+			stakeContract ??
+			ContractFramework.StakeContract({
+				chainId,
+				provider,
+			});
 
 		const totalSupply = await ContractFramework.call({
 			contract,
 			methodName: "totalSupply",
 		});
 
-		const rewardRate = await ContractFramework.call({
+		const totalStakedAmount = new TokenAmount(
+			stakeToken,
+			JSBI.BigInt(totalSupply ?? BIG_INT_ZERO)
+		);
+
+		return totalStakedAmount;
+	}
+
+	private static async getStakedAmount({
+		chainId,
+		provider,
+		stakeToken,
+		stakeContract,
+		walletAddress,
+	}: IStakeServicesGetStakedAmount) {
+		const contract =
+			stakeContract ?? ContractFramework.StakeContract({ chainId, provider });
+
+		const balance = await ContractFramework.call({
 			contract,
-			methodName: "rewardRate",
+			methodName: "balanceOf",
+			args: [walletAddress],
 		});
 
-		const periodFinish = await ContractFramework.call({
-			contract,
-			methodName: "periodFinish",
+		const stakedAmount = new TokenAmount(
+			stakeToken,
+			balance ? JSBI.BigInt(balance) : BIG_INT_ZERO
+		);
+
+		return stakedAmount;
+	}
+
+	private static async getUnstake({
+		stakeToken,
+		walletAddress,
+		provider,
+	}: IStakeServicesGetUnstake) {
+		const contract = ContractFramework.TokenContract({
+			address: stakeToken.address,
+			provider,
 		});
 
-		const routerContract = ContractFramework.RouterContract(ChainId.NEVM);
+		const unstake = await ContractFramework.call({
+			contract,
+			methodName: "balanceOf",
+			args: [walletAddress],
+		});
+
+		return new TokenAmount(
+			stakeToken,
+			JSBI.BigInt(unstake.toString() ?? BIG_INT_ZERO)
+		);
+	}
+
+	private static async getUnclaimed({
+		chainId,
+		stakeContract,
+		rewardToken,
+		walletAddress,
+		provider,
+	}: IStakeServicesGetUnclaimed) {
+		const contract =
+			stakeContract ?? ContractFramework.StakeContract({ chainId, provider });
+
+		const unclaimed = await ContractFramework.call({
+			contract,
+			methodName: "earned",
+			args: [walletAddress],
+		});
+
+		return new TokenAmount(
+			rewardToken,
+			JSBI.BigInt(unclaimed.toString() ?? BIG_INT_ZERO)
+		);
+	}
+
+	private static async getApr({
+		chainId,
+		provider,
+		totalRewardRatePerSecond,
+		isPeriodFinished,
+		totalStaked,
+	}: IStakeServicesGetApr) {
+		const psys = PSYS[chainId ?? ChainId.NEVM];
+		const wsys = WSYS[chainId ?? ChainId.NEVM];
+
+		const contract = ContractFramework.RouterContract({
+			chainId,
+			provider,
+		});
 
 		const amountIn = `1${"0".repeat(18)}`; // 1 PSYS
 
 		const amountsOut = await ContractFramework.call({
-			contract: routerContract,
+			contract,
 			methodName: "getAmountsOut",
 			args: [amountIn, [psys.address, wsys.address, psys.address]],
 		});
 
 		const valueOfPsys = JSBI.BigInt(amountsOut.slice(-1)?.[0] ?? 0);
-
-		const periodFinishMs = periodFinish?.mul(1000)?.toNumber();
-
-		const isPeriodFinished =
-			periodFinishMs === 0 ? false : periodFinishMs < Date.now();
-
-		const totalSupplyStaked = JSBI.BigInt(totalSupply);
-
-		const stakedAmount = new TokenAmount(psys, JSBI.BigInt(balance ?? 0));
-
-		const totalStakedAmount = new TokenAmount(psys, totalSupplyStaked);
-
-		const totalRewardRatePerSecond = new TokenAmount(
-			psys,
-			JSBI.BigInt(isPeriodFinished ? 0 : rewardRate)
-		);
-
-		const totalRewardRatePerWeek = new TokenAmount(
-			psys,
-			JSBI.multiply(totalRewardRatePerSecond.raw, BIG_INT_SECONDS_IN_WEEK)
-		);
-
-		const earnedAmount = new TokenAmount(psys, JSBI.BigInt(earned ?? 0));
 
 		// TODO: Handle situation where stakingToken and rewardToken have different decimals
 		const oneToken = JSBI.BigInt(amountIn);
@@ -91,7 +160,7 @@ class StakeServices {
 
 		let apr: JSBI;
 
-		if (isPeriodFinished || JSBI.EQ(totalSupplyStaked, 0)) {
+		if (isPeriodFinished || JSBI.EQ(totalStaked.raw, BIG_INT_ZERO)) {
 			apr = JSBI.BigInt(0);
 		} else {
 			const rewardsPerYear = JSBI.multiply(
@@ -101,123 +170,367 @@ class StakeServices {
 
 			apr = JSBI.divide(
 				JSBI.multiply(rewardsPerYear, JSBI.BigInt(100)),
-				totalSupplyStaked
+				totalStaked.raw
 			);
 		}
 
-		const individualRewardRate = new TokenAmount(
-			psys,
-			JSBI.greaterThan(totalStakedAmount.raw, JSBI.BigInt(0))
-				? JSBI.divide(
-						JSBI.multiply(totalRewardRatePerWeek.raw, stakedAmount.raw),
-						totalStakedAmount.raw
-				  )
-				: JSBI.BigInt(0)
-		);
+		return apr;
+	}
 
-		const individualWeeklyRewardRate = new TokenAmount(
-			psys,
-			JSBI.greaterThan(totalStakedAmount.raw, JSBI.BigInt(0))
-				? JSBI.divide(
-						JSBI.multiply(
-							JSBI.multiply(totalRewardRatePerSecond.raw, stakedAmount.raw),
-							BIG_INT_SECONDS_IN_WEEK
-						),
-						totalStakedAmount.raw
-				  )
-				: JSBI.BigInt(0)
-		);
+	private static async getPeriodFinish({
+		chainId,
+		provider,
+		stakeContract,
+	}: IStakeServicesGetPeriodFinish) {
+		const contract =
+			stakeContract ?? ContractFramework.StakeContract({ chainId, provider });
 
-		const tokenContract = ContractFramework.TokenContract(psys.address);
-
-		const unstakedPsys = await ContractFramework.call({
-			contract: tokenContract,
-			methodName: "balanceOf",
-			args: [address],
+		const periodFinish = await ContractFramework.call({
+			contract,
+			methodName: "periodFinish",
 		});
 
-		const unstakedPsysAmount = new TokenAmount(psys, unstakedPsys);
+		const periodFinishMs = periodFinish?.mul(1000)?.toNumber();
+
+		return periodFinishMs;
+	}
+
+	private static async getStakeReward({
+		chainId,
+		stakeContract,
+		provider,
+		rewardToken,
+		isPeriodFinished,
+		totalStaked,
+		staked,
+	}: IStakeServicesGetStakeReward) {
+		const contract =
+			stakeContract ?? ContractFramework.StakeContract({ chainId, provider });
+
+		const rewardRate = await ContractFramework.call({
+			contract,
+			methodName: "rewardRate",
+		});
+
+		const totalRewardRatePerSecond = new TokenAmount(
+			rewardToken,
+			isPeriodFinished ? BIG_INT_ZERO : JSBI.BigInt(rewardRate)
+		);
+
+		const totalRewardRatePerWeek = new TokenAmount(
+			rewardToken,
+			JSBI.multiply(totalRewardRatePerSecond.raw, BIG_INT_SECONDS_IN_WEEK)
+		);
+
+		const rewardRatePerWeek = new TokenAmount(
+			rewardToken,
+			JSBI.greaterThan(totalStaked.raw, BIG_INT_ZERO)
+				? JSBI.divide(
+						JSBI.multiply(
+							JSBI.multiply(totalRewardRatePerSecond.raw, staked.raw),
+							BIG_INT_SECONDS_IN_WEEK
+						),
+						totalStaked.raw
+				  )
+				: BIG_INT_ZERO
+		);
 
 		return {
-			stakeToken: psys,
-			rewardToken: psys,
-			stakedAmount,
-			unstakedAmount: unstakedPsysAmount,
-			unclaimedAmount: earnedAmount,
-			totalStakedAmount,
-			rewardRatePerWeek: individualWeeklyRewardRate,
+			totalRewardRatePerSecond,
 			totalRewardRatePerWeek,
-			stakedInUsd: JSBI,
-			totalStakedInUsd: TokenAmount,
-
-			// rewardToken: psys,
-			periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,
-			isPeriodFinished,
-			// earnedAmount,
-			// rewardRate: individualRewardRate,
-			// totalRewardRate: totalRewardRatePerWeek,
-			// totalStakedInPsys: totalStakedAmount,
-			apr,
-			// unstakedPsysAmount,
-			// totalRewardRatePerWeek,
-			// totalRewardRatePerSecond,
-			// rewardRatePerWeek: individualWeeklyRewardRate,
+			rewardRatePerWeek,
 		};
 	}
 
-	static async unstakeAndClaim() {
-		let txHash = "";
-		let txResponse: ITransactionResponse | any = null;
-		const contract = ContractFramework.StakeContract(ChainId.NEVM);
+	static async getDollarValues({
+		chainId,
+		totalStaked,
+		staked,
+		unclaimedAmount,
+		rewardRatePerWeek,
+	}: IStakeServicesGetDollarValues) {
+		const wsys = WSYS[chainId ?? ChainId.NEVM];
+		const psys = PSYS[chainId ?? ChainId.NEVM];
 
-		await ContractFramework.call({
+		const [[sysPsysPairState, sysPsysPair]] = await PairServices.getPairs([
+			[wsys, psys],
+		]);
+
+		const oneToken = JSBI.BigInt(`1${"0".repeat(18)}`);
+
+		const sysPsysRatio = JSBI.divide(
+			JSBI.multiply(oneToken, sysPsysPair?.reserveOf(wsys).raw ?? BIG_INT_ZERO),
+			sysPsysPair?.reserveOf(psys).raw ?? BIG_INT_ONE
+		);
+
+		const totalStakedValueOfPsysInSys = JSBI.divide(
+			JSBI.multiply(totalStaked.raw, sysPsysRatio),
+			oneToken
+		);
+
+		const stakedValueOfPsysInSys = JSBI.divide(
+			JSBI.multiply(staked.raw, sysPsysRatio),
+			oneToken
+		);
+
+		const unclaimedValueOfPsysInSys = JSBI.divide(
+			JSBI.multiply(unclaimedAmount.raw, sysPsysRatio),
+			oneToken
+		);
+
+		const rewardRateValueOfPsysInSys = JSBI.divide(
+			JSBI.multiply(rewardRatePerWeek.raw, sysPsysRatio),
+			oneToken
+		);
+
+		const totalStakedInWsys = new TokenAmount(
+			wsys,
+			JSBI.divide(
+				JSBI.multiply(
+					JSBI.multiply(totalStaked.raw, totalStakedValueOfPsysInSys),
+					BIG_INT_TWO // this is b/c the value of LP shares are ~double the value of the wsys they entitle owner to
+				),
+				totalStaked.raw
+			)
+		);
+
+		const stakedInWsys = new TokenAmount(
+			wsys,
+			JSBI.divide(
+				JSBI.multiply(
+					JSBI.multiply(staked.raw, stakedValueOfPsysInSys),
+					BIG_INT_TWO // this is b/c the value of LP shares are ~double the value of the wsys they entitle owner to
+				),
+				totalStaked.raw
+			)
+		);
+
+		const unclaimedInWsys = new TokenAmount(
+			wsys,
+			JSBI.divide(
+				JSBI.multiply(
+					JSBI.multiply(unclaimedAmount.raw, unclaimedValueOfPsysInSys),
+					BIG_INT_TWO // this is b/c the value of LP shares are ~double the value of the wsys they entitle owner to
+				),
+				totalStaked.raw
+			)
+		);
+
+		const rewardRateInWsys = new TokenAmount(
+			wsys,
+			JSBI.divide(
+				JSBI.multiply(
+					JSBI.multiply(rewardRatePerWeek.raw, rewardRateValueOfPsysInSys),
+					BIG_INT_TWO // this is b/c the value of LP shares are ~double the value of the wsys they entitle owner to
+				),
+				totalStaked.raw
+			)
+		);
+
+		const usdPrice = await TokenServices.getUsdcPrice(wsys, chainId);
+
+		return {
+			totalStakedInUsd: Number(usdPrice?.quote(totalStakedInWsys).raw),
+			stakedInUsd: Number(usdPrice?.quote(stakedInWsys).raw),
+			unclaimedInUsd: Number(usdPrice?.quote(unclaimedInWsys).raw),
+			rewardRateInUsd: Number(usdPrice?.quote(rewardRateInWsys).raw),
+		};
+	}
+
+	static async getStakeOpportunities({
+		chainId,
+		walletAddress,
+		provider,
+		stakeContract: contract,
+	}: IStakeServicesGetStakeOpportunities) {
+		const stakeContract =
+			contract ??
+			ContractFramework.StakeContract({
+				chainId,
+				provider,
+			});
+
+		const psys = PSYS[chainId ?? ChainId.NEVM];
+
+		const opportunities = [
+			{
+				stakeToken: psys,
+				rewardToken: psys,
+			},
+		];
+
+		const stakeOpportunities: IStakeInfo[] = [];
+
+		await Promise.all(
+			opportunities.map(async ({ stakeToken, rewardToken }) => {
+				const values: { [k: string]: any } = {};
+
+				await Promise.all([
+					this.getStakedAmount({
+						walletAddress,
+						stakeContract,
+						stakeToken,
+					}).then(stake => {
+						values.stake = stake;
+					}),
+					this.getTotalStakedAmount({
+						stakeContract,
+						stakeToken,
+					}).then(totalStake => {
+						values.totalStake = totalStake;
+					}),
+					this.getUnstake({
+						walletAddress,
+						stakeToken,
+						provider,
+					}).then(unstaked => {
+						values.unstaked = unstaked;
+					}),
+					this.getUnclaimed({
+						walletAddress,
+						stakeContract,
+						rewardToken,
+					}).then(unclaimed => {
+						values.unclaimed = unclaimed;
+					}),
+					this.getPeriodFinish({
+						stakeContract,
+					}).then(periodFinishMs => {
+						values.periodFinishMs = periodFinishMs;
+					}),
+				]);
+
+				const isPeriodFinished =
+					values.periodFinishMs === 0
+						? false
+						: values.periodFinishMs < Date.now();
+
+				const {
+					rewardRatePerWeek,
+					totalRewardRatePerWeek,
+					totalRewardRatePerSecond,
+				} = await this.getStakeReward({
+					stakeContract,
+					rewardToken,
+					isPeriodFinished,
+					totalStaked: values.totalStake,
+					staked: values.stake,
+					provider,
+				});
+
+				const apr = await this.getApr({
+					chainId,
+					provider,
+					totalRewardRatePerSecond,
+					isPeriodFinished,
+					totalStaked: values.totalStake,
+				});
+
+				const {
+					totalStakedInUsd,
+					stakedInUsd,
+					unclaimedInUsd,
+					rewardRateInUsd,
+				} = await this.getDollarValues({
+					chainId,
+					totalStaked: values.totalStake,
+					staked: values.stake,
+					unclaimedAmount: values.unclaimed,
+					rewardRatePerWeek,
+				});
+
+				stakeOpportunities.push({
+					rewardToken,
+					stakeToken,
+					tokenA: psys,
+					stakedAmount: values.stake,
+					totalStakedAmount: values.totalStake,
+					unclaimedAmount: values.unclaimed,
+					unstakedAmount: values.unstaked,
+					rewardRatePerWeek,
+					totalRewardRatePerWeek,
+					totalStakedInUsd,
+					stakedInUsd,
+					periodFinish: values.periodFinishMs
+						? new Date(values.periodFinishMs)
+						: undefined,
+					isPeriodFinished: !!values.periodFinishMs,
+					apr,
+					rewardRatePerWeekInUsd: rewardRateInUsd,
+					unclaimedInUsd,
+				});
+			})
+		);
+
+		return stakeOpportunities;
+	}
+
+	static async unstakeAndClaim({
+		chainId,
+		provider,
+		stakeContract,
+	}: IStakeServicesUnstakeAndClaim) {
+		let txHash = "";
+		const contract =
+			stakeContract ??
+			ContractFramework.StakeContract({
+				chainId,
+				provider,
+			});
+
+		const res = await ContractFramework.call({
 			methodName: "exit",
 			contract,
-		}).then((res: ITransactionResponse) => {
-			txHash = `${res?.hash}`;
-			txResponse = res;
 		});
+
+		txHash = `${res?.hash}`;
 
 		return {
 			hash: txHash,
-			response: txResponse,
+			response: res ?? null,
 		};
 	}
 
-	static async unstake(amount: string) {
+	static async unstake({
+		amount,
+		chainId,
+		provider,
+		stakeContract,
+	}: IStakeServicesUnstake) {
 		let txHash = "";
-		let txResponse: ITransactionResponse | any = null;
-		const contract = ContractFramework.StakeContract(ChainId.NEVM);
+		const contract =
+			stakeContract ??
+			ContractFramework.StakeContract({
+				chainId,
+				provider,
+			});
 
-		await ContractFramework.call({
+		const res = await ContractFramework.call({
 			methodName: "withdraw",
 			contract,
 			args: [`0x${amount}`],
-		}).then((res: ITransactionResponse) => {
-			txHash = `${res?.hash}`;
-			txResponse = res;
 		});
+
+		txHash = `${res?.hash}`;
 
 		return {
 			hash: txHash,
-			response: txResponse,
+			response: res ?? null,
 		};
 	}
 
-	static async stake(
-		amount: string,
-		signatureData: {
-			v: number;
-			r: string;
-			s: string;
-			deadline: BigNumber;
-		}
-	) {
+	static async stake({
+		signatureData,
+		amount,
+		chainId,
+		provider,
+		stakeContract,
+	}: IStakeServicesStake) {
 		let txHash = "";
-		let txResponse: ITransactionResponse | any = null;
-		const contract = ContractFramework.StakeContract(ChainId.NEVM);
+		const contract =
+			stakeContract ?? ContractFramework.StakeContract({ chainId, provider });
 
-		await ContractFramework.call({
+		const res = await ContractFramework.call({
 			methodName: "stakeWithPermit",
 			contract,
 			args: [
@@ -227,33 +540,35 @@ class StakeServices {
 				signatureData.r,
 				signatureData.s,
 			],
-		}).then((res: ITransactionResponse) => {
-			txHash = `${res?.hash}`;
-			txResponse = res;
 		});
+
+		txHash = `${res?.hash}`;
 
 		return {
 			hash: txHash,
-			response: txResponse,
+			response: res ?? null,
 		};
 	}
 
-	static async claim() {
+	static async claim({
+		stakeContract,
+		provider,
+		chainId,
+	}: IStakeServicesClaim) {
 		let txHash = "";
-		let txResponse: ITransactionResponse | any = null;
-		const contract = ContractFramework.StakeContract(ChainId.NEVM);
+		const contract =
+			stakeContract ?? ContractFramework.StakeContract({ chainId, provider });
 
-		await ContractFramework.call({
+		const res = await ContractFramework.call({
 			methodName: "getReward",
 			contract,
-		}).then((res: ITransactionResponse) => {
-			txHash = `${res?.hash}`;
-			txResponse = res;
 		});
+
+		txHash = `${res?.hash}`;
 
 		return {
 			hash: txHash,
-			response: txResponse,
+			response: res ?? null,
 		};
 	}
 }

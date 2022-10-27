@@ -469,7 +469,7 @@ export const PoolsContainer: NextPage = () => {
 						zIndex="docked"
 						position="relative"
 						borderRadius="xl"
-						backgroundColor={theme.bg.whiteGray}
+						backgroundColor={theme.bg.alphaPurple}
 					>
 						<Img
 							borderRadius="xl"
@@ -508,7 +508,7 @@ export const PoolsContainer: NextPage = () => {
 								alignItems="center"
 								justifyContent="center"
 								flexDirection="row"
-								bgColor={theme.bg.whiteGray}
+								bgColor={theme.bg.alphaPurple}
 								zIndex="0"
 								position="relative"
 								top="2"
@@ -582,15 +582,14 @@ export const PoolsContainer: NextPage = () => {
 										pb="0.3rem"
 										// eslint-disable-next-line react/no-children-prop
 										children={
-											<MdSearch color={theme.icon.searchIcon} size={20} />
+											<MdSearch color={theme.icon.inputSearchIcon} size={20} />
 										}
 									/>
 									<Input
 										borderColor={theme.bg.blueNavyLightness}
 										placeholder="Search by token name"
 										_placeholder={{
-											opacity: 1,
-											color: theme.text.input,
+											color: theme.text.inputBluePurple,
 										}}
 										onChange={handleInput}
 										borderRadius="full"
@@ -622,7 +621,6 @@ export const PoolsContainer: NextPage = () => {
 												as={Button}
 												fontSize="sm"
 												fontWeight="semibold"
-												py={["0.2rem", "0.2rem", "1", "1"]}
 												px="1rem"
 												size="sm"
 												h="2.2rem"
@@ -646,28 +644,28 @@ export const PoolsContainer: NextPage = () => {
 											>
 												<MenuItem
 													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.iconBg }}
+													_hover={{ bgColor: theme.bg.neutralGray }}
 													onClick={() => setSortType("liquidity")}
 												>
 													Liquidity
 												</MenuItem>
 												<MenuItem
 													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.iconBg }}
+													_hover={{ bgColor: theme.bg.neutralGray }}
 													onClick={() => setSortType("volume")}
 												>
 													Volume
 												</MenuItem>
 												<MenuItem
 													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.iconBg }}
+													_hover={{ bgColor: theme.bg.neutralGray }}
 													onClick={() => setSortType("apr")}
 												>
 													APR
 												</MenuItem>
 												<MenuItem
 													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.iconBg }}
+													_hover={{ bgColor: theme.bg.neutralGray }}
 													onClick={() => setSortType("your-pools")}
 												>
 													Your Pools

@@ -18,8 +18,15 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 	sign,
 	buttonTitle,
 }) => {
-	const { selectedOpportunity, signature, depositTypedValue, buttonId } =
-		useEarn();
+	const {
+		selectedOpportunity,
+		signature,
+		depositTypedValue,
+		buttonId,
+		signatureLoading,
+		loading,
+		depositPercentage,
+	} = useEarn();
 	const { userTokensBalance } = useTokens();
 
 	const tokenALogo = useMemo(() => {
@@ -59,9 +66,9 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				</Flex>
 				<Flex>
 					<Text fontSize="lg" fontWeight="bold">
-						{selectedOpportunity.tokenA.name}
+						{selectedOpportunity.tokenA.symbol}
 						{selectedOpportunity.tokenB
-							? `:${selectedOpportunity.tokenB.name}`
+							? `:${selectedOpportunity.tokenB.symbol}`
 							: ""}
 					</Text>
 				</Flex>
@@ -80,7 +87,9 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				</Text>
 				{selectedOpportunity.extraRewardToken && (
 					<Text fontWeight="normal">
-						Extra Reward: 0 {selectedOpportunity.extraRewardToken.symbol} / Week
+						Extra Reward:{" "}
+						{selectedOpportunity.extraTotalRewardRatePerWeek?.toSignificant()}{" "}
+						{selectedOpportunity.extraRewardToken.symbol} / Week
 					</Text>
 				)}
 			</Flex>
@@ -91,11 +100,17 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				px="1.5rem"
 				mt="1.5rem"
 				mb="1rem"
-				disabled={!depositTypedValue}
+				disabled={
+					!depositTypedValue ||
+					signatureLoading ||
+					!depositPercentage ||
+					loading
+				}
 				onClick={signature ? deposit : sign}
+				fontSize={16}
 				solid
 			>
-				{signature ? buttonTitle : "Sign"}
+				{signatureLoading ? "LOADING" : signature ? buttonTitle : "Sign"}
 			</EarnButton>
 		</Flex>
 	);

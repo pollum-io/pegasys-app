@@ -1,11 +1,7 @@
 import React, { useEffect, createContext, useMemo, useState } from "react";
-import { ChainId } from "@pollum-io/pegasys-sdk";
 
-import { PSYS, STAKE_ADDRESS } from "pegasys-services/constants";
-import { ContractFramework } from "pegasys-services/frameworks";
-import { useWallet } from "hooks";
-import { addTransaction } from "utils";
-import { ApprovalState } from "contexts";
+import { STAKE_ADDRESS } from "pegasys-services";
+import { ContractFramework, RoutesFramework } from "../frameworks";
 import { StakeServices } from "../services";
 import { useWallet as psUseWallet, useEarn } from "../hooks";
 import { IStakeProviderProps, IStakeProviderValue } from "../dto";
@@ -15,13 +11,6 @@ export const StakeContext = createContext({} as IStakeProviderValue);
 
 const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 	const [showInUsd, setShowInUsd] = useState<boolean>(false);
-	const {
-		provider,
-		setTransactions,
-		transactions,
-		setCurrentTxHash,
-		setApprovalState,
-	} = useWallet();
 	const { chainId, address } = psUseWallet();
 	const {
 		signature,
@@ -29,84 +18,103 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 		getTypedValue,
 		selectedOpportunity,
 		setEarnOpportunities,
+		withdrawPercentage,
+		onContractCall,
 	} = useEarn();
 
-	const walletInfo = {
-		walletAddress: address,
-		chainId,
-		provider,
-	};
+	const stakeContract = useMemo(
+		() =>
+			ContractFramework.StakeContract({
+				chainId,
+			}),
+		[chainId]
+	);
 
 	const unstake = async () => {
-		const typedValue = getTypedValue();
+		await onContractCall(
+			async () => {
+				const typedValue = getTypedValue();
 
-		if (selectedOpportunity && typedValue) {
-			let method = StakeServices.unstake;
+				if (selectedOpportunity && typedValue) {
+					if (withdrawPercentage === 100) {
+						const res = await StakeServices.unstakeAndClaim({ stakeContract });
+						return res;
+					}
 
-			if (typedValue.isAllIn) {
-				method = StakeServices.unstakeAndClaim;
-			}
+					const res = await StakeServices.unstake({
+						stakeContract,
+						amount: typedValue.value.toString(16),
+					});
 
-			await method(typedValue.value.toString(16)).then(({ response, hash }) => {
-				addTransaction(response, walletInfo, setTransactions, transactions, {
-					summary: "Withdraw deposited liquidity",
-					finished: false,
-				});
-				setCurrentTxHash(hash);
-				setApprovalState({ type: "unstake", status: ApprovalState.PENDING });
-			});
-		}
+					return res;
+				}
+
+				return undefined;
+			},
+			"Withdraw deposited liquidity",
+			"unstake"
+		);
 	};
 
 	const claim = async () => {
-		if (selectedOpportunity) {
-			await StakeServices.claim().then(({ response, hash }) => {
-				addTransaction(response, walletInfo, setTransactions, transactions, {
-					summary: "Claim accumulated PSYS rewards",
-					finished: false,
-				});
-				setCurrentTxHash(hash);
-				setApprovalState({ type: "claim", status: ApprovalState.PENDING });
-			});
-		}
+		await onContractCall(
+			async () => {
+				if (selectedOpportunity) {
+					const res = await StakeServices.claim({ stakeContract });
+					return res;
+				}
+				return undefined;
+			},
+			"Claim accumulated PSYS rewards",
+			"claim"
+		);
 	};
 
 	const stake = async () => {
-		const typedValue = getTypedValue(true);
+		await onContractCall(
+			async () => {
+				const typedValue = getTypedValue(true);
 
-		if (selectedOpportunity && typedValue && signature) {
-			await StakeServices.stake(typedValue.value.toString(16), signature).then(
-				({ response, hash }) => {
-					addTransaction(response, walletInfo, setTransactions, transactions, {
-						summary: "Stake PSYS tokens",
-						finished: false,
+				if (selectedOpportunity && typedValue && signature) {
+					const res = await StakeServices.stake({
+						stakeContract,
+						amount: typedValue.value.toString(16),
+						signatureData: signature,
 					});
-					setCurrentTxHash(hash);
-					setApprovalState({ type: "stake", status: ApprovalState.PENDING });
+
+					return res;
 				}
-			);
-		}
+
+				return undefined;
+			},
+			"Stake PSYS tokens",
+			"stake"
+		);
 	};
 
 	const sign = async () => {
 		if (selectedOpportunity) {
-			const contract = ContractFramework.PSYSContract(chainId);
+			const contract = ContractFramework.PSYSContract({ chainId });
 
 			await onSign(
 				contract,
 				"Pegasys",
-				STAKE_ADDRESS,
-				PSYS[chainId as ChainId].address
+				RoutesFramework.getStakeAddress(chainId),
+				RoutesFramework.getPsysAddress(chainId)
 			);
 		}
 	};
 
 	useEffect(() => {
-		if (address && chainId) {
+		if (address && chainId && STAKE_ADDRESS[chainId]) {
 			const getStakes = async () => {
-				const stakeInfo = await StakeServices.getStakeInfos(address, chainId);
+				const stakeInfos = await StakeServices.getStakeOpportunities({
+					stakeContract,
+					chainId,
+					walletAddress: address,
+				});
 
-				setEarnOpportunities([stakeInfo]);
+				setEarnOpportunities(stakeInfos);
 			};
 
 			getStakes();

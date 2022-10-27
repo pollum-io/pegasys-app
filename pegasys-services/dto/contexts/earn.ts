@@ -16,12 +16,13 @@ export interface IEarnInfo {
 	totalStakedAmount: TokenAmount;
 	rewardRatePerWeek: TokenAmount;
 	totalRewardRatePerWeek: TokenAmount;
-	stakedInUsd: JSBI;
-	totalStakedInUsd: TokenAmount;
+	stakedInUsd: number;
+	totalStakedInUsd: number;
 	tokenA: Token;
 	tokenB?: Token;
 	extraRewardToken?: Token;
-	extraTotalRewardToken?: TokenAmount;
+	extraRewardRatePerWeek?: TokenAmount;
+	extraTotalRewardRatePerWeek?: TokenAmount;
 }
 
 export type TButtonId = "withdraw" | "claim" | "deposit" | null;
@@ -50,9 +51,20 @@ export interface IEarnProviderValue {
 	) => Promise<void>;
 	getTypedValue: (
 		isDeposit?: boolean
-	) => { isAllIn: boolean; value: JSBI } | undefined;
+	) => { percentage: number; value: JSBI } | undefined;
 	earnOpportunities: IEarnInfo[];
 	setEarnOpportunities: setType<IEarnInfo[]>;
 	selectedOpportunity: IEarnInfo | null;
 	setSelectedOpportunity: setType<IEarnInfo | null>;
+	withdrawPercentage: number;
+	depositPercentage: number;
+	reset: () => void;
+	signatureLoading: boolean;
+	loading: boolean;
+	setLoading: setType<boolean>;
+	onContractCall: (
+		promise: () => Promise<{ hash: string; response: any } | undefined>,
+		summary: string,
+		type: string
+	) => Promise<void>;
 }

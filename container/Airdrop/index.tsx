@@ -8,24 +8,101 @@ import {
 	Text,
 	useMediaQuery,
 } from "@chakra-ui/react";
-import { usePicasso } from "hooks";
+import {
+	useClaimCallback,
+	usePicasso,
+	userHasAvailableClaim,
+	userUnclaimedAmount,
+	useWallet,
+} from "hooks";
 import { SiDiscord, SiTwitter } from "react-icons/si";
 import { FaTelegramPlane } from "react-icons/fa";
-import { useState } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { MdOutlineCallMade } from "react-icons/md";
 import { BorderAnimation } from "components/Airdrop/BorderAnimation";
-import { useWallet } from "pegasys-services";
+import { ChainId, TokenAmount } from "@pollum-io/pegasys-sdk";
+import { Signer } from "ethers";
+import { ApprovalState } from "contexts";
+import { useWallet as psUseWallet } from "pegasys-services";
 
 export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
-	const { isConnected } = useWallet();
+	const {
+		signer,
+		provider,
+		setCurrentTxHash,
+		setApprovalState,
+		approvalState,
+		setTransactions,
+		transactions,
+	} = useWallet();
 
-	const [isNotAvailable] = useState();
-	const [isClaim] = useState();
-	const [isClaiming] = useState();
-	const [isClaimed] = useState(true);
+	const {
+		chainId: currentNetworkChainId,
+		isConnected,
+		address: walletAddress,
+	} = psUseWallet();
+
+	const chainId =
+		currentNetworkChainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
+
+	const [isAvailable, setIsAvailable] = useState<boolean>(true);
+	const [isClaim, setIsClaim] = useState<boolean>(false);
+	const [isClaimed, setIsClaimed] = useState<boolean>(false);
+	const [availableClaimAmount, setAvailableClaimAmount] =
+		useState<TokenAmount>();
+
+	const isClaiming =
+		approvalState.status === ApprovalState.PENDING &&
+		approvalState.type === "claim";
+
+	const walletInfos = {
+		walletAddress,
+		provider,
+		chainId,
+	};
+
+	const { claimCallback } = useClaimCallback(
+		walletAddress,
+		chainId,
+		signer as Signer,
+		walletInfos,
+		setApprovalState,
+		setCurrentTxHash,
+		setTransactions,
+		transactions
+	);
+
+	useMemo(async () => {
+		if (!isConnected || !walletAddress) return null;
+
+		const canClaim = await userHasAvailableClaim(
+			walletAddress,
+			chainId,
+			provider
+		);
+		setIsClaim(canClaim);
+
+		if (!canClaim) return setIsAvailable(false);
+		const claimAmount = await userUnclaimedAmount(
+			walletAddress,
+			chainId,
+			provider
+		);
+		setAvailableClaimAmount(claimAmount);
+
+		return null;
+	}, [isConnected, isClaiming]);
+
+	useEffect(() => {
+		if (
+			approvalState.status === ApprovalState.APPROVED &&
+			approvalState.type === "claim"
+		)
+			setIsClaimed(true);
+	}, [isClaiming]);
 
 	return (
 		<Flex alignItems="flex-start" justifyContent="center" mb="6.2rem">
@@ -100,7 +177,7 @@ export const AirdropContainer: NextPage = () => {
 						</BorderAnimation>
 					) : (
 						<Flex w="100%">
-							{isNotAvailable && (
+							{!isAvailable && !isClaimed && (
 								<BorderAnimation>
 									<Flex
 										gap={["4", "4", "40", "40"]}
@@ -152,7 +229,11 @@ export const AirdropContainer: NextPage = () => {
 											/>
 											<Flex alignItems="baseline">
 												<Text fontSize="4xl" fontWeight="semibold" ml="2">
-													234.32
+													{availableClaimAmount
+														? availableClaimAmount?.toFixed(2, {
+																groupSeparator: ",",
+														  })
+														: "-"}
 												</Text>
 												<Text fontSize="xl" pl="2">
 													$PSYS
@@ -171,6 +252,7 @@ export const AirdropContainer: NextPage = () => {
 													color={theme.text.cyan}
 													_hover={{ opacity: "1" }}
 													_active={{}}
+													onClick={claimCallback}
 													borderRadius="full"
 												>
 													Claim now
@@ -189,7 +271,7 @@ export const AirdropContainer: NextPage = () => {
 													_active={{}}
 													borderRadius="full"
 												>
-													<Flex className="circleLoading" pr="2" />
+													<Flex className="circleLoading" pr="2" mr="2" />
 													Claiming...
 												</Button>
 											)}

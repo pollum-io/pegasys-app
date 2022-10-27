@@ -9,9 +9,9 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
+import { useEarn, useStake } from "pegasys-services";
 import React from "react";
 import { MdOutlineInfo } from "react-icons/md";
-import { useEarn, useStake } from "pegasys-services";
 import {
 	EarnActionsHeader,
 	EarnDepositAction,
@@ -25,14 +25,19 @@ interface IModal {
 }
 
 export const StakeActions: React.FC<IModal> = props => {
-	const { isOpen, onClose } = props;
+	const { isOpen, onClose: close } = props;
 	const theme = usePicasso();
 	const { claim, stake, unstake, sign } = useStake();
-	const { selectedOpportunity, buttonId } = useEarn();
+	const { selectedOpportunity, buttonId, reset } = useEarn();
 
 	if (!selectedOpportunity) {
 		return null;
 	}
+
+	const onClose = () => {
+		reset();
+		close();
+	};
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -99,7 +104,12 @@ export const StakeActions: React.FC<IModal> = props => {
 									color={theme.text.cyanPurple}
 								/>
 							</Flex>
-							<Flex flexDirection="column" gap="6" color={theme.text.mono}>
+							<Flex
+								flexDirection="column"
+								gap="6"
+								color={theme.text.mono}
+								textAlign="justify"
+							>
 								<Text>
 									When you partially unstake your deposits, you will keep
 									earning rewards from this staking pool proportionally to your
@@ -129,7 +139,12 @@ export const StakeActions: React.FC<IModal> = props => {
 									color={theme.text.cyanPurple}
 								/>
 							</Flex>
-							<Flex flexDirection="column" gap="6" color={theme.text.mono}>
+							<Flex
+								flexDirection="column"
+								gap="6"
+								color={theme.text.mono}
+								textAlign="justify"
+							>
 								<Text>
 									Please note that when you claim without withdrawing your
 									liquidity remains in the staking pool.
