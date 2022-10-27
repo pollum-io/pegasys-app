@@ -1,11 +1,11 @@
 import { ethers, Signer } from "ethers";
 import { UseENS } from "hooks";
-import { removeScientificNotation, truncateNumberDecimalsPlaces } from "utils";
+import { verifyZerosInBalanceAndFormat } from "utils";
 
 interface IGetProviderBalance {
 	validatedAddress: string | null;
-	providerBalanceFormattedValue: string;
-	providerTruncatedBalance: string;
+	providerFullBalance: string;
+	providerFormattedBalance: string;
 }
 
 export const getProviderBalance = async (
@@ -20,8 +20,8 @@ export const getProviderBalance = async (
 	if (!walletAddress) {
 		return {
 			validatedAddress: "",
-			providerBalanceFormattedValue: "0",
-			providerTruncatedBalance: "0",
+			providerFullBalance: "0",
+			providerFormattedBalance: "0",
 		};
 	}
 
@@ -31,23 +31,18 @@ export const getProviderBalance = async (
 		?.getBalance(validateAddress.address as string)
 		.then(result => result.toString());
 
-	const providerBalanceFormattedValue =
-		providerTokenBalance &&
-		ethers.utils.formatEther(providerTokenBalance as string);
+	const providerFullBalance =
+		(providerTokenBalance &&
+			ethers.utils.formatEther(providerTokenBalance as string)) ||
+		"0";
 
-	const providerTruncatedBalance =
-		providerBalanceFormattedValue &&
-		String(
-			+providerBalanceFormattedValue > 0 && +providerBalanceFormattedValue < 1
-				? removeScientificNotation(parseFloat(providerBalanceFormattedValue))
-				: truncateNumberDecimalsPlaces(
-						parseFloat(providerBalanceFormattedValue)
-				  )
-		);
+	const finalValueFormatted = verifyZerosInBalanceAndFormat(
+		Number(providerFullBalance)
+	);
 
 	return {
 		validatedAddress: validateAddress.address,
-		providerBalanceFormattedValue: `${providerBalanceFormattedValue}`,
-		providerTruncatedBalance: `${providerTruncatedBalance}`,
+		providerFullBalance,
+		providerFormattedBalance: finalValueFormatted,
 	};
 };

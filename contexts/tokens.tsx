@@ -64,7 +64,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		const allTokens = [...initialTokens, SYS];
 
-		setInitialDefaultTokens(allTokens);
+		setInitialDefaultTokens([...allTokens]);
 	};
 
 	const getAllTokens = () => {
@@ -132,44 +132,33 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 				token => new WrappedTokenInfo(token as ITokenInfoBalance)
 			);
 
-			setUserTokensBalance(convertTokens);
+			setUserTokensBalance([...convertTokens]);
 		}
 
-		const {
-			providerBalanceFormattedValue,
-			validatedAddress,
-			providerTruncatedBalance,
-		} = await getProviderBalance(provider, walletAddress);
+		const { providerFullBalance, providerFormattedBalance, validatedAddress } =
+			await getProviderBalance(provider, walletAddress);
 
 		const tokensWithBalance = await Promise.all(
 			tokens.map(async token => {
 				if (token?.symbol === "SYS") {
 					return {
 						...token,
-						balance: providerBalanceFormattedValue || ("0" as string),
-						formattedBalance: providerTruncatedBalance || ("0" as string),
+						balance: providerFullBalance || ("0" as string),
+						formattedBalance: providerFormattedBalance,
 					};
 				}
 
-				const contractBalance = await getBalanceOfSingleCall(
+				const { balance, formattedBalance } = await getBalanceOfSingleCall(
 					token?.address as string,
 					validatedAddress as string,
 					provider,
 					token?.decimals as number
 				);
 
-				const trucatedContractBalance =
-					contractBalance &&
-					String(
-						+contractBalance > 0 && +contractBalance < 1
-							? removeScientificNotation(parseFloat(contractBalance))
-							: truncateNumberDecimalsPlaces(parseFloat(contractBalance))
-					);
-
 				return {
 					...token,
-					balance: contractBalance,
-					formattedBalance: trucatedContractBalance,
+					balance,
+					formattedBalance,
 				};
 			})
 		);
@@ -178,7 +167,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			token => new WrappedTokenInfo(token as ITokenInfoBalance)
 		);
 
-		setUserTokensBalance(convertTokens);
+		setUserTokensBalance([...convertTokens]);
 	};
 
 	useEffect(() => {
@@ -192,6 +181,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		currentNetworkChainId,
 		walletAddress,
 		approvalState.status,
+		isConnected,
 		currentCacheListTokensToDisplay,
 		initialDefaultTokens,
 		tokenListManageState.selectedListUrl,
@@ -199,7 +189,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	useEffect(() => {
 		getInitialDefaultTokensByRequest();
-	}, [currentNetworkChainId]);
+	}, [currentNetworkChainId, isConnected, walletAddress]);
 
 	const tokensProviderValue = useMemo(
 		() => ({

@@ -3,11 +3,16 @@ import { BigNumber, Contract, ethers, Signer } from "ethers";
 import pairPegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/PegasysPair.sol/PegasysPair.json";
 import { Interface } from "@ethersproject/abi";
 import { IAddressessAndBalances } from "types";
+import {
+	verifyZerosInBalanceAndFormat,
+	removeScientificNotation,
+	formatBigNumberValues,
+	createContractUsingAbi,
+	singleCallWithoutParams,
+	singleCall,
+} from "utils";
 import abi20 from "./abis/erc20.json";
-import { createContractUsingAbi } from "./contractInstance";
-import { singleCallWithoutParams, singleCall } from "./singleCall";
 import { multiCall } from "./multiCall";
-import { formatBigNumberValues } from "./formatBigNumberValues";
 
 const PAIR_INTERFACE = new Interface(pairPegasysAbi.abi);
 
@@ -22,7 +27,12 @@ export const getBalanceOfSingleCall = async (
 		| undefined,
 	decimals: number
 ) => {
-	if (!signerOrProvider) return "0";
+	if (!signerOrProvider)
+		return {
+			balance: "0",
+			formattedBalance: "0",
+		};
+
 	try {
 		const contract = createContractUsingAbi(
 			String(tokenAddress),
@@ -32,13 +42,23 @@ export const getBalanceOfSingleCall = async (
 
 		const contractCall = await singleCall(contract, "balanceOf", walletAddress);
 
-		const formattedBalance = String(
+		const fullContractBalanceValue = String(
 			ethers.utils.formatUnits(contractCall, decimals)
 		);
 
-		return formattedBalance;
+		const finalFormattedValue = verifyZerosInBalanceAndFormat(
+			Number(fullContractBalanceValue)
+		);
+
+		return {
+			balance: fullContractBalanceValue,
+			formattedBalance: finalFormattedValue,
+		};
 	} catch (err) {
-		return "0";
+		return {
+			balance: "0",
+			formattedBalance: "0",
+		};
 	}
 };
 
