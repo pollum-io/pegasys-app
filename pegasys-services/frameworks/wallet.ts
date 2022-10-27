@@ -1,8 +1,14 @@
-import { ethers } from "ethers";
-import { CurrencyAmount } from "@pollum-io/pegasys-sdk";
+import { ChainId } from "@pollum-io/pegasys-sdk";
+import { BigNumber, ethers } from "ethers";
+import { getAddress, splitSignature } from "ethers/lib/utils";
 
-import { TSigner, TProvider, IWalletFrameworkConnectionInfo } from "../dto";
-import { PoolServices } from "../services";
+import {
+	TSigner,
+	TProvider,
+	IWalletFrameworkConnectionInfo,
+	TContract,
+} from "../dto";
+import ContractFramework from "./contract";
 
 class WalletFramework {
 	static getProvider(): TProvider | undefined {
@@ -27,36 +33,21 @@ class WalletFramework {
 
 		await provider?.send("eth_requestAccounts", []);
 
-		const signer = this.getSigner(provider);
-
-		const connectionInfo = await this.getConnectionInfo(provider, signer);
+		const connectionInfo = await this.getConnectionInfo(provider);
 
 		return connectionInfo;
 	}
 
 	static async getConnectionInfo(
-		p?: TProvider,
-		s?: TSigner
+		p?: TProvider
 	): Promise<IWalletFrameworkConnectionInfo> {
-		// const currencyAmount = new CurrencyAmount();
-
-		// await PoolServices.approveAddLiquidity();
-
 		const provider = p ?? this.getProvider();
 
-		if (provider) {
-			const signer = s ?? this.getSigner(provider);
+		const address = await this.getAddress();
 
-			if (signer) {
-				const address = await this.getAddress(signer);
+		const chainId = await this.getChain(provider);
 
-				const chainId = await this.getChain(provider);
-
-				return { address: address ?? 0, chainId: chainId ?? 0 };
-			}
-		}
-
-		return { address: "", chainId: 0 };
+		return { address: address ?? 0, chainId: chainId ?? 0 };
 	}
 
 	static async getChain(p?: TProvider): Promise<number | undefined> {
@@ -67,22 +58,15 @@ class WalletFramework {
 		return res ? res.chainId : undefined;
 	}
 
-	static async getAddress(s?: TSigner, p?: TProvider): Promise<string> {
+	static async getAddress(p?: TProvider): Promise<string> {
 		const provider = p ?? this.getProvider();
 
 		if (provider) {
 			const accounts = await provider.listAccounts();
 
 			if (accounts.length) {
-				return accounts[0];
+				return getAddress(accounts[0]);
 			}
-			// const signer = s ?? this.getSigner();
-
-			// if (signer) {
-			// 	const address = await signer.getAddress();
-
-			// 	return getAddress(address);
-			// }
 		}
 
 		return "";
@@ -96,93 +80,107 @@ class WalletFramework {
 		return signer ?? provider;
 	}
 
-	// static getProvider(): TProvider | undefined {
-	// 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	// 	const { ethereum } = window as any;
+	static async getSignature({
+		address,
+		userDeadline,
+		contract,
+		value,
+		version,
+		chainId,
+		name,
+		spender,
+		verifyingContract,
+	}: {
+		address: string;
+		userDeadline: number | BigNumber;
+		value: string;
+		contract: TContract;
+		version?: string;
+		chainId: ChainId;
+		name: string;
+		spender: string;
+		verifyingContract: string;
+	}) {
+		const nonce = await ContractFramework.call({
+			contract,
+			methodName: "nonces",
+			args: [address],
+		});
 
-	// 	const provider = new ethers.providers.Web3Provider(ethereum);
+		const deadline = BigNumber.from(
+			Math.floor(new Date().getTime() / 1000)
+		).add(userDeadline);
 
-	// 	return provider;
-	// }
+		const message = {
+			owner: address,
+			spender,
+			value,
+			nonce: nonce.toHexString(),
+			deadline: deadline.toNumber(),
+		};
 
-	// static getSigner(p?: TProvider): TSigner | undefined {
-	// 	const provider = p ?? this.getProvider();
+		const EIP712Domain = version
+			? [
+					{ name: "name", type: "string" },
+					{ name: "version", type: "string" },
+					{ name: "chainId", type: "uint256" },
+					{ name: "verifyingContract", type: "address" },
+			  ]
+			: [
+					{ name: "name", type: "string" },
+					{ name: "chainId", type: "uint256" },
+					{ name: "verifyingContract", type: "address" },
+			  ];
 
-	// 	const signer = provider?.getSigner();
+		const domain: {
+			name: string;
+			chainId: number;
+			verifyingContract: string;
+			version?: string;
+		} = {
+			name,
+			chainId,
+			verifyingContract: getAddress(verifyingContract),
+		};
 
-	// 	return signer;
-	// }
+		if (version) {
+			domain.version = version;
+		}
 
-	// static async connect(): Promise<IWalletFrameworkConnectionInfo> {
-	// 	const provider = this.getProvider();
+		const Permit = [
+			{ name: "owner", type: "address" },
+			{ name: "spender", type: "address" },
+			{ name: "value", type: "uint256" },
+			{ name: "nonce", type: "uint256" },
+			{ name: "deadline", type: "uint256" },
+		];
 
-	// 	await provider?.send("eth_requestAccounts", []);
+		const data = JSON.stringify({
+			types: {
+				EIP712Domain,
+				Permit,
+			},
+			domain,
+			primaryType: "Permit",
+			message,
+		});
 
-	// 	const signer = this.getSigner(provider);
+		const provider = WalletFramework.getProvider();
 
-	// 	const connectionInfo = await this.getConnectionInfo(provider, signer);
+		const signatureRes = await provider?.send("eth_signTypedData_v4", [
+			address,
+			data,
+		]);
 
-	// 	return connectionInfo;
-	// }
+		const signature = splitSignature(signatureRes);
 
-	// static async getConnectionInfo(
-	// 	p?: TProvider,
-	// 	s?: TSigner
-	// ): Promise<IWalletFrameworkConnectionInfo> {
-	// 	const provider = p ?? this.getProvider();
-
-	// 	provider?.send("eth_accounts", []);
-
-	// 	const signer = s ?? this.getSigner(provider);
-
-	// 	// if (!signer) {
-	// 	// 	await this.connect();
-	// 	// }
-
-	// 	const address = await this.getAddress(signer);
-
-	// 	const chainId = await this.getChain(provider);
-
-	// 	return { address, chainId };
-	// }
-
-	// static async getChain(p?: TProvider): Promise<number> {
-	// 	const provider = p ?? this.getProvider();
-
-	// 	const { chainId } = await provider.getNetwork();
-
-	// 	return chainId;
-	// }
-
-	// static async getAddress(s?: TSigner): Promise<string> {
-	// 	if (s) {
-	// 		const address = await s.getAddress();
-
-	// 		return getAddress(address);
-	// 	}
-
-	// 	const provider = this.getProvider();
-
-	// 	const accounts = await provider?.listAccounts();
-
-	// 	if (accounts?.length) {
-	// 		return accounts[0];
-	// 	}
-
-	// 	return "";
-
-	// 	// const connectionInfo = await this.connect();
-
-	// 	// return connectionInfo.address;
-	// }
-
-	// static getSignerOrProvider(): TSigner | TProvider {
-	// 	const provider = this.getProvider();
-
-	// 	const signer = this.getSigner(provider);
-
-	// 	return signer ?? provider;
-	// }
+		return {
+			v: signature.v,
+			r: signature.r,
+			s: signature.s,
+			deadline,
+		};
+	}
 }
 
 export default WalletFramework;

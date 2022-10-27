@@ -1,11 +1,12 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
-import { BigNumber, ethers, Signer } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { convertHexToNumber } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { IWalletInfo, ITx, IPersistTxs } from "types";
 import { useToasty, useWallet } from "pegasys-services";
 import { UseENS } from "hooks";
 import { TProvider, TSigner } from "pegasys-services/dto";
+import { ChainId } from "@pollum-io/pegasys-sdk";
 import {
 	INITIAL_ALLOWED_SLIPPAGE,
 	SYS_TESTNET_CHAIN_PARAMS,
@@ -76,9 +77,6 @@ interface IWeb3 {
 	setVotesLocked: React.Dispatch<React.SetStateAction<boolean>>;
 	delegatedTo: string;
 	setDelegatedTo: React.Dispatch<React.SetStateAction<string>>;
-	walletAddress: string;
-	currentNetworkChainId: number | null;
-	isConnected: boolean;
 	setCurrentLpAddress: React.Dispatch<React.SetStateAction<string>>;
 	currentLpAddress: string;
 	currentSummary: string;
@@ -376,7 +374,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		getCurrentConnectorProvider?.on("chainChanged", (chainId: string) => {
 			const convertedChainId = convertHexToNumber(chainId);
-			setChainId(convertedChainId);
+			setChainId(convertedChainId ?? ChainId.NEVM);
 			setWalletError(
 				Boolean(SUPPORTED_NETWORK_CHAINS.includes(convertedChainId))
 			);
@@ -421,9 +419,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const providerValue = useMemo(
 		() => ({
-			walletAddress: address,
-			currentNetworkChainId: chainId,
-			isConnected,
 			provider,
 			signer,
 			connectWallet,

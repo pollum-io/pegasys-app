@@ -1,5 +1,3 @@
-/* eslint-disable */
-// @ts-nocheck
 import {
 	Button,
 	Flex,
@@ -39,7 +37,6 @@ import {
 	wrappedCurrencyAmount,
 	maxAmountSpend,
 } from "utils";
-import { SelectCoinModal } from "./SelectCoin";
 import {
 	ChainId,
 	JSBI,
@@ -51,12 +48,13 @@ import { ONE_BIPS, ROUTER_ADDRESS } from "helpers/consts";
 import { Signer } from "ethers";
 import { ApprovalState } from "contexts";
 import { parseUnits } from "@ethersproject/units";
+import { SelectCoinModal } from "./SelectCoin";
 
 interface IModal {
 	isModalOpen: boolean;
 	onModalClose: () => void;
 	isCreate?: boolean;
-	setIsCreate: React.Dispatch<React.SetStateAction<boolean>>;
+	setIsCreate?: React.Dispatch<React.SetStateAction<boolean>>;
 	haveValue?: boolean;
 	setSelectedToken: React.Dispatch<React.SetStateAction<WrappedTokenInfo[]>>;
 	selectedToken: WrappedTokenInfo[];
@@ -119,7 +117,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const [amountToApp, setAmountToApp] = useState<TokenAmount>();
 	const [amounts, setAmounts] = useState<TokenAmount[]>([]);
 	const [currPoolShare, setCurrPoolShare] = useState<string>("");
-
 	const {
 		userSlippageTolerance,
 		userTransactionDeadlineValue,
@@ -132,9 +129,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		approvalState,
 		setCurrentTxHash,
 		setCurrentSummary,
-		isConnected,
 	} = useWallet();
-	const { address, chainId } = psUseWallet();
+	const { address, chainId, isConnected } = psUseWallet();
 
 	const chain = chainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
 
@@ -143,7 +139,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const walletInfo = useMemo(
 		() => ({
 			walletAddress: address,
-			chainId,
+			chainId: chain,
 			provider,
 		}),
 		[chainId, address, provider]
@@ -201,7 +197,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 				currentInputTyped: typedInput,
 				lastInputTyped: typedInput === "inputFrom" ? 0 : 1,
 			});
-			return;
 		}
 	};
 
@@ -256,10 +251,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 		if (currentInputTyped === "inputFrom" && currPair) {
 			const parseInputValue = tryParseAmount(inputFromValue, selectedToken[0]);
-			const wrappedAmountValue = wrappedCurrencyAmount(
-				parseInputValue,
-				chainId
-			);
+			const wrappedAmountValue = wrappedCurrencyAmount(parseInputValue, chain);
 			const quoteValue =
 				wrappedAmountValue &&
 				currPair?.priceOf(currPair?.token0)?.quote(wrappedAmountValue);
@@ -270,10 +262,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 		if (currentInputTyped === "inputTo" && currPair) {
 			const parseInputValue = tryParseAmount(inputToValue, selectedToken[1]);
-			const wrappedAmountValue = wrappedCurrencyAmount(
-				parseInputValue,
-				chainId
-			);
+			const wrappedAmountValue = wrappedCurrencyAmount(parseInputValue, chain);
 			const quoteValue =
 				wrappedAmountValue &&
 				currPair?.priceOf(currPair?.token1)?.quote(wrappedAmountValue);
@@ -301,15 +290,19 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		);
 
 		const [tokenAmountA, tokenAmountB] = [
-			wrappedCurrencyAmount(currencyAmountA, chainId),
-			wrappedCurrencyAmount(currencyAmountB, chainId),
+			wrappedCurrencyAmount(currencyAmountA, chain),
+			wrappedCurrencyAmount(currencyAmountB, chain),
 		];
 
 		const liquidityMinted =
 			currPair &&
 			tokenAmountA &&
 			tokenAmountB &&
-			currPair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB);
+			currPair.getLiquidityMinted(
+				totalSupply as TokenAmount,
+				tokenAmountA,
+				tokenAmountB
+			);
 
 		const poolPercentageShare =
 			liquidityMinted &&
@@ -411,6 +404,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	};
 
 	const addLiquidity = async () => {
+		// eslint-disable-next-line react-hooks/rules-of-hooks
 		const pairs = await useAllCommonPairs(
 			selectedToken[0],
 			selectedToken[1] ?? selectedToken[0],
@@ -450,23 +444,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 				closePendingTx();
 			});
 	};
-
-	useEffect(() => {
-		const defaultTokenValues = userTokensBalance.filter(
-			tokens =>
-				tokens.symbol === "WSYS" ||
-				tokens.symbol === "SYS" ||
-				tokens.symbol === "PSYS"
-		);
-
-		setSelectedToken([defaultTokenValues[2], defaultTokenValues[1]]);
-	}, [userTokensBalance]);
-
-	useEffect(() => {
-		if (tokenInputValue.inputFrom.value && tokenInputValue.inputTo.value) {
-			setIsCreate(false);
-		}
-	}, [tokenInputValue]);
 
 	useEffect(() => {
 		setTokenInputValue(initialTokenInputValue);
@@ -584,7 +561,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						>
 							<Flex
 								flexDirection="row"
-								justifyContent={"space-between"}
+								justifyContent="space-between"
 								color={theme.text.mono}
 							>
 								<Text fontSize="sm">Input</Text>
@@ -595,7 +572,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 							<Flex
 								flexDirection="row"
-								justifyContent={"space-between"}
+								justifyContent="space-between"
 								color={theme.text.swapInfo}
 							>
 								<Flex
@@ -698,7 +675,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						>
 							<Flex
 								flexDirection="row"
-								justifyContent={"space-between"}
+								justifyContent="space-between"
 								color={theme.text.mono}
 							>
 								<Text fontSize="sm">Input</Text>
@@ -709,7 +686,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 							<Flex
 								flexDirection="row"
-								justifyContent={"space-between"}
+								justifyContent="space-between"
 								color={theme.text.swapInfo}
 							>
 								<Flex
@@ -856,9 +833,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 											flexDirection={["column", "column", "column", "column"]}
 											textAlign="center"
 										>
-											<Text fontWeight="semibold">
-												{currPoolShare ? currPoolShare : "-"}
-											</Text>
+											<Text fontWeight="semibold">{currPoolShare || "-"}</Text>
 											<Text fontWeight="normal">Share of Pool</Text>
 										</Flex>
 									</Flex>
@@ -936,7 +911,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								</Text>
 							</Flex>
 							<Text fontSize="lg" fontWeight="bold">
-								{userPoolBalance ? userPoolBalance : "-"}
+								{userPoolBalance || "-"}
 							</Text>
 						</Flex>
 						<Flex flexDirection="column">

@@ -1,17 +1,36 @@
-import { Button, Flex, Img, Text, useMediaQuery } from "@chakra-ui/react";
-import { StakeCards } from "components/Stake/StakeCard";
-import { usePicasso } from "hooks";
+import {
+	Button,
+	Flex,
+	Img,
+	Text,
+	useMediaQuery,
+	useColorMode,
+} from "@chakra-ui/react";
+import { StakeCard, LoadingTransition } from "components";
+import { useModal, usePicasso } from "hooks";
 import { NextPage } from "next";
-import { useState } from "react";
 import { MdOutlineCallMade } from "react-icons/md";
+import {
+	useWallet as psUseWallet,
+	useStake,
+	useEarn,
+	IStakeInfo,
+} from "pegasys-services";
+import { StakeActions } from "components/Modals/StakeActions";
 
 export const StakeContainer: NextPage = () => {
 	const theme = usePicasso();
-	const [buttonId, setButtonId] = useState<string>("");
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
+	const { colorMode } = useColorMode();
+	const { isConnected, address } = psUseWallet();
+	const { showInUsd, setShowInUsd } = useStake();
+	const { earnOpportunities, loading, signatureLoading } = useEarn();
+	const { isOpenStakeActions, onCloseStakeActions } = useModal();
 
 	return (
 		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
+			<LoadingTransition isOpen={loading || signatureLoading} />
+			<StakeActions isOpen={isOpenStakeActions} onClose={onCloseStakeActions} />
 			<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
 				<Flex
 					flexDirection="column"
@@ -61,6 +80,8 @@ export const StakeContainer: NextPage = () => {
 						py="0.531rem"
 						gap="2.5"
 						color="white"
+						cursor="pointer"
+						onClick={() => window.open("https://pegasys.finance/blog/psys/")}
 					>
 						<Text fontWeight="medium" fontSize="xs">
 							Read more about PSYS
@@ -86,70 +107,110 @@ export const StakeContainer: NextPage = () => {
 						<Text fontSize="2xl" fontWeight="semibold">
 							Current Opportunities
 						</Text>
-						<Flex
-							gap="1"
-							mt={["4", "4", "0", "0"]}
-							justifyContent={[
-								"center",
-								"center",
-								"space-between",
-								"space-between",
-							]}
-						>
-							<Button
-								onClick={() => setButtonId("psys")}
-								color={
-									buttonId === "psys"
-										? theme.text.darkBluePurple
-										: theme.text.lightGray
-								}
-								bgColor={
-									buttonId === "psys" ? theme.bg.babyBluePurple : "transparent"
-								}
-								borderRadius="full"
-								w="5.688rem"
-								h="max-content"
-								py="2"
-								px="6"
-								fontWeight="semibold"
-								_hover={{
-									opacity: "0.9",
-								}}
+						{address && (
+							<Flex
+								gap="1"
+								mt={["4", "4", "0", "0"]}
+								justifyContent={[
+									"center",
+									"center",
+									"space-between",
+									"space-between",
+								]}
 							>
-								PSYS
-							</Button>
-							<Button
-								onClick={() => setButtonId("usd")}
-								color={
-									buttonId === "usd"
-										? theme.text.darkBluePurple
-										: theme.text.lightGray
-								}
-								bgColor={
-									buttonId === "usd" ? theme.bg.babyBluePurple : "transparent"
-								}
-								borderRadius="full"
-								w="5.688rem"
-								h="max-content"
-								py="2"
-								px="6"
-								fontWeight="semibold"
-								_hover={{
-									opacity: "0.9",
-								}}
-							>
-								USD
-							</Button>
-						</Flex>
+								<Button
+									onClick={() => setShowInUsd(false)}
+									color={
+										showInUsd
+											? theme.border.lightGray
+											: theme.text.darkBluePurple
+									}
+									bgColor={showInUsd ? "transparent" : theme.bg.babyBluePurple}
+									borderRadius="full"
+									w="5.688rem"
+									h="max-content"
+									py="2"
+									px="6"
+									fontWeight="semibold"
+									_hover={{
+										opacity: "0.9",
+									}}
+								>
+									PSYS
+								</Button>
+								<Button
+									onClick={() => setShowInUsd(true)}
+									color={
+										showInUsd
+											? theme.text.darkBluePurple
+											: theme.border.lightGray
+									}
+									bgColor={showInUsd ? theme.bg.babyBluePurple : "transparent"}
+									borderRadius="full"
+									w="5.688rem"
+									h="max-content"
+									py="2"
+									px="6"
+									fontWeight="semibold"
+									_hover={{
+										opacity: "0.9",
+									}}
+								>
+									USD
+								</Button>
+							</Flex>
+						)}
 					</Flex>
 				</Flex>
+				{!isConnected && (
+					<Flex
+						w="100%"
+						mt={["3rem", "3rem", "4rem", "4rem"]}
+						flexDirection="column"
+						alignItems="center"
+						justifyContent="center"
+						mb={["3rem", "3rem", "4rem", "4rem"]}
+					>
+						<Text
+							fontSize={["sm", "sm", "md", "md"]}
+							fontWeight="normal"
+							textAlign="center"
+						>
+							Please connect your wallet in the button bellow to be able to view
+							your stakes.
+						</Text>
+					</Flex>
+				)}
+				{!earnOpportunities.length && isConnected && (
+					<Flex
+						w="100%"
+						mt={["3rem", "3rem", "4rem", "4rem"]}
+						flexDirection="column"
+						alignItems="center"
+						justifyContent="center"
+						gap="16"
+					>
+						<Flex
+							className="circleLoading"
+							width="60px !important"
+							height="60px !important"
+							id={
+								colorMode === "dark"
+									? "pendingTransactionsDark"
+									: "pendingTransactionsLight"
+							}
+						/>
+					</Flex>
+				)}
 				<Flex
 					flexDirection="column"
 					gap="8"
 					mb="24"
 					alignItems={["center", "center", "center", "center"]}
 				>
-					<StakeCards />
+					{earnOpportunities.map((stakeInfo: unknown, index) => (
+						<StakeCard key={index} stakeInfo={stakeInfo as IStakeInfo} />
+					))}
 				</Flex>
 			</Flex>
 		</Flex>
