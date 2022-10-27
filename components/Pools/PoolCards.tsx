@@ -1,6 +1,6 @@
 import { Button, Flex, Img, Text } from "@chakra-ui/react";
 import { FunctionComponent, SetStateAction, useMemo, useState } from "react";
-import { useModal, usePicasso, useWallet } from "hooks";
+import { useModal, usePicasso, useWallet, useTokens } from "hooks";
 import {
 	getBalanceOfBNSingleCall,
 	getTotalSupply,
@@ -73,11 +73,12 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	const theme = usePicasso();
 	const { onOpenRemoveLiquidity, onOpenAddLiquidity } = useModal();
 	const { setCurrentLpAddress, signer, provider } = useWallet();
+	const { userTokensBalance } = useTokens();
 	const [poolBalance, setPoolBalance] = useState<string>("");
 	const [percentShare, setPercentShare] = useState<number>(0);
 	const [sysPrice, setSysPrice] = useState<number>(0);
 	const [trigger, setTrigger] = useState<boolean>(false);
-	const { address } = psUseWallet();
+	const { address, chainId } = psUseWallet();
 
 	const currencyA = unwrappedToken(pair?.token0 as Token);
 	const currencyB = unwrappedToken(pair?.token1 as Token);
@@ -227,6 +228,15 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			}`
 		);
 
+	const showPool =
+		chainId === 2814
+			? ""
+			: pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`] &&
+			  userTokensBalance.map(item => item.symbol).includes(currencyA.symbol) &&
+			  userTokensBalance.map(item => item.symbol).includes(currencyB.symbol)
+			? ""
+			: "none";
+
 	useMemo(() => {
 		if (pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`]) {
 			setPoolsApr(prevState => {
@@ -271,6 +281,12 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					),
 			}));
 		}
+		if (poolBalance) {
+			setPoolsWithLiquidity(prevState => ({
+				...prevState,
+				[`${currencyA.symbol}-${currencyB.symbol}`]: +poolBalance,
+			}));
+		}
 	}, [sysPrice, poolBalance]);
 
 	return (
@@ -281,11 +297,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			borderRadius="xl"
 			border="1px solid rgb(86,190,216, 0.4)"
 			background={theme.bg.blackAlpha}
-			display={
-				pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`]
-					? ""
-					: "none"
-			}
+			display={showPool}
 		>
 			<Flex gap="2">
 				<Flex>

@@ -1,15 +1,18 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
-import { BigNumber, ethers, Signer } from "ethers";
-import { convertHexToNumber, isAddress } from "utils";
+import { BigNumber, ethers } from "ethers";
+import { convertHexToNumber } from "utils";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { IWalletInfo, ITx, IPersistTxs } from "types";
 import { useToasty, useWallet } from "pegasys-services";
+import { UseENS } from "hooks";
+import { TProvider, TSigner } from "pegasys-services/dto";
 import {
 	INITIAL_ALLOWED_SLIPPAGE,
 	SYS_TESTNET_CHAIN_PARAMS,
 	NEVM_CHAIN_PARAMS,
 	SUPPORTED_NETWORK_CHAINS,
 	DEFAULT_DEADLINE_FROM_NOW,
+	SUPPORTED_WALLETS,
 } from "../helpers/consts";
 
 export enum ApprovalState {
@@ -30,13 +33,8 @@ export interface ISubmittedAproval {
 }
 
 interface IWeb3 {
-	provider:
-		| ethers.providers.Provider
-		| ethers.providers.Web3Provider
-		| ethers.providers.JsonRpcProvider
-		| Signer
-		| undefined;
-	signer: Signer | undefined;
+	provider: TProvider | undefined;
+	signer: TSigner | undefined;
 	connectWallet: (connector: AbstractConnector) => Promise<void>;
 	walletError: boolean;
 	setWalletError: React.Dispatch<React.SetStateAction<boolean>>;
@@ -93,14 +91,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [walletError, setWalletError] = useState<boolean>(false);
-	const [signer, setSigner] = useState<Signer>();
 	const [connecting, setConnecting] = useState<boolean>(false);
 	const [votesLocked, setVotesLocked] = useState<boolean>(true);
 	const [votersType, setVotersType] = useState<string>("");
 	const [delegatedTo, setDelegatedTo] = useState<string>("");
-	const [provider, setProvider] = useState<
-		ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider
-	>();
 	const [connectorSelected, setConnectorSelected] = useState<IWalletInfo>();
 	const [expert, setExpert] = useState<boolean>(false);
 	const [otherWallet, setOtherWallet] = useState<boolean>(false);
@@ -120,6 +114,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [transactions, setTransactions] = useState<ITx>({
 		57: {},
 		5700: {},
+		2814: {},
 	});
 	const [pendingTxLength, setPendingTxLength] = useState<number>(0);
 	const [currentLpAddress, setCurrentLpAddress] = useState<string>("");
@@ -138,6 +133,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		setChainId,
 		setIsConnected,
 		setAddress,
+		provider,
+		setProvider,
+		signer,
+		setSigner,
 	} = useWallet();
 
 	const connectToSysRpcIfNotConnected = () => {
@@ -155,6 +154,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	const rpcUrl =
 		chainId === 5700
 			? "https://tanenbaum.io/api"
+			: chainId === 2814
+			? "https://explorer.testnet.rollux.com/api"
 			: "https://explorer.syscoin.org/api";
 
 	const getSignerIfConnected = async () => {
@@ -207,6 +208,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			});
 	};
 
+	const timeValue = chainId === 2814 ? 3000 : 10000;
+
 	useMemo(() => {
 		if (approvalState.status === ApprovalState.PENDING && isConnected) {
 			const timer = setInterval(async () => {
@@ -239,9 +242,13 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 						setTransactions(prevTransactions => ({
 							...prevTransactions,
 							[Number(chainId)]: {
-								...prevTransactions[chainId === 57 ? 57 : 5700],
+								...prevTransactions[
+									chainId === 57 ? 57 : chainId === 2814 ? 2814 : 5700
+								],
 								[hash]: {
-									...prevTransactions[chainId === 57 ? 57 : 5700][hash],
+									...prevTransactions[
+										chainId === 57 ? 57 : chainId === 2814 ? 2814 : 5700
+									][hash],
 									...result,
 									chainId,
 									summary: storageSummary || summary,
@@ -280,7 +287,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 						return;
 					}
 				});
-			}, 10000);
+			}, timeValue);
 		}
 	}, [approvalState, currentTxHash]);
 
@@ -313,8 +320,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 				if (tx.finished === false) {
 					setTransactions(prevState => ({
 						...prevState,
-						[chainId]: {
-							...prevState[tx.chainId === 57 ? 57 : 5700],
+						[chainId as number]: {
+							...prevState[
+								tx.chainId === 57 ? 57 : tx.chainId === 2814 ? 2814 : 5700
+							],
 							[tx.hash]: tx,
 						},
 					}));
@@ -327,8 +336,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 				}
 				setTransactions(prevState => ({
 					...prevState,
-					[chainId]: {
-						...prevState[tx.chainId === 57 ? 57 : 5700],
+					[chainId as number]: {
+						...prevState[
+							tx.chainId === 57 ? 57 : tx.chainId === 2814 ? 2814 : 5700
+						],
 						[tx.hash]: tx,
 					},
 				}));
@@ -339,7 +350,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	useEffect(() => {
 		if (currentTxHash) localStorage.setItem("currentTxHash", currentTxHash);
-		if (currentSummary) localStorage.setItem("currentSummary", currentSummary);
+		if (currentSummary) {
+			localStorage.setItem("currentSummary", currentSummary);
+			setPendingTxLength(1);
+		}
 	}, [currentTxHash, currentSummary]);
 
 	useEffect(() => {
@@ -381,12 +395,18 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			connectToSysRpcIfNotConnected();
 		}
 
+		if (isConnected && !connectorSelected) {
+			setConnectorSelected(SUPPORTED_WALLETS.METAMASK);
+		}
+
 		if (connectorSelected) {
 			setIsConnected(
 				verifySysNetwork ? !!window?.ethereum?.selectedAddress : false
 			);
 			setAddress(
-				verifySysNetwork ? isAddress(window?.ethereum?.selectedAddress) : ""
+				verifySysNetwork
+					? (UseENS(window?.ethereum?.selectedAddress).address as string)
+					: ""
 			);
 			setWalletError(!verifySysNetwork);
 		}

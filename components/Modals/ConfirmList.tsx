@@ -17,10 +17,11 @@ import { RiInformationFill } from "react-icons/ri";
 interface IModal {
 	isOpen: boolean;
 	onClose: () => void;
+	handleAddList: () => void;
 }
 
 export const ConfirmList: React.FC<IModal> = props => {
-	const { isOpen, onClose } = props;
+	const { isOpen, onClose, handleAddList } = props;
 	const theme = usePicasso();
 
 	return (
@@ -88,6 +89,7 @@ export const ConfirmList: React.FC<IModal> = props => {
 						_hover={{
 							bgColor: theme.bg.bluePurple,
 						}}
+						onClick={() => handleAddList()}
 					>
 						Add List
 					</Button>

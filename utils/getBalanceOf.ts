@@ -2,11 +2,17 @@ import { BigNumber, Contract, ethers, Signer } from "ethers";
 // import pegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
 import pairPegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/PegasysPair.sol/PegasysPair.json";
 import { Interface } from "@ethersproject/abi";
+import { IAddressessAndBalances } from "types";
+import {
+	verifyZerosInBalanceAndFormat,
+	removeScientificNotation,
+	formatBigNumberValues,
+	createContractUsingAbi,
+	singleCallWithoutParams,
+	singleCall,
+} from "utils";
 import abi20 from "./abis/erc20.json";
-import { createContractUsingAbi } from "./contractInstance";
-import { singleCall } from "./singleCall";
 import { multiCall } from "./multiCall";
-import { formatBigNumberValues } from "./formatBigNumberValues";
 
 const PAIR_INTERFACE = new Interface(pairPegasysAbi.abi);
 
@@ -17,10 +23,16 @@ export const getBalanceOfSingleCall = async (
 		| Signer
 		| ethers.providers.JsonRpcProvider
 		| ethers.providers.Web3Provider
+		| ethers.providers.Provider
 		| undefined,
 	decimals: number
 ) => {
-	if (!signerOrProvider) return "0";
+	if (!signerOrProvider)
+		return {
+			balance: "0",
+			formattedBalance: "0",
+		};
+
 	try {
 		const contract = createContractUsingAbi(
 			String(tokenAddress),
@@ -28,17 +40,25 @@ export const getBalanceOfSingleCall = async (
 			signerOrProvider
 		);
 
-		const contractCall = await singleCall(contract, "balanceOf");
+		const contractCall = await singleCall(contract, "balanceOf", walletAddress);
 
-		const balance = await contractCall(walletAddress);
-
-		const formattedBalance = String(
-			ethers.utils.formatUnits(balance, decimals)
+		const fullContractBalanceValue = String(
+			ethers.utils.formatUnits(contractCall, decimals)
 		);
 
-		return formattedBalance;
+		const finalFormattedValue = verifyZerosInBalanceAndFormat(
+			Number(fullContractBalanceValue)
+		);
+
+		return {
+			balance: fullContractBalanceValue,
+			formattedBalance: finalFormattedValue,
+		};
 	} catch (err) {
-		return "0";
+		return {
+			balance: "0",
+			formattedBalance: "0",
+		};
 	}
 };
 
@@ -59,7 +79,7 @@ export const getBalanceOfBNSingleCall = async (
 			signerOrProvider
 		);
 
-		const contractCall = await singleCall(contract, "balanceOf");
+		const contractCall = await singleCallWithoutParams(contract, "balanceOf");
 
 		const balance = await contractCall(walletAddress);
 
@@ -68,11 +88,6 @@ export const getBalanceOfBNSingleCall = async (
 		return "0";
 	}
 };
-
-interface IAddressessAndBalances {
-	address: string;
-	balance: string;
-}
 
 export const getBalanceOfMultiCall = async (
 	tokenAddress: string[],
@@ -134,10 +149,8 @@ export const getBalancesOf = async (
 
 		const contractCall = await multiCall(contracts, "balanceOf", walletAddress);
 
-		console.log("formatted:", contractCall);
 		return contractCall;
 	} catch (error) {
-		console.log("error", error);
 		return [];
 	}
 };

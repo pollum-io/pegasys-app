@@ -22,6 +22,7 @@ import {
 	RemoveLiquidity,
 } from "components";
 import { PoolCards } from "components/Pools/PoolCards";
+import { SUPPORTED_NETWORK_CHAINS } from "helpers/consts";
 import { usePicasso, useModal, useWallet, useTokens, usePairs } from "hooks";
 import { NextPage } from "next";
 import { ChangeEvent, useMemo, useState } from "react";
@@ -78,7 +79,7 @@ export const PoolsContainer: NextPage = () => {
 	const [depositedTokens, setDepositedTokens] = useState<IDeposited>();
 	const [poolPercentShare, setPoolPercentShare] = useState<string>("");
 	const [userPoolBalance, setUserPoolBalance] = useState<string>("");
-	const [sortType, setSortType] = useState<string>("");
+	const [sortType, setSortType] = useState<string>("your-pools");
 	const [searchTokens, setSearchTokens] = useState<Pair[]>([]);
 	const [poolsApr, setPoolsApr] = useState<IPoolsApr>();
 	const [poolsWithLiquidity, setPoolsWithLiquidity] =
@@ -87,9 +88,27 @@ export const PoolsContainer: NextPage = () => {
 	const [poolsVolume, setPoolsVolume] = useState<IPoolsVolume>();
 	const [pairInfo, setPairInfo] = useState<ICommonPairs>();
 	const [notFound, setNotFound] = useState<boolean>(false);
+	const [allTokens, setAllTokens] = useState<[Token, Token][]>([]);
 
-	const chainId =
-		currentNetworkChainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
+	let currentChainId: ChainId;
+
+	const validatedCurrentChain = SUPPORTED_NETWORK_CHAINS.includes(
+		currentNetworkChainId as number
+	);
+
+	switch (currentNetworkChainId) {
+		case 57:
+			currentChainId = ChainId.NEVM;
+			break;
+		case 5700:
+			currentChainId = ChainId.TANENBAUM;
+			break;
+		case 2814:
+			currentChainId = ChainId.ROLLUX;
+			break;
+		default:
+			currentChainId = ChainId.NEVM;
+	}
 
 	const sortTypeName =
 		sortType === "liquidity"
@@ -101,10 +120,26 @@ export const PoolsContainer: NextPage = () => {
 			: "Volume";
 
 	useMemo(async () => {
-		const allTokens = getTokenPairs(currentNetworkChainId, userTokensBalance);
+		if (userTokensBalance.length === 0) return;
+
+		const tokens = getTokenPairs(
+			validatedCurrentChain ? currentChainId : ChainId.NEVM,
+			userTokensBalance
+		);
+
+		if (
+			tokens.every(
+				token =>
+					token[0]?.chainId === currentChainId &&
+					token[1]?.chainId === currentChainId
+			) &&
+			currentNetworkChainId === currentChainId
+		) {
+			setAllTokens(tokens);
+		}
 
 		const walletInfos = {
-			chainId,
+			chainId: validatedCurrentChain ? currentChainId : ChainId.NEVM,
 			provider,
 			walletAddress: address,
 		};
@@ -115,7 +150,7 @@ export const PoolsContainer: NextPage = () => {
 		const tokensWithLiquidity = allTokens.map(tokens => ({
 			liquidityToken: toV2LiquidityToken(
 				tokens as [WrappedTokenInfo, Token],
-				chainId
+				currentChainId
 			),
 			tokens: tokens as [WrappedTokenInfo, Token],
 		}));
@@ -190,12 +225,12 @@ export const PoolsContainer: NextPage = () => {
 				currency =>
 					formattedOneDayPairsInfo[
 						`${
-							currency[0].symbol === "WETH"
+							currency[0]?.symbol === "WETH"
 								? "ETH"
-								: currency[0].symbol === "SYS"
+								: currency[0]?.symbol === "SYS"
 								? "WSYS"
-								: currency[0].symbol
-						}-${currency[1].symbol === "WETH" ? "ETH" : currency[1].symbol}`
+								: currency[0]?.symbol
+						}-${currency[1]?.symbol === "WETH" ? "ETH" : currency[1]?.symbol}`
 					]
 			)
 			.filter(item => item !== undefined);
@@ -205,12 +240,12 @@ export const PoolsContainer: NextPage = () => {
 				currency =>
 					formattedTwoDaysPairsInfo[
 						`${
-							currency[0].symbol === "WETH"
+							currency[0]?.symbol === "WETH"
 								? "ETH"
-								: currency[0].symbol === "SYS"
+								: currency[0]?.symbol === "SYS"
 								? "WSYS"
-								: currency[0].symbol
-						}-${currency[1].symbol === "WETH" ? "ETH" : currency[1].symbol}`
+								: currency[0]?.symbol
+						}-${currency[1]?.symbol === "WETH" ? "ETH" : currency[1]?.symbol}`
 					]
 			)
 			.filter(item => item !== undefined);
@@ -220,12 +255,12 @@ export const PoolsContainer: NextPage = () => {
 				currency =>
 					formattedGeneralPairsInfo[
 						`${
-							currency[0].symbol === "WETH"
+							currency[0]?.symbol === "WETH"
 								? "ETH"
-								: currency[0].symbol === "SYS"
+								: currency[0]?.symbol === "SYS"
 								? "WSYS"
-								: currency[0].symbol
-						}-${currency[1].symbol === "WETH" ? "ETH" : currency[1].symbol}`
+								: currency[0]?.symbol
+						}-${currency[1]?.symbol === "WETH" ? "ETH" : currency[1]?.symbol}`
 					]
 			)
 			.filter(item => item !== undefined);
@@ -316,7 +351,7 @@ export const PoolsContainer: NextPage = () => {
 			twoDays: formattedTwoDaysCommonPairs,
 			general: formattedGeneralCommonPairs,
 		});
-	}, [userTokensBalance]);
+	}, [userTokensBalance, currentNetworkChainId]);
 
 	useMemo(() => {
 		if (searchTokens.length !== 0) {
@@ -385,20 +420,6 @@ export const PoolsContainer: NextPage = () => {
 		poolsVolume,
 		poolsLiquidity,
 	]);
-
-	useMemo(() => {
-		if (
-			searchTokens.length !== 0 &&
-			poolsWithLiquidity &&
-			poolsApr &&
-			poolsLiquidity &&
-			poolsVolume
-		) {
-			setTimeout(() => {
-				setSortType("your-pools");
-			}, 2300);
-		}
-	}, [searchTokens, poolsWithLiquidity, poolsApr, poolsLiquidity, poolsVolume]);
 
 	const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
 		const inputValue = event.target.value;
@@ -469,7 +490,9 @@ export const PoolsContainer: NextPage = () => {
 						zIndex="docked"
 						position="relative"
 						borderRadius="xl"
-						backgroundColor={theme.bg.alphaPurple}
+						backgroundColor={
+							walletAddress ? theme.bg.alphaPurple : "transparent"
+						}
 					>
 						<Img
 							borderRadius="xl"

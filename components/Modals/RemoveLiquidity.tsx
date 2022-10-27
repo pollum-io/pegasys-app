@@ -94,10 +94,25 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 		token1: "",
 	});
 	const [receiveSys, setReceiveSys] = useState<boolean>(true);
+	let currentChainId: ChainId;
+
+	switch (chainId) {
+		case 57:
+			currentChainId = ChainId.NEVM;
+			break;
+		case 5700:
+			currentChainId = ChainId.TANENBAUM;
+			break;
+		case 2814:
+			currentChainId = ChainId.ROLLUX;
+			break;
+		default:
+			currentChainId = ChainId.NEVM;
+	}
 	const walletInfos = {
 		provider,
 		walletAddress: address,
-		chainId: chainId === 5700 ? ChainId.TANENBAUM : ChainId.NEVM,
+		chainId: currentChainId,
 	};
 	const WSYS = allTokens?.find(token => token?.symbol === "WSYS");
 	const SYS = allTokens?.find(token => token?.symbol === "SYS");
@@ -149,6 +164,8 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	}, [isModalOpen]);
 
 	useMemo(() => {
+		setTxSignature(false);
+
 		if (isModalOpen && slideValidation)
 			onSlide(setAvailableTokensAmount, sliderValue);
 	}, [sliderValue]);

@@ -24,7 +24,13 @@ export const NetworkButton: FunctionComponent<IButtonProps> = props => {
 			_active={{}}
 		>
 			{children}
-			{isConnected ? (chainId === 57 ? "NEVM" : "TANENBAUM") : "NEVM"}
+			{isConnected
+				? chainId === 57
+					? "NEVM"
+					: chainId === 5700
+					? "TANENBAUM"
+					: "ROLLUX"
+				: "NEVM"}
 		</Text>
 	);
 };

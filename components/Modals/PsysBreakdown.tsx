@@ -89,9 +89,9 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 				<ModalBody bgColor={theme.bg.blueNavyLight}>
 					<Flex alignItems="center" justifyContent="center">
 						<Img
-							src={theme.icon.pegasysLogo}
-							w="8"
-							h="8"
+							src="icons/loading.gif"
+							w="10"
+							h="10"
 							filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
 						/>
 						<Text
