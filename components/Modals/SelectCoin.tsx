@@ -283,12 +283,16 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 								</Flex>
 								<Text
 									fontWeight="normal"
-									w={token?.balance?.length > 10 ? "105px" : ""}
-									overflow={token?.balance?.length > 10 ? "hidden" : ""}
-									textOverflow={token?.balance?.length > 10 ? "ellipsis" : ""}
+									w={token?.formattedBalance?.length > 10 ? "105px" : ""}
+									overflow={
+										token?.formattedBalance?.length > 10 ? "hidden" : ""
+									}
+									textOverflow={
+										token?.formattedBalance?.length > 10 ? "ellipsis" : ""
+									}
 									textAlign="end"
 								>
-									{token?.balance as string}
+									{token?.formattedBalance as string}
 								</Text>
 							</Flex>
 						</Button>
