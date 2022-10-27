@@ -1,4 +1,4 @@
-import { injected, walletlink } from "utils/connectors";
+import { injected } from "utils/connectors";
 import { IWalletInfo } from "types";
 import { ChainId, Token, WSYS, Percent, JSBI } from "@pollum-io/pegasys-sdk";
 import { ethers } from "ethers";
@@ -66,11 +66,6 @@ export const SUPPORTED_WALLETS: { [key: string]: IWalletInfo } = {
 		connector: injected,
 		name: "MetaMask",
 		iconName: "metamask.png",
-	},
-	WALLET_LINK: {
-		connector: walletlink,
-		name: "Coinbase Wallet",
-		iconName: "coinbaseWalletIcon.svg",
 	},
 };
 

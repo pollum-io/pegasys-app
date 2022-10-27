@@ -42,8 +42,11 @@ export const TokensListManageProvider: React.FC<{
 	const [listToAdd, setListToAdd] = useState<string>("");
 	const [listToRemove, setListToRemove] = useState<string>("");
 
-	const { address: walletAddress, chainId: currentNetworkChainId } =
-		useWallet();
+	const {
+		address: walletAddress,
+		chainId: currentNetworkChainId,
+		isConnected,
+	} = useWallet();
 
 	// HANDLE FUNCTIONS TO FILL AND MANAGE TOKEN LIST MANAGE STATE AT ALL AND ALSO WEAK MAP LISTS //
 	const fetchAndFulfilledTokenListManage = async (listUrl: string) => {
@@ -254,6 +257,7 @@ export const TokensListManageProvider: React.FC<{
 		tokenListManageState.selectedListUrl,
 		walletAddress,
 		currentNetworkChainId,
+		isConnected,
 	]);
 
 	useEffect(() => {
@@ -310,6 +314,7 @@ export const TokensListManageProvider: React.FC<{
 		tokenListManageState.selectedListUrl,
 		walletAddress,
 		currentNetworkChainId,
+		isConnected,
 	]);
 
 	useMemo(() => {

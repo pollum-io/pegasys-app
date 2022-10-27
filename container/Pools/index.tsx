@@ -74,7 +74,7 @@ export const PoolsContainer: NextPage = () => {
 	const [depositedTokens, setDepositedTokens] = useState<IDeposited>();
 	const [poolPercentShare, setPoolPercentShare] = useState<string>("");
 	const [userPoolBalance, setUserPoolBalance] = useState<string>("");
-	const [sortType, setSortType] = useState<string>("");
+	const [sortType, setSortType] = useState<string>("your-pools");
 	const [searchTokens, setSearchTokens] = useState<Pair[]>([]);
 	const [poolsApr, setPoolsApr] = useState<IPoolsApr>();
 	const [poolsWithLiquidity, setPoolsWithLiquidity] =
@@ -416,20 +416,6 @@ export const PoolsContainer: NextPage = () => {
 		poolsVolume,
 		poolsLiquidity,
 	]);
-
-	useMemo(() => {
-		if (
-			searchTokens.length !== 0 &&
-			poolsWithLiquidity &&
-			poolsApr &&
-			poolsLiquidity &&
-			poolsVolume
-		) {
-			setTimeout(() => {
-				setSortType("your-pools");
-			}, 2300);
-		}
-	}, [searchTokens, poolsWithLiquidity, poolsApr, poolsLiquidity, poolsVolume]);
 
 	const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
 		const inputValue = event.target.value;

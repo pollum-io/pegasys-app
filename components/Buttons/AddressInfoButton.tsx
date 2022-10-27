@@ -1,5 +1,4 @@
 import {
-	Button,
 	Flex,
 	Icon,
 	Link,
@@ -142,28 +141,6 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									Connected with {connectorSelected?.name}
 								</Text>
 							</Flex>
-							<Flex>
-								<Button
-									borderRadius="full"
-									border="1px solid"
-									borderColor={theme.text.cyanPurple}
-									px="2"
-									pt="0.103rem"
-									w="max-content"
-									h="max-content"
-									color={theme.text.whitePurple}
-									fontSize={["xs", "xs", "sm", "sm"]}
-									fontWeight="bold"
-									alignItems="center"
-									bgColor="transparent"
-									_hover={{
-										borderColor: theme.text.cyanLightPurple,
-										color: theme.text.cyanLightPurple,
-									}}
-								>
-									CHANGE
-								</Button>
-							</Flex>
 						</Flex>
 						<Flex
 							mt="2"
@@ -254,12 +231,12 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 							</Flex>
 
 							<Flex flexDirection="column" gap={1} w="100%">
-								{txs.map((item: ITransactionResponse) => (
-									// eslint-disable-next-line react/jsx-key
+								{txs.map((item: ITransactionResponse, index: number) => (
 									<Flex
 										alignItems="center"
 										justifyContent="flex-start"
 										w="100%"
+										key={item.nonce + index}
 									>
 										{isPending && !item?.finished && (
 											<Flex

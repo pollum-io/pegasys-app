@@ -285,6 +285,12 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					),
 			}));
 		}
+		if (poolBalance) {
+			setPoolsWithLiquidity(prevState => ({
+				...prevState,
+				[`${currencyA.symbol}-${currencyB.symbol}`]: +poolBalance,
+			}));
+		}
 	}, [sysPrice, poolBalance]);
 
 	return (
