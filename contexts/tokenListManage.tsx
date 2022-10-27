@@ -13,7 +13,7 @@ import {
 import { getTokenListByUrl } from "networks";
 import React, { createContext, useMemo, useState, useEffect } from "react";
 import { ListsState, TokenAddressMap, WrappedTokenInfo } from "types";
-import { useWallet } from "pegasys-services";
+import { useWallet, PersistentFramework } from "pegasys-services";
 
 interface ITokensListManageContext {
 	tokenListManageState: ListsState;
@@ -263,6 +263,8 @@ export const TokensListManageProvider: React.FC<{
 	useEffect(() => {
 		if (tokenListManageState.selectedListUrl?.length === 0) return;
 
+		console.log("entrei");
+
 		tokenListManageState.selectedListUrl?.map(listUrl => {
 			const getListTokens = tokenListCache?.get(
 				tokenListManageState.byUrl[listUrl].current as TokenList
@@ -300,7 +302,13 @@ export const TokensListManageProvider: React.FC<{
 							return prevState;
 						}
 
-						prevState = [...prevState, ...getTokensByChain];
+						prevState = [
+							...getTokensByChain.filter(chainToken =>
+								prevState.some(
+									prevToken => prevToken.address !== chainToken.address
+								)
+							),
+						];
 
 						return prevState;
 					});
@@ -324,6 +332,23 @@ export const TokensListManageProvider: React.FC<{
 
 		if (listToRemove) removeListFromListState(listToRemove);
 	}, [listToAdd, listToRemove]);
+
+	useEffect(() => {
+		if (currentCacheListTokensToDisplay.length > 0) {
+			PersistentFramework.add(
+				"currentStorageTokens",
+				currentCacheListTokensToDisplay
+			);
+		}
+	}, [currentCacheListTokensToDisplay]);
+
+	useEffect(() => {
+		const getStorageValue = PersistentFramework.get("currentStorageTokens");
+
+		if (getStorageValue) {
+			setCurrentCacheListTokensToDisplay(getStorageValue as WrappedTokenInfo[]);
+		}
+	}, []);
 
 	const tokensListManageProviderValue = useMemo(
 		() => ({
