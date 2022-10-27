@@ -1,6 +1,5 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 
-import { ethers, Signer } from "ethers";
 import { useToasty } from "../hooks";
 import {
 	IWalletProviderValue,
@@ -50,7 +49,7 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 
 	useEffect(() => {
 		const checkConnection = async () => {
-			const value = PersistentFramework.get("wallet");
+			const value = PersistentFramework.get("wallet") as { [k: string]: any };
 
 			if (value?.isConnected) {
 				const connection = await WalletFramework.getConnectionInfo();
