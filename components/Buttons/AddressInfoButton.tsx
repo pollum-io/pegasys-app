@@ -234,12 +234,13 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 							</Flex>
 
 							<Flex flexDirection="column" gap={1} w="100%">
-								{txs.map((item: ITransactionResponse) => (
+								{txs.map((item: ITransactionResponse, index: number) => (
 									// eslint-disable-next-line react/jsx-key
 									<Flex
 										alignItems="center"
 										justifyContent="flex-start"
 										w="100%"
+										key={item.nonce + index}
 									>
 										{isPending && !item?.finished && (
 											<Flex
