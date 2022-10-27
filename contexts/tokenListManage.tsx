@@ -263,8 +263,6 @@ export const TokensListManageProvider: React.FC<{
 	useEffect(() => {
 		if (tokenListManageState.selectedListUrl?.length === 0) return;
 
-		console.log("entrei");
-
 		tokenListManageState.selectedListUrl?.map(listUrl => {
 			const getListTokens = tokenListCache?.get(
 				tokenListManageState.byUrl[listUrl].current as TokenList
