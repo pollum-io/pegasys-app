@@ -490,9 +490,7 @@ export const PoolsContainer: NextPage = () => {
 						zIndex="docked"
 						position="relative"
 						borderRadius="xl"
-						backgroundColor={
-							walletAddress ? theme.bg.alphaPurple : "transparent"
-						}
+						backgroundColor={address ? theme.bg.alphaPurple : "transparent"}
 					>
 						<Img
 							borderRadius="xl"

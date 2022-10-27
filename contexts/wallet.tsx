@@ -14,6 +14,7 @@ import {
 	DEFAULT_DEADLINE_FROM_NOW,
 	SUPPORTED_WALLETS,
 } from "../helpers/consts";
+import { ChainId } from "@pollum-io/pegasys-sdk";
 
 export enum ApprovalState {
 	UNKNOWN,
@@ -373,7 +374,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		getCurrentConnectorProvider?.on("chainChanged", (chainId: string) => {
 			const convertedChainId = convertHexToNumber(chainId);
-			setChainId(convertedChainId);
+			setChainId(convertedChainId ?? ChainId.NEVM);
 			setWalletError(
 				Boolean(SUPPORTED_NETWORK_CHAINS.includes(convertedChainId))
 			);

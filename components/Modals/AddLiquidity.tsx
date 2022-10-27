@@ -139,7 +139,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const walletInfo = useMemo(
 		() => ({
 			walletAddress: address,
-			chainId,
+			chainId: chain,
 			provider,
 		}),
 		[chainId, address, provider]
@@ -251,10 +251,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 		if (currentInputTyped === "inputFrom" && currPair) {
 			const parseInputValue = tryParseAmount(inputFromValue, selectedToken[0]);
-			const wrappedAmountValue = wrappedCurrencyAmount(
-				parseInputValue,
-				chainId
-			);
+			const wrappedAmountValue = wrappedCurrencyAmount(parseInputValue, chain);
 			const quoteValue =
 				wrappedAmountValue &&
 				currPair?.priceOf(currPair?.token0)?.quote(wrappedAmountValue);
@@ -265,10 +262,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 		if (currentInputTyped === "inputTo" && currPair) {
 			const parseInputValue = tryParseAmount(inputToValue, selectedToken[1]);
-			const wrappedAmountValue = wrappedCurrencyAmount(
-				parseInputValue,
-				chainId
-			);
+			const wrappedAmountValue = wrappedCurrencyAmount(parseInputValue, chain);
 			const quoteValue =
 				wrappedAmountValue &&
 				currPair?.priceOf(currPair?.token1)?.quote(wrappedAmountValue);
@@ -296,8 +290,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		);
 
 		const [tokenAmountA, tokenAmountB] = [
-			wrappedCurrencyAmount(currencyAmountA, chainId),
-			wrappedCurrencyAmount(currencyAmountB, chainId),
+			wrappedCurrencyAmount(currencyAmountA, chain),
+			wrappedCurrencyAmount(currencyAmountB, chain),
 		];
 
 		const liquidityMinted =

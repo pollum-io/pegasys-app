@@ -1,5 +1,6 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 
+import { ChainId } from "@pollum-io/pegasys-sdk";
 import { useToasty } from "../hooks";
 import {
 	IWalletProviderValue,
@@ -15,7 +16,7 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 	children,
 }) => {
 	const [address, setAddress] = useState<string>("");
-	const [chainId, setChainId] = useState<number | null>(null);
+	const [chainId, setChainId] = useState<ChainId>(ChainId.NEVM);
 	const [isConnected, setIsConnected] = useState<boolean>(false);
 	const [provider, setProvider] = useState<TProvider>();
 	const [signer, setSigner] = useState<TSigner | undefined>();
@@ -23,7 +24,7 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 
 	const disconnect = () => {
 		setAddress("");
-		setChainId(null);
+		setChainId(ChainId.NEVM);
 		setIsConnected(false);
 		setProvider(undefined);
 		setSigner(undefined);
