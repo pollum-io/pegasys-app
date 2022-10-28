@@ -1,5 +1,6 @@
 import React, { useEffect, createContext, useMemo, useState } from "react";
 
+import { ApprovalState, useWallet } from "hooks";
 import { STAKE_ADDRESS } from "pegasys-services";
 import { ContractFramework, RoutesFramework } from "../frameworks";
 import { StakeServices } from "../services";
@@ -12,6 +13,7 @@ export const StakeContext = createContext({} as IStakeProviderValue);
 const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 	const [showInUsd, setShowInUsd] = useState<boolean>(false);
 	const { chainId, address } = psUseWallet();
+	const { approvalState } = useWallet();
 	const {
 		signature,
 		onSign,
@@ -52,7 +54,7 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 				return undefined;
 			},
 			"Withdraw deposited liquidity",
-			"unstake"
+			"unstake-stake"
 		);
 	};
 
@@ -66,7 +68,7 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 				return undefined;
 			},
 			"Claim accumulated PSYS rewards",
-			"claim"
+			"claim-stake"
 		);
 	};
 
@@ -88,7 +90,7 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 				return undefined;
 			},
 			"Stake PSYS tokens",
-			"stake"
+			"stake-stake"
 		);
 	};
 
@@ -105,20 +107,31 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 		}
 	};
 
-	useEffect(() => {
+	const getStakes = async () => {
 		if (address && chainId && STAKE_ADDRESS[chainId]) {
-			const getStakes = async () => {
-				const stakeInfos = await StakeServices.getStakeOpportunities({
-					stakeContract,
-					chainId,
-					walletAddress: address,
-				});
+			const stakeInfos = await StakeServices.getStakeOpportunities({
+				stakeContract,
+				chainId,
+				walletAddress: address,
+			});
 
-				setEarnOpportunities(stakeInfos);
-			};
+			setEarnOpportunities(stakeInfos);
+		}
+	};
 
+	useEffect(() => {
+		if (
+			approvalState.status === ApprovalState.APPROVED &&
+			(approvalState.type === "stake-stake" ||
+				approvalState.type === "claim-stake" ||
+				approvalState.type === "unstake-stake")
+		) {
 			getStakes();
 		}
+	}, [approvalState]);
+
+	useEffect(() => {
+		getStakes();
 	}, [address, chainId]);
 
 	const providerValue = useMemo(
