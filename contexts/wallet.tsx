@@ -6,6 +6,7 @@ import { IWalletInfo, ITx, IPersistTxs } from "types";
 import { useToasty, useWallet } from "pegasys-services";
 import { UseENS } from "hooks";
 import { TProvider, TSigner } from "pegasys-services/dto";
+import { ChainId } from "@pollum-io/pegasys-sdk";
 import {
 	INITIAL_ALLOWED_SLIPPAGE,
 	SYS_TESTNET_CHAIN_PARAMS,
@@ -14,7 +15,6 @@ import {
 	DEFAULT_DEADLINE_FROM_NOW,
 	SUPPORTED_WALLETS,
 } from "../helpers/consts";
-import { ChainId } from "@pollum-io/pegasys-sdk";
 
 export enum ApprovalState {
 	UNKNOWN,
