@@ -1,6 +1,7 @@
 import { Button, ButtonProps, Flex } from "@chakra-ui/react";
 import { usePicasso, useWallet } from "hooks";
 import { FunctionComponent, ReactNode } from "react";
+import { useWallet as usePsysWallet } from "pegasys-services";
 import Jazzicon from "react-jazzicon";
 
 interface IButtonProps extends ButtonProps {
@@ -13,6 +14,7 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	const { children, pending, ...rest } = props;
 	const { walletError, expert } = useWallet();
+	const { address } = usePsysWallet();
 
 	return (
 		<Button
@@ -46,10 +48,7 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 			) : (
 				<>
 					<Flex pr="2" textTransform="uppercase">
-						<Jazzicon
-							diameter={18}
-							seed={Math.round(Math.random() * 10000000)}
-						/>
+						<Jazzicon diameter={18} seed={Number(address)} />
 					</Flex>
 					{children}
 				</>
