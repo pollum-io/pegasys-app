@@ -78,7 +78,7 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 
 	useEffect(() => {
 		const checkConnection = async () => {
-			const value = PersistentFramework.get("wallet");
+			const value = PersistentFramework.get("wallet") as { [k: string]: any };
 
 			if (value?.isConnected) {
 				const connection = await WalletFramework.getConnectionInfo();
@@ -101,8 +101,17 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 		};
 		checkConnection();
 
+		const watchAccounts = async () => {
+			const newAddress = await WalletFramework.getAddress();
+
+			setAddress(newAddress);
+		};
+
 		const provider = WalletFramework.getProvider();
-		setProvider(provider);
+
+		provider?.on("accountsChanged", () => {
+			watchAccounts();
+		});
 	}, []);
 
 	const providerValue = useMemo(

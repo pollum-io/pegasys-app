@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 class PersistentFramework {
-	static add(name: string, value: { [k: string]: any }) {
+	static add(name: string, value: { [k: string]: any } | any[]) {
 		localStorage.setItem(name, JSON.stringify(value));
 	}
 
@@ -8,7 +8,7 @@ class PersistentFramework {
 		localStorage.removeItem(name);
 	}
 
-	static get(name: string): { [k: string]: any } | undefined {
+	static get(name: string): { [k: string]: any } | any[] | undefined {
 		const value = localStorage.getItem(name);
 
 		return value ? JSON.parse(value) : undefined;
