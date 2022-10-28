@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
 	Collapse,
 	Flex,
@@ -25,6 +25,7 @@ const EarnInput: React.FC<IEarnInputProps> = ({ deposit }) => {
 		withdrawPercentage,
 	} = useEarn();
 	const theme = usePicasso();
+	const textInput = useRef<HTMLInputElement>(null);
 
 	const onChange = (value: string) => {
 		if (deposit) {
@@ -55,7 +56,9 @@ const EarnInput: React.FC<IEarnInputProps> = ({ deposit }) => {
 						}}
 						value={deposit ? depositTypedValue : withdrawTypedValue}
 						onChange={e => onChange(e.target.value)}
-						ref={input => input && input.focus()}
+						ref={textInput}
+						autoFocus
+						onBlur={() => textInput?.current?.focus()}
 					/>
 					<InputRightAddon
 						border="1px solid"

@@ -3,7 +3,7 @@ import { JSBI, Token } from "@pollum-io/pegasys-sdk";
 
 import { getTokenPairs } from "utils";
 import { WrappedTokenInfo } from "types";
-import { useTokens, useWallet } from "hooks";
+import { ApprovalState, useTokens, useWallet } from "hooks";
 
 import { MINICHEF_ADDRESS } from "pegasys-services";
 import { ContractFramework, RoutesFramework } from "../frameworks";
@@ -25,7 +25,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	const [search, setSearch] = useState<string>("");
 	const { userTokensBalance } = useTokens();
 	const { chainId, address } = psUseWallet();
-	const { provider } = useWallet();
+	const { provider, approvalState } = useWallet();
 	const {
 		signature,
 		onSign,
@@ -72,7 +72,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 				return undefined;
 			},
 			"Withdraw deposited liquidity",
-			"withdraw"
+			"withdraw-farm"
 		);
 	};
 
@@ -95,7 +95,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 				return undefined;
 			},
 			"Claim accumulated PSYS rewards",
-			"claim"
+			"claim-farm"
 		);
 	};
 
@@ -122,7 +122,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 				return undefined;
 			},
 			"Deposit liquidity",
-			"deposit"
+			"deposit-farm"
 		);
 	};
 
@@ -184,28 +184,39 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 		return pairsToRender;
 	};
 
-	useEffect(() => {
+	const getAvailablePair = async () => {
 		if (chainId && address && MINICHEF_ADDRESS[chainId]) {
-			const getAvailablePair = async () => {
-				const pairsTokens = getTokenPairs(chainId, userTokensBalance);
+			const pairsTokens = getTokenPairs(chainId, userTokensBalance);
 
-				const stakeInfos = await FarmServices.getFarmOpportunities({
-					tokenPairs: pairsTokens as [WrappedTokenInfo, Token][],
-					walletAddress: address,
-					chainId,
-					provider,
-					farmContract,
-				});
+			const stakeInfos = await FarmServices.getFarmOpportunities({
+				tokenPairs: pairsTokens as [WrappedTokenInfo, Token][],
+				walletAddress: address,
+				chainId,
+				provider,
+				farmContract,
+			});
 
-				setEarnOpportunities(stakeInfos);
+			setEarnOpportunities(stakeInfos);
 
-				const sorted = onSort(stakeInfos);
+			const sorted = onSort(stakeInfos);
 
-				setSortPairs(sorted);
-			};
+			setSortPairs(sorted);
+		}
+	};
 
+	useEffect(() => {
+		if (
+			approvalState.status === ApprovalState.APPROVED &&
+			(approvalState.type === "deposit-farm" ||
+				approvalState.type === "claim-farm" ||
+				approvalState.type === "withdraw-farm")
+		) {
 			getAvailablePair();
 		}
+	}, [approvalState]);
+
+	useEffect(() => {
+		getAvailablePair();
 	}, [userTokensBalance, chainId, address]);
 
 	useEffect(() => {

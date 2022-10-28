@@ -131,8 +131,7 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 				id: `${type}Toast`,
 				position: "top-right",
 				status: "error",
-				title: `Error on ${type}`,
-				description: `Error on ${summary}`,
+				title: `Error on ${summary}`,
 			});
 		} finally {
 			setLoading(false);
