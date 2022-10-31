@@ -6,8 +6,8 @@ import {
 import { Token, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
 import abi20 from "utils/abis/erc20.json";
-import { getContract } from "./getContract";
-import { singleCallWithoutParams } from "./singleCall";
+import { getContract } from "../contracts/getContract";
+import { singleCallWithoutParams } from "../contracts";
 
 export async function getTotalSupply(
 	token: Token,

@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex, Grid } from "@chakra-ui/react";
 
-import { formattedNum } from "utils/numberFormat";
+import { formattedNum } from "utils/convert/numberFormat";
 import { IBodyProps } from "./dto";
 import CardItem from "./CardItem";
 

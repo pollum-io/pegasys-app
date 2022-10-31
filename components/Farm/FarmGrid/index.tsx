@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState } from "react";
 import { Flex } from "@chakra-ui/react";
 
 import { IFarmInfo, useFarm } from "pegasys-services";

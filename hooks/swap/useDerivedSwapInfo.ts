@@ -16,7 +16,7 @@ import {
 	ISwapCall,
 } from "types";
 import { computeSlippageAdjustedAmounts, tryParseAmount, Field } from "utils";
-import { involvesAddress } from "utils/involvesAddress";
+import { involvesAddress } from "utils/validations/involvesAddress";
 
 import { UseBestSwapMethod } from "./useBestSwapMethod";
 import { UseENS } from "./useENS";

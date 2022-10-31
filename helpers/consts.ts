@@ -1,4 +1,4 @@
-import { injected } from "utils/connectors";
+import { injected } from "utils/connector/connectors";
 import { IWalletInfo } from "types";
 import { ChainId, Token, WSYS, Percent, JSBI } from "@pollum-io/pegasys-sdk";
 import { ethers } from "ethers";

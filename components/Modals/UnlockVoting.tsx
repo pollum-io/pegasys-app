@@ -12,7 +12,7 @@ import {
 	Text,
 	useColorMode,
 } from "@chakra-ui/react";
-import { usePicasso, useWallet, useModal } from "hooks";
+import { usePicasso, useWallet } from "hooks";
 import { FunctionComponent, SetStateAction, useState } from "react";
 
 import { BiTrashAlt } from "react-icons/bi";

@@ -1,5 +1,5 @@
 import { Flex, Input, Text, useColorMode } from "@chakra-ui/react";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso } from "hooks";
 import React, { FunctionComponent } from "react";
 import { MdOutlineArrowDownward } from "react-icons/md";
 import { BiTrashAlt } from "react-icons/bi";
