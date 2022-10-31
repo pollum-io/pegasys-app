@@ -31,6 +31,8 @@ import {
 	PoolServices,
 	useWallet as psUseWallet,
 	usePegasys,
+	PegasysContracts,
+	ONE_BIPS,
 } from "pegasys-services";
 import {
 	addTransaction,
@@ -47,7 +49,6 @@ import {
 	Percent,
 	TokenAmount,
 } from "@pollum-io/pegasys-sdk";
-import { ONE_BIPS, ROUTER_ADDRESS } from "helpers/consts";
 import { Signer } from "ethers";
 import { ApprovalState } from "contexts";
 import { parseUnits } from "@ethersproject/units";
@@ -133,7 +134,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 	const chain = chainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
 
-	const router = ROUTER_ADDRESS[chain];
+	const router = PegasysContracts[chain].ROUTER_ADDRESS;
 
 	const walletInfo = useMemo(
 		() => ({

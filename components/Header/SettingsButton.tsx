@@ -18,9 +18,12 @@ import { IoWarningOutline } from "react-icons/io5";
 import { usePicasso } from "hooks";
 import { mockedSlippageValues } from "helpers/mockedData";
 import { useTranslation } from "react-i18next";
-import { DEFAULT_DEADLINE_FROM_NOW } from "helpers/consts";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
-import { useWallet, usePegasys } from "pegasys-services";
+import {
+	useWallet,
+	usePegasys,
+	DEFAULT_DEADLINE_FROM_NOW,
+} from "pegasys-services";
 import { IconButton } from "../Buttons/IconButton";
 import { SlippageButton } from "../Buttons/SlippageButton";
 import { Languages } from "./Languages";

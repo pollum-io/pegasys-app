@@ -5,7 +5,7 @@ import { getTokenPairs } from "utils";
 import { WrappedTokenInfo } from "types";
 import { ApprovalState, useTokens, useWallet } from "hooks";
 
-import { MINICHEF_ADDRESS } from "pegasys-services";
+import { PegasysContracts } from "../constants";
 import { ContractFramework, RoutesFramework } from "../frameworks";
 import { FarmServices } from "../services";
 import { useWallet as psUseWallet, useEarn } from "../hooks";
@@ -185,7 +185,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	};
 
 	const getAvailablePair = async () => {
-		if (chainId && address && MINICHEF_ADDRESS[chainId]) {
+		if (chainId && address && PegasysContracts[chainId].MINICHEF_ADDRESS) {
 			const pairsTokens = getTokenPairs(chainId, userTokensBalance);
 
 			const stakeInfos = await FarmServices.getFarmOpportunities({

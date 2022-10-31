@@ -1,8 +1,7 @@
 import { ButtonProps } from "@chakra-ui/react";
-import { SUPPORTED_WALLETS } from "helpers/consts";
 import { FunctionComponent } from "react";
 import { IWalletInfo } from "types/index";
-import { useWallet } from "pegasys-services";
+import { useWallet, SUPPORTED_WALLETS } from "pegasys-services";
 import { Wallets } from "./Wallets";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -24,12 +23,7 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 			if (!window.web3 && !window.ethereum) {
 				return (
 					<Wallets
-						onClick={() =>
-							// option.connector !== injected &&
-							!option.href &&
-							// option.connector &&
-							setConnectorValues(option)
-						}
+						onClick={() => setConnectorValues(option)}
 						id={`connect-${key}`}
 						key={key}
 						header={option.name}

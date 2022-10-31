@@ -1,11 +1,11 @@
 import { Token } from "@pollum-io/pegasys-sdk";
-import { PSYS } from "helpers/consts";
+import { PegasysTokens } from "pegasys-services";
 import { WrappedTokenInfo } from "types";
 
 export const UseTokensPairSorted = (tokens: Token[]) => {
 	if (tokens[0].symbol === "SYS" && tokens[1].symbol === "WSYS") {
 		const SYS = new WrappedTokenInfo({
-			...PSYS[tokens[0].chainId],
+			...PegasysTokens[tokens[0].chainId].PSYS,
 			name: "Syscoin",
 			symbol: "SYS",
 			logoURI: "public/icons/syslogo.png",
@@ -23,7 +23,7 @@ export const UseTokensPairSorted = (tokens: Token[]) => {
 	}
 	if (tokens[0].symbol === "WSYS" && tokens[1].symbol === "SYS") {
 		const SYS = new WrappedTokenInfo({
-			...PSYS[tokens[0].chainId],
+			...PegasysTokens[tokens[0].chainId].PSYS,
 			name: "Syscoin",
 			symbol: "SYS",
 			logoURI: "public/icons/syslogo.png",

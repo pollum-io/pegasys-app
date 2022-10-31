@@ -14,6 +14,8 @@ import {
 	useToasty,
 	useWallet as psUseWallet,
 	usePegasys,
+	ONE_DAY_IN_SECONDS,
+	SUPPORTED_NETWORK_CHAINS,
 } from "pegasys-services";
 import {
 	useModal,
@@ -57,7 +59,6 @@ import { Signer } from "ethers";
 import { computeTradePriceBreakdown, Field, maxAmountSpend } from "utils";
 import { getTokensGraphCandle } from "services/index";
 
-import { ONE_DAY_IN_SECONDS, SUPPORTED_NETWORK_CHAINS } from "helpers/consts";
 import { ConfirmSwap } from "components/Modals/ConfirmSwap";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { OtherWallet } from "./OtherWallet";

@@ -1,6 +1,9 @@
 import { Currency, Pair, Token, ChainId } from "@pollum-io/pegasys-sdk";
 import flatMap from "lodash.flatmap";
-import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from "helpers/consts";
+import {
+	BASES_TO_CHECK_TRADES_AGAINST,
+	//  CUSTOM_BASES
+} from "pegasys-services";
 import { IWalletHookInfos } from "types";
 import { wrappedCurrency } from "utils";
 import { PairState, usePairs } from "./usePair";
@@ -44,25 +47,26 @@ export async function useAllCommonPairs(
 						Boolean(tokens[0] && tokens[1])
 					)
 					.filter(([t0, t1]) => t0.address !== t1.address)
-					.filter(([tokenA, tokenB]) => {
-						// if (!walletInfos.chainId) return true;
-						const customBases = CUSTOM_BASES[chainId as ChainId];
-						if (!customBases) return true;
+					.filter(
+						([tokenA, tokenB]) =>
+							// if (!walletInfos.chainId) return true;
+							// const customBases = CUSTOM_BASES[chainId as ChainId];
+							// if (!customBases) return true;
 
-						const customBasesA: Token[] | undefined =
-							customBases[tokenA.address];
-						const customBasesB: Token[] | undefined =
-							customBases[tokenB.address];
+							// const customBasesA: Token[] | undefined =
+							// customBases[tokenA.address];
+							// const customBasesB: Token[] | undefined =
+							// customBases[tokenB.address];
 
-						if (!customBasesA && !customBasesB) return true;
+							// if (!customBasesA && !customBasesB) return true;
 
-						if (customBasesA && !customBasesA.find(base => tokenB.equals(base)))
-							return false;
-						if (customBasesB && !customBasesB.find(base => tokenA.equals(base)))
-							return false;
+							// if (customBasesA && !customBasesA.find(base => tokenB.equals(base)))
+							// return false;
+							// if (customBasesB && !customBasesB.find(base => tokenA.equals(base)))
+							// return false;
 
-						return true;
-					})
+							true
+					)
 			: [];
 
 	// eslint-disable-next-line

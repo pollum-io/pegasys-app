@@ -7,7 +7,6 @@ import {
 	Token,
 	WSYS,
 } from "@pollum-io/pegasys-sdk";
-import { USDC } from "pegasys-services/constants";
 import {
 	ITokenServicesGetToken,
 	ITokenServicesGetTokenName,
@@ -17,6 +16,7 @@ import {
 } from "pegasys-services/dto";
 import { ContractFramework } from "pegasys-services/frameworks";
 import { wrappedCurrency } from "utils";
+import { PegasysTokens } from "../constants";
 import PairServices from "./pair";
 
 class TokenServices {
@@ -108,8 +108,11 @@ class TokenServices {
 
 	static async getUsdcPrice(currency: Currency, chainId?: ChainId | null) {
 		const wrapped = wrappedCurrency(currency, chainId ?? ChainId.NEVM);
-		const usdc = USDC[chainId ?? ChainId.NEVM];
-		const wsys = WSYS[chainId ?? ChainId.NEVM];
+
+		const tokens = PegasysTokens[chainId ?? ChainId.NEVM];
+
+		const usdc = tokens.USDC;
+		const wsys = tokens.WSYS;
 
 		const tokenPairs: Array<[Token | undefined, Token | undefined]> = [
 			[
