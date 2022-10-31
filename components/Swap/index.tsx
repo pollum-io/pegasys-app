@@ -193,6 +193,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		ApprovalState.UNKNOWN
 	);
 
+	const [recipientAddress, setRecipientAddress] = useState<string>("");
+
 	// END REACT STATES //
 
 	// VALIDATIONS AT ALL //
@@ -296,6 +298,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			userTransactionDeadlineValue,
 			walletInfos,
 			signer,
+			recipientAddress,
 			setTransactions,
 			setApprovalState,
 			setCurrentTxHash,
@@ -558,7 +561,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const isOtherWallet = useMemo(() => {
 		if (otherWallet && expert) {
-			return <OtherWallet />;
+			return <OtherWallet setRecipientAddress={setRecipientAddress} />;
 		}
 		return <Flex />;
 	}, [otherWallet]);
