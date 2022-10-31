@@ -1,5 +1,5 @@
 import { ChainId } from "@pollum-io/pegasys-sdk";
-import { IBasePairsDTO } from "./dto";
+import { IBasePairsDTO, ICustomBasePairDTO } from "./dto";
 import { PegasysTokens } from "./index";
 
 export const BASES_TO_CHECK_TRADES_AGAINST: IBasePairsDTO = {
@@ -22,4 +22,10 @@ const WSYS_AND_PSYS_ONLY: IBasePairsDTO = {
 
 export const BASES_TO_TRACK_LIQUIDITY_FOR: IBasePairsDTO = {
 	...WSYS_AND_PSYS_ONLY,
+};
+
+export const CUSTOM_BASES_PAIRS: ICustomBasePairDTO = {
+	[ChainId.NEVM]: {},
+	[ChainId.TANENBAUM]: {},
+	[ChainId.ROLLUX]: {},
 };

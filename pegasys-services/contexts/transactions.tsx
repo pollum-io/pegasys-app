@@ -1,4 +1,4 @@
-import React, { createContext, useMemo } from "react";
+import React, { createContext, useMemo, useState } from "react";
 
 import { ITransactionProviderValue, ITransactionProviderProps } from "../dto";
 
@@ -9,7 +9,14 @@ export const TransactionContext = createContext(
 export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 	children,
 }) => {
-	const providerValue = useMemo(() => ({}), []);
+	const [transactions, setTransactions] = useState<any[]>([]);
+
+	const providerValue = useMemo(
+		() => ({
+			transactions,
+		}),
+		[transactions]
+	);
 
 	return (
 		<TransactionContext.Provider value={providerValue}>

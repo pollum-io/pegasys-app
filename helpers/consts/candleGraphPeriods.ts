@@ -1,0 +1,9 @@
+// Candle graph periods values -> Seconds to Minutes
+export const candleGraphPeriods = {
+	FIVE_MINUTES_IN_SECONDS: 300,
+	FIFTEEN_MINUTES_IN_SECONDS: 900,
+	ONE_HOUR_IN_SECONDS: 3600,
+	FOUR_HOURS_IN_SECONDS: 14400,
+	ONE_DAY_IN_SECONDS: 86400,
+	ONE_WEEK_IN_SECONDS: 604800,
+};
