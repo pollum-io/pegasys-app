@@ -22,7 +22,6 @@ import {
 	RemoveLiquidity,
 } from "components";
 import { PoolCards } from "components/Pools/PoolCards";
-import { SUPPORTED_NETWORK_CHAINS } from "helpers/consts";
 import { usePicasso, useModal, useTokens, usePairs } from "hooks";
 import { NextPage } from "next";
 import { ChangeEvent, useMemo, useState } from "react";
@@ -36,7 +35,7 @@ import {
 	IPoolsLiquidity,
 	IPoolsVolume,
 } from "types";
-import { useWallet } from "pegasys-services";
+import { useWallet, SUPPORTED_NETWORK_CHAINS } from "pegasys-services";
 import {
 	getTokenPairs,
 	toV2LiquidityToken,

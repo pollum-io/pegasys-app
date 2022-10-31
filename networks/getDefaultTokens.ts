@@ -1,5 +1,5 @@
 import { TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
-import { PEGASYS_LIST, TANENBAUM_LIST, ROLLUX_LIST } from "helpers/consts";
+import { PEGASYS_LIST, TANENBAUM_LIST, ROLLUX_LIST } from "pegasys-services";
 import { IGetTokenListByUrl } from "types";
 import { returnConvertedUrl } from "utils/convert/returnConvertedUrl";
 

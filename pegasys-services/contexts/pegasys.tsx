@@ -4,7 +4,7 @@ import { BigNumber } from "ethers";
 import {
 	DEFAULT_DEADLINE_FROM_NOW,
 	INITIAL_ALLOWED_SLIPPAGE,
-} from "helpers/consts";
+} from "../constants";
 import { WalletProvider } from "./wallet";
 import { ToastyProvider } from "./toasty";
 import { IPegasysProviderProps, children, IPegasysProviderValue } from "../dto";
