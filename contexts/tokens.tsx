@@ -34,9 +34,10 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		isConnected,
 		address: walletAddress,
 		chainId: currentNetworkChainId,
+		provider,
 	} = psUseWallet();
 
-	const { provider, approvalState } = useWallet();
+	const { approvalState } = useWallet();
 
 	const { currentCacheListTokensToDisplay, tokenListManageState } =
 		useTokensListManage();

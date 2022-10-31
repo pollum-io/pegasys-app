@@ -24,11 +24,14 @@ import {
 	MdAdd,
 	MdOutlineInfo,
 } from "react-icons/md";
-import { IoIosArrowDown } from "react-icons/io";
 import { IDeposited, IInputValues, WrappedTokenInfo } from "types";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { useTranslation } from "react-i18next";
-import { PoolServices, useWallet as psUseWallet } from "pegasys-services";
+import {
+	PoolServices,
+	useWallet as psUseWallet,
+	usePegasys,
+} from "pegasys-services";
 import {
 	addTransaction,
 	getTokenAllowance,
@@ -118,19 +121,16 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const [amounts, setAmounts] = useState<TokenAmount[]>([]);
 	const [currPoolShare, setCurrPoolShare] = useState<string>("");
 	const {
-		userSlippageTolerance,
-		userTransactionDeadlineValue,
-		provider,
 		setTransactions,
 		transactions,
 		setCurrentLpAddress,
-		signer,
 		setApprovalState,
 		approvalState,
 		setCurrentTxHash,
 		setCurrentSummary,
 	} = useWallet();
-	const { address, chainId, isConnected } = psUseWallet();
+	const { address, chainId, isConnected, signer, provider } = psUseWallet();
+	const { userSlippageTolerance, userTransactionDeadlineValue } = usePegasys();
 
 	const chain = chainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
 

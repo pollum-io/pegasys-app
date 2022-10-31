@@ -1,10 +1,11 @@
 import { Flex, Img, Text } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso } from "hooks";
+import { usePegasys } from "pegasys-services";
 
 export const ExpertMode: FunctionComponent = () => {
 	const theme = usePicasso();
-	const { expert } = useWallet();
+	const { expert } = usePegasys();
 
 	return (
 		<Flex>

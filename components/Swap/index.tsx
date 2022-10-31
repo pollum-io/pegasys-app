@@ -10,7 +10,11 @@ import {
 	useColorMode,
 	SlideFade,
 } from "@chakra-ui/react";
-import { useToasty, useWallet as psUseWallet } from "pegasys-services";
+import {
+	useToasty,
+	useWallet as psUseWallet,
+	usePegasys,
+} from "pegasys-services";
 import {
 	useModal,
 	usePicasso,
@@ -94,9 +98,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	} = useModal();
 
 	const {
-		provider,
-		signer,
-		userSlippageTolerance,
 		setTransactions,
 		transactions,
 		setApprovalState,
@@ -105,12 +106,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setCurrentTxHash,
 		setCurrentSummary,
 		setCurrentInputTokenName,
-		expert,
 		otherWallet,
-		userTransactionDeadlineValue,
 	} = useWallet();
 
-	const { address, chainId, isConnected } = psUseWallet();
+	const { address, chainId, isConnected, provider, signer } = psUseWallet();
+	const { userSlippageTolerance, userTransactionDeadlineValue, expert } =
+		usePegasys();
 
 	// END HOOKS IMPORTED VALUES
 

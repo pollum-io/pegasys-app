@@ -219,7 +219,7 @@ class FarmServices {
 		pair: Pair,
 		stakeToken: Token,
 		totalStake: TokenAmount,
-		chainId?: ChainId
+		chainId?: ChainId | null
 	) {
 		const dai = DAI[chainId ?? ChainId.NEVM];
 

@@ -23,7 +23,7 @@ import {
 } from "components";
 import { PoolCards } from "components/Pools/PoolCards";
 import { SUPPORTED_NETWORK_CHAINS } from "helpers/consts";
-import { usePicasso, useModal, useWallet, useTokens, usePairs } from "hooks";
+import { usePicasso, useModal, useTokens, usePairs } from "hooks";
 import { NextPage } from "next";
 import { ChangeEvent, useMemo, useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
@@ -36,7 +36,7 @@ import {
 	IPoolsLiquidity,
 	IPoolsVolume,
 } from "types";
-import { useWallet as psUseWallet } from "pegasys-services";
+import { useWallet } from "pegasys-services";
 import {
 	getTokenPairs,
 	toV2LiquidityToken,
@@ -64,12 +64,12 @@ export const PoolsContainer: NextPage = () => {
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const [isCreate, setIsCreate] = useState(false);
 	const [haveValue] = useState(false);
-	const { provider } = useWallet();
 	const {
 		isConnected,
 		address,
 		chainId: currentNetworkChainId,
-	} = psUseWallet();
+		provider,
+	} = useWallet();
 	const { userTokensBalance } = useTokens();
 	const [userHavePool] = useState(true);
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);

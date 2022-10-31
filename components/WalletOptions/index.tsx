@@ -1,22 +1,18 @@
 import { ButtonProps } from "@chakra-ui/react";
 import { SUPPORTED_WALLETS } from "helpers/consts";
 import { FunctionComponent } from "react";
-import { useWallet } from "hooks";
-import { injected } from "utils/connectors";
-import { AbstractConnector } from "@web3-react/abstract-connector";
 import { IWalletInfo } from "types/index";
+import { useWallet } from "pegasys-services";
 import { Wallets } from "./Wallets";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let window: any;
 
 export const WalletOptions: FunctionComponent<ButtonProps> = () => {
-	const { connectWallet, setConnectorSelected } = useWallet();
+	const { connect, setConnectorSelected } = useWallet();
 
 	const setConnectorValues = (connectorOptionsSelected: IWalletInfo) => {
-		const { connector } = connectorOptionsSelected;
-
-		connectWallet(connector as AbstractConnector);
+		connect();
 		setConnectorSelected(connectorOptionsSelected);
 	};
 
@@ -29,9 +25,9 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 				return (
 					<Wallets
 						onClick={() =>
-							option.connector !== injected &&
+							// option.connector !== injected &&
 							!option.href &&
-							option.connector &&
+							// option.connector &&
 							setConnectorValues(option)
 						}
 						id={`connect-${key}`}
@@ -43,37 +39,37 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 			}
 
 			// overwrite injected when needed
-			if (option.connector === injected) {
-				// don't show injected if there's no injected provider
-				if (!(window.web3 || window.ethereum)) {
-					if (option.name === "MetaMask") {
-						return (
-							<Wallets
-								id={`connect-${key}`}
-								key={key}
-								header="Install Metamask"
-								// href="https://metamask.io/"
-								icon="/icons/metamask.png"
-							/>
-						);
-					}
-					return null; // dont want to return install twice
+			// if (option.connector === injected) {
+			// don't show injected if there's no injected provider
+			if (!(window.web3 || window.ethereum)) {
+				if (option.name === "MetaMask") {
+					return (
+						<Wallets
+							id={`connect-${key}`}
+							key={key}
+							header="Install Metamask"
+							// href="https://metamask.io/"
+							icon="/icons/metamask.png"
+						/>
+					);
 				}
-				// don't return metamask if injected provider isn't metamask
-				if (option.name === "MetaMask" && !isMetamask) {
-					return null;
-				}
-				// likewise for generic
-				if (option.name === "Injected" && isMetamask) {
-					return null;
-				}
+				return null; // dont want to return install twice
 			}
+			// don't return metamask if injected provider isn't metamask
+			if (option.name === "MetaMask" && !isMetamask) {
+				return null;
+			}
+			// likewise for generic
+			if (option.name === "Injected" && isMetamask) {
+				return null;
+			}
+			// }
 			// return rest of options
 			return (
 				<Wallets
 					id={`connect-${key}`}
 					onClick={() => {
-						if (option.connector) setConnectorValues(option);
+						setConnectorValues(option);
 					}}
 					key={key}
 					// href={option.href || "/"}

@@ -15,7 +15,7 @@ import {
 class PairServices {
 	static async getPairs(
 		pairs: Array<[Token | undefined, Token | undefined]>,
-		currentChainId?: ChainId
+		currentChainId?: ChainId | null
 	) {
 		const chainId = currentChainId ?? ChainId.NEVM;
 
@@ -56,7 +56,7 @@ class PairServices {
 
 	static getPairAddress(
 		tokens: [Token | undefined, Token | undefined],
-		chainId?: ChainId
+		chainId?: ChainId | null
 	) {
 		return tokens[0] && tokens[1] && !tokens[0].equals(tokens[1])
 			? Pair.getAddress(tokens[0], tokens[1], chainId ?? ChainId.NEVM)

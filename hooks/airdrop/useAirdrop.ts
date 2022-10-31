@@ -21,7 +21,7 @@ export const userHasAvailableClaim = async (
 		| ethers.providers.Web3Provider
 		| ethers.providers.JsonRpcProvider
 		| Signer
-		| undefined
+		| null
 ) => {
 	// eslint-disable-next-line
 	// @ts-ignore
@@ -50,13 +50,17 @@ export const userUnclaimedAmount = async (
 		| ethers.providers.Web3Provider
 		| ethers.providers.JsonRpcProvider
 		| Signer
-		| undefined
+		| null
 ) => {
 	// eslint-disable-next-line
 	// @ts-ignore
 	const userClaimData = AirdropInfo.claims[address || ""];
 	const psys = chainId ? PSYS[chainId] : undefined;
-	const canClaim = await userHasAvailableClaim(address, chainId, signer);
+	const canClaim = await userHasAvailableClaim(
+		address,
+		chainId,
+		signer ?? null
+	);
 
 	if (!psys) return undefined;
 	if (!userClaimData) return new TokenAmount(psys, JSBI.BigInt(0));
@@ -87,7 +91,7 @@ export const useClaimCallback = (
 	const airDropContract = createContractUsingAbi(
 		AIRDROP_ADDRESS[chainId] as string,
 		AIRDROP_ABI,
-		signer
+		signer ?? null
 	);
 
 	const claimCallback = async () => {

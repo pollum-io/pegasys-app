@@ -1,12 +1,12 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
-import { JSBI } from "@pollum-io/pegasys-sdk";
+import { ChainId, JSBI } from "@pollum-io/pegasys-sdk";
 
 import { tryParseAmount, addTransaction } from "utils";
 import { ApprovalState } from "contexts";
 import { useWallet, useModal } from "hooks";
 
-import { BIG_INT_ZERO } from "pegasys-services/constants";
-import { useWallet as psUseWallet, useToasty } from "../hooks";
+import { BIG_INT_ZERO } from "../constants";
+import { useWallet as psUseWallet, useToasty, usePegasys } from "../hooks";
 import { WalletFramework } from "../frameworks";
 import { onlyNumbers } from "../utils";
 import {
@@ -31,17 +31,12 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 	const [selectedOpportunity, setSelectedOpportunity] =
 		useState<IEarnInfo | null>(null);
 
-	const {
-		provider,
-		userTransactionDeadlineValue,
-		setTransactions,
-		transactions,
-		setCurrentTxHash,
-		setApprovalState,
-	} = useWallet();
+	const { setTransactions, transactions, setCurrentTxHash, setApprovalState } =
+		useWallet();
 	const { onCloseStakeActions, onCloseFarmActions } = useModal();
 
-	const { chainId, address } = psUseWallet();
+	const { chainId, address, provider } = psUseWallet();
+	const { userTransactionDeadlineValue } = usePegasys();
 	const { toast } = useToasty();
 
 	const reset = () => {
@@ -106,7 +101,7 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 
 			const walletInfo = {
 				walletAddress: address,
-				chainId,
+				chainId: ChainId.NEVM,
 				provider,
 			};
 

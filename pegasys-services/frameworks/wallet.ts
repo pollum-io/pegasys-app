@@ -1,6 +1,7 @@
 import { ChainId } from "@pollum-io/pegasys-sdk";
 import { BigNumber, ethers } from "ethers";
 import { getAddress, splitSignature } from "ethers/lib/utils";
+import { NEVM_CHAIN_PARAMS } from "helpers/consts";
 
 import {
 	TSigner,
@@ -11,11 +12,23 @@ import {
 import ContractFramework from "./contract";
 
 class WalletFramework {
-	static getProvider(): TProvider | undefined {
+	static getRpcProvider(): TProvider {
+		const provider = new ethers.providers.JsonRpcProvider(
+			NEVM_CHAIN_PARAMS.rpcUrls[0]
+		);
+
+		return provider;
+	}
+
+	static getProvider(): TProvider {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const { ethereum } = window as any;
 
-		const provider = new ethers.providers.Web3Provider(ethereum);
+		let provider: TProvider = new ethers.providers.Web3Provider(ethereum);
+
+		if (!provider) {
+			provider = this.getRpcProvider();
+		}
 
 		return provider;
 	}
@@ -47,7 +60,9 @@ class WalletFramework {
 
 		const chainId = await this.getChain(provider);
 
-		return { address: address ?? 0, chainId: chainId ?? 0 };
+		const signer = this.getSigner(provider);
+
+		return { address, chainId: chainId ?? ChainId.NEVM, signer, provider };
 	}
 
 	static async getChain(p?: TProvider): Promise<number | undefined> {
@@ -96,7 +111,7 @@ class WalletFramework {
 		value: string;
 		contract: TContract;
 		version?: string;
-		chainId: ChainId;
+		chainId: ChainId | null;
 		name: string;
 		spender: string;
 		verifyingContract: string;
@@ -139,7 +154,7 @@ class WalletFramework {
 			version?: string;
 		} = {
 			name,
-			chainId,
+			chainId: chainId ?? ChainId.NEVM,
 			verifyingContract: getAddress(verifyingContract),
 		};
 

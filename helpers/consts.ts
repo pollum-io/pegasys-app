@@ -61,9 +61,21 @@ export const SYS_TESTNET_CHAIN_PARAMS = {
 	blockExplorerUrls: ["https://tanenbaum.io"],
 };
 
+export const ROLLUX_CHAIN_PARAMS = {
+	chainId: "0xafe", // A 0x-prefixed hexadecimal chainId
+	chainName: "Rollux Testnet",
+	nativeCurrency: {
+		name: "Rollux Testnet",
+		symbol: "rSYS",
+		decimals: 18,
+	},
+	rpcUrls: ["https://testnet.rollux.com:2814/"],
+	blockExplorerUrls: ["https://explorer.testnet.rollux.com/"],
+};
+
 export const SUPPORTED_WALLETS: { [key: string]: IWalletInfo } = {
 	METAMASK: {
-		connector: injected,
+		// connector: injected,
 		name: "MetaMask",
 		iconName: "metamask.png",
 	},

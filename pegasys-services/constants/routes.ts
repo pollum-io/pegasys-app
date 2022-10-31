@@ -188,5 +188,4 @@ export const LUXY: { [chainId in ChainId]: Token } = {
 		"LUXY"
 	),
 };
-
 export const API = "https://api.pegasys.finance/";
