@@ -24,8 +24,8 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	const [sortedPairs, setSortPairs] = useState<IFarmInfo[]>([]);
 	const [search, setSearch] = useState<string>("");
 	const { userTokensBalance } = useTokens();
-	const { chainId, address } = psUseWallet();
-	const { provider, approvalState } = useWallet();
+	const { chainId, address, provider } = psUseWallet();
+	const { approvalState } = useWallet();
 	const {
 		signature,
 		onSign,

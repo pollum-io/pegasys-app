@@ -11,7 +11,7 @@ export type TAbi = ethers.ContractInterface;
 export interface IContractFrameworkGetContractProps {
 	abi: TAbi;
 	address: string;
-	provider?: TProvider | TSigner;
+	provider?: TProvider | TSigner | null;
 }
 
 export interface IContractFrameworkEstimateGasProps {
@@ -26,10 +26,10 @@ export type IContractFrameworkCallProps = IContractFrameworkEstimateGasProps;
 
 export interface IGetDefinedContract {
 	address: string;
-	provider?: TProvider | TSigner;
+	provider?: TProvider | TSigner | null;
 }
 
 export interface IGetSpecificContract {
-	chainId?: ChainId;
-	provider?: TProvider | TSigner;
+	chainId?: ChainId | null;
+	provider?: TProvider | TSigner | null;
 }

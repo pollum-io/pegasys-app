@@ -12,7 +12,7 @@ import { singleCallWithoutParams } from "./singleCall";
 export async function getTotalSupply(
 	token: Token,
 	signer: Signer,
-	provider: Signer | JsonRpcProvider | Web3Provider | Provider | undefined
+	provider: Signer | JsonRpcProvider | Web3Provider | Provider | null
 ) {
 	// eslint-disable-next-line
 	// @ts-ignore

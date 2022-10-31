@@ -9,4 +9,6 @@ export type TSigner = Signer | undefined;
 export interface IWalletFrameworkConnectionInfo {
 	address: string;
 	chainId: number;
+	signer?: TSigner;
+	provider: TProvider;
 }

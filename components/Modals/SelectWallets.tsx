@@ -10,6 +10,7 @@ import {
 import { usePicasso, useWallet } from "hooks";
 import { WalletOptions } from "components/WalletOptions";
 import { MdOutlineClose } from "react-icons/md";
+import { useWallet as psUseWallet } from "pegasys-services";
 
 interface IModal {
 	isOpen: boolean;
@@ -20,7 +21,8 @@ export const SelectWallets: React.FC<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
-	const { connecting, connectorSelected } = useWallet();
+	const { connecting } = useWallet();
+	const { connectorSelected } = psUseWallet();
 
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>

@@ -1,20 +1,6 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
-import { BigNumber, ethers } from "ethers";
-import { convertHexToNumber } from "utils";
-import { AbstractConnector } from "@web3-react/abstract-connector";
-import { IWalletInfo, ITx, IPersistTxs } from "types";
+import { ITx, IPersistTxs } from "types";
 import { useToasty, useWallet } from "pegasys-services";
-import { UseENS } from "hooks";
-import { TProvider, TSigner } from "pegasys-services/dto";
-import { ChainId } from "@pollum-io/pegasys-sdk";
-import {
-	INITIAL_ALLOWED_SLIPPAGE,
-	SYS_TESTNET_CHAIN_PARAMS,
-	NEVM_CHAIN_PARAMS,
-	SUPPORTED_NETWORK_CHAINS,
-	DEFAULT_DEADLINE_FROM_NOW,
-	SUPPORTED_WALLETS,
-} from "../helpers/consts";
 
 export enum ApprovalState {
 	UNKNOWN,
@@ -34,27 +20,10 @@ export interface ISubmittedAproval {
 }
 
 interface IWeb3 {
-	provider: TProvider | undefined;
-	signer: TSigner | undefined;
-	connectWallet: (connector: AbstractConnector) => Promise<void>;
-	walletError: boolean;
-	setWalletError: React.Dispatch<React.SetStateAction<boolean>>;
-	connectorSelected: IWalletInfo | undefined;
-	setConnectorSelected: React.Dispatch<
-		React.SetStateAction<IWalletInfo | undefined>
-	>;
 	connecting: boolean;
 	setConnecting: React.Dispatch<React.SetStateAction<boolean>>;
-	expert: boolean;
-	setExpert: React.Dispatch<React.SetStateAction<boolean>>;
 	otherWallet: boolean;
 	setOtherWallet: React.Dispatch<React.SetStateAction<boolean>>;
-	userTransactionDeadlineValue: BigNumber | number;
-	setUserTransactionDeadlineValue: React.Dispatch<
-		React.SetStateAction<BigNumber | number>
-	>;
-	userSlippageTolerance: number;
-	setUserSlippageTolerance: React.Dispatch<React.SetStateAction<number>>;
 	setTransactions: React.Dispatch<React.SetStateAction<ITx>>;
 	transactions: ITx;
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>;
@@ -85,27 +54,16 @@ interface IWeb3 {
 
 export const WalletContext = createContext({} as IWeb3);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-declare let window: any;
-
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
-	const [walletError, setWalletError] = useState<boolean>(false);
 	const [connecting, setConnecting] = useState<boolean>(false);
 	const [votesLocked, setVotesLocked] = useState<boolean>(true);
 	const [votersType, setVotersType] = useState<string>("");
 	const [delegatedTo, setDelegatedTo] = useState<string>("");
-	const [connectorSelected, setConnectorSelected] = useState<IWalletInfo>();
-	const [expert, setExpert] = useState<boolean>(false);
 	const [otherWallet, setOtherWallet] = useState<boolean>(false);
-	const [userTransactionDeadlineValue, setUserTransactionDeadlineValue] =
-		useState<BigNumber | number>(DEFAULT_DEADLINE_FROM_NOW);
 	const [showCancelled, setShowCancelled] = useState<boolean>(false);
 	const [isGovernance, setIsGovernance] = useState<boolean>(false);
-	const [userSlippageTolerance, setUserSlippageTolerance] = useState<number>(
-		INITIAL_ALLOWED_SLIPPAGE
-	);
 	const [approvalSubmitted, setApprovalSubmitted] = useState<ISubmittedAproval>(
 		{ status: false, tokens: [], currentTokenToApprove: "" }
 	);
@@ -126,88 +84,14 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		type: "",
 	});
 	const { toast } = useToasty();
-	const {
-		isConnected,
-		address,
-		chainId,
-		connect,
-		setChainId,
-		setIsConnected,
-		setAddress,
-		provider,
-		setProvider,
-		signer,
-		setSigner,
-	} = useWallet();
+	const { isConnected, address, chainId, provider } = useWallet();
 
-	const connectToSysRpcIfNotConnected = () => {
-		const rpcProvider = new ethers.providers.JsonRpcProvider(
-			Number(window?.ethereum?.networkVersion) === 57
-				? NEVM_CHAIN_PARAMS.rpcUrls[0]
-				: SYS_TESTNET_CHAIN_PARAMS.rpcUrls[0]
-		);
-		setProvider(rpcProvider);
-
-		const rpcSigner = rpcProvider.getSigner();
-
-		setSigner(rpcSigner);
-	};
 	const rpcUrl =
 		chainId === 5700
 			? "https://tanenbaum.io/api"
 			: chainId === 2814
 			? "https://explorer.testnet.rollux.com/api"
 			: "https://explorer.syscoin.org/api";
-
-	const getSignerIfConnected = async () => {
-		const web3Provider = new ethers.providers.Web3Provider(
-			window.ethereum,
-			"any"
-		);
-
-		await web3Provider.send("eth_requestAccounts", []);
-
-		const web3Signer = web3Provider.getSigner();
-
-		setProvider(web3Provider);
-		setSigner(web3Signer);
-	};
-
-	const defaultActionsWhenConnectWallet = async () => {
-		await connect();
-		getSignerIfConnected();
-		setWalletError(false);
-	};
-
-	const connectWallet = async (connector: AbstractConnector) => {
-		connector
-			.activate()
-			.then(() => {
-				if (
-					SUPPORTED_NETWORK_CHAINS.includes(
-						Number(window?.ethereum?.networkVersion)
-					)
-				) {
-					defaultActionsWhenConnectWallet();
-				} else {
-					setWalletError(true);
-				}
-			})
-			.catch(error => {
-				if (
-					String(error).includes("The user rejected the request.") ||
-					String(error).includes("Metamask not installed")
-				) {
-					setConnecting(false);
-				}
-				if (
-					String(error).includes("accounts received is empty") ||
-					String(error).includes("User denied account authorization")
-				) {
-					setConnecting(false);
-				}
-			});
-	};
 
 	const timeValue = chainId === 2814 ? 3000 : 10000;
 
@@ -366,76 +250,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 		}
 	}, [approvalSubmitted]);
 
-	useMemo(async () => {
-		if (!connectorSelected) return;
-
-		const getCurrentConnectorProvider =
-			await connectorSelected?.connector?.getProvider();
-
-		getCurrentConnectorProvider?.on("chainChanged", (chainId: string) => {
-			const convertedChainId = convertHexToNumber(chainId);
-			setChainId(convertedChainId ?? ChainId.NEVM);
-			setWalletError(
-				Boolean(SUPPORTED_NETWORK_CHAINS.includes(convertedChainId))
-			);
-		});
-
-		getCurrentConnectorProvider?.on("accountsChanged", () =>
-			defaultActionsWhenConnectWallet()
-		);
-	}, [connectorSelected]);
-
-	useEffect(() => {
-		const verifySysNetwork =
-			window?.ethereum?.selectedAddress &&
-			SUPPORTED_NETWORK_CHAINS.includes(
-				Number(window?.ethereum?.networkVersion)
-			);
-
-		if (!isConnected) {
-			connectToSysRpcIfNotConnected();
-		}
-
-		if (isConnected && !connectorSelected) {
-			setConnectorSelected(SUPPORTED_WALLETS.METAMASK);
-		}
-
-		if (connectorSelected) {
-			setIsConnected(
-				verifySysNetwork ? !!window?.ethereum?.selectedAddress : false
-			);
-			setAddress(
-				verifySysNetwork
-					? (UseENS(window?.ethereum?.selectedAddress).address as string)
-					: ""
-			);
-			setWalletError(!verifySysNetwork);
-		}
-
-		if (isConnected && verifySysNetwork) {
-			getSignerIfConnected();
-		}
-	}, [chainId]);
-
 	const providerValue = useMemo(
 		() => ({
-			provider,
-			signer,
-			connectWallet,
-			walletError,
-			setWalletError,
-			setConnectorSelected,
-			connectorSelected,
 			connecting,
 			setConnecting,
-			setExpert,
-			expert,
 			otherWallet,
 			setOtherWallet,
-			userTransactionDeadlineValue,
-			setUserTransactionDeadlineValue,
-			userSlippageTolerance,
-			setUserSlippageTolerance,
 			transactions,
 			setTransactions,
 			approvalState,
@@ -464,22 +284,36 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
 			setCurrentSummary,
 		}),
 		[
-			provider,
-			signer,
-			connectWallet,
-			walletError,
-			connectorSelected,
-			expert,
+			connecting,
+			setConnecting,
 			otherWallet,
-			userTransactionDeadlineValue,
-			userSlippageTolerance,
+			setOtherWallet,
 			transactions,
+			setTransactions,
 			approvalState,
+			setApprovalState,
 			approvalSubmitted,
+			setApprovalSubmitted,
 			currentTxHash,
+			setCurrentTxHash,
+			currentInputTokenName,
+			setCurrentInputTokenName,
 			isGovernance,
+			setIsGovernance,
+			setPendingTxLength,
 			pendingTxLength,
 			showCancelled,
+			setShowCancelled,
+			votersType,
+			setVotersType,
+			votesLocked,
+			setVotesLocked,
+			delegatedTo,
+			setDelegatedTo,
+			currentLpAddress,
+			setCurrentLpAddress,
+			currentSummary,
+			setCurrentSummary,
 		]
 	);
 

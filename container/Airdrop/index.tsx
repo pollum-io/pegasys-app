@@ -30,8 +30,6 @@ export const AirdropContainer: NextPage = () => {
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	const {
-		signer,
-		provider,
 		setCurrentTxHash,
 		setApprovalState,
 		approvalState,
@@ -43,6 +41,8 @@ export const AirdropContainer: NextPage = () => {
 		chainId: currentNetworkChainId,
 		isConnected,
 		address: walletAddress,
+		signer,
+		provider,
 	} = psUseWallet();
 
 	const chainId =

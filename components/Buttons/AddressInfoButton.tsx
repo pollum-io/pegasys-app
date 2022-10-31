@@ -34,10 +34,10 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
-	const { transactions, connectorSelected, approvalState } = useWallet();
+	const { transactions, approvalState } = useWallet();
 	const isPending = approvalState.status === ApprovalState.PENDING;
 	const { toast } = useToasty();
-	const { address, chainId } = psUseWallet();
+	const { address, chainId, connectorSelected } = psUseWallet();
 	const [txs, setTxs] = useState<ITransactionResponse[]>([]);
 
 	const handleCopyToClipboard = () => {

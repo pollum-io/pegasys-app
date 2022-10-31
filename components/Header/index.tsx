@@ -5,17 +5,17 @@ import {
 	Link,
 	Text,
 	useColorMode,
-	useDisclosure,
 	useMediaQuery,
 } from "@chakra-ui/react";
 import React from "react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
-import { useModal, usePicasso, useWallet } from "hooks";
+import { useModal, usePicasso } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { HiOutlineMenu } from "react-icons/hi";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
 import { useRouter } from "next/router";
+import { usePegasys } from "pegasys-services";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
@@ -37,10 +37,9 @@ export const Header: React.FC = () => {
 		onCloseDrawerMenu,
 	} = useModal();
 
-	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [isMobile] = useMediaQuery("(max-width: 750px)");
 	const btnRef: any = React.useRef();
-	const { expert } = useWallet();
+	const { expert } = usePegasys();
 
 	const links = [
 		{

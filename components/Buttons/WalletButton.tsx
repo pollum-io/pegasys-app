@@ -13,7 +13,7 @@ import { AddressInfoButton } from "components/Buttons";
 import { shortAddress } from "utils";
 import { ExpertMode } from "components/Header/ExpertMode";
 import { ApprovalState } from "contexts";
-import { useWallet as psUseWallet } from "pegasys-services";
+import { useWallet as psUseWallet, usePegasys } from "pegasys-services";
 import { AddressButton } from "./AddressButton";
 
 export const WalletButton: FunctionComponent<ButtonProps> = props => {
@@ -31,8 +31,9 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 		onCloseAddress,
 	} = useModal();
 
-	const { walletError, approvalState, pendingTxLength, expert } = useWallet();
-	const { address, isConnected } = psUseWallet();
+	const { approvalState, pendingTxLength } = useWallet();
+	const { address, isConnected, walletError } = psUseWallet();
+	const { expert } = usePegasys();
 
 	const isPending = approvalState.status === ApprovalState.PENDING;
 	const { colorMode } = useColorMode();

@@ -13,7 +13,7 @@ export interface IFarmInfo extends IEarnInfo {
 }
 
 export interface IFarmServicesGetTotalStake {
-	chainId?: ChainId;
+	chainId?: ChainId | null;
 	lpContract?: TContract;
 	stakeToken: Token;
 	provider?: TProvider | TSigner;
@@ -21,7 +21,7 @@ export interface IFarmServicesGetTotalStake {
 
 export interface IFarmServicesGetStake {
 	farmContract?: TContract;
-	chainId?: ChainId;
+	chainId?: ChainId | null;
 	provider?: TProvider | TSigner;
 	poolId: number;
 	walletAddress: string;
@@ -40,7 +40,7 @@ export interface IFarmServicesGetUnclaimed {
 	provider?: TProvider | TSigner;
 	walletAddress: string;
 	rewardToken: Token;
-	chainId?: ChainId;
+	chainId?: ChainId | null;
 	poolId: number;
 }
 
@@ -50,15 +50,15 @@ export interface IFarmServicesGetPoolRewardRate {
 	poolId: number;
 	farmContract?: TContract;
 	provider?: TProvider | TSigner;
-	chainId?: ChainId;
+	chainId?: ChainId | null;
 }
 
 export interface IFarmServicesGetExtraReward {
 	totalRewardRatePerWeek: TokenAmount;
 	rewardRatePerWeek: TokenAmount;
 	poolId: number;
-	chainId?: ChainId;
-	provider?: TProvider | TSigner;
+	chainId?: ChainId | null;
+	provider?: TProvider | TSigner | null;
 	farmContract?: TContract;
 	unclaimed: TokenAmount;
 }
@@ -66,27 +66,28 @@ export interface IFarmServicesGetExtraReward {
 export interface IFarmServicesGetFarmOpportunities {
 	tokenPairs: Array<[WrappedTokenInfo, Token]>;
 	walletAddress: string;
-	chainId?: ChainId;
+	chainId?: ChainId | null;
 	farmContract?: TContract;
-	provider?:
+	provider:
 		| ethers.providers.Provider
 		| ethers.providers.Web3Provider
 		| ethers.providers.JsonRpcProvider
-		| Signer;
+		| Signer
+		| null;
 }
 
 export interface IFarmServicesWithdraw {
 	poolId: number;
 	amount: string;
 	address: string;
-	chainId?: ChainId;
+	chainId?: ChainId | null;
 	farmContract?: TContract;
 }
 
 export interface IFarmServicesClaim {
 	poolId: number;
 	address: string;
-	chainId?: ChainId;
+	chainId?: ChainId | null;
 	farmContract?: TContract;
 }
 
@@ -100,6 +101,6 @@ export interface IFarmServicesDeposit {
 		s: string;
 		deadline: BigNumber;
 	} | null;
-	chainId?: ChainId;
+	chainId?: ChainId | null;
 	farmContract?: TContract;
 }

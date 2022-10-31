@@ -106,7 +106,7 @@ class TokenServices {
 		);
 	}
 
-	static async getUsdcPrice(currency: Currency, chainId?: ChainId) {
+	static async getUsdcPrice(currency: Currency, chainId?: ChainId | null) {
 		const wrapped = wrappedCurrency(currency, chainId ?? ChainId.NEVM);
 		const usdc = USDC[chainId ?? ChainId.NEVM];
 		const wsys = WSYS[chainId ?? ChainId.NEVM];
