@@ -1,5 +1,5 @@
 import { CurrencyAmount, JSBI, NSYS } from "@pollum-io/pegasys-sdk";
-import { MIN_ETH } from "helpers/consts";
+import { MIN_ETH } from "pegasys-services/constants";
 
 export const maxAmountSpend = (
 	currencyAmount?: CurrencyAmount

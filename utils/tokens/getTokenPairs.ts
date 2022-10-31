@@ -1,5 +1,5 @@
 import { ChainId, Token } from "@pollum-io/pegasys-sdk";
-import { BASES_TO_TRACK_LIQUIDITY_FOR } from "helpers/consts";
+import { BASES_TO_TRACK_LIQUIDITY_FOR } from "pegasys-services/constants";
 import flatMap from "lodash.flatmap";
 import { WrappedTokenInfo } from "types";
 
