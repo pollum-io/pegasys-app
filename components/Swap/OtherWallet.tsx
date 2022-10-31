@@ -70,9 +70,9 @@ export const OtherWallet: FunctionComponent<{
 					border="1px solid"
 					borderColor={colorMode === "light" ? "#E8ECF0" : "transparent"}
 					onClick={() =>
-						// eslint-disable-next-line
-						// @ts-ignore
-						clearInput(document.getElementById("recipientAddress"))
+						clearInput(
+							document.getElementById("recipientAddress") as HTMLInputElement
+						)
 					}
 				>
 					<Flex mt="0.6rem">
