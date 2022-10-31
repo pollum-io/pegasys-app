@@ -3,7 +3,7 @@ import { FunctionComponent, useMemo } from "react";
 import { useModal, usePicasso, useTokens } from "hooks";
 import { IFarmInfo, useEarn, TButtonId, BIG_INT_ZERO } from "pegasys-services";
 import { JSBI, Pair } from "@pollum-io/pegasys-sdk";
-import { formattedNum } from "utils/numberFormat";
+import { formattedNum } from "utils/convert/numberFormat";
 import { WrappedTokenInfo } from "types";
 import { EarnButton } from "../Earn";
 

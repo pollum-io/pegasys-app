@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Flex, Text } from "@chakra-ui/react";
 
-import { formattedNum } from "utils/numberFormat";
+import { formattedNum } from "utils/convert/numberFormat";
 import { usePicasso } from "hooks";
 import { BIG_INT_ZERO } from "pegasys-services";
 import { JSBI } from "@pollum-io/pegasys-sdk";

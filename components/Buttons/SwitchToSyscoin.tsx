@@ -1,7 +1,7 @@
 import { Button, ButtonProps } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { FunctionComponent } from "react";
-import { ConnectSyscoinNetwork } from "utils/ConnectSyscoinNetwork";
+import { ConnectSyscoinNetwork } from "utils/connector/ConnectSyscoinNetwork";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useWallet } from "pegasys-services";
 

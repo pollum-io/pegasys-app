@@ -15,6 +15,7 @@ import {
 	useStake,
 	useEarn,
 	IStakeInfo,
+	IEarnInfo,
 } from "pegasys-services";
 import { StakeActions } from "components/Modals/StakeActions";
 
@@ -208,7 +209,7 @@ export const StakeContainer: NextPage = () => {
 					mb="24"
 					alignItems={["center", "center", "center", "center"]}
 				>
-					{earnOpportunities.map((stakeInfo: unknown, index) => (
+					{earnOpportunities.map((stakeInfo: IEarnInfo, index) => (
 						<StakeCard key={index} stakeInfo={stakeInfo as IStakeInfo} />
 					))}
 				</Flex>

@@ -1,17 +1,15 @@
 import { BigNumber, Contract, ethers, Signer } from "ethers";
-// import pegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
 import pairPegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/PegasysPair.sol/PegasysPair.json";
 import { Interface } from "@ethersproject/abi";
 import { IAddressessAndBalances } from "types";
 import {
 	verifyZerosInBalanceAndFormat,
-	removeScientificNotation,
 	formatBigNumberValues,
 	createContractUsingAbi,
 	singleCallWithoutParams,
 	singleCall,
 } from "utils";
-import abi20 from "./abis/erc20.json";
+import abi20 from "../abis/erc20.json";
 import { multiCall } from "./multiCall";
 
 const PAIR_INTERFACE = new Interface(pairPegasysAbi.abi);

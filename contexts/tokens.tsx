@@ -2,14 +2,8 @@ import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ITokenInfoBalance, WrappedTokenInfo } from "types";
 import { useWallet, ApprovalState, useTokensListManage } from "hooks";
 import { getDefaultTokens } from "networks";
-import {
-	getBalanceOfSingleCall,
-	getProviderBalance,
-	removeScientificNotation,
-	truncateNumberDecimalsPlaces,
-} from "utils";
+import { getBalanceOfSingleCall, getProviderBalance } from "utils";
 import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
-import { Signer } from "ethers";
 import { useWallet as psUseWallet } from "pegasys-services";
 import { SUPPORTED_NETWORK_CHAINS } from "helpers/consts";
 

@@ -51,7 +51,6 @@ export const PoolsContainer: NextPage = () => {
 		onCloseImportPool,
 		isOpenRemoveLiquidity,
 		onCloseRemoveLiquidity,
-		onOpenAddLiquidity,
 		isOpenAddLiquidity,
 		onCloseAddLiquidity,
 		isOpenTransaction,

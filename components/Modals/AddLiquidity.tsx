@@ -88,9 +88,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		poolPercentShare,
 		userPoolBalance,
 		currPair,
-		setIsCreate,
 		openPendingTx,
 		closePendingTx,
+		setIsCreate,
 	} = props;
 
 	const initialTokenInputValue = {
@@ -105,10 +105,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		lastInputTyped: undefined,
 	};
 
-	const { userTokensBalance } = useTokens();
 	const { t: translation } = useTranslation();
 	const theme = usePicasso();
-	const { isOpenCoin, onCloseCoin, onOpenCoin } = useModal();
+	const { isOpenCoin, onCloseCoin } = useModal();
 	const [buttonId, setButtonId] = useState<number>(0);
 	const [tokenInputValue, setTokenInputValue] = useState<ITokenInputValue>(
 		initialTokenInputValue
@@ -236,10 +235,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			});
 		},
 		[maxAmounts]
-	);
-
-	const showMaxInput = Boolean(
-		!tokenInputValue.inputFrom.value && !tokenInputValue.inputTo.value
 	);
 
 	useMemo(async () => {

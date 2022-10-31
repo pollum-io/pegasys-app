@@ -24,7 +24,7 @@ import {
 	IPoolsVolume,
 } from "types";
 import { Signer } from "ethers";
-import { formattedNum, formattedPercent } from "utils/numberFormat";
+import { formattedNum, formattedPercent } from "utils/convert/numberFormat";
 import { pegasysClient, SYS_PRICE } from "apollo";
 import { useWallet as psUseWallet } from "pegasys-services";
 

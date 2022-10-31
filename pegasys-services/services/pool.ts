@@ -3,12 +3,11 @@ import {
 	CurrencyAmount,
 	JSBI,
 	NSYS,
-	Pair,
 	TokenAmount,
 } from "@pollum-io/pegasys-sdk";
 import IPegasysRouterABI from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
 
-import { ITransactionResponse, WrappedTokenInfo } from "types";
+import { ITransactionResponse } from "types";
 import { tryParseAmount, wrappedCurrencyAmount, wrappedCurrency } from "utils";
 import { ApprovalState } from "contexts";
 import { MaxUint256 } from "@ethersproject/constants";
@@ -186,7 +185,7 @@ class PoolServices {
 			: ROUTER_ADDRESS[ChainId.NEVM];
 
 		let txHash = "";
-		let txResponse: ITransactionResponse | any = null;
+		let txResponse: ITransactionResponse | unknown = null;
 		const token =
 			amountToApprove instanceof TokenAmount
 				? amountToApprove.token
@@ -196,17 +195,6 @@ class PoolServices {
 			const contract = ContractFramework.TokenContract({
 				address: token.address,
 			});
-
-			const allowance = await ContractFramework.call({
-				contract,
-				methodName: "allowance",
-				args: [address, spender],
-			});
-
-			const currentAllowance =
-				token && allowance
-					? new TokenAmount(token, allowance.toString())
-					: undefined;
 
 			if (approvalState !== ApprovalState.NOT_APPROVED) {
 				throw new Error("approve was called unnecessarily");
@@ -245,13 +233,13 @@ class PoolServices {
 				args: [spender, useExact ? amountToApprove.raw.toString() : MaxUint256],
 			}).then((res: ITransactionResponse) => {
 				txHash = `${res?.hash}`;
-				txResponse = res;
+				txResponse = res as ITransactionResponse;
 			});
 
 			return {
 				spender,
 				hash: txHash,
-				response: txResponse,
+				response: txResponse as ITransactionResponse,
 			};
 		}
 
