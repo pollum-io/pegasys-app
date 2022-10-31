@@ -20,7 +20,7 @@ import {
 	IPoolServicesGetCurrencyAmountsProps,
 	IPoolServicesAddLiquidityProps,
 } from "../dto";
-import { ROUTER_ADDRESS } from "../constants";
+import { PegasysContracts } from "../constants";
 
 class PoolServices {
 	static async getCurrencyAmounts(props: IPoolServicesGetCurrencyAmountsProps) {
@@ -75,9 +75,8 @@ class PoolServices {
 		const { tokens, values, haveValue, pair, slippage, userDeadline } = props;
 		const { chainId, address } = await WalletFramework.getConnectionInfo();
 
-		const router = chainId
-			? ROUTER_ADDRESS[chainId as ChainId]
-			: ROUTER_ADDRESS[ChainId.NEVM];
+		const router =
+			PegasysContracts[(chainId as ChainId) ?? ChainId.NEVM].ROUTER_ADDRESS;
 
 		const contract = ContractFramework.getContract({
 			address: router,
@@ -181,9 +180,8 @@ class PoolServices {
 
 		const { chainId, address } = await WalletFramework.getConnectionInfo();
 
-		const spender = chainId
-			? ROUTER_ADDRESS[chainId as ChainId]
-			: ROUTER_ADDRESS[ChainId.NEVM];
+		const spender =
+			PegasysContracts[(chainId as ChainId) ?? ChainId.NEVM].ROUTER_ADDRESS;
 
 		let txHash = "";
 		let txResponse: ITransactionResponse | any = null;

@@ -47,3 +47,5 @@ export const MIN_ETH: JSBI = JSBI.exponentiate(
 	JSBI.BigInt(10),
 	JSBI.BigInt(16)
 ); // .01 ETH
+
+export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";

@@ -10,8 +10,10 @@ import {
 } from "utils";
 import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
 import { Signer } from "ethers";
-import { useWallet as psUseWallet } from "pegasys-services";
-import { SUPPORTED_NETWORK_CHAINS } from "helpers/consts";
+import {
+	useWallet as psUseWallet,
+	SUPPORTED_NETWORK_CHAINS,
+} from "pegasys-services";
 
 interface ITokensContext {
 	userTokensBalance: WrappedTokenInfo[];

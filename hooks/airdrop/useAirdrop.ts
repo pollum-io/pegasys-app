@@ -1,7 +1,7 @@
 import React from "react";
 import { ChainId, JSBI, TokenAmount } from "@pollum-io/pegasys-sdk";
 import AirdropInfo from "helpers/airdrop.json";
-import { AIRDROP_ADDRESS, PSYS } from "helpers/consts";
+import { PegasysContracts, PegasysTokens } from "pegasys-services";
 import AIRDROP_ABI from "utils/abis/airdropAbi.json";
 import {
 	addTransaction,
@@ -27,7 +27,7 @@ export const userHasAvailableClaim = async (
 	// @ts-ignore
 	const userClaimData = AirdropInfo.claims[address || ""];
 	const airDropContract = createContractUsingAbi(
-		AIRDROP_ADDRESS[chainId] as string,
+		PegasysContracts[chainId].AIRDROP_ADDRESS,
 		AIRDROP_ABI,
 		signer
 	);
@@ -55,7 +55,7 @@ export const userUnclaimedAmount = async (
 	// eslint-disable-next-line
 	// @ts-ignore
 	const userClaimData = AirdropInfo.claims[address || ""];
-	const psys = chainId ? PSYS[chainId] : undefined;
+	const psys = chainId ? PegasysTokens[chainId].PSYS : undefined;
 	const canClaim = await userHasAvailableClaim(
 		address,
 		chainId,
@@ -89,7 +89,7 @@ export const useClaimCallback = (
 	// @ts-ignore
 	const userClaimData = AirdropInfo.claims[address || ""];
 	const airDropContract = createContractUsingAbi(
-		AIRDROP_ADDRESS[chainId] as string,
+		PegasysContracts[chainId].AIRDROP_ADDRESS,
 		AIRDROP_ABI,
 		signer ?? null
 	);

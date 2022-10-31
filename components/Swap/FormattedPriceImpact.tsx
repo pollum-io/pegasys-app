@@ -1,8 +1,8 @@
 import { Percent } from "@pollum-io/pegasys-sdk";
 import { Text } from "@chakra-ui/react";
-import { ONE_BIPS } from "helpers/consts";
 import { priceImpactSeverity } from "utils";
 import { usePicasso } from "hooks";
+import { ONE_BIPS } from "pegasys-services";
 
 export const FormattedPriceImpat = ({
 	priceImpact,

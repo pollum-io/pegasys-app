@@ -1,8 +1,8 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 
 import { ChainId } from "@pollum-io/pegasys-sdk";
-import { SUPPORTED_NETWORK_CHAINS } from "helpers/consts";
 import { IWalletInfo } from "types";
+import { SUPPORTED_NETWORK_CHAINS } from "../constants";
 import { useToasty } from "../hooks";
 import {
 	IWalletProviderValue,

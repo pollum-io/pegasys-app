@@ -1,7 +1,7 @@
 import { ChainId } from "@pollum-io/pegasys-sdk";
 import { BigNumber, ethers } from "ethers";
 import { getAddress, splitSignature } from "ethers/lib/utils";
-import { NEVM_CHAIN_PARAMS } from "helpers/consts";
+import { NETWORKS_CHAIN_PARAMS } from "../constants";
 
 import {
 	TSigner,
@@ -14,7 +14,7 @@ import ContractFramework from "./contract";
 class WalletFramework {
 	static getRpcProvider(): TProvider {
 		const provider = new ethers.providers.JsonRpcProvider(
-			NEVM_CHAIN_PARAMS.rpcUrls[0]
+			NETWORKS_CHAIN_PARAMS[ChainId.NEVM].rpcUrls[0]
 		);
 
 		return provider;

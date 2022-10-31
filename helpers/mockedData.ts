@@ -5,7 +5,7 @@ import {
 	FIFTEEN_MINUTES_IN_SECONDS,
 	FOUR_HOURS_IN_SECONDS,
 	ONE_WEEK_IN_SECONDS,
-} from "helpers/consts";
+} from "pegasys-services";
 import {
 	IPeriodsMockedData,
 	ISlippageMockedValues,

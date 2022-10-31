@@ -1,4 +1,4 @@
-import { BIPS_BASE, ROUTER_ADDRESS } from "helpers/consts";
+import { BIPS_BASE, PegasysContracts } from "pegasys-services";
 import { BigNumber } from "@ethersproject/bignumber";
 import {
 	Trade,
@@ -38,7 +38,7 @@ export function UseBestSwapMethod(
 	const contract =
 		chainId &&
 		createContractUsingAbi(
-			ROUTER_ADDRESS[chainId],
+			PegasysContracts[chainId].ROUTER_ADDRESS,
 			pegasysAbi.abi,
 			signer as Signer
 		);

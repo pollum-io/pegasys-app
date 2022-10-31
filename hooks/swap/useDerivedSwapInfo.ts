@@ -6,7 +6,7 @@ import {
 	NSYS,
 } from "@pollum-io/pegasys-sdk";
 import { BigNumber, Signer } from "ethers";
-import { ROUTER_ADDRESS } from "helpers/consts";
+import { PegasysContracts } from "pegasys-services";
 import { TFunction } from "react-i18next";
 
 import {
@@ -24,7 +24,7 @@ import { useTradeExactIn, useTradeExactOut } from "./useTrade";
 
 const BAD_RECIPIENT_ADDRESSES: string[] = [
 	FACTORY_ADDRESS[ChainId.NEVM], // v2 factory
-	ROUTER_ADDRESS[ChainId.NEVM], // v2 router 02
+	PegasysContracts[ChainId.NEVM].ROUTER_ADDRESS, // v2 router 02
 ];
 
 export async function UseDerivedSwapInfo(
