@@ -15,7 +15,7 @@ import {
 } from "pegasys-services/frameworks";
 import { WrappedTokenInfo } from "types";
 
-import { BASES_TO_TRACK_LIQUIDITY_FOR } from "helpers/consts";
+import { BASES_TO_TRACK_LIQUIDITY_FOR } from "pegasys-services/constants";
 import flatMap from "lodash.flatmap";
 
 class PairServices {

@@ -4,7 +4,7 @@ import {
 	ALLOWED_PRICE_IMPACT_LOW,
 	ALLOWED_PRICE_IMPACT_MEDIUM,
 	BLOCKED_PRICE_IMPACT_NON_EXPERT,
-} from "helpers/consts";
+} from "pegasys-services/constants";
 
 export const priceImpactSeverity = (
 	receivedPriceImpact: Percent | undefined
