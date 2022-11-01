@@ -21,7 +21,7 @@ export async function getTotalSupply(
 		return new TokenAmount(token, "1");
 	}
 
-	const contract = await getContract(token?.address, signer, abi20);
+	const contract = await getContract(token?.address, provider as Signer, abi20);
 
 	const fetchTotalSupply =
 		contract && (await singleCallWithoutParams(contract, "totalSupply"));

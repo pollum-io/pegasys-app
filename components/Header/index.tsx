@@ -43,7 +43,6 @@ export const Header: React.FC = () => {
 	const [isMobile] = useMediaQuery("(max-width: 750px)");
 	const btnRef: any = React.useRef();
 	const { expert, provider, signer } = useWallet();
-	const { address } = psUseWallet();
 	const { userTokensBalance } = useTokens();
 	const [psysInfo, setPsysInfo] = useState({
 		balance: "0",
@@ -80,11 +79,15 @@ export const Header: React.FC = () => {
 			provider &&
 			(await getTotalSupply(PSYS as Token, signer as Signer, provider));
 
-		// console.log({totalSupply})
+		console.log({
+			balance: PSYS?.formattedBalance,
+			totalSupply: totalSupply?.toSignificant(3),
+		});
 
 		setPsysInfo(prevState => ({
 			...prevState,
-			balance: PSYS?.balance as string,
+			balance: PSYS?.formattedBalance as string,
+			totalSupply: totalSupply?.toSignificant(6) as string,
 		}));
 	}, [userTokensBalance]);
 
