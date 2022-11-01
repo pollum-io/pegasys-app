@@ -1189,8 +1189,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			<Flex
 				h="max-content"
 				w={["18rem", "sm", "100%", "xl"]}
-				p="1.5rem"
-				ml={["0", "0", "0", "10"]}
+				ml={["0", "0", "0", "12"]}
 				mt={["8", "8", "8", "0"]}
 				mb={["24", "24", "24", "0"]}
 				flexDirection="column"
