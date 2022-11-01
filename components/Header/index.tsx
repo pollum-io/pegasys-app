@@ -76,23 +76,23 @@ export const Header: React.FC = () => {
 		},
 	];
 
-	const getTotalSupplyValue = async () => {
-		const totalSupply = await getTotalSupply(
-			PSYS as Token,
-			signer as Signer,
-			provider
-		);
-
-		setPsysInfo(prevState => ({
-			...prevState,
-			balance: PSYS?.formattedBalance as string,
-			totalSupply: totalSupply
-				? (totalSupply?.toSignificant(6) as string)
-				: "0",
-		}));
-	};
-
 	useEffect(() => {
+		const getTotalSupplyValue = async () => {
+			const totalSupply = await getTotalSupply(
+				PSYS as Token,
+				signer as Signer,
+				provider
+			);
+
+			setPsysInfo(prevState => ({
+				...prevState,
+				balance: PSYS?.formattedBalance as string,
+				totalSupply: totalSupply
+					? (totalSupply?.toSignificant(6) as string)
+					: "0",
+			}));
+		};
+
 		getTotalSupplyValue();
 	}, [userTokensBalance]);
 
