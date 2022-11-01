@@ -74,12 +74,6 @@ export const Header: React.FC = () => {
 	];
 
 	useMemo(async () => {
-		const { formattedBalance } = await getBalanceOfSingleCall(
-			PSYS?.address as string,
-			address,
-			provider,
-			PSYS?.decimals as number
-		);
 		const totalSupply =
 			PSYS &&
 			signer &&
@@ -90,7 +84,7 @@ export const Header: React.FC = () => {
 
 		setPsysInfo(prevState => ({
 			...prevState,
-			balance: formattedBalance,
+			balance: PSYS?.balance as string,
 		}));
 	}, [userTokensBalance]);
 
