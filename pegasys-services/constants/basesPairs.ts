@@ -1,6 +1,6 @@
 import { ChainId } from "@pollum-io/pegasys-sdk";
 import { IBasePairsDTO, ICustomBasePairDTO } from "./dto";
-import { PegasysTokens } from "./index";
+import { PegasysTokens } from "./tokens";
 
 export const BASES_TO_CHECK_TRADES_AGAINST: IBasePairsDTO = {
 	[ChainId.TANENBAUM]: [PegasysTokens[5700].WSYS, PegasysTokens[5700].PSYS],
