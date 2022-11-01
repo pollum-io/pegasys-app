@@ -8,14 +8,18 @@ import {
 	useDisclosure,
 	useMediaQuery,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
-import { useModal, usePicasso, useWallet } from "hooks";
+import { useModal, usePicasso, useWallet, useTokens } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { HiOutlineMenu } from "react-icons/hi";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
 import { useRouter } from "next/router";
+import { getBalanceOfSingleCall, getTotalSupply } from "utils";
+import { useWallet as psUseWallet } from "pegasys-services";
+import { Token } from "@pollum-io/pegasys-sdk";
+import { Signer } from "ethers";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
@@ -36,11 +40,19 @@ export const Header: React.FC = () => {
 		isOpenDrawerMenu,
 		onCloseDrawerMenu,
 	} = useModal();
-
-	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [isMobile] = useMediaQuery("(max-width: 750px)");
 	const btnRef: any = React.useRef();
-	const { expert } = useWallet();
+	const { expert, provider, signer } = useWallet();
+	const { address } = psUseWallet();
+	const { userTokensBalance } = useTokens();
+	const [psysInfo, setPsysInfo] = useState({
+		balance: "0",
+		unclaimed: "0",
+		price: "0",
+		totalSupply: "0",
+	});
+
+	const PSYS = userTokensBalance.find(token => token.symbol === "PSYS");
 
 	const links = [
 		{
@@ -61,6 +73,27 @@ export const Header: React.FC = () => {
 		},
 	];
 
+	useMemo(async () => {
+		const { formattedBalance } = await getBalanceOfSingleCall(
+			PSYS?.address as string,
+			address,
+			provider,
+			PSYS?.decimals as number
+		);
+		const totalSupply =
+			PSYS &&
+			signer &&
+			provider &&
+			(await getTotalSupply(PSYS as Token, signer as Signer, provider));
+
+		// console.log({totalSupply})
+
+		setPsysInfo(prevState => ({
+			...prevState,
+			balance: formattedBalance,
+		}));
+	}, [userTokensBalance]);
+
 	return (
 		<Flex
 			p="4"
@@ -74,6 +107,8 @@ export const Header: React.FC = () => {
 				<PsysBreakdown
 					isOpen={isOpenPsysBreakdown}
 					onClose={onClosePsysBreakdown}
+					psysBalance={psysInfo.balance}
+					totalSuply={psysInfo.totalSupply}
 				/>
 				<Link href="/">
 					<Img
