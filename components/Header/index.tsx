@@ -8,7 +8,7 @@ import {
 	useDisclosure,
 	useMediaQuery,
 } from "@chakra-ui/react";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
 import { useModal, usePicasso, useWallet, useTokens } from "hooks";
@@ -20,6 +20,7 @@ import { getBalanceOfSingleCall, getTotalSupply } from "utils";
 import { useWallet as psUseWallet } from "pegasys-services";
 import { Token } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
+import { WrappedTokenInfo } from "types";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
@@ -51,7 +52,10 @@ export const Header: React.FC = () => {
 		totalSupply: "0",
 	});
 
-	const PSYS = userTokensBalance.find(token => token.symbol === "PSYS");
+	const PSYS = userTokensBalance.find(
+		token =>
+			token.symbol === "PSYS" && parseFloat(token.tokenInfo.balance) !== 0
+	);
 
 	const links = [
 		{
@@ -72,24 +76,29 @@ export const Header: React.FC = () => {
 		},
 	];
 
-	useMemo(async () => {
-		const totalSupply =
-			PSYS &&
-			signer &&
-			provider &&
-			(await getTotalSupply(PSYS as Token, signer as Signer, provider));
-
-		console.log({
-			balance: PSYS?.formattedBalance,
-			totalSupply: totalSupply?.toSignificant(3),
-		});
+	const getTotalSupplyValue = async () => {
+		const totalSupply = await getTotalSupply(
+			PSYS as Token,
+			signer as Signer,
+			provider
+		);
 
 		setPsysInfo(prevState => ({
 			...prevState,
 			balance: PSYS?.formattedBalance as string,
-			totalSupply: totalSupply?.toSignificant(6) as string,
+			totalSupply: totalSupply
+				? (totalSupply?.toSignificant(6) as string)
+				: "0",
 		}));
+	};
+
+	useEffect(() => {
+		getTotalSupplyValue();
 	}, [userTokensBalance]);
+
+	console.log("PSYS", PSYS);
+	console.log("psysInfo", psysInfo);
+	console.log("userTokensBalance", userTokensBalance);
 
 	return (
 		<Flex
