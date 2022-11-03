@@ -5,22 +5,26 @@ import {
 	Link,
 	Text,
 	useColorMode,
-	useDisclosure,
 	useMediaQuery,
 } from "@chakra-ui/react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
-import { useModal, usePicasso, useWallet, useTokens } from "hooks";
+import {
+	useModal,
+	usePicasso,
+	useWallet,
+	useTokens,
+	usePairs as getPairs,
+} from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { HiOutlineMenu } from "react-icons/hi";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
 import { useRouter } from "next/router";
-import { getBalanceOfSingleCall, getTotalSupply } from "utils";
+import { getTotalSupply } from "utils";
 import { useWallet as psUseWallet } from "pegasys-services";
 import { Token } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
-import { WrappedTokenInfo } from "types";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
@@ -44,6 +48,7 @@ export const Header: React.FC = () => {
 	const [isMobile] = useMediaQuery("(max-width: 750px)");
 	const btnRef: any = React.useRef();
 	const { expert, provider, signer } = useWallet();
+	const { address, chainId } = psUseWallet();
 	const { userTokensBalance } = useTokens();
 	const [psysInfo, setPsysInfo] = useState({
 		balance: "0",
@@ -52,10 +57,14 @@ export const Header: React.FC = () => {
 		totalSupply: "0",
 	});
 
-	const PSYS = userTokensBalance.find(
-		token =>
-			token.symbol === "PSYS" && parseFloat(token.tokenInfo.balance) !== 0
-	);
+	const walletInfos = {
+		provider,
+		walletAddress: address,
+		chainId,
+	};
+
+	const PSYS = userTokensBalance.find(token => token.symbol === "PSYS");
+	const SYS = userTokensBalance.find(token => token.symbol === "SYS");
 
 	const links = [
 		{
@@ -76,29 +85,33 @@ export const Header: React.FC = () => {
 		},
 	];
 
-	useEffect(() => {
-		const getTotalSupplyValue = async () => {
-			const totalSupply = await getTotalSupply(
-				PSYS as Token,
-				signer as Signer,
-				provider
-			);
-
+	useMemo(async () => {
+		if (PSYS?.formattedBalance !== "0") {
 			setPsysInfo(prevState => ({
 				...prevState,
 				balance: PSYS?.formattedBalance as string,
-				totalSupply: totalSupply
-					? (totalSupply?.toSignificant(6) as string)
-					: "0",
 			}));
-		};
+		}
 
-		getTotalSupplyValue();
+		const totalSupply =
+			PSYS &&
+			signer &&
+			provider &&
+			(await getTotalSupply(PSYS as Token, signer as Signer, provider));
+
+		const pairs = await getPairs(
+			[[PSYS, SYS]] as [Token, Token][],
+			walletInfos
+		);
+
+		const pair = pairs?.[0]?.[1];
+
+		setPsysInfo(prevState => ({
+			...prevState,
+			totalSupply: totalSupply?.toSignificant(6) as string,
+			price: pair?.priceOf(pair.token1).toSignificant(6) as string,
+		}));
 	}, [userTokensBalance]);
-
-	console.log("PSYS", PSYS);
-	console.log("psysInfo", psysInfo);
-	console.log("userTokensBalance", userTokensBalance);
 
 	return (
 		<Flex
@@ -113,8 +126,9 @@ export const Header: React.FC = () => {
 				<PsysBreakdown
 					isOpen={isOpenPsysBreakdown}
 					onClose={onClosePsysBreakdown}
-					psysBalance={psysInfo.balance}
-					totalSuply={psysInfo.totalSupply}
+					psysBalance={psysInfo.balance || "0"}
+					totalSuply={psysInfo.totalSupply || "0"}
+					psysPriceSys={psysInfo.price || "0"}
 				/>
 				<Link href="/">
 					<Img

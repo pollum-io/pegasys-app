@@ -16,9 +16,9 @@ import { MdOutlineClose } from "react-icons/md";
 interface IModal {
 	isOpen: boolean;
 	onClose: () => void;
-	psysValue?: string;
 	psysBalance?: string;
 	psysUnclaimed?: string;
+	psysValue?: string;
 	psysPriceSys?: string;
 	totalSuply?: string;
 }
@@ -27,8 +27,8 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 	const {
 		isOpen,
 		onClose,
-		psysValue,
 		psysBalance,
+		psysValue,
 		psysUnclaimed,
 		psysPriceSys,
 		totalSuply,
