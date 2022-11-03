@@ -116,7 +116,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 
 		setDefaultTokens(orderedTokens);
 		setFilter(orderedTokens);
-	}, [userTokensBalance]);
+	}, [userTokensBalance, isOpen]);
 
 	const handleSelectToken = useCallback(
 		(id: number, token: WrappedTokenInfo) => {
@@ -183,7 +183,12 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							icon={MdHelpOutline}
 						/>
 					</Flex>
-					<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
+					<Flex
+						_hover={{ cursor: "pointer" }}
+						onClick={() => {
+							onClose();
+						}}
+					>
 						<MdOutlineClose size={23} color={theme.icon.whiteDarkGray} />
 					</Flex>
 				</ModalHeader>
@@ -201,7 +206,10 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							onChange={handleInput}
 							py={["0.1rem", "0.1rem", "1", "1"]}
 							pl="10"
-							_focus={{ outline: "none" }}
+							_focus={{
+								outline: "none",
+								borderColor: theme.border.focusBluePurple,
+							}}
 							_hover={{}}
 						/>
 						<Flex

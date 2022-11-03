@@ -5,6 +5,7 @@ import {
 	ModalContent,
 	ModalOverlay,
 	Text,
+	useColorMode,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import React from "react";
@@ -18,6 +19,7 @@ interface IModal {
 export const LoadingTransition: React.FC<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
+	const { colorMode } = useColorMode();
 
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
@@ -30,7 +32,11 @@ export const LoadingTransition: React.FC<IModal> = props => {
 				pb="6"
 				px="6"
 				border="1px solid transparent"
-				background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				background={
+					colorMode === "dark"
+						? `linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`
+						: undefined
+				}
 			>
 				<Flex
 					bgColor="transparent"

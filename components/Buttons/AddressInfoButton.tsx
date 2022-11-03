@@ -94,10 +94,10 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 			<ModalOverlay />
 			<ModalContent
 				my={["0", "40", "40", "40"]}
-				mt={["0", "0", "20rem", "20rem"]}
+				top={["0", "0", "0", "0"]}
 				h="max-content"
 				position="absolute"
-				bottom={["0", "0", "none", "none"]}
+				mb={["0", "0", "none", "15rem"]}
 				borderRadius="30px"
 			>
 				<ModalHeader

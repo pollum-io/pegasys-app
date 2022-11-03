@@ -53,28 +53,15 @@ export const ExpertMode: FunctionComponent = () => {
 				</Flex>
 			)}
 			{expert && (
-				<Flex
-					display={["flex", "none", "none", "none"]}
-					id="flex"
-					minWidth="2rem"
-					w="7rem"
-				>
+				<Flex display={["flex", "none", "none", "none"]} id="flex" w="7rem">
 					<Img
 						src={theme.icon.borderExpertMode}
 						position="absolute"
 						px="6rem"
 						bottom="3rem"
 						h="63%"
+						zIndex="-99"
 					/>
-					<Text
-						fontWeight="light"
-						fontSize="xs"
-						position="relative"
-						bottom="2.3rem"
-						left="7.5rem"
-					>
-						Expert mode
-					</Text>
 				</Flex>
 			)}
 		</Flex>

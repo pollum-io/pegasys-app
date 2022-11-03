@@ -197,9 +197,19 @@ export const UnlockVotesModal: FunctionComponent<IModal> = props => {
 									py="0.8rem"
 									bgColor={theme.bg.blueNavyLightness}
 									color={theme.text.cyan}
-									_hover={{
-										bgColor: theme.bg.bluePurple,
-									}}
+									_hover={
+										(
+											votesLocked
+												? addDelegate
+													? isButtonDisabled
+													: false
+												: inputValue.length < 11 || inputValue === delegatedTo
+										)
+											? {
+													opacity: "0.3",
+											  }
+											: { bgColor: theme.bg.bluePurple }
+									}
 									borderRadius="full"
 									onClick={!addDelegate ? isSelfDelegate : handleDelegateVotes}
 									disabled={

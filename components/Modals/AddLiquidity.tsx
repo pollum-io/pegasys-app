@@ -306,6 +306,37 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			wrappedCurrencyAmount(currencyAmountB, chainId),
 		];
 
+		const modalAlignment = () => {
+			if (
+				parseFloat(tokenInputValue.inputTo.value) >
+					parseFloat(selectedToken[1]?.balance) &&
+				parseFloat(tokenInputValue.inputFrom.value) >
+					parseFloat(selectedToken[0]?.balance)
+			) {
+				return ["unset", "unset", "35rem", "35rem"];
+			}
+			if (
+				(parseFloat(tokenInputValue.inputTo.value) >
+					parseFloat(selectedToken[1]?.balance) &&
+					parseFloat(tokenInputValue.inputFrom.value)! >
+						parseFloat(selectedToken[0]?.balance)) ||
+				(parseFloat(tokenInputValue.inputFrom.value) >
+					parseFloat(selectedToken[0]?.balance) &&
+					parseFloat(tokenInputValue.inputTo.value)! >
+						parseFloat(selectedToken[1]?.balance))
+			) {
+				return ["unset", "unset", "20rem", "20rem"];
+			}
+			if (
+				parseFloat(tokenInputValue.inputTo.value)! >
+					parseFloat(selectedToken[1]?.balance) &&
+				parseFloat(tokenInputValue.inputFrom.value)! >
+					parseFloat(selectedToken[0]?.balance)
+			) {
+				return ["unset", "unset", "10rem", "10rem"];
+			}
+		};
+
 		const liquidityMinted =
 			currPair &&
 			tokenAmountA &&
@@ -484,7 +515,14 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			/>
 			<ModalOverlay />
 			<ModalContent
-				mt="10rem"
+				mb={
+					tokenInputValue.inputTo.value &&
+					tokenInputValue.inputFrom.value &&
+					!invalidPair
+						? "25rem"
+						: "0"
+				}
+				top={["none", "none", "2rem", "2rem"]}
 				bottom={["0", "0", "0", "0"]}
 				position={["fixed", "fixed", "relative", "relative"]}
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
@@ -937,12 +975,24 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					<Flex
 						flexDirection="column"
 						p="1.5rem"
+						transition="200ms"
 						background={theme.bg.subModal}
 						position={["relative", "relative", "absolute", "absolute"]}
-						bottom={["0", "-280", "-280", "-280"]}
+						top={
+							parseFloat(tokenInputValue.inputTo.value) >
+								parseFloat(selectedToken[1]?.balance) &&
+							parseFloat(tokenInputValue.inputFrom.value) >
+								parseFloat(selectedToken[0]?.balance)
+								? ["unset", "unset", "35rem", "39rem"]
+								: parseFloat(tokenInputValue.inputTo.value) >
+										parseFloat(selectedToken[1]?.balance) ||
+								  parseFloat(tokenInputValue.inputFrom.value) >
+										parseFloat(selectedToken[0]?.balance)
+								? ["unset", "unset", "20rem", "37rem"]
+								: ["unset", "unset", "10rem", "35rem"]
+						}
 						w="100%"
-						borderTopRadius={["0", "0", "3xl", "3xl"]}
-						borderBottomRadius={["0", "0", "3xl", "3xl"]}
+						borderRadius={["0", "0", "3xl", "3xl"]}
 						color={theme.text.mono}
 					>
 						<Text fontWeight="bold" fontSize="lg">
@@ -953,10 +1003,21 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							justifyContent="space-between"
 							py="1.563rem"
 						>
-							<Flex fontSize="lg" fontWeight="bold" align="center">
+							<Flex
+								fontSize="lg"
+								fontWeight="bold"
+								align="center"
+								position="relative"
+							>
 								<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
-								<Img src={selectedToken[1]?.logoURI} w="6" h="6" />
-								<Text pl="2">
+								<Img
+									src={selectedToken[1]?.logoURI}
+									w="6"
+									h="6"
+									position="absolute"
+									left="1.3rem"
+								/>
+								<Text pl="2" ml="1.2rem">
 									{selectedToken[0]?.symbol}/{selectedToken[1]?.symbol}
 								</Text>
 							</Flex>
@@ -1008,7 +1069,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						bgColor={theme.bg.subModal}
 						position={["relative", "relative", "absolute", "absolute"]}
 						w="100%"
-						bottom={["0", "-250", "-250", "-250"]}
+						top={["unset", "unset", "27.3rem", "27.3rem"]}
 						borderRadius={["0", "0", "3xl", "3xl"]}
 						alignItems="flex-start"
 						gap="2"
@@ -1026,11 +1087,11 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							gap="6"
 							fontSize={["sm", "sm", "md", "md"]}
 						>
-							<Text>
+							<Text textAlign="justify">
 								By adding liquidity you’ll earn 0.25% of all trades on this pair
 								proportional to your share of the pool.
 							</Text>
-							<Text>
+							<Text textAlign="justify">
 								Fees are added to the pool, accrue in real time and can be
 								claimed by withdrawing your liquidity.
 							</Text>

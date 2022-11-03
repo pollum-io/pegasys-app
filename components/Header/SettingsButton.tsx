@@ -282,6 +282,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 										textAlign="center"
 										_focus={{
 											outline: "none",
+											borderColor: theme.border.focusGray,
 										}}
 									/>
 									<Text position="absolute" left="75%">
@@ -344,10 +345,12 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								value={deadlineInputValue}
 								_focus={{
 									outline: "none",
+									borderColor: theme.border.focusGray,
 								}}
 								onChange={e =>
 									parseCustomTransactionDeadlineValue(e.target.value)
 								}
+								_hover={{}}
 							/>
 							<Text color={theme.text.mono}>
 								{translation("transactionSettings.minutes")}
