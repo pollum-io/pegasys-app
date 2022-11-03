@@ -34,3 +34,5 @@ export * from "./toV2LiquidityToken";
 export * from "./removeScientificNotation";
 export * from "./time";
 export * from "./verifyZerosAndFormatValue";
+export * from "./numberFormat";
+export * from "./addTokenToWallet";

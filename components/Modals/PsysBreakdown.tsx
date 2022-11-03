@@ -12,15 +12,17 @@ import {
 import { usePicasso } from "hooks";
 import { FunctionComponent } from "react";
 import { MdOutlineClose } from "react-icons/md";
+import { WrappedTokenInfo } from "types";
+import { addTokenToWallet } from "utils";
 
 interface IModal {
 	isOpen: boolean;
 	onClose: () => void;
 	psysBalance?: string;
 	psysUnclaimed?: string;
-	psysValue?: string;
 	psysPriceSys?: string;
 	totalSuply?: string;
+	psys?: WrappedTokenInfo;
 }
 
 export const PsysBreakdown: FunctionComponent<IModal> = props => {
@@ -28,10 +30,10 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 		isOpen,
 		onClose,
 		psysBalance,
-		psysValue,
 		psysUnclaimed,
 		psysPriceSys,
 		totalSuply,
+		psys,
 	} = props;
 	const theme = usePicasso();
 
@@ -100,7 +102,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 							ml="2"
 							color={theme.text.mono}
 						>
-							{psysValue}
+							{psysBalance} PSYS
 						</Text>
 					</Flex>
 					<Flex flexDirection="column" gap="4" mt="8" color={theme.text.mono}>
@@ -110,19 +112,9 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 							flexDirection="row"
 						>
 							<Text fontSize="sm" fontWeight="semibold">
-								Balance:
-							</Text>
-							<Text fontSize="sm">{psysBalance}</Text>
-						</Flex>
-						<Flex
-							alignItems="center"
-							justifyContent="space-between"
-							flexDirection="row"
-						>
-							<Text fontSize="sm" fontWeight="semibold">
 								Unclaimed:
 							</Text>
-							<Text fontSize="sm">{psysUnclaimed}</Text>
+							<Text fontSize="sm">{psysUnclaimed} PSYS</Text>
 						</Flex>
 						<Flex
 							alignItems="center"
@@ -165,6 +157,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 						_hover={{
 							bgColor: theme.bg.bluePurple,
 						}}
+						onClick={() => addTokenToWallet(psys as WrappedTokenInfo)}
 					>
 						Add PSYS to MetaMask
 					</Button>

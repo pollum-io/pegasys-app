@@ -21,8 +21,8 @@ import { MdOutlineCallMade } from "react-icons/md";
 import { HiOutlineMenu } from "react-icons/hi";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
 import { useRouter } from "next/router";
-import { getTotalSupply } from "utils";
-import { useWallet as psUseWallet } from "pegasys-services";
+import { getTotalSupply, formattedNum } from "utils";
+import { useEarn, useWallet as psUseWallet } from "pegasys-services";
 import { Token } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
 import { NavButton } from "./NavButton";
@@ -50,6 +50,7 @@ export const Header: React.FC = () => {
 	const { expert, provider, signer } = useWallet();
 	const { address, chainId } = psUseWallet();
 	const { userTokensBalance } = useTokens();
+	const { earnOpportunities } = useEarn();
 	const [psysInfo, setPsysInfo] = useState({
 		balance: "0",
 		unclaimed: "0",
@@ -106,12 +107,26 @@ export const Header: React.FC = () => {
 
 		const pair = pairs?.[0]?.[1];
 
+		if (
+			earnOpportunities[0]?.unclaimedAmount.toSignificant(6) &&
+			earnOpportunities[0]?.unclaimedAmount.toSignificant(6) !== "0"
+		) {
+			setPsysInfo(prevState => ({
+				...prevState,
+				unclaimed: earnOpportunities[0]?.unclaimedAmount.toSignificant(
+					6
+				) as string,
+			}));
+		}
+
 		setPsysInfo(prevState => ({
 			...prevState,
-			totalSupply: totalSupply?.toSignificant(6) as string,
+			totalSupply: formattedNum(
+				Number(totalSupply?.toSignificant(6))
+			) as string,
 			price: pair?.priceOf(pair.token1).toSignificant(6) as string,
 		}));
-	}, [userTokensBalance]);
+	}, [userTokensBalance, earnOpportunities]);
 
 	return (
 		<Flex
@@ -126,9 +141,11 @@ export const Header: React.FC = () => {
 				<PsysBreakdown
 					isOpen={isOpenPsysBreakdown}
 					onClose={onClosePsysBreakdown}
+					psysUnclaimed={psysInfo.unclaimed || "0"}
 					psysBalance={psysInfo.balance || "0"}
 					totalSuply={psysInfo.totalSupply || "0"}
 					psysPriceSys={psysInfo.price || "0"}
+					psys={PSYS}
 				/>
 				<Link href="/">
 					<Img
