@@ -57,7 +57,7 @@ export function getTokenPairs(chainId: ChainId, allTokens: WrappedTokenInfo[]) {
 				// for each token on the current chain,
 				return (
 					// loop though all bases on the current chain
-					(BASES_TO_TRACK_LIQUIDITY_FOR[chainId] ?? [])
+					(BASES_TO_TRACK_LIQUIDITY_FOR[chainId ?? ChainId.NEVM] ?? [])
 						// to construct pairs of the given token with each base
 						.map(base => {
 							if (base.address === token.address) {
