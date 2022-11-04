@@ -1,8 +1,7 @@
 import { Currency, CurrencyAmount, Pair } from "@pollum-io/pegasys-sdk";
 import { BigNumber } from "@ethersproject/bignumber";
-import { ApprovalState } from "contexts";
-
 import { WrappedTokenInfo } from "types";
+import { ApprovalState } from "../contexts";
 
 interface ICurrencyInfo {
 	currency: Currency;

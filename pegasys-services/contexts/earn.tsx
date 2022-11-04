@@ -2,14 +2,9 @@ import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ChainId, JSBI } from "@pollum-io/pegasys-sdk";
 
 import { tryParseAmount, addTransaction } from "utils";
-import { ApprovalState } from "contexts";
-import { useWallet, useModal } from "hooks";
-
-import { BIG_INT_ZERO } from "../constants";
-import { useWallet as psUseWallet, useToasty, usePegasys } from "../hooks";
-import { WalletFramework } from "../frameworks";
-import { onlyNumbers } from "../utils";
+import { useModal } from "hooks";
 import {
+	ApprovalState,
 	IEarnProviderProps,
 	IEarnProviderValue,
 	IEarnInfo,
@@ -17,6 +12,16 @@ import {
 	TSignature,
 	TButtonId,
 } from "../dto";
+
+import { BIG_INT_ZERO } from "../constants";
+import {
+	useWallet as psUseWallet,
+	useToasty,
+	usePegasys,
+	useTransaction,
+} from "../hooks";
+import { WalletFramework } from "../frameworks";
+import { onlyNumbers } from "../utils";
 
 export const EarnContext = createContext({} as IEarnProviderValue);
 
@@ -32,7 +37,7 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 		useState<IEarnInfo | null>(null);
 
 	const { setTransactions, transactions, setCurrentTxHash, setApprovalState } =
-		useWallet();
+		useTransaction();
 	const { onCloseStakeActions, onCloseFarmActions } = useModal();
 
 	const { chainId, address, provider } = psUseWallet();

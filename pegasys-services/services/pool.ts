@@ -9,16 +9,16 @@ import IPegasysRouterABI from "@pollum-io/pegasys-protocol/artifacts/contracts/p
 
 import { ITransactionResponse } from "types";
 import { tryParseAmount, wrappedCurrencyAmount, wrappedCurrency } from "utils";
-import { ApprovalState } from "contexts";
 import { MaxUint256 } from "@ethersproject/constants";
 import { BigNumber } from "@ethersproject/bignumber";
-import { ContractFramework, WalletFramework } from "../frameworks";
 import {
+	ApprovalState,
 	IPoolServicesCalculateSlippageAmountProps,
 	IPoolServicesApproveProps,
 	IPoolServicesGetCurrencyAmountsProps,
 	IPoolServicesAddLiquidityProps,
 } from "../dto";
+import { ContractFramework, WalletFramework } from "../frameworks";
 import { PegasysContracts } from "../constants";
 
 class PoolServices {

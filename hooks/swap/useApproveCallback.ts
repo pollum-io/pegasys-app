@@ -1,7 +1,11 @@
 import { MaxUint256 } from "@ethersproject/constants";
 import { Trade, ChainId, TokenAmount, Token } from "@pollum-io/pegasys-sdk";
 import { UseToastOptions } from "@chakra-ui/react";
-import { PegasysContracts } from "pegasys-services";
+import {
+	PegasysContracts,
+	IApprovalState,
+	ISubmittedAproval,
+} from "pegasys-services";
 import {
 	addTransaction,
 	calculateGasMargin,
@@ -16,7 +20,6 @@ import {
 	ITransactionResponse,
 } from "types";
 import { Signer } from "ethers";
-import { IApprovalState, ISubmittedAproval } from "contexts";
 import abi20 from "utils/abis/erc20.json";
 
 export enum ApprovalState {

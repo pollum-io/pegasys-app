@@ -63,17 +63,21 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 	}, [chainId]);
 
 	useEffect(() => {
-		if (provider) {
-			provider.on("network", (newNetwork, oldNetwork) => {
-				if (oldNetwork) {
-					setChainId(newNetwork.chainId ?? ChainId.NEVM);
-				}
-			});
+		const p = provider ?? WalletFramework.getProvider();
 
-			provider.on("accountsChanged", () => {
-				connect();
-			});
-		}
+		p.on("network", (newNetwork, oldNetwork) => {
+			if (oldNetwork) {
+				setChainId(newNetwork.chainId ?? ChainId.NEVM);
+				// window.location.reload();
+			}
+		});
+
+		// eslint-disable-next-line
+		const { ethereum } = window as any;
+
+		ethereum.on("accountsChanged", () => {
+			connect();
+		});
 	}, [provider]);
 
 	useEffect(() => {

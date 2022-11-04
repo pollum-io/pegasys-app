@@ -3,12 +3,12 @@ import { JSBI, Token } from "@pollum-io/pegasys-sdk";
 
 import { getTokenPairs } from "utils";
 import { WrappedTokenInfo } from "types";
-import { ApprovalState, useTokens, useWallet } from "hooks";
+import { ApprovalState, useTokens } from "hooks";
 
 import { PegasysContracts } from "../constants";
 import { ContractFramework, RoutesFramework } from "../frameworks";
 import { FarmServices } from "../services";
-import { useWallet as psUseWallet, useEarn } from "../hooks";
+import { useWallet, useEarn, useTransaction } from "../hooks";
 import {
 	IFarmProviderProps,
 	IFarmProviderValue,
@@ -24,8 +24,8 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	const [sortedPairs, setSortPairs] = useState<IFarmInfo[]>([]);
 	const [search, setSearch] = useState<string>("");
 	const { userTokensBalance } = useTokens();
-	const { chainId, address, provider } = psUseWallet();
-	const { approvalState } = useWallet();
+	const { chainId, address, provider } = useWallet();
+	const { approvalState } = useTransaction();
 	const {
 		signature,
 		onSign,

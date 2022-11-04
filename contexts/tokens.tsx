@@ -1,12 +1,12 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ITokenInfoBalance, WrappedTokenInfo } from "types";
-import { useWallet, ApprovalState, useTokensListManage } from "hooks";
+import { ApprovalState, useTokensListManage } from "hooks";
 import { getDefaultTokens } from "networks";
 import { getBalanceOfSingleCall, getProviderBalance } from "utils";
 import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
-import { Signer } from "ethers";
 import {
-	useWallet as psUseWallet,
+	useWallet,
+	useTransaction,
 	SUPPORTED_NETWORK_CHAINS,
 } from "pegasys-services";
 
@@ -32,9 +32,9 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		address: walletAddress,
 		chainId: currentNetworkChainId,
 		provider,
-	} = psUseWallet();
+	} = useWallet();
 
-	const { approvalState } = useWallet();
+	const { approvalState } = useTransaction();
 
 	const { currentCacheListTokensToDisplay, tokenListManageState } =
 		useTokensListManage();

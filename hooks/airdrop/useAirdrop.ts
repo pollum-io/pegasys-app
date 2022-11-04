@@ -1,7 +1,12 @@
 import React from "react";
 import { ChainId, JSBI, TokenAmount } from "@pollum-io/pegasys-sdk";
 import AirdropInfo from "helpers/airdrop.json";
-import { PegasysContracts, PegasysTokens } from "pegasys-services";
+import {
+	PegasysContracts,
+	PegasysTokens,
+	ApprovalState,
+	IApprovalState,
+} from "pegasys-services";
 import AIRDROP_ABI from "utils/abis/airdropAbi.json";
 import {
 	addTransaction,
@@ -11,7 +16,6 @@ import {
 } from "utils";
 import { Signer, ethers } from "ethers";
 import { ITransactionResponse, ITx, IWalletHookInfos } from "types";
-import { ApprovalState, IApprovalState } from "contexts";
 
 export const userHasAvailableClaim = async (
 	address: string,

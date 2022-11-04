@@ -16,6 +16,7 @@ import {
 	usePegasys,
 	ONE_DAY_IN_SECONDS,
 	SUPPORTED_NETWORK_CHAINS,
+	useTransaction,
 } from "pegasys-services";
 import {
 	useModal,
@@ -97,7 +98,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		isOpenTransaction,
 		onCloseTransaction,
 	} = useModal();
-
 	const {
 		setTransactions,
 		transactions,
@@ -107,8 +107,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setCurrentTxHash,
 		setCurrentSummary,
 		setCurrentInputTokenName,
-		otherWallet,
-	} = useWallet();
+	} = useTransaction();
+	const { otherWallet } = useWallet();
 
 	const { address, chainId, isConnected, provider, signer } = psUseWallet();
 	const { userSlippageTolerance, userTransactionDeadlineValue, expert } =

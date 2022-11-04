@@ -12,19 +12,22 @@ import {
 import ContractFramework from "./contract";
 
 class WalletFramework {
-	static getRpcProvider(): TProvider {
+	static getRpcProvider(chainId?: ChainId): TProvider {
 		const provider = new ethers.providers.JsonRpcProvider(
-			NETWORKS_CHAIN_PARAMS[ChainId.NEVM].rpcUrls[0]
+			NETWORKS_CHAIN_PARAMS[chainId ?? ChainId.NEVM].rpcUrls[0]
 		);
 
 		return provider;
 	}
 
 	static getProvider(): TProvider {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		// eslint-disable-next-line
 		const { ethereum } = window as any;
 
-		let provider: TProvider = new ethers.providers.Web3Provider(ethereum);
+		let provider: TProvider = new ethers.providers.Web3Provider(
+			ethereum,
+			"any"
+		);
 
 		if (!provider) {
 			provider = this.getRpcProvider();

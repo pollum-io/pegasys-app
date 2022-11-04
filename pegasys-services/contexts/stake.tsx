@@ -1,10 +1,10 @@
 import React, { useEffect, createContext, useMemo, useState } from "react";
 
-import { ApprovalState, useWallet } from "hooks";
+import { ApprovalState } from "hooks";
 import { PegasysContracts } from "../constants";
 import { ContractFramework, RoutesFramework } from "../frameworks";
 import { StakeServices } from "../services";
-import { useWallet as psUseWallet, useEarn } from "../hooks";
+import { useWallet, useEarn, useTransaction } from "../hooks";
 import { IStakeProviderProps, IStakeProviderValue } from "../dto";
 import { EarnProvider } from "./earn";
 
@@ -12,8 +12,8 @@ export const StakeContext = createContext({} as IStakeProviderValue);
 
 const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 	const [showInUsd, setShowInUsd] = useState<boolean>(false);
-	const { chainId, address } = psUseWallet();
-	const { approvalState } = useWallet();
+	const { chainId, address } = useWallet();
+	const { approvalState } = useTransaction();
 	const {
 		signature,
 		onSign,

@@ -1,9 +1,10 @@
 import { Button, Flex, Text } from "@chakra-ui/react";
 import { MdArrowBack } from "react-icons/md";
-import { usePicasso, useWallet, useModal } from "hooks";
+import { usePicasso, useModal } from "hooks";
 import Jazzicon from "react-jazzicon";
 import { FunctionComponent } from "react";
 import { CheckAllVotersModal } from "components/Modals/CheckAllVoters";
+import { useGovernance } from "pegasys-services";
 
 interface IProposalDetails {
 	title?: string;
@@ -26,7 +27,7 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 		details = "0x25aece71c96825BNJ6256vcsd3568DC98fA1",
 	} = props;
 	const theme = usePicasso();
-	const { setIsGovernance, setVotersType } = useWallet();
+	const { setIsGovernance, setVotersType } = useGovernance();
 	const {
 		onOpenCheckAllVotersModal,
 		isOpenCheckAllVotersModal,

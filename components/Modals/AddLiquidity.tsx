@@ -10,13 +10,7 @@ import {
 	ModalOverlay,
 	Text,
 } from "@chakra-ui/react";
-import {
-	useModal,
-	usePicasso,
-	useTokens,
-	useWallet,
-	useAllCommonPairs,
-} from "hooks";
+import { useModal, usePicasso, useWallet, useAllCommonPairs } from "hooks";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
 	MdHelpOutline,
@@ -33,6 +27,8 @@ import {
 	usePegasys,
 	PegasysContracts,
 	ONE_BIPS,
+	ApprovalState,
+	useTransaction,
 } from "pegasys-services";
 import {
 	addTransaction,
@@ -50,7 +46,6 @@ import {
 	TokenAmount,
 } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
-import { ApprovalState } from "contexts";
 import { parseUnits } from "@ethersproject/units";
 import { SelectCoinModal } from "./SelectCoin";
 
@@ -120,15 +115,15 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const [amountToApp, setAmountToApp] = useState<TokenAmount>();
 	const [amounts, setAmounts] = useState<TokenAmount[]>([]);
 	const [currPoolShare, setCurrPoolShare] = useState<string>("");
+	const { setCurrentLpAddress } = useWallet();
 	const {
 		setTransactions,
 		transactions,
-		setCurrentLpAddress,
 		setApprovalState,
 		approvalState,
 		setCurrentTxHash,
 		setCurrentSummary,
-	} = useWallet();
+	} = useTransaction();
 	const { address, chainId, isConnected, signer, provider } = psUseWallet();
 	const { userSlippageTolerance, userTransactionDeadlineValue } = usePegasys();
 
