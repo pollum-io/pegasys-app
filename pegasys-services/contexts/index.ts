@@ -4,3 +4,5 @@ export * from "./pegasys";
 export * from "./farm";
 export * from "./stake";
 export * from "./earn";
+export * from "./transactions";
+export * from "./governance";

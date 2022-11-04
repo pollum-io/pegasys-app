@@ -132,7 +132,7 @@ class StakeServices {
 		const tokens = PegasysTokens[chainId ?? ChainId.NEVM];
 
 		const psys = tokens.PSYS;
-		const wsys = tokens.WSYS;
+		const wsys = WSYS[chainId ?? ChainId.NEVM];
 
 		const contract = ContractFramework.RouterContract({
 			chainId,
@@ -254,7 +254,7 @@ class StakeServices {
 		const tokens = PegasysTokens[chainId ?? ChainId.NEVM];
 
 		const psys = tokens.PSYS;
-		const wsys = tokens.WSYS;
+		const wsys = WSYS[chainId ?? ChainId.NEVM];
 
 		const [[sysPsysPairState, sysPsysPair]] = await PairServices.getPairs([
 			[wsys, psys],

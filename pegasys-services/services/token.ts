@@ -112,7 +112,7 @@ class TokenServices {
 		const tokens = PegasysTokens[chainId ?? ChainId.NEVM];
 
 		const usdc = tokens.USDC;
-		const wsys = tokens.WSYS;
+		const wsys = WSYS[chainId ?? ChainId.NEVM];
 
 		const tokenPairs: Array<[Token | undefined, Token | undefined]> = [
 			[

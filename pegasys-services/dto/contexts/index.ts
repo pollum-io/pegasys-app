@@ -5,3 +5,4 @@ export * from "./farm";
 export * from "./stake";
 export * from "./earn";
 export * from "./transaction";
+export * from "./governance";

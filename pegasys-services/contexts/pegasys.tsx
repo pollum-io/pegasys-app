@@ -7,6 +7,7 @@ import {
 } from "../constants";
 import { WalletProvider } from "./wallet";
 import { ToastyProvider } from "./toasty";
+import { TransactionProvider } from "./transactions";
 import { IPegasysProviderProps, children, IPegasysProviderValue } from "../dto";
 
 export const PegasysContext = createContext({} as IPegasysProviderValue);
@@ -51,7 +52,9 @@ export const PegasysProvider: React.FC<IPegasysProviderProps> = ({
 }) => (
 	<ToastyProvider {...toasty}>
 		<WalletProvider>
-			<Provider>{children}</Provider>
+			<TransactionProvider>
+				<Provider>{children}</Provider>
+			</TransactionProvider>
 		</WalletProvider>
 	</ToastyProvider>
 );

@@ -20,7 +20,7 @@ import {
 } from "utils";
 import { useState } from "react";
 import { Token } from "@pollum-io/pegasys-sdk";
-import { ApprovalState, IApprovalState } from "contexts";
+import { ApprovalState, IApprovalState } from "pegasys-services";
 import { useTranslation } from "react-i18next";
 import { IAmounts } from "components";
 import { useToasty, useAllCommonPairs } from "hooks";
