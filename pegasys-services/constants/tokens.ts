@@ -6,10 +6,10 @@ export const PegasysTokens: ITokensDTO = {
 	[ChainId.NEVM]: {
 		PSYS: new Token(
 			ChainId.NEVM,
-			ethers.utils.getAddress("0x922D641a426DcFFaeF11680e5358F34d97d112E1"),
-			6,
-			"USDT",
-			"Tether USD"
+			ethers.utils.getAddress("0xe18c200a70908c89ffa18c628fe1b83ac0065ea4"),
+			18,
+			"PSYS",
+			"Pegasys"
 		),
 		USDT: new Token(
 			ChainId.NEVM,

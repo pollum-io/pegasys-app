@@ -236,7 +236,7 @@ class FarmServices {
 
 		const usdc = tokens.USDC;
 		const usdt = tokens.USDT;
-		const wsys = tokens.WSYS;
+		const wsys = WSYS[chainId ?? ChainId.NEVM];
 		const psys = tokens.PSYS;
 
 		const usdPrice = await TokenServices.getUsdcPrice(wsys, chainId);
