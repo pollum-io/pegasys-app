@@ -81,11 +81,15 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 	}, [provider]);
 
 	useEffect(() => {
-		const provider = WalletFramework.getProvider();
+		const p = WalletFramework.getProvider();
 
-		setProvider(provider);
+		setProvider(p);
 
 		const checkConnection = async () => {
+			const c = await WalletFramework.getChain(p);
+
+			setChainId(c ?? ChainId.NEVM);
+
 			const value = PersistentFramework.get("wallet") as { [k: string]: any };
 
 			if (value?.isConnected) {
