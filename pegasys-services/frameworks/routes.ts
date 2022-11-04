@@ -4,7 +4,7 @@ import { PegasysContracts, PegasysTokens } from "../constants";
 
 class RoutesFramework {
 	static getMinichefAddress(chainId?: ChainId | null) {
-		return PegasysContracts[chainId ?? ChainId.NEVM].MINICHEF_ADDRESS;
+		return PegasysContracts[chainId ?? ChainId.NEVM].MINICHEF_ADDRESS ?? "";
 	}
 
 	static getRouterAddress(chainId?: ChainId | null) {

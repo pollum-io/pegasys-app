@@ -1,4 +1,4 @@
-import { ChainId } from "@pollum-io/pegasys-sdk";
+import { ChainId, WSYS } from "@pollum-io/pegasys-sdk";
 import { IBasePairsDTO, ICustomBasePairDTO } from "./dto";
 import { PegasysTokens } from "./tokens";
 
@@ -15,9 +15,12 @@ export const BASES_TO_CHECK_TRADES_AGAINST: IBasePairsDTO = {
 };
 
 const WSYS_AND_PSYS_ONLY: IBasePairsDTO = {
-	[ChainId.TANENBAUM]: [PegasysTokens[5700].WSYS, PegasysTokens[5700].PSYS],
-	[ChainId.NEVM]: [PegasysTokens[57].WSYS, PegasysTokens[57].PSYS],
-	[ChainId.ROLLUX]: [PegasysTokens[2814].WSYS, PegasysTokens[2814].PSYS],
+	[ChainId.TANENBAUM]: [
+		WSYS[ChainId.TANENBAUM],
+		PegasysTokens[ChainId.TANENBAUM].PSYS,
+	],
+	[ChainId.NEVM]: [WSYS[ChainId.NEVM], PegasysTokens[ChainId.NEVM].PSYS],
+	[ChainId.ROLLUX]: [WSYS[ChainId.ROLLUX], PegasysTokens[ChainId.ROLLUX].PSYS],
 };
 
 export const BASES_TO_TRACK_LIQUIDITY_FOR: IBasePairsDTO = {
