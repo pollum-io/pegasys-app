@@ -484,12 +484,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			token => token?.symbol === "SYS" || token?.symbol === "PSYS"
 		);
 
-		const setIdToTokens = getTokensBySymbol.map((token, index: number) => ({
-			...token,
-			id: index,
-		})) as WrappedTokenInfo[];
+		const setIdToTokens = getTokensBySymbol.map(
+			(token: WrappedTokenInfo, index: number) => ({
+				...token,
+				id: index,
+			})
+		) as WrappedTokenInfo[];
 
-		setSelectedToken(setIdToTokens);
+		setSelectedToken(setIdToTokens as WrappedTokenInfo[]);
 	}, [userTokensBalance]);
 
 	useEffect(() => {

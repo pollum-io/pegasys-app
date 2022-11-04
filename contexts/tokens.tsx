@@ -9,6 +9,7 @@ import {
 	useTransaction,
 	SUPPORTED_NETWORK_CHAINS,
 } from "pegasys-services";
+import { ChainId } from "@pollum-io/pegasys-sdk";
 
 interface ITokensContext {
 	userTokensBalance: WrappedTokenInfo[];
@@ -49,7 +50,9 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		);
 
 		const WSYS = initialTokens.find(
-			(token: TokenInfo | WrappedTokenInfo) => token.symbol === "WSYS"
+			(token: TokenInfo | WrappedTokenInfo) =>
+				token.symbol === "WSYS" &&
+				(token.chainId as ChainId) === currentNetworkChainId
 		) as WrappedTokenInfo | ITokenInfoBalance;
 
 		const SYS: TokenInfo = {
