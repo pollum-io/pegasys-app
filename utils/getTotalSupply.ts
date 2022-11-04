@@ -16,12 +16,12 @@ export async function getTotalSupply(
 ) {
 	// eslint-disable-next-line
 	// @ts-ignore
-	const code = provider && (await provider?.getCode(token.address));
+	const code = provider && (await provider?.getCode(token?.address));
 	if (code === "0x") {
 		return new TokenAmount(token, "1");
 	}
 
-	const contract = await getContract(token?.address, signer, abi20);
+	const contract = await getContract(token?.address, provider as Signer, abi20);
 
 	const fetchTotalSupply =
 		contract && (await singleCallWithoutParams(contract, "totalSupply"));
