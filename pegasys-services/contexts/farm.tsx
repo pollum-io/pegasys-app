@@ -8,7 +8,7 @@ import { ApprovalState, useTokens } from "hooks";
 import { PegasysContracts } from "../constants";
 import { ContractFramework, RoutesFramework } from "../frameworks";
 import { FarmServices } from "../services";
-import { useWallet, useEarn, useTransaction } from "../hooks";
+import { useWallet, useEarn, useTransaction, useToasty } from "../hooks";
 import {
 	IFarmProviderProps,
 	IFarmProviderValue,
@@ -26,6 +26,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	const { userTokensBalance } = useTokens();
 	const { chainId, address, provider } = useWallet();
 	const { approvalState } = useTransaction();
+	const { toast } = useToasty();
 	const {
 		signature,
 		onSign,
@@ -35,6 +36,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 		earnOpportunities,
 		withdrawPercentage,
 		onContractCall,
+		setDataLoading,
 	} = useEarn();
 
 	const farmContract = useMemo(
@@ -185,22 +187,34 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	};
 
 	const getAvailablePair = async () => {
-		if (chainId && address && PegasysContracts[chainId].MINICHEF_ADDRESS) {
-			const pairsTokens = getTokenPairs(chainId, userTokensBalance);
+		try {
+			setDataLoading(true);
+			if (chainId && address && PegasysContracts[chainId].MINICHEF_ADDRESS) {
+				const pairsTokens = getTokenPairs(chainId, userTokensBalance);
 
-			const stakeInfos = await FarmServices.getFarmOpportunities({
-				tokenPairs: pairsTokens as [WrappedTokenInfo, Token][],
-				walletAddress: address,
-				chainId,
-				provider,
-				farmContract,
+				const stakeInfos = await FarmServices.getFarmOpportunities({
+					tokenPairs: pairsTokens as [WrappedTokenInfo, Token][],
+					walletAddress: address,
+					chainId,
+					provider,
+					farmContract,
+				});
+
+				setEarnOpportunities(stakeInfos);
+
+				const sorted = onSort(stakeInfos);
+
+				setSortPairs(sorted);
+			}
+		} catch (e) {
+			toast({
+				id: "toast",
+				position: "top-right",
+				status: "error",
+				title: "Error while fetching farms opportunities",
 			});
-
-			setEarnOpportunities(stakeInfos);
-
-			const sorted = onSort(stakeInfos);
-
-			setSortPairs(sorted);
+		} finally {
+			setDataLoading(false);
 		}
 	};
 

@@ -3,7 +3,7 @@ import { Flex, Img, Text } from "@chakra-ui/react";
 import { JSBI } from "@pollum-io/pegasys-sdk";
 
 import { useTokens } from "hooks";
-import { useEarn } from "pegasys-services";
+import { BIG_INT_ZERO, useEarn } from "pegasys-services";
 import EarnButton from "./EarnButton";
 import EarnInput from "./EarnInput";
 
@@ -26,6 +26,7 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 		signatureLoading,
 		loading,
 		depositPercentage,
+		depositValue,
 	} = useEarn();
 	const { userTokensBalance } = useTokens();
 
@@ -103,7 +104,8 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				disabled={
 					!depositTypedValue ||
 					signatureLoading ||
-					!depositPercentage ||
+					depositPercentage > 100 ||
+					!JSBI.greaterThan(depositValue, BIG_INT_ZERO) ||
 					loading
 				}
 				onClick={signature ? deposit : sign}
