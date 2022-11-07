@@ -119,7 +119,7 @@ export const PoolsContainer: NextPage = () => {
 			? "APR"
 			: sortType === "your-pools"
 			? translation("pool.yourPools")
-			: "Volume";
+			: translation("positionCard.volume");
 
 	useMemo(async () => {
 		if (userTokensBalance.length === 0) return;
@@ -670,14 +670,14 @@ export const PoolsContainer: NextPage = () => {
 													_hover={{ bgColor: theme.bg.neutralGray }}
 													onClick={() => setSortType("liquidity")}
 												>
-													Liquidity
+													{translation("pool.liquidity")}
 												</MenuItem>
 												<MenuItem
 													color={theme.text.mono}
 													_hover={{ bgColor: theme.bg.neutralGray }}
 													onClick={() => setSortType("volume")}
 												>
-													Volume
+													{translation("positionCard.volume")}
 												</MenuItem>
 												<MenuItem
 													color={theme.text.mono}
@@ -691,7 +691,7 @@ export const PoolsContainer: NextPage = () => {
 													_hover={{ bgColor: theme.bg.neutralGray }}
 													onClick={() => setSortType("your-pools")}
 												>
-													Your Pools
+													{translation("pool.yourPools")}
 												</MenuItem>
 											</MenuList>
 										</Menu>

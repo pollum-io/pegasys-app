@@ -94,6 +94,7 @@
 		"withdrawAndClaim": "Retirar & resgatar",
 		"withdrewStakingToken": "Retirar {{ symbol }}!",
 		"sign": "Assinar",
+		"approve": "Aprovar ",
 		"poolWeight": "Peso da piscina",
 		"extraReward": "Recompensa Extra"
 	},
@@ -133,15 +134,18 @@
 		"dismiss": "Dispensar"
 	},
 	"positionCard": {
-		"add": "Adicionar",
+		"add": "Adicionar Liquidez",
 		"remove": "Remover",
-		"poolShare": "Sua participação na pool:",
+		"volume": "Volume",
+		"poolShare": "Sua participação na pool",
 		"pooled": "Pooled",
 		"poolTokens": "Tokens da sua pool:",
 		"manage": "Gerenciar",
 		"loading": "Carregando",
+		"liquidity": "Liquidez",
 		"yourPosition": "Sua posição",
-		"byAddingLiquidityInfo": "Ao adicionar liquidez, você ganhará 0,25% de todas as trocas sobre este par, proporcional à sua parte do pool. \n Taxas são adicionadas ao pool, acumulando em tempo real e podem ser reivindicadas retirando sua liquidez."
+		"byAddingLiquidityInfo1": "Ao adicionar liquidez, você ganhará 0,25% de todas as trocas sobre este par, proporcional à sua parte do pool.",
+		"byAddingLiquidityInfo2": " Taxas são adicionadas ao pool, acumulando em tempo real e podem ser reivindicadas retirando sua liquidez."
 	},
 	"searchModal": {
 		"commonBases": "Bases comuns",
@@ -370,6 +374,7 @@
 		"noSeePoolJoined": "Não vê uma pool da qual participa?",
 		"migrateNow": "Migre-a.",
 		"importIt": "Importe-a.",
+
 		"poolsOverview": "Visão geral de pools",
 		"searchPair": "Pesquisa por símbolo do token",
 		"sort": "Ordenar por"
@@ -394,14 +399,16 @@
 		"detailed": "Detalhado",
 		"receiveSys": "SYS recebido",
 		"receiveWsys": "WSYS recebido",
-		"price": "Preço:",
+		"receive": "Receber",
+		"price": "Preço",
 		"connectWallet": "Conectar a uma carteira",
 		"approving": "Aprovando",
 		"approve": "Aprovar",
 		"approved": "Aprovado",
 		"remove": "Remover",
 		"output": "Saída",
-		"amount": "Quantidade"
+		"amount": "Quantidade",
+		"sign": "Assinar"
 	},
 	"swapPage": {
 		"addSend": "+ adicione um envio (opcional)",
