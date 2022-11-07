@@ -1,15 +1,10 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
-import { JSBI } from "@pollum-io/pegasys-sdk";
+import { ChainId, JSBI } from "@pollum-io/pegasys-sdk";
 
 import { tryParseAmount, addTransaction } from "utils";
-import { ApprovalState } from "contexts";
-import { useWallet, useModal } from "hooks";
-
-import { BIG_INT_ZERO } from "pegasys-services/constants";
-import { useWallet as psUseWallet, useToasty } from "../hooks";
-import { WalletFramework } from "../frameworks";
-import { onlyNumbers } from "../utils";
+import { useModal } from "hooks";
 import {
+	ApprovalState,
 	IEarnProviderProps,
 	IEarnProviderValue,
 	IEarnInfo,
@@ -17,6 +12,16 @@ import {
 	TSignature,
 	TButtonId,
 } from "../dto";
+
+import { BIG_INT_ZERO } from "../constants";
+import {
+	useWallet as psUseWallet,
+	useToasty,
+	usePegasys,
+	useTransaction,
+} from "../hooks";
+import { WalletFramework } from "../frameworks";
+import { onlyNumbers } from "../utils";
 
 export const EarnContext = createContext({} as IEarnProviderValue);
 
@@ -27,21 +32,17 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 	const [signature, setSignature] = useState<TSignature>(null);
 	const [signatureLoading, setSignatureLoading] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
+	const [dataLoading, setDataLoading] = useState<boolean>(false);
 	const [buttonId, setButtonId] = useState<TButtonId>(null);
 	const [selectedOpportunity, setSelectedOpportunity] =
 		useState<IEarnInfo | null>(null);
 
-	const {
-		provider,
-		userTransactionDeadlineValue,
-		setTransactions,
-		transactions,
-		setCurrentTxHash,
-		setApprovalState,
-	} = useWallet();
+	const { setTransactions, transactions, setCurrentTxHash, setApprovalState } =
+		useTransaction();
 	const { onCloseStakeActions, onCloseFarmActions } = useModal();
 
-	const { chainId, address } = psUseWallet();
+	const { chainId, address, provider } = psUseWallet();
+	const { userTransactionDeadlineValue } = usePegasys();
 	const { toast } = useToasty();
 
 	const reset = () => {
@@ -70,14 +71,25 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 			const percentage = JSBI.toNumber(
 				(isDeposit &&
 					JSBI.greaterThan(
-						selectedOpportunity.unstakedAmount.raw,
-						BIG_INT_ZERO
+						parsedAmount,
+						selectedOpportunity.unstakedAmount.raw
 					)) ||
 					(!isDeposit &&
 						JSBI.greaterThan(
-							selectedOpportunity.stakedAmount.raw,
-							BIG_INT_ZERO
+							parsedAmount,
+							selectedOpportunity.stakedAmount.raw
 						))
+					? JSBI.BigInt(101)
+					: (isDeposit &&
+							JSBI.greaterThan(
+								selectedOpportunity.unstakedAmount.raw,
+								BIG_INT_ZERO
+							)) ||
+					  (!isDeposit &&
+							JSBI.greaterThan(
+								selectedOpportunity.stakedAmount.raw,
+								BIG_INT_ZERO
+							))
 					? JSBI.divide(
 							JSBI.multiply(parsedAmount, JSBI.BigInt(100)),
 							isDeposit
@@ -106,7 +118,7 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 
 			const walletInfo = {
 				walletAddress: address,
-				chainId,
+				chainId: ChainId.NEVM,
 				provider,
 			};
 
@@ -177,28 +189,28 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 		setSignature(null);
 	}, [depositTypedValue]);
 
-	const withdrawPercentage = useMemo(() => {
+	const withdrawValues = useMemo(() => {
 		const value = getTypedValue();
 
 		if (!value) {
-			return 0;
+			return { percentage: 0, typed: BIG_INT_ZERO };
 		}
 
-		return value.percentage;
+		return { percentage: value.percentage, typed: value.value };
 	}, [
 		selectedOpportunity,
 		selectedOpportunity?.stakedAmount,
 		withdrawTypedValue,
 	]);
 
-	const depositPercentage = useMemo(() => {
+	const depositValues = useMemo(() => {
 		const value = getTypedValue(true);
 
 		if (!value) {
-			return 0;
+			return { percentage: 0, typed: BIG_INT_ZERO };
 		}
 
-		return value.percentage;
+		return { percentage: value.percentage, typed: value.value };
 	}, [
 		selectedOpportunity,
 		selectedOpportunity?.stakedAmount,
@@ -226,13 +238,17 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 			setEarnOpportunities,
 			selectedOpportunity,
 			setSelectedOpportunity,
-			withdrawPercentage,
+			withdrawPercentage: withdrawValues.percentage,
 			reset,
 			signatureLoading,
 			loading,
 			setLoading,
 			onContractCall,
-			depositPercentage,
+			depositPercentage: depositValues.percentage,
+			depositValue: depositValues.typed,
+			withdrawValue: withdrawValues.typed,
+			dataLoading,
+			setDataLoading,
 		}),
 		[
 			withdrawTypedValue,
@@ -248,13 +264,15 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 			setEarnOpportunities,
 			selectedOpportunity,
 			setSelectedOpportunity,
-			withdrawPercentage,
+			withdrawValues,
 			reset,
 			signatureLoading,
 			loading,
 			setLoading,
 			onContractCall,
-			depositPercentage,
+			depositValues,
+			dataLoading,
+			setDataLoading,
 		]
 	);
 

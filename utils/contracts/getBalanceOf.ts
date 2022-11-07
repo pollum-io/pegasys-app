@@ -1,17 +1,15 @@
 import { BigNumber, Contract, ethers, Signer } from "ethers";
-// import pegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
 import pairPegasysAbi from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/PegasysPair.sol/PegasysPair.json";
 import { Interface } from "@ethersproject/abi";
 import { IAddressessAndBalances } from "types";
 import {
 	verifyZerosInBalanceAndFormat,
-	removeScientificNotation,
 	formatBigNumberValues,
 	createContractUsingAbi,
 	singleCallWithoutParams,
 	singleCall,
 } from "utils";
-import abi20 from "./abis/erc20.json";
+import abi20 from "../abis/erc20.json";
 import { multiCall } from "./multiCall";
 
 const PAIR_INTERFACE = new Interface(pairPegasysAbi.abi);
@@ -24,7 +22,7 @@ export const getBalanceOfSingleCall = async (
 		| ethers.providers.JsonRpcProvider
 		| ethers.providers.Web3Provider
 		| ethers.providers.Provider
-		| undefined,
+		| null,
 	decimals: number
 ) => {
 	if (!signerOrProvider)
@@ -69,7 +67,7 @@ export const getBalanceOfBNSingleCall = async (
 		| Signer
 		| ethers.providers.JsonRpcProvider
 		| ethers.providers.Web3Provider
-		| undefined
+		| null
 ) => {
 	if (!signerOrProvider) return "0";
 	try {
@@ -163,7 +161,7 @@ export const getMultiCall = async (
 		| ethers.providers.JsonRpcProvider
 		| ethers.providers.Web3Provider
 		| ethers.providers.Provider
-		| undefined,
+		| null,
 	method?: string
 ) => {
 	if (!signerOrProvider) return [];

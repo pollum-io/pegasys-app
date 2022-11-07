@@ -1,10 +1,10 @@
 import React, { useEffect, createContext, useMemo, useState } from "react";
 
-import { ApprovalState, useWallet } from "hooks";
-import { STAKE_ADDRESS } from "pegasys-services";
+import { ApprovalState } from "hooks";
+import { PegasysContracts } from "../constants";
 import { ContractFramework, RoutesFramework } from "../frameworks";
 import { StakeServices } from "../services";
-import { useWallet as psUseWallet, useEarn } from "../hooks";
+import { useWallet, useEarn, useTransaction, useToasty } from "../hooks";
 import { IStakeProviderProps, IStakeProviderValue } from "../dto";
 import { EarnProvider } from "./earn";
 
@@ -12,8 +12,9 @@ export const StakeContext = createContext({} as IStakeProviderValue);
 
 const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 	const [showInUsd, setShowInUsd] = useState<boolean>(false);
-	const { chainId, address } = psUseWallet();
-	const { approvalState } = useWallet();
+	const { chainId, address } = useWallet();
+	const { approvalState } = useTransaction();
+	const { toast } = useToasty();
 	const {
 		signature,
 		onSign,
@@ -22,6 +23,7 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 		setEarnOpportunities,
 		withdrawPercentage,
 		onContractCall,
+		setDataLoading,
 	} = useEarn();
 
 	const stakeContract = useMemo(
@@ -108,14 +110,28 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 	};
 
 	const getStakes = async () => {
-		if (address && chainId && STAKE_ADDRESS[chainId]) {
-			const stakeInfos = await StakeServices.getStakeOpportunities({
-				stakeContract,
-				chainId,
-				walletAddress: address,
-			});
+		try {
+			setDataLoading(true);
+			if (address && chainId && PegasysContracts[chainId].STAKE_ADDRESS) {
+				const stakeInfos = await StakeServices.getStakeOpportunities({
+					stakeContract,
+					chainId,
+					walletAddress: address,
+				});
 
-			setEarnOpportunities(stakeInfos);
+				setEarnOpportunities(stakeInfos);
+			} else {
+				setEarnOpportunities([]);
+			}
+		} catch (e) {
+			toast({
+				id: "toast",
+				position: "top-right",
+				status: "error",
+				title: "Error while fetching stake opportunities",
+			});
+		} finally {
+			setDataLoading(false);
 		}
 	};
 

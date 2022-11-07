@@ -15,7 +15,7 @@ export const useCurrency = () => {
 			| Signer
 			| ethers.providers.JsonRpcProvider
 			| ethers.providers.Web3Provider
-			| undefined
+			| null
 	): Promise<ITokenInfo> => {
 		// eslint-disable-next-line
 		const contract = createContractUsingAbi(

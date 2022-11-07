@@ -73,7 +73,7 @@ export const WalletStatsCards: FunctionComponent = () => {
 							alignItems="center"
 							w={["55%", "45%", "24%", "24%"]}
 						>
-							<Image src={cardsValue.icon} h="9" w="9" />
+							<Image src={cardsValue.icon} h="9" w="9" alt={cardsValue.asset} />
 							<Flex
 								flexDirection={["column", "column", "row", "row"]}
 								alignItems={["flex-start", "flex-start", "center", "center"]}

@@ -1,17 +1,15 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ITokenInfoBalance, WrappedTokenInfo } from "types";
-import { useWallet, ApprovalState, useTokensListManage } from "hooks";
+import { ApprovalState, useTokensListManage } from "hooks";
 import { getDefaultTokens } from "networks";
-import {
-	getBalanceOfSingleCall,
-	getProviderBalance,
-	removeScientificNotation,
-	truncateNumberDecimalsPlaces,
-} from "utils";
+import { getBalanceOfSingleCall, getProviderBalance } from "utils";
 import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
-import { Signer } from "ethers";
-import { useWallet as psUseWallet } from "pegasys-services";
-import { SUPPORTED_NETWORK_CHAINS } from "helpers/consts";
+import {
+	useWallet,
+	useTransaction,
+	SUPPORTED_NETWORK_CHAINS,
+} from "pegasys-services";
+import { ChainId } from "@pollum-io/pegasys-sdk";
 
 interface ITokensContext {
 	userTokensBalance: WrappedTokenInfo[];
@@ -34,9 +32,10 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		isConnected,
 		address: walletAddress,
 		chainId: currentNetworkChainId,
-	} = psUseWallet();
+		provider,
+	} = useWallet();
 
-	const { provider, approvalState } = useWallet();
+	const { approvalState } = useTransaction();
 
 	const { currentCacheListTokensToDisplay, tokenListManageState } =
 		useTokensListManage();
@@ -51,7 +50,9 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		);
 
 		const WSYS = initialTokens.find(
-			(token: TokenInfo | WrappedTokenInfo) => token.symbol === "WSYS"
+			(token: TokenInfo | WrappedTokenInfo) =>
+				token.symbol === "WSYS" &&
+				(token.chainId as ChainId) === currentNetworkChainId
 		) as WrappedTokenInfo | ITokenInfoBalance;
 
 		const SYS: TokenInfo = {

@@ -1,5 +1,9 @@
-import { NEVM_CHAIN_PARAMS, SUPPORTED_NETWORK_CHAINS } from "helpers/consts";
+import {
+	NETWORKS_CHAIN_PARAMS,
+	SUPPORTED_NETWORK_CHAINS,
+} from "pegasys-services";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { ChainId } from "@pollum-io/pegasys-sdk";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let window: any;
@@ -35,7 +39,7 @@ export const ConnectSyscoinNetwork = async (
 		await getConnectorProvider
 			.request({
 				method: "wallet_switchEthereumChain",
-				params: [{ chainId: NEVM_CHAIN_PARAMS.chainId }],
+				params: [{ chainId: NETWORKS_CHAIN_PARAMS[ChainId.NEVM].chainId }],
 			})
 			.then(() => setWalletError(false))
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,7 +48,7 @@ export const ConnectSyscoinNetwork = async (
 					await getConnectorProvider
 						.request({
 							method: "wallet_addEthereumChain",
-							params: [NEVM_CHAIN_PARAMS],
+							params: [NETWORKS_CHAIN_PARAMS[ChainId.NEVM]],
 						})
 						.then(() => setWalletError(false));
 				}

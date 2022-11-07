@@ -1,8 +1,9 @@
 import { Button, ButtonProps, Flex } from "@chakra-ui/react";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso } from "hooks";
 import { FunctionComponent, ReactNode } from "react";
-import { useWallet as usePsysWallet } from "pegasys-services";
 import Jazzicon from "react-jazzicon";
+
+import { usePegasys, useWallet } from "pegasys-services";
 
 interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
@@ -13,8 +14,8 @@ interface IButtonProps extends ButtonProps {
 export const AddressButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	const { children, pending, ...rest } = props;
-	const { walletError, expert } = useWallet();
-	const { address } = usePsysWallet();
+	const { expert } = usePegasys();
+	const { walletError, address } = useWallet();
 
 	return (
 		<Button

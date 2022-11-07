@@ -6,13 +6,13 @@ import {
 import { Token, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
 import abi20 from "utils/abis/erc20.json";
-import { getContract } from "./getContract";
-import { singleCallWithoutParams } from "./singleCall";
+import { getContract } from "../contracts/getContract";
+import { singleCallWithoutParams } from "../contracts";
 
 export async function getTotalSupply(
 	token: Token,
 	signer: Signer,
-	provider: Signer | JsonRpcProvider | Web3Provider | Provider | undefined
+	provider: Signer | JsonRpcProvider | Web3Provider | Provider | null
 ) {
 	// eslint-disable-next-line
 	// @ts-ignore

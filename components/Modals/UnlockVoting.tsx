@@ -12,12 +12,13 @@ import {
 	Text,
 	useColorMode,
 } from "@chakra-ui/react";
-import { usePicasso, useWallet, useModal } from "hooks";
+import { usePicasso } from "hooks";
 import { FunctionComponent, SetStateAction, useState } from "react";
 
 import { BiTrashAlt } from "react-icons/bi";
 import { FaLessThan } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
+import { useGovernance } from "pegasys-services";
 
 interface IModal {
 	isOpen: boolean;
@@ -32,7 +33,7 @@ export const UnlockVotesModal: FunctionComponent<IModal> = props => {
 	const { colorMode } = useColorMode();
 	const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
 	const { votesLocked, setVotesLocked, setDelegatedTo, delegatedTo } =
-		useWallet();
+		useGovernance();
 
 	const isSelfDelegate = () => {
 		setVotesLocked(false);
