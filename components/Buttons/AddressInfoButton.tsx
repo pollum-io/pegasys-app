@@ -151,10 +151,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 							textTransform="uppercase"
 						>
 							<Flex pr="2" alignItems="center">
-								<Jazzicon
-									diameter={15}
-									seed={Math.round(Math.random() * 10000000)}
-								/>
+								<Jazzicon diameter={15} seed={Number(address)} />
 							</Flex>
 							{address && shortAddress(address)}
 						</Flex>

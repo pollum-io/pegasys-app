@@ -4,9 +4,16 @@ import React, { FunctionComponent } from "react";
 import { MdOutlineArrowDownward } from "react-icons/md";
 import { BiTrashAlt } from "react-icons/bi";
 
-export const OtherWallet: FunctionComponent = () => {
+export const OtherWallet: FunctionComponent<{
+	setRecipientAddress: React.Dispatch<React.SetStateAction<string>>;
+}> = ({ ...props }) => {
+	const { setRecipientAddress } = props;
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
+
+	const clearInput = (el: HTMLInputElement) => {
+		el.value = "";
+	};
 
 	return (
 		<Flex flexDirection="column">
@@ -37,6 +44,7 @@ export const OtherWallet: FunctionComponent = () => {
 					<Input
 						fontSize="1rem"
 						border="none"
+						id="recipientAddress"
 						placeholder="Wallet Address"
 						_placeholder={{
 							color: theme.text.lightGray,
@@ -47,6 +55,7 @@ export const OtherWallet: FunctionComponent = () => {
 						type="text"
 						h="100%"
 						_focus={{ outline: "none" }}
+						onChange={e => setRecipientAddress(e.currentTarget.value)}
 					/>
 				</Flex>
 
@@ -60,6 +69,11 @@ export const OtherWallet: FunctionComponent = () => {
 					justifyContent="center"
 					border="1px solid"
 					borderColor={colorMode === "light" ? "#E8ECF0" : "transparent"}
+					onClick={() =>
+						clearInput(
+							document.getElementById("recipientAddress") as HTMLInputElement
+						)
+					}
 				>
 					<Flex mt="0.6rem">
 						<BiTrashAlt size={23} color="#9FA6B0" />

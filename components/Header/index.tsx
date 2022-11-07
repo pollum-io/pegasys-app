@@ -7,15 +7,18 @@ import {
 	useColorMode,
 	useMediaQuery,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
-import { useModal, usePicasso } from "hooks";
+import { useModal, usePicasso, useTokens, usePairs as getPairs } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { HiOutlineMenu } from "react-icons/hi";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
 import { useRouter } from "next/router";
-import { usePegasys } from "pegasys-services";
+import { getTotalSupply, formattedNum } from "utils";
+import { useEarn, useWallet, usePegasys } from "pegasys-services";
+import { ChainId, Token } from "@pollum-io/pegasys-sdk";
+import { Signer } from "ethers";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
 import { TokenButton } from "./TokenButton";
@@ -36,10 +39,27 @@ export const Header: React.FC = () => {
 		isOpenDrawerMenu,
 		onCloseDrawerMenu,
 	} = useModal();
-
 	const [isMobile] = useMediaQuery("(max-width: 750px)");
 	const btnRef: any = React.useRef();
 	const { expert } = usePegasys();
+	const { address, chainId, provider, signer } = useWallet();
+	const { userTokensBalance } = useTokens();
+	const { earnOpportunities } = useEarn();
+	const [psysInfo, setPsysInfo] = useState({
+		balance: "0",
+		unclaimed: "0",
+		price: "0",
+		totalSupply: "0",
+	});
+
+	const walletInfos = {
+		provider,
+		walletAddress: address,
+		chainId: chainId ?? ChainId.NEVM,
+	};
+
+	const PSYS = userTokensBalance.find(token => token.symbol === "PSYS");
+	const SYS = userTokensBalance.find(token => token.symbol === "SYS");
 
 	const links = [
 		{
@@ -60,6 +80,48 @@ export const Header: React.FC = () => {
 		},
 	];
 
+	useMemo(async () => {
+		if (PSYS?.formattedBalance !== "0") {
+			setPsysInfo(prevState => ({
+				...prevState,
+				balance: PSYS?.formattedBalance as string,
+			}));
+		}
+
+		const totalSupply =
+			PSYS &&
+			signer &&
+			provider &&
+			(await getTotalSupply(PSYS as Token, signer as Signer, provider));
+
+		const pairs = await getPairs(
+			[[PSYS, SYS]] as [Token, Token][],
+			walletInfos
+		);
+
+		const pair = pairs?.[0]?.[1];
+
+		if (
+			earnOpportunities[0]?.unclaimedAmount.toSignificant(6) &&
+			earnOpportunities[0]?.unclaimedAmount.toSignificant(6) !== "0"
+		) {
+			setPsysInfo(prevState => ({
+				...prevState,
+				unclaimed: earnOpportunities[0]?.unclaimedAmount.toSignificant(
+					6
+				) as string,
+			}));
+		}
+
+		setPsysInfo(prevState => ({
+			...prevState,
+			totalSupply: formattedNum(
+				Number(totalSupply?.toSignificant(6))
+			) as string,
+			price: pair?.priceOf(pair.token1).toSignificant(6) as string,
+		}));
+	}, [userTokensBalance, earnOpportunities]);
+
 	return (
 		<Flex
 			p="4"
@@ -73,6 +135,11 @@ export const Header: React.FC = () => {
 				<PsysBreakdown
 					isOpen={isOpenPsysBreakdown}
 					onClose={onClosePsysBreakdown}
+					psysUnclaimed={psysInfo.unclaimed || "0"}
+					psysBalance={psysInfo.balance || "0"}
+					totalSuply={psysInfo.totalSupply || "0"}
+					psysPriceSys={psysInfo.price || "0"}
+					psys={PSYS}
 				/>
 				<Link href="/">
 					<Img

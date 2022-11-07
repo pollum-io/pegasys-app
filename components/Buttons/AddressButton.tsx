@@ -15,7 +15,7 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	const { children, pending, ...rest } = props;
 	const { expert } = usePegasys();
-	const { walletError } = useWallet();
+	const { walletError, address } = useWallet();
 
 	return (
 		<Button
@@ -49,10 +49,7 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 			) : (
 				<>
 					<Flex pr="2" textTransform="uppercase">
-						<Jazzicon
-							diameter={18}
-							seed={Math.round(Math.random() * 10000000)}
-						/>
+						<Jazzicon diameter={18} seed={Number(address)} />
 					</Flex>
 					{children}
 				</>

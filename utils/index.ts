@@ -14,3 +14,5 @@ export * from "./copyToClipboard";
 export * from "./openWalletOnExplorer";
 
 export * from "./time";
+
+export * from "./addTokenToWallet";
