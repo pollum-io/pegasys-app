@@ -2,7 +2,7 @@ import React from "react";
 import { Flex, Text } from "@chakra-ui/react";
 import { JSBI } from "@pollum-io/pegasys-sdk";
 
-import { useEarn } from "pegasys-services";
+import { BIG_INT_ZERO, useEarn } from "pegasys-services";
 import EarnButton from "./EarnButton";
 import EarnInput from "./EarnInput";
 import EarnSlider from "./EarnSlider";
@@ -24,6 +24,7 @@ const EarnWithdrawAction: React.FC<IEarnWithdrawActionProps> = ({
 		buttonId,
 		withdrawPercentage,
 		loading,
+		withdrawValue,
 	} = useEarn();
 
 	if (
@@ -58,7 +59,12 @@ const EarnWithdrawAction: React.FC<IEarnWithdrawActionProps> = ({
 					height={["2.5rem", "2.5rem", "3rem", "3rem"]}
 					py="3"
 					px="1.5rem"
-					disabled={!withdrawTypedValue || !withdrawPercentage || loading}
+					disabled={
+						!withdrawTypedValue ||
+						withdrawPercentage > 100 ||
+						!JSBI.greaterThan(withdrawValue, BIG_INT_ZERO) ||
+						loading
+					}
 					onClick={withdraw}
 					solid
 					fontSize={16}

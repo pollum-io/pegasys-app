@@ -135,8 +135,15 @@ const FarmCard: FunctionComponent<{
 					</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
-					<Text fontWeight="semibold">Your Stake</Text>
-					<Text>{formattedNum(stakedInUsd, true)}</Text>
+					<Text
+						fontWeight={stakedInUsd <= 0 ? undefined : "semibold"}
+						color={stakedInUsd <= 0 ? "grey" : undefined}
+					>
+						Your Stake
+					</Text>
+					<Text color={stakedInUsd <= 0 ? "grey" : undefined}>
+						{stakedInUsd <= 0 ? "-" : formattedNum(stakedInUsd, true)}
+					</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold">Swap Fee APR</Text>
@@ -185,7 +192,7 @@ const FarmCard: FunctionComponent<{
 					id="withdraw"
 					py="0.625rem"
 					px="1.5rem"
-					height="max-content"
+					height="2rem"
 					onClick={onClick}
 					amount={stakedAmount}
 					solid
@@ -196,7 +203,7 @@ const FarmCard: FunctionComponent<{
 					id="deposit"
 					py="0.625rem"
 					px="1.5rem"
-					height="max-content"
+					height="2rem"
 					onClick={onClick}
 					amount={unstakedAmount}
 					solid
@@ -209,7 +216,7 @@ const FarmCard: FunctionComponent<{
 				py="0.625rem"
 				px="1.5rem"
 				mt="1rem"
-				height="max-content"
+				height="2rem"
 				onClick={onClick}
 				amount={unclaimedAmount}
 			>
@@ -220,7 +227,7 @@ const FarmCard: FunctionComponent<{
 				JSBI.greaterThanOrEqual(BIG_INT_ZERO, unclaimedAmount.raw) && (
 					<EarnButton
 						py="0.625rem"
-						height="max-content"
+						height="2rem"
 						px="1.5rem"
 						mt="1rem"
 						onClick={() => {

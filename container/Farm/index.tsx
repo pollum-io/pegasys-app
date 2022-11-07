@@ -18,7 +18,12 @@ import { MdOutlineCallMade, MdExpandMore } from "react-icons/md";
 import { LoadingTransition, SearchInput, FarmGrid } from "components";
 import { usePicasso, useModal } from "hooks";
 
-import { useFarm, useWallet as psUseWallet, useEarn } from "pegasys-services";
+import {
+	useFarm,
+	useWallet as psUseWallet,
+	useEarn,
+	PegasysContracts,
+} from "pegasys-services";
 import { FarmActions } from "components/Modals/FarmActions";
 
 const sortData = {
@@ -28,9 +33,9 @@ const sortData = {
 };
 
 export const FarmContainer: NextPage = () => {
-	const { setSearch, sort, setSort, sortedPairs } = useFarm();
-	const { loading, signatureLoading } = useEarn();
-	const { isConnected, address } = psUseWallet();
+	const { setSearch, sort, setSort } = useFarm();
+	const { loading, signatureLoading, dataLoading } = useEarn();
+	const { isConnected, address, chainId } = psUseWallet();
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
 	const { isOpenFarmActions, onCloseFarmActions } = useModal();
@@ -229,7 +234,26 @@ export const FarmContainer: NextPage = () => {
 						</Text>
 					</Flex>
 				)}
-				{sortedPairs.length === 0 && isConnected && (
+				{isConnected &&
+					(!chainId || !PegasysContracts[chainId].MINICHEF_ADDRESS) && (
+						<Flex
+							w="100%"
+							mt={["3rem", "3rem", "4rem", "4rem"]}
+							flexDirection="column"
+							alignItems="center"
+							justifyContent="center"
+							mb={["3rem", "3rem", "4rem", "4rem"]}
+						>
+							<Text
+								fontSize={["sm", "sm", "md", "md"]}
+								fontWeight="normal"
+								textAlign="center"
+							>
+								This feature is not available for this network
+							</Text>
+						</Flex>
+					)}
+				{dataLoading && isConnected && (
 					<Flex
 						w="100%"
 						mt={["3rem", "3rem", "4rem", "4rem"]}
