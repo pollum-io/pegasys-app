@@ -359,7 +359,8 @@
 		"liquidityProvidersEarn": "Os provedores de liquidez ganham uma taxa de 0,25% sobre todas as trocas proporcionais a sua parte na pool. As taxas são adicionadas à pool, acumulando em tempo real e podendo ser reivindicadas retirando sua liquidez.",
 		"readMoreProviding": "Leia mais sobre como fornecer liquidez",
 		"viewStakedLiquidity": "Veja sua liquidez depositada",
-		"yourLiquidity": "Sua liquidez",
+		"yourPools": "Suas pools",
+		"liquidity": "Liquidez",
 		"createPair": "Criar um par",
 		"addLiquidity": "Adicionar liquidez",
 		"connectWalletToView": "Conecte-se a uma carteira para ver sua liquidez.",
@@ -368,7 +369,11 @@
 		"uniswapV1Found": "Liquidez da Uniswap V1 encontrada!",
 		"noSeePoolJoined": "Não vê uma pool da qual participa?",
 		"migrateNow": "Migre-a.",
-		"importIt": "Importe-a."
+		"importIt": "Importe-a.",
+		"poolsOverview": "Visão geral de pools",
+		"searchPair": "Pesquisa por símbolo do token",
+		"sort": "Ordenar por"
+
 	},
 	"poolFinder": {
 		"connectToFind": "Conecte-se a uma carteira para encontrar suas pools",
