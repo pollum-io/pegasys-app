@@ -366,6 +366,7 @@
 		"createPair": "Crear una pareja",
 		"addLiquidity": "Añadir liquidez",
 		"liquidity": "Liquidez",
+		"unavailable": "Fichas de liquidez no disponibles.",
 		"connectWalletToView": "Conecte la cartera para ver su liquidez.",
 		"loading": "Cargando",
 		"noLiquidity": "No se ha encontrado liquidez.",

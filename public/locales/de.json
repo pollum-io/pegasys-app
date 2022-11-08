@@ -364,6 +364,7 @@
 		"viewStakedLiquidity": "Lass dir deine gestakte Liquidität anzeigen",
 		"yourLiquidity": "Deine Liquidität",
 		"liquidity":"Liquidität",
+		"unavailable": "Nicht verfügbare Liquiditätsmünzen.",
 		"createPair": "Erstelle ein Paar",
 		"addLiquidity": "Füge Liquidität hinzu",
 		"connectWalletToView": "Verbinde mit einer Wallet, um deine Liquidität zu sehen.",

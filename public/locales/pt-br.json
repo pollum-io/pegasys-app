@@ -366,6 +366,7 @@
 		"yourPools": "Suas pools",
 		"liquidity": "Liquidez",
 		"createPair": "Criar um par",
+		"unavailable": "Tokens de liquidez indisponíveis.",
 		"addLiquidity": "Adicionar liquidez",
 		"connectWalletToView": "Conecte-se a uma carteira para ver sua liquidez.",
 		"loading": "Carregando",

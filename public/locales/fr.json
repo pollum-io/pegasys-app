@@ -365,6 +365,7 @@
 		"yourLiquidity": "Vos liquidités",
 		"createPair": "Créer une paire",
 		"liquidity":"Liquidité",
+		"unavailable": "Jetons de liquidité non disponibles.",
 		"addLiquidity": "Ajouter de la liquidité",
 		"connectWalletToView": "Connectez-vous à un portefeuille pour voir vos liquidités.",
 		"loading": "Chargement",
@@ -405,7 +406,7 @@
 		"approved": "Approuvé",
 		"remove": "Retirer",
 		"output": "Sortie",
-		"amount": "Montant", 
+		"amount": "Montant",
 		"sign": "Signe"
 	},
 	"swapPage": {

@@ -363,6 +363,7 @@
 		"readMoreProviding": "Read more about providing liquidity",
 		"viewStakedLiquidity": "View your staked liquidity",
 		"yourPools": "Your pools",
+		"unavailable": "Unavailable liquidity tokens.",
 		"liquidity":"Liquidity",
 		"createPair": "Create a pair",
 		"addLiquidity": "Add liquidity",

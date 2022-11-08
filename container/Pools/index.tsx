@@ -500,7 +500,7 @@ export const PoolsContainer: NextPage = () => {
 							position="absolute"
 							zIndex="base"
 							w="100%"
-							h="85%"
+							h={address ? "85%" : "100%"}
 						/>
 						<Flex
 							zIndex="docked"
@@ -714,8 +714,7 @@ export const PoolsContainer: NextPage = () => {
 								fontWeight="normal"
 								textAlign="center"
 							>
-								Please connect your wallet in the button bellow to be able to
-								view your liquidity.
+								{translation("pool.connectWalletToView")}
 							</Text>
 						</Flex>
 					) : (
@@ -760,7 +759,7 @@ export const PoolsContainer: NextPage = () => {
 										fontWeight="normal"
 										textAlign="center"
 									>
-										Unavailable liquidity tokens.
+										{translation("pool.unavailable")}
 									</Text>
 								</Flex>
 							) : (

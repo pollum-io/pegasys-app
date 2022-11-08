@@ -372,7 +372,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 					{haveSys && (
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text fontWeight="medium" fontSize="md">
-							{translation("removeLiquidity.receive")}
+								{translation("removeLiquidity.receive")}
 							</Text>
 							<Flex flexDirection="row">
 								<Stack align="center" direction="row">
@@ -390,7 +390,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 					)}
 					<Flex flexDirection="row" justifyContent="space-between" pt="6">
 						<Text fontWeight="medium" fontSize="md">
-						{translation("removeLiquidity.price")}
+							{translation("removeLiquidity.price")}
 						</Text>
 						<Flex flexDirection="column">
 							<Flex flexDirection="row">
@@ -457,7 +457,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 					borderBottomRadius={["0", "0", "3xl", "3xl"]}
 				>
 					<Text fontWeight="bold" fontSize="lg">
-					{translation("positionCard.yourPosition")}
+						{translation("positionCard.yourPosition")}
 					</Text>
 					<Flex
 						flexDirection="row"
@@ -475,7 +475,9 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 					</Flex>
 					<Flex flexDirection="column">
 						<Flex flexDirection="row" justifyContent="space-between">
-							<Text fontWeight="semibold">{translation("positionCard.poolShare")}</Text>
+							<Text fontWeight="semibold">
+								{translation("positionCard.poolShare")}
+							</Text>
 							<Text fontWeight="normal">
 								{poolPercentShare === "0.00"
 									? "<0.01%"

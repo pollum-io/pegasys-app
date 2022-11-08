@@ -366,6 +366,7 @@
 		"createPair": "Bir işlem çifti oluştur",
 		"addLiquidity": "Likidite ekle",
 		"liquidity": "Likidite",
+		"unavailable": "Kullanılamayan likidite belirteçleri.",
 		"connectWalletToView": "Likiditenizi görüntülemek için bir cüzdana bağlanın.",
 		"loading": "Yükleniyor",
 		"noLiquidity": "Likidite bulunamadı.",

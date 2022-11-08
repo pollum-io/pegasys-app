@@ -369,6 +369,7 @@
 		"connectWalletToView": "Kết nối với một ví bất kỳ để quan sát thanh khoản của bạn",
 		"loading": "Đang tải",
 		"noLiquidity": "Không tìm thấy thanh khoản.",
+		"unavailable": "Mã thông báo thanh khoản không có sẵn.",
 		"uniswapV1Found": "Thanh khoản uniswap V1 được tìm thấy",
 		"noSeePoolJoined": "Bạn không tìm thấy bể mà bạn đã tham gia?",
 		"migrateNow": "Chuyển đổi ngay bây giờ.",

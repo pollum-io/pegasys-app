@@ -366,6 +366,7 @@
 		"liquidity":"流动性",
 		"createPair": "创建一个交易对",
 		"addLiquidity": "增加流动性",
+		"unavailable": "不可用的流动性代币。",
 		"connectWalletToView": "连接到钱包以查看您的流动性。",
 		"loading": "加载中",
 		"noLiquidity": "没有发现流动性。",
