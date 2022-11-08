@@ -412,7 +412,6 @@ export const UseRemoveLiquidity = (
 		sliderValue: number
 	) {
 		let percent = new Percent(sliderValue.toString(), "100");
-		console.log({currencyA, currencyB})
 		const pairs = await useAllCommonPairs(currencyA, currencyB, walletInfos);
 
 		const pair = pairs[0];
