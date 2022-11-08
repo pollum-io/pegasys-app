@@ -1,29 +1,24 @@
 import { ChainId } from "@pollum-io/pegasys-sdk";
-import { ROUTER_ADDRESS } from "helpers/consts";
 
-import { MINICHEF_ADDRESS, PSYS, STAKE_ADDRESS } from "../constants";
+import { PegasysContracts, PegasysTokens } from "../constants";
 
 class RoutesFramework {
-	static getMinichefAddress(chainId?: ChainId) {
-		return MINICHEF_ADDRESS[ChainId.NEVM];
+	static getMinichefAddress(chainId?: ChainId | null) {
+		return PegasysContracts[chainId ?? ChainId.NEVM].MINICHEF_ADDRESS ?? "";
 	}
 
-	static getRouterAddress(chainId?: ChainId) {
-		return ROUTER_ADDRESS[chainId ?? ChainId.NEVM];
+	static getRouterAddress(chainId?: ChainId | null) {
+		return PegasysContracts[chainId ?? ChainId.NEVM].ROUTER_ADDRESS;
 	}
 
-	static getStakeAddress(chainId?: ChainId) {
-		return STAKE_ADDRESS[ChainId.NEVM];
+	static getStakeAddress(chainId?: ChainId | null) {
+		return PegasysContracts[ChainId.NEVM].STAKE_ADDRESS;
 	}
 
-	static getPsysAddress(chainId?: ChainId) {
-		const router: { [k: number]: string } = {};
+	static getPsysAddress(chainId?: ChainId | null) {
+		const psys = PegasysTokens[chainId ?? ChainId.NEVM].PSYS;
 
-		Object.keys(PSYS).forEach((chain: unknown) => {
-			router[Number(chain)] = PSYS[chain as keyof typeof PSYS].address;
-		});
-
-		return router[chainId ?? ChainId.NEVM];
+		return psys ? psys.address : "";
 	}
 }
 

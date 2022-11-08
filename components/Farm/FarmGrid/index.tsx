@@ -1,7 +1,13 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { Flex } from "@chakra-ui/react";
+import React, { useMemo, useState } from "react";
+import { Flex, Text } from "@chakra-ui/react";
 
-import { IFarmInfo, useFarm } from "pegasys-services";
+import {
+	IFarmInfo,
+	PegasysContracts,
+	useFarm,
+	useWallet,
+	useEarn,
+} from "pegasys-services";
 import { AddLiquidityModal } from "components/Modals";
 import { useModal } from "hooks";
 import { Pair, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
@@ -12,13 +18,14 @@ const FarmGrid: React.FC = () => {
 	const { sortedPairs } = useFarm();
 	const [currPair, setCurrPair] = useState<Pair>();
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
-
+	const { chainId, isConnected } = useWallet();
 	const {
 		isOpenAddLiquidity,
 		onCloseAddLiquidity,
 		onOpenTransaction,
 		onCloseTransaction,
 	} = useModal();
+	const { dataLoading } = useEarn();
 
 	const [even, odds] = useMemo(() => {
 		const oddIndexes: IFarmInfo[] = [];
@@ -35,8 +42,52 @@ const FarmGrid: React.FC = () => {
 		return [evenIndexes, oddIndexes];
 	}, [sortedPairs]);
 
+	if (
+		!dataLoading &&
+		isConnected &&
+		chainId &&
+		PegasysContracts[chainId].MINICHEF_ADDRESS &&
+		!sortedPairs.length
+	) {
+		return (
+			<Flex
+				w="100%"
+				mt={["3rem", "3rem", "4rem", "4rem"]}
+				flexDirection="column"
+				alignItems="center"
+				justifyContent="center"
+				mb={["3rem", "3rem", "4rem", "4rem"]}
+			>
+				<Text
+					fontSize={["sm", "sm", "md", "md"]}
+					fontWeight="normal"
+					textAlign="center"
+				>
+					Any available opportunitie
+				</Text>
+			</Flex>
+		);
+	}
+
 	return (
 		<>
+			{currPair && (
+				<AddLiquidityModal
+					isModalOpen={isOpenAddLiquidity}
+					onModalClose={onCloseAddLiquidity}
+					setSelectedToken={setSelectedToken}
+					selectedToken={selectedToken}
+					depositedTokens={{
+						token0: new TokenAmount(currPair?.token0 as Token, "0"),
+						token1: new TokenAmount(currPair?.token1 as Token, "0"),
+					}}
+					poolPercentShare="0.00"
+					userPoolBalance="0"
+					currPair={currPair}
+					openPendingTx={onOpenTransaction}
+					closePendingTx={onCloseTransaction}
+				/>
+			)}
 			<Flex
 				w="100%"
 				maxW="900px"
@@ -47,23 +98,6 @@ const FarmGrid: React.FC = () => {
 				gap="30px"
 				justifyContent="space-between"
 			>
-				{currPair && (
-					<AddLiquidityModal
-						isModalOpen={isOpenAddLiquidity}
-						onModalClose={onCloseAddLiquidity}
-						setSelectedToken={setSelectedToken}
-						selectedToken={selectedToken}
-						depositedTokens={{
-							token0: new TokenAmount(currPair?.token0 as Token, "0"),
-							token1: new TokenAmount(currPair?.token1 as Token, "0"),
-						}}
-						poolPercentShare="0.00"
-						userPoolBalance="0"
-						currPair={currPair}
-						openPendingTx={onOpenTransaction}
-						closePendingTx={onCloseTransaction}
-					/>
-				)}
 				<Flex flexDirection="column" gap="2px" width="fit-content">
 					{even.map(p => (
 						<FarmCard

@@ -1,4 +1,5 @@
 import { ChainId, Token } from "@pollum-io/pegasys-sdk";
+import { WrappedTokenInfo } from "types";
 import { TContract, TProvider } from "../framework";
 
 export interface IPairServicesDoesPairExists {
@@ -13,6 +14,15 @@ export interface IPairServicesGetPairReserve {
 	tokenA: Token;
 	tokenB: Token;
 	chainId?: ChainId;
+}
+
+export interface IGetMixedTokenPairs {
+	chainId: ChainId;
+	allTokens: WrappedTokenInfo[];
+}
+
+export interface ITokensMixed {
+	[address: string]: WrappedTokenInfo;
 }
 
 export enum PairState {

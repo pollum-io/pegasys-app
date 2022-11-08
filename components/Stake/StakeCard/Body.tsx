@@ -1,7 +1,8 @@
 import React from "react";
 import { Flex, Grid } from "@chakra-ui/react";
 
-import { formattedNum } from "utils/numberFormat";
+import { formattedNum } from "utils/convert/numberFormat";
+import { formatBigNumbers } from "pegasys-services";
 import { IBodyProps } from "./dto";
 import CardItem from "./CardItem";
 
@@ -35,7 +36,9 @@ const Body: React.FC<IBodyProps> = ({
 			<CardItem
 				text="Total staked"
 				usdValue={`${formattedNum(totalStakedInUsd, true)} USD`}
-				value={`${totalStakedAmount.toSignificant()} ${symbol}`}
+				value={`${formatBigNumbers(
+					Number(totalStakedAmount.toSignificant())
+				)} ${symbol}`}
 			/>
 			<CardItem
 				text="Your rate"

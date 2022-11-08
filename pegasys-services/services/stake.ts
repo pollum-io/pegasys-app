@@ -3,10 +3,10 @@ import { ChainId, JSBI, TokenAmount, WSYS } from "@pollum-io/pegasys-sdk";
 import { ContractFramework } from "../frameworks";
 import {
 	BIG_INT_ONE,
-	BIG_INT_SECONDS_IN_WEEK,
+	BIG_INT_ONE_WEEK_IN_SECONDS,
 	BIG_INT_TWO,
 	BIG_INT_ZERO,
-	PSYS,
+	PegasysTokens,
 } from "../constants";
 import {
 	IStakeInfo,
@@ -129,7 +129,9 @@ class StakeServices {
 		isPeriodFinished,
 		totalStaked,
 	}: IStakeServicesGetApr) {
-		const psys = PSYS[chainId ?? ChainId.NEVM];
+		const tokens = PegasysTokens[chainId ?? ChainId.NEVM];
+
+		const psys = tokens.PSYS;
 		const wsys = WSYS[chainId ?? ChainId.NEVM];
 
 		const contract = ContractFramework.RouterContract({
@@ -219,7 +221,7 @@ class StakeServices {
 
 		const totalRewardRatePerWeek = new TokenAmount(
 			rewardToken,
-			JSBI.multiply(totalRewardRatePerSecond.raw, BIG_INT_SECONDS_IN_WEEK)
+			JSBI.multiply(totalRewardRatePerSecond.raw, BIG_INT_ONE_WEEK_IN_SECONDS)
 		);
 
 		const rewardRatePerWeek = new TokenAmount(
@@ -228,7 +230,7 @@ class StakeServices {
 				? JSBI.divide(
 						JSBI.multiply(
 							JSBI.multiply(totalRewardRatePerSecond.raw, staked.raw),
-							BIG_INT_SECONDS_IN_WEEK
+							BIG_INT_ONE_WEEK_IN_SECONDS
 						),
 						totalStaked.raw
 				  )
@@ -249,8 +251,10 @@ class StakeServices {
 		unclaimedAmount,
 		rewardRatePerWeek,
 	}: IStakeServicesGetDollarValues) {
+		const tokens = PegasysTokens[chainId ?? ChainId.NEVM];
+
+		const psys = tokens.PSYS;
 		const wsys = WSYS[chainId ?? ChainId.NEVM];
-		const psys = PSYS[chainId ?? ChainId.NEVM];
 
 		const [[sysPsysPairState, sysPsysPair]] = await PairServices.getPairs([
 			[wsys, psys],
@@ -350,7 +354,7 @@ class StakeServices {
 				provider,
 			});
 
-		const psys = PSYS[chainId ?? ChainId.NEVM];
+		const psys = PegasysTokens[chainId ?? ChainId.NEVM].PSYS;
 
 		const opportunities = [
 			{

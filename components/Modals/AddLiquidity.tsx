@@ -10,13 +10,7 @@ import {
 	ModalOverlay,
 	Text,
 } from "@chakra-ui/react";
-import {
-	useModal,
-	usePicasso,
-	useTokens,
-	useWallet,
-	useAllCommonPairs,
-} from "hooks";
+import { useModal, usePicasso, useWallet, useAllCommonPairs } from "hooks";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
 	MdHelpOutline,
@@ -24,11 +18,18 @@ import {
 	MdAdd,
 	MdOutlineInfo,
 } from "react-icons/md";
-import { IoIosArrowDown } from "react-icons/io";
 import { IDeposited, IInputValues, WrappedTokenInfo } from "types";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { useTranslation } from "react-i18next";
-import { PoolServices, useWallet as psUseWallet } from "pegasys-services";
+import {
+	PoolServices,
+	useWallet as psUseWallet,
+	usePegasys,
+	PegasysContracts,
+	ONE_BIPS,
+	ApprovalState,
+	useTransaction,
+} from "pegasys-services";
 import {
 	addTransaction,
 	getTokenAllowance,
@@ -44,9 +45,7 @@ import {
 	Percent,
 	TokenAmount,
 } from "@pollum-io/pegasys-sdk";
-import { ONE_BIPS, ROUTER_ADDRESS } from "helpers/consts";
 import { Signer } from "ethers";
-import { ApprovalState } from "contexts";
 import { parseUnits } from "@ethersproject/units";
 import { SelectCoinModal } from "./SelectCoin";
 
@@ -85,9 +84,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		poolPercentShare,
 		userPoolBalance,
 		currPair,
-		setIsCreate,
 		openPendingTx,
 		closePendingTx,
+		setIsCreate,
 	} = props;
 
 	const initialTokenInputValue = {
@@ -102,10 +101,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		lastInputTyped: undefined,
 	};
 
-	const { userTokensBalance } = useTokens();
 	const { t: translation } = useTranslation();
 	const theme = usePicasso();
-	const { isOpenCoin, onCloseCoin, onOpenCoin } = useModal();
+	const { isOpenCoin, onCloseCoin } = useModal();
 	const [buttonId, setButtonId] = useState<number>(0);
 	const [tokenInputValue, setTokenInputValue] = useState<ITokenInputValue>(
 		initialTokenInputValue
@@ -117,24 +115,21 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const [amountToApp, setAmountToApp] = useState<TokenAmount>();
 	const [amounts, setAmounts] = useState<TokenAmount[]>([]);
 	const [currPoolShare, setCurrPoolShare] = useState<string>("");
+	const { setCurrentLpAddress } = useWallet();
 	const {
-		userSlippageTolerance,
-		userTransactionDeadlineValue,
-		provider,
 		setTransactions,
 		transactions,
-		setCurrentLpAddress,
-		signer,
 		setApprovalState,
 		approvalState,
 		setCurrentTxHash,
 		setCurrentSummary,
-	} = useWallet();
-	const { address, chainId, isConnected } = psUseWallet();
+	} = useTransaction();
+	const { address, chainId, isConnected, signer, provider } = psUseWallet();
+	const { userSlippageTolerance, userTransactionDeadlineValue } = usePegasys();
 
 	const chain = chainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
 
-	const router = ROUTER_ADDRESS[chain];
+	const router = PegasysContracts[chain].ROUTER_ADDRESS;
 
 	const walletInfo = useMemo(
 		() => ({
@@ -236,10 +231,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			});
 		},
 		[maxAmounts]
-	);
-
-	const showMaxInput = Boolean(
-		!tokenInputValue.inputFrom.value && !tokenInputValue.inputTo.value
 	);
 
 	useMemo(async () => {

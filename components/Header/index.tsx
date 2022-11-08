@@ -10,20 +10,14 @@ import {
 import React, { useMemo, useState } from "react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
-import {
-	useModal,
-	usePicasso,
-	useWallet,
-	useTokens,
-	usePairs as getPairs,
-} from "hooks";
+import { useModal, usePicasso, useTokens, usePairs as getPairs } from "hooks";
 import { MdOutlineCallMade } from "react-icons/md";
 import { HiOutlineMenu } from "react-icons/hi";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
 import { useRouter } from "next/router";
 import { getTotalSupply, formattedNum } from "utils";
-import { useEarn, useWallet as psUseWallet } from "pegasys-services";
-import { Token } from "@pollum-io/pegasys-sdk";
+import { useEarn, useWallet, usePegasys } from "pegasys-services";
+import { ChainId, Token } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
@@ -47,8 +41,8 @@ export const Header: React.FC = () => {
 	} = useModal();
 	const [isMobile] = useMediaQuery("(max-width: 750px)");
 	const btnRef: any = React.useRef();
-	const { expert, provider, signer } = useWallet();
-	const { address, chainId } = psUseWallet();
+	const { expert } = usePegasys();
+	const { address, chainId, provider, signer } = useWallet();
 	const { userTokensBalance } = useTokens();
 	const { earnOpportunities } = useEarn();
 	const [psysInfo, setPsysInfo] = useState({
@@ -61,7 +55,7 @@ export const Header: React.FC = () => {
 	const walletInfos = {
 		provider,
 		walletAddress: address,
-		chainId,
+		chainId: chainId ?? ChainId.NEVM,
 	};
 
 	const PSYS = userTokensBalance.find(token => token.symbol === "PSYS");

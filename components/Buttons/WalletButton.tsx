@@ -7,13 +7,17 @@ import {
 	Collapse,
 } from "@chakra-ui/react";
 import { SelectSyscoin, SelectWallets } from "components/Modals";
-import { useModal, usePicasso, useWallet } from "hooks";
+import { useModal, usePicasso } from "hooks";
 import { FunctionComponent } from "react";
 import { AddressInfoButton } from "components/Buttons";
 import { shortAddress } from "utils";
 import { ExpertMode } from "components/Header/ExpertMode";
-import { ApprovalState } from "contexts";
-import { useWallet as psUseWallet } from "pegasys-services";
+import {
+	useWallet,
+	usePegasys,
+	ApprovalState,
+	useTransaction,
+} from "pegasys-services";
 import { AddressButton } from "./AddressButton";
 
 export const WalletButton: FunctionComponent<ButtonProps> = props => {
@@ -31,8 +35,9 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 		onCloseAddress,
 	} = useModal();
 
-	const { walletError, approvalState, pendingTxLength, expert } = useWallet();
-	const { address, isConnected } = psUseWallet();
+	const { approvalState, pendingTxLength } = useTransaction();
+	const { address, isConnected, walletError } = useWallet();
+	const { expert } = usePegasys();
 
 	const isPending = approvalState.status === ApprovalState.PENDING;
 	const { colorMode } = useColorMode();

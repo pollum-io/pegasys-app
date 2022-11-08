@@ -23,5 +23,5 @@ export interface ITokenServicesGetToken {
 	contractAddress: string;
 	contract?: TContract;
 	provider?: TProvider;
-	chainId?: ChainId;
+	chainId?: ChainId | null;
 }

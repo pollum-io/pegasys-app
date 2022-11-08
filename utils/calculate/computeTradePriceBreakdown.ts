@@ -12,7 +12,7 @@ import {
 	ALLOWED_PRICE_IMPACT_MEDIUM,
 	ALLOWED_PRICE_IMPACT_HIGH,
 	BLOCKED_PRICE_IMPACT_NON_EXPERT,
-} from "helpers/consts";
+} from "pegasys-services/constants";
 
 export function warningSeverity(
 	priceImpact: Percent | undefined

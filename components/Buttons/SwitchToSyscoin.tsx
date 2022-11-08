@@ -1,14 +1,13 @@
 import { Button, ButtonProps } from "@chakra-ui/react";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso } from "hooks";
 import { FunctionComponent } from "react";
-import { ConnectSyscoinNetwork } from "utils/ConnectSyscoinNetwork";
+import { ConnectSyscoinNetwork } from "utils/connector/ConnectSyscoinNetwork";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { useWallet as psUseWallet } from "pegasys-services";
+import { useWallet } from "pegasys-services";
 
 export const SwitchToSyscoin: FunctionComponent<ButtonProps> = props => {
 	const theme = usePicasso();
-	const { connectorSelected, setWalletError } = useWallet();
-	const { chainId } = psUseWallet();
+	const { connectorSelected, setWalletError, chainId } = useWallet();
 	const { ...rest } = props;
 
 	return (

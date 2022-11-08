@@ -13,7 +13,6 @@ import {
 	usePicasso,
 	userHasAvailableClaim,
 	userUnclaimedAmount,
-	useWallet,
 } from "hooks";
 import { SiDiscord, SiTwitter } from "react-icons/si";
 import { FaTelegramPlane } from "react-icons/fa";
@@ -22,28 +21,27 @@ import { MdOutlineCallMade } from "react-icons/md";
 import { BorderAnimation } from "components/Airdrop/BorderAnimation";
 import { ChainId, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
-import { ApprovalState } from "contexts";
-import { useWallet as psUseWallet } from "pegasys-services";
+import { useWallet, ApprovalState, useTransaction } from "pegasys-services";
 
 export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	const {
-		signer,
-		provider,
 		setCurrentTxHash,
 		setApprovalState,
 		approvalState,
 		setTransactions,
 		transactions,
-	} = useWallet();
+	} = useTransaction();
 
 	const {
 		chainId: currentNetworkChainId,
 		isConnected,
 		address: walletAddress,
-	} = psUseWallet();
+		signer,
+		provider,
+	} = useWallet();
 
 	const chainId =
 		currentNetworkChainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;

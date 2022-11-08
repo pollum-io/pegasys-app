@@ -25,7 +25,7 @@ import {
 	IPoolsVolume,
 } from "types";
 import { Signer } from "ethers";
-import { formattedNum, formattedPercent } from "utils/numberFormat";
+import { formattedNum, formattedPercent } from "utils/convert/numberFormat";
 import { pegasysClient, SYS_PRICE } from "apollo";
 import { useWallet as psUseWallet } from "pegasys-services";
 
@@ -73,14 +73,15 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	} = props;
 	const theme = usePicasso();
 	const { onOpenRemoveLiquidity, onOpenAddLiquidity } = useModal();
-	const { setCurrentLpAddress, signer, provider } = useWallet();
+	const { setCurrentLpAddress } = useWallet();
 	const { userTokensBalance } = useTokens();
 	const [poolBalance, setPoolBalance] = useState<string>("");
 	const [percentShare, setPercentShare] = useState<number>(0);
 	const [sysPrice, setSysPrice] = useState<number>(0);
 	const [trigger, setTrigger] = useState<boolean>(false);
-	const { address, chainId } = psUseWallet();
 	const { t: translation } = useTranslation();
+	const { address, chainId, signer, provider } = psUseWallet();
+
 	const currencyA = unwrappedToken(pair?.token0 as Token);
 	const currencyB = unwrappedToken(pair?.token1 as Token);
 
@@ -113,7 +114,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		const pairBalance = await getBalanceOfBNSingleCall(
 			pair?.liquidityToken.address as string,
 			address,
-			signer
+			signer ?? null
 		);
 
 		const value = JSBI.BigInt(pairBalance?.toString());
