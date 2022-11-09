@@ -21,8 +21,7 @@ export const SelectWallets: React.FC<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
-	const { connecting } = useWallet();
-	const { connectorSelected } = psUseWallet();
+	const { connectorSelected, connecting } = psUseWallet();
 
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
