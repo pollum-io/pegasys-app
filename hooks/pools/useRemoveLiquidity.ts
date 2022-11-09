@@ -119,7 +119,7 @@ export const UseRemoveLiquidity = (
 		];
 		const message = {
 			owner: account,
-			spender: PegasysContracts[chainId],
+			spender: PegasysContracts[chainId].ROUTER_ADDRESS,
 			value: liquidityAmount.raw.toString(),
 			nonce: nonce.toHexString(),
 			deadline: deadline.toNumber(),

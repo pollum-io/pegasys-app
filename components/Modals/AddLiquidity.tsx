@@ -851,7 +851,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										? () => {
 												approve();
 												openPendingTx();
-												onModalClose();
 										  }
 										: () => {
 												addLiquidity();

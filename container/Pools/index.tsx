@@ -117,8 +117,11 @@ export const PoolsContainer: NextPage = () => {
 			? "Your Pools"
 			: "Volume";
 
+	const isValid = userTokensBalance.every(
+		token => token.chainId === currentChainId
+	);
 	useMemo(async () => {
-		if (userTokensBalance.length === 0) return;
+		if (userTokensBalance.length === 0 || !isValid) return;
 
 		const tokens = getTokenPairs(
 			validatedCurrentChain ? currentChainId : ChainId.NEVM,
@@ -349,7 +352,7 @@ export const PoolsContainer: NextPage = () => {
 			twoDays: formattedTwoDaysCommonPairs,
 			general: formattedGeneralCommonPairs,
 		});
-	}, [userTokensBalance, currentNetworkChainId]);
+	}, [userTokensBalance, isValid, currentNetworkChainId]);
 
 	useMemo(() => {
 		if (searchTokens.length !== 0) {

@@ -8,7 +8,12 @@ interface ITokens {
 }
 
 export function getTokenPairs(chainId: ChainId, allTokens: WrappedTokenInfo[]) {
-	if (allTokens.length === 0 || !chainId) return [];
+	if (
+		allTokens.length === 0 ||
+		!chainId ||
+		!allTokens.every(token => token.chainId === chainId)
+	)
+		return [];
 	const tokens: ITokens = allTokens.reduce(
 		(accumulator, value) => ({
 			...accumulator,
