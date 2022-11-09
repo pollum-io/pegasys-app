@@ -306,15 +306,17 @@
 	},
 	"airdrop": {
 		"claimPsysAirdrop": "Получить PSYS Airdrop",
+		"airdropTime": "Время высадки!",
+		"mainText": "Если вы приняли участие в акции PSYS airdrop, здесь вы можете проверить, сколько вы заработали, и получить свои жетоны.",
 		"claimPeriodEnded": "Период подачи заявки на аирдроп закончился.",
 		"connectWalletViewLiquidity": "Подключитесь к кошельку, чтобы просмотреть свою ликвидность.",
 		"noAvailableClaim": "У вас нет доступных клеймов.",
 		"noUniNoSushi": "У вас нет токенов UNI или SUSHI. Пожалуйста, следуйте инструкциям, чтобы добавить токены UNI или SUSHI в свой кошелек.",
 		"youHave": "У тебя есть ",
 		"psysAvailableClaim": " PSYS доступен для клейма",
-		"loading": "Загрузка",
+		"loading": "Утверждение",
 		"welcomeToTeamPegasys": "Добро пожаловать в команду Pegasus",
-		"claim": "Клейм "
+		"claim": "Заявить сейчас"
 	},
 	"earnPage": {
 		"pegasysLiquidityMining": "Добыча ликвидности Pegasys",

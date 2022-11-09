@@ -307,15 +307,17 @@
 	},
 	"airdrop": {
 		"airdrop": "Airdrop",
+		"airdropTime": "¡Es la hora del lanzamiento aéreo!",
+		"mainText": "Si has seguido los pasos para calificar para el lanzamiento aéreo de PSYS, este es el lugar para comprobar cuánto has ganado y reclamar tus tokens.",
 		"claimPeriodEnded": "El período de reclamación del airdrop ha termindado.",
 		"connectWalletViewLiquidity": "Conecte la cartera para ver su liquidez.",
 		"noAvailableClaim": "No tiene recompensa disponible.",
 		"noUniNoSushi": "No tiene tokens UNI ni SUSHI. Por favor, siga el tutorial aquí para añadir tokens UNI o SUSHI a su cartera.",
 		"youHave": "Tiene ",
 		"psysAvailableClaim": " PSYS disponible para reclamar",
-		"loading": "Cargando",
+		"loading": "Reclamando",
 		"welcomeToTeamPegasys": "Bienvenido al equipo Pegasys",
-		"claim": "reclamar "
+		"claim": "Reclamar ahora"
 	},
 	"earnPage": {
 		"pegasysLiquidityMining": "Minería de liquidez Pegasys",

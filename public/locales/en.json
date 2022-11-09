@@ -307,15 +307,17 @@
 	},
 	"airdrop": {
 		"airdrop": "Airdrop",
+		"airdropTime": "It’s airdrop time!",
+		"mainText": "If you have taken the steps to qualify for the PSYS airdrop, this is the place to check how much you earned and claim your tokens.",
 		"claimPeriodEnded": "The airdrop claim period has ended.",
 		"connectWalletViewLiquidity": "Connect to a wallet to check your eligibility.",
 		"noAvailableClaim": "You have no available PSYS to claim.",
 		"noUniNoSushi": "You have no UNI or SUSHI tokens. Please follow the tutorial here to add UNI or SUSHI tokens to your wallet.",
 		"youHave": "You have ",
 		"psysAvailableClaim": " PSYS available to claim",
-		"loading": "Loading",
+		"loading": "Claiming",
 		"welcomeToTeamPegasys": "Welcome to the Pegasys DAO",
-		"claim": "Claim "
+		"claim": "Claim now"
 	},
 	"earnPage": {
 		"pegasysLiquidityMining": "Pegasys liquidity mining",

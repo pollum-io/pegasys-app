@@ -307,15 +307,17 @@
 	},
 	"airdrop": {
 		"airdrop": "空投",
+		"airdropTime": "空投时间到了!",
+		"mainText": "如果你已经采取了措施来获得PSYS空投的资格，这里是检查你赚了多少钱和领取代币的地方。",
 		"claimPeriodEnded": "空投申领期已经结束。",
 		"connectWalletViewLiquidity": "连接到钱包以查看您的流动性。",
 		"noAvailableClaim": "您没有可以领取的",
 		"noUniNoSushi": "您没有 UNI 或 SUSHI 代币。请按照此处的教程将 UNI 或 SUSHI 代币添加到您的钱包。",
 		"youHave": "你有 ",
 		"psysAvailableClaim": " PSYS 可以领取",
-		"loading": "Loading",
+		"loading": "声称",
 		"welcomeToTeamPegasys": "欢迎加入 Pegasys 团队",
-		"claim": "领取 "
+		"claim": "现在申请"
 	},
 	"earnPage": {
 		"pegasysLiquidityMining": "Pegasys 流动性挖矿",
@@ -363,7 +365,7 @@
 		"readMoreProviding": "阅读有关提供流动性的更多信息",
 		"viewStakedLiquidity": "查看您质押的流动性",
 		"yourLiquidity": "您的流动性",
-		"liquidity":"流动性",
+		"liquidity": "流动性",
 		"createPair": "创建一个交易对",
 		"addLiquidity": "增加流动性",
 		"unavailable": "不可用的流动性代币。",
