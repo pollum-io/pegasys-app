@@ -133,15 +133,18 @@
 		"dismiss": "Dismiss"
 	},
 	"positionCard": {
-		"add": "Add",
+		"add": "Add Liquidity",
 		"remove": "Remove",
-		"poolShare": "Your pool share:",
+		"volume": "Volume",
+		"poolShare": "Your pool share",
 		"pooled": "Pooled",
 		"poolTokens": "Your pool tokens:",
 		"manage": "Manage",
 		"loading": "Loading",
+		"liquidity": "Liquidity",
 		"yourPosition": "Your position",
-		"byAddingLiquidityInfo": "By adding liquidity you'll earn 0.25% of all trades on this pair proportional to your share of the pool.\n Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
+		"byAddingLiquidityInfo1": "By adding liquidity you'll earn 0.25% of all trades on this pair proportional to your share of the pool.",
+		"byAddingLiquidityInfo2": "Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 	},
 	"searchModal": {
 		"commonBases": "Common bases",
@@ -359,7 +362,9 @@
 		"liquidityProvidersEarn": "Liquidity providers earn a 0.25% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.",
 		"readMoreProviding": "Read more about providing liquidity",
 		"viewStakedLiquidity": "View your staked liquidity",
-		"yourLiquidity": "Your liquidity",
+		"yourPools": "Your pools",
+		"unavailable": "Unavailable liquidity tokens.",
+		"liquidity":"Liquidity",
 		"createPair": "Create a pair",
 		"addLiquidity": "Add liquidity",
 		"connectWalletToView": "Connect to a wallet to view your liquidity.",
@@ -368,7 +373,10 @@
 		"uniswapV1Found": "Uniswap V1 liquidity found!",
 		"noSeePoolJoined": "Don't see a pool you joined?",
 		"migrateNow": "Migrate now.",
-		"importIt": "Import it."
+		"importIt": "Import it.",
+		"poolsOverview": "Pools Overview",
+		"searchPair": "Search by token symbol",
+		"sort": "Sort by"
 	},
 	"poolFinder": {
 		"connectToFind": "Connect to a wallet to find pools",
@@ -389,14 +397,16 @@
 		"detailed": "Detailed",
 		"receiveSys": "Receive SYS",
 		"receiveWsys": "Receive WSYS",
-		"price": "Price:",
+		"price": "Price",
+		"receive": "Receive",
 		"connectWallet": "Connect Wallet",
 		"approving": "Approving",
 		"approve": "Approve",
 		"approved": "Approved",
 		"remove": "Remove",
 		"output": "Output",
-		"amount": "Amount"
+		"amount": "Amount",
+		"sign": "Sign"
 	},
 	"swapPage": {
 		"addSend": "+ Add a send (optional)",

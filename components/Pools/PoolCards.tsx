@@ -14,6 +14,7 @@ import {
 	Token,
 	TokenAmount,
 } from "@pollum-io/pegasys-sdk";
+import { useTranslation } from "react-i18next";
 import {
 	WrappedTokenInfo,
 	IDeposited,
@@ -78,6 +79,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	const [percentShare, setPercentShare] = useState<number>(0);
 	const [sysPrice, setSysPrice] = useState<number>(0);
 	const [trigger, setTrigger] = useState<boolean>(false);
+	const { t: translation } = useTranslation();
 	const { address, chainId, signer, provider } = psUseWallet();
 
 	const currencyA = unwrappedToken(pair?.token0 as Token);
@@ -311,13 +313,13 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			<Flex flexDirection="column" pt="6">
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold" color={theme.text.mono}>
-						Liquidity
+						{translation("positionCard.liquidity")}
 					</Text>
 					<Text>{reserveUSD || "-"}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold" color={theme.text.mono}>
-						Volume (24h)
+						{translation("positionCard.volume")} (24h)
 					</Text>
 					<Text>{volumeUSD || "-"}</Text>
 				</Flex>
@@ -332,7 +334,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 						fontWeight="semibold"
 						color={percentShare === 0 ? theme.text.lightnessGray : ""}
 					>
-						Your pool share
+						{translation("positionCard.poolShare")}
 					</Text>
 					<Text color={percentShare === 0 ? theme.text.lightnessGray : ""}>
 						{percentShare !== 0 && percentShare
@@ -365,7 +367,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 						color: theme.text.cyanLightPurple,
 					}}
 				>
-					Remove
+					{translation("positionCard.remove")}
 				</Button>
 				<Button
 					w="100%"
@@ -384,7 +386,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 						bgColor: theme.bg.bluePurple,
 					}}
 				>
-					Add Liquidity
+					{translation("positionCard.add")}
 				</Button>
 			</Flex>
 		</Flex>

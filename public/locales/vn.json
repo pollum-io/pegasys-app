@@ -139,9 +139,12 @@
 		"pooled": "Chung vốn",
 		"poolTokens": "Token bể của bạn:",
 		"manage": "Quản lý",
+		"volume": "Âm lượng",
 		"loading": "Đang tải",
+		"liquidity": "tính thanh khoản",
 		"yourPosition": "Vị thế của bạn",
-		"byAddingLiquidityInfo": "Bằng cách thêm thanh khoản, bạn sẽ nhận được 0,3% tất cả các giao dịch trên cặp tiền này tỷ lệ với phần của bạn trong bể .\n Phí được thêm vào bể, sẽ tích lũy trong thời gian thực và có thể được nhận bằng cách rút thanh khoản của bạn ."
+		"byAddingLiquidityInfo1": "Bằng cách thêm thanh khoản, bạn sẽ nhận được 0,3% tất cả các giao dịch trên cặp tiền này tỷ lệ với phần của bạn trong bể .",
+		"byAddingLiquidityInfo2": "Phí được thêm vào bể, sẽ tích lũy trong thời gian thực và có thể được nhận bằng cách rút thanh khoản của bạn ."
 	},
 	"searchModal": {
 		"commonBases": "Cơ sở chung",
@@ -361,14 +364,21 @@
 		"viewStakedLiquidity": "Quan sát số lượng thanh khoản đã cung cấp của bạn",
 		"yourLiquidity": "Số lượng thanh khoản của bạn",
 		"createPair": "Tạo một cặp",
+		"liquidity": "tính thanh khoản",
 		"addLiquidity": "Thêm thanh khoản",
 		"connectWalletToView": "Kết nối với một ví bất kỳ để quan sát thanh khoản của bạn",
 		"loading": "Đang tải",
 		"noLiquidity": "Không tìm thấy thanh khoản.",
+		"unavailable": "Mã thông báo thanh khoản không có sẵn.",
 		"uniswapV1Found": "Thanh khoản uniswap V1 được tìm thấy",
 		"noSeePoolJoined": "Bạn không tìm thấy bể mà bạn đã tham gia?",
 		"migrateNow": "Chuyển đổi ngay bây giờ.",
-		"importIt": "Nhập."
+		"yourPools": "Hồ bơi của bạn",
+		"importIt": "Nhập.",
+		"sort": "Sắp xếp theo",
+		"poolsOverview": "Tổng quan về Hồ bơi",
+
+		"searchPair": "Tìm kiếm theo biểu tượng mã thông báo"
 	},
 	"poolFinder": {
 		"connectToFind": "Kêt nối với một ví để nhìn thấy bể",
@@ -389,6 +399,7 @@
 		"detailed": "Chi tiết",
 		"receiveSys": "Nhận SYS",
 		"receiveWsys": "Nhận WSYS",
+		"receive":"Nhận",
 		"price": "Giá:",
 		"connectWallet": "Kết nối ví",
 		"approving": "Đang chấp nhận",
@@ -396,7 +407,8 @@
 		"approved": "Đã chấp nhận",
 		"remove": "Loại bỏ",
 		"output": "Đầu ra",
-		"amount": "Số lượng"
+		"amount": "Số lượng",
+		"sign": "Dấu hiệu"
 	},
 	"swapPage": {
 		"addSend": "+ Thêm lần gửi (tùy chọn) ",

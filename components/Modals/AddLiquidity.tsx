@@ -477,7 +477,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							px="4"
 							color={theme.text.mono}
 						>
-							{isCreate ? "Create a pair" : "Add Liquidity"}
+							{translation("positionCard.add")}
 						</Text>
 					</Flex>
 					<TooltipComponent
@@ -486,37 +486,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						color={theme.icon.whiteGray}
 					/>
 				</ModalHeader>
-				{isCreate && (
-					<Flex alignItems="center" w="100%" justifyContent="center">
-						<Flex
-							w={["90%", "90%", "90%", "90%"]}
-							h={["100%", "max-content", "90%", "100%"]}
-							borderRadius="2xl"
-							bgColor={theme.bg.blueNavyLightnessOp}
-							color={theme.text.cyan}
-							p="1.5rem"
-							flexDirection="column"
-							gap={3}
-						>
-							<Text
-								fontSize={["sm", "sm", "md", "md"]}
-								fontWeight="semibold"
-								textAlign="left"
-							>
-								You are the first liquidity provider.
-							</Text>
-							<Text
-								fontSize={["sm", "sm", "md", "md"]}
-								fontWeight="normal"
-								textAlign="left"
-								lineHeight="base"
-							>
-								The ratio of tokens you add will set the price of this pool.
-								Once you are happy with the rate click supply to review.
-							</Text>
-						</Flex>
-					</Flex>
-				)}
 
 				<Flex flexDirection="column">
 					<Flex
@@ -557,7 +526,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							>
 								<Text fontSize="sm">Input</Text>
 								<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-									Balance: {selectedToken[0]?.balance}
+									{translation("currencyInputPanel.balance")}{" "}
+									{selectedToken[0]?.balance}
 								</Text>
 							</Flex>
 
@@ -599,7 +569,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										color={theme.text.cyanPurple}
 										_hover={{ cursor: "pointer", opacity: "0.8" }}
 									>
-										Max
+										{translation("currencyInputPanel.max")}
 									</Text>
 								</Flex>
 
@@ -630,7 +600,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									color={theme.text.red400}
 									fontWeight="semibold"
 								>
-									Insufficient {selectedToken[0]?.symbol} balance.
+									{translation("swapHooks.insufficient")}
+									{selectedToken[0]?.symbol} {translation("swapHooks.balance")}.
 								</Text>
 								<Text
 									fontSize="sm"
@@ -638,7 +609,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									textAlign="center"
 									color={theme.text.red400}
 								>
-									Please insert a valid amount.
+									{translation("swapHooks.validAmount")}.
 								</Text>
 							</Flex>
 						)}
@@ -671,7 +642,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							>
 								<Text fontSize="sm">Input</Text>
 								<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
-									Balance: {selectedToken[1]?.balance}
+									{translation("currencyInputPanel.balance")}{" "}
+									{selectedToken[1]?.balance}
 								</Text>
 							</Flex>
 
@@ -713,7 +685,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										color={theme.text.cyanPurple}
 										_hover={{ cursor: "pointer", opacity: "0.8" }}
 									>
-										Max
+										{translation("currencyInputPanel.max")}
 									</Text>
 								</Flex>
 
@@ -744,7 +716,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									color={theme.text.red400}
 									fontWeight="semibold"
 								>
-									Insufficient {selectedToken[1]?.symbol} balance.
+									{translation("swapHooks.insufficient")}
+									{selectedToken[1]?.symbol} {translation("swapHooks.balance")}.
 								</Text>
 								<Text
 									fontSize="sm"
@@ -752,7 +725,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									textAlign="center"
 									color={theme.text.red400}
 								>
-									Please insert a valid amount.
+									{translation("swapHooks.validAmount")}.
 								</Text>
 							</Flex>
 						)}
@@ -774,7 +747,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										py="0.5rem"
 										color={theme.text.mono}
 									>
-										Prices and pool share
+										{translation("addLiquidity.prices")}{" "}
+										{translation("addLiquidity.poolShare")}
 									</Text>
 									<Flex
 										flexDirection={["row", "row", "row", "row"]}
@@ -798,8 +772,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 													: "-"}
 											</Text>
 											<Text fontWeight="normal">
-												{selectedToken[0]?.symbol} per{" "}
-												{selectedToken[1]?.symbol}{" "}
+												{selectedToken[0]?.symbol}
+												{translation("addLiquidity.per")}
+												{selectedToken[1]?.symbol}
 											</Text>
 										</Flex>
 										<Flex
@@ -814,7 +789,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 													: "-"}
 											</Text>
 											<Text fontWeight="normal">
-												{selectedToken[1]?.symbol} per{" "}
+												{selectedToken[1]?.symbol}
+												{translation("addLiquidity.per")}
 												{selectedToken[0]?.symbol}
 											</Text>
 										</Flex>
@@ -825,7 +801,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 											textAlign="center"
 										>
 											<Text fontWeight="semibold">{currPoolShare || "-"}</Text>
-											<Text fontWeight="normal">Share of Pool</Text>
+											<Text fontWeight="normal">
+												{translation("addLiquidity.shareOfPool")}
+											</Text>
 										</Flex>
 									</Flex>
 								</Flex>
@@ -865,8 +843,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									? "Invalid Pair"
 									: approveTokenStatus === ApprovalState.NOT_APPROVED &&
 									  !isApproved
-									? `Approve ${tokenToApp?.symbol}`
-									: "Add Liquidity"}
+									? `${translation("earn.approve")} ${tokenToApp?.symbol}`
+									: translation("positionCard.add")}
 							</Button>
 						</Flex>
 					</Flex>
@@ -886,7 +864,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						color={theme.text.mono}
 					>
 						<Text fontWeight="bold" fontSize="lg">
-							Your position
+							{translation("positionCard.yourPosition")}
 						</Text>
 						<Flex
 							flexDirection="row"
@@ -906,7 +884,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						</Flex>
 						<Flex flexDirection="column">
 							<Flex flexDirection="row" justifyContent="space-between">
-								<Text fontWeight="semibold">Your pool share:</Text>
+								<Text fontWeight="semibold">
+									{translation("positionCard.poolShare")}
+								</Text>
 								<Text fontWeight="normal">
 									{poolPercentShare === "0.00" &&
 									depositedTokens?.token0?.toSignificant(6) !== "0" &&
@@ -966,14 +946,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 							gap="6"
 							fontSize={["sm", "sm", "md", "md"]}
 						>
-							<Text>
-								By adding liquidity you’ll earn 0.25% of all trades on this pair
-								proportional to your share of the pool.
-							</Text>
-							<Text>
-								Fees are added to the pool, accrue in real time and can be
-								claimed by withdrawing your liquidity.
-							</Text>
+							<Text>{translation("positionCard.byAddingLiquidityInfo1")}</Text>
+							<Text>{translation("positionCard.byAddingLiquidityInfo2")}</Text>
 						</Flex>
 					</Flex>
 				)}
