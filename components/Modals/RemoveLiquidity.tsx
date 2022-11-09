@@ -238,7 +238,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 							px="4"
 							color={theme.text.mono}
 						>
-							Remove Liquidity
+							{translation("navigationTabs.removeLiquidity")}
 						</Text>
 					</Flex>
 					<TooltipComponent
@@ -261,7 +261,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						fontSize="md"
 						fontWeight="medium"
 					>
-						<Text>Amount</Text>
+						<Text>{translation("removeLiquidity.amount")}</Text>
 					</Flex>
 					<Flex
 						flexDirection="row"
@@ -373,7 +373,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 					{haveSys && (
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text fontWeight="medium" fontSize="md">
-								Receive
+								{translation("removeLiquidity.receive")}
 							</Text>
 							<Flex flexDirection="row">
 								<Stack align="center" direction="row">
@@ -391,7 +391,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 					)}
 					<Flex flexDirection="row" justifyContent="space-between" pt="6">
 						<Text fontWeight="medium" fontSize="md">
-							Price
+							{translation("removeLiquidity.price")}
 						</Text>
 						<Flex flexDirection="column">
 							<Flex flexDirection="row">
@@ -442,8 +442,8 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 						{isCreate
 							? "Create a pair"
 							: !txSignature
-							? "Sign"
-							: "Remove Liquidity"}
+							? translation("removeLiquidity.sign")
+							: translation("navigationTabs.removeLiquidity")}
 					</Button>
 				</Flex>
 				<Flex
@@ -458,7 +458,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 					borderBottomRadius={["0", "0", "3xl", "3xl"]}
 				>
 					<Text fontWeight="bold" fontSize="lg">
-						Your position
+						{translation("positionCard.yourPosition")}
 					</Text>
 					<Flex
 						flexDirection="row"
@@ -476,7 +476,9 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 					</Flex>
 					<Flex flexDirection="column">
 						<Flex flexDirection="row" justifyContent="space-between">
-							<Text fontWeight="semibold">Your pool share:</Text>
+							<Text fontWeight="semibold">
+								{translation("positionCard.poolShare")}
+							</Text>
 							<Text fontWeight="normal">
 								{poolPercentShare === "0.00"
 									? "<0.01%"

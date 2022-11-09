@@ -29,7 +29,7 @@ export async function useAllCommonPairs(
 
 	const basePairs: [Token, Token][] = flatMap(bases, (base): [Token, Token][] =>
 		bases.map(otherBase => [base, otherBase])
-	).filter(([t0, t1]) => t0.address !== t1.address);
+	).filter(([t0, t1]) => t0?.address !== t1?.address);
 
 	const allPairCombinations: [Token, Token][] =
 		tokenA && tokenB

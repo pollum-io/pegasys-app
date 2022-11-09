@@ -35,6 +35,7 @@ import {
 	IPoolsLiquidity,
 	IPoolsVolume,
 } from "types";
+import { useTranslation } from "react-i18next";
 import { useWallet, SUPPORTED_NETWORK_CHAINS } from "pegasys-services";
 import {
 	getTokenPairs,
@@ -87,6 +88,7 @@ export const PoolsContainer: NextPage = () => {
 	const [pairInfo, setPairInfo] = useState<ICommonPairs>();
 	const [notFound, setNotFound] = useState<boolean>(false);
 	const [allTokens, setAllTokens] = useState<[Token, Token][]>([]);
+	const { t: translation } = useTranslation();
 
 	let currentChainId: ChainId;
 
@@ -110,12 +112,12 @@ export const PoolsContainer: NextPage = () => {
 
 	const sortTypeName =
 		sortType === "liquidity"
-			? "Liquidity"
+			? translation("pool.liquidity")
 			: sortType === "apr"
 			? "APR"
 			: sortType === "your-pools"
-			? "Your Pools"
-			: "Volume";
+			? translation("pool.yourPools")
+			: translation("positionCard.volume");
 
 	useMemo(async () => {
 		if (userTokensBalance.length === 0) return;
@@ -496,7 +498,7 @@ export const PoolsContainer: NextPage = () => {
 							position="absolute"
 							zIndex="base"
 							w="100%"
-							h="85%"
+							h={address ? "85%" : "100%"}
 						/>
 						<Flex
 							zIndex="docked"
@@ -508,7 +510,7 @@ export const PoolsContainer: NextPage = () => {
 							color="white"
 						>
 							<Text fontWeight="bold" fontSize="md">
-								Liquidity Provider Rewards
+								{translation("pool.liquidityProviderRewards")}
 							</Text>
 							<Text
 								color="white"
@@ -517,9 +519,7 @@ export const PoolsContainer: NextPage = () => {
 								lineHeight="shorter"
 								w={["100%", "70%", "60%", "60%"]}
 							>
-								Liquidity providers earn a 0.25% fee on all trades proportional
-								to their share of the pool. Fees are added to the pool, accrue
-								in real time and can be claimed by withdrawing your liquidity.
+								{translation("pool.liquidityProvidersEarn")}
 							</Text>
 						</Flex>
 						{address && (
@@ -540,7 +540,7 @@ export const PoolsContainer: NextPage = () => {
 								}
 							>
 								<Text fontWeight="medium" fontSize="xs" color="white">
-									View Your Staked Liquidity
+									{translation("pool.viewStakedLiquidity")}
 								</Text>
 								<MdOutlineCallMade size={18} color="white" />
 							</Flex>
@@ -571,7 +571,7 @@ export const PoolsContainer: NextPage = () => {
 								fontWeight="semibold"
 								color={theme.text.mono}
 							>
-								Pools Overview
+								{translation("pool.poolsOverview")}
 							</Text>
 						</Flex>
 						<Flex
@@ -606,7 +606,7 @@ export const PoolsContainer: NextPage = () => {
 									/>
 									<Input
 										borderColor={theme.bg.blueNavyLightness}
-										placeholder="Search by token name"
+										placeholder={translation("pool.searchPair")}
 										_placeholder={{
 											color: theme.text.inputBluePurple,
 										}}
@@ -634,7 +634,7 @@ export const PoolsContainer: NextPage = () => {
 									{isConnected && (
 										<Menu>
 											<Text fontSize="sm" pb="2">
-												Sort by
+												{translation("pool.sort")}
 											</Text>
 											<MenuButton
 												as={Button}
@@ -652,7 +652,9 @@ export const PoolsContainer: NextPage = () => {
 												borderRadius="full"
 												rightIcon={<MdExpandMore size={20} />}
 											>
-												{!sortType ? "Your Pools" : sortTypeName}
+												{!sortType
+													? translation("pool.yourPools")
+													: sortTypeName}
 											</MenuButton>
 											<MenuList
 												bgColor={theme.bg.blueNavy}
@@ -666,14 +668,14 @@ export const PoolsContainer: NextPage = () => {
 													_hover={{ bgColor: theme.bg.neutralGray }}
 													onClick={() => setSortType("liquidity")}
 												>
-													Liquidity
+													{translation("pool.liquidity")}
 												</MenuItem>
 												<MenuItem
 													color={theme.text.mono}
 													_hover={{ bgColor: theme.bg.neutralGray }}
 													onClick={() => setSortType("volume")}
 												>
-													Volume
+													{translation("positionCard.volume")}
 												</MenuItem>
 												<MenuItem
 													color={theme.text.mono}
@@ -687,7 +689,7 @@ export const PoolsContainer: NextPage = () => {
 													_hover={{ bgColor: theme.bg.neutralGray }}
 													onClick={() => setSortType("your-pools")}
 												>
-													Your Pools
+													{translation("pool.yourPools")}
 												</MenuItem>
 											</MenuList>
 										</Menu>
@@ -710,8 +712,7 @@ export const PoolsContainer: NextPage = () => {
 								fontWeight="normal"
 								textAlign="center"
 							>
-								Please connect your wallet in the button bellow to be able to
-								view your liquidity.
+								{translation("pool.connectWalletToView")}
 							</Text>
 						</Flex>
 					) : (
@@ -756,7 +757,7 @@ export const PoolsContainer: NextPage = () => {
 										fontWeight="normal"
 										textAlign="center"
 									>
-										Unavailable liquidity tokens.
+										{translation("pool.unavailable")}
 									</Text>
 								</Flex>
 							) : (
