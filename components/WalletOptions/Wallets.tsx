@@ -1,5 +1,6 @@
 import { Button, Flex, Img } from "@chakra-ui/react";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso } from "hooks";
+import { useWallet } from "pegasys-services";
 import React from "react";
 
 interface IWalletProps {
