@@ -10,6 +10,7 @@ import { StakeCard, LoadingTransition } from "components";
 import { useModal, usePicasso } from "hooks";
 import { NextPage } from "next";
 import { MdOutlineCallMade } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 import {
 	useWallet as psUseWallet,
 	useStake,
@@ -29,6 +30,7 @@ export const StakeContainer: NextPage = () => {
 	const { earnOpportunities, loading, signatureLoading, dataLoading } =
 		useEarn();
 	const { isOpenStakeActions, onCloseStakeActions } = useModal();
+	const { t: translation } = useTranslation();
 
 	return (
 		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
@@ -60,7 +62,7 @@ export const StakeContainer: NextPage = () => {
 						color="white"
 					>
 						<Text fontWeight="bold" color="white" fontSize="md">
-							Pegasys PSYS Staking
+						{translation("earnPages.stakingTitle")}
 						</Text>
 						<Text
 							fontWeight="medium"
@@ -68,7 +70,7 @@ export const StakeContainer: NextPage = () => {
 							lineHeight="shorter"
 							w={["70%", "50%", "50%", "50%"]}
 						>
-							Deposit and stake your PSYS tokens to earn more tokens.
+							{translation("earnPages.stakingDescription")}
 						</Text>
 					</Flex>
 					<Flex
@@ -87,7 +89,7 @@ export const StakeContainer: NextPage = () => {
 						onClick={() => window.open("https://pegasys.finance/blog/psys/")}
 					>
 						<Text fontWeight="medium" fontSize="xs">
-							Read more about PSYS
+							{translation("earnPages.stakingLink")}
 						</Text>
 						<MdOutlineCallMade size={20} />
 					</Flex>
@@ -108,7 +110,7 @@ export const StakeContainer: NextPage = () => {
 						zIndex="docked"
 					>
 						<Text fontSize="2xl" fontWeight="semibold">
-							Current Opportunities
+							{translation("earnPages.stakes")}
 						</Text>
 						{address && (
 							<Flex
@@ -179,8 +181,7 @@ export const StakeContainer: NextPage = () => {
 							fontWeight="normal"
 							textAlign="center"
 						>
-							Please connect your wallet in the button bellow to be able to view
-							your stakes.
+							{translation("earnPages.walletConnect")}
 						</Text>
 					</Flex>
 				)}
@@ -199,7 +200,7 @@ export const StakeContainer: NextPage = () => {
 								fontWeight="normal"
 								textAlign="center"
 							>
-								This feature is not available for this network
+								{translation("earnPages.featNotAvailable")}
 							</Text>
 						</Flex>
 					)}
@@ -221,7 +222,7 @@ export const StakeContainer: NextPage = () => {
 								fontWeight="normal"
 								textAlign="center"
 							>
-								Any available opportunitie
+								{translation("earnPages.anyAvailableOpportunities")}
 							</Text>
 						</Flex>
 					)}

@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { Flex, Img, Text } from "@chakra-ui/react";
 import { JSBI } from "@pollum-io/pegasys-sdk";
+import { useTranslation } from "react-i18next";
 
 import { usePicasso, useTokens } from "hooks";
 import { useEarn } from "pegasys-services";
@@ -14,6 +15,7 @@ const EarnClaimAction: React.FC<IEarnClaimActionProps> = ({ claim }) => {
 	const { selectedOpportunity, buttonId, loading } = useEarn();
 	const { userTokensBalance } = useTokens();
 	const theme = usePicasso();
+	const { t } = useTranslation();
 
 	const extraTokenLogo = useMemo(() => {
 		const extraTokenWrapped = userTokensBalance.find(
@@ -61,7 +63,11 @@ const EarnClaimAction: React.FC<IEarnClaimActionProps> = ({ claim }) => {
 					</Text>
 				</Flex>
 				<Flex flexDirection="row">
-					<Text>Unclaimed {selectedOpportunity.rewardToken.symbol}</Text>
+					<Text>
+						{t("earnPages.unclaimed", {
+							token: selectedOpportunity.rewardToken.symbol,
+						})}
+					</Text>
 				</Flex>
 			</Flex>
 			{selectedOpportunity.extraRewardToken &&
@@ -86,7 +92,9 @@ const EarnClaimAction: React.FC<IEarnClaimActionProps> = ({ claim }) => {
 						</Flex>
 						<Flex flexDirection="row">
 							<Text>
-								Unclaimed {selectedOpportunity.extraRewardToken.symbol}
+								{t("earnPages.unclaimed", {
+									token: selectedOpportunity.extraRewardToken.symbol,
+								})}
 							</Text>
 						</Flex>
 					</Flex>
@@ -102,7 +110,7 @@ const EarnClaimAction: React.FC<IEarnClaimActionProps> = ({ claim }) => {
 				fontSize={16}
 				solid
 			>
-				{`Claim ${selectedOpportunity.rewardToken.symbol}`}
+				{t("earnPages.claim")}
 			</EarnButton>
 		</Flex>
 	);

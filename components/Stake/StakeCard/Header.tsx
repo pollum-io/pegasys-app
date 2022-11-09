@@ -1,5 +1,6 @@
 import React from "react";
 import { Flex, Img, Text } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 import { usePicasso } from "hooks";
 import { EarnButton } from "../../Earn";
@@ -12,6 +13,7 @@ const Header: React.FC<IHeaderProps> = ({
 	onClick,
 }) => {
 	const theme = usePicasso();
+	const { t } = useTranslation();
 
 	return (
 		<Flex
@@ -24,7 +26,9 @@ const Header: React.FC<IHeaderProps> = ({
 			gap="2"
 		>
 			<Img src="icons/pegasys.png" w="6" h="6" />
-			<Text color={theme.text.whitePurple}>Earn {symbol}</Text>
+			<Text color={theme.text.whitePurple}>
+				{t("earnPages.earn")} {symbol}
+			</Text>
 			<EarnButton
 				id="claim"
 				py="1"
@@ -35,7 +39,7 @@ const Header: React.FC<IHeaderProps> = ({
 				amount={unclaimedAmount}
 				fontSize="xs"
 			>
-				Claim
+				{t("earnPages.claim")}
 			</EarnButton>
 		</Flex>
 	);

@@ -1,5 +1,6 @@
 import React from "react";
 import { Flex, Grid } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 import { formattedNum } from "utils/convert/numberFormat";
 import { formatBigNumbers } from "pegasys-services";
@@ -17,46 +18,50 @@ const Body: React.FC<IBodyProps> = ({
 	stakedAmount,
 	unclaimedInUsd,
 	unclaimedAmount,
-}) => (
-	<Flex
-		alignItems={["flex-start", "flex-start", "center", "center"]}
-		width="100%"
-	>
-		<Grid
-			templateColumns={[
-				"repeat(1, 1fr)",
-				"repeat(1, 1fr)",
-				"repeat(3, 1fr)",
-				"repeat(3, 1fr)",
-			]}
-			gap={["1rem", "1rem", "2rem", "2rem"]}
-			px="8"
+}) => {
+	const { t } = useTranslation();
+
+	return (
+		<Flex
+			alignItems={["flex-start", "flex-start", "center", "center"]}
+			width="100%"
 		>
-			<CardItem text="APR" value={`${apr}%`} />
-			<CardItem
-				text="Total staked"
-				usdValue={`${formattedNum(totalStakedInUsd, true)} USD`}
-				value={`${formatBigNumbers(
-					Number(totalStakedAmount.toSignificant())
-				)} ${symbol}`}
-			/>
-			<CardItem
-				text="Your rate"
-				usdValue={`${formattedNum(rewardRatePerWeekInUsd, true)} USD/Week`}
-				value={`${rewardRatePerWeek.toSignificant()} ${symbol}/Week`}
-			/>
-			<CardItem
-				text="Your Staked"
-				usdValue={`${formattedNum(stakedInUsd, true)} USD`}
-				value={`${stakedAmount.toSignificant()} ${symbol}`}
-			/>
-			<CardItem
-				text="Your unclaimed"
-				usdValue={`${formattedNum(unclaimedInUsd, true)} USD`}
-				value={`${unclaimedAmount.toSignificant()} ${symbol}`}
-			/>
-		</Grid>
-	</Flex>
-);
+			<Grid
+				templateColumns={[
+					"repeat(1, 1fr)",
+					"repeat(1, 1fr)",
+					"repeat(3, 1fr)",
+					"repeat(3, 1fr)",
+				]}
+				gap={["1rem", "1rem", "2rem", "2rem"]}
+				px="8"
+			>
+				<CardItem text="APR" value={`${apr}%`} />
+				<CardItem
+					text={t("earnPages.totalStaked")}
+					usdValue={`${formattedNum(totalStakedInUsd, true)} USD`}
+					value={`${formatBigNumbers(
+						Number(totalStakedAmount.toSignificant())
+					)} ${symbol}`}
+				/>
+				<CardItem
+					text={t("earnPages.yourRate")}
+					usdValue={`${formattedNum(rewardRatePerWeekInUsd, true)} USD/Week`}
+					value={`${rewardRatePerWeek.toSignificant()} ${symbol}/Week`}
+				/>
+				<CardItem
+					text={t("earnPages.yourStake")}
+					usdValue={`${formattedNum(stakedInUsd, true)} USD`}
+					value={`${stakedAmount.toSignificant()} ${symbol}`}
+				/>
+				<CardItem
+					text={t("earnPages.yourUnclaimed")}
+					usdValue={`${formattedNum(unclaimedInUsd, true)} USD`}
+					value={`${unclaimedAmount.toSignificant()} ${symbol}`}
+				/>
+			</Grid>
+		</Flex>
+	);
+};
 
 export default Body;

@@ -17,6 +17,7 @@ import { MdOutlineCallMade, MdExpandMore } from "react-icons/md";
 
 import { LoadingTransition, SearchInput, FarmGrid } from "components";
 import { usePicasso, useModal } from "hooks";
+import { useTranslation } from "react-i18next";
 
 import {
 	useFarm,
@@ -40,6 +41,7 @@ export const FarmContainer: NextPage = () => {
 	const { colorMode } = useColorMode();
 	const { isOpenFarmActions, onCloseFarmActions } = useModal();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
+	const { t: translation } = useTranslation();
 
 	return (
 		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
@@ -71,7 +73,7 @@ export const FarmContainer: NextPage = () => {
 						color="white"
 					>
 						<Text fontWeight="bold" fontSize="md">
-							Pegasys Liquidity Mining
+							{translation("earnPages.farmingTitle")}
 						</Text>
 						<Text
 							fontWeight="medium"
@@ -79,8 +81,7 @@ export const FarmContainer: NextPage = () => {
 							lineHeight="shorter"
 							w={["100%", "70%", "50%", "50%"]}
 						>
-							Deposit your Pegasys Liquidity Provider PLP tokens to receive
-							PSYS, the Pegasys protocol governance token.
+							{translation("earnPages.farmingDescription")}
 						</Text>
 					</Flex>
 					<Flex
@@ -105,7 +106,7 @@ export const FarmContainer: NextPage = () => {
 							>
 								<Flex gap="2.5">
 									<Text fontWeight="medium" fontSize="xs">
-										View Your Staked Liquidity
+										{translation("earnPages.farmingLink")}
 									</Text>
 
 									<MdOutlineCallMade size={20} />
@@ -133,7 +134,7 @@ export const FarmContainer: NextPage = () => {
 						flexDirection={["column-reverse", "unset"]}
 					>
 						<Text fontSize="2xl" fontWeight="semibold">
-							Farms
+							{translation("earnPages.farms")}
 						</Text>
 					</Flex>
 					{address && (
@@ -229,8 +230,7 @@ export const FarmContainer: NextPage = () => {
 							fontWeight="normal"
 							textAlign="center"
 						>
-							Please connect your wallet in the button bellow to be able to view
-							your farms.
+							{translation("earnPages.walletConnect")}
 						</Text>
 					</Flex>
 				)}
@@ -249,7 +249,7 @@ export const FarmContainer: NextPage = () => {
 								fontWeight="normal"
 								textAlign="center"
 							>
-								This feature is not available for this network
+								{translation("earnPages.featNotAvailable")}
 							</Text>
 						</Flex>
 					)}
