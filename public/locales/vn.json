@@ -307,15 +307,17 @@
 	},
 	"airdrop": {
 		"airdrop": "Aidrop",
+		"airdropTime": "Đã đến lúc phát sóng!",
+		"mainText": "Nếu bạn đã thực hiện các bước để đủ điều kiện tham gia đợt airdrop PSYS, đây là nơi để kiểm tra số tiền bạn kiếm được và yêu cầu mã thông báo của bạn.",
 		"claimPeriodEnded": "Thời gian nhận airdrop đã kết thúc.",
 		"connectWalletViewLiquidity": "Kết nối với ví để tìm hiều thanh khoản của bạn.",
 		"noAvailableClaim": "Bạn không có phần thưởng nào.",
 		"noUniNoSushi": "Bạn không có mã token UNI hoặc SUSHI. Vui lòng làm theo hướng dẫn tại đây để thêm mã token UNI hoặc SUSHI vào ví của bạn .",
 		"youHave": "Bạn có ",
 		"psysAvailableClaim": " PSYS khả dụng để nhận",
-		"loading": "Đang tải",
+		"loading": "Yêu cầu bồi thường",
 		"welcomeToTeamPegasys": "Chào mừng đến đội Pagonlin",
-		"claim": "Nhận "
+		"claim": "Yêu cầu ngay bây giờ"
 	},
 	"earnPage": {
 		"pegasysLiquidityMining": "Khai thác thanh khoản Pegasys",
@@ -377,7 +379,6 @@
 		"importIt": "Nhập.",
 		"sort": "Sắp xếp theo",
 		"poolsOverview": "Tổng quan về Hồ bơi",
-
 		"searchPair": "Tìm kiếm theo biểu tượng mã thông báo"
 	},
 	"poolFinder": {
@@ -399,7 +400,7 @@
 		"detailed": "Chi tiết",
 		"receiveSys": "Nhận SYS",
 		"receiveWsys": "Nhận WSYS",
-		"receive":"Nhận",
+		"receive": "Nhận",
 		"price": "Giá:",
 		"connectWallet": "Kết nối ví",
 		"approving": "Đang chấp nhận",

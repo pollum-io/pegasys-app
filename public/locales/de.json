@@ -307,15 +307,17 @@
 	},
 	"airdrop": {
 		"airdrop": "Airdrop",
+		"airdropTime": "Es ist Zeit für die Übergabe!",
+		"mainText": "Wenn Sie die Schritte unternommen haben, um sich für den PSYS-Airdrop zu qualifizieren, können Sie hier überprüfen, wie viel Sie verdient haben, und Ihre Token einfordern.",
 		"claimPeriodEnded": "Der Zeitraum für das Beanspruchen von Airdrops ist abgelaufen.",
 		"connectWalletViewLiquidity": "Verbinde mit einer Wallet, um deine Liquidität zu sehen.",
 		"noAvailableClaim": "Dir stehen keine PSYS zum Beanspruchen zu.",
 		"noUniNoSushi": "Du hast keine UNI- oder SUSHI Token. Bitte folge diesem Tutorial, um deiner Wallet UNI- oder SUSHI-Token hinzuzufügen.",
 		"youHave": "Du hast ",
 		"psysAvailableClaim": " PSYS verfügbar zum Beanspruchen",
-		"loading": "Lädt",
+		"loading": "Beantragung von",
 		"welcomeToTeamPegasys": "Willkommen im Pegasys-Team",
-		"claim": "Beanspruchen "
+		"claim": "Jetzt anfordern"
 	},
 	"earnPage": {
 		"pegasysLiquidityMining": "Pegasys Liquidity-Mining",

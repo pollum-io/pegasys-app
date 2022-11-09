@@ -307,15 +307,17 @@
 	},
 	"airdrop": {
 		"airdrop": "Airdrop",
+		"airdropTime": "C'est l'heure du parachutage !",
+		"mainText": "Si vous avez fait les démarches pour vous qualifier pour le largage PSYS, c'est ici que vous pouvez vérifier combien vous avez gagné et réclamer vos jetons.",
 		"claimPeriodEnded": "La période de réclamation de l'airdrop est terminée.",
 		"connectWalletViewLiquidity": "Connectez-vous à un portefeuille pour consulter vos liquidités.",
 		"noAvailableClaim": "Vous n'avez pas de réclamation disponible.",
 		"noUniNoSushi": "Vous n'avez pas de jetons UNI ou SUSHI. Veuillez suivre le tutoriel ici pour ajouter des jetons UNI ou SUSHI à votre portefeuille.",
 		"youHave": "Vous avez ",
 		"psysAvailableClaim": " PSYS disponible à réclamer",
-		"loading": "Chargement",
+		"loading": "Réclamant",
 		"welcomeToTeamPegasys": "Bienvenue dans l'équipe Pegasys",
-		"claim": "Réclamer "
+		"claim": "Réclamer maintenant"
 	},
 	"earnPage": {
 		"pegasysLiquidityMining": "Minage de la liquidité de Pegasys",
@@ -364,7 +366,7 @@
 		"viewStakedLiquidity": "Visualisez votre liquidité staké",
 		"yourLiquidity": "Vos liquidités",
 		"createPair": "Créer une paire",
-		"liquidity":"Liquidité",
+		"liquidity": "Liquidité",
 		"unavailable": "Jetons de liquidité non disponibles.",
 		"addLiquidity": "Ajouter de la liquidité",
 		"connectWalletToView": "Connectez-vous à un portefeuille pour voir vos liquidités.",

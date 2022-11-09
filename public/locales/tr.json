@@ -307,15 +307,17 @@
 	},
 	"airdrop": {
 		"airdrop": "Airdrop",
+		"airdropTime": "Hava indirme zamanı!",
+		"mainText": "PSYS airdrop'una hak kazanmak için gerekli adımları attıysanız, ne kadar kazandığınızı kontrol edebileceğiniz ve jetonlarınızı talep edebileceğiniz yer burasıdır.",
 		"claimPeriodEnded": "Airdrop’u talep etme süresi sonra erdi.",
 		"connectWalletViewLiquidity": "Likiditenizi görmek için bir cüzdana bağlanın.",
 		"noAvailableClaim": "Mevcut bir talebiniz bulunmuyor.",
 		"noUniNoSushi": "UNI veya SUSHI tokeniniz mevcut değil. Cüzdanınıza UNI veya SUSHI tokenini eklemek için lütfen buradaki rehberi inceleyin.",
 		"youHave": "Talep edebileceğiniz mevcut PSYS: ",
 		"psysAvailableClaim": "",
-		"loading": "Yükleniyor",
+		"loading": "İddia",
 		"welcomeToTeamPegasys": "Pegasys ekibine hoşgeldiniz",
-		"claim": "Talep Et"
+		"claim": "Şimdi talep edin"
 	},
 	"earnPage": {
 		"pegasysLiquidityMining": "Pegasys likidite madenciliği",
