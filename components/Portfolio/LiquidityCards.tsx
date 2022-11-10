@@ -17,18 +17,11 @@ export const LiquidityCards: React.FunctionComponent = () => {
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
 	const [isCreate, setIsCreate] = useState(false);
-	const { t: translation } = useTranslation();
-	// const [haveValue] = useState(false);
-	const {
-		// isOpenRemoveLiquidity,
-		// onCloseRemoveLiquidity,
-		onOpenAddLiquidity,
-		// isOpenAddLiquidity,
-		// onCloseAddLiquidity,
-		onOpenRemoveLiquidity,
-	} = useModal();
+	const { onOpenAddLiquidity, onOpenRemoveLiquidity } = useModal();
 
 	const quantityPerPage = 5;
+
+	const { t: translation } = useTranslation();
 
 	const quantityOfPages = Math.ceil(
 		liquidityCardsMockedData.length / quantityPerPage
@@ -69,18 +62,6 @@ export const LiquidityCards: React.FunctionComponent = () => {
 					px={["1.5rem", "2rem", "2.5rem", "8rem"]}
 					h="max-content"
 				>
-					{/* <AddLiquidityModal
-						isModalOpen={isOpenAddLiquidity}
-						onModalClose={onCloseAddLiquidity}
-						isCreate={isCreate}
-						haveValue={haveValue}
-					/>
-					<RemoveLiquidity
-						isModalOpen={isOpenRemoveLiquidity}
-						onModalClose={onCloseRemoveLiquidity}
-						isCreate={isCreate}
-						haveValue={haveValue}
-					/> */}
 					<Flex
 						display={["flex", "none", "none", "none"]}
 						bgColor={theme.bg.poolShare}
@@ -134,8 +115,18 @@ export const LiquidityCards: React.FunctionComponent = () => {
 									gap={["3", "3", "2", "2"]}
 								>
 									<Flex>
-										<Image src={cardsValue.firstIcon} h="9" w="9" />
-										<Image src={cardsValue.secondIcon} h="9" w="9" />
+										<Image
+											src={cardsValue.firstIcon}
+											h="9"
+											w="9"
+											alt={cardsValue.firstAsset}
+										/>
+										<Image
+											src={cardsValue.secondIcon}
+											h="9"
+											w="9"
+											alt={cardsValue.secondAsset}
+										/>
 									</Flex>
 									<Flex flexDirection={["column", "column", "row", "row"]}>
 										<Text

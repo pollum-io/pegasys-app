@@ -10,7 +10,14 @@ import {
 	useColorMode,
 	SlideFade,
 } from "@chakra-ui/react";
-import { useToasty, useWallet as psUseWallet } from "pegasys-services";
+import {
+	useToasty,
+	useWallet as psUseWallet,
+	usePegasys,
+	ONE_DAY_IN_SECONDS,
+	SUPPORTED_NETWORK_CHAINS,
+	useTransaction,
+} from "pegasys-services";
 import {
 	useModal,
 	usePicasso,
@@ -53,7 +60,6 @@ import { Signer } from "ethers";
 import { computeTradePriceBreakdown, Field, maxAmountSpend } from "utils";
 import { getTokensGraphCandle } from "services/index";
 
-import { ONE_DAY_IN_SECONDS, SUPPORTED_NETWORK_CHAINS } from "helpers/consts";
 import { ConfirmSwap } from "components/Modals/ConfirmSwap";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { OtherWallet } from "./OtherWallet";
@@ -92,11 +98,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		isOpenTransaction,
 		onCloseTransaction,
 	} = useModal();
-
 	const {
-		provider,
-		signer,
-		userSlippageTolerance,
 		setTransactions,
 		transactions,
 		setApprovalState,
@@ -105,12 +107,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setCurrentTxHash,
 		setCurrentSummary,
 		setCurrentInputTokenName,
-		expert,
-		otherWallet,
-		userTransactionDeadlineValue,
-	} = useWallet();
+	} = useTransaction();
+	const { otherWallet } = useWallet();
 
-	const { address, chainId, isConnected } = psUseWallet();
+	const { address, chainId, isConnected, provider, signer } = psUseWallet();
+	const { userSlippageTolerance, userTransactionDeadlineValue, expert } =
+		usePegasys();
 
 	// END HOOKS IMPORTED VALUES
 
@@ -485,12 +487,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			token => token?.symbol === "SYS" || token?.symbol === "PSYS"
 		);
 
-		const setIdToTokens = getTokensBySymbol.map((token, index: number) => ({
-			...token,
-			id: index,
-		})) as WrappedTokenInfo[];
+		const setIdToTokens = getTokensBySymbol.map(
+			(token: WrappedTokenInfo, index: number) => ({
+				...token,
+				id: index,
+			})
+		) as WrappedTokenInfo[];
 
-		setSelectedToken(setIdToTokens);
+		setSelectedToken(setIdToTokens as WrappedTokenInfo[]);
 	}, [userTokensBalance]);
 
 	useEffect(() => {

@@ -76,7 +76,7 @@ class LpTokenServices {
 		return balance;
 	}
 
-	static getLpToken(tokenA: Token, tokenB: Token, chainId?: number) {
+	static getLpToken(tokenA: Token, tokenB: Token, chainId?: number | null) {
 		const lpToken = new Token(
 			chainId ?? ChainId.NEVM,
 			Pair.getAddress(tokenA, tokenB, chainId ?? ChainId.NEVM),

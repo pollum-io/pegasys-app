@@ -27,13 +27,10 @@ import LpTokenServices from "./lpToken";
 import { ContractFramework } from "../frameworks";
 import {
 	BIG_INT_ONE,
-	BIG_INT_SECONDS_IN_WEEK,
+	BIG_INT_ONE_WEEK_IN_SECONDS,
 	BIG_INT_TWO,
 	BIG_INT_ZERO,
-	DAI,
-	PSYS,
-	USDC,
-	USDT,
+	PegasysTokens,
 	ZERO_ADDRESS,
 } from "../constants";
 import PairServices from "./pair";
@@ -148,7 +145,7 @@ class FarmServices {
 	) {
 		const totalRewardRatePerWeek = new TokenAmount(
 			rewardToken,
-			JSBI.multiply(poolRewardRate.raw, BIG_INT_SECONDS_IN_WEEK)
+			JSBI.multiply(poolRewardRate.raw, BIG_INT_ONE_WEEK_IN_SECONDS)
 		);
 
 		return totalRewardRatePerWeek;
@@ -166,7 +163,7 @@ class FarmServices {
 				? JSBI.divide(
 						JSBI.multiply(
 							JSBI.multiply(poolRewardRate.raw, staked.raw),
-							BIG_INT_SECONDS_IN_WEEK
+							BIG_INT_ONE_WEEK_IN_SECONDS
 						),
 						totalStaked.raw
 				  )
@@ -219,9 +216,11 @@ class FarmServices {
 		pair: Pair,
 		stakeToken: Token,
 		totalStake: TokenAmount,
-		chainId?: ChainId
+		chainId?: ChainId | null
 	) {
-		const dai = DAI[chainId ?? ChainId.NEVM];
+		const tokens = PegasysTokens[chainId ?? ChainId.NEVM];
+
+		const dai = tokens.DAI;
 
 		let totalStakedInUsd = new TokenAmount(dai, BIG_INT_ZERO);
 
@@ -235,10 +234,10 @@ class FarmServices {
 			return 0;
 		}
 
-		const usdc = USDC[chainId ?? ChainId.NEVM];
-		const usdt = USDT[chainId ?? ChainId.NEVM];
+		const usdc = tokens.USDC;
+		const usdt = tokens.USDT;
 		const wsys = WSYS[chainId ?? ChainId.NEVM];
-		const psys = PSYS[chainId ?? ChainId.NEVM];
+		const psys = tokens.PSYS;
 
 		const usdPrice = await TokenServices.getUsdcPrice(wsys, chainId);
 
@@ -424,7 +423,7 @@ class FarmServices {
 			chainId,
 		});
 
-		const rewardToken = PSYS[chainId ?? ChainId.NEVM];
+		const rewardToken = PegasysTokens[chainId ?? ChainId.NEVM].PSYS;
 
 		const walletInfo = {
 			walletAddress,

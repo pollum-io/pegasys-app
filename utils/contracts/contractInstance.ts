@@ -8,6 +8,6 @@ export const createContractUsingAbi = (
 		| Signer
 		| ethers.providers.JsonRpcProvider
 		| ethers.providers.Web3Provider
-		| undefined
+		| null
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-) => new ethers.Contract(address, AbiContract as any, signer);
+) => new ethers.Contract(address, AbiContract as any, signer ?? undefined);

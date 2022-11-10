@@ -15,6 +15,8 @@ import {
 	useStake,
 	useEarn,
 	IStakeInfo,
+	IEarnInfo,
+	PegasysContracts,
 } from "pegasys-services";
 import { StakeActions } from "components/Modals/StakeActions";
 
@@ -22,9 +24,10 @@ export const StakeContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const { colorMode } = useColorMode();
-	const { isConnected, address } = psUseWallet();
+	const { isConnected, address, chainId } = psUseWallet();
 	const { showInUsd, setShowInUsd } = useStake();
-	const { earnOpportunities, loading, signatureLoading } = useEarn();
+	const { earnOpportunities, loading, signatureLoading, dataLoading } =
+		useEarn();
 	const { isOpenStakeActions, onCloseStakeActions } = useModal();
 
 	return (
@@ -181,7 +184,48 @@ export const StakeContainer: NextPage = () => {
 						</Text>
 					</Flex>
 				)}
-				{!earnOpportunities.length && isConnected && (
+				{isConnected &&
+					(!chainId || !PegasysContracts[chainId].MINICHEF_ADDRESS) && (
+						<Flex
+							w="100%"
+							mt={["3rem", "3rem", "4rem", "4rem"]}
+							flexDirection="column"
+							alignItems="center"
+							justifyContent="center"
+							mb={["3rem", "3rem", "4rem", "4rem"]}
+						>
+							<Text
+								fontSize={["sm", "sm", "md", "md"]}
+								fontWeight="normal"
+								textAlign="center"
+							>
+								This feature is not available for this network
+							</Text>
+						</Flex>
+					)}
+				{!dataLoading &&
+					isConnected &&
+					chainId &&
+					PegasysContracts[chainId].MINICHEF_ADDRESS &&
+					!earnOpportunities.length && (
+						<Flex
+							w="100%"
+							mt={["3rem", "3rem", "4rem", "4rem"]}
+							flexDirection="column"
+							alignItems="center"
+							justifyContent="center"
+							mb={["3rem", "3rem", "4rem", "4rem"]}
+						>
+							<Text
+								fontSize={["sm", "sm", "md", "md"]}
+								fontWeight="normal"
+								textAlign="center"
+							>
+								Any available opportunitie
+							</Text>
+						</Flex>
+					)}
+				{dataLoading && isConnected && (
 					<Flex
 						w="100%"
 						mt={["3rem", "3rem", "4rem", "4rem"]}
@@ -208,7 +252,7 @@ export const StakeContainer: NextPage = () => {
 					mb="24"
 					alignItems={["center", "center", "center", "center"]}
 				>
-					{earnOpportunities.map((stakeInfo: unknown, index) => (
+					{earnOpportunities.map((stakeInfo: IEarnInfo, index) => (
 						<StakeCard key={index} stakeInfo={stakeInfo as IStakeInfo} />
 					))}
 				</Flex>

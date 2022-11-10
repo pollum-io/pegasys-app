@@ -68,4 +68,8 @@ export interface IEarnProviderValue {
 		summary: string,
 		type: string
 	) => Promise<void>;
+	depositValue: JSBI;
+	withdrawValue: JSBI;
+	dataLoading: boolean;
+	setDataLoading: setType<boolean>;
 }

@@ -9,9 +9,10 @@ import {
 	ModalOverlay,
 	Text,
 } from "@chakra-ui/react";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso } from "hooks";
 import { FunctionComponent } from "react";
 import { useTranslation } from "react-i18next";
+import { useGovernance } from "pegasys-services";
 
 import { MdClose } from "react-icons/md";
 import Jazzicon from "react-jazzicon";
@@ -25,8 +26,7 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 
 	const theme = usePicasso();
-
-	const { votersType } = useWallet();
+	const { votersType } = useGovernance();
 
 	const { t: translation } = useTranslation();
 

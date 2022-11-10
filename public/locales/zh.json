@@ -139,9 +139,12 @@
 		"pooled": "汇集",
 		"poolTokens": "您池中的代币:",
 		"manage": "管理",
+		"volume": "卷宗",
 		"loading": "加载中",
+		"liquidity": "流动性",
 		"yourPosition": "您的部位",
-		"byAddingLiquidityInfo": "通过增加流动性，您将获得该货币对所有交易的 0.25%，与您在池中的份额成比例。\n 交易手续费随时累积并添加到池中，可以透过提取您的流动性来收成收益。"
+		"byAddingLiquidityInfo1": "通过增加流动性，您将获得该货币对所有交易的 0.25%，与您在池中的份额成比例。",
+		"byAddingLiquidityInfo2": "交易手续费随时累积并添加到池中，可以透过提取您的流动性来收成收益。"
 	},
 	"searchModal": {
 		"commonBases": "共同底层",
@@ -302,15 +305,17 @@
 	},
 	"airdrop": {
 		"airdrop": "空投",
+		"airdropTime": "空投时间到了!",
+		"mainText": "如果你已经采取了措施来获得PSYS空投的资格，这里是检查你赚了多少钱和领取代币的地方。",
 		"claimPeriodEnded": "空投申领期已经结束。",
 		"connectWalletViewLiquidity": "连接到钱包以查看您的流动性。",
 		"noAvailableClaim": "您没有可以领取的",
 		"noUniNoSushi": "您没有 UNI 或 SUSHI 代币。请按照此处的教程将 UNI 或 SUSHI 代币添加到您的钱包。",
 		"youHave": "你有 ",
 		"psysAvailableClaim": " PSYS 可以领取",
-		"loading": "Loading",
+		"loading": "声称",
 		"welcomeToTeamPegasys": "欢迎加入 Pegasys 团队",
-		"claim": "领取 "
+		"claim": "现在申请"
 	},
 	"earnPage": {
 		"pegasysLiquidityMining": "Pegasys 流动性挖矿",
@@ -358,15 +363,21 @@
 		"readMoreProviding": "阅读有关提供流动性的更多信息",
 		"viewStakedLiquidity": "查看您质押的流动性",
 		"yourLiquidity": "您的流动性",
+		"liquidity": "流动性",
 		"createPair": "创建一个交易对",
 		"addLiquidity": "增加流动性",
+		"unavailable": "不可用的流动性代币。",
 		"connectWalletToView": "连接到钱包以查看您的流动性。",
 		"loading": "加载中",
 		"noLiquidity": "没有发现流动性。",
 		"uniswapV1Found": "“Uniswap V1 发现流动性!",
 		"noSeePoolJoined": "看不到您加入的矿池?",
 		"migrateNow": "立即迁移。",
-		"importIt": "导入它。"
+		"yourPools": "你的游泳池",
+		"importIt": "导入它。",
+		"sort": "排序方式",
+		"poolsOverview": "游泳池概述",
+		"searchPair": "按代币符号搜索"
 	},
 	"poolFinder": {
 		"connectToFind": "连接到钱包以查找矿池",
@@ -387,6 +398,7 @@
 		"detailed": "详细的",
 		"receiveSys": "获得 SYS",
 		"receiveWsys": "获得 WSYS",
+		"receive": "获得",
 		"price": "价格:",
 		"connectWallet": "连接钱包",
 		"approving": "正在批准",
@@ -394,7 +406,8 @@
 		"approved": "已批准",
 		"remove": "移除",
 		"output": "输出",
-		"amount": "合计"
+		"amount": "合计",
+		"sign": "签名"
 	},
 	"swapPage": {
 		"addSend": "+ 添加发送（可选）",

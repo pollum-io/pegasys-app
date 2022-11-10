@@ -4,12 +4,12 @@ import { BigNumber, Signer } from "ethers";
 import { UseENS } from "hooks";
 import { calculateGasMargin, isZero, shortAddress } from "utils";
 import { ITx, IWalletHookInfos } from "types";
-import { addTransaction } from "utils/addTransaction";
+import { addTransaction } from "utils/transactions";
 import { UseBestSwapMethod } from "./useBestSwapMethod";
 import { UseToastOptions } from "@chakra-ui/react";
 import { ApprovalState } from "./useApproveCallback";
 import { TransactionResponse } from "@ethersproject/providers";
-import { IApprovalState } from "contexts";
+import { IApprovalState } from "pegasys-services";
 
 export enum SwapCallbackState {
 	INVALID,

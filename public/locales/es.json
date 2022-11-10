@@ -135,13 +135,16 @@
 	"positionCard": {
 		"add": "Añadir",
 		"remove": "Retirar",
+		"volume": "Volumen",
 		"poolShare": "Tu parte de la pool:",
 		"pooled": "En la Pool",
 		"poolTokens": "Tus Pool tokens:",
 		"manage": "Gestionar",
 		"loading": "Cargando",
 		"yourPosition": "Tu posición",
-		"byAddingLiquidityInfo": "Añadiendo liquidez ganará el 0.25% de todos los intercambios en la pareja de forma proporcional a su parte de la Pool.\n Las tasas se añaden a la Pool, se acumulan en tiempo real y pueden ser reclamadas retirando su liquidez."
+		"liquidity": "Liquidez",
+		"byAddingLiquidityInfo1": "Añadiendo liquidez ganará el 0.25% de todos los intercambios en la pareja de forma proporcional a su parte de la Pool.",
+		"byAddingLiquidityInfo2": "Las tasas se añaden a la Pool, se acumulan en tiempo real y pueden ser reclamadas retirando su liquidez."
 	},
 	"searchModal": {
 		"commonBases": "Bases comunes",
@@ -302,15 +305,17 @@
 	},
 	"airdrop": {
 		"airdrop": "Airdrop",
+		"airdropTime": "¡Es la hora del lanzamiento aéreo!",
+		"mainText": "Si has seguido los pasos para calificar para el lanzamiento aéreo de PSYS, este es el lugar para comprobar cuánto has ganado y reclamar tus tokens.",
 		"claimPeriodEnded": "El período de reclamación del airdrop ha termindado.",
 		"connectWalletViewLiquidity": "Conecte la cartera para ver su liquidez.",
 		"noAvailableClaim": "No tiene recompensa disponible.",
 		"noUniNoSushi": "No tiene tokens UNI ni SUSHI. Por favor, siga el tutorial aquí para añadir tokens UNI o SUSHI a su cartera.",
 		"youHave": "Tiene ",
 		"psysAvailableClaim": " PSYS disponible para reclamar",
-		"loading": "Cargando",
+		"loading": "Reclamando",
 		"welcomeToTeamPegasys": "Bienvenido al equipo Pegasys",
-		"claim": "reclamar "
+		"claim": "Reclamar ahora"
 	},
 	"earnPage": {
 		"pegasysLiquidityMining": "Minería de liquidez Pegasys",
@@ -360,13 +365,19 @@
 		"yourLiquidity": "Su liquidez",
 		"createPair": "Crear una pareja",
 		"addLiquidity": "Añadir liquidez",
+		"liquidity": "Liquidez",
+		"unavailable": "Fichas de liquidez no disponibles.",
 		"connectWalletToView": "Conecte la cartera para ver su liquidez.",
 		"loading": "Cargando",
 		"noLiquidity": "No se ha encontrado liquidez.",
 		"uniswapV1Found": "Liquidez Uniswap V1 encontrada!",
 		"noSeePoolJoined": "No ves un pool a la que te has unido?",
 		"migrateNow": "Mirgrar ahora.",
-		"importIt": "Importar."
+		"yourPools": "Sus Piscinas",
+		"importIt": "Importar.",
+		"sort": "Ordenar por",
+		"poolsOverview": "Resumen de las pools",
+		"searchPair": "Búsqueda por símbolo de token"
 	},
 	"poolFinder": {
 		"connectToFind": "Conecte la cartera para encontrar pools",
@@ -387,14 +398,16 @@
 		"detailed": "Detallado",
 		"receiveS": "Recibir SYS",
 		"receiveWsys": "Recibir WSYS",
-		"price": "Precio:",
+		"receive": "Recibir",
+		"price": "Precio",
 		"connectWallet": "Conectar cartera",
 		"approving": "Aprobando",
 		"approve": "Aprobar",
 		"approved": "Aprobado",
 		"remove": "Remove",
 		"output": "Resultado",
-		"amount": "Cantidad"
+		"amount": "Cantidad",
+		"sign": "Signo"
 	},
 	"swapPage": {
 		"addSend": "+ Añadir un envío (opcional)",

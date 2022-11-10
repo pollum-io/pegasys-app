@@ -1,4 +1,4 @@
-import { removeScientificNotation } from ".";
+import { removeScientificNotation } from "..";
 
 // Truncate balance values without around using regex
 const truncateNumberWithoutRound = (

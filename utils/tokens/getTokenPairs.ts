@@ -1,5 +1,5 @@
 import { ChainId, Token } from "@pollum-io/pegasys-sdk";
-import { BASES_TO_TRACK_LIQUIDITY_FOR } from "helpers/consts";
+import { BASES_TO_TRACK_LIQUIDITY_FOR } from "pegasys-services/constants";
 import flatMap from "lodash.flatmap";
 import { WrappedTokenInfo } from "types";
 
@@ -8,7 +8,12 @@ interface ITokens {
 }
 
 export function getTokenPairs(chainId: ChainId, allTokens: WrappedTokenInfo[]) {
-	if (allTokens.length === 0 || !chainId) return [];
+	if (
+		allTokens.length === 0 ||
+		!chainId ||
+		!allTokens.every(token => token.chainId === chainId)
+	)
+		return [];
 	const tokens: ITokens = allTokens.reduce(
 		(accumulator, value) => ({
 			...accumulator,
@@ -57,7 +62,7 @@ export function getTokenPairs(chainId: ChainId, allTokens: WrappedTokenInfo[]) {
 				// for each token on the current chain,
 				return (
 					// loop though all bases on the current chain
-					(BASES_TO_TRACK_LIQUIDITY_FOR[chainId] ?? [])
+					(BASES_TO_TRACK_LIQUIDITY_FOR[chainId ?? ChainId.NEVM] ?? [])
 						// to construct pairs of the given token with each base
 						.map(base => {
 							if (base.address === token.address) {

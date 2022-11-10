@@ -5,11 +5,12 @@ import {
 	ModalOverlay,
 	Text,
 } from "@chakra-ui/react";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso } from "hooks";
 import { FunctionComponent } from "react";
 import { SwitchToSyscoin } from "components/Buttons";
 import { IoIosInformationCircle } from "react-icons/io";
 import { MdOutlineClose } from "react-icons/md";
+import { useWallet } from "pegasys-services";
 
 interface IModal {
 	isOpen: boolean;

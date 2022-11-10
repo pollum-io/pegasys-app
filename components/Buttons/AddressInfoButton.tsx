@@ -1,4 +1,5 @@
 import {
+	Button,
 	Flex,
 	Icon,
 	Link,
@@ -11,8 +12,13 @@ import {
 	Text,
 	useColorMode,
 } from "@chakra-ui/react";
-import { useToasty, useWallet as psUseWallet } from "pegasys-services";
-import { usePicasso, useWallet } from "hooks";
+import {
+	useToasty,
+	useWallet,
+	ApprovalState,
+	useTransaction,
+} from "pegasys-services";
+import { usePicasso } from "hooks";
 import { FunctionComponent, useState, useEffect } from "react";
 import Jazzicon from "react-jazzicon";
 import {
@@ -23,7 +29,6 @@ import {
 import { shortAddress, copyToClipboard, openWalletOnExplorer } from "utils";
 import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { ITransactionResponse } from "types";
-import { ApprovalState } from "contexts";
 
 interface IModal {
 	isOpen: boolean;
@@ -34,10 +39,10 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
-	const { transactions, connectorSelected, approvalState } = useWallet();
+	const { transactions, approvalState } = useTransaction();
 	const isPending = approvalState.status === ApprovalState.PENDING;
 	const { toast } = useToasty();
-	const { address, chainId } = psUseWallet();
+	const { address, chainId, connectorSelected, disconnect } = useWallet();
 	const [txs, setTxs] = useState<ITransactionResponse[]>([]);
 
 	const handleCopyToClipboard = () => {
@@ -138,6 +143,29 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								>
 									Connected with {connectorSelected?.name}
 								</Text>
+							</Flex>
+							<Flex>
+								<Button
+									borderRadius="full"
+									border="1px solid"
+									borderColor={theme.text.cyanPurple}
+									px="2"
+									py="0.5"
+									w="max-content"
+									h="max-content"
+									color={theme.text.whitePurple}
+									fontSize={["xs", "xs", "sm", "sm"]}
+									fontWeight="bold"
+									alignItems="center"
+									bgColor="transparent"
+									_hover={{
+										borderColor: theme.text.cyanLightPurple,
+										color: theme.text.cyanLightPurple,
+									}}
+									onClick={() => disconnect()}
+								>
+									Disconnect
+								</Button>
 							</Flex>
 						</Flex>
 						<Flex

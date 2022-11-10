@@ -6,22 +6,22 @@ import {
 import { Token, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
 import abi20 from "utils/abis/erc20.json";
-import { getContract } from "./getContract";
-import { singleCallWithoutParams } from "./singleCall";
+import { getContract } from "../contracts/getContract";
+import { singleCallWithoutParams } from "../contracts";
 
 export async function getTotalSupply(
 	token: Token,
 	signer: Signer,
-	provider: Signer | JsonRpcProvider | Web3Provider | Provider | undefined
+	provider: Signer | JsonRpcProvider | Web3Provider | Provider | null
 ) {
 	// eslint-disable-next-line
 	// @ts-ignore
-	const code = provider && (await provider?.getCode(token.address));
+	const code = provider && (await provider?.getCode(token?.address));
 	if (code === "0x") {
 		return new TokenAmount(token, "1");
 	}
 
-	const contract = await getContract(token?.address, signer, abi20);
+	const contract = await getContract(token?.address, provider as Signer, abi20);
 
 	const fetchTotalSupply =
 		contract && (await singleCallWithoutParams(contract, "totalSupply"));

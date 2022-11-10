@@ -6,26 +6,25 @@ import {
 	Text,
 	useMediaQuery,
 } from "@chakra-ui/react";
-import { usePicasso, useWallet, useModal } from "hooks";
+import { usePicasso, useModal } from "hooks";
 import { NextPage } from "next";
 import { VoteCards } from "components/Vote/VoteCards";
 import { ProposalDetails } from "components/Vote/ProposalDetails";
 import { MdOutlineCallMade } from "react-icons/md";
 import { UnlockVotesModal } from "components/Modals/UnlockVoting";
-import { useWallet as psUseWallet } from "pegasys-services";
+import { useWallet, useGovernance } from "pegasys-services";
 import { useTranslation } from "react-i18next";
 
 export const VoteContainer: NextPage = () => {
 	const theme = usePicasso();
-	const { isConnected } = psUseWallet();
+	const { isConnected } = useWallet();
 	const {
 		isGovernance,
 		showCancelled,
 		setShowCancelled,
 		votesLocked,
 		delegatedTo,
-	} = useWallet();
-
+	} = useGovernance();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	const { t: translation } = useTranslation();

@@ -1,10 +1,6 @@
 import { ChainId } from "@pollum-io/pegasys-sdk";
 import { TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
 import {
-	DEFAULT_TOKEN_LISTS_SELECTED,
-	SUPPORTED_NETWORK_CHAINS,
-} from "helpers/consts";
-import {
 	EMPTY_TOKEN_LIST,
 	INITIAL_TOKEN_LIST_STATE,
 	NEW_TOKEN_LIST_STATE,
@@ -13,7 +9,12 @@ import {
 import { getTokenListByUrl } from "networks";
 import React, { createContext, useMemo, useState, useEffect } from "react";
 import { ListsState, TokenAddressMap, WrappedTokenInfo } from "types";
-import { useWallet, PersistentFramework } from "pegasys-services";
+import {
+	useWallet,
+	PersistentFramework,
+	DEFAULT_TOKEN_LISTS_SELECTED,
+	SUPPORTED_NETWORK_CHAINS,
+} from "pegasys-services";
 
 interface ITokensListManageContext {
 	tokenListManageState: ListsState;

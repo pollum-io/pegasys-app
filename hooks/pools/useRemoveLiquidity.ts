@@ -3,10 +3,10 @@
 import { Web3Provider } from "@ethersproject/providers";
 import IPegasysPairABI from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/interfaces/IPegasysPair.sol/IPegasysPair.json";
 import IPegasysRouterABI from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
-import { JSBI, NSYS, Percent, TokenAmount } from "@pollum-io/pegasys-sdk";
+import { JSBI, Percent, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { BigNumber, Signer } from "ethers";
 import { splitSignature } from "ethers/lib/utils";
-import { ROUTER_ADDRESS } from "helpers/consts";
+import { PegasysContracts } from "pegasys-services/constants";
 import { useTransactionDeadline } from "hooks/swap/useTransactionDeadline";
 import { ITx, IWalletHookInfos, WrappedTokenInfo } from "types";
 import {
@@ -20,7 +20,7 @@ import {
 } from "utils";
 import { useState } from "react";
 import { Token } from "@pollum-io/pegasys-sdk";
-import { ApprovalState, IApprovalState } from "contexts";
+import { ApprovalState, IApprovalState } from "pegasys-services";
 import { useTranslation } from "react-i18next";
 import { IAmounts } from "components";
 import { useToasty, useAllCommonPairs } from "hooks";
@@ -53,7 +53,7 @@ export const UseRemoveLiquidity = (
 	const deadline = useTransactionDeadline(transactionDeadlineValue);
 	const { toast } = useToasty();
 	const [currencyA, currencyB] = [tradeTokens[0], tradeTokens[1]];
-	const chainRouter = ROUTER_ADDRESS[chainId];
+	const chainRouter = PegasysContracts[chainId];
 
 	const pairContract =
 		pairAddress &&
@@ -119,7 +119,7 @@ export const UseRemoveLiquidity = (
 		];
 		const message = {
 			owner: account,
-			spender: ROUTER_ADDRESS[chainId],
+			spender: PegasysContracts[chainId].ROUTER_ADDRESS,
 			value: liquidityAmount.raw.toString(),
 			nonce: nonce.toHexString(),
 			deadline: deadline.toNumber(),
