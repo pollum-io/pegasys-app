@@ -38,7 +38,7 @@ export const Header: React.FC = () => {
 	} = useModal();
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [isMobile] = useMediaQuery("(max-width: 750px)");
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const btnRef: any = React.useRef();
 	const { expert } = useWallet();
 

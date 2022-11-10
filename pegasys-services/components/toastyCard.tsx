@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Flex, Text, useColorMode } from "@chakra-ui/react";
+import { Flex, Text, useColorMode, useMediaQuery } from "@chakra-ui/react";
 import { IoIosInformationCircle } from "react-icons/io";
 import { AiFillExclamationCircle } from "react-icons/ai";
 import { RiCheckboxCircleFill } from "react-icons/ri";
@@ -34,12 +34,14 @@ const ToastyCard: React.FC<IToastyCardProps> = ({
 
 	const { colorMode } = useColorMode();
 
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
+
 	return (
 		<Flex
 			h="max-content"
-			w="356px"
+			w={["300px", "356px", "356px", "356px", "356px"]}
 			mt="50px"
-			mr="40px"
+			mr={["unset", "1.5rem", "2.5rem", "2.5rem"]}
 			py="0.7rem"
 			px="0.5rem"
 			bg={bg}
