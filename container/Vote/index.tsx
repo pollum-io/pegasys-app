@@ -13,6 +13,7 @@ import { ProposalDetails } from "components/Vote/ProposalDetails";
 import { MdOutlineCallMade } from "react-icons/md";
 import { UnlockVotesModal } from "components/Modals/UnlockVoting";
 import { useWallet as psUseWallet } from "pegasys-services";
+import { useTranslation } from "react-i18next";
 
 export const VoteContainer: NextPage = () => {
 	const theme = usePicasso();
@@ -24,7 +25,10 @@ export const VoteContainer: NextPage = () => {
 		votesLocked,
 		delegatedTo,
 	} = useWallet();
+
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
+
+	const { t: translation } = useTranslation();
 
 	const {
 		onOpenUnlockVotesModal,
@@ -63,14 +67,14 @@ export const VoteContainer: NextPage = () => {
 							<Flex
 								zIndex="docked"
 								flexDirection="column"
-								px="1.625rem"
+								px={["1rem", "1.3rem", "1.6rem", "1.6rem"]}
 								py={["0.8rem", "1.375rem", "1.375rem", "2.1rem"]}
 								gap="2"
 								h={["9rem", "10rem", "10rem", "10rem"]}
 								color="white"
 							>
 								<Text fontWeight="bold" fontSize="md">
-									Pegasys Governance
+									{translation("votePage.pegasysGovernance")}
 								</Text>
 								<Text
 									color="white"
@@ -79,9 +83,8 @@ export const VoteContainer: NextPage = () => {
 									lineHeight="shorter"
 									w={["100%", "70%", "60%", "60%"]}
 								>
-									PSYS tokens represent voting shares in Pegasys governance. You
-									can vote on each proposal yourself or delegate your votes to a
-									third party.
+									{translation("votePage.earnedPsysTokens")}{" "}
+									{translation("votePage.youCanVote")}
 								</Text>
 							</Flex>
 							{!votesLocked && (
@@ -97,11 +100,18 @@ export const VoteContainer: NextPage = () => {
 									py="0.531rem"
 									px="1rem"
 								>
-									<Text fontWeight="500" fontSize="16px" color="white">
-										12.73 votes
+									<Text
+										fontWeight="500"
+										fontSize="16px"
+										color="white"
+										textTransform="lowercase"
+									>
+										12.73 {translation("votePage.votes")}
 									</Text>
 									<Flex gap="4" fontSize="14px">
-										<Text color="white">Delegated to: {delegatedTo}</Text>
+										<Text color="white">
+											{translation("votePage.delegatedTo")} {delegatedTo}
+										</Text>
 										<Text
 											fontWeight="semibold"
 											_hover={{ cursor: "pointer", opacity: "0.9" }}
@@ -109,7 +119,7 @@ export const VoteContainer: NextPage = () => {
 											color={theme.text.cyan}
 											onClick={onOpenUnlockVotesModal}
 										>
-											Edit
+											{translation("votePage.edit")}
 										</Text>
 									</Flex>
 								</Flex>
@@ -141,11 +151,11 @@ export const VoteContainer: NextPage = () => {
 								>
 									<Flex>
 										<Text
-											fontSize="2xl"
+											fontSize={["20px", "20px", "2xl", "2xl"]}
 											fontWeight="semibold"
 											color={theme.text.mono}
 										>
-											Proposals
+											{translation("votePage.proposals")}
 										</Text>
 									</Flex>
 									{!votesLocked ? (
@@ -157,12 +167,14 @@ export const VoteContainer: NextPage = () => {
 												_hover={{ cursor: "pointer", opacity: "0.9" }}
 											>
 												<Text color={theme.text.mono}>
-													Discuss at the Forum
+													{translation("votePage.discussAtTheForum")}
 												</Text>
 												<MdOutlineCallMade size={18} color={theme.text.mono} />
 											</Flex>
 											<Flex flexDirection="row" gap="2" alignItems="center">
-												<Text color={theme.text.mono}>Show Cancelled</Text>
+												<Text color={theme.text.mono}>
+													{translation("votePage.showCancelled")}
+												</Text>
 												<Switch
 													size="md"
 													onChange={() => setShowCancelled(!showCancelled)}
@@ -174,7 +186,7 @@ export const VoteContainer: NextPage = () => {
 											<Button
 												fontSize="14px"
 												fontWeight="semibold"
-												px={["1.7rem", "1.5rem", "1.5rem", "1.5rem"]}
+												px={["1.2rem", "1.5rem", "1.5rem", "1.5rem"]}
 												size="sm"
 												py="0.8rem"
 												bgColor={theme.bg.blueNavyLightness}
@@ -185,7 +197,7 @@ export const VoteContainer: NextPage = () => {
 												onClick={onOpenUnlockVotesModal}
 												borderRadius="full"
 											>
-												Unlock Voting
+												{translation("votePage.unlockVoting")}
 											</Button>
 										</Flex>
 									)}
@@ -221,7 +233,7 @@ export const VoteContainer: NextPage = () => {
 										textAlign="center"
 										color={theme.text.mono}
 									>
-										No proposals found.
+										{translation("votePage.noProposalsFound")}
 									</Text>
 									<Text
 										fontSize={["sm", "sm", "md", "md"]}
@@ -229,7 +241,7 @@ export const VoteContainer: NextPage = () => {
 										textAlign="center"
 										color={theme.text.mono}
 									>
-										Proposals submitted by community will appear here.
+										{translation("votePage.proposalCommunityMembers")}
 									</Text>
 									<Flex mt="15px">
 										<Text
@@ -239,8 +251,7 @@ export const VoteContainer: NextPage = () => {
 											color={theme.text.gray45}
 											fontStyle="Italic"
 										>
-											A minimun threshold of 1,000,0000 PSYS is required to
-											submit proposals.
+											{translation("votePage.minimumThreshold")}
 										</Text>
 									</Flex>
 								</Flex>

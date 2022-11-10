@@ -12,8 +12,9 @@ import {
 	Text,
 	useColorMode,
 } from "@chakra-ui/react";
-import { usePicasso, useWallet, useModal } from "hooks";
+import { usePicasso, useWallet } from "hooks";
 import { FunctionComponent, SetStateAction, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { BiTrashAlt } from "react-icons/bi";
 import { FaLessThan } from "react-icons/fa";
@@ -33,6 +34,7 @@ export const UnlockVotesModal: FunctionComponent<IModal> = props => {
 	const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
 	const { votesLocked, setVotesLocked, setDelegatedTo, delegatedTo } =
 		useWallet();
+	const { t: translation } = useTranslation();
 
 	const isSelfDelegate = () => {
 		setVotesLocked(false);
@@ -80,11 +82,11 @@ export const UnlockVotesModal: FunctionComponent<IModal> = props => {
 					<Flex alignItems="center" justifyContent="space-between" mb="1rem">
 						{votesLocked ? (
 							<Text fontSize="18px" fontWeight="semibold">
-								Unlock Votes
+								{translation("votePage.unlockVotes")}
 							</Text>
 						) : (
 							<Text fontSize="18px" fontWeight="semibold">
-								Edit Vote Delegation
+								{translation("votePage.editVoteDelegation")}
 							</Text>
 						)}
 						<Flex _hover={{ cursor: "pointer" }}>
@@ -100,20 +102,20 @@ export const UnlockVotesModal: FunctionComponent<IModal> = props => {
 					<Flex w="100%" flexDirection="column" gap="8">
 						<Flex gap="6" flexDirection="column" w="100%" textAlign="justify">
 							<Text fontSize="16px" color={theme.text.mono}>
-								Earned PSYS tokens represent voting shares in Pegasys
-								governance.
+								{translation("vote.earnedPsys")}
 							</Text>
 
 							<Text fontSize="16px" color={theme.text.mono}>
-								You can either vote on each proposal yourself or delegate your
-								votes to a third party.
+								{translation("votePage.youCanVote")}
 							</Text>
 						</Flex>
 						<Flex flexDirection="column" w="100%" gap="1">
 							<Collapse in={addDelegate}>
 								<Flex flexDirection="column" w="100%" mb="1">
 									<Text fontWeight="500">
-										{votesLocked ? "Add Delegate" : "Delegate"}
+										{votesLocked
+											? translation("vote.add") && translation("vote.delegate")
+											: translation("vote.delegate")}
 									</Text>
 								</Flex>
 								<Flex
@@ -138,7 +140,9 @@ export const UnlockVotesModal: FunctionComponent<IModal> = props => {
 											value={inputValue}
 											fontSize="1rem"
 											border="none"
-											placeholder="Wallet Address"
+											placeholder={translation(
+												"addressInputPanel.walletAddress"
+											)}
 											_placeholder={{
 												color: theme.text.lightGray,
 												fontWeight: "normal",
@@ -212,9 +216,9 @@ export const UnlockVotesModal: FunctionComponent<IModal> = props => {
 								>
 									{votesLocked
 										? !addDelegate
-											? "Self Delegate"
-											: "Delegate Votes"
-										: "Update Vote Delegation"}
+											? translation("vote.selfDelegate")
+											: translation("vote.delegateVotes")
+										: translation("votePage.updateDelegation")}
 								</Button>
 							</Flex>
 							<Flex
@@ -233,13 +237,17 @@ export const UnlockVotesModal: FunctionComponent<IModal> = props => {
 							>
 								{!addDelegate ? (
 									<Flex gap="1">
-										<Text>Add delegate</Text>
+										<Text>
+											{translation("vote.add")} {translation("vote.delegate")}
+										</Text>
 										<Text>+</Text>
 									</Flex>
 								) : (
 									<Flex alignItems="baseline" gap="1">
 										<FaLessThan size={10} fontWeight="normal" />
-										<Text fontWeight="semibold">Back</Text>
+										<Text fontWeight="semibold">
+											{translation("migratePage.back")}
+										</Text>
 									</Flex>
 								)}
 							</Flex>

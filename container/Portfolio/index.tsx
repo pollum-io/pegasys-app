@@ -15,12 +15,14 @@ import { WalletStatsCards } from "components/Portfolio/WalletStatsCards";
 import { LiquidityCards } from "components/Portfolio/LiquidityCards";
 import { TransactionCards } from "components/Portfolio/TransactionCards";
 import { useWallet } from "pegasys-services";
+import { useTranslation } from "react-i18next";
 
 export const PortfolioContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [buttonId, setButtonId] = useState<string>("all");
 	const { colorMode } = useColorMode();
 	const { isConnected } = useWallet();
+	const { t: translation } = useTranslation();
 
 	return (
 		<Flex justifyContent="center" alignItems="center" w="100%">
@@ -43,22 +45,22 @@ export const PortfolioContainer: NextPage = () => {
 						<Text
 							_hover={{ color: theme.text.whiteGrayHover, cursor: "pointer" }}
 						>
-							Wallet
+							{translation("portfolioPage.wallet")}
 						</Text>
 						<Text
 							_hover={{ color: theme.text.whiteGrayHover, cursor: "pointer" }}
 						>
-							Liquidity
+							{translation("portfolioPage.liquidity")}
 						</Text>
 						<Text
 							_hover={{ color: theme.text.whiteGrayHover, cursor: "pointer" }}
 						>
-							Transactions
+							{translation("portfolioPage.transactions")}
 						</Text>
 					</Flex>
 				</Flex>
 				<Flex
-					w={["94%", "28rem", "46rem", "61rem"]}
+					w={["94%", "30rem", "47rem", "61rem"]}
 					justifyContent="flex-start"
 					zIndex="docked"
 					mt="16"
@@ -87,20 +89,20 @@ export const PortfolioContainer: NextPage = () => {
 							w="96%"
 							gap={["4", "4", "0", "0"]}
 						>
-							<Flex>
+							<Flex w={["", "25rem", "10rem", "12rem"]}>
 								<Text
 									fontWeight="semibold"
 									fontSize={["20px", "22px", "24px", "24px"]}
 									color={theme.text.whitePurple}
 								>
-									Wallet Stats
+									{translation("portfolioPage.walletStats")}
 								</Text>
 							</Flex>
 							<Flex
 								justifyContent="space-between"
-								w={["100%", "100%", "70%", "65%"]}
+								w={["100%", "95%", "72%", "69%"]}
 								flexDirection={["column", "column", "row", "row"]}
-								gap={["2", "2", "0", "0"]}
+								gap={["2", "2", "4", "0"]}
 							>
 								<Flex
 									flexDirection={["row", "row", "column", "column"]}
@@ -110,42 +112,29 @@ export const PortfolioContainer: NextPage = () => {
 										"flex-start",
 										"flex-start",
 									]}
-									w={["100%", "100%", "max-content", "max-content"]}
-									gap={["2.05rem", "4.35rem", "0", "0"]}
-									justifyContent="normal"
+									w={["100%", "100%", "11rem", "11rem"]}
+									gap={["2.05rem", "0", "0", "0"]}
+									justifyContent={[
+										"space-between",
+										"space-between",
+										"normal",
+										"normal",
+									]}
+									pr={["1rem", "1rem", "0", "0"]}
 								>
 									<Text
 										fontWeight="semibold"
-										fontSize={["20px", "20px", "24px", "24px"]}
+										fontSize={["20px", "20px", "22px", "24px"]}
 										order={[1, 1, 0, 0]}
+										w="11rem"
 									>
 										{isConnected ? "$1.21" : "-"}
 									</Text>
-									<Text fontSize={["12px", "14px", "14px", "14px"]}>
-										Total Value Swapped
-									</Text>
-								</Flex>
-								<Flex
-									flexDirection={["row", "row", "column", "column"]}
-									alignItems={[
-										"center",
-										"flex-center",
-										"flex-start",
-										"flex-start",
-									]}
-									w={["100%", "100%", "max-content", "max-content"]}
-									gap={["4.1rem", "6.75rem", "0", "0"]}
-									justifyContent="normal"
-								>
 									<Text
-										fontWeight="semibold"
-										fontSize={["20px", "20px", "24px", "24px"]}
-										order={[1, 1, 0, 0]}
+										fontSize={["12px", "14px", "14px", "14px"]}
+										w={["40%", "max-content", "9rem", "11rem"]}
 									>
-										{isConnected ? "$0.0036" : "-"}
-									</Text>
-									<Text fontSize={["12px", "14px", "14px", "14px"]}>
-										Total Fees Paid
+										{translation("portfolioPage.totalValueSwapped")}
 									</Text>
 								</Flex>
 								<Flex
@@ -156,19 +145,62 @@ export const PortfolioContainer: NextPage = () => {
 										"flex-start",
 										"flex-start",
 									]}
-									w={["100%", "100%", "max-content", "max-content"]}
-									gap={["3.05rem", "5.5rem", "0", "0"]}
-									justifyContent="normal"
+									w={["100%", "100%", "11rem", "11rem"]}
+									gap={["2.05rem", "0", "0", "0"]}
+									justifyContent={[
+										"space-between",
+										"space-between",
+										"normal",
+										"normal",
+									]}
+									pr={["1rem", "1rem", "0", "0"]}
 								>
 									<Text
 										fontWeight="semibold"
-										fontSize={["20px", "20px", "24px", "24px"]}
+										fontSize={["20px", "20px", "22px", "24px"]}
 										order={[1, 1, 0, 0]}
+										w={["11rem", "11rem", "9rem", "11rem"]}
+									>
+										{isConnected ? "$1450,00" : "-"}
+									</Text>
+									<Text
+										fontSize={["12px", "14px", "14px", "14px"]}
+										w={["40%", "max-content", "9rem", "8rem"]}
+									>
+										{translation("portfolioPage.totalFeesPaid")}
+									</Text>
+								</Flex>
+								<Flex
+									flexDirection={["row", "row", "column", "column"]}
+									alignItems={[
+										"center",
+										"flex-center",
+										"flex-start",
+										"flex-start",
+									]}
+									w={["100%", "100%", "8rem", "8rem"]}
+									gap={["2.05rem", "0", "0", "0"]}
+									justifyContent={[
+										"space-between",
+										"space-between",
+										"normal",
+										"normal",
+									]}
+									pr={["1rem", "1rem", "0", "0"]}
+								>
+									<Text
+										fontWeight="semibold"
+										fontSize={["20px", "20px", "22px", "24px"]}
+										order={[1, 1, 0, 0]}
+										w={["11rem", "11rem", "8rem", "8rem"]}
 									>
 										{isConnected ? "12" : "-"}
 									</Text>
-									<Text fontSize={["12px", "14px", "14px", "14px"]}>
-										Total Transactions
+									<Text
+										fontSize={["12px", "14px", "14px", "14px"]}
+										w={["40%", "max-content", "8rem", "8rem"]}
+									>
+										{translation("portfolioPage.totalTransactions")}
 									</Text>
 								</Flex>
 							</Flex>
@@ -188,7 +220,7 @@ export const PortfolioContainer: NextPage = () => {
 								fontWeight="600"
 								fontSize="20px"
 							>
-								Wallet Balance
+								{translation("portfolioPage.walletBalance")}
 							</Text>
 						</Flex>
 						<Flex
@@ -203,7 +235,7 @@ export const PortfolioContainer: NextPage = () => {
 							<Flex alignItems="center" w="100%" pl={["4", "4", "6", "6"]}>
 								<Flex alignItems="center" w={["55%", "40%", "24.1%", "24%"]}>
 									<Flex>
-										<Text>Asset</Text>
+										<Text>{translation("portfolioPage.asset")}</Text>
 									</Flex>
 								</Flex>
 								<Flex
@@ -214,7 +246,7 @@ export const PortfolioContainer: NextPage = () => {
 								>
 									<Flex w="10rem">
 										<Text display={["none", "flex", "flex", "flex"]}>
-											Price
+											{translation("swapPage.price")}
 										</Text>
 									</Flex>
 									<Flex
@@ -222,10 +254,10 @@ export const PortfolioContainer: NextPage = () => {
 										display={["none", "flex", "flex", "flex"]}
 										mr="1.9rem"
 									>
-										<Text>Balance</Text>
+										<Text>{translation("portfolioPage.balance")}</Text>
 									</Flex>
 									<Flex w="6rem">
-										<Text>Value</Text>
+										<Text>{translation("portfolioPage.value")}</Text>
 									</Flex>
 								</Flex>
 							</Flex>
@@ -235,7 +267,7 @@ export const PortfolioContainer: NextPage = () => {
 						</Flex>
 
 						<Flex
-							w={["94%", "25rem", "40.75rem", "52.75rem"]}
+							w={["94%", "27rem", "43.75rem", "54.75rem"]}
 							justifyContent="flex-start"
 							zIndex="docked"
 							mt="6rem"
@@ -261,11 +293,11 @@ export const PortfolioContainer: NextPage = () => {
 									alignItems={["flex-start", "flex-start", "center", "center"]}
 									justifyContent="space-between"
 									flexDirection={["column", "column", "row", "row"]}
-									w="92%"
+									w="95%"
 									gap={["4", "4", "0", "0"]}
 								>
 									<Flex
-										w={["max-content", "max-content", "8rem", "8rem"]}
+										w={["max-content", "max-content", "8.6rem", "8.6rem"]}
 										h="max-content"
 									>
 										<Text
@@ -273,16 +305,16 @@ export const PortfolioContainer: NextPage = () => {
 											fontSize={["20px", "20px", "24px", "24px"]}
 											color={theme.text.whitePurple}
 										>
-											Liquidity Positions
+											{translation("portfolioPage.liquidityPositions")}
 										</Text>
 									</Flex>
 									<Flex
 										justifyContent="space-between"
-										w={["100%", "100%", "70%", "65%"]}
+										w={["100%", "100%", "68%", "65%"]}
 										h="100%"
 										pt={["0", "0", "1.5", "1.5"]}
 										flexDirection={["column", "column", "row", "row"]}
-										gap={["2", "2", "0", "0"]}
+										gap={["2", "2", "4", "4"]}
 									>
 										<Flex
 											flexDirection={["row", "row", "column", "column"]}
@@ -294,22 +326,28 @@ export const PortfolioContainer: NextPage = () => {
 											]}
 											gap={["1.5rem", "2rem", "0", "0"]}
 											justifyContent={[
-												"flex-start",
-												"flex-start",
+												"space-between",
+												"space-between",
 												"center",
 												"center",
 											]}
 											h="max-content"
+											w={["", "100%", "15rem", "15rem"]}
 										>
 											<Text
 												fontWeight="semibold"
-												fontSize={["20px", "20px", "24px", "24px"]}
+												fontSize={["20px", "20px", "22px", "24px"]}
 												order={[1, 1, 0, 0]}
+												w="11rem"
 											>
 												{isConnected ? "$0.03" : "-"}
 											</Text>
-											<Text fontSize={["12px", "14px", "14px", "14px"]}>
-												Liquidity (Incluiding fees)
+											<Text
+												fontSize={["12px", "14px", "14px", "14px"]}
+												w={["50%", "50%", "12rem", "12rem"]}
+											>
+												{translation("portfolioPage.liquidity")}{" "}
+												{translation("portfolioPage.includingFees")}
 											</Text>
 										</Flex>
 										<Flex
@@ -322,20 +360,25 @@ export const PortfolioContainer: NextPage = () => {
 											]}
 											gap={["1.3rem", "1.75rem", "0", "0"]}
 											h="max-content"
+											w={["", "100%", "13rem", "13rem"]}
 										>
 											<Text
 												fontWeight="semibold"
-												fontSize={["20px", "20px", "24px", "24px"]}
+												fontSize={["20px", "20px", "22px", "24px"]}
 												order={[1, 1, 0, 0]}
 												color="#38A169"
+												w="10.7rem"
 											>
 												{isConnected ? "$0.0036" : "-"}
 											</Text>
+
 											<Text
 												fontSize={["12px", "14px", "14px", "14px"]}
 												color="#38A169"
+												w={["50%", "50%", "12rem", "13rem"]}
 											>
-												Fees Earned (Cumulative)
+												{translation("portfolioPage.feesEarned")}{" "}
+												{translation("portfolioPage.cumulative")}
 											</Text>
 										</Flex>
 									</Flex>
@@ -369,7 +412,7 @@ export const PortfolioContainer: NextPage = () => {
 										justifyContent="flex-start"
 										w={["45%", "45%", "30.2%", "29.2%"]}
 									>
-										<Text>Assets</Text>
+										<Text>{translation("portfolioPage.assets")}</Text>
 									</Flex>
 									<Flex
 										flexDirection="row"
@@ -379,9 +422,11 @@ export const PortfolioContainer: NextPage = () => {
 										pr={["0", "0", "0", "0.1rem"]}
 									>
 										<Text>Pool Tokens</Text>
-										<Text pl={["", "", "2.7rem", "2.7rem"]}>Value</Text>
-										<Text pl={["", "", "2.4rem", "2.4rem"]}>APR</Text>
-										<Text pr={["", "", "1.3rem", "2.65rem"]}>Pool Share</Text>
+										<Text pl={["", "", "2.7rem", "2.7rem"]}>
+											{translation("portfolioPage.value")}
+										</Text>
+										<Text pl={["", "", "3rem", "2.4rem"]}>APR</Text>
+										<Text pr={["", "", "1.5rem", "2.65rem"]}>Pool Share</Text>
 									</Flex>
 								</Flex>
 							</Flex>
@@ -411,7 +456,7 @@ export const PortfolioContainer: NextPage = () => {
 										fontWeight="semibold"
 										color={theme.text.whitePurple}
 									>
-										Transactions
+										{translation("portfolioPage.transactions")}
 									</Text>
 								</Flex>
 								<Flex
@@ -450,7 +495,7 @@ export const PortfolioContainer: NextPage = () => {
 													opacity: "0.9",
 												}}
 											>
-												All
+												{translation("portfolioPage.all")}
 											</Button>
 											<Button
 												onClick={() => setButtonId("swaps")}
@@ -587,16 +632,16 @@ export const PortfolioContainer: NextPage = () => {
 											fontSize="14px"
 										>
 											<Flex w="5rem">
-												<Text>Total Value</Text>
+												<Text>{translation("portfolioPage.totalValue")}</Text>
 											</Flex>
 											<Flex w="8rem" mr={["0.5rem", "0", "0", "0"]}>
-												<Text>Total Amount</Text>
+												<Text>{translation("portfolioPage.totalAmount")}</Text>
 											</Flex>
 											<Flex w="8rem">
-												<Text>Token Amount</Text>
+												<Text>{translation("portfolioPage.tokenAmount")}</Text>
 											</Flex>
 											<Flex w="6rem" mr={["0", "0.2rem", "1.1rem", "1.35rem"]}>
-												<Text>Time</Text>
+												<Text>{translation("portfolioPage.time")}</Text>
 											</Flex>
 										</Flex>
 									</Flex>
@@ -626,8 +671,7 @@ export const PortfolioContainer: NextPage = () => {
 							fontWeight="normal"
 							textAlign="center"
 						>
-							Please connect your wallet in the button below to view your
-							portfolio.
+							{translation("portfolioPage.pleaseConnect")}
 						</Text>
 					</Flex>
 				)}
