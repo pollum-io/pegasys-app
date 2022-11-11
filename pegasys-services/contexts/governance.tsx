@@ -1,6 +1,13 @@
-import React, { createContext, useMemo, useState } from "react";
+import React, { createContext, useEffect, useMemo, useState } from "react";
 
-import { IGovernanceProviderValue, IGovernanceProviderProps } from "../dto";
+import { GovernanceServices } from "../services";
+import { useWallet } from "../hooks";
+import {
+	IGovernanceProviderValue,
+	IGovernanceProviderProps,
+	IFormattedProposal,
+} from "../dto";
+import { ContractFramework } from "../frameworks";
 
 export const GovernanceContext = createContext({} as IGovernanceProviderValue);
 
@@ -12,6 +19,35 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 	const [votesLocked, setVotesLocked] = useState<boolean>(true);
 	const [delegatedTo, setDelegatedTo] = useState<string>("");
 	const [votersType, setVotersType] = useState<string>("");
+	const [proposals, setProposals] = useState<IFormattedProposal[]>([]);
+	const { chainId, provider } = useWallet();
+
+	useEffect(() => {
+		const init = async () => {
+			try {
+				const contract = ContractFramework.GovernanceContract({
+					chainId,
+					provider,
+				});
+
+				const proposalCount = await GovernanceServices.getProposalCount({
+					contract,
+				});
+
+				const fetchedProposals = await GovernanceServices.getProposals({
+					proposalCount,
+				});
+
+				if (fetchedProposals.length) {
+					setProposals(fetchedProposals);
+				}
+			} catch (e) {
+				console.log(e);
+			}
+		};
+
+		init();
+	}, []);
 
 	const providerValue = useMemo(
 		() => ({
@@ -25,6 +61,7 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 			setDelegatedTo,
 			votersType,
 			setVotersType,
+			proposals,
 		}),
 		[
 			showCancelled,
@@ -37,6 +74,7 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 			setDelegatedTo,
 			votersType,
 			setVotersType,
+			proposals,
 		]
 	);
 

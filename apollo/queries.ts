@@ -117,3 +117,29 @@ export const GET_BLOCKS = (timestamps: number[]) => {
 	queryString += "}";
 	return gql(queryString);
 };
+
+export const GET_PROPOSALS = gql`
+	query proposalsQuery($proposalCount: Int!) {
+		proposals(
+			orderBy: startBlock
+			first: $proposalCount
+			orderDirection: desc
+		) {
+			id
+			description
+			proposer {
+				id
+			}
+			status
+			signatures
+			calldatas
+			startBlock
+			endBlock
+			votes {
+				id
+				votes
+				support
+			}
+		}
+	}
+`;

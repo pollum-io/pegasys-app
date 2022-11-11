@@ -1,4 +1,5 @@
 import { children, setType } from "../react";
+import { IFormattedProposal } from "../services";
 
 export interface IGovernanceProviderProps {
 	children: children;
@@ -15,4 +16,5 @@ export interface IGovernanceProviderValue {
 	setShowCancelled: setType<boolean>;
 	isGovernance: boolean;
 	setIsGovernance: setType<boolean>;
+	proposals: IFormattedProposal[];
 }

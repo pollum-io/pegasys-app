@@ -24,6 +24,7 @@
 		"@ethersproject/providers": "^5.6.8",
 		"@ethersproject/units": "^5.6.1",
 		"@hookform/resolvers": "^2.8.8",
+		"@pangolindex/governance": "^1.2.0",
 		"@pollum-io/pegasys-injected-connector": "^0.1.0",
 		"@pollum-io/pegasys-protocol": "^0.0.15",
 		"@pollum-io/pegasys-sdk": "^0.0.12",
