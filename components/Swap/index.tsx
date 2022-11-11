@@ -673,7 +673,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								? theme.text.red400
 								: "#ff000000"
 						}
-						transition="500ms ease-in-out"
+						transition="500ms border ease-in-out"
 					>
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
@@ -821,7 +821,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								? theme.text.red400
 								: "#ff000000"
 						}
-						transition="500ms ease-in-out"
+						transition="500ms border ease-in-out"
 					>
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
