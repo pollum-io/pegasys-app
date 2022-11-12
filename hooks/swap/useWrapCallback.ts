@@ -8,7 +8,7 @@ import {
 	IWalletHookInfos,
 	ITx,
 } from "types";
-import { ApprovalState, IApprovalState } from "contexts";
+import { ApprovalState, IApprovalState } from "pegasys-services";
 import WETH_ABI from "utils/abis/weth.json";
 
 export enum WrapType {

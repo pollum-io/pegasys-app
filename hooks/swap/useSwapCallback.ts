@@ -4,12 +4,12 @@ import { BigNumber, Signer } from "ethers";
 import { UseENS } from "hooks";
 import { calculateGasMargin, isZero, shortAddress } from "utils";
 import { ITx, IWalletHookInfos } from "types";
-import { addTransaction } from "utils/addTransaction";
+import { addTransaction } from "utils/transactions";
 import { UseBestSwapMethod } from "./useBestSwapMethod";
 import { UseToastOptions } from "@chakra-ui/react";
 import { ApprovalState } from "./useApproveCallback";
 import { TransactionResponse } from "@ethersproject/providers";
-import { IApprovalState } from "contexts";
+import { IApprovalState } from "pegasys-services";
 
 export enum SwapCallbackState {
 	INVALID,
@@ -23,6 +23,7 @@ export function UseSwapCallback(
 	transactionDeadlineValue: BigNumber | number,
 	walletInfos: IWalletHookInfos,
 	signer: Signer,
+	recipientAddress: string,
 	setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
 	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
 	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
@@ -35,18 +36,16 @@ export function UseSwapCallback(
 ) {
 	const { walletAddress, chainId: chain } = walletInfos;
 
+	const recipient = !recipientAddress ? walletAddress : recipientAddress;
+
 	const swapCalls = UseBestSwapMethod(
 		trade as Trade,
-		walletInfos.walletAddress,
+		recipient,
 		signer,
 		walletInfos,
 		allowedSlippage,
 		transactionDeadlineValue
 	);
-
-	const { address: recipientAddress } = UseENS(walletAddress);
-	const recipient =
-		recipientAddress === null ? walletAddress : recipientAddress;
 
 	if (!trade || !walletAddress || !chain) {
 		return {

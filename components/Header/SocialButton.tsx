@@ -20,6 +20,7 @@ interface IButtonProps extends ButtonProps {
 }
 
 export const SocialButton: FunctionComponent<IButtonProps> = props => {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const { children, ...rest } = props;
 	const theme = usePicasso();
 

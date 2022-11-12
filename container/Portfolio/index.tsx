@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso } from "hooks";
 import {
 	Button,
 	Flex,
@@ -14,6 +14,7 @@ import { useState } from "react";
 import { WalletStatsCards } from "components/Portfolio/WalletStatsCards";
 import { LiquidityCards } from "components/Portfolio/LiquidityCards";
 import { TransactionCards } from "components/Portfolio/TransactionCards";
+import { useWallet } from "pegasys-services";
 
 export const PortfolioContainer: NextPage = () => {
 	const theme = usePicasso();

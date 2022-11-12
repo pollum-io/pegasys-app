@@ -16,12 +16,15 @@ import {
 import React, { FunctionComponent, ReactNode, useState } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
 import { IoWarningOutline } from "react-icons/io5";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso } from "hooks";
 import { mockedSlippageValues } from "helpers/mockedData";
 import { useTranslation } from "react-i18next";
-import { DEFAULT_DEADLINE_FROM_NOW } from "helpers/consts";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
-import { useWallet as psUseWallet } from "pegasys-services";
+import {
+	useWallet,
+	usePegasys,
+	DEFAULT_DEADLINE_FROM_NOW,
+} from "pegasys-services";
 import { IconButton } from "../Buttons/IconButton";
 import { SlippageButton } from "../Buttons/SlippageButton";
 import { Languages } from "./Languages";
@@ -54,9 +57,9 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 		setUserTransactionDeadlineValue,
 		setExpert,
 		expert,
-	} = useWallet();
+	} = usePegasys();
 
-	const { isConnected } = psUseWallet();
+	const { isConnected } = useWallet();
 
 	const { t: translation } = useTranslation();
 

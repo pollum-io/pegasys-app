@@ -22,8 +22,7 @@ import {
 	RemoveLiquidity,
 } from "components";
 import { PoolCards } from "components/Pools/PoolCards";
-import { SUPPORTED_NETWORK_CHAINS } from "helpers/consts";
-import { usePicasso, useModal, useWallet, useTokens, usePairs } from "hooks";
+import { usePicasso, useModal, useTokens, usePairs } from "hooks";
 import { NextPage } from "next";
 import { ChangeEvent, useMemo, useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
@@ -36,6 +35,8 @@ import {
 	IPoolsLiquidity,
 	IPoolsVolume,
 } from "types";
+import { useTranslation } from "react-i18next";
+import { useWallet, SUPPORTED_NETWORK_CHAINS } from "pegasys-services";
 import {
 	getTokenPairs,
 	toV2LiquidityToken,
@@ -50,7 +51,6 @@ export const PoolsContainer: NextPage = () => {
 		onCloseImportPool,
 		isOpenRemoveLiquidity,
 		onCloseRemoveLiquidity,
-		onOpenAddLiquidity,
 		isOpenAddLiquidity,
 		onCloseAddLiquidity,
 		isOpenTransaction,
@@ -63,8 +63,12 @@ export const PoolsContainer: NextPage = () => {
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const [isCreate, setIsCreate] = useState(false);
 	const [haveValue] = useState(false);
-	const { isConnected, currentNetworkChainId, walletAddress, provider } =
-		useWallet();
+	const {
+		isConnected,
+		address,
+		chainId: currentNetworkChainId,
+		provider,
+	} = useWallet();
 	const { userTokensBalance } = useTokens();
 	const [userHavePool] = useState(true);
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
@@ -84,6 +88,7 @@ export const PoolsContainer: NextPage = () => {
 	const [pairInfo, setPairInfo] = useState<ICommonPairs>();
 	const [notFound, setNotFound] = useState<boolean>(false);
 	const [allTokens, setAllTokens] = useState<[Token, Token][]>([]);
+	const { t: translation } = useTranslation();
 
 	let currentChainId: ChainId;
 
@@ -107,15 +112,18 @@ export const PoolsContainer: NextPage = () => {
 
 	const sortTypeName =
 		sortType === "liquidity"
-			? "Liquidity"
+			? translation("pool.liquidity")
 			: sortType === "apr"
 			? "APR"
 			: sortType === "your-pools"
-			? "Your Pools"
-			: "Volume";
+			? translation("pool.yourPools")
+			: translation("positionCard.volume");
 
+	const isValid = userTokensBalance.every(
+		token => token.chainId === currentChainId
+	);
 	useMemo(async () => {
-		if (userTokensBalance.length === 0) return;
+		if (userTokensBalance.length === 0 || !isValid) return;
 
 		const tokens = getTokenPairs(
 			validatedCurrentChain ? currentChainId : ChainId.NEVM,
@@ -136,7 +144,7 @@ export const PoolsContainer: NextPage = () => {
 		const walletInfos = {
 			chainId: validatedCurrentChain ? currentChainId : ChainId.NEVM,
 			provider,
-			walletAddress,
+			walletAddress: address,
 		};
 
 		const [{ number: oneDay }, { number: twoDays }] =
@@ -177,7 +185,6 @@ export const PoolsContainer: NextPage = () => {
 			}),
 			{}
 		);
-
 		const twoDaysPairInfos = await Promise.all(
 			pairAddresses.map(async (token: { id: string }) => {
 				const volume = await pegasysClient.query({
@@ -347,7 +354,7 @@ export const PoolsContainer: NextPage = () => {
 			twoDays: formattedTwoDaysCommonPairs,
 			general: formattedGeneralCommonPairs,
 		});
-	}, [userTokensBalance, currentNetworkChainId]);
+	}, [userTokensBalance, isValid, currentNetworkChainId]);
 
 	useMemo(() => {
 		if (searchTokens.length !== 0) {
@@ -486,9 +493,7 @@ export const PoolsContainer: NextPage = () => {
 						zIndex="docked"
 						position="relative"
 						borderRadius="xl"
-						backgroundColor={
-							walletAddress ? theme.bg.alphaPurple : "transparent"
-						}
+						backgroundColor={address ? theme.bg.alphaPurple : "transparent"}
 					>
 						<Img
 							borderRadius="xl"
@@ -496,7 +501,7 @@ export const PoolsContainer: NextPage = () => {
 							position="absolute"
 							zIndex="base"
 							w="100%"
-							h={walletAddress ? "85%" : "100%"}
+							h={address ? "85%" : "100%"}
 						/>
 						<Flex
 							zIndex="docked"
@@ -508,7 +513,7 @@ export const PoolsContainer: NextPage = () => {
 							color="white"
 						>
 							<Text fontWeight="bold" fontSize="md">
-								Liquidity Provider Rewards
+								{translation("pool.liquidityProviderRewards")}
 							</Text>
 							<Text
 								color="white"
@@ -517,12 +522,10 @@ export const PoolsContainer: NextPage = () => {
 								lineHeight="shorter"
 								w={["100%", "70%", "60%", "60%"]}
 							>
-								Liquidity providers earn a 0.25% fee on all trades proportional
-								to their share of the pool. Fees are added to the pool, accrue
-								in real time and can be claimed by withdrawing your liquidity.
+								{translation("pool.liquidityProvidersEarn")}
 							</Text>
 						</Flex>
-						{walletAddress && (
+						{address && (
 							<Flex
 								alignItems="center"
 								justifyContent="center"
@@ -536,13 +539,11 @@ export const PoolsContainer: NextPage = () => {
 								gap="2.5"
 								cursor="pointer"
 								onClick={() =>
-									window.open(
-										`https://info.pegasys.finance/account/${walletAddress}`
-									)
+									window.open(`https://info.pegasys.finance/account/${address}`)
 								}
 							>
 								<Text fontWeight="medium" fontSize="xs" color="white">
-									View Your Staked Liquidity
+									{translation("pool.viewStakedLiquidity")}
 								</Text>
 								<MdOutlineCallMade size={18} color="white" />
 							</Flex>
@@ -573,7 +574,7 @@ export const PoolsContainer: NextPage = () => {
 								fontWeight="semibold"
 								color={theme.text.mono}
 							>
-								Pools Overview
+								{translation("pool.poolsOverview")}
 							</Text>
 						</Flex>
 						<Flex
@@ -608,9 +609,8 @@ export const PoolsContainer: NextPage = () => {
 									/>
 									<Input
 										borderColor={theme.bg.blueNavyLightness}
-										placeholder="Search by token name"
+										placeholder={translation("pool.searchPair")}
 										_placeholder={{
-											opacity: 1,
 											color: theme.text.inputBluePurple,
 										}}
 										onChange={handleInput}
@@ -640,7 +640,7 @@ export const PoolsContainer: NextPage = () => {
 									{isConnected && (
 										<Menu>
 											<Text fontSize="sm" pb="2">
-												Sort by
+												{translation("pool.sort")}
 											</Text>
 											<MenuButton
 												as={Button}
@@ -658,7 +658,9 @@ export const PoolsContainer: NextPage = () => {
 												borderRadius="full"
 												rightIcon={<MdExpandMore size={20} />}
 											>
-												{!sortType ? "Your Pools" : sortTypeName}
+												{!sortType
+													? translation("pool.yourPools")
+													: sortTypeName}
 											</MenuButton>
 											<MenuList
 												bgColor={theme.bg.blueNavy}
@@ -672,14 +674,14 @@ export const PoolsContainer: NextPage = () => {
 													_hover={{ bgColor: theme.bg.neutralGray }}
 													onClick={() => setSortType("liquidity")}
 												>
-													Liquidity
+													{translation("pool.liquidity")}
 												</MenuItem>
 												<MenuItem
 													color={theme.text.mono}
 													_hover={{ bgColor: theme.bg.neutralGray }}
 													onClick={() => setSortType("volume")}
 												>
-													Volume
+													{translation("positionCard.volume")}
 												</MenuItem>
 												<MenuItem
 													color={theme.text.mono}
@@ -693,7 +695,7 @@ export const PoolsContainer: NextPage = () => {
 													_hover={{ bgColor: theme.bg.neutralGray }}
 													onClick={() => setSortType("your-pools")}
 												>
-													Your Pools
+													{translation("pool.yourPools")}
 												</MenuItem>
 											</MenuList>
 										</Menu>
@@ -716,8 +718,7 @@ export const PoolsContainer: NextPage = () => {
 								fontWeight="normal"
 								textAlign="center"
 							>
-								Please connect your wallet in the button bellow to be able to
-								view your liquidity.
+								{translation("pool.connectWalletToView")}
 							</Text>
 						</Flex>
 					) : (
@@ -762,7 +763,7 @@ export const PoolsContainer: NextPage = () => {
 										fontWeight="normal"
 										textAlign="center"
 									>
-										Unavailable liquidity tokens.
+										{translation("pool.unavailable")}
 									</Text>
 								</Flex>
 							) : (

@@ -24,7 +24,7 @@ import {
 	useToasty,
 	useTokensListManage,
 } from "hooks";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { MdArrowBack } from "react-icons/md";
 import { returnConvertedUrl, TokenListNameOrigin } from "utils";
 import { useTranslation } from "react-i18next";

@@ -1,10 +1,6 @@
 import { ChainId } from "@pollum-io/pegasys-sdk";
 import { TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
 import {
-	DEFAULT_TOKEN_LISTS_SELECTED,
-	SUPPORTED_NETWORK_CHAINS,
-} from "helpers/consts";
-import {
 	EMPTY_TOKEN_LIST,
 	INITIAL_TOKEN_LIST_STATE,
 	NEW_TOKEN_LIST_STATE,
@@ -13,7 +9,12 @@ import {
 import { getTokenListByUrl } from "networks";
 import React, { createContext, useMemo, useState, useEffect } from "react";
 import { ListsState, TokenAddressMap, WrappedTokenInfo } from "types";
-import { useWallet } from "pegasys-services";
+import {
+	useWallet,
+	PersistentFramework,
+	DEFAULT_TOKEN_LISTS_SELECTED,
+	SUPPORTED_NETWORK_CHAINS,
+} from "pegasys-services";
 
 interface ITokensListManageContext {
 	tokenListManageState: ListsState;
@@ -300,7 +301,13 @@ export const TokensListManageProvider: React.FC<{
 							return prevState;
 						}
 
-						prevState = [...prevState, ...getTokensByChain];
+						prevState = [
+							...getTokensByChain.filter(chainToken =>
+								prevState.some(
+									prevToken => prevToken.address !== chainToken.address
+								)
+							),
+						];
 
 						return prevState;
 					});
@@ -324,6 +331,23 @@ export const TokensListManageProvider: React.FC<{
 
 		if (listToRemove) removeListFromListState(listToRemove);
 	}, [listToAdd, listToRemove]);
+
+	useEffect(() => {
+		if (currentCacheListTokensToDisplay.length > 0) {
+			PersistentFramework.add(
+				"currentStorageTokens",
+				currentCacheListTokensToDisplay
+			);
+		}
+	}, [currentCacheListTokensToDisplay]);
+
+	useEffect(() => {
+		const getStorageValue = PersistentFramework.get("currentStorageTokens");
+
+		if (getStorageValue) {
+			setCurrentCacheListTokensToDisplay(getStorageValue as WrappedTokenInfo[]);
+		}
+	}, []);
 
 	const tokensListManageProviderValue = useMemo(
 		() => ({

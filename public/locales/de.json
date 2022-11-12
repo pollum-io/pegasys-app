@@ -137,11 +137,14 @@
 		"remove": "Entfernen",
 		"poolShare": "Dein Anteil am Pool:",
 		"pooled": "gepoolt",
+		"volume": "Band",
 		"poolTokens": "Deine Pool-Token:",
 		"manage": "Verwalten",
 		"loading": "Lädt",
+		"liquidity": "Liquidität",
 		"yourPosition": "Deine Position",
-		"byAddingLiquidityInfo": "Durch das Bereitstellen von Liquidität verdienst du 0,25% an allen Trades auf diesem Paar, proportional zu deinem Anteil am Pool. \n Gebühren werden dem Pool hinzugefügt, fallen in Echtzeit an und können beansprucht werden, indem die Liquidität abgebucht wird."
+		"byAddingLiquidityInfo1": "Durch das Bereitstellen von Liquidität verdienst du 0,25% an allen Trades auf diesem Paar, proportional zu deinem Anteil am Pool.",
+		"byAddingLiquidityInfo2": "Gebühren werden dem Pool hinzugefügt, fallen in Echtzeit an und können beansprucht werden, indem die Liquidität abgebucht wird."
 	},
 	"searchModal": {
 		"commonBases": "Übliche Basis-Token",
@@ -304,15 +307,17 @@
 	},
 	"airdrop": {
 		"airdrop": "Airdrop",
+		"airdropTime": "Es ist Zeit für die Übergabe!",
+		"mainText": "Wenn Sie die Schritte unternommen haben, um sich für den PSYS-Airdrop zu qualifizieren, können Sie hier überprüfen, wie viel Sie verdient haben, und Ihre Token einfordern.",
 		"claimPeriodEnded": "Der Zeitraum für das Beanspruchen von Airdrops ist abgelaufen.",
 		"connectWalletViewLiquidity": "Verbinde mit einer Wallet, um deine Liquidität zu sehen.",
 		"noAvailableClaim": "Dir stehen keine PSYS zum Beanspruchen zu.",
 		"noUniNoSushi": "Du hast keine UNI- oder SUSHI Token. Bitte folge diesem Tutorial, um deiner Wallet UNI- oder SUSHI-Token hinzuzufügen.",
 		"youHave": "Du hast ",
 		"psysAvailableClaim": " PSYS verfügbar zum Beanspruchen",
-		"loading": "Lädt",
+		"loading": "Beantragung von",
 		"welcomeToTeamPegasys": "Willkommen im Pegasys-Team",
-		"claim": "Beanspruchen "
+		"claim": "Jetzt anfordern"
 	},
 	"earnPage": {
 		"pegasysLiquidityMining": "Pegasys Liquidity-Mining",
@@ -360,6 +365,8 @@
 		"readMoreProviding": "Erfahre mehr über das Bereitstellen von Liquidität",
 		"viewStakedLiquidity": "Lass dir deine gestakte Liquidität anzeigen",
 		"yourLiquidity": "Deine Liquidität",
+		"liquidity":"Liquidität",
+		"unavailable": "Nicht verfügbare Liquiditätsmünzen.",
 		"createPair": "Erstelle ein Paar",
 		"addLiquidity": "Füge Liquidität hinzu",
 		"connectWalletToView": "Verbinde mit einer Wallet, um deine Liquidität zu sehen.",
@@ -368,7 +375,11 @@
 		"uniswapV1Found": "Uniswap V1-Liquidität gefunden!",
 		"noSeePoolJoined": "Siehst du den Pool, dem Du beigetreten bist nicht?",
 		"migrateNow": "Jetzt migrieren.",
-		"importIt": "Importiere ihn."
+		"yourPools": "Ihre Pools",
+		"importIt": "Importiere ihn.",
+		"sort": "Sortieren nach",
+		"poolsOverview": "Pools Übersicht",
+		"searchPair": "Suche nach Token-Symbol"
 	},
 	"poolFinder": {
 		"connectToFind": "Verbinde mit einer Wallet, um Pools zu finden",
@@ -389,14 +400,16 @@
 		"detailed": "Detailliert",
 		"receiveSys": "Erhalte SYS",
 		"receiveWsys": "Erhalte WSYS",
-		"price": "Preis:",
+		"receive": "Erhalte",
+		"price": "Preis",
 		"connectWallet": "Mit Wallet verbinden",
 		"approving": "Bestätige",
 		"approve": "Bestätigen",
 		"approved": "Bestätigt",
 		"remove": "Entferne",
 		"output": "Auszahlung",
-		"amount": "Anzahl"
+		"amount": "Anzahl",
+		"sign": "Zeichen"
 	},
 	"swapPage": {
 		"addSend": "+ Empfängerwallet hinzufügen (optional)",

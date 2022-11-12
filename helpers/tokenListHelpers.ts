@@ -1,7 +1,10 @@
 import { ChainId } from "@pollum-io/pegasys-sdk";
 import { TokenList } from "@pollum-io/syscoin-tokenlist-sdk";
 import { ListsState, Mutable, NewListState, TokenAddressMap } from "types";
-import { DEFAULT_TOKEN_LISTS, DEFAULT_TOKEN_LISTS_SELECTED } from "./consts";
+import {
+	DEFAULT_TOKEN_LISTS,
+	DEFAULT_TOKEN_LISTS_SELECTED,
+} from "pegasys-services";
 
 // An empty result, useful as a default token list value.
 export const EMPTY_TOKEN_LIST: TokenAddressMap = {

@@ -13,7 +13,7 @@ import { MdOutlineClose } from "react-icons/md";
 
 interface IModal {
 	isOpen: boolean;
-	onClose: () => void;
+	onClose?: () => void;
 }
 
 export const LoadingTransition: React.FC<IModal> = props => {
@@ -22,7 +22,15 @@ export const LoadingTransition: React.FC<IModal> = props => {
 	const { colorMode } = useColorMode();
 
 	return (
-		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+		<Modal
+			blockScrollOnMount={false}
+			isOpen={isOpen}
+			onClose={() => {
+				if (onClose) {
+					onClose();
+				}
+			}}
+		>
 			<ModalOverlay />
 			<ModalContent
 				mt="10rem"
@@ -38,20 +46,26 @@ export const LoadingTransition: React.FC<IModal> = props => {
 						: undefined
 				}
 			>
-				<Flex
-					bgColor="transparent"
-					_hover={{ cursor: "pointer" }}
-					onClick={onClose}
-					pt="0"
-					justifyContent="flex-end"
-					flexDirection="row"
-					alignItems="center"
-					position="relative"
-					top="8"
-					right="2"
-				>
-					<MdOutlineClose size={22} onClick={onClose} color={theme.text.mono} />
-				</Flex>
+				{onClose && (
+					<Flex
+						bgColor="transparent"
+						_hover={{ cursor: "pointer" }}
+						onClick={onClose}
+						pt="0"
+						justifyContent="flex-end"
+						flexDirection="row"
+						alignItems="center"
+						position="relative"
+						top="8"
+						right="2"
+					>
+						<MdOutlineClose
+							size={22}
+							onClick={onClose}
+							color={theme.text.mono}
+						/>
+					</Flex>
+				)}
 				<Flex
 					flexDirection="column"
 					justifyContent="center"

@@ -1,6 +1,7 @@
 import { Flex, Text } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso } from "hooks";
+import { useGovernance } from "pegasys-services";
 
 interface IVoteCards {
 	title?: string;
@@ -17,7 +18,7 @@ export const VoteCards: FunctionComponent<IVoteCards> = props => {
 		version = "2.9",
 	} = props;
 	const theme = usePicasso();
-	const { setIsGovernance, showCancelled } = useWallet();
+	const { setIsGovernance, showCancelled } = useGovernance();
 
 	return (
 		<Flex

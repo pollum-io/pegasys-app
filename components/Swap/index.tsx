@@ -10,7 +10,14 @@ import {
 	useColorMode,
 	SlideFade,
 } from "@chakra-ui/react";
-import { useToasty, useWallet as psUseWallet } from "pegasys-services";
+import {
+	useToasty,
+	useWallet as psUseWallet,
+	usePegasys,
+	ONE_DAY_IN_SECONDS,
+	SUPPORTED_NETWORK_CHAINS,
+	useTransaction,
+} from "pegasys-services";
 import {
 	useModal,
 	usePicasso,
@@ -53,7 +60,6 @@ import { Signer } from "ethers";
 import { computeTradePriceBreakdown, Field, maxAmountSpend } from "utils";
 import { getTokensGraphCandle } from "services/index";
 
-import { ONE_DAY_IN_SECONDS, SUPPORTED_NETWORK_CHAINS } from "helpers/consts";
 import { ConfirmSwap } from "components/Modals/ConfirmSwap";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { OtherWallet } from "./OtherWallet";
@@ -95,11 +101,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		onCloseTransaction,
 		onOpenSelectWalletModal,
 	} = useModal();
-
 	const {
-		provider,
-		signer,
-		userSlippageTolerance,
 		setTransactions,
 		transactions,
 		setApprovalState,
@@ -108,12 +110,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setCurrentTxHash,
 		setCurrentSummary,
 		setCurrentInputTokenName,
-		expert,
-		otherWallet,
-		userTransactionDeadlineValue,
-	} = useWallet();
+	} = useTransaction();
+	const { otherWallet } = useWallet();
 
-	const { address, chainId, isConnected } = psUseWallet();
+	const { address, chainId, isConnected, provider, signer } = psUseWallet();
+	const { userSlippageTolerance, userTransactionDeadlineValue, expert } =
+		usePegasys();
 
 	// END HOOKS IMPORTED VALUES
 
@@ -195,6 +197,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const [approveTokenStatus, setApproveTokenStatus] = useState<ApprovalState>(
 		ApprovalState.UNKNOWN
 	);
+
+	const [recipientAddress, setRecipientAddress] = useState<string>("");
 
 	// END REACT STATES //
 
@@ -299,6 +303,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			userTransactionDeadlineValue,
 			walletInfos,
 			signer,
+			recipientAddress,
 			setTransactions,
 			setApprovalState,
 			setCurrentTxHash,
@@ -485,12 +490,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			token => token?.symbol === "SYS" || token?.symbol === "PSYS"
 		);
 
-		const setIdToTokens = getTokensBySymbol.map((token, index: number) => ({
-			...token,
-			id: index,
-		})) as WrappedTokenInfo[];
+		const setIdToTokens = getTokensBySymbol.map(
+			(token: WrappedTokenInfo, index: number) => ({
+				...token,
+				id: index,
+			})
+		) as WrappedTokenInfo[];
 
-		setSelectedToken(setIdToTokens);
+		setSelectedToken(setIdToTokens as WrappedTokenInfo[]);
 	}, [userTokensBalance]);
 
 	useEffect(() => {
@@ -561,7 +568,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 	const isOtherWallet = useMemo(() => {
 		if (otherWallet && expert) {
-			return <OtherWallet />;
+			return <OtherWallet setRecipientAddress={setRecipientAddress} />;
 		}
 		return <Flex />;
 	}, [otherWallet]);
@@ -1199,8 +1206,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			<Flex
 				h="max-content"
 				w={["18rem", "sm", "100%", "xl"]}
-				p="1.5rem"
-				ml={["0", "0", "0", "10"]}
+				ml={["0", "0", "0", "12"]}
 				mt={["8", "8", "8", "0"]}
 				mb={["24", "24", "24", "0"]}
 				flexDirection="column"

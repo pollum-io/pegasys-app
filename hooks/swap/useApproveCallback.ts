@@ -1,7 +1,11 @@
 import { MaxUint256 } from "@ethersproject/constants";
 import { Trade, ChainId, TokenAmount, Token } from "@pollum-io/pegasys-sdk";
 import { UseToastOptions } from "@chakra-ui/react";
-import { ROUTER_ADDRESS } from "helpers/consts";
+import {
+	PegasysContracts,
+	IApprovalState,
+	ISubmittedAproval,
+} from "pegasys-services";
 import {
 	addTransaction,
 	calculateGasMargin,
@@ -16,7 +20,6 @@ import {
 	ITransactionResponse,
 } from "types";
 import { Signer } from "ethers";
-import { IApprovalState, ISubmittedAproval } from "contexts";
 import abi20 from "utils/abis/erc20.json";
 
 export enum ApprovalState {
@@ -195,7 +198,7 @@ export function useApproveCallbackFromTrade(
 		setApproveTokenStatus,
 		onCloseTransaction,
 		amountToApprove,
-		chainId ? ROUTER_ADDRESS[chainId] : ROUTER_ADDRESS[ChainId.NEVM],
+		PegasysContracts[chainId ?? ChainId.NEVM].ROUTER_ADDRESS,
 		signer
 	);
 }

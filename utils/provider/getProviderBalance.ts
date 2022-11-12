@@ -14,7 +14,7 @@ export const getProviderBalance = async (
 		| ethers.providers.Web3Provider
 		| ethers.providers.JsonRpcProvider
 		| Signer
-		| undefined,
+		| null,
 	walletAddress: string
 ): Promise<IGetProviderBalance> => {
 	if (!walletAddress) {

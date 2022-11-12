@@ -16,15 +16,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
 	const [isCreate, setIsCreate] = useState(false);
-	// const [haveValue] = useState(false);
-	const {
-		// isOpenRemoveLiquidity,
-		// onCloseRemoveLiquidity,
-		onOpenAddLiquidity,
-		// isOpenAddLiquidity,
-		// onCloseAddLiquidity,
-		onOpenRemoveLiquidity,
-	} = useModal();
+	const { onOpenAddLiquidity, onOpenRemoveLiquidity } = useModal();
 
 	const quantityPerPage = 5;
 
@@ -67,18 +59,6 @@ export const LiquidityCards: React.FunctionComponent = () => {
 					px={["1.5rem", "2rem", "2.5rem", "8rem"]}
 					h="max-content"
 				>
-					{/* <AddLiquidityModal
-						isModalOpen={isOpenAddLiquidity}
-						onModalClose={onCloseAddLiquidity}
-						isCreate={isCreate}
-						haveValue={haveValue}
-					/>
-					<RemoveLiquidity
-						isModalOpen={isOpenRemoveLiquidity}
-						onModalClose={onCloseRemoveLiquidity}
-						isCreate={isCreate}
-						haveValue={haveValue}
-					/> */}
 					<Flex
 						display={["flex", "none", "none", "none"]}
 						bgColor={theme.bg.poolShare}

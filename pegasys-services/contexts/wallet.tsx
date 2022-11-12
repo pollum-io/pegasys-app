@@ -1,6 +1,8 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 
-import { ethers, Signer } from "ethers";
+import { ChainId } from "@pollum-io/pegasys-sdk";
+import { IWalletInfo } from "types";
+import { SUPPORTED_NETWORK_CHAINS } from "../constants";
 import { useToasty } from "../hooks";
 import {
 	IWalletProviderValue,
@@ -16,18 +18,22 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 	children,
 }) => {
 	const [address, setAddress] = useState<string>("");
-	const [chainId, setChainId] = useState<number | null>(null);
+	const [chainId, setChainId] = useState<ChainId | null>(null);
 	const [isConnected, setIsConnected] = useState<boolean>(false);
-	const [provider, setProvider] = useState<TProvider | undefined>();
-	const [signer, setSigner] = useState<TSigner | undefined>();
+	const [provider, setProvider] = useState<TProvider | null>(null);
+	const [signer, setSigner] = useState<TSigner | null>(null);
+	const [walletError, setWalletError] = useState<boolean>(false);
+	const [connectorSelected, setConnectorSelected] =
+		useState<IWalletInfo | null>(null);
+	const [connecting, setConnecting] = useState<boolean>(false);
 	const { toast } = useToasty();
 
 	const disconnect = () => {
 		setAddress("");
 		setChainId(null);
 		setIsConnected(false);
-		setProvider(undefined);
 		setSigner(undefined);
+		setConnecting(false);
 		PersistentFramework.remove("wallet");
 	};
 
@@ -37,6 +43,8 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 
 			setChainId(data.chainId);
 			setAddress(data.address);
+			setSigner(data.signer ?? null);
+			setProvider(data.provider ?? null);
 			setIsConnected(true);
 			PersistentFramework.add("wallet", { isConnected: true });
 		} catch {
@@ -49,21 +57,52 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 	};
 
 	useEffect(() => {
+		if (chainId) {
+			if (!SUPPORTED_NETWORK_CHAINS.includes(chainId)) {
+				setWalletError(true);
+			}
+		}
+	}, [chainId]);
+
+	useEffect(() => {
+		const p = provider ?? WalletFramework.getProvider();
+
+		p.on("network", (newNetwork, oldNetwork) => {
+			if (oldNetwork) {
+				setChainId(newNetwork.chainId ?? ChainId.NEVM);
+				// window.location.reload();
+			}
+		});
+
+		// eslint-disable-next-line
+		const { ethereum } = window as any;
+
+		ethereum.on("accountsChanged", () => {
+			connect();
+		});
+	}, [provider]);
+
+	useEffect(() => {
+		const p = WalletFramework.getProvider();
+
+		setProvider(p);
+
 		const checkConnection = async () => {
-			const value = PersistentFramework.get("wallet");
+			const c = await WalletFramework.getChain(p);
+
+			setChainId(c ?? ChainId.NEVM);
+
+			const value = PersistentFramework.get("wallet") as { [k: string]: any };
 
 			if (value?.isConnected) {
 				const connection = await WalletFramework.getConnectionInfo();
-
-				const currentProvider = WalletFramework.getProvider();
-				const currentSigner = WalletFramework.getSigner();
 
 				if (connection.address && connection.chainId) {
 					setAddress(connection.address);
 					setChainId(connection.chainId);
 					setIsConnected(true);
-					setProvider(currentProvider);
-					setSigner(currentSigner);
+					setSigner(connection.signer);
+					setProvider(connection.provider);
 				} else {
 					disconnect();
 				}
@@ -71,19 +110,8 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 				disconnect();
 			}
 		};
+
 		checkConnection();
-
-		const watchAccounts = async () => {
-			const newAddress = await WalletFramework.getAddress();
-
-			setAddress(newAddress);
-		};
-
-		const provider = WalletFramework.getProvider();
-
-		provider?.on("accountsChanged", () => {
-			watchAccounts();
-		});
 	}, []);
 
 	const providerValue = useMemo(
@@ -100,6 +128,12 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 			setProvider,
 			signer,
 			setSigner,
+			walletError,
+			setWalletError,
+			connectorSelected,
+			setConnectorSelected,
+			connecting,
+			setConnecting,
 		}),
 		[
 			chainId,
@@ -114,6 +148,12 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 			setProvider,
 			signer,
 			setSigner,
+			walletError,
+			setWalletError,
+			connectorSelected,
+			setConnectorSelected,
+			connecting,
+			setConnecting,
 		]
 	);
 

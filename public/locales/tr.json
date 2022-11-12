@@ -139,9 +139,12 @@
 		"pooled": "Havuzda",
 		"poolTokens": "Havuz tokenleriniz:",
 		"manage": "Yönet",
+		"liquidity": "Likidite",
+		"volume": "Cilt",
 		"loading": "Yükleniyor",
 		"yourPosition": "Pozisyonunuz",
-		"byAddingLiquidityInfo": "Likidite ekleyerek, havuzdaki payınızla orantılı olarak bu çiftteki tüm işlemlerin %0.25'ünü kazanacaksınız.\n Ücretler havuza eklenir, gerçek zamanlı olarak birikir ve likiditenizi çekerek talep edilebilir."
+		"byAddingLiquidityInfo1": "Likidite ekleyerek, havuzdaki payınızla orantılı olarak bu çiftteki tüm işlemlerin %0.25'ünü kazanacaksınız.",
+		"byAddingLiquidityInfo2": "Ücretler havuza eklenir, gerçek zamanlı olarak birikir ve likiditenizi çekerek talep edilebilir."
 	},
 	"searchModal": {
 		"commonBases": "Ortak bazlar",
@@ -304,15 +307,17 @@
 	},
 	"airdrop": {
 		"airdrop": "Airdrop",
+		"airdropTime": "Hava indirme zamanı!",
+		"mainText": "PSYS airdrop'una hak kazanmak için gerekli adımları attıysanız, ne kadar kazandığınızı kontrol edebileceğiniz ve jetonlarınızı talep edebileceğiniz yer burasıdır.",
 		"claimPeriodEnded": "Airdrop’u talep etme süresi sonra erdi.",
 		"connectWalletViewLiquidity": "Likiditenizi görmek için bir cüzdana bağlanın.",
 		"noAvailableClaim": "Mevcut bir talebiniz bulunmuyor.",
 		"noUniNoSushi": "UNI veya SUSHI tokeniniz mevcut değil. Cüzdanınıza UNI veya SUSHI tokenini eklemek için lütfen buradaki rehberi inceleyin.",
 		"youHave": "Talep edebileceğiniz mevcut PSYS: ",
 		"psysAvailableClaim": "",
-		"loading": "Yükleniyor",
+		"loading": "İddia",
 		"welcomeToTeamPegasys": "Pegasys ekibine hoşgeldiniz",
-		"claim": "Talep Et"
+		"claim": "Şimdi talep edin"
 	},
 	"earnPage": {
 		"pegasysLiquidityMining": "Pegasys likidite madenciliği",
@@ -362,13 +367,19 @@
 		"yourLiquidity": "Likiditeniz",
 		"createPair": "Bir işlem çifti oluştur",
 		"addLiquidity": "Likidite ekle",
+		"liquidity": "Likidite",
+		"unavailable": "Kullanılamayan likidite belirteçleri.",
 		"connectWalletToView": "Likiditenizi görüntülemek için bir cüzdana bağlanın.",
 		"loading": "Yükleniyor",
 		"noLiquidity": "Likidite bulunamadı.",
 		"uniswapV1Found": "Uniswap V1 likiditesi bulundu!",
 		"noSeePoolJoined": "Katıldığınız bir havuzu görmüyor musunuz?",
 		"migrateNow": "Şimdi taşı.",
-		"importIt": "Dışarıdan ekle."
+		"yourPools": "Havuzlarınız",
+		"importIt": "Dışarıdan ekle.",
+		"sort": "Göre sırala",
+		"poolsOverview": "Havuzlara Genel Bakış",
+		"searchPair": "Belirteç sembolüne göre arama"
 	},
 	"poolFinder": {
 		"connectToFind": "Havuzları bulmak için bir cüzdana bağlanın",
@@ -389,6 +400,7 @@
 		"detailed": "Detaylı",
 		"receiveSys": "SYS'ları Teslim Al",
 		"receiveWsys": "WSYS'ları Teslim Al",
+		"receive": "Teslim Al",
 		"price": "Fiyat:",
 		"connectWallet": "Cüzdanı Bağla",
 		"approving": "Onaylanıyor",
@@ -396,7 +408,8 @@
 		"approved": "Onaylandı",
 		"remove": "Çıkar",
 		"output": "Çıktı(Hasıla)",
-		"amount": "Tutar"
+		"amount": "Tutar",
+		"sign": "Işaret"
 	},
 	"swapPage": {
 		"addSend": "+ Bir alıcı ekleyin (opsiyonel)",

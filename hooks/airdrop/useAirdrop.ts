@@ -1,7 +1,12 @@
 import React from "react";
 import { ChainId, JSBI, TokenAmount } from "@pollum-io/pegasys-sdk";
 import AirdropInfo from "helpers/airdrop.json";
-import { AIRDROP_ADDRESS, PSYS } from "helpers/consts";
+import {
+	PegasysContracts,
+	PegasysTokens,
+	ApprovalState,
+	IApprovalState,
+} from "pegasys-services";
 import AIRDROP_ABI from "utils/abis/airdropAbi.json";
 import {
 	addTransaction,
@@ -11,7 +16,6 @@ import {
 } from "utils";
 import { Signer, ethers } from "ethers";
 import { ITransactionResponse, ITx, IWalletHookInfos } from "types";
-import { ApprovalState, IApprovalState } from "contexts";
 
 export const userHasAvailableClaim = async (
 	address: string,
@@ -21,13 +25,13 @@ export const userHasAvailableClaim = async (
 		| ethers.providers.Web3Provider
 		| ethers.providers.JsonRpcProvider
 		| Signer
-		| undefined
+		| null
 ) => {
 	// eslint-disable-next-line
 	// @ts-ignore
 	const userClaimData = AirdropInfo.claims[address || ""];
 	const airDropContract = createContractUsingAbi(
-		AIRDROP_ADDRESS[chainId] as string,
+		PegasysContracts[chainId].AIRDROP_ADDRESS,
 		AIRDROP_ABI,
 		signer
 	);
@@ -50,13 +54,17 @@ export const userUnclaimedAmount = async (
 		| ethers.providers.Web3Provider
 		| ethers.providers.JsonRpcProvider
 		| Signer
-		| undefined
+		| null
 ) => {
 	// eslint-disable-next-line
 	// @ts-ignore
 	const userClaimData = AirdropInfo.claims[address || ""];
-	const psys = chainId ? PSYS[chainId] : undefined;
-	const canClaim = await userHasAvailableClaim(address, chainId, signer);
+	const psys = chainId ? PegasysTokens[chainId].PSYS : undefined;
+	const canClaim = await userHasAvailableClaim(
+		address,
+		chainId,
+		signer ?? null
+	);
 
 	if (!psys) return undefined;
 	if (!userClaimData) return new TokenAmount(psys, JSBI.BigInt(0));
@@ -85,9 +93,9 @@ export const useClaimCallback = (
 	// @ts-ignore
 	const userClaimData = AirdropInfo.claims[address || ""];
 	const airDropContract = createContractUsingAbi(
-		AIRDROP_ADDRESS[chainId] as string,
+		PegasysContracts[chainId].AIRDROP_ADDRESS,
 		AIRDROP_ABI,
-		signer
+		signer ?? null
 	);
 
 	const claimCallback = async () => {

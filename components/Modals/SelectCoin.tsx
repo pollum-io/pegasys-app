@@ -12,13 +12,7 @@ import {
 	Text,
 	InputGroup,
 } from "@chakra-ui/react";
-import {
-	ApprovalState,
-	useModal,
-	usePicasso,
-	useTokens,
-	useWallet,
-} from "hooks";
+import { ApprovalState, useModal, usePicasso, useTokens } from "hooks";
 import React, {
 	ChangeEvent,
 	useMemo,
@@ -37,6 +31,7 @@ import { WrappedTokenInfo } from "types";
 import BigNumber from "bignumber.js";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { useTranslation } from "react-i18next";
+import { useTransaction } from "pegasys-services";
 import { ManageToken } from "./ManageToken";
 
 interface IModal {
@@ -58,7 +53,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const [filter, setFilter] = useState<WrappedTokenInfo[]>([]);
 	const [tokenError, setTokenError] = useState<WrappedTokenInfo[]>([]);
 	const [arrowOrder, setArrowOrder] = useState(false);
-	const { setApprovalState, approvalState } = useWallet();
+	const { setApprovalState, approvalState } = useTransaction();
 	const { t: translation } = useTranslation();
 	const { userTokensBalance } = useTokens();
 
