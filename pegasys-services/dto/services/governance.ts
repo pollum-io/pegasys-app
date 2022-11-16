@@ -19,6 +19,27 @@ export interface IGovernaceServicesCastVote {
 	support?: boolean;
 }
 
+export interface IGovernaceServicesDelegate {
+	chainId?: ChainId | null;
+	provider?: TProvider;
+	contract?: TContract;
+	delegatee?: string;
+}
+
+export interface IGovernaceServicesGetDelegatee {
+	chainId?: ChainId | null;
+	provider?: TProvider;
+	contract?: TContract;
+	walletAddress?: string;
+}
+
+export interface IGovernaceServicesGetCurrentVotes {
+	chainId?: ChainId | null;
+	provider?: TProvider;
+	contract?: TContract;
+	walletAddress?: string;
+}
+
 export interface IProposal {
 	calldatas: [string];
 	description: string;

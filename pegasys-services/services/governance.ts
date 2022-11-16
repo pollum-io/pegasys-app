@@ -7,6 +7,9 @@ import {
 	IGovernaceServicesCastVote,
 	IProposal,
 	IFormattedProposal,
+	IGovernaceServicesDelegate,
+	IGovernaceServicesGetDelegatee,
+	IGovernaceServicesGetCurrentVotes,
 } from "../dto";
 
 class GovernanceServices {
@@ -107,6 +110,69 @@ class GovernanceServices {
 			hash: `${res?.hash}`,
 			response: res ?? null,
 		};
+	}
+
+	static async delegate({
+		contract,
+		provider,
+		chainId,
+		delegatee,
+	}: IGovernaceServicesDelegate) {
+		if (!delegatee) return { hash: "", response: null };
+
+		const psysContract =
+			contract ?? ContractFramework.PSYSContract({ chainId, provider });
+
+		const res = await ContractFramework.call({
+			contract: psysContract,
+			methodName: "delegate",
+			args: [delegatee],
+		});
+
+		return {
+			hash: `${res?.hash}`,
+			response: res ?? null,
+		};
+	}
+
+	static async getDelegatee({
+		contract,
+		provider,
+		chainId,
+		walletAddress,
+	}: IGovernaceServicesGetDelegatee) {
+		if (!walletAddress) return "";
+
+		const psysContract =
+			contract ?? ContractFramework.PSYSContract({ chainId, provider });
+
+		const res = await ContractFramework.call({
+			contract: psysContract,
+			methodName: "delegates",
+			args: [walletAddress],
+		});
+
+		return res;
+	}
+
+	static async getCurrentVotes({
+		contract,
+		provider,
+		chainId,
+		walletAddress,
+	}: IGovernaceServicesGetCurrentVotes) {
+		if (!walletAddress) return 0;
+
+		const psysContract =
+			contract ?? ContractFramework.PSYSContract({ chainId, provider });
+
+		const res = await ContractFramework.call({
+			contract: psysContract,
+			methodName: "getCurrentVotes",
+			args: [walletAddress],
+		});
+
+		return res;
 	}
 }
 
