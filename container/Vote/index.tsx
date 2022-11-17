@@ -8,8 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { usePicasso, useModal } from "hooks";
 import { NextPage } from "next";
-import { VoteCards } from "components/Vote/VoteCards";
-import { ProposalDetails } from "components/Vote/ProposalDetails";
+import { VoteCards, ProposalDetails, LoadingTransition } from "components";
 import { MdOutlineCallMade } from "react-icons/md";
 import { UnlockVotesModal } from "components/Modals/UnlockVoting";
 import { useWallet, useGovernance } from "pegasys-services";
@@ -19,11 +18,14 @@ export const VoteContainer: NextPage = () => {
 	const theme = usePicasso();
 	const { isConnected } = useWallet();
 	const {
-		isGovernance,
+		selectedProposals,
+		// isGovernance,
 		showCancelled,
 		setShowCancelled,
 		votesLocked,
 		delegatedTo,
+		proposals,
+		loading,
 	} = useGovernance();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
@@ -41,8 +43,9 @@ export const VoteContainer: NextPage = () => {
 				isOpen={isOpenUnlockVotesModal}
 				onClose={onCloseUnlockVotesModal}
 			/>
+			<LoadingTransition isOpen={loading} />
 			<Flex alignItems="flex-start" justifyContent="center" mb="6.2rem">
-				{!isGovernance ? (
+				{!selectedProposals ? (
 					<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
 						<Flex
 							flexDirection="column"
@@ -259,8 +262,9 @@ export const VoteContainer: NextPage = () => {
 									flexDirection="column"
 									mt={["1.5rem", "1.5rem", "2rem", "2rem"]}
 								>
-									<VoteCards />
-									<VoteCards />
+									{proposals.map((proposal, index) => (
+										<VoteCards proposal={proposal} key={`voteCard-${index}`} />
+									))}
 								</Flex>
 							)}
 						</Flex>

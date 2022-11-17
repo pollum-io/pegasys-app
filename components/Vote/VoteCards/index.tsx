@@ -1,0 +1,46 @@
+import { Flex } from "@chakra-ui/react";
+import React, { useMemo } from "react";
+import { usePicasso } from "hooks";
+import { useGovernance } from "pegasys-services";
+import Status from "./status";
+import Body from "./body";
+import { IVoteCardsProps } from "./dto";
+
+const VoteCards: React.FC<IVoteCardsProps> = props => {
+	const { proposal } = props;
+	const theme = usePicasso();
+	const { showCancelled, setSelectedProposals } = useGovernance();
+
+	const dateString = useMemo(() => {
+		const dateParts = proposal.date.toDateString().split(" ");
+
+		const customDateParts = [dateParts[1], dateParts[2], dateParts[3]];
+
+		return customDateParts.join(" ");
+	}, [proposal.date]);
+
+	if (proposal.status === "CANCELLED" && !showCancelled) {
+		return null;
+	}
+
+	return (
+		<Flex
+			w={["xs", "md", "2xl", "2xl"]}
+			mb="2"
+			alignItems="center"
+			flexDirection={["column", "column", "row", "row"]}
+			h={["100px", "100px", "58px", "58px"]}
+			bgColor={theme.bg.blueNavyLight}
+			borderRadius="xl"
+			justifyContent="space-between"
+			_hover={{ cursor: "pointer" }}
+			boxShadow="0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)"
+			onClick={() => setSelectedProposals(proposal)}
+		>
+			<Body title={proposal.title} version="4" />
+			<Status status={proposal.status} date={dateString} />
+		</Flex>
+	);
+};
+
+export default VoteCards;

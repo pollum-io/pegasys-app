@@ -16,6 +16,7 @@ import { useGovernance } from "pegasys-services";
 
 import { MdClose } from "react-icons/md";
 import Jazzicon from "react-jazzicon";
+import { shortAddress } from "utils";
 
 interface IModal {
 	isOpen: boolean;
@@ -24,11 +25,12 @@ interface IModal {
 
 export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
+	const { t: translation } = useTranslation();
 
 	const theme = usePicasso();
-	const { votersType } = useGovernance();
+	const { votersType, selectedProposals } = useGovernance();
 
-	const { t: translation } = useTranslation();
+	if (!selectedProposals) return null;
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -62,13 +64,20 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 								</Text>
 								{votersType === "favor" ? (
 									<Flex fontSize="14px">
-										<Text mr="0.563rem">50,634,749</Text>
-										<Text fontWeight="400">/ 40,000,000</Text>
+										<Text mr="0.563rem">{selectedProposals.forVotes}</Text>
+										<Text fontWeight="400">
+											/ {selectedProposals.totalVotes}
+										</Text>
 									</Flex>
 								) : (
 									<Flex>
 										<Text fontSize="14px" fontWeight="semibold">
-											390
+											<Text mr="0.563rem">
+												{selectedProposals.againstVotes}
+											</Text>
+											<Text fontWeight="400">
+												/ {selectedProposals.totalVotes}
+											</Text>
 										</Text>
 									</Flex>
 								)}
@@ -84,8 +93,19 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 								w={["85%", "83%", "83%", "83%"]}
 								borderRadius="xl"
 								h="0.375rem"
-								bgColor="#48BB78"
-							/>
+								bgColor={theme.bg.voteGray}
+								mb={["15px", "8px", "8px", "8px"]}
+							>
+								<Flex
+									w={`${
+										(selectedProposals.forVotes * 100) /
+										selectedProposals.totalVotes
+									}%`}
+									borderRadius="xl"
+									h="0.375rem"
+									bgColor="#48BB78"
+								/>
+							</Flex>
 						) : (
 							<Flex
 								w={["85%", "83%", "83%", "83%"]}
@@ -95,7 +115,10 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 								mb={["15px", "8px", "8px", "8px"]}
 							>
 								<Flex
-									w="13%"
+									w={`${
+										(selectedProposals.againstVotes * 100) /
+										selectedProposals.totalVotes
+									}%`}
 									borderRadius="xl"
 									h="0.375rem"
 									bgColor="#F56565"
@@ -118,44 +141,35 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 							fontSize="14px"
 							mb="1.5rem"
 						>
-							<Text>2 {translation("votePage.addresses")}</Text>
-							<Text>{translation("votePage.votes")}</Text>
+							<Text>
+								{votersType === "favor"
+									? selectedProposals.supportVotes.length
+									: selectedProposals.notSupportVotes.length}{" "}
+								addresses
+							</Text>
+							<Text>Votes</Text>
 						</Flex>
 						<Flex w="100%" flexDirection="column" fontSize="14px" pr="0.5rem">
-							<Flex
-								justifyContent="space-between"
-								textTransform="lowercase"
-								color={theme.text.mono}
-								gap="2"
-								alignItems="center"
-								mb="3"
-							>
-								<Flex gap="2">
-									<Jazzicon
-										diameter={18}
-										seed={Math.round(Math.random() * 10000000)}
-									/>
-									<Text fontSize="14px">0x6856...BF99</Text>
+							{(votersType === "favor"
+								? selectedProposals.supportVotes
+								: selectedProposals.notSupportVotes
+							).map(vote => (
+								<Flex
+									key={`vote-${vote.voter}`}
+									justifyContent="space-between"
+									textTransform="lowercase"
+									color={theme.text.mono}
+									gap="2"
+									alignItems="center"
+									mb="3"
+								>
+									<Flex gap="2">
+										<Jazzicon diameter={18} seed={Number(vote.voter)} />
+										<Text fontSize="14px">{shortAddress(vote.voter)}</Text>
+									</Flex>
+									<Text>{vote.votes}</Text>
 								</Flex>
-								<Text>2.25</Text>
-							</Flex>
-
-							<Flex
-								justifyContent="space-between"
-								textTransform="lowercase"
-								color={theme.text.mono}
-								gap="2"
-								alignItems="center"
-							>
-								<Flex gap="2">
-									<Jazzicon
-										diameter={18}
-										seed={Math.round(Math.random() * 10000000)}
-									/>
-									<Text fontSize="14px">0x6856...BF99</Text>
-								</Flex>
-								<Text>12324.25</Text>
-							</Flex>
+							))}
 						</Flex>
 						<Button
 							display={["flex", "none", "none", "none"]}

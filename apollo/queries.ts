@@ -136,9 +136,11 @@ export const GET_PROPOSALS = gql`
 			startBlock
 			endBlock
 			votes {
-				id
 				votes
 				support
+				voter {
+					id
+				}
 			}
 		}
 	}

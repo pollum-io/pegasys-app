@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next";
 import { BiTrashAlt } from "react-icons/bi";
 import { FaLessThan } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
-import { useGovernance } from "pegasys-services";
+import { useGovernance, ZERO_ADDRESS } from "pegasys-services";
 
 interface IModal {
 	isOpen: boolean;
@@ -33,8 +33,13 @@ export const UnlockVotesModal: FunctionComponent<IModal> = props => {
 	const [inputValue, setInputValue] = useState<string>("");
 	const { colorMode } = useColorMode();
 	const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
-	const { votesLocked, setVotesLocked, setDelegatedTo, delegatedTo } =
-		useGovernance();
+	const {
+		votesLocked,
+		setVotesLocked,
+		setDelegatedTo,
+		delegatedTo,
+		onDelegate,
+	} = useGovernance();
 
 	const { t: translation } = useTranslation();
 
@@ -44,6 +49,7 @@ export const UnlockVotesModal: FunctionComponent<IModal> = props => {
 		setDelegatedTo("Self");
 		setAddDelegate(true);
 		onClose();
+		onDelegate();
 	};
 
 	const handleInputChange = (e: {
@@ -61,6 +67,7 @@ export const UnlockVotesModal: FunctionComponent<IModal> = props => {
 		setDelegatedTo(inputValue);
 		setVotesLocked(false);
 		onClose();
+		onDelegate(inputValue);
 	};
 
 	return (
@@ -173,7 +180,7 @@ export const UnlockVotesModal: FunctionComponent<IModal> = props => {
 									>
 										<Flex
 											mt="0.6rem"
-											onClick={() => setInputValue("")}
+											onClick={() => setInputValue(ZERO_ADDRESS)}
 											_hover={{ opacity: "0.9" }}
 										>
 											<BiTrashAlt size={23} color="#9FA6B0" />

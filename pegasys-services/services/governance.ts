@@ -1,6 +1,8 @@
-import { BigNumber, utils } from "ethers";
+import { BigNumber, ethers, utils } from "ethers";
 import { governanceClient, GET_PROPOSALS } from "apollo";
-import { ContractFramework } from "../frameworks";
+import { JSBI } from "@pollum-io/pegasys-sdk";
+import { BIG_INT_ZERO } from "pegasys-services/constants";
+import { ContractFramework, WalletFramework } from "../frameworks";
 import {
 	IGovernaceServicesGetProposalCount,
 	IGovernaceServicesGetProposal,
@@ -10,6 +12,8 @@ import {
 	IGovernaceServicesDelegate,
 	IGovernaceServicesGetDelegatee,
 	IGovernaceServicesGetCurrentVotes,
+	IGovernaceServicesGetProposalVotes,
+	IProposalVote,
 } from "../dto";
 
 class GovernanceServices {
@@ -29,6 +33,37 @@ class GovernanceServices {
 		return proposalCount?.toNumber() ?? 0;
 	}
 
+	static async getProposalVotes({
+		contract,
+		provider,
+		chainId,
+		proposalIndex,
+	}: IGovernaceServicesGetProposalVotes): Promise<{
+		againstVotes: number;
+		forVotes: number;
+	}> {
+		const governanceContract =
+			contract ?? ContractFramework.GovernanceContract({ chainId, provider });
+
+		const proposal: { againstVotes: BigNumber; forVotes: BigNumber } =
+			await ContractFramework.call({
+				contract: governanceContract,
+				methodName: "proposals",
+				args: [proposalIndex],
+			});
+
+		return {
+			againstVotes: proposal?.againstVotes
+				? parseFloat(
+						ethers.utils.formatUnits(proposal.againstVotes.toString(), 18)
+				  )
+				: 0,
+			forVotes: proposal?.forVotes
+				? parseFloat(ethers.utils.formatUnits(proposal.forVotes.toString(), 18))
+				: 0,
+		};
+	}
+
 	static async getProposals({
 		proposalCount,
 	}: IGovernaceServicesGetProposal): Promise<IFormattedProposal[]> {
@@ -40,51 +75,79 @@ class GovernanceServices {
 			fetchPolicy: "network-only",
 		});
 
-		const response: IFormattedProposal[] = (
-			(governanceQuery.data.proposals as IProposal[]) ?? []
-		).map(
-			({
-				description,
-				id,
-				proposer,
-				status,
-				votes,
-				startBlock,
-				endBlock,
-				signatures,
-				calldatas,
-			}) => {
-				const forVotes = votes.filter(({ support }) => support);
-
-				const signature = signatures[0];
-
-				const [name, types] = signature
-					.substr(0, signature.length - 1)
-					.split("(");
-
-				const calldata = calldatas[0];
-
-				const decoded = utils.defaultAbiCoder.decode(
-					types.split(","),
-					calldata
-				);
-
-				return {
+		const response: IFormattedProposal[] = await Promise.all(
+			((governanceQuery.data.proposals as IProposal[]) ?? []).map(
+				async ({
+					description,
 					id,
-					title: description?.split(/# |\n/g)[1] || "Untitled",
-					description: description ?? "No description.",
-					proposer: proposer.id,
+					proposer,
 					status,
-					forCount: forVotes.length,
-					againstCount: votes.length - forVotes.length,
 					startBlock,
 					endBlock,
-					details: {
-						functionSig: name,
-						callData: decoded.join(", "),
-					},
-				};
-			}
+					signatures,
+					calldatas,
+					votes,
+				}) => {
+					const supportVotes: IProposalVote[] = [];
+					const notSupportVotes: IProposalVote[] = [];
+
+					votes.forEach(vote => {
+						const proposalVote = {
+							voter: vote.voter.id,
+							votes: Number(vote.votes),
+						};
+
+						if (vote.support) {
+							supportVotes.push(proposalVote);
+						} else {
+							notSupportVotes.push(proposalVote);
+						}
+					});
+
+					const { forVotes, againstVotes } = await this.getProposalVotes({
+						proposalIndex: Number(id),
+					});
+
+					const signature = signatures[0];
+
+					const [name, types] = signature
+						.substr(0, signature.length - 1)
+						.split("(");
+
+					const calldata = calldatas[0];
+
+					const decoded = utils.defaultAbiCoder.decode(
+						types.split(","),
+						calldata
+					);
+
+					const { timestamp } = await WalletFramework.getBlock(endBlock);
+
+					const date = new Date(timestamp * 1000);
+
+					const descriptionParts = description?.split("\\n");
+
+					return {
+						id,
+						title: descriptionParts[0] ?? "Untitled",
+						description: descriptionParts.splice(1) ?? ["No description."],
+						proposer: proposer.id,
+						status,
+						forVotes,
+						againstVotes,
+						totalVotes: forVotes + againstVotes,
+						startBlock,
+						endBlock,
+						date,
+						details: {
+							functionSig: name,
+							callData: decoded.join(", "),
+						},
+						supportVotes,
+						notSupportVotes,
+					};
+				}
+			)
 		);
 
 		return response;
@@ -114,14 +177,13 @@ class GovernanceServices {
 
 	static async delegate({
 		contract,
-		provider,
 		chainId,
 		delegatee,
 	}: IGovernaceServicesDelegate) {
 		if (!delegatee) return { hash: "", response: null };
 
 		const psysContract =
-			contract ?? ContractFramework.PSYSContract({ chainId, provider });
+			contract ?? ContractFramework.PSYSContract({ chainId });
 
 		const res = await ContractFramework.call({
 			contract: psysContract,

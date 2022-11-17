@@ -1,10 +1,17 @@
-import { ChainId } from "@pollum-io/pegasys-sdk";
+import { ChainId, JSBI } from "@pollum-io/pegasys-sdk";
 import { TContract, TProvider } from "../framework";
 
 export interface IGovernaceServicesGetProposalCount {
 	chainId?: ChainId | null;
 	provider?: TProvider | null;
 	contract?: TContract;
+}
+
+export interface IGovernaceServicesGetProposalVotes {
+	chainId?: ChainId | null;
+	provider?: TProvider | null;
+	contract?: TContract;
+	proposalIndex: number;
 }
 
 export interface IGovernaceServicesGetProposal {
@@ -21,7 +28,6 @@ export interface IGovernaceServicesCastVote {
 
 export interface IGovernaceServicesDelegate {
 	chainId?: ChainId | null;
-	provider?: TProvider;
 	contract?: TContract;
 	delegatee?: string;
 }
@@ -50,24 +56,35 @@ export interface IProposal {
 	startBlock: string;
 	status: string;
 	votes: Array<{
-		id: string;
 		support: boolean;
 		votes: string;
+		voter: {
+			id: string;
+		};
 	}>;
+}
+
+export interface IProposalVote {
+	voter: string;
+	votes: number;
 }
 
 export interface IFormattedProposal {
 	id: string;
 	title: string;
-	description: string;
+	description: string[];
 	proposer: string;
 	status: string;
-	forCount: number;
-	againstCount: number;
+	forVotes: number;
+	againstVotes: number;
+	totalVotes: number;
 	startBlock: string;
 	endBlock: string;
+	date: Date;
 	details: {
 		functionSig: string;
 		callData: string;
 	};
+	supportVotes: IProposalVote[];
+	notSupportVotes: IProposalVote[];
 }
