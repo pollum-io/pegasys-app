@@ -28,7 +28,7 @@ const usePicasso = () => {
 			gray45: useColorModeValue("gray.500", "gray.400"),
 			gray500: useColorModeValue("gray.500", "gray.500"),
 			gray300: useColorModeValue("#718096", "#CBD5E0"),
-			greenSocial: useColorModeValue("#67DBD8", "#67DBD8"),
+			greenSocial: useColorModeValue("#665EE1", "#67DBD8"),
 			psysBalance: useColorModeValue(
 				"linear-gradient(90deg, #19EBCE 0%, #8A15E6 84.28%);",
 				"linear-gradient(90deg, #19EBCE 0%, #8A15E6 84.28%);"
@@ -63,6 +63,10 @@ const usePicasso = () => {
 			stakeBanner: useColorModeValue(
 				"/images/backgrounds/LightBannerStake.png",
 				"/images/backgrounds/BannerStake.png"
+			),
+			blurPegasysLogo: useColorModeValue(
+				"/icons/BlurLightPegasysLogo.png",
+				"/icons/BlurPegasysLogo.png"
 			),
 			psysAirdrop: useColorModeValue(
 				"/images/backgrounds/LightPsysAirdrop.png",

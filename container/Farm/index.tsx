@@ -95,23 +95,21 @@ export const FarmContainer: NextPage = () => {
 						py="0.531rem"
 						color="white"
 					>
-						{!!address && (
-							<Link
-								href={`https://info.pegasys.finance/account/${address}`}
-								target="_blank"
-								rel="noreferrer"
-								_hover={{ cursor: "pointer", opacity: "0.9" }}
-								flexDirection="row"
-							>
-								<Flex gap="2.5">
-									<Text fontWeight="medium" fontSize="xs">
-										View Your Staked Liquidity
-									</Text>
+						<Link
+							href={`https://info.pegasys.finance/account/${address}`}
+							target="_blank"
+							rel="noreferrer"
+							_hover={{ cursor: "pointer", opacity: "0.9" }}
+							flexDirection="row"
+						>
+							<Flex gap="2.5">
+								<Text fontWeight="medium" fontSize="xs">
+									View Your Staked Liquidity
+								</Text>
 
-									<MdOutlineCallMade size={20} />
-								</Flex>
-							</Link>
-						)}
+								<MdOutlineCallMade size={20} />
+							</Flex>
+						</Link>
 					</Flex>
 				</Flex>
 				<Flex
