@@ -767,15 +767,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									>
 										{translation("swapHooks.insufficient")}
 										{selectedToken[0]?.symbol}
-										{translation("swapHooks.balance")}.
-									</Text>
-									<Text
-										fontSize="sm"
-										pt="2"
-										textAlign="center"
-										color={theme.text.red400}
-										fontWeight="medium"
-									>
+										{translation("swapHooks.balance")}.{" "}
 										{translation("swapHooks.validAmount")}.
 									</Text>
 								</Flex>
@@ -878,12 +870,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							/>
 						</Flex>
 					</Flex>
-					<Flex
-						flexDirection="column"
-						gap="1"
-						justifyContent="flex-start"
-						alignItems="flex-start"
-					>
+					<Flex flexDirection="column" gap="1">
 						<Collapse
 							in={isConnected && verifyIfHaveInsufficientLiquidity && !isWrap}
 						>

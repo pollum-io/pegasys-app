@@ -581,6 +581,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									textAlign="right"
 									mt="2"
 									px="1.5"
+									pl="4"
 									_placeholder={{ color: theme.text.whiteGray }}
 									_active={{ border: "none" }}
 									name="inputFrom"
@@ -592,23 +593,16 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						</Flex>
 						{parseFloat(tokenInputValue.inputFrom.value) >
 							parseFloat(selectedToken[0]?.balance) && (
-							<Flex flexDirection="row" gap="1" justifyContent="center">
+							<Flex flexDirection="row" gap="1" justifyContent="center" pt="2">
 								<Text
 									fontSize="sm"
-									pt="2"
-									textAlign="center"
+									w="100%"
 									color={theme.text.red400}
 									fontWeight="semibold"
+									textAlign="center"
 								>
 									{translation("swapHooks.insufficient")}
-									{selectedToken[0]?.symbol} {translation("swapHooks.balance")}.
-								</Text>
-								<Text
-									fontSize="sm"
-									pt="2"
-									textAlign="center"
-									color={theme.text.red400}
-								>
+									{selectedToken[0]?.symbol} {translation("swapHooks.balance")}.{" "}
 									{translation("swapHooks.validAmount")}.
 								</Text>
 							</Flex>
@@ -697,6 +691,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									textAlign="right"
 									mt="2"
 									px="1.5"
+									pl="4"
 									_placeholder={{ color: theme.text.whiteGray }}
 									_active={{ border: "none" }}
 									name="inputTo"
@@ -717,14 +712,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									fontWeight="semibold"
 								>
 									{translation("swapHooks.insufficient")}
-									{selectedToken[1]?.symbol} {translation("swapHooks.balance")}.
-								</Text>
-								<Text
-									fontSize="sm"
-									pt="2"
-									textAlign="center"
-									color={theme.text.red400}
-								>
+									{selectedToken[1]?.symbol} {translation("swapHooks.balance")}.{" "}
 									{translation("swapHooks.validAmount")}.
 								</Text>
 							</Flex>
