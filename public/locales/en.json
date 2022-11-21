@@ -592,6 +592,8 @@
 		"stakingClaimTooltip": "Please note that when you claim without withdrawing your liquidity remains in the staking pool.",
 		"farmingWithdrawTooltip": "When you withdraw, your Pegasys Liquidity Tokens, PLP, are returned to you. Your original token liquidity will remain in its liquidity pool.",
 		"farmingWithdrawAndClaimTooltip": "When you withdraw, your PSYS is claimed and your Pegasys Liquidity tokens, PLP, are returned to you. You will no longer earn PSYS rewards on this liquidity. Your original token liquidity will remain in its liquidity pool.",
-		"farmingClaimTooltip": "Please note that when you claim without withdrawing your liquidity remains in the mining pool."
+		"farmingClaimTooltip": "Please note that when you claim without withdrawing your liquidity remains in the mining pool.",
+		"yourFarms": "Your Farms",
+		"sortBy": "Sort By"
 	}
 }

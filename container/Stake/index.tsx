@@ -62,7 +62,7 @@ export const StakeContainer: NextPage = () => {
 						color="white"
 					>
 						<Text fontWeight="bold" color="white" fontSize="md">
-						{translation("earnPages.stakingTitle")}
+							{translation("earnPages.stakingTitle")}
 						</Text>
 						<Text
 							fontWeight="medium"

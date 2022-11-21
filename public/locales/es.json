@@ -549,22 +549,22 @@
 		"followed_interact": "Interact"
 	},
 	"earnPages": {
-		"totalStaked": "Total apostado",
-		"yourStake": "Su participación",
+		"totalStaked": "Total Staked",
+		"yourStake": "Su Stake",
 		"yourRate": "Su tarifa",
-		"yourUnclaimed": "Su no reclamado",
+		"yourUnclaimed": "Su Unclaimed",
 		"apr": "APR",
-		"swapFeeApr": "Tasa de canje APR",
+		"swapFeeApr": "Tasa de Swap APR",
 		"superFarmApr": "Super Farm APR",
 		"farmFeeApr": "Farming Fee APR",
 		"totalApr": "Total de APR",
 		"week": "Semana",
-		"claim": "Reclamación",
+		"claim": "Claim",
 		"withdraw": "Retirar",
-		"andClaim": " y Reclamación",
+		"andClaim": " y Claim",
 		"deposit": "Depósito",
-		"unstake": "Desaproveche",
-		"stake": "Depósito",
+		"unstake": "Unstake",
+		"stake": "Stake",
 		"earn": "Gana",
 		"get": "Obtenga",
 		"stakes": "Stakes",
@@ -592,6 +592,8 @@
 		"stakingClaimTooltip": "Tenga en cuenta que cuando reclama sin retirar, su liquidez permanece en el fondo de apuestas.",
 		"farmingWithdrawTooltip": "Cuando usted se retira, sus Pegasys Liquidity Tokens, PLP, le son devueltos. Su token de liquidez original permanecerá en su fondo de liquidez.",
 		"farmingWithdrawAndClaimTooltip": "Cuando se retira, se reclama su PSYS y se le devuelven sus tokens de liquidez de Pegasys, PLP. Ya no ganará recompensas de PSYS sobre esta liquidez. Su liquidez token original permanecerá en su fondo de liquidez.",
-		"farmingClaimTooltip": "Tenga en cuenta que cuando reclama sin retirar su liquidez permanece en el pool minero."
+		"farmingClaimTooltip": "Tenga en cuenta que cuando reclama sin retirar su liquidez permanece en el pool minero.",
+		"yourFarms": "Sus Farms",
+		"sortBy": "Ordenar Por"
 	}
 }

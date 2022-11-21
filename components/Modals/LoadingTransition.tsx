@@ -9,6 +9,7 @@ import {
 import { usePicasso } from "hooks";
 import React from "react";
 import { MdOutlineClose } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 interface IModal {
 	isOpen: boolean;
@@ -18,6 +19,7 @@ interface IModal {
 export const LoadingTransition: React.FC<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
+	const { t: translation } = useTranslation();
 
 	return (
 		<Modal

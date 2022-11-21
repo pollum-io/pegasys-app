@@ -549,8 +549,8 @@
 		"followed_interact": "Interact"
 	},
 	"earnPages": {
-		"totalStaked": "Total des jalons",
-		"yourStake": "Votre mise",
+		"totalStaked": "Total Staked",
+		"yourStake": "Votre Stake",
 		"yourRate": "Votre taux",
 		"yourUnclaimed": "Vos droits non réclamés",
 		"apr": "APR",
@@ -559,11 +559,11 @@
 		"farmFeeApr": "Farming Fee APR",
 		"totalApr": "Total APR",
 		"week": "Semaine",
-		"claim": "Revendication",
-		"withdraw": "Retirer",
+		"claim": "Claim",
+		"withdraw": "Withdraw",
 		"andClaim": " et Revendication",
 		"deposit": "Dépôt",
-		"unstake": "Détachement",
+		"unstake": "Unstake",
 		"stake": "Stake",
 		"earn": "Gagner",
 		"get": "Obtenez",
@@ -576,7 +576,7 @@
 		"farmingDescription": "Déposez vos jetons PLP du fournisseur de liquidité Pegasys pour recevoir PSYS, le jeton de gouvernance du protocole Pegasys.",
 		"farmingLink": "Visualisez votre liquidité jalonnée",
 		"addLiquidity": "Ajouter la liquidité de {{ pair }}",
-		"unclaimed": "{{ token }} non réclamés",
+		"unclaimed": "{{ token }} Unclaimed",
 		"weeklyRewards": "Récompenses hebdomadaires",
 		"extraRewards": "Récompense supplémentaire",
 		"availableToDeposit": "Disponible pour le dépôt",
@@ -592,6 +592,8 @@
 		"stakingClaimTooltip": "Veuillez noter que lorsque vous réclamez sans retirer, vos liquidités restent dans la réserve de mises.",
 		"farmingWithdrawTooltip": "Lorsque vous effectuez un retrait, vos jetons de liquidité Pegasys, PLP, vous sont rendus. Votre jeton de liquidité d'origine restera dans sa réserve de liquidité.",
 		"farmingWithdrawAndClaimTooltip": "Lorsque vous effectuez un retrait, votre PSYS est réclamé et vos jetons Pegasys Liquidity, PLP, vous sont rendus. Vous ne gagnerez plus de récompenses PSYS sur cette liquidité. Votre jeton de liquidité d'origine restera dans sa réserve de liquidité.",
-		"farmingClaimTooltip": "Veuillez noter que lorsque vous réclamez sans retirer, vos liquidités restent dans le pool minier."
+		"farmingClaimTooltip": "Veuillez noter que lorsque vous réclamez sans retirer, vos liquidités restent dans le pool minier.",
+		"yourFarms": "Your Farms",
+		"sortBy": "Sort By"
 	}
 }

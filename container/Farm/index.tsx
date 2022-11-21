@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { MdOutlineCallMade, MdExpandMore } from "react-icons/md";
-
 import { LoadingTransition, SearchInput, FarmGrid } from "components";
 import { usePicasso, useModal } from "hooks";
 import { useTranslation } from "react-i18next";
