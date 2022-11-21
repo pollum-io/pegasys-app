@@ -70,7 +70,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 				borderRadius="3xl"
 				borderBottomRadius={["0", "0", "3xl", "3xl"]}
 				border={["none", "1px solid transparent"]}
-				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				background={theme.bg.blueNavyLight}
 			>
 				<ModalHeader
 					display="flex"
@@ -93,21 +93,19 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 				</ModalHeader>
 				<ModalBody mb="4">
 					<Flex
-						flexDirection="row"
+						flexDirection="column"
 						alignItems="center"
 						mb="6"
 						justifyContent="center"
 					>
-						<Flex flexDirection="column" gap="14" pr="2">
+						<Flex w="100%" justifyContent="center" gap="2">
 							<Text textAlign="right" fontWeight="semibold">
 								{tokenInputValue?.inputFrom?.value}
 							</Text>
-							<Text textAlign="right" fontWeight="semibold">
-								{tokenInputValue?.inputTo?.value}
-							</Text>
-						</Flex>
-						<Flex flexDirection="column" gap="1.1rem" alignItems="center">
 							<Img src={selectedTokens[0]?.logoURI} w="5" h="5" />
+							<Text>{selectedTokens[0]?.symbol}</Text>
+						</Flex>
+						<Flex w="100%" justifyContent="center" my="0.8rem">
 							<Icon
 								as={MdArrowDownward}
 								bg="transparent"
@@ -116,16 +114,12 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 								h="6"
 								borderRadius="full"
 							/>
-							<Img src={selectedTokens[1]?.logoURI} w="5" h="5" />
 						</Flex>
-
-						<Flex
-							flexDirection="column"
-							gap="14"
-							pl="2"
-							alignItems="flex-start"
-						>
-							<Text>{selectedTokens[0]?.symbol}</Text>
+						<Flex w="100%" justifyContent="center" gap="2">
+							<Text fontWeight="semibold">
+								{tokenInputValue?.inputTo?.value}
+							</Text>
+							<Img src={selectedTokens[1]?.logoURI} w="5" h="5" />
 							<Text>{selectedTokens[1]?.symbol}</Text>
 						</Flex>
 					</Flex>

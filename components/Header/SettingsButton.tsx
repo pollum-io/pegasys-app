@@ -11,6 +11,7 @@ import {
 	Switch,
 	PopoverArrow,
 	PopoverCloseButton,
+	useColorMode,
 } from "@chakra-ui/react";
 import React, { FunctionComponent, ReactNode, useState } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
@@ -47,6 +48,8 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	const [deadlineInputValue, setDeadlineInputValue] = useState<string>("");
 
 	const theme = usePicasso();
+	const { colorMode } = useColorMode();
+	// const [expert, setExpert] = useState(false)
 	const {
 		userSlippageTolerance,
 		setUserSlippageTolerance,
@@ -147,8 +150,10 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 					_expanded={{ color: theme.text.cyanPurple }}
 				/>
 			</PopoverTrigger>
-			<PopoverArrow bg="red" />
+			<PopoverArrow />
 			<PopoverContent
+				borderRadius="12px"
+				borderColor={theme.bg.blueNavy}
 				_focus={{
 					outline: "none",
 				}}
@@ -160,6 +165,11 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 				right={["0", "0", "unset", "unset"]}
 				mx={["0", "0", "20", "56"]}
 				position="fixed"
+				boxShadow={
+					colorMode === "dark"
+						? "0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
+						: "0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
+				}
 			>
 				<Flex
 					justifyContent="flex-end"
@@ -183,9 +193,14 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 						Transaction Settings
 					</Text>
 				</Flex>
-				<PopoverBody>
-					<Flex flexDirection="column" mt="4">
-						<Flex alignItems="center" flexDirection="row" w="max-content">
+				<PopoverBody p="0">
+					<Flex flexDirection="column" mt="4" w="100%">
+						<Flex
+							alignItems="center"
+							flexDirection="row"
+							w="max-content"
+							left="0"
+						>
 							<Text
 								fontSize="md"
 								pr="1"
@@ -249,7 +264,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 											position="absolute"
 											left="10px"
 										>
-											<IoWarningOutline color="yellow" />
+											<IoWarningOutline color="orange" />
 										</Text>
 									) : null}
 									<Input
@@ -270,6 +285,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 										textAlign="center"
 										_focus={{
 											outline: "none",
+											borderColor: theme.border.focusGray,
 										}}
 									/>
 									<Text position="absolute" left="75%">
@@ -332,10 +348,12 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								value={deadlineInputValue}
 								_focus={{
 									outline: "none",
+									borderColor: theme.border.focusGray,
 								}}
 								onChange={e =>
 									parseCustomTransactionDeadlineValue(e.target.value)
 								}
+								_hover={{}}
 							/>
 							<Text color={theme.text.mono}>
 								{translation("transactionSettings.minutes")}
@@ -344,7 +362,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 						<Flex
 							alignItems={["flex-start", "center", "center", "center"]}
 							flexDirection={["column", "row", "row", "row"]}
-							mt="4"
+							mt="2"
 							h="max-content"
 						>
 							<Flex

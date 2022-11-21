@@ -301,10 +301,16 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			background={theme.bg.blackAlpha}
 			display={showPool}
 		>
-			<Flex gap="2">
-				<Flex>
+			<Flex gap="7">
+				<Flex position="relative">
 					<Img src={wrapTokenA?.logoURI} w="6" h="6" />
-					<Img src={wrapTokenB?.logoURI} w="6" h="6" />
+					<Img
+						src={wrapTokenB?.logoURI}
+						w="6"
+						h="6"
+						position="absolute"
+						left="1.3rem"
+					/>
 				</Flex>
 				<Text fontSize="lg" fontWeight="bold">
 					{pair ? `${currencyA.symbol}/${currencyB.symbol}` : ""}

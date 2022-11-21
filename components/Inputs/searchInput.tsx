@@ -2,6 +2,7 @@ import { Flex, Input, InputGroup } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { setType } from "pegasys-services";
 import { MdSearch } from "react-icons/md";
+import { usePicasso } from "hooks";
 
 interface ISearchInputProps {
 	setSearch: setType<string>;
@@ -34,6 +35,8 @@ const SearchInput: React.FC<ISearchInputProps> = ({
 		setTimeoutid(id);
 	};
 
+	const theme = usePicasso();
+
 	return (
 		<InputGroup right="0rem">
 			<Input
@@ -45,7 +48,7 @@ const SearchInput: React.FC<ISearchInputProps> = ({
 				h="2.2rem"
 				py={["0.2rem", "0.2rem", "1", "1"]}
 				pl="10"
-				_focus={{ outline: "none" }}
+				_focus={{ outline: "none", borderColor: theme.border.focusBluePurple }}
 				_hover={{}}
 				onChange={e => onInputChange(e.target.value)}
 			/>

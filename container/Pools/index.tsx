@@ -619,7 +619,10 @@ export const PoolsContainer: NextPage = () => {
 										h="2.2rem"
 										py={["0.2rem", "0.2rem", "1", "1"]}
 										pl="10"
-										_focus={{ outline: "none" }}
+										_focus={{
+											outline: "none",
+											borderColor: theme.border.focusBluePurple,
+										}}
 										_hover={{}}
 									/>
 								</InputGroup>

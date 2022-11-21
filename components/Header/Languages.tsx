@@ -5,14 +5,15 @@ import ReactCountryFlag from "react-country-flag";
 import i18next, { availableLanguages } from "helpers/translation";
 
 export const Languages: FunctionComponent = () => {
-	const countryFlagsNames = ["US", "DE", "TR", "CN", "ES", "FR", "BR", "VN"];
+	const countryFlagsNames = ["US", "DE", "TR", "CN", "ES", "FR", "VN", "BR"];
 	const theme = usePicasso();
 
 	return (
-		<Flex flexWrap="wrap" ml="2" mt="2">
+		<Flex flexWrap="wrap" ml="0" mt="2" gap="1" pl="1.5rem">
 			{availableLanguages.map((lang, index) => (
 				<Flex
-					p="0.5rem"
+					py="0.5rem"
+					pr="1rem"
 					key={lang + Number(index)}
 					gap="2"
 					onClick={() => {

@@ -72,10 +72,10 @@ const useToasty = () => {
 	}, [state.status]);
 
 	useEffect(() => {
-		if (!state || !(Object.keys(state).length !== 0)) return;
+		if (!state || Object.keys(state).length === 0) return;
 		toast({
 			...state,
-			id: `${state?.id}`,
+			id: Math.floor(Math.random() * 10),
 			duration: 5000,
 			position: `${
 				(state?.position as ToastPositionWithLogical) || "top-right"
@@ -88,7 +88,7 @@ const useToasty = () => {
 			render: ({ onClose }) => (
 				<Flex
 					h="fit-content"
-					w="356px"
+					w="100%"
 					mt="50px"
 					mr="40px"
 					p={3}

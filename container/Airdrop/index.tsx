@@ -7,6 +7,7 @@ import {
 	Link,
 	Text,
 	useMediaQuery,
+	useColorMode,
 } from "@chakra-ui/react";
 import {
 	useClaimCallback,
@@ -27,6 +28,7 @@ import { useTranslation } from "react-i18next";
 export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
+	const { colorMode } = useColorMode();
 
 	const {
 		setCurrentTxHash,
@@ -148,15 +150,17 @@ export const AirdropContainer: NextPage = () => {
 							{translation("airdrop.mainText")}
 						</Text>
 					</Flex>
-					<Flex
-						w="65%"
-						h="100%"
-						borderTopLeftRadius="2xl"
-						borderBottomRadius="2xl"
-						zIndex="base"
-						position="absolute"
-						background="linear-gradient(89.54deg, rgba(8, 17, 32, 0.9) 44.27%, rgba(8, 17, 32, 0) 100.3%)"
-					/>
+					{colorMode === "dark" && (
+						<Flex
+							w="65%"
+							h="100%"
+							borderTopLeftRadius="2xl"
+							borderBottomRadius="2xl"
+							zIndex="base"
+							position="absolute"
+							background="linear-gradient(89.54deg, rgba(8, 17, 32, 0.9) 44.27%, rgba(8, 17, 32, 0) 100.3%)"
+						/>
+					)}
 				</Flex>
 				<Flex>
 					{!isConnected ? (
@@ -181,9 +185,13 @@ export const AirdropContainer: NextPage = () => {
 									<Flex
 										gap={["4", "4", "40", "40"]}
 										flexDirection={["column", "column", "row", "row"]}
+										alignItems="center"
 									>
 										<Flex>
-											<Text color="white" fontSize={["sm", "sm", "md", "md"]}>
+											<Text
+												color={theme.text.mono}
+												fontSize={["sm", "sm", "md", "md"]}
+											>
 												{translation("airdrop.noAvailableClaim")}
 											</Text>
 										</Flex>
@@ -192,18 +200,22 @@ export const AirdropContainer: NextPage = () => {
 											_hover={{
 												textDecoration: "underline",
 												cursor: "pointer",
-												color: "cyan",
+												opacity: "0.9",
 											}}
+											alignItems="center"
 										>
 											<Text
-												color={theme.text.cyan}
+												color={theme.text.cyanPurple}
 												fontSize="sm"
 												fontWeight="medium"
 												textAlign="center"
 											>
 												{translation("earnPage.readMoreAboutPsys")}
 											</Text>
-											<MdOutlineCallMade size={15} color="cyan" />
+											<MdOutlineCallMade
+												size={15}
+												color={theme.text.cyanPurple}
+											/>
 										</Flex>
 									</Flex>
 								</BorderAnimation>

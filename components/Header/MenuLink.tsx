@@ -86,7 +86,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 				bgColor={theme.bg.blueNavyLight}
 				borderBottomRadius={["none", "none", "xl", "xl"]}
 				borderTopRadius={["2xl", "2xl", "xl", "xl"]}
-				p="0"
+				pt="2"
 				top={["3.5rem", "3.3rem", "0", "0"]}
 				position="relative"
 				right="0"

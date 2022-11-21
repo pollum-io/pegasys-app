@@ -109,20 +109,16 @@ export const LiquidityCards: React.FunctionComponent = () => {
 								<Flex
 									flexDirection="row"
 									alignItems={["center", "center", "center", "center"]}
-									gap={["3", "3", "2", "2"]}
+									gap={["3", "3", "9", "9"]}
 								>
-									<Flex>
-										<Image
-											src={cardsValue.firstIcon}
-											h="9"
-											w="9"
-											alt={cardsValue.firstAsset}
-										/>
+									<Flex position="relative">
+										<Image src={cardsValue.firstIcon} h="9" w="9" />
 										<Image
 											src={cardsValue.secondIcon}
 											h="9"
 											w="9"
-											alt={cardsValue.secondAsset}
+											position="absolute"
+											left="1.8rem"
 										/>
 									</Flex>
 									<Flex flexDirection={["column", "column", "row", "row"]}>

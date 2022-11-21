@@ -6,7 +6,6 @@ import {
 	Input,
 	Modal,
 	ModalBody,
-	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
 	ModalOverlay,
@@ -26,6 +25,7 @@ import {
 	MdArrowDownward,
 	MdArrowUpward,
 	MdSearch,
+	MdOutlineClose,
 } from "react-icons/md";
 import { WrappedTokenInfo } from "types";
 import BigNumber from "bignumber.js";
@@ -111,7 +111,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 
 		setDefaultTokens(orderedTokens);
 		setFilter(orderedTokens);
-	}, [userTokensBalance]);
+	}, [userTokensBalance, isOpen]);
 
 	const handleSelectToken = useCallback(
 		(id: number, token: WrappedTokenInfo) => {
@@ -163,22 +163,31 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				position={["absolute", "absolute", "relative", "relative"]}
 				h="max-content"
 			>
-				<ModalHeader display="flex" alignItems="center" gap="3">
-					<Text fontSize="lg" fontWeight="semibold">
-						Select a token
-					</Text>
-					<TooltipComponent
-						label={translation("searchModal.findToken")}
-						icon={MdHelpOutline}
-					/>
+				<ModalHeader
+					display="flex"
+					alignItems="center"
+					gap="3"
+					justifyContent="space-between"
+				>
+					<Flex alignItems="center" gap="2">
+						<Text fontSize="lg" fontWeight="semibold">
+							Select a token
+						</Text>
+						<TooltipComponent
+							label={translation("searchModal.findToken")}
+							icon={MdHelpOutline}
+						/>
+					</Flex>
+					<Flex
+						_hover={{ cursor: "pointer" }}
+						onClick={() => {
+							onClose();
+						}}
+					>
+						<MdOutlineClose size={23} color={theme.icon.whiteDarkGray} />
+					</Flex>
 				</ModalHeader>
-				<ModalCloseButton
-					color={theme.icon.whiteDarkGray}
-					top="4"
-					size="md"
-					_focus={{}}
-					_hover={{}}
-				/>
+
 				<ModalBody>
 					<InputGroup>
 						<Input
@@ -192,7 +201,10 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							onChange={handleInput}
 							py={["0.1rem", "0.1rem", "1", "1"]}
 							pl="10"
-							_focus={{ outline: "none" }}
+							_focus={{
+								outline: "none",
+								borderColor: theme.border.focusBluePurple,
+							}}
 							_hover={{}}
 						/>
 						<Flex
@@ -224,7 +236,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				<Flex
 					flexDirection="column"
 					w="95%"
-					h="10%"
+					h="30rem"
 					my="0"
 					pr="2"
 					pl="2"
@@ -244,6 +256,18 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 						},
 					}}
 				>
+					{filter.length === 0 && (
+						<Flex
+							ml="2rem"
+							pt="2rem"
+							color={theme.text.mono}
+							w="90%"
+							justifyContent="center"
+							fontWeight="semibold"
+						>
+							No Tokens Found
+						</Flex>
+					)}
 					{filter?.map((token: WrappedTokenInfo, index: number) => (
 						<Button
 							bg="transparent"

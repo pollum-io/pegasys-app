@@ -8,6 +8,7 @@ import {
 	ModalFooter,
 	ModalOverlay,
 	Text,
+	useColorMode,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { FunctionComponent } from "react";
@@ -35,7 +36,10 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 		totalSuply,
 		psys,
 	} = props;
+
 	const theme = usePicasso();
+
+	const { colorMode } = useColorMode();
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -45,7 +49,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 				borderBottomRadius={["none", "none", "3xl", "3xl"]}
 				bgColor="transparent"
 				my={["0", "0", "40", "40"]}
-				w={["100vw", "100vw", "xs", "xs"]}
+				w={["100vw", "100vw", "21.125", "21.125rem"]}
 				h="md"
 				position={["absolute", "absolute", "unset", "unset"]}
 				bottom={["0.8rem", "2.9rem", "", ""]}
@@ -91,10 +95,15 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 				<ModalBody bgColor={theme.bg.blueNavyLight}>
 					<Flex alignItems="center" justifyContent="center">
 						<Img
-							src="icons/loading.gif"
+							src={
+								colorMode === "dark"
+									? "icons/loading.gif"
+									: "icons/lightLoading.gif"
+							}
 							w="10"
 							h="10"
 							filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
+							className="blob"
 						/>
 						<Text
 							fontSize="2xl"

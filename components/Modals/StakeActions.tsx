@@ -91,8 +91,7 @@ export const StakeActions: React.FC<IModal> = props => {
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
 							top={["unset", "unset", "24rem", "24rem"]}
-							borderTopRadius={["0", "0", "3xl", "3xl"]}
-							borderBottomRadius={["0", "0", "3xl", "3xl"]}
+							borderRadius={["0", "0", "3xl", "3xl"]}
 							alignItems="flex-start"
 							gap="2"
 						>
@@ -126,8 +125,7 @@ export const StakeActions: React.FC<IModal> = props => {
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
 							top={["unset", "unset", "24rem", "23rem"]}
-							borderTopRadius={["0", "0", "3xl", "3xl"]}
-							borderBottomRadius={["0", "0", "3xl", "3xl"]}
+							borderRadius={["0", "0", "3xl", "3xl"]}
 							alignItems="flex-start"
 							gap="2"
 						>
