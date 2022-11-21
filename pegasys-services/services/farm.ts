@@ -9,6 +9,7 @@ import {
 
 import { usePairs as getPairs } from "hooks";
 
+import { pegasysClient, SYS_PRICE } from "apollo";
 import {
 	IFarmInfo,
 	IFarmServicesClaim,
@@ -209,7 +210,20 @@ class FarmServices {
 			totalSupply
 		);
 
-		return new TokenAmount(reserve.token, stakedValueInDAI);
+		const tokenAmount = new TokenAmount(reserve.token, stakedValueInDAI);
+
+		return Number(tokenAmount.toSignificant());
+	}
+
+	private static async getPsysUsdPrice() {
+		const fetchSysPrice = await pegasysClient.query({
+			query: SYS_PRICE(),
+			fetchPolicy: "cache-first",
+		});
+
+		const sysPrice = fetchSysPrice?.data?.bundles[0]?.sysPrice;
+
+		return Number(sysPrice);
 	}
 
 	private static async getTotalStakeInUsd(
@@ -222,7 +236,7 @@ class FarmServices {
 
 		const dai = tokens.DAI;
 
-		let totalStakedInUsd = new TokenAmount(dai, BIG_INT_ZERO);
+		let totalStakedInUsd = 0;
 
 		const totalSupply = await LpTokenServices.getTotalSupply({
 			contractAddress: stakeToken.address,
@@ -239,7 +253,7 @@ class FarmServices {
 		const wsys = WSYS[chainId ?? ChainId.NEVM];
 		const psys = tokens.PSYS;
 
-		const usdPrice = await TokenServices.getUsdcPrice(wsys, chainId);
+		const usdPrice = await this.getPsysUsdPrice();
 
 		if (pair.involvesToken(dai)) {
 			totalStakedInUsd = this.getReservePrice(
@@ -274,7 +288,7 @@ class FarmServices {
 				: new TokenAmount(wsys, BIG_INT_ZERO);
 
 			if (JSBI.greaterThan(totalStakedInWsys.raw, BIG_INT_ZERO)) {
-				totalStakedInUsd = usdPrice?.quote(totalStakedInWsys) as TokenAmount;
+				totalStakedInUsd = Number(totalStakedInWsys.toSignificant()) * usdPrice;
 			}
 		} else if (pair.involvesToken(psys)) {
 			const [[sysPsysPairState, sysPsysPair]] = await PairServices.getPairs([
@@ -309,10 +323,10 @@ class FarmServices {
 					  )
 			);
 
-			totalStakedInUsd = usdPrice?.quote(totalStakedInWsys) as TokenAmount;
+			totalStakedInUsd = Number(totalStakedInWsys.toSignificant()) * usdPrice;
 		}
 
-		return Number(totalStakedInUsd.toSignificant());
+		return totalStakedInUsd;
 	}
 
 	private static getStakeInUsd(
@@ -502,6 +516,8 @@ class FarmServices {
 						values.totalStake,
 						chainId
 					);
+
+					console.log("values.stake: ", values.stake.toExact());
 
 					const stakedInUsd = this.getStakeInUsd(
 						values.totalStake,
