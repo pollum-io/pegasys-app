@@ -5,6 +5,7 @@ export interface ICardItemProps {
 	text: string;
 	value: string;
 	usdValue?: string;
+	opacity?: boolean;
 }
 
 export interface IStakeCardsProps {

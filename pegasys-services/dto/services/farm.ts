@@ -6,7 +6,7 @@ import { TContract, TProvider, TSigner } from "../framework";
 
 export interface IFarmInfo extends IEarnInfo {
 	swapFeeApr: number;
-	superFarmApr?: number;
+	farmApr: number;
 	combinedApr: number;
 	poolId: number;
 	pair: Pair;

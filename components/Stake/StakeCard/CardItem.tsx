@@ -1,23 +1,42 @@
-import { GridItem, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 
 import { usePicasso } from "hooks";
 import { useStake } from "pegasys-services";
 
 import { ICardItemProps } from "./dto";
 
-const CardItem: React.FC<ICardItemProps> = ({ text, value, usdValue }) => {
+const CardItem: React.FC<ICardItemProps> = ({
+	text,
+	value,
+	usdValue,
+	opacity,
+}) => {
 	const theme = usePicasso();
 	const { showInUsd } = useStake();
 
 	return (
-		<GridItem flexDirection="column">
-			<Text fontSize="sm" color={theme.text.cyanPurple}>
+		<Flex
+			justifyContent="center"
+			flexDirection="column"
+			width={["100%", "100%", "30%", "30%"]}
+		>
+			<Text
+				fontSize="sm"
+				color={theme.text.cyanPurple}
+				opacity={opacity ? "0.3" : undefined}
+			>
 				{text}
 			</Text>
-			<Text fontWeight="medium" fontSize="md" color={theme.text.mono}>
+			<Text
+				fontWeight="medium"
+				fontSize="md"
+				color={theme.text.mono}
+				opacity={opacity ? "0.3" : undefined}
+			>
 				{!!usdValue && showInUsd ? usdValue : value}
 			</Text>
-		</GridItem>
+			<Flex />
+		</Flex>
 	);
 };
 
