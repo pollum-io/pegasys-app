@@ -14,6 +14,7 @@ import { FunctionComponent } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { WrappedTokenInfo } from "types";
 import { addTokenToWallet } from "utils";
+import { useTranslation } from "react-i18next";
 
 interface IModal {
 	isOpen: boolean;
@@ -36,6 +37,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 		psys,
 	} = props;
 	const theme = usePicasso();
+	const { t: translation } = useTranslation();
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -48,7 +50,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 				w={["100vw", "100vw", "xs", "xs"]}
 				h="md"
 				position={["absolute", "absolute", "unset", "unset"]}
-				bottom={["0.8rem", "2.9rem", "", ""]}
+				bottom={["0", "0", "", ""]}
 			>
 				<Flex
 					w="100%"
@@ -81,7 +83,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 							fontWeight="500"
 							color="white"
 						>
-							Your PSYS Breakdown
+							{translation("header.psysBreakDown")}
 						</Text>
 						<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
 							<MdOutlineClose size={23} onClick={onClose} color="white" />
@@ -112,7 +114,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 							flexDirection="row"
 						>
 							<Text fontSize="sm" fontWeight="semibold">
-								Unclaimed:
+								{translation("header.unclaimed")}
 							</Text>
 							<Text fontSize="sm">{psysUnclaimed} PSYS</Text>
 						</Flex>
@@ -122,7 +124,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 							flexDirection="row"
 						>
 							<Text fontSize="sm" fontWeight="semibold">
-								PSYS price:
+								{translation("header.psysPrice")}
 							</Text>
 							<Text fontSize="sm">{psysPriceSys} SYS</Text>
 						</Flex>
@@ -132,7 +134,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 							flexDirection="row"
 						>
 							<Text fontSize="sm" fontWeight="semibold">
-								Total Supply:
+								{translation("header.totalSupply")}
 							</Text>
 							<Text fontSize="sm">{totalSuply}</Text>
 						</Flex>
@@ -142,7 +144,6 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 					bgColor={theme.bg.blueNavyLight}
 					justifyContent="flex-start"
 					pb={["2rem", "2rem", "6", "6"]}
-					mt={["2", "10", "0", "0"]}
 					borderBottomRadius={["none", "none", "3xl", "2xl"]}
 				>
 					<Button

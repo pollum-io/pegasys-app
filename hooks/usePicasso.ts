@@ -42,9 +42,10 @@ const usePicasso = () => {
 			whiteDarkGray: useColorModeValue("#718096", "#ffffff"),
 			helpIcon: useColorModeValue("#A0AEC0", "rgba(255, 255, 255, 0.64)"),
 			pegasysLogo: useColorModeValue(
-				"icons/LightPegasysLogo.png",
+				"icons/LighttPegasysLogo.svg",
 				"icons/pegasys.png"
 			),
+
 			borderExpertMode: useColorModeValue(
 				"icons/Border-gradient-02.png",
 				"icons/Border-gradient-02.png"

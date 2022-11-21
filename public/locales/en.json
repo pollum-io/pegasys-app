@@ -19,7 +19,7 @@
 		"unclaimed": "Unclaimed: ",
 		"psysPrice": "PSYS price:",
 		"psysCirculation": "PSYS in circulation:",
-		"totalSupply": "Total Supply",
+		"totalSupply": "Total Supply:",
 		"makeSureURLWarning": "Make sure the URL is",
 		"alwaysMakeSureWarning": "Always make sure the URL is",
 		"bookmarkIt": "bookmark it to be safe.",
@@ -39,7 +39,7 @@
 		"change": "Change",
 		"copy": "Copy Address",
 		"viewExplorer": "View on the Explorer",
-		"clearAll": "(clear all)",
+		"clearAll": "Clear all",
 		"transactionAppear": "Your transactions will appear here...",
 		"recentTransactions": "Recent Transactions",
 		"copied": "Copied"
@@ -155,8 +155,8 @@
 		"add": "Add",
 		"findToken": "Find a token by searching for its name or symbol or by pasting its address below.",
 		"selectToken": "Select a token",
-		"tokenSearchPlaceholder": "Search name or paste address",
-		"tokenName": "Token Name",
+		"tokenSearchPlaceholder": "Search, name or paste address",
+		"tokenName": "Token name",
 		"change": "Change",
 		"selectList": "Select a list",
 		"confirmListRemovalPrompt": "Please confirm you would like to remove this list by typing REMOVE",
@@ -169,20 +169,26 @@
 		"removeList": "Remove list",
 		"selected": "Selected",
 		"select": "Select",
-		"manageTokenLists": "Manage Token Lists"
+		"manageTokenLists": "Manage Token Lists",
+		"confirmList": "Confirm List",
+		"beCareful": "Please be careful when adding custom token lists.",
+		"anyoneCan": "Anyone can create fake or scam tokens, so take caution and do your research. If you purchase an arbitrary token you may be unable to sell it back.",
+		"areYouSure": "Are you sure you want to import this token list?"
 	},
 	"settings": {
 		"areYouSure": "Are you sure?",
 		"expertInfo": "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds.",
 		"expertWarningCAPS": "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING.",
-		"confirm": "confirm",
+		"confirm": "Confirm",
 		"confirmExpertMode": "Please type the word \"confirm\" to enable expert mode.",
 		"turnOnExpertMode": "Turn On Expert Mode",
 		"transactionSettings": "Transaction Settings",
 		"interfaceSettings": "Interface Settings",
 		"toggleExpertMode": "Toggle Expert Mode",
 		"expertModeHelper": "Bypasses confirmation modals and allows high slippage trades. Use at your own risk.",
-		"toggleDarkMode": "Toggle Dark Mode"
+		"toggleDarkMode": "Toggle Dark Mode",
+		"selectLanguage": "Select Language",
+		"transactionTolerance": "Transaction tolerance"
 	},
 	"swap": {
 		"priceImpact": "Price Impact",
@@ -237,7 +243,7 @@
 		"enterValidSlippage": "Enter a valid slippage percentage",
 		"transactionMayFail": "Your transaction may fail",
 		"transactionMayFrontrun": "Your transaction may be frontrun",
-		"minutes": "minutes"
+		"minutes": "Minutes"
 	},
 	"vote": {
 		"earnedPsys": "Earned PSYS tokens represent voting shares in Pegasys governance.",
@@ -363,7 +369,7 @@
 		"viewStakedLiquidity": "View your staked liquidity",
 		"yourPools": "Your pools",
 		"unavailable": "Unavailable liquidity tokens.",
-		"liquidity":"Liquidity",
+		"liquidity": "Liquidity",
 		"createPair": "Create a pair",
 		"addLiquidity": "Add liquidity",
 		"connectWalletToView": "Connect to a wallet to view your liquidity.",
@@ -429,7 +435,12 @@
 		"velox": "Set a limit order on <1>Velox</1>",
 		"marginSwap": "Trade with leverage on <1>MarginSwap</1>",
 		"wowSwap": " or <1>WOWswap</1>",
-		"veeFinance": " or <1>Vee Finance</1>"
+		"veeFinance": " or <1>Vee Finance</1>",
+		"dataNotFound": "Data not found for this pair of tokens.",
+		"tryWithAnother": "Please try again with another pair.",
+		"sendToAnother": "Send to another wallet",
+		"optional": "(optional)",
+		"sendToAddress": "Send to address"
 	},
 	"buyPage": {
 		"buySysInfo": "Buy SYS with fiat from our partner Wyre.",

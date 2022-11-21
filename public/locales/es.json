@@ -19,7 +19,7 @@
 		"unclaimed": "Sin reclamar: ",
 		"psysPrice": "Precio PSYS:",
 		"psysCirculation": "PSYS en circulación:",
-		"totalSupply": "Suministro total",
+		"totalSupply": "Suministro Total:",
 		"makeSureURLWarning": "Asegúrese de que el URL es",
 		"alwaysMakeSureWarning": "Asegúrese siempre de que la URL sea",
 		"bookmarkIt": "marcarla para estar seguro.",
@@ -40,7 +40,7 @@
 		"change": "Cambiar",
 		"copy": "Copiar dirección",
 		"viewExplorer": "Ver en el Explorador",
-		"clearAll": "(borrar todo)",
+		"clearAll": "Borrar todo",
 		"transactionAppear": "Tus transacciones aparecerán aquí...",
 		"recentTransactions": "Transacciones recientes",
 		"copied": "Copiado"
@@ -155,7 +155,7 @@
 		"add": "Añadir",
 		"findToken": "Encuentra un token buscándolo por su nombre, símbolo o pegando su dirección.",
 		"selectToken": "Selecciona un token",
-		"tokenSearchPlaceholder": "Busca un nombre o pega una dirección",
+		"tokenSearchPlaceholder": "Buscar, nombrar o pegar la dirección",
 		"tokenName": "Nombre del token",
 		"change": "Cambiar",
 		"selectList": "Selecciona una lista",
@@ -169,23 +169,29 @@
 		"removeList": "Borrar lista",
 		"selected": "Seleccionado",
 		"select": "Seleccionar",
-		"manageTokenLists": "Administrar listas de tokens"
+		"manageTokenLists": "Administrar listas de tokens",
+		"confirmList": "Confirmar Lista",
+		"beCareful": "Por favor, tenga cuidado al añadir listas de tokens personalizadas.",
+		"anyoneCan": "Cualquiera puede crear tokens falsos o estafadores, así que tenga cuidado e investigue. Si compras un token arbitrario es posible que no puedas volver a venderlo.",
+		"areYouSure": "¿Está seguro de que quiere importar esta lista de tokens?"
 	},
 	"settings": {
 		"areYouSure": "Estas seguro?",
 		"expertInfo": "El modo experto deshabilita el aviso de confirmar transacción y permite altos deslizamientos en intercambios que suelen causar malos ratios y fondos perdidos.",
 		"expertWarningCAPS": "USA ESTE MODO SOLO SI SABES LO QUE ESTÁS HACIENDO.",
-		"confirm": "confirmar",
+		"confirm": "Confirmar",
 		"confirmExpertMode": "Por favor introduce la palabra \"confirmar\" para habilitar el modo experto.",
 		"turnOnExpertMode": "Habilitar modo experto",
 		"transactionSettings": "Ajustes de transacción",
 		"interfaceSettings": "Ajustes de la interfaz",
-		"toggleExpertMode": "Avticar modo experto",
+		"toggleExpertMode": "Avticar Modo Experto",
 		"expertModeHelper": "Sobrepasa los avisos de confirmación y permite intercambios con altos deslizamientos. Úselo bajo su propio riesgo.",
-		"toggleDarkMode": "Activar modo oscuro"
+		"toggleDarkMode": "Activar modo oscuro",
+		"selectLanguage": "Seleccione el Idioma",
+		"transactionTolerance": "Tolerancia en las Transacciones"
 	},
 	"swap": {
-		"priceImpact": "Impacto en el precio",
+		"priceImpact": "Impacto en el Precio",
 		"priceImpactHelper": "La diferencia entre el precio de merkado y el precio estimado debido al tamaño del intercambio.",
 		"liquidityProviderFee": "Tasa de proveedor de liquidez",
 		"liquidityProviderHelper": "Una parte de cada intercambio (0.30%) va a los proveedores de liquidez como un incentivo protocolario.",
@@ -208,8 +214,8 @@
 		"priceImpactHighPrompt": "Este intercambio tiene un impacto en el precio de por lo menos {{ priceImpact }}%. Por favor, confirme que quiere continuar con este intercambio."
 	},
 	"toggle": {
-		"on": "Encendido",
-		"off": "Apagado"
+		"on": "On",
+		"off": "Off"
 	},
 	"tokenWarningModal": {
 		"tokenImported": "Token importado",
@@ -237,7 +243,7 @@
 		"enterValidSlippage": "Introduce un porcentaje de deslizamieinto válido",
 		"transactionMayFail": "Tu transacción puede fallar",
 		"transactionMayFrontrun": "Tu transacción puede sufrir inversión ventajista",
-		"minutes": "minutos"
+		"minutes": "Minutos"
 	},
 	"vote": {
 		"earnedPsys": "Earned PSYS tokens represent voting shares in Pegasys governance.",
@@ -431,7 +437,12 @@
 		"velox": "Pon una orden límite en <1>Velox</1>",
 		"marginSwap": "Opere con apalancamiento en <1>MarginSwap</1>",
 		"wowSwap": " o <1>WOWswap</1>",
-		"veeFinance": " o <1>Vee Finance</1>"
+		"veeFinance": " o <1>Vee Finance</1>",
+		"dataNotFound": "Datos no encontrados para este par de tokens.",
+		"tryWithAnother": "Por favor, inténtelo de nuevo con otro par.",
+		"sendToAnother": "Enviar a otra cartera",
+		"optional": "(opcional)",
+		"sendToAddress": "Enviar a la dirección"
 	},
 	"buyPage": {
 		"buySysInfo": "Compre SYS con fiat de nuestro socio Wyre.",

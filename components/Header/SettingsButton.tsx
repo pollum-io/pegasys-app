@@ -58,7 +58,9 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 
 	const { isConnected } = useWallet();
 
-	const { t: translation } = useTranslation();
+	const { t: translation, i18n } = useTranslation();
+
+	const { language } = i18n;
 
 	// Transaction Slippage handlers - Validations //
 	const parseCustomTransactionSlippageValue = (slippageValue: string) => {
@@ -180,7 +182,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 					alignItems="center"
 				>
 					<Text fontSize="md" fontWeight="semibold" color={theme.text.mono}>
-						Transaction Settings
+						{translation("settings.transactionSettings")}
 					</Text>
 				</Flex>
 				<PopoverBody>
@@ -192,7 +194,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								fontWeight="medium"
 								color={theme.text.mono}
 							>
-								Slippage tolerance
+								{translation("transactionSettings.slippageTolerance")}
 							</Text>
 							<Flex>
 								<TooltipComponent
@@ -301,7 +303,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 								fontWeight="medium"
 								color={theme.text.mono}
 							>
-								Transaction tolerance
+								{translation("settings.transactionTolerance")}
 							</Text>
 							<TooltipComponent
 								label={translation(
@@ -342,25 +344,36 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							</Text>
 						</Flex>
 						<Flex
-							alignItems={["flex-start", "center", "center", "center"]}
-							flexDirection={["column", "row", "row", "row"]}
+							alignItems={["center", "center", "center", "center"]}
+							flexDirection="row"
 							mt="4"
 							h="max-content"
+							justifyContent="space-between"
 						>
 							<Flex
 								pt="0.1rem"
-								mt="4"
+								mt="0"
 								flexDirection={["row", "row", "row", "row"]}
 								pb={["2", "2", "0", "0"]}
 								alignItems="center"
+								w={
+									language === "de" || language === "vn"
+										? ["8rem", "max-content", "10rem", "10rem"]
+										: "unset"
+								}
 							>
 								<Text
 									fontSize={["sm", "md", "md", "md"]}
 									pr={["1", "1", "1", "1"]}
 									fontWeight="medium"
 									color={theme.text.mono}
+									w={
+										language === "de" || language === "vn"
+											? "unset"
+											: "max-content"
+									}
 								>
-									Toggle Expert Mode
+									{translation("settings.toggleExpertMode")}
 								</Text>
 								<TooltipComponent
 									label={translation(
@@ -369,16 +382,19 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 									icon={MdHelpOutline}
 								/>
 							</Flex>
-							<Flex flexDirection="row" ml={["2", "12", "12", "12"]} mt="5">
+							<Flex flexDirection="row">
 								<Stack align="center" direction="row">
-									<Text color={theme.text.mono}>Off</Text>
+									<Text color={theme.text.mono}>
+										{translation("toggle.off")}
+									</Text>
 									<Switch
 										disabled={!isConnected}
 										size="md"
 										onChange={() => setExpert(!expert)}
-										// colorScheme="lightPurple"
 									/>
-									<Text color={theme.text.mono}>On</Text>
+									<Text color={theme.text.mono}>
+										{translation("toggle.on")}
+									</Text>
 								</Stack>
 							</Flex>
 						</Flex>
@@ -392,7 +408,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 						alignItems="center"
 					>
 						<Text fontSize="md" fontWeight="semibold" color={theme.text.mono}>
-							Select Language
+							{translation("settings.selectLanguage")}
 						</Text>
 					</Flex>
 					<Flex justifyContent="center" alignItems="center">

@@ -165,7 +165,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 			>
 				<ModalHeader display="flex" alignItems="center" gap="3">
 					<Text fontSize="lg" fontWeight="semibold">
-						Select a token
+						{translation("swapHooks.selectToken")}
 					</Text>
 					<TooltipComponent
 						label={translation("searchModal.findToken")}
@@ -188,7 +188,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 								color: theme.text.inputBluePurple,
 								opacity: "0.6",
 							}}
-							placeholder="Search, name or paste address"
+							placeholder={translation("searchModal.tokenSearchPlaceholder")}
 							onChange={handleInput}
 							py={["0.1rem", "0.1rem", "1", "1"]}
 							pl="10"
@@ -206,7 +206,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					</InputGroup>
 					<Flex my="5" gap="2" justifyContent="space-between">
 						<Text fontSize="md" color={theme.text.cyanPurple}>
-							Token name
+							{translation("searchModal.tokenName")}
 						</Text>
 						<IconButton
 							as={arrowOrder ? MdArrowDownward : MdArrowUpward}
@@ -225,7 +225,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					flexDirection="column"
 					w="95%"
 					h="10%"
-					my="0"
+					my="1"
 					pr="2"
 					pl="2"
 					maxHeight={["20rem", "20rem", "30rem", "30rem"]}
@@ -327,7 +327,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							fontWeight="semibold"
 							onClick={onOpenManageToken}
 						>
-							Manage Token Lists
+							{translation("searchModal.manageTokenLists")}
 						</Text>
 					</Flex>
 				</Flex>

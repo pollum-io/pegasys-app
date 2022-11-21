@@ -11,6 +11,7 @@ import { usePicasso, useWallet } from "hooks";
 import { WalletOptions } from "components/WalletOptions";
 import { MdOutlineClose } from "react-icons/md";
 import { useWallet as psUseWallet } from "pegasys-services";
+import { useTranslation } from "react-i18next";
 
 interface IModal {
 	isOpen: boolean;
@@ -22,6 +23,7 @@ export const SelectWallets: React.FC<IModal> = props => {
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
 	const { connectorSelected, connecting } = psUseWallet();
+	const { t: translation } = useTranslation();
 
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
@@ -30,7 +32,7 @@ export const SelectWallets: React.FC<IModal> = props => {
 				borderRadius="1.875rem"
 				my={["0", "0", "40", "40"]}
 				bgColor={theme.bg.blueNavy}
-				w={["100vw", "100vw", "50%", "sm"]}
+				w={["100vw", "100vw", "sm", "sm"]}
 				h="max-content"
 				p="6"
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
@@ -42,7 +44,7 @@ export const SelectWallets: React.FC<IModal> = props => {
 					<Flex flexDirection="column" justifyContent="center">
 						<Flex justifyContent="space-between" align="center" pb="5">
 							<Text fontSize={["lg", "lg", "xl", "xl"]} fontWeight="semibold">
-								Connect to a Wallet
+								{translation("walletModal.connectToWallet")}
 							</Text>
 							<Flex _hover={{ cursor: "pointer" }}>
 								<MdOutlineClose
@@ -66,15 +68,15 @@ export const SelectWallets: React.FC<IModal> = props => {
 								fontWeight="normal"
 								color={theme.text.mono}
 							>
-								New to Syscoin?
+								{translation("walletModal.newToSyscoin")}
 							</Text>
 							<Text
 								textColor={theme.text.cyanPurple}
 								fontWeight="semibold"
 								textAlign="center"
-								_hover={{ cursor: "pointer" }}
+								_hover={{ cursor: "pointer", opacity: "0.9" }}
 							>
-								Learn more about setting up a wallet
+								{translation("walletModal.learnMoreWallet")}
 							</Text>
 						</Flex>
 					</Flex>
@@ -112,7 +114,7 @@ export const SelectWallets: React.FC<IModal> = props => {
 								/>
 							</Flex>
 							<Text pb="2" pl="3" fontSize="18px" fontWeight="600">
-								Initializing...
+								{translation("walletModal.initializing")}
 							</Text>
 						</Flex>
 						<Flex justifyContent="center" align="center">

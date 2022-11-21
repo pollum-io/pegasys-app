@@ -19,7 +19,7 @@
 		"unclaimed": "Não resgatado: ",
 		"psysPrice": "Preço do PSYS:",
 		"psysCirculation": "PSYS em circulação:",
-		"totalSupply": "Suprimento total",
+		"totalSupply": "Oferta total",
 		"makeSureURLWarning": "Certifique-se que a URL seja",
 		"alwaysMakeSureWarning": "Certifique-se sempre que a URL seja",
 		"bookmarkIt": "marque para ser seguro.",
@@ -38,8 +38,8 @@
 		"disconnect": "Desconectar",
 		"change": "Trocar",
 		"copy": "Copiar endereço",
-		"viewExplorer": "Vizualize no Explorer",
-		"clearAll": "(limpar tudo)",
+		"viewExplorer": "Visualize no Explorer",
+		"clearAll": "Limpar tudo",
 		"transactionAppear": "Suas transações aparecerão aqui ... ",
 		"recentTransactions": "Transações recentes",
 		"copied": "Copiado"
@@ -156,8 +156,8 @@
 		"add": "Incluir",
 		"findToken": "Encontre um token procurando por seu nome ou símbolo ou colando seu endereço abaixo.",
 		"selectToken": "Selecione um token",
-		"tokenSearchPlaceholder": "Procurar por nome ou cole o endereço",
-		"tokenName": "Nome do Token",
+		"tokenSearchPlaceholder": "Pesquisar, nome ou cole o endereço",
+		"tokenName": "Nome do token",
 		"change": "Trocar",
 		"selectList": "Selecione uma lista",
 		"confirmListRemovalPrompt": "Por favor, confirme que gostaria de remover esta lista digitando: \"remover\"",
@@ -170,23 +170,29 @@
 		"removeList": "Remover lista",
 		"selected": "Selecionado",
 		"select": "Selecionar",
-		"manageTokenLists": "Gerenciar Lista de Tokens"
+		"manageTokenLists": "Gerenciar Lista de Tokens",
+		"confirmList": "Confirmar Lista",
+		"beCareful": "Por favor, tenha cuidado ao adicionar listas de tokens personalizadas.",
+		"anyoneCan": "Qualquer pessoa pode criar tokens falsos ou fraudulentos, portanto, tenha cuidado e faça sua pesquisa. Se você comprar um token arbitrário, talvez não consiga vendê-lo de volta.",
+		"areYouSure": "Você tem certeza de que quer importar esta lista de tokens?"
 	},
 	"settings": {
 		"areYouSure": "Você tem certeza?",
 		"expertInfo": "O modo expert desliga o prompt de confirmação de transação e permite alta variação de preço que muitas vezes resultam em taxas ruins e perdas.",
 		"expertWarningCAPS": "USE APENAS ESTE MODO SE VOCÊ SABE O QUE ESTÁ FAZENDO",
-		"confirm": "confirmar",
+		"confirm": "Confirmar",
 		"confirmExpertMode": "Por favor digite a palavra \"confirmar\" para habilitar o modo expert.",
 		"turnOnExpertMode": "Ativar modo expert",
 		"transactionSettings": "Configurações de transação",
 		"interfaceSettings": "Configurações da Interface",
-		"toggleExpertMode": "Ativar modo expert",
+		"toggleExpertMode": "Ativar Modo Expert",
 		"expertModeHelper": "Ignora os modais de confirmação e permite alta variação de preço. Use por sua conta e risco.",
-		"toggleDarkMode": "Ativar modo escuro"
+		"toggleDarkMode": "Ativar modo escuro",
+		"selectLanguage": "Selecione o Idioma",
+		"transactionTolerance": "Tolerância de Transação"
 	},
 	"swap": {
-		"priceImpact": "Impacto no preço",
+		"priceImpact": "Impacto no Preço",
 		"priceImpactHelper": "A diferença entre o preço de mercado e o preço estimado devido ao tamanho da troca.",
 		"liquidityProviderFee": "Taxa para os provedores de liquidez",
 		"liquidityProviderHelper": "Uma parte de cada troca (0,30%) vai para os provedores de liquidez como um incentivo do protocolo.",
@@ -238,7 +244,7 @@
 		"enterValidSlippage": "Digite uma porcentagem válida de variação de preço",
 		"transactionMayFail": "Sua transação pode falhar",
 		"transactionMayFrontrun": "Sua transação pode ser suscetível a frontrun",
-		"minutes": "minutos"
+		"minutes": "Minutos"
 	},
 	"vote": {
 		"earnedPsys": "Os tokens PSYS ganhos representam ações de votação na governança do Pegasys.",
@@ -375,11 +381,9 @@
 		"noSeePoolJoined": "Não vê uma pool da qual participa?",
 		"migrateNow": "Migre-a.",
 		"importIt": "Importe-a.",
-
 		"poolsOverview": "Visão geral de pools",
 		"searchPair": "Pesquisa por símbolo do token",
 		"sort": "Ordenar por"
-
 	},
 	"poolFinder": {
 		"connectToFind": "Conecte-se a uma carteira para encontrar suas pools",
@@ -433,7 +437,12 @@
 		"velox": "Definir uma ordem de limite no <1>Velox</1>",
 		"marginSwap": "Negocie com alavancagem no <1>MarginSwap</1>",
 		"wowSwap": " ou <1>WOWswap</1>",
-		"veeFinance": " ou <1>Vee Finance</1>"
+		"veeFinance": " ou <1>Vee Finance</1>",
+		"dataNotFound": "Dados não encontrados para este par de tokens.",
+		"tryWithAnother": "Por favor, tente novamente com outro par.",
+		"sendToAnother": "Enviar para outra carteira",
+		"optional": "(opcional)",
+		"sendToAddress": "Enviar para o endereço"
 	},
 	"buyPage": {
 		"buySysInfo": "Compre SYS com moeda fiduciária do nosso parceiro Wyre.",
