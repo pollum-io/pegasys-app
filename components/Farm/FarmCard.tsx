@@ -16,7 +16,7 @@ const FarmCard: FunctionComponent<{
 		tokenA,
 		tokenB,
 		swapFeeApr,
-		superFarmApr,
+		farmApr,
 		combinedApr,
 		stakedAmount,
 		unclaimedAmount,
@@ -112,7 +112,7 @@ const FarmCard: FunctionComponent<{
 						{tokenA.symbol}-{tokenB?.symbol ?? ""}
 					</Text>
 				</Flex>
-				{!!superFarmApr && (
+				{!!extraRewardToken && (
 					<Flex
 						alignItems="flex-end"
 						justifyContent="center"
@@ -149,17 +149,17 @@ const FarmCard: FunctionComponent<{
 					<Text fontWeight="semibold">Swap Fee APR</Text>
 					<Text>{swapFeeApr}%</Text>
 				</Flex>
-				{!!superFarmApr && (
-					<>
-						<Flex justifyContent="space-between" pb="3" fontSize="sm">
-							<Text fontWeight="semibold">Super Farm APR</Text>
-							<Text>{superFarmApr}%</Text>
-						</Flex>
-						<Flex justifyContent="space-between" pb="3" fontSize="sm">
-							<Text fontWeight="semibold">Total APR</Text>
-							<Text>{combinedApr}%</Text>
-						</Flex>
-					</>
+				<Flex justifyContent="space-between" pb="3" fontSize="sm">
+					<Text fontWeight="semibold">
+						{extraRewardToken ? "Super " : ""}Farm APR
+					</Text>
+					<Text>{farmApr}%</Text>
+				</Flex>
+				{!!extraRewardToken && (
+					<Flex justifyContent="space-between" pb="3" fontSize="sm">
+						<Text fontWeight="semibold">Total APR</Text>
+						<Text>{combinedApr}%</Text>
+					</Flex>
 				)}
 			</Flex>
 			{(JSBI.greaterThan(rewardRatePerWeek.raw, BIG_INT_ZERO) ||
