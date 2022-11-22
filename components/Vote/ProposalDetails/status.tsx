@@ -17,9 +17,7 @@ const Status: React.FC = () => {
 			h="max-content"
 			mt="1.5rem"
 			py="1"
-			backgroundColor={
-				selectedProposals.status === "EXECUTED" ? "#48BB78" : "#FC8181"
-			}
+			backgroundColor={selectedProposals.statusColor}
 			borderRightRadius="full"
 			alignItems={["none", "none", "center", "center"]}
 		>
@@ -33,7 +31,9 @@ const Status: React.FC = () => {
 				{selectedProposals.status}
 			</Text>
 			<Text fontWeight="normal" color="white" fontSize="12px" pl="1rem">
-				Voting ended {selectedProposals.date.toUTCString()}
+				{selectedProposals.endDate
+					? `Voting ended ${selectedProposals.endDate.toUTCString()}`
+					: `Voting ends at block ${selectedProposals.endBlock}`}
 			</Text>
 		</Flex>
 	);

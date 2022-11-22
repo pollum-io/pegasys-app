@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useMemo, useState } from "react";
 
-import { ChainId } from "@pollum-io/pegasys-sdk";
-import { tryParseAmount, addTransaction } from "utils";
+import { ChainId, TokenAmount } from "@pollum-io/pegasys-sdk";
+import { addTransaction } from "utils";
 import { GovernanceServices } from "../services";
 import { useWallet, useTransaction, useToasty } from "../hooks";
 import {
@@ -10,7 +10,7 @@ import {
 	IFormattedProposal,
 	ApprovalState,
 } from "../dto";
-import { ContractFramework } from "../frameworks";
+import { ContractFramework, PersistentFramework } from "../frameworks";
 
 export const GovernanceContext = createContext({} as IGovernanceProviderValue);
 
@@ -23,6 +23,7 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 	const [delegatedTo, setDelegatedTo] = useState<string>("");
 	const [votersType, setVotersType] = useState<string>("");
 	const [proposals, setProposals] = useState<IFormattedProposal[]>([]);
+	const [currentVotes, setCurrentVotes] = useState<TokenAmount | null>(null);
 	const [selectedProposals, setSelectedProposals] =
 		useState<IFormattedProposal | null>(null);
 	const { chainId, provider, address } = useWallet();
@@ -33,7 +34,6 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 	const governanceContract = useMemo(() => {
 		const contract = ContractFramework.GovernanceContract({
 			chainId,
-			provider,
 		});
 
 		return contract;
@@ -87,14 +87,15 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 				status: "error",
 				title: `Error on ${summary}`,
 			});
-
-			console.log(e);
 		} finally {
 			setLoading(false);
 		}
 	};
 
 	const onDelegate = async (delegatee?: string) => {
+		if (delegatee)
+			PersistentFramework.add("governancePersistence", { delegatee });
+
 		await contractCall(
 			() =>
 				GovernanceServices.delegate({
@@ -119,24 +120,54 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 		);
 	};
 
+	const getCurrentVotes = async () => {
+		const crrVotes = await GovernanceServices.getCurrentVotes({
+			contract: psysContract,
+			walletAddress: address,
+		});
+
+		setCurrentVotes(crrVotes);
+	};
+
+	useEffect(() => {
+		if (address) {
+			getCurrentVotes();
+		}
+	}, [address]);
+
 	useEffect(() => {
 		const init = async () => {
 			try {
+				const governancePersistence: { [k: string]: any } | undefined =
+					PersistentFramework.get("governancePersistence");
+
+				if (governancePersistence?.delegatee) {
+					setVotesLocked(false);
+					setDelegatedTo(
+						governancePersistence.delegatee === "Self"
+							? address
+							: governancePersistence.delegatee
+					);
+				}
+
 				const proposalCount = await GovernanceServices.getProposalCount({
 					contract: governanceContract,
 				});
-				console.log("proposalCount", proposalCount);
 
 				const fetchedProposals = await GovernanceServices.getProposals({
 					proposalCount,
 				});
-				console.log("fetchedProposals", fetchedProposals);
 
 				if (fetchedProposals.length) {
 					setProposals(fetchedProposals);
 				}
 			} catch (e) {
-				console.log(e);
+				toast({
+					id: `fetchedProposalsToast`,
+					position: "top-right",
+					status: "error",
+					title: `Error while fetching proposals`,
+				});
 			}
 		};
 
@@ -147,8 +178,6 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 		() => ({
 			showCancelled,
 			setShowCancelled,
-			// isGovernance,
-			// setIsGovernance,
 			votesLocked,
 			setVotesLocked,
 			delegatedTo,
@@ -161,12 +190,11 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 			vote,
 			onDelegate,
 			loading,
+			currentVotes,
 		}),
 		[
 			showCancelled,
 			setShowCancelled,
-			// isGovernance,
-			// setIsGovernance,
 			votesLocked,
 			setVotesLocked,
 			delegatedTo,
@@ -179,6 +207,7 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 			vote,
 			onDelegate,
 			loading,
+			currentVotes,
 		]
 	);
 

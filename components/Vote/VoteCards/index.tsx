@@ -12,12 +12,12 @@ const VoteCards: React.FC<IVoteCardsProps> = props => {
 	const { showCancelled, setSelectedProposals } = useGovernance();
 
 	const dateString = useMemo(() => {
-		const dateParts = proposal.date.toDateString().split(" ");
+		const dateParts = proposal.startDate.toDateString().split(" ");
 
 		const customDateParts = [dateParts[1], dateParts[2], dateParts[3]];
 
 		return customDateParts.join(" ");
-	}, [proposal.date]);
+	}, [proposal.startDate]);
 
 	if (proposal.status === "CANCELLED" && !showCancelled) {
 		return null;
@@ -37,8 +37,12 @@ const VoteCards: React.FC<IVoteCardsProps> = props => {
 			boxShadow="0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)"
 			onClick={() => setSelectedProposals(proposal)}
 		>
-			<Body title={proposal.title} version="4" />
-			<Status status={proposal.status} date={dateString} />
+			<Body title={proposal.title} version={proposal.id} />
+			<Status
+				status={proposal.status}
+				date={dateString}
+				statusColor={proposal.statusColor}
+			/>
 		</Flex>
 	);
 };

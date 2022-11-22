@@ -19,13 +19,13 @@ export const VoteContainer: NextPage = () => {
 	const { isConnected } = useWallet();
 	const {
 		selectedProposals,
-		// isGovernance,
 		showCancelled,
 		setShowCancelled,
 		votesLocked,
 		delegatedTo,
 		proposals,
 		loading,
+		currentVotes,
 	} = useGovernance();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
@@ -102,13 +102,8 @@ export const VoteContainer: NextPage = () => {
 									py="0.531rem"
 									px="1rem"
 								>
-									<Text
-										fontWeight="500"
-										fontSize="16px"
-										color="white"
-										textTransform="lowercase"
-									>
-										12.73 {translation("votePage.votes")}
+									<Text fontWeight="500" fontSize="16px" color="white">
+										{currentVotes ? currentVotes.toSignificant() : 0} votes
 									</Text>
 									<Flex gap="4" fontSize="14px">
 										<Text color="white">

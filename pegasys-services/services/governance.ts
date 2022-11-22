@@ -1,7 +1,7 @@
 import { BigNumber, ethers, utils } from "ethers";
 import { governanceClient, GET_PROPOSALS } from "apollo";
-import { JSBI } from "@pollum-io/pegasys-sdk";
-import { BIG_INT_ZERO } from "pegasys-services/constants";
+import { BIG_INT_ZERO, PegasysTokens } from "pegasys-services/constants";
+import { ChainId, JSBI, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { ContractFramework, WalletFramework } from "../frameworks";
 import {
 	IGovernaceServicesGetProposalCount,
@@ -19,11 +19,10 @@ import {
 class GovernanceServices {
 	static async getProposalCount({
 		contract,
-		provider,
 		chainId,
 	}: IGovernaceServicesGetProposalCount): Promise<number> {
 		const governanceContract =
-			contract ?? ContractFramework.GovernanceContract({ chainId, provider });
+			contract ?? ContractFramework.GovernanceContract({ chainId });
 
 		const proposalCount: BigNumber = await ContractFramework.call({
 			contract: governanceContract,
@@ -35,7 +34,6 @@ class GovernanceServices {
 
 	static async getProposalVotes({
 		contract,
-		provider,
 		chainId,
 		proposalIndex,
 	}: IGovernaceServicesGetProposalVotes): Promise<{
@@ -43,7 +41,7 @@ class GovernanceServices {
 		forVotes: number;
 	}> {
 		const governanceContract =
-			contract ?? ContractFramework.GovernanceContract({ chainId, provider });
+			contract ?? ContractFramework.GovernanceContract({ chainId });
 
 		const proposal: { againstVotes: BigNumber; forVotes: BigNumber } =
 			await ContractFramework.call({
@@ -121,11 +119,45 @@ class GovernanceServices {
 						calldata
 					);
 
-					const { timestamp } = await WalletFramework.getBlock(endBlock);
+					const initialBlock = await WalletFramework.getBlock(startBlock);
+					const finalBlock = await WalletFramework.getBlock(endBlock);
 
-					const date = new Date(timestamp * 1000);
+					const endDate = finalBlock
+						? new Date(finalBlock.timestamp * 1000)
+						: undefined;
+					const startDate = new Date(initialBlock.timestamp * 1000);
 
 					const descriptionParts = description?.split("\\n");
+
+					let statusColor;
+
+					switch (status.toLocaleLowerCase()) {
+						case "pending":
+							statusColor = "#ffff67";
+							break;
+						case "active":
+							statusColor = "#68D391";
+							break;
+						// case "Canceled":
+						// 	break;
+						// case "Defeated":
+						// 	break;
+						case "succeeded":
+							statusColor = "#68D391";
+							break;
+						case "queued":
+							statusColor = "#ffff67";
+							break;
+						// case "Expired":
+						// 	break;
+						case "executed":
+							statusColor = "#68D391";
+							break;
+
+						default:
+							statusColor = "#FC8181";
+							break;
+					}
 
 					return {
 						id,
@@ -133,12 +165,14 @@ class GovernanceServices {
 						description: descriptionParts.splice(1) ?? ["No description."],
 						proposer: proposer.id,
 						status,
+						statusColor,
 						forVotes,
 						againstVotes,
 						totalVotes: forVotes + againstVotes,
 						startBlock,
 						endBlock,
-						date,
+						endDate,
+						startDate,
 						details: {
 							functionSig: name,
 							callData: decoded.join(", "),
@@ -155,13 +189,12 @@ class GovernanceServices {
 
 	static async castVote({
 		contract,
-		provider,
 		chainId,
 		proposalIndex,
 		support,
 	}: IGovernaceServicesCastVote) {
 		const governanceContract =
-			contract ?? ContractFramework.GovernanceContract({ chainId, provider });
+			contract ?? ContractFramework.GovernanceContract({ chainId });
 
 		const res = await ContractFramework.call({
 			contract: governanceContract,
@@ -199,14 +232,13 @@ class GovernanceServices {
 
 	static async getDelegatee({
 		contract,
-		provider,
 		chainId,
 		walletAddress,
 	}: IGovernaceServicesGetDelegatee) {
 		if (!walletAddress) return "";
 
 		const psysContract =
-			contract ?? ContractFramework.PSYSContract({ chainId, provider });
+			contract ?? ContractFramework.PSYSContract({ chainId });
 
 		const res = await ContractFramework.call({
 			contract: psysContract,
@@ -219,22 +251,23 @@ class GovernanceServices {
 
 	static async getCurrentVotes({
 		contract,
-		provider,
 		chainId,
 		walletAddress,
 	}: IGovernaceServicesGetCurrentVotes) {
-		if (!walletAddress) return 0;
+		const psys = PegasysTokens[chainId ?? ChainId.NEVM].PSYS;
+
+		if (!walletAddress) return new TokenAmount(psys, BIG_INT_ZERO);
 
 		const psysContract =
-			contract ?? ContractFramework.PSYSContract({ chainId, provider });
+			contract ?? ContractFramework.PSYSContract({ chainId });
 
-		const res = await ContractFramework.call({
+		const res: BigNumber = await ContractFramework.call({
 			contract: psysContract,
 			methodName: "getCurrentVotes",
 			args: [walletAddress],
 		});
 
-		return res;
+		return new TokenAmount(psys, JSBI.BigInt(res ?? 0));
 	}
 }
 

@@ -1,3 +1,4 @@
+import { TokenAmount } from "@pollum-io/pegasys-sdk";
 import { children, setType } from "../react";
 import { IFormattedProposal } from "../services";
 
@@ -14,12 +15,11 @@ export interface IGovernanceProviderValue {
 	setVotersType: setType<string>;
 	showCancelled: boolean;
 	setShowCancelled: setType<boolean>;
-	// isGovernance: boolean;
-	// setIsGovernance: setType<boolean>;
 	proposals: IFormattedProposal[];
 	selectedProposals: IFormattedProposal | null;
 	setSelectedProposals: setType<IFormattedProposal | null>;
 	vote: (id: string, support?: boolean) => Promise<void>;
 	onDelegate: (delegatee?: string) => Promise<void>;
 	loading: boolean;
+	currentVotes: TokenAmount | null;
 }

@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Button, Flex, Text } from "@chakra-ui/react";
 import { usePicasso, useModal } from "hooks";
 import Jazzicon from "react-jazzicon";
-import { useGovernance } from "pegasys-services";
+import { BIG_INT_ZERO, useGovernance } from "pegasys-services";
+import { JSBI } from "@pollum-io/pegasys-sdk";
 
 const Vote: React.FC = () => {
 	const theme = usePicasso();
-	const { setVotersType, selectedProposals, vote } = useGovernance();
+	const { setVotersType, selectedProposals, vote, currentVotes } =
+		useGovernance();
 	const { onOpenCheckAllVotersModal } = useModal();
+
+	const isOpenToVote = useMemo(() => {
+		if (selectedProposals?.endDate) return false;
+
+		if (!currentVotes || JSBI.lessThanOrEqual(currentVotes.raw, BIG_INT_ZERO))
+			return false;
+
+		return true;
+	}, []);
 
 	const isFavor = () => {
 		setVotersType("favor");
@@ -78,7 +89,7 @@ const Vote: React.FC = () => {
 						justifyContent="space-between"
 						w="full-content"
 						pb={["4", "4", "4", "4"]}
-						fontSize="14px"
+						fontSize="12px"
 						fontWeight="600"
 						color={theme.text.mono}
 					>
@@ -107,38 +118,30 @@ const Vote: React.FC = () => {
 							bgColor="#48BB78"
 							mb={["15px", "15px", "8px", "8px"]}
 						/>
-						{/* <Flex
-							w={`${
-								(selectedProposals.againstVotes * 100) /
-								selectedProposals.totalVotes
-							}%`}
-							borderRadius="xl"
-							h="0.375rem"
-							bgColor="#F56565"
-							mb={["15px", "15px", "8px", "1rem"]}
-						/> */}
 					</Flex>
 					<Flex
 						justifyContent="space-between"
 						alignItems="center"
 						mt={["0", "0", "1.5", "1.5"]}
 					>
-						<Button
-							fontSize="12px"
-							fontWeight="normal"
-							px="0.8rem"
-							h="1.5rem"
-							bgColor={theme.bg.blueNavyLightness}
-							color={theme.text.cyan}
-							_hover={{
-								bgColor: theme.bg.bluePurple,
-							}}
-							_active={{}}
-							borderRadius="full"
-							onClick={() => vote(selectedProposals.id, true)}
-						>
-							Vote in Favor
-						</Button>
+						{isOpenToVote && (
+							<Button
+								fontSize="12px"
+								fontWeight="normal"
+								px="0.8rem"
+								h="1.5rem"
+								bgColor={theme.bg.blueNavyLightness}
+								color={theme.text.cyan}
+								_hover={{
+									bgColor: theme.bg.bluePurple,
+								}}
+								_active={{}}
+								borderRadius="full"
+								onClick={() => vote(selectedProposals.id, true)}
+							>
+								Vote in Favor
+							</Button>
+						)}
 						<Text
 							fontSize="12px"
 							_hover={{ cursor: "pointer", opacity: "0.9" }}
@@ -159,7 +162,7 @@ const Vote: React.FC = () => {
 						justifyContent="space-between"
 						w="full-content"
 						pb={["4", "4", "4", "4"]}
-						fontSize="14px"
+						fontSize="12px"
 						fontWeight="600"
 						color={theme.text.mono}
 					>
@@ -196,22 +199,24 @@ const Vote: React.FC = () => {
 						alignItems="center"
 						mt={["0", "0", "1.5", "1.5"]}
 					>
-						<Button
-							fontSize="12px"
-							fontWeight="normal"
-							px="0.8rem"
-							h="1.5rem"
-							bgColor={theme.bg.blueNavyLightness}
-							color={theme.text.cyan}
-							_hover={{
-								bgColor: theme.bg.bluePurple,
-							}}
-							_active={{}}
-							borderRadius="full"
-							onClick={() => vote(selectedProposals.id, false)}
-						>
-							Vote Against
-						</Button>
+						{isOpenToVote && (
+							<Button
+								fontSize="12px"
+								fontWeight="normal"
+								px="0.8rem"
+								h="1.5rem"
+								bgColor={theme.bg.blueNavyLightness}
+								color={theme.text.cyan}
+								_hover={{
+									bgColor: theme.bg.bluePurple,
+								}}
+								_active={{}}
+								borderRadius="full"
+								onClick={() => vote(selectedProposals.id, false)}
+							>
+								Vote Against
+							</Button>
+						)}
 						<Text
 							fontSize="12px"
 							_hover={{ cursor: "pointer", opacity: "0.9" }}

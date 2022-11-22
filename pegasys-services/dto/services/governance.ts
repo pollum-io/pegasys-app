@@ -1,15 +1,13 @@
-import { ChainId, JSBI } from "@pollum-io/pegasys-sdk";
-import { TContract, TProvider } from "../framework";
+import { ChainId } from "@pollum-io/pegasys-sdk";
+import { TContract } from "../framework";
 
 export interface IGovernaceServicesGetProposalCount {
 	chainId?: ChainId | null;
-	provider?: TProvider | null;
 	contract?: TContract;
 }
 
 export interface IGovernaceServicesGetProposalVotes {
 	chainId?: ChainId | null;
-	provider?: TProvider | null;
 	contract?: TContract;
 	proposalIndex: number;
 }
@@ -20,7 +18,6 @@ export interface IGovernaceServicesGetProposal {
 
 export interface IGovernaceServicesCastVote {
 	chainId?: ChainId | null;
-	provider?: TProvider;
 	contract?: TContract;
 	proposalIndex: number;
 	support?: boolean;
@@ -34,14 +31,12 @@ export interface IGovernaceServicesDelegate {
 
 export interface IGovernaceServicesGetDelegatee {
 	chainId?: ChainId | null;
-	provider?: TProvider;
 	contract?: TContract;
 	walletAddress?: string;
 }
 
 export interface IGovernaceServicesGetCurrentVotes {
 	chainId?: ChainId | null;
-	provider?: TProvider;
 	contract?: TContract;
 	walletAddress?: string;
 }
@@ -75,12 +70,14 @@ export interface IFormattedProposal {
 	description: string[];
 	proposer: string;
 	status: string;
+	statusColor: string;
 	forVotes: number;
 	againstVotes: number;
 	totalVotes: number;
 	startBlock: string;
 	endBlock: string;
-	date: Date;
+	endDate?: Date;
+	startDate: Date;
 	details: {
 		functionSig: string;
 		callData: string;

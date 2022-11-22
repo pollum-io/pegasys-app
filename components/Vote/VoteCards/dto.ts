@@ -2,6 +2,7 @@ import { IFormattedProposal } from "pegasys-services";
 
 export interface IStatusProps {
 	status?: string;
+	statusColor?: string;
 	date?: string;
 }
 

@@ -5,7 +5,7 @@ import { usePicasso } from "hooks";
 
 import { IStatusProps } from "./dto";
 
-const Status: React.FC<IStatusProps> = ({ status, date }) => {
+const Status: React.FC<IStatusProps> = ({ status, date, statusColor }) => {
 	const theme = usePicasso();
 
 	return (
@@ -27,7 +27,7 @@ const Status: React.FC<IStatusProps> = ({ status, date }) => {
 		>
 			<Text
 				fontWeight="bold"
-				color={status === "EXECUTED" ? "#68D391" : "#FC8181"}
+				color={statusColor}
 				fontSize={["0.75rem", "0.813rem", "0.813rem", "0.813rem"]}
 			>
 				{status}
