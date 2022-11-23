@@ -28,7 +28,6 @@ import { useTranslation } from "react-i18next";
 export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
-	const { colorMode } = useColorMode();
 
 	const {
 		setCurrentTxHash,
@@ -55,7 +54,11 @@ export const AirdropContainer: NextPage = () => {
 	const [availableClaimAmount, setAvailableClaimAmount] =
 		useState<TokenAmount>();
 
-	const { t: translation } = useTranslation();
+	const { t: translation, i18n } = useTranslation();
+
+	const { language } = i18n;
+
+	const { colorMode } = useColorMode();
 
 	const isClaiming =
 		approvalState.status === ApprovalState.PENDING &&
@@ -113,27 +116,38 @@ export const AirdropContainer: NextPage = () => {
 				flexDirection="column"
 				w={["18rem", "md", "2xl", "2xl"]}
 				alignItems="center"
+				borderRadius="12px"
 			>
 				<Flex
 					flexDirection="column"
 					zIndex="99"
 					position="relative"
-					borderTopRadius="2xl"
+					borderTopRadius="3xl"
 					backgroundColor="transparent"
 					w={["20rem", "md", "2xl", "2xl"]}
+					boxShadow={
+						colorMode === "dark"
+							? "0px 4px 4px rgba(0, 0, 0, 0.25)"
+							: "0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04)"
+					}
+					filter={
+						colorMode === "dark"
+							? "drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.2)) drop-shadow(0px 15px 40px rgba(0, 0, 0, 0.4))"
+							: ""
+					}
 				>
 					<Img
 						src={isMobile ? theme.bg.aidropBannerMobile : theme.bg.psysAirdrop}
 						position="absolute"
 						zIndex="base"
 						w="100%"
-						h={["100%", "100%", "100%", "100%"]}
+						h="100%"
 					/>
 					<Flex
 						zIndex="docked"
 						flexDirection="column"
 						px="1.625rem"
-						h={["10rem", "10rem", "10rem", "10rem"]}
+						h="10rem"
 						py="1.375rem"
 						gap="3"
 					>
@@ -165,7 +179,14 @@ export const AirdropContainer: NextPage = () => {
 				<Flex>
 					{!isConnected ? (
 						<BorderAnimation>
-							<Flex py={["0", "0", "4", "4"]}>
+							<Flex
+								py={["0", "0", "0", "0"]}
+								w={
+									language === "fr"
+										? ["unset", "20rem", "unset", "unset"]
+										: ["unset", "unset", "unset", "unset"]
+								}
+							>
 								<Flex>
 									<Text
 										textAlign="center"
@@ -183,15 +204,22 @@ export const AirdropContainer: NextPage = () => {
 							{!isAvailable && !isClaimed && (
 								<BorderAnimation>
 									<Flex
-										gap={["4", "4", "40", "40"]}
+										justifyContent="space-between"
 										flexDirection={["column", "column", "row", "row"]}
+										w="100%"
+										gap={["1.5rem", "1.5rem", "0", "0"]}
 										alignItems="center"
 									>
-										<Flex>
-											<Text
-												color={theme.text.mono}
-												fontSize={["sm", "sm", "md", "md"]}
-											>
+										<Flex
+											w={
+												language === "tr"
+													? ["100%", "max-content", "50%", "50%"]
+													: ["100%", "max-content", "60%", "60%"]
+											}
+											alignItems="center"
+											justifyContent={["left", "left", "unset", "unset"]}
+										>
+											<Text color="white" fontSize={["sm", "sm", "md", "md"]}>
 												{translation("airdrop.noAvailableClaim")}
 											</Text>
 										</Flex>
@@ -203,19 +231,24 @@ export const AirdropContainer: NextPage = () => {
 												opacity: "0.9",
 											}}
 											alignItems="center"
+											w={["100%", "max-content", "18rem", "18rem"]}
+											justifyContent={["left", "left", "right", "right"]}
 										>
 											<Text
 												color={theme.text.cyanPurple}
 												fontSize="sm"
 												fontWeight="medium"
-												textAlign="center"
+												h="100%"
 											>
 												{translation("earnPage.readMoreAboutPsys")}
 											</Text>
-											<MdOutlineCallMade
-												size={15}
-												color={theme.text.cyanPurple}
-											/>
+											<Flex
+												h="100%"
+												alignItems="center"
+												pb={["0.03rem", "0.03rem", "0.1rem", "0.1rem"]}
+											>
+												<MdOutlineCallMade size={15} color="cyan" />
+											</Flex>
 										</Flex>
 									</Flex>
 								</BorderAnimation>
@@ -223,21 +256,25 @@ export const AirdropContainer: NextPage = () => {
 							{isClaim && (
 								<BorderAnimation>
 									<Flex
-										gap={["5", "5", "28", "28"]}
+										px="2rem"
+										justifyContent="space-between"
+										w="100%"
 										flexDirection={["column", "column", "row", "row"]}
 										alignItems="center"
 									>
 										<Flex
-											align="center"
 											gap="2"
 											flexDirection={["column", "column", "row", "row"]}
+											alignItems={["center", "center", "unset", "unset"]}
 										>
-											<Img
-												src="icons/pegasys.png"
-												w="14"
-												h="14"
-												filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
-											/>
+											<Flex h="2rem">
+												<Img
+													src={theme.bg.blurPegasysLogo}
+													w="4rem"
+													h="4rem"
+													filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
+												/>
+											</Flex>
 											<Flex alignItems="baseline">
 												<Text fontSize="4xl" fontWeight="semibold" ml="2">
 													{availableClaimAmount
@@ -251,8 +288,12 @@ export const AirdropContainer: NextPage = () => {
 												</Text>
 											</Flex>
 										</Flex>
-										<Flex align="center" gap="2">
-											{!isClaiming ? (
+										<Flex
+											align="center"
+											gap="2"
+											pt={["0.5rem", "0.5rem", "unset", "unset"]}
+										>
+											{isClaiming ? (
 												<Button
 													fontSize="sm"
 													fontWeight="semibold"
@@ -272,7 +313,7 @@ export const AirdropContainer: NextPage = () => {
 												<Button
 													fontSize="sm"
 													fontWeight="semibold"
-													py="0.625rem"
+													py="0.525rem"
 													pr="1"
 													w="3xs"
 													h="max-content"
@@ -282,8 +323,19 @@ export const AirdropContainer: NextPage = () => {
 													_active={{}}
 													borderRadius="full"
 												>
-													<Flex className="circleLoading" pr="2" mr="2" />
-													{translation("airdrop.loading")}
+													<Flex>
+														<Flex
+															className="circleLoading"
+															h="4"
+															w="4"
+															pr="2"
+															mr="2"
+															borderColor="#00D9EF rgba(255, 255, 255, 0.48) rgba(255, 255, 255, 0.48) rgba(255, 255, 255, 0.48)"
+														/>
+														<Flex mt="0.05rem">
+															{translation("airdrop.loading")}...
+														</Flex>
+													</Flex>
 												</Button>
 											)}
 										</Flex>
@@ -298,12 +350,14 @@ export const AirdropContainer: NextPage = () => {
 											gap="2"
 											flexDirection={["column", "column", "row", "row"]}
 										>
-											<Img
-												src="icons/pegasys.png"
-												w="14"
-												h="14"
-												filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
-											/>
+											<Flex h="3.5rem">
+												<Img
+													src={theme.bg.blurPegasysLogo}
+													w="4rem"
+													h="4rem"
+													filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
+												/>
+											</Flex>
 											<Flex alignItems="baseline">
 												<Text
 													fontSize={["xl", "2xl", "3xl", "3xl"]}

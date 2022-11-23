@@ -12,9 +12,10 @@ import { AddLiquidityModal } from "components/Modals";
 import { useModal } from "hooks";
 import { Pair, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { WrappedTokenInfo } from "types";
+import { useTranslation } from "react-i18next";
 import FarmCard from "../FarmCard";
 
-const FarmGrid: React.FC = () => {
+const FarmGrid = () => {
 	const { sortedPairs } = useFarm();
 	const [currPair, setCurrPair] = useState<Pair>();
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
@@ -26,6 +27,7 @@ const FarmGrid: React.FC = () => {
 		onCloseTransaction,
 	} = useModal();
 	const { dataLoading } = useEarn();
+	const { t: translation } = useTranslation();
 
 	const [even, odds] = useMemo(() => {
 		const oddIndexes: IFarmInfo[] = [];
@@ -42,8 +44,11 @@ const FarmGrid: React.FC = () => {
 		return [evenIndexes, oddIndexes];
 	}, [sortedPairs]);
 
+	if (dataLoading) {
+		return null;
+	}
+
 	if (
-		!dataLoading &&
 		isConnected &&
 		chainId &&
 		PegasysContracts[chainId].MINICHEF_ADDRESS &&
@@ -63,7 +68,7 @@ const FarmGrid: React.FC = () => {
 					fontWeight="normal"
 					textAlign="center"
 				>
-					Any available opportunitie
+					{translation("earnPages.anyAvailableOpportunities")}
 				</Text>
 			</Flex>
 		);

@@ -88,7 +88,7 @@ export const PoolsContainer: NextPage = () => {
 	const [pairInfo, setPairInfo] = useState<ICommonPairs>();
 	const [notFound, setNotFound] = useState<boolean>(false);
 	const [allTokens, setAllTokens] = useState<[Token, Token][]>([]);
-	const { t: translation } = useTranslation();
+	const { t: translation, i18n } = useTranslation();
 
 	let currentChainId: ChainId;
 
@@ -425,6 +425,10 @@ export const PoolsContainer: NextPage = () => {
 		poolsLiquidity,
 	]);
 
+	const { language } = i18n;
+
+	const languages = ["de", "fr", "pt-br", "vn", "es"];
+
 	const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
 		const inputValue = event.target.value;
 
@@ -494,6 +498,7 @@ export const PoolsContainer: NextPage = () => {
 						zIndex="docked"
 						position="relative"
 						borderRadius="xl"
+						h={["11rem", "unset", "unset", "unset"]}
 						backgroundColor={address ? theme.bg.alphaPurple : "transparent"}
 					>
 						<Img
@@ -502,26 +507,44 @@ export const PoolsContainer: NextPage = () => {
 							position="absolute"
 							zIndex="base"
 							w="100%"
-							h={address ? "85%" : "100%"}
+							h={
+								address
+									? ["92%", "85%", "85%", "85%"]
+									: languages.includes(language)
+									? ["100%", "105%", "100%", "100%"]
+									: ["100%", "100%", "100%", "100%"]
+							}
 						/>
 						<Flex
 							zIndex="docked"
 							flexDirection="column"
-							px="1.625rem"
-							py={["0.8rem", "1.375rem", "1.375rem", "1.375rem"]}
+							px={["1rem", "1rem", "1.625rem", "1.625rem"]}
+							py={["0.6rem", "0.7rem", "1rem", "1rem"]}
 							gap="3"
 							h={["9rem", "10rem", "10rem", "10rem"]}
 							color="white"
 						>
-							<Text fontWeight="bold" fontSize="md">
+							<Text fontWeight="bold" fontSize={["14px", "md", "md", "md"]}>
 								{translation("pool.liquidityProviderRewards")}
 							</Text>
 							<Text
 								color="white"
 								fontWeight="medium"
-								fontSize="sm"
+								fontSize={
+									languages.includes(language)
+										? ["13px", "sm", "sm", "sm"]
+										: "sm"
+								}
 								lineHeight="shorter"
-								w={["100%", "70%", "60%", "60%"]}
+								w={
+									!isMobile
+										? language === "fr" || language === "de"
+											? ["80%", "80%", "64%", "64%"]
+											: ["100%", "70%", "60%", "60%"]
+										: languages.includes(language) || language === "tr"
+										? ["100%", "80%", "64%", "64%"]
+										: ["100%", "80%", "64%", "64%"]
+								}
 							>
 								{translation("pool.liquidityProvidersEarn")}
 							</Text>
@@ -534,16 +557,21 @@ export const PoolsContainer: NextPage = () => {
 								bgColor={theme.bg.alphaPurple}
 								zIndex="0"
 								position="relative"
-								top="2"
+								top={["5", "2", "2", "2"]}
 								borderBottomRadius="xl"
 								py="0.531rem"
+								pt={["0.3rem", "unset", "unset", "unset"]}
 								gap="2.5"
 								cursor="pointer"
 								onClick={() =>
 									window.open(`https://info.pegasys.finance/account/${address}`)
 								}
 							>
-								<Text fontWeight="medium" fontSize="xs" color="white">
+								<Text
+									fontWeight="medium"
+									fontSize={language === "vn" && isMobile ? "11px" : "xs"}
+									color="white"
+								>
 									{translation("pool.viewStakedLiquidity")}
 								</Text>
 								<MdOutlineCallMade size={18} color="white" />
@@ -553,7 +581,7 @@ export const PoolsContainer: NextPage = () => {
 					<Flex
 						id="a"
 						alignItems={["flex-start", "flex-start", "baseline", "baseline"]}
-						my={["1", "4", "8", "8"]}
+						my={["8", "4", "8", "8"]}
 						justifyContent="space-between"
 						w="100%"
 						flexDirection={
@@ -597,7 +625,10 @@ export const PoolsContainer: NextPage = () => {
 							gap={["7", "none", "none", "none"]}
 							alignItems={["flex-start", "flex-start", "flex-end", "flex-end"]}
 						>
-							<Flex display={userHavePool && isConnected ? "flex" : "none"}>
+							<Flex
+								display={userHavePool && isConnected ? "flex" : "none"}
+								w="100%"
+							>
 								<InputGroup alignItems="center">
 									<InputLeftElement
 										pl="0.625rem"
@@ -616,7 +647,7 @@ export const PoolsContainer: NextPage = () => {
 										}}
 										onChange={handleInput}
 										borderRadius="full"
-										w={["18.5rem", "27rem", "20rem", "20rem"]}
+										w={["100%", "100%", "20rem", "20rem"]}
 										h="2.2rem"
 										py={["0.2rem", "0.2rem", "1", "1"]}
 										pl="10"
@@ -640,7 +671,7 @@ export const PoolsContainer: NextPage = () => {
 								>
 									{isConnected && (
 										<Menu>
-											<Text fontSize="sm" pb="2">
+											<Text fontSize="sm" pb="2" w="100%">
 												{translation("pool.sort")}
 											</Text>
 											<MenuButton

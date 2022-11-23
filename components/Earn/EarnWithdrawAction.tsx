@@ -1,6 +1,7 @@
 import React from "react";
 import { Flex, Text } from "@chakra-ui/react";
 import { JSBI } from "@pollum-io/pegasys-sdk";
+import { useTranslation } from "react-i18next";
 
 import { BIG_INT_ZERO, useEarn } from "pegasys-services";
 import EarnButton from "./EarnButton";
@@ -26,6 +27,7 @@ const EarnWithdrawAction: React.FC<IEarnWithdrawActionProps> = ({
 		loading,
 		withdrawValue,
 	} = useEarn();
+	const { t } = useTranslation();
 
 	if (
 		!selectedOpportunity ||
@@ -38,8 +40,10 @@ const EarnWithdrawAction: React.FC<IEarnWithdrawActionProps> = ({
 	return (
 		<Flex flexDirection="column">
 			<Text fontWeight="normal" mb="2">
-				Deposited {selectedOpportunity.stakeToken.name}:{" "}
-				{selectedOpportunity.stakedAmount.toSignificant()}
+				{t("earnPages.deposited", {
+					token: selectedOpportunity.stakeToken.name,
+				})}
+				: {selectedOpportunity.stakedAmount.toSignificant()}
 			</Text>
 			<EarnInput />
 			<EarnSlider />
@@ -52,7 +56,7 @@ const EarnWithdrawAction: React.FC<IEarnWithdrawActionProps> = ({
 					onClick={onClose}
 					fontSize={16}
 				>
-					Cancel
+					{t("earnPages.cancel")}
 				</EarnButton>
 				<EarnButton
 					width="100%"
@@ -70,7 +74,7 @@ const EarnWithdrawAction: React.FC<IEarnWithdrawActionProps> = ({
 					fontSize={16}
 				>
 					{`${buttonTitle}
-					${withdrawPercentage === 100 ? " And Claim" : ""}`}
+					${withdrawPercentage === 100 ? t("earnPages.andClaim") : ""}`}
 				</EarnButton>
 			</Flex>
 		</Flex>

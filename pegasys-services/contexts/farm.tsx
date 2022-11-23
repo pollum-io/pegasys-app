@@ -5,6 +5,7 @@ import { getTokenPairs } from "utils";
 import { WrappedTokenInfo } from "types";
 import { ApprovalState, useTokens } from "hooks";
 
+import { useTranslation } from "react-i18next";
 import { PegasysContracts } from "../constants";
 import { ContractFramework, RoutesFramework } from "../frameworks";
 import { FarmServices } from "../services";
@@ -25,6 +26,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	const [search, setSearch] = useState<string>("");
 	const { userTokensBalance } = useTokens();
 	const { chainId, address, provider } = useWallet();
+	const { t: translation } = useTranslation();
 	const { approvalState } = useTransaction();
 	const { toast } = useToasty();
 	const {
@@ -211,7 +213,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 				id: "toast",
 				position: "top-right",
 				status: "error",
-				title: "Error while fetching farms opportunities",
+				title: translation("toasts.errorFarm"),
 			});
 		} finally {
 			setDataLoading(false);

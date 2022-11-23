@@ -20,10 +20,10 @@ import {
 } from "utils";
 import { useState } from "react";
 import { Token } from "@pollum-io/pegasys-sdk";
-import { ApprovalState, IApprovalState } from "pegasys-services";
+import { ApprovalState, IApprovalState, useToasty } from "pegasys-services";
 import { useTranslation } from "react-i18next";
 import { IAmounts } from "components";
-import { useToasty, useAllCommonPairs } from "hooks";
+import { useAllCommonPairs } from "hooks";
 
 export const UseRemoveLiquidity = (
 	pairAddress: string,
@@ -152,7 +152,7 @@ export const UseRemoveLiquidity = (
 					closePendingTx();
 					toast({
 						status: "error",
-						title: "Transaction error",
+						title: t("toasts"),
 						description: `${error?.message.substring(
 							error?.message.indexOf(":") + 1
 						)} Code: ${error?.code}`,
@@ -398,7 +398,7 @@ export const UseRemoveLiquidity = (
 					console.log(error);
 					toast({
 						status: "error",
-						title: "Transaction error",
+						title: t("toasts.transactionError"),
 						description: `${error?.message.substring(
 							error?.message.indexOf(":") + 1
 						)} Code: ${error?.code}`,

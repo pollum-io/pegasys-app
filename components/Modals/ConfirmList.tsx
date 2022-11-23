@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { MdOutlineClose } from "react-icons/md";
-
+import { useTranslation } from "react-i18next";
 import { RiInformationFill } from "react-icons/ri";
 
 interface IModal {
@@ -23,11 +23,21 @@ interface IModal {
 export const ConfirmList: React.FC<IModal> = props => {
 	const { isOpen, onClose, handleAddList } = props;
 	const theme = usePicasso();
+	const { t: translation } = useTranslation();
 
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
-			<ModalContent borderRadius="3xl" bgColor={theme.bg.blueNavyLight}>
+			<ModalContent
+				borderRadius="3xl"
+				bgColor="transparent"
+				m={["0", "0", "10", "10"]}
+				bottom={["0", "0", "unset", "unset"]}
+				position={["absolute", "absolute", "relative", "relative"]}
+				borderBottomRadius={["0", "0", "3xl", "3xl"]}
+				border={["none", "1px solid transparent"]}
+				borderTop="1px solid transparent"
+			>
 				<ModalHeader
 					display="flex"
 					alignItems="center"
@@ -44,7 +54,7 @@ export const ConfirmList: React.FC<IModal> = props => {
 							fontWeight="semibold"
 							color={theme.icon.whiteRed}
 						>
-							Confirm List
+							{translation("searchModal.confirmList")}
 						</Text>
 					</Flex>
 					<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
@@ -56,15 +66,11 @@ export const ConfirmList: React.FC<IModal> = props => {
 					</Flex>
 				</ModalHeader>
 				<ModalBody py="6" bgColor={theme.bg.blueNavyLight}>
-					<Flex gap="5" flexDirection="column">
-						<Text>Please be careful when adding custom token lists.</Text>
-						<Text>
-							Anyone can create fake or scam tokens, so take caution and do your
-							research. If you purchase an arbitrary token you may be unable to
-							sell it back.
-						</Text>
+					<Flex gap="5" flexDirection="column" textAlign="justify">
+						<Text>{translation("searchModal.beCareful")}</Text>
+						<Text>{translation("searchModal.anyoneCan")}</Text>
 						<Text fontWeight="semibold">
-							Are you sure you want to import this token list?
+							{translation("searchModal.areYouSure")}
 						</Text>
 					</Flex>
 				</ModalBody>
@@ -73,7 +79,7 @@ export const ConfirmList: React.FC<IModal> = props => {
 					alignItems="center"
 					justifyContent="space-between"
 					bgColor={theme.bg.blackAlpha}
-					borderBottomRadius="3xl"
+					borderBottomRadius={["0", "0", "3xl", "3xl"]}
 				>
 					<Button
 						py="3"

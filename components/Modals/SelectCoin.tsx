@@ -163,29 +163,14 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				position={["absolute", "absolute", "relative", "relative"]}
 				h="max-content"
 			>
-				<ModalHeader
-					display="flex"
-					alignItems="center"
-					gap="3"
-					justifyContent="space-between"
-				>
-					<Flex alignItems="center" gap="2">
-						<Text fontSize="lg" fontWeight="semibold">
-							Select a token
-						</Text>
-						<TooltipComponent
-							label={translation("searchModal.findToken")}
-							icon={MdHelpOutline}
-						/>
-					</Flex>
-					<Flex
-						_hover={{ cursor: "pointer" }}
-						onClick={() => {
-							onClose();
-						}}
-					>
-						<MdOutlineClose size={23} color={theme.icon.whiteDarkGray} />
-					</Flex>
+				<ModalHeader display="flex" alignItems="center" gap="3">
+					<Text fontSize="lg" fontWeight="semibold">
+						{translation("swapHooks.selectToken")}
+					</Text>
+					<TooltipComponent
+						label={translation("searchModal.findToken")}
+						icon={MdHelpOutline}
+					/>
 				</ModalHeader>
 
 				<ModalBody>
@@ -197,7 +182,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 								color: theme.text.inputBluePurple,
 								opacity: "0.6",
 							}}
-							placeholder="Search, name or paste address"
+							placeholder={translation("searchModal.tokenSearchPlaceholder")}
 							onChange={handleInput}
 							py={["0.1rem", "0.1rem", "1", "1"]}
 							pl="10"
@@ -218,7 +203,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					</InputGroup>
 					<Flex my="5" gap="2" justifyContent="space-between">
 						<Text fontSize="md" color={theme.text.cyanPurple}>
-							Token name
+							{translation("searchModal.tokenName")}
 						</Text>
 						<IconButton
 							as={arrowOrder ? MdArrowDownward : MdArrowUpward}
@@ -236,8 +221,8 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				<Flex
 					flexDirection="column"
 					w="95%"
-					h="30rem"
-					my="0"
+					h="10%"
+					my="1"
 					pr="2"
 					pl="2"
 					maxHeight={["20rem", "20rem", "30rem", "30rem"]}
@@ -351,7 +336,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							fontWeight="semibold"
 							onClick={onOpenManageToken}
 						>
-							Manage Token Lists
+							{translation("searchModal.manageTokenLists")}
 						</Text>
 					</Flex>
 				</Flex>

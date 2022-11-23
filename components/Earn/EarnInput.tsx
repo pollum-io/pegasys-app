@@ -7,6 +7,7 @@ import {
 	InputRightAddon,
 	Text,
 } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 import { usePicasso } from "hooks";
 import { useEarn } from "pegasys-services";
@@ -26,6 +27,7 @@ const EarnInput: React.FC<IEarnInputProps> = ({ deposit }) => {
 	} = useEarn();
 	const theme = usePicasso();
 	const textInput = useRef<HTMLInputElement>(null);
+	const { t } = useTranslation();
 
 	const onChange = (value: string) => {
 		if (deposit) {
@@ -82,14 +84,16 @@ const EarnInput: React.FC<IEarnInputProps> = ({ deposit }) => {
 							onChange(value);
 						}}
 					>
-						max
+						{t("earnPages.max")}
 					</InputRightAddon>
 				</InputGroup>
 			</Flex>
-			<Collapse in={withdrawPercentage === 100} animateOpacity>
+			<Collapse in={!deposit && withdrawPercentage === 100} animateOpacity>
 				<Text fontWeight="normal" mt="2">
-					Unclaimed {selectedOpportunity.rewardToken.symbol}:{" "}
-					{selectedOpportunity.unclaimedAmount.toExact()}
+					{t("earnPages.unclaimed", {
+						token: selectedOpportunity.rewardToken.symbol,
+					})}
+					: {selectedOpportunity.unclaimedAmount.toExact()}
 				</Text>
 			</Collapse>
 		</>

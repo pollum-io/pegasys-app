@@ -4,11 +4,13 @@ import { FunctionComponent } from "react";
 import { ConnectSyscoinNetwork } from "utils/connector/ConnectSyscoinNetwork";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useWallet } from "pegasys-services";
+import { useTranslation } from "react-i18next";
 
 export const SwitchToSyscoin: FunctionComponent<ButtonProps> = props => {
 	const theme = usePicasso();
 	const { connectorSelected, setWalletError, chainId } = useWallet();
 	const { ...rest } = props;
+	const { t: translation } = useTranslation();
 
 	return (
 		<Button
@@ -31,7 +33,7 @@ export const SwitchToSyscoin: FunctionComponent<ButtonProps> = props => {
 			}
 			{...rest}
 		>
-			Switch to Syscoin Chain
+			{translation("walletModal.switchSyscoin")}
 		</Button>
 	);
 };

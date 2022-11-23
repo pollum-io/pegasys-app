@@ -599,6 +599,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									textAlign="right"
 									mt="2"
 									px="1.5"
+									pl="4"
 									_placeholder={{ color: theme.text.whiteGray }}
 									_active={{ border: "none" }}
 									name="inputFrom"
@@ -724,6 +725,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									textAlign="right"
 									mt="2"
 									px="1.5"
+									pl="4"
 									_placeholder={{ color: theme.text.whiteGray }}
 									_active={{ border: "none" }}
 									name="inputTo"
@@ -741,6 +743,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										parseFloat(selectedToken[1]?.formattedBalance)
 									}
 								>
+									{translation("swapHooks.insufficient")}
+									{selectedToken[1]?.symbol} {translation("swapHooks.balance")}.{" "}
+									{translation("swapHooks.validAmount")}.
 									<Flex flexDirection="row" gap="1" justifyContent="center">
 										<Text
 											fontSize="sm"

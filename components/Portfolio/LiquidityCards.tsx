@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { usePicasso, useModal } from "hooks";
 import { liquidityCardsMockedData } from "helpers/mockedData";
 import { usePaginator } from "chakra-paginator";
+import { useTranslation } from "react-i18next";
 import {
 	ILiquidityCardsMockedData,
 	ITransactionCardsMockedData,
@@ -19,6 +20,8 @@ export const LiquidityCards: React.FunctionComponent = () => {
 	const { onOpenAddLiquidity, onOpenRemoveLiquidity } = useModal();
 
 	const quantityPerPage = 5;
+
+	const { t: translation } = useTranslation();
 
 	const quantityOfPages = Math.ceil(
 		liquidityCardsMockedData.length / quantityPerPage
@@ -133,7 +136,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 											fontSize={["14px", "14px", "0", "0"]}
 											display={["flex", "flex", "none", "none"]}
 										>
-											Value {cardsValue.value}
+											{translation("portfolioPage.value")} {cardsValue.value}
 										</Text>
 									</Flex>
 								</Flex>
@@ -260,25 +263,25 @@ export const LiquidityCards: React.FunctionComponent = () => {
 						<Flex
 							gap={["3", "3", "2", "2"]}
 							mt={["0.5rem", "0.5rem", "0", "0"]}
-							justifyContent={["center", "center", "normal", "normal"]}
+							justifyContent={["center", "center", "flex-start", "normal"]}
 							flexDirection={["row", "row", "column", "column"]}
 							alignItems={["center", "center", "flex-start", "flex-start"]}
 							w={["100%", "100%", "15%", "10%"]}
-							pl={["0", "6", "6", "6"]}
+							pl={["0", "6", "2", "2"]}
 							pr={["3", "5", "0", "0"]}
 						>
 							<Button
 								justifyContent="center"
-								w={["50%", "50%", "80%", "70%"]}
+								w={["50%", "50%", "85%", "80%"]}
 								h="max-content"
-								py={["1", "0.3rem", "1", "1"]}
+								py={["1", "1.5", "1", "1"]}
 								px="10%"
 								border="1px solid"
 								borderRadius="67px"
 								bgColor="transparent"
 								borderColor={theme.text.cyanPurple}
 								color={theme.text.whitePurple}
-								fontSize="xs"
+								fontSize="10px"
 								fontWeight="semibold"
 								_hover={{
 									borderColor: theme.text.cyanLightPurple,
@@ -286,18 +289,18 @@ export const LiquidityCards: React.FunctionComponent = () => {
 								}}
 								onClick={onOpenRemoveLiquidity}
 							>
-								Remove
+								{translation("removeLiquidity.remove")}
 							</Button>
 							<Button
-								w={["50%", "50%", "80%", "70%"]}
+								w={["50%", "50%", "85%", "80%"]}
 								h="max-content"
-								py={["1", "0.3rem", "1", "1"]}
-								px="10%"
+								py={["1", "1.5", "1", "1"]}
+								px="20%"
 								border="1px solid transparent"
 								borderRadius="67px"
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
-								fontSize="xs"
+								fontSize="10px"
 								fontWeight="semibold"
 								_hover={{
 									bgColor: theme.bg.bluePurple,
@@ -307,7 +310,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 									onOpenAddLiquidity();
 								}}
 							>
-								Add
+								{translation("positionCard.add")}
 							</Button>
 						</Flex>
 					</Flex>

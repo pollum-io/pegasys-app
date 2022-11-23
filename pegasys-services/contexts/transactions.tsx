@@ -7,6 +7,7 @@ import React, {
 	useState,
 } from "react";
 
+import { useTranslation } from "react-i18next";
 import { PersistentFramework, TransactionFramework } from "../frameworks";
 import {
 	ITransactionProviderValue,
@@ -46,6 +47,7 @@ export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 	const [currentSummary, setCurrentSummary] = useState<string>("");
 	const { chainId, isConnected, address, provider } = useWallet();
 	const { toast } = useToasty();
+	const { t: translation } = useTranslation();
 
 	const addTransaction = (response: ITransactionResponse) => {
 		if (!address || !chainId) return;
@@ -148,7 +150,7 @@ export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 	useEffect(() => {
 		if (approvalState.status === ApprovalState.APPROVED) {
 			toast({
-				title: "Transaction completed successfully.",
+				title: translation("toasts.transactionComp"),
 				status: "success",
 			});
 		}

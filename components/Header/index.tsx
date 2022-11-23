@@ -150,6 +150,8 @@ export const Header: React.FC = () => {
 						mt={["1.5", "1", "0", "0"]}
 						position="absolute"
 						left="0"
+						bgColor={colorMode === "light" ? "white" : "transparent"}
+						borderRadius="full"
 					/>
 				</Link>
 				{isMobile ? (
@@ -213,7 +215,7 @@ export const Header: React.FC = () => {
 				)}
 			</Flex>
 			<Flex
-				w={["90%", "34rem", "37rem", "37rem"]}
+				w={["90%", "30rem", "37rem", "37rem"]}
 				h="max-content"
 				backgroundColor={theme.bg.blackAlpha}
 				borderRadius="46px 46px 0px 0px"
@@ -233,18 +235,20 @@ export const Header: React.FC = () => {
 					<TokenButton onClick={onOpenPsysBreakdown} />
 					<NetworkButton />
 				</Flex>
-				<Flex flexDirection="column">
+				<Flex flexDirection="column" pr={["0", "0", "4", "0"]}>
 					<WalletButton />
 				</Flex>
-				<Flex>
-					<IconButton
-						_hover={{
-							color: theme.text.cyanPurple,
-						}}
-						aria-label="Theme"
-						icon={<theme.icon.theme size="20px" />}
-						onClick={() => toggleColorMode()}
-					/>
+				<Flex alignContent={["flex-start", "unset", "unset", "unset"]}>
+					<Flex>
+						<IconButton
+							_hover={{
+								color: theme.text.cyanPurple,
+							}}
+							aria-label="Theme"
+							icon={<theme.icon.theme size="20px" />}
+							onClick={() => toggleColorMode()}
+						/>
+					</Flex>
 					<MenuLinks />
 					<SettingsButton />
 				</Flex>

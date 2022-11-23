@@ -1,6 +1,7 @@
 import React, { useEffect, createContext, useMemo, useState } from "react";
 
 import { ApprovalState } from "hooks";
+import { useTranslation } from "react-i18next";
 import { PegasysContracts } from "../constants";
 import { ContractFramework, RoutesFramework } from "../frameworks";
 import { StakeServices } from "../services";
@@ -15,6 +16,7 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 	const { chainId, address } = useWallet();
 	const { approvalState } = useTransaction();
 	const { toast } = useToasty();
+	const { t: translation } = useTranslation();
 	const {
 		signature,
 		onSign,
@@ -128,7 +130,7 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 				id: "toast",
 				position: "top-right",
 				status: "error",
-				title: "Error while fetching stake opportunities",
+				title: translation("toasts.errorStake"),
 			});
 		} finally {
 			setDataLoading(false);

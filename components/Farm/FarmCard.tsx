@@ -4,6 +4,7 @@ import { useModal, usePicasso, useTokens } from "hooks";
 import { IFarmInfo, useEarn, TButtonId, BIG_INT_ZERO } from "pegasys-services";
 import { JSBI, Pair } from "@pollum-io/pegasys-sdk";
 import { formattedNum } from "utils/convert/numberFormat";
+import { useTranslation } from "react-i18next";
 import { WrappedTokenInfo } from "types";
 import { EarnButton } from "../Earn";
 
@@ -33,6 +34,8 @@ const FarmCard: FunctionComponent<{
 	const { userTokensBalance } = useTokens();
 	const { setSelectedOpportunity, setButtonId } = useEarn();
 	const { onOpenFarmActions, onOpenAddLiquidity } = useModal();
+
+	const { t } = useTranslation();
 
 	const wrapTokenA = useMemo(() => {
 		const wrapToken = userTokensBalance.find(
@@ -88,13 +91,13 @@ const FarmCard: FunctionComponent<{
 			h="max-content"
 			d="inline-block"
 			flexDirection="column"
-			backgroundColor={theme.bg.blueNavy}
+			backgroundColor={theme.bg.blackAlpha}
 			px="6"
 			pb="6"
 			mb="4"
 			borderRadius="xl"
 			border="1px solid transparent;"
-			background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+			background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 		>
 			<Flex justifyContent="space-between">
 				<Flex gap="2" pt="6">
@@ -128,7 +131,7 @@ const FarmCard: FunctionComponent<{
 			<Flex flexDirection="column" pt="6">
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold" color={theme.text.cyanPurple}>
-						Total Staked
+						{t("earnPages.totalStaked")}
 					</Text>
 					<Text color={theme.text.cyanPurple}>
 						{formattedNum(totalStakedInUsd, true)}
@@ -139,14 +142,14 @@ const FarmCard: FunctionComponent<{
 						fontWeight={stakedInUsd <= 0 ? undefined : "semibold"}
 						color={stakedInUsd <= 0 ? "grey" : undefined}
 					>
-						Your Stake
+						{t("earnPages.yourStake")}
 					</Text>
 					<Text color={stakedInUsd <= 0 ? "grey" : undefined}>
 						{stakedInUsd <= 0 ? "-" : formattedNum(stakedInUsd, true)}
 					</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
-					<Text fontWeight="semibold">Swap Fee APR</Text>
+					<Text fontWeight="semibold">{t("earnPages.swapFeeApr")}</Text>
 					<Text>{swapFeeApr}%</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
@@ -157,7 +160,7 @@ const FarmCard: FunctionComponent<{
 				</Flex>
 				{!!extraRewardToken && (
 					<Flex justifyContent="space-between" pb="3" fontSize="sm">
-						<Text fontWeight="semibold">Total APR</Text>
+						<Text fontWeight="semibold">{t("earnPages.totalApr")}</Text>
 						<Text>{combinedApr}%</Text>
 					</Flex>
 				)}
@@ -174,13 +177,14 @@ const FarmCard: FunctionComponent<{
 					mb="1.5rem"
 				>
 					<Flex justifyContent="space-between" py="1.5" fontSize="sm">
-						<Text fontWeight="semibold">Your Rate</Text>
+						<Text fontWeight="semibold">{t("earnPages.yourRate")}</Text>
 						<Text>
-							{rewardRatePerWeek.toFixed(8)} {rewardToken.symbol}/Week
+							{rewardRatePerWeek.toFixed(8)} {rewardToken.symbol}/
+							{t("earnPages.week")}
 						</Text>
 					</Flex>
 					<Flex justifyContent="space-between" py="1.5" fontSize="sm">
-						<Text fontWeight="semibold">Your Unclaimed</Text>
+						<Text fontWeight="semibold">{t("earnPages.yourUnclaimed")}</Text>
 						<Text>
 							{unclaimedAmount.toSignificant()} {rewardToken.symbol}
 						</Text>
@@ -197,7 +201,7 @@ const FarmCard: FunctionComponent<{
 					amount={stakedAmount}
 					solid
 				>
-					Withdraw
+					{t("earnPages.withdraw")}
 				</EarnButton>
 				<EarnButton
 					id="deposit"
@@ -208,7 +212,7 @@ const FarmCard: FunctionComponent<{
 					amount={unstakedAmount}
 					solid
 				>
-					Deposit
+					{t("earnPages.deposit")}
 				</EarnButton>
 			</Flex>
 			<EarnButton
@@ -220,7 +224,7 @@ const FarmCard: FunctionComponent<{
 				onClick={onClick}
 				amount={unclaimedAmount}
 			>
-				Claim
+				{t("earnPages.claim")}
 			</EarnButton>
 			{JSBI.greaterThanOrEqual(BIG_INT_ZERO, stakedAmount.raw) &&
 				JSBI.greaterThanOrEqual(BIG_INT_ZERO, unstakedAmount.raw) &&
@@ -236,7 +240,9 @@ const FarmCard: FunctionComponent<{
 							setCurrPair(pair);
 						}}
 					>
-						{`Add ${tokenA.symbol}-${tokenB?.symbol} Liquidity`}
+						{t("earnPages.addLiquidity", {
+							pair: `${tokenA.symbol}-${tokenB?.symbol}`,
+						})}
 					</EarnButton>
 				)}
 		</Flex>

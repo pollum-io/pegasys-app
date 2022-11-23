@@ -18,6 +18,7 @@ import {
 	ApprovalState,
 	useTransaction,
 } from "pegasys-services";
+import { useTranslation } from "react-i18next";
 import { AddressButton } from "./AddressButton";
 
 export const WalletButton: FunctionComponent<ButtonProps> = props => {
@@ -41,6 +42,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 
 	const isPending = approvalState.status === ApprovalState.PENDING;
 	const { colorMode } = useColorMode();
+	const { t: translation } = useTranslation();
 
 	return (
 		<>
@@ -66,11 +68,10 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						px={["4", "4", "4", "4"]}
 						position={["absolute", "relative"]}
 						bottom={["12", "8", "8", "8"]}
-						left={["28%", "0", "0", "0"]}
 						onClick={onOpenSelectWalletModal}
 						{...rest}
 					>
-						Connect wallet
+						{translation("addLiquidity.connectWallet")}
 					</Button>
 				</Flex>
 			)}
@@ -105,11 +106,10 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
 
 					<Flex
-						ml="20px"
 						zIndex="2"
 						py={["2", "2", "2", "2"]}
-						position={["absolute", "absolute"]}
-						right={["25%", "10.5rem", "12rem", "12rem"]}
+						position="absolute"
+						right={["10rem", "10.5rem", "12rem", "12rem"]}
 						bottom="4.5rem"
 						w="2.313rem"
 						h="1.25rem"

@@ -29,6 +29,7 @@ import {
 import { shortAddress, copyToClipboard, openWalletOnExplorer } from "utils";
 import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { ITransactionResponse } from "types";
+import { useTranslation } from "react-i18next";
 
 interface IModal {
 	isOpen: boolean;
@@ -44,6 +45,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { toast } = useToasty();
 	const { address, chainId, connectorSelected, disconnect } = useWallet();
 	const [txs, setTxs] = useState<ITransactionResponse[]>([]);
+	const { t: translation } = useTranslation();
 
 	const handleCopyToClipboard = () => {
 		copyToClipboard(address);
@@ -52,8 +54,8 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 			id: "toast1",
 			position: "top-right",
 			status: "success",
-			title: "Successfully copied",
-			description: "Address sucessfully copied to clipboard!",
+			title: translation("toasts.copied"),
+			description: translation("toasts.addressCopied"),
 		});
 	};
 
@@ -108,7 +110,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 				>
 					<Flex alignItems="center" justifyContent="space-between">
 						<Text fontSize="lg" fontWeight="semibold">
-							Account
+							{translation("accountDetails.account")}
 						</Text>
 						<Flex _hover={{ cursor: "pointer" }}>
 							<MdOutlineClose
@@ -138,7 +140,8 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									fontWeight="semibold"
 									color={theme.text.cyanPurple}
 								>
-									Connected with {connectorSelected?.name}
+									{translation("accountDetails.connectedWith")}{" "}
+									{connectorSelected?.name}
 								</Text>
 							</Flex>
 							<Flex>
@@ -161,7 +164,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									}}
 									onClick={() => disconnect()}
 								>
-									Disconnect
+									{translation("accountDetails.disconnect")}
 								</Button>
 							</Flex>
 						</Flex>
@@ -193,7 +196,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									fontWeight="normal"
 									pl="1"
 								>
-									Copy Address
+									{translation("accountDetails.copy")}
 								</Text>
 							</Flex>
 							<Flex
@@ -210,7 +213,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									fontWeight="normal"
 									pl="1"
 								>
-									View on Explorer
+									{translation("accountDetails.viewExplorer")}
 								</Text>
 							</Flex>
 						</Flex>
@@ -219,13 +222,13 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 				<ModalFooter
 					bgColor={theme.bg.darkBlueGray}
 					justifyContent="flex-start"
+					borderBottomRadius={["0", "0", "18", "18"]}
 					h="max-content"
 					pb="1.4rem"
-					borderBottomRadius="30px"
 				>
 					{txs.length === 0 ? (
 						<Text fontSize="sm" fontWeight="semibold" color={theme.text.mono}>
-							Your transactions will appear here...
+							{translation("accountDetails.transactionAppear")}
 						</Text>
 					) : (
 						<Flex flexDirection="column">
@@ -237,7 +240,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								pb={["1.1rem", "1.1rem", "1.1rem", "1.1rem"]}
 							>
 								<Text fontSize="sm" fontWeight="semibold">
-									Recent transactions
+									{translation("accountDetails.recentTransactions")}
 								</Text>
 								<Text
 									fontSize="sm"
@@ -246,7 +249,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									_hover={{ cursor: "pointer", textDecoration: "underline" }}
 									onClick={() => setTxs([])}
 								>
-									Clear All
+									{translation("accoutnDetails.clearAll")}
 								</Text>
 							</Flex>
 
