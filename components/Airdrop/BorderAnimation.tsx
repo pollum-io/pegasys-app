@@ -15,11 +15,13 @@ export const BorderAnimation: FunctionComponent<ILinkProps> = props => {
 			className="gradientBorder"
 			zIndex="9"
 			w={["20rem", "md", "2xl", "2xl"]}
-			py="12"
+			py={["10", "10", "12", "12"]}
+			pt={["3rem", "3rem", "4rem", "4rem"]}
 			gap="2.5"
 			bgColor={theme.bg.blueNavyLight}
 			justifyContent="center"
 			borderBottomRadius="2xl"
+			px="1.7rem"
 		>
 			{children}
 		</Flex>

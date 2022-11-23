@@ -16,6 +16,7 @@ import { MdArrowDownward, MdOutlineClose } from "react-icons/md";
 import { WrappedTokenInfo, ISwapTokenInputValue } from "types";
 import { CurrencyAmount, Trade } from "@pollum-io/pegasys-sdk";
 import { FormattedPriceImpat } from "components/Swap/FormattedPriceImpact";
+import { useTranslation } from "react-i18next";
 
 interface IModal {
 	isOpen: boolean;
@@ -47,6 +48,8 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 	} = props;
 	const theme = usePicasso();
 
+	const { t: translation, i18n } = useTranslation();
+
 	const txName =
 		txType === "approve"
 			? "Approve"
@@ -60,6 +63,8 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 			? "Approve"
 			: "Swap";
 
+	const { language } = i18n;
+
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
@@ -70,7 +75,8 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 				borderRadius="3xl"
 				borderBottomRadius={["0", "0", "3xl", "3xl"]}
 				border={["none", "1px solid transparent"]}
-				background={theme.bg.blueNavyLight}
+				borderTop="1px solid transparent"
+				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
 					display="flex"
@@ -80,7 +86,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 				>
 					<Flex alignItems="center">
 						<Text fontSize="lg" fontWeight="medium" textAlign="center">
-							Confirm {txName}
+							{translation("settings.confirm")} {txName}
 						</Text>
 					</Flex>
 					<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
@@ -123,9 +129,9 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 							<Text>{selectedTokens[1]?.symbol}</Text>
 						</Flex>
 					</Flex>
-					<Text fontSize="sm" color={theme.text.mono}>
-						Output is estimated. You will receive at least {minimumReceived} or
-						the transaction will revert.
+					<Text fontSize="sm" color={theme.text.mono} textAlign="justify">
+						{translation("swap.outputEstimated")} {minimumReceived}{" "}
+						{translation("swap.transactionRevert")}
 					</Text>
 				</ModalBody>
 				<Flex
@@ -135,23 +141,29 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 					p="1.5rem"
 					pb={["3.75rem", "3.75rem", "1.5rem", "1.5rem"]}
 				>
-					<Flex flexDirection="column" gap="2">
+					<Flex
+						flexDirection="column"
+						gap="2"
+						fontSize={["14px", "16px", "16px", "16px"]}
+					>
 						<Flex flexDirection="row" justifyContent="space-between">
-							<Text>Price</Text>
+							<Text>{translation("swapPage.price")}</Text>
 							<Text fontWeight="medium">
 								{trade ? trade?.executionPrice?.toSignificant(6) : "-"}{" "}
 								{selectedTokens[0]?.symbol}/{selectedTokens[1]?.symbol}
 							</Text>
 						</Flex>
 						<Flex flexDirection="row" justifyContent="space-between">
-							<Text>Minmum Received</Text>
+							<Text w={["10rem", "max-content", "max-content", "max-content"]}>
+								{translation("swap.minimumReceived")}
+							</Text>
 							<Text fontWeight="medium">
 								{minimumReceived && minimumReceived}{" "}
 								{trade && trade?.outputAmount?.currency.symbol}
 							</Text>
 						</Flex>
 						<Flex flexDirection="row" justifyContent="space-between">
-							<Text>Price Impact</Text>
+							<Text>{translation("swap.priceImpact")}</Text>
 							<Text fontWeight="medium">
 								{trade ? (
 									<FormattedPriceImpat priceImpact={trade?.priceImpact} />
@@ -160,8 +172,20 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 								)}
 							</Text>
 						</Flex>
-						<Flex flexDirection="row" justifyContent="space-between">
-							<Text>Liquidity Provider Fee</Text>
+						<Flex
+							flexDirection="row"
+							justifyContent="space-between"
+							alignItems="center"
+						>
+							<Text
+								w={
+									language === "fr" || language === "vn"
+										? ["10rem", "12rem", "max-content", "max-content"]
+										: ["10rem", "max-content", "max-content", "max-content"]
+								}
+							>
+								{translation("swap.liquidityProviderFee")}
+							</Text>
 							<Text fontWeight="medium">
 								{liquidityFee && liquidityFee?.toSignificant(4)}{" "}
 								{trade && trade?.inputAmount?.currency?.symbol}
@@ -187,7 +211,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 							_hover={{ bgColor: theme.bg.bluePurple }}
 							fontWeight="semibold"
 						>
-							Confirm {txName}
+							{translation("settings.confirm")} {txName}
 						</Button>
 					</Flex>
 				</Flex>

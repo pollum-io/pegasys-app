@@ -380,7 +380,6 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 									<Text>WSYS</Text>
 									<Switch
 										size="md"
-										colorScheme="cyan"
 										defaultChecked
 										onChange={e => setReceiveSys(e.target.checked)}
 									/>

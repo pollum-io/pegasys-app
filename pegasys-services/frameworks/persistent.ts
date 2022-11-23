@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 class PersistentFramework {
-	static add(name: string, value: { [k: string]: any } | any[]) {
+	static add(name: string, value: { [k: string]: any } | any[] | string) {
 		localStorage.setItem(name, JSON.stringify(value));
 	}
 

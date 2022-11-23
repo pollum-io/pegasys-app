@@ -21,9 +21,9 @@ import {
 	parseENSAddress,
 	useModal,
 	usePicasso,
-	useToasty,
 	useTokensListManage,
 } from "hooks";
+import { useToasty } from "pegasys-services";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { MdArrowBack } from "react-icons/md";
 import { returnConvertedUrl, TokenListNameOrigin } from "utils";
@@ -116,7 +116,6 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 
 						<Switch
 							size="md"
-							colorScheme={colorMode === "dark" ? "cyan" : ""}
 							isChecked={isListSelected}
 							name={`${currentList?.name}`}
 							onChange={() => toggleList()}
@@ -171,7 +170,6 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 export const ManageToken: React.FC<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
-
 	const { t: translation } = useTranslation();
 
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -271,18 +269,25 @@ export const ManageToken: React.FC<IModal> = props => {
 				bgColor={theme.bg.blueNavy}
 				px="1"
 				py="2"
+				position={["absolute", "absolute", "relative", "relative"]}
+				m={["0", "0", "10", "10"]}
+				bottom={["0", "0", "unset", "unset"]}
+				borderBottomRadius={["0", "0", "3xl", "3xl"]}
+				border={["none", "1px solid transparent"]}
+				borderTop="1px solid transparent"
+				pb={["2rem", "2rem", "0.5rem", "0.5rem"]}
 			>
 				<ModalHeader display="flex" alignItems="center" gap="3">
 					<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
 						<MdArrowBack size={24} color={theme.icon.whiteGray} />
 					</Flex>
 					<Text fontSize="lg" fontWeight="semibold" color={theme.text.mono}>
-						Manage Lists
+						{translation("searchModal.manageLists")}
 					</Text>
 				</ModalHeader>
 				<ModalBody>
 					<Text fontSize="sm" fontWeight="semibold" color={theme.text.mono}>
-						Add a List
+						{translation("searchModal.addList")}
 					</Text>
 					<Flex flexDirection="row" alignItems="center" gap="3" mt="1.5">
 						<Input
@@ -315,11 +320,13 @@ export const ManageToken: React.FC<IModal> = props => {
 									? {
 											opacity: "0.3",
 									  }
-									: { bgColor: theme.bg.bluePurple }
+									: {
+											bgColor: theme.bg.bluePurple,
+									  }
 							}
 							disabled={listUrlInput.length === 0}
 						>
-							Add
+							{translation("vote.add")}
 						</Button>
 					</Flex>
 
