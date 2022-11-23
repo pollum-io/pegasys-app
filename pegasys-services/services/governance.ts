@@ -13,10 +13,28 @@ import {
 	IGovernaceServicesGetDelegatee,
 	IGovernaceServicesGetCurrentVotes,
 	IGovernaceServicesGetProposalVotes,
+	IGovernaceServicesGetQuorumCount,
 	IProposalVote,
 } from "../dto";
 
 class GovernanceServices {
+	static async getQuorumCount({
+		contract,
+		chainId,
+	}: IGovernaceServicesGetQuorumCount): Promise<number> {
+		const governanceContract =
+			contract ?? ContractFramework.GovernanceContract({ chainId });
+
+		const quorumCount: BigNumber = await ContractFramework.call({
+			contract: governanceContract,
+			methodName: "quorumVotes",
+		});
+
+		return quorumCount
+			? parseInt(ethers.utils.formatUnits(quorumCount.toString(), 18), 10)
+			: 0;
+	}
+
 	static async getProposalCount({
 		contract,
 		chainId,
@@ -52,19 +70,30 @@ class GovernanceServices {
 
 		return {
 			againstVotes: proposal?.againstVotes
-				? parseFloat(
-						ethers.utils.formatUnits(proposal.againstVotes.toString(), 18)
+				? parseInt(
+						ethers.utils.formatUnits(proposal.againstVotes.toString(), 18),
+						10
 				  )
 				: 0,
 			forVotes: proposal?.forVotes
-				? parseFloat(ethers.utils.formatUnits(proposal.forVotes.toString(), 18))
+				? parseInt(
+						ethers.utils.formatUnits(proposal.forVotes.toString(), 18),
+						10
+				  )
 				: 0,
 		};
 	}
 
 	static async getProposals({
-		proposalCount,
+		governanceContract,
 	}: IGovernaceServicesGetProposal): Promise<IFormattedProposal[]> {
+		const quorumCount = await this.getQuorumCount({
+			contract: governanceContract,
+		});
+		const proposalCount = await this.getProposalCount({
+			contract: governanceContract,
+		});
+
 		const governanceQuery = await governanceClient.query({
 			query: GET_PROPOSALS,
 			variables: {
@@ -85,6 +114,7 @@ class GovernanceServices {
 					signatures,
 					calldatas,
 					votes,
+					targets,
 				}) => {
 					const supportVotes: IProposalVote[] = [];
 					const notSupportVotes: IProposalVote[] = [];
@@ -129,6 +159,13 @@ class GovernanceServices {
 
 					const descriptionParts = description?.split("\\n");
 
+					status =
+						endDate &&
+						forVotes < quorumCount &&
+						status.toLocaleLowerCase() === "active"
+							? "DEFEATED"
+							: status;
+
 					let statusColor;
 
 					switch (status.toLocaleLowerCase()) {
@@ -138,18 +175,12 @@ class GovernanceServices {
 						case "active":
 							statusColor = "#68D391";
 							break;
-						// case "Canceled":
-						// 	break;
-						// case "Defeated":
-						// 	break;
 						case "succeeded":
 							statusColor = "#68D391";
 							break;
 						case "queued":
 							statusColor = "#ffff67";
 							break;
-						// case "Expired":
-						// 	break;
 						case "executed":
 							statusColor = "#68D391";
 							break;
@@ -167,8 +198,10 @@ class GovernanceServices {
 						status,
 						statusColor,
 						forVotes,
+						forVotesQuorumPercentage: (forVotes * 100) / quorumCount,
 						againstVotes,
-						totalVotes: forVotes + againstVotes,
+						againstVotesQuorumPercentage: (againstVotes * 100) / quorumCount,
+						quorumCount,
 						startBlock,
 						endBlock,
 						endDate,
@@ -176,6 +209,7 @@ class GovernanceServices {
 						details: {
 							functionSig: name,
 							callData: decoded.join(", "),
+							target: targets[0],
 						},
 						supportVotes,
 						notSupportVotes,

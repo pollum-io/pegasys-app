@@ -21,5 +21,6 @@ export interface IGovernanceProviderValue {
 	vote: (id: string, support?: boolean) => Promise<void>;
 	onDelegate: (delegatee?: string) => Promise<void>;
 	loading: boolean;
+	dataLoading: boolean;
 	currentVotes: TokenAmount | null;
 }

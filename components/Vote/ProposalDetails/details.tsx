@@ -1,11 +1,22 @@
 import React from "react";
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Text, Link } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import { useGovernance } from "pegasys-services";
+import {
+	useGovernance,
+	NETWORKS_CHAIN_PARAMS,
+	useWallet,
+} from "pegasys-services";
+import { ChainId } from "@pollum-io/pegasys-sdk";
 
 const Detail: React.FC = () => {
 	const theme = usePicasso();
 	const { selectedProposals } = useGovernance();
+	const { chainId } = useWallet();
+
+	const getLink = (addr: string) =>
+		`${
+			NETWORKS_CHAIN_PARAMS[chainId ?? ChainId.NEVM].blockExplorerUrls[0]
+		}address/${addr}`;
 
 	if (!selectedProposals) {
 		return null;
@@ -22,14 +33,24 @@ const Detail: React.FC = () => {
 			<Text fontWeight="bold">Details</Text>
 			<Flex w="100%" flexDirection={["column", "column", "row", "row"]}>
 				<Text>1:</Text>
-				<Text
-					color={theme.text.cyanPurple}
-					ml={["0", "0", "0.438rem", "0.438rem"]}
-					_hover={{ cursor: "pointer" }}
-				>
-					{selectedProposals.details.callData}
+				<Text wordBreak="break-all" ml={["0", "0", "0.438rem", "0.438rem"]}>
+					<Link
+						isExternal
+						color={theme.text.cyanPurple}
+						href={getLink(selectedProposals.details.target)}
+					>
+						{selectedProposals.details.target}
+					</Link>
+					.{selectedProposals.details.functionSig}(
+					<Link
+						isExternal
+						color={theme.text.cyanPurple}
+						href={getLink(selectedProposals.details.callData)}
+					>
+						{selectedProposals.details.callData}
+					</Link>
+					)
 				</Text>
-				<Text>.{selectedProposals.details.functionSig}()</Text>
 			</Flex>
 		</Flex>
 	);

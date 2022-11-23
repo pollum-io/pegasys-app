@@ -33,7 +33,9 @@ const Description: React.FC = () => {
 						return (
 							<Text key={`description-${index}`} color={theme.text.mono}>
 								{parts[0]}
-								<Link href={link}>here</Link>
+								<Link color={theme.text.cyanPurple} isExternal href={link}>
+									here
+								</Link>
 								{otherDescriptions.slice(1).join(")")}
 							</Text>
 						);

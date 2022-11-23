@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useMemo, useState } from "react";
 
 import { ChainId, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { addTransaction } from "utils";
+import { ZERO_ADDRESS } from "../constants";
 import { GovernanceServices } from "../services";
 import { useWallet, useTransaction, useToasty } from "../hooks";
 import {
@@ -17,8 +18,9 @@ export const GovernanceContext = createContext({} as IGovernanceProviderValue);
 export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 	children,
 }) => {
-	const [showCancelled, setShowCancelled] = useState<boolean>(false);
+	const [showCancelled, setShowCancelled] = useState<boolean>(true);
 	const [loading, setLoading] = useState<boolean>(false);
+	const [dataLoading, setDataLoading] = useState<boolean>(false);
 	const [votesLocked, setVotesLocked] = useState<boolean>(true);
 	const [delegatedTo, setDelegatedTo] = useState<string>("");
 	const [votersType, setVotersType] = useState<string>("");
@@ -93,8 +95,15 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 	};
 
 	const onDelegate = async (delegatee?: string) => {
-		if (delegatee)
-			PersistentFramework.add("governancePersistence", { delegatee });
+		if (delegatee) {
+			if (delegatee === ZERO_ADDRESS) {
+				PersistentFramework.remove("governancePersistence");
+			} else {
+				PersistentFramework.add("governancePersistence", { delegatee });
+			}
+		} else {
+			PersistentFramework.add("governancePersistence", { delegatee: "Self" });
+		}
 
 		await contractCall(
 			() =>
@@ -138,6 +147,7 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 	useEffect(() => {
 		const init = async () => {
 			try {
+				setDataLoading(true);
 				const governancePersistence: { [k: string]: any } | undefined =
 					PersistentFramework.get("governancePersistence");
 
@@ -145,17 +155,13 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 					setVotesLocked(false);
 					setDelegatedTo(
 						governancePersistence.delegatee === "Self"
-							? address
+							? "Self"
 							: governancePersistence.delegatee
 					);
 				}
 
-				const proposalCount = await GovernanceServices.getProposalCount({
-					contract: governanceContract,
-				});
-
 				const fetchedProposals = await GovernanceServices.getProposals({
-					proposalCount,
+					governanceContract,
 				});
 
 				if (fetchedProposals.length) {
@@ -168,6 +174,9 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 					status: "error",
 					title: `Error while fetching proposals`,
 				});
+				console.log(e);
+			} finally {
+				setDataLoading(false);
 			}
 		};
 
@@ -191,6 +200,7 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 			onDelegate,
 			loading,
 			currentVotes,
+			dataLoading,
 		}),
 		[
 			showCancelled,
@@ -208,6 +218,7 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 			onDelegate,
 			loading,
 			currentVotes,
+			dataLoading,
 		]
 	);
 

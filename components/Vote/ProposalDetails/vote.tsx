@@ -4,6 +4,8 @@ import { usePicasso, useModal } from "hooks";
 import Jazzicon from "react-jazzicon";
 import { BIG_INT_ZERO, useGovernance } from "pegasys-services";
 import { JSBI } from "@pollum-io/pegasys-sdk";
+import { shortAddress } from "utils";
+import { ProposalDetailsPercentageBar } from "../../governance";
 
 const Vote: React.FC = () => {
 	const theme = usePicasso();
@@ -64,7 +66,9 @@ const Vote: React.FC = () => {
 					alignItems="center"
 				>
 					<Jazzicon diameter={18} seed={Math.round(Math.random() * 10000000)} />
-					<Text fontSize="14px">{selectedProposals.proposer}</Text>
+					<Text fontSize="14px">
+						{shortAddress(selectedProposals.proposer)}
+					</Text>
 				</Flex>
 			</Flex>
 			<Flex
@@ -85,40 +89,7 @@ const Vote: React.FC = () => {
 					flexDirection="column"
 					w={["100%", "100%", "46%", "46%"]}
 				>
-					<Flex
-						justifyContent="space-between"
-						w="full-content"
-						pb={["4", "4", "4", "4"]}
-						fontSize="12px"
-						fontWeight="600"
-						color={theme.text.mono}
-					>
-						<Text>For</Text>
-						<Flex>
-							<Text mr="0.563rem">{selectedProposals.forVotes.toString()}</Text>
-							<Text fontWeight="400">
-								/ {selectedProposals.totalVotes.toString()}
-							</Text>
-						</Flex>
-					</Flex>
-					<Flex
-						w="100%"
-						borderRadius="xl"
-						h="0.375rem"
-						bgColor={theme.bg.voteGray}
-						mb={["15px", "15px", "8px", "8px"]}
-					>
-						<Flex
-							w={`${
-								(selectedProposals.forVotes * 100) /
-								selectedProposals.totalVotes
-							}%`}
-							borderRadius="xl"
-							h="0.375rem"
-							bgColor="#48BB78"
-							mb={["15px", "15px", "8px", "8px"]}
-						/>
-					</Flex>
+					<ProposalDetailsPercentageBar support />
 					<Flex
 						justifyContent="space-between"
 						alignItems="center"
@@ -158,42 +129,7 @@ const Vote: React.FC = () => {
 					flexDirection="column"
 					w={["100%", "100%", "46%", "46%"]}
 				>
-					<Flex
-						justifyContent="space-between"
-						w="full-content"
-						pb={["4", "4", "4", "4"]}
-						fontSize="12px"
-						fontWeight="600"
-						color={theme.text.mono}
-					>
-						<Text color="">Against</Text>
-						<Flex>
-							<Text mr="0.563rem">
-								{selectedProposals.againstVotes.toString()}
-							</Text>
-							<Text fontWeight="400">
-								/ {selectedProposals.totalVotes.toString()}
-							</Text>
-						</Flex>
-					</Flex>
-					<Flex
-						w="100%"
-						borderRadius="xl"
-						h="0.375rem"
-						bgColor={theme.bg.voteGray}
-						mb={["15px", "15px", "8px", "8px"]}
-					>
-						<Flex
-							w={`${
-								(selectedProposals.againstVotes * 100) /
-								selectedProposals.totalVotes
-							}%`}
-							borderRadius="xl"
-							h="0.375rem"
-							bgColor="#F56565"
-							mb={["15px", "15px", "8px", "1rem"]}
-						/>
-					</Flex>
+					<ProposalDetailsPercentageBar />
 					<Flex
 						justifyContent="space-between"
 						alignItems="center"

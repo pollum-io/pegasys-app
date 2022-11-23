@@ -10,13 +10,15 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import { FunctionComponent } from "react";
-import { useTranslation } from "react-i18next";
-import { useGovernance } from "pegasys-services";
+import { FunctionComponent, useMemo } from "react";
+import { useGovernance, BIG_INT_ZERO } from "pegasys-services";
 
 import { MdClose } from "react-icons/md";
 import Jazzicon from "react-jazzicon";
 import { shortAddress } from "utils";
+import { JSBI } from "@pollum-io/pegasys-sdk";
+import { useTranslation } from "react-i18next";
+import { ProposalDetailsPercentageBar } from "../governance";
 
 interface IModal {
 	isOpen: boolean;
@@ -28,7 +30,16 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 	const { t: translation } = useTranslation();
 
 	const theme = usePicasso();
-	const { votersType, selectedProposals } = useGovernance();
+	const { votersType, selectedProposals, currentVotes, vote } = useGovernance();
+
+	const isOpenToVote = useMemo(() => {
+		if (selectedProposals?.endDate) return false;
+
+		if (!currentVotes || JSBI.lessThanOrEqual(currentVotes.raw, BIG_INT_ZERO))
+			return false;
+
+		return true;
+	}, []);
 
 	if (!selectedProposals) return null;
 
@@ -43,93 +54,30 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 				position={["absolute", "relative", "relative", "relative"]}
 				bottom={["0", "0", "0", "0"]}
 				w={["100vw", "22.375rem", "22.375rem", "22.375rem"]}
+				bgColor={theme.bg.blueNavyLight}
 			>
 				<ModalHeader
 					borderTopRadius="30px"
-					bgColor={theme.bg.blueNavyLight}
 					pt="1.5rem"
 					pb="1rem"
 					flexDirection="column"
 				>
 					<Flex flexDirection="column">
-						<Flex alignItems="center" justifyContent="space-between" mb="1rem">
-							<Flex
-								justifyContent="space-between"
-								w={["85%", "83%", "83%", "83%"]}
-							>
-								<Text fontSize="14px" fontWeight="semibold">
-									{votersType === "favor"
-										? translation("votePage.for")
-										: translation("votePage.against")}
-								</Text>
-								{votersType === "favor" ? (
-									<Flex fontSize="14px">
-										<Text mr="0.563rem">{selectedProposals.forVotes}</Text>
-										<Text fontWeight="400">
-											/ {selectedProposals.totalVotes}
-										</Text>
-									</Flex>
-								) : (
-									<Flex>
-										<Text fontSize="14px" fontWeight="semibold">
-											<Text mr="0.563rem">
-												{selectedProposals.againstVotes}
-											</Text>
-											<Text fontWeight="400">
-												/ {selectedProposals.totalVotes}
-											</Text>
-										</Text>
-									</Flex>
-								)}
-							</Flex>
-
-							<Flex _hover={{ cursor: "pointer" }}>
-								<MdClose size={22} onClick={onClose} color={theme.text.mono} />
-							</Flex>
+						<Flex pb="1rem" justifyContent="end">
+							<MdClose
+								size={22}
+								onClick={onClose}
+								color={theme.text.mono}
+								cursor="pointer"
+							/>
 						</Flex>
-
-						{votersType === "favor" ? (
-							<Flex
-								w={["85%", "83%", "83%", "83%"]}
-								borderRadius="xl"
-								h="0.375rem"
-								bgColor={theme.bg.voteGray}
-								mb={["15px", "8px", "8px", "8px"]}
-							>
-								<Flex
-									w={`${
-										(selectedProposals.forVotes * 100) /
-										selectedProposals.totalVotes
-									}%`}
-									borderRadius="xl"
-									h="0.375rem"
-									bgColor="#48BB78"
-								/>
-							</Flex>
-						) : (
-							<Flex
-								w={["85%", "83%", "83%", "83%"]}
-								borderRadius="xl"
-								h="0.375rem"
-								bgColor={theme.bg.voteGray}
-								mb={["15px", "8px", "8px", "8px"]}
-							>
-								<Flex
-									w={`${
-										(selectedProposals.againstVotes * 100) /
-										selectedProposals.totalVotes
-									}%`}
-									borderRadius="xl"
-									h="0.375rem"
-									bgColor="#F56565"
-									mb={["15px", "8px", "8px", "8px"]}
-								/>
-							</Flex>
-						)}
+						<ProposalDetailsPercentageBar
+							quorum
+							support={votersType === "favor"}
+						/>
 					</Flex>
 				</ModalHeader>
 				<ModalBody
-					bgColor={theme.bg.blueNavyLight}
 					pb="6"
 					pr={["2rem", "2.4rem", "2.4rem", "2.4rem"]}
 					flexDirection="column"
@@ -171,45 +119,49 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 								</Flex>
 							))}
 						</Flex>
-						<Button
-							display={["flex", "none", "none", "none"]}
-							mt="2.5rem"
-							mb="3rem"
-							fontWeight="semibold"
-							w="100%"
-							fontSize="16px"
-							py="0.5rem"
-							bgColor={theme.bg.blueNavyLightness}
-							color={theme.text.cyan}
-							_hover={{
-								bgColor: theme.bg.bluePurple,
-							}}
-							borderRadius="full"
-						>
-							{votersType === "favor"
-								? translation("votePage.voteInFavor")
-								: translation("votePage.voteAgainst")}
-						</Button>
+						{isOpenToVote && (
+							<Button
+								display={["flex", "none", "none", "none"]}
+								mt="2.5rem"
+								mb="3rem"
+								fontWeight="semibold"
+								w="100%"
+								fontSize="16px"
+								py="0.5rem"
+								bgColor={theme.bg.blueNavyLightness}
+								color={theme.text.cyan}
+								_hover={{
+									bgColor: theme.bg.bluePurple,
+								}}
+								borderRadius="full"
+								onClick={() =>
+									vote(selectedProposals.id, votersType === "favor")
+								}
+							>
+								{votersType === "favor" ? "Vote in Favor" : "Vote Against"}
+							</Button>
+						)}
 					</Flex>
 				</ModalBody>
-				<ModalFooter
-					bgColor={theme.bg.blackAlpha}
-					justifyContent="center"
-					py="1.3rem"
-					borderBottomRadius={["0", "30px", "30px", "30px"]}
-					display={["none", "flex", "flex", "flex"]}
-				>
-					<Text
-						fontSize="14px"
-						color={theme.text.cyanPurple}
-						_hover={{ cursor: "pointer" }}
-						fontWeight="semibold"
+				{isOpenToVote && (
+					<ModalFooter
+						bgColor={theme.bg.blackAlpha}
+						justifyContent="center"
+						py="1.3rem"
+						borderBottomRadius={["0", "30px", "30px", "30px"]}
+						display={["none", "flex", "flex", "flex"]}
 					>
-						{votersType === "favor"
-							? translation("votePage.voteInFavor")
-							: translation("votePage.voteAgainst")}
-					</Text>
-				</ModalFooter>
+						<Text
+							fontSize="14px"
+							color={theme.text.cyanPurple}
+							_hover={{ cursor: "pointer" }}
+							fontWeight="semibold"
+							onClick={() => vote(selectedProposals.id, votersType === "favor")}
+						>
+							{votersType === "favor" ? "Vote in Favor" : "Vote Against"}
+						</Text>
+					</ModalFooter>
+				)}
 			</ModalContent>
 		</Modal>
 	);

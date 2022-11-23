@@ -7,4 +7,5 @@ export * from "./Farm";
 export * from "./Stake";
 export * from "./Inputs";
 export * from "./Vote";
+export * from "./governance";
 export { default as Card } from "./Card";

@@ -6,6 +6,11 @@ export interface IGovernaceServicesGetProposalCount {
 	contract?: TContract;
 }
 
+export interface IGovernaceServicesGetQuorumCount {
+	chainId?: ChainId | null;
+	contract?: TContract;
+}
+
 export interface IGovernaceServicesGetProposalVotes {
 	chainId?: ChainId | null;
 	contract?: TContract;
@@ -13,7 +18,7 @@ export interface IGovernaceServicesGetProposalVotes {
 }
 
 export interface IGovernaceServicesGetProposal {
-	proposalCount: number;
+	governanceContract?: TContract;
 }
 
 export interface IGovernaceServicesCastVote {
@@ -48,6 +53,7 @@ export interface IProposal {
 	id: string;
 	proposer: { id: string };
 	signatures: [string];
+	targets: [string];
 	startBlock: string;
 	status: string;
 	votes: Array<{
@@ -72,14 +78,17 @@ export interface IFormattedProposal {
 	status: string;
 	statusColor: string;
 	forVotes: number;
+	forVotesQuorumPercentage: number;
 	againstVotes: number;
-	totalVotes: number;
+	againstVotesQuorumPercentage: number;
+	quorumCount: number;
 	startBlock: string;
 	endBlock: string;
 	endDate?: Date;
 	startDate: Date;
 	details: {
 		functionSig: string;
+		target: string;
 		callData: string;
 	};
 	supportVotes: IProposalVote[];

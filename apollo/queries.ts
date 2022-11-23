@@ -132,6 +132,7 @@ export const GET_PROPOSALS = gql`
 			}
 			status
 			signatures
+			targets
 			calldatas
 			startBlock
 			endBlock

@@ -4,6 +4,7 @@ import {
 	Img,
 	Switch,
 	Text,
+	useColorMode,
 	useMediaQuery,
 } from "@chakra-ui/react";
 import { usePicasso, useModal } from "hooks";
@@ -13,6 +14,7 @@ import { MdOutlineCallMade } from "react-icons/md";
 import { UnlockVotesModal } from "components/Modals/UnlockVoting";
 import { useWallet, useGovernance } from "pegasys-services";
 import { useTranslation } from "react-i18next";
+import { shortAddress } from "utils";
 
 export const VoteContainer: NextPage = () => {
 	const theme = usePicasso();
@@ -25,9 +27,11 @@ export const VoteContainer: NextPage = () => {
 		delegatedTo,
 		proposals,
 		loading,
+		dataLoading,
 		currentVotes,
 	} = useGovernance();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
+	const { colorMode } = useColorMode();
 
 	const { t: translation } = useTranslation();
 
@@ -107,7 +111,10 @@ export const VoteContainer: NextPage = () => {
 									</Text>
 									<Flex gap="4" fontSize="14px">
 										<Text color="white">
-											{translation("votePage.delegatedTo")} {delegatedTo}
+											Delegated to:{" "}
+											{delegatedTo.toLocaleLowerCase() === "self"
+												? delegatedTo
+												: shortAddress(delegatedTo)}
 										</Text>
 										<Text
 											fontWeight="semibold"
@@ -173,6 +180,7 @@ export const VoteContainer: NextPage = () => {
 													{translation("votePage.showCancelled")}
 												</Text>
 												<Switch
+													isChecked={showCancelled}
 													size="md"
 													onChange={() => setShowCancelled(!showCancelled)}
 												/>
@@ -251,6 +259,26 @@ export const VoteContainer: NextPage = () => {
 											{translation("votePage.minimumThreshold")}
 										</Text>
 									</Flex>
+								</Flex>
+							) : dataLoading ? (
+								<Flex
+									w="100%"
+									mt={["3rem", "3rem", "4rem", "4rem"]}
+									flexDirection="column"
+									alignItems="center"
+									justifyContent="center"
+									gap="16"
+								>
+									<Flex
+										className="circleLoading"
+										width="60px !important"
+										height="60px !important"
+										id={
+											colorMode === "dark"
+												? "pendingTransactionsDark"
+												: "pendingTransactionsLight"
+										}
+									/>
 								</Flex>
 							) : (
 								<Flex
