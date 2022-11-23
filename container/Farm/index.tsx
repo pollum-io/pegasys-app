@@ -103,7 +103,7 @@ export const FarmContainer: NextPage = () => {
 								_hover={{ cursor: "pointer", opacity: "0.9" }}
 								flexDirection="row"
 							>
-								<Flex gap="2.5">
+								<Flex gap="2.5" alignItems="center">
 									<Text fontWeight="medium" fontSize="xs">
 										{translation("earnPages.farmingLink")}
 									</Text>

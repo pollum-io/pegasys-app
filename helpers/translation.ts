@@ -10,8 +10,8 @@ export const availableLanguages = [
 	"zh",
 	"es",
 	"fr",
-	"pt-br",
 	"vn",
+	"pt-br",
 ];
 export const defaultLocale = "en";
 const LOCALE_VERSION = "1.5.1";

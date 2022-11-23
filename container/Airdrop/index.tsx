@@ -7,6 +7,7 @@ import {
 	Link,
 	Text,
 	useMediaQuery,
+	useColorMode,
 } from "@chakra-ui/react";
 import {
 	useClaimCallback,
@@ -22,10 +23,12 @@ import { BorderAnimation } from "components/Airdrop/BorderAnimation";
 import { ChainId, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
 import { useWallet, ApprovalState, useTransaction } from "pegasys-services";
+import { useTranslation } from "react-i18next";
 
 export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
+	const { colorMode } = useColorMode();
 
 	const {
 		setCurrentTxHash,
@@ -51,6 +54,8 @@ export const AirdropContainer: NextPage = () => {
 	const [isClaimed, setIsClaimed] = useState<boolean>(false);
 	const [availableClaimAmount, setAvailableClaimAmount] =
 		useState<TokenAmount>();
+
+	const { t: translation } = useTranslation();
 
 	const isClaiming =
 		approvalState.status === ApprovalState.PENDING &&
@@ -133,7 +138,7 @@ export const AirdropContainer: NextPage = () => {
 						gap="3"
 					>
 						<Text fontWeight="bold" color="white" fontSize="md">
-							It’s airdrop time!
+							{translation("airdrop.airdropTime")}
 						</Text>
 						<Text
 							color="white"
@@ -142,19 +147,20 @@ export const AirdropContainer: NextPage = () => {
 							lineHeight="shorter"
 							w={["100%", "90%", "60%", "60%"]}
 						>
-							If you have taken the steps to qualify for the PSYS airdrop, this
-							is the place to check how much you earned and claim your tokens.
+							{translation("airdrop.mainText")}
 						</Text>
 					</Flex>
-					<Flex
-						w="65%"
-						h="100%"
-						borderTopLeftRadius="2xl"
-						borderBottomRadius="2xl"
-						zIndex="base"
-						position="absolute"
-						background="linear-gradient(89.54deg, rgba(8, 17, 32, 0.9) 44.27%, rgba(8, 17, 32, 0) 100.3%)"
-					/>
+					{colorMode === "dark" && (
+						<Flex
+							w="65%"
+							h="100%"
+							borderTopLeftRadius="2xl"
+							borderBottomRadius="2xl"
+							zIndex="base"
+							position="absolute"
+							background="linear-gradient(89.54deg, rgba(8, 17, 32, 0.9) 44.27%, rgba(8, 17, 32, 0) 100.3%)"
+						/>
+					)}
 				</Flex>
 				<Flex>
 					{!isConnected ? (
@@ -167,8 +173,7 @@ export const AirdropContainer: NextPage = () => {
 										px={["4", "2", "2", "2"]}
 										fontSize={["sm", "sm", "md", "md"]}
 									>
-										Please connect your wallet in the button bellow to check
-										your eligibility.
+										{translation("airdrop.connectWalletViewLiquidity")}
 									</Text>
 								</Flex>
 							</Flex>
@@ -180,10 +185,14 @@ export const AirdropContainer: NextPage = () => {
 									<Flex
 										gap={["4", "4", "40", "40"]}
 										flexDirection={["column", "column", "row", "row"]}
+										alignItems="center"
 									>
 										<Flex>
-											<Text color="white" fontSize={["sm", "sm", "md", "md"]}>
-												You have no available PSYS to claim.
+											<Text
+												color={theme.text.mono}
+												fontSize={["sm", "sm", "md", "md"]}
+											>
+												{translation("airdrop.noAvailableClaim")}
 											</Text>
 										</Flex>
 										<Flex
@@ -191,18 +200,22 @@ export const AirdropContainer: NextPage = () => {
 											_hover={{
 												textDecoration: "underline",
 												cursor: "pointer",
-												color: "cyan",
+												opacity: "0.9",
 											}}
+											alignItems="center"
 										>
 											<Text
-												color={theme.text.cyan}
+												color={theme.text.cyanPurple}
 												fontSize="sm"
 												fontWeight="medium"
 												textAlign="center"
 											>
-												Read more about PSYS
+												{translation("earnPage.readMoreAboutPsys")}
 											</Text>
-											<MdOutlineCallMade size={15} color="cyan" />
+											<MdOutlineCallMade
+												size={15}
+												color={theme.text.cyanPurple}
+											/>
 										</Flex>
 									</Flex>
 								</BorderAnimation>
@@ -253,7 +266,7 @@ export const AirdropContainer: NextPage = () => {
 													onClick={claimCallback}
 													borderRadius="full"
 												>
-													Claim now
+													{translation("airdrop.claim")}
 												</Button>
 											) : (
 												<Button
@@ -270,7 +283,7 @@ export const AirdropContainer: NextPage = () => {
 													borderRadius="full"
 												>
 													<Flex className="circleLoading" pr="2" mr="2" />
-													Claiming...
+													{translation("airdrop.loading")}
 												</Button>
 											)}
 										</Flex>
@@ -298,7 +311,7 @@ export const AirdropContainer: NextPage = () => {
 													textAlign="center"
 													ml="2"
 												>
-													Welcome to the Pegasys DAO
+													{translation("airdrop.welcomeToTeamPegasys")}
 												</Text>
 											</Flex>
 										</Flex>

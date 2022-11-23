@@ -1,10 +1,10 @@
 import React, { useMemo } from "react";
-import { Flex, Text } from "@chakra-ui/react";
-import { IoMdClose, IoIosInformationCircle } from "react-icons/io";
+import { Flex, Text, useColorMode, useMediaQuery } from "@chakra-ui/react";
+import { IoIosInformationCircle } from "react-icons/io";
 import { AiFillExclamationCircle } from "react-icons/ai";
 import { RiCheckboxCircleFill } from "react-icons/ri";
 import { IconType } from "react-icons";
-
+import { MdOutlineClose } from "react-icons/md";
 import { IToastyCardProps } from "../dto";
 
 const cards: { [k: string]: [string, IconType, number] } = {
@@ -32,36 +32,61 @@ const ToastyCard: React.FC<IToastyCardProps> = ({
 		};
 	}, [state.status]);
 
+	const { colorMode } = useColorMode();
+
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
+
 	return (
 		<Flex
-			h="72px"
-			w="356px"
+			h="max-content"
+			w={["300px", "356px", "356px", "356px", "356px"]}
 			mt="50px"
-			mr="40px"
-			p={3}
+			mr={["unset", "1.5rem", "2.5rem", "2.5rem"]}
+			py="0.7rem"
+			px="0.5rem"
 			bg={bg}
 			borderRadius="0.2rem"
 			borderLeftWidth="0.25rem"
 			borderLeftColor={toastData.color}
 			justifyContent="space-between"
+			boxShadow={
+				colorMode === "light"
+					? "0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)"
+					: "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
+			}
 		>
 			<Flex
 				color={text}
 				flexDirection="row"
 				zIndex="docked"
 				px="0.3rem"
-				py="0.15rem"
+				w="100%"
+				position="relative"
 			>
-				{toastData.icon}
+				<Flex pt="0.1rem">{toastData.icon}</Flex>
 
-				<Flex flexDirection="column" ml="0.8rem">
+				<Flex
+					flexDirection="column"
+					ml="0.8rem"
+					py="0"
+					position="relative"
+					alignItems="flex-top"
+					w="16rem"
+				>
 					<Text font-weight="bold"> {`${state?.title}`}</Text>
-					<Text fontSize="sm" font-weight="normal">
+					<Text fontSize="16px" font-weight="normal">
 						{state.description}
 					</Text>
 				</Flex>
-				<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
-					<IoMdClose size={16} color={text} />
+				<Flex
+					_hover={{ cursor: "pointer" }}
+					onClick={onClose}
+					position="absolute"
+					right="0"
+					top="0"
+					pt="0.1rem"
+				>
+					<MdOutlineClose size={16} color={text} />
 				</Flex>
 			</Flex>
 		</Flex>

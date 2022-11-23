@@ -63,6 +63,7 @@
 		"yup": "^0.32.11"
 	},
 	"devDependencies": {
+		"@chakra-ui/cli": "^2.1.8",
 		"@ethersproject/experimental": "^5.6.3",
 		"@types/lodash.flatmap": "^4.5.7",
 		"@types/node": "17.0.31",

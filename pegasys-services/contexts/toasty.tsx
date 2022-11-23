@@ -1,5 +1,5 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
-import { useToast } from "@chakra-ui/react";
+import { useToast, useMediaQuery } from "@chakra-ui/react";
 
 import { ToastyCard } from "../components";
 import {
@@ -17,6 +17,7 @@ export const ToastyProvider: React.FC<IToastyProviderProps> = ({
 }) => {
 	const [state, setState] = useState<TToastState>({});
 	const toast = useToast();
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	useEffect(() => {
 		if (!state || !Object.keys(state).length) return;
@@ -25,8 +26,8 @@ export const ToastyProvider: React.FC<IToastyProviderProps> = ({
 			toast({
 				...state,
 				id: state?.id,
-				duration: 5000,
-				position: state?.position ?? "top-right",
+				duration: 500000000000,
+				position: state?.position ?? isMobile ? "top" : "top-right",
 				isClosable: true,
 				status: state?.status,
 				title: state?.title,
@@ -37,7 +38,7 @@ export const ToastyProvider: React.FC<IToastyProviderProps> = ({
 				),
 			});
 		}
-	}, [state, toast]);
+	}, [state]);
 
 	const providerValue = useMemo(
 		() => ({ state, toast: setState }),

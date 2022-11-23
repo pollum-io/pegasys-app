@@ -45,7 +45,13 @@ export const theme = extendTheme({
 	},
 	colors: {
 		gray: {
-			"700": "#2c2f36",
+			700: "#2c2f36",
+		},
+		cyanDark: {
+			100: "#00d9ef",
+		},
+		purpleLight: {
+			200: "#665EE1",
 		},
 	},
 	fonts: {

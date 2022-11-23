@@ -21,8 +21,7 @@ export const SelectWallets: React.FC<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
-	const { connecting } = useWallet();
-	const { connectorSelected } = psUseWallet();
+	const { connectorSelected, connecting } = psUseWallet();
 
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
@@ -45,12 +44,8 @@ export const SelectWallets: React.FC<IModal> = props => {
 							<Text fontSize={["lg", "lg", "xl", "xl"]} fontWeight="semibold">
 								Connect to a Wallet
 							</Text>
-							<Flex _hover={{ cursor: "pointer" }}>
-								<MdOutlineClose
-									size={23}
-									onClick={onClose}
-									color={theme.icon.whiteDarkGray}
-								/>
+							<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
+								<MdOutlineClose size={23} color={theme.icon.whiteDarkGray} />
 							</Flex>
 						</Flex>
 						<Flex flexDirection="column" pb="5">

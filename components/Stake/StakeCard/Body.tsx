@@ -3,7 +3,8 @@ import { Flex, Grid } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 import { formattedNum } from "utils/convert/numberFormat";
-import { formatBigNumbers } from "pegasys-services";
+import { BIG_INT_ONE, formatBigNumbers } from "pegasys-services";
+import { JSBI } from "@pollum-io/pegasys-sdk";
 import { IBodyProps } from "./dto";
 import CardItem from "./CardItem";
 

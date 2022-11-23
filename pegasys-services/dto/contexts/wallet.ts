@@ -20,6 +20,8 @@ export interface IWalletProviderValue {
 	setWalletError: setType<boolean>;
 	connectorSelected: IWalletInfo | null;
 	setConnectorSelected: setType<IWalletInfo | null>;
+	connecting: boolean;
+	setConnecting: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface IWalletProviderProps {

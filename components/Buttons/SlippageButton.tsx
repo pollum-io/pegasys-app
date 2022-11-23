@@ -22,8 +22,7 @@ export const SlippageButton: FunctionComponent<IButtonProps> = props => {
 			fontWeight="semibold"
 			bgColor="transparent"
 			_hover={{
-				background: theme.bg.softBluePink,
-				color: theme.text.mono,
+				opacity: "0.9",
 			}}
 			{...rest}
 		>

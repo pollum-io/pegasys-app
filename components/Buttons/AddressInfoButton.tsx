@@ -1,4 +1,5 @@
 import {
+	Button,
 	Flex,
 	Icon,
 	Link,
@@ -42,7 +43,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { transactions, approvalState } = useTransaction();
 	const isPending = approvalState.status === ApprovalState.PENDING;
 	const { toast } = useToasty();
-	const { address, chainId, connectorSelected } = useWallet();
+	const { address, chainId, connectorSelected, disconnect } = useWallet();
 	const [txs, setTxs] = useState<ITransactionResponse[]>([]);
 	const { t: translation } = useTranslation();
 
@@ -94,21 +95,18 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				borderRadius={18}
-				borderBottomRadius={["0", "18"]}
 				my={["0", "40", "40", "40"]}
-				mb={["0", "0", "24rem", "24rem"]}
+				top={["0", "0", "0", "0"]}
 				h="max-content"
 				position="absolute"
-				bottom={["0", "0", "none", "none"]}
-				mx="0"
-				p="0"
+				mb={["0", "0", "none", "15rem"]}
+				borderRadius="30px"
 			>
 				<ModalHeader
-					borderTopRadius={18}
 					bgColor={theme.bg.blueNavyLight}
 					pt="1.5rem"
 					pb="1rem"
+					borderTopRadius="30px"
 				>
 					<Flex alignItems="center" justifyContent="space-between">
 						<Text fontSize="lg" fontWeight="semibold">
@@ -144,6 +142,29 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 								>
 									Connected with {connectorSelected?.name}
 								</Text>
+							</Flex>
+							<Flex>
+								<Button
+									borderRadius="full"
+									border="1px solid"
+									borderColor={theme.text.cyanPurple}
+									px="2"
+									py="0.5"
+									w="max-content"
+									h="max-content"
+									color={theme.text.whitePurple}
+									fontSize={["xs", "xs", "sm", "sm"]}
+									fontWeight="bold"
+									alignItems="center"
+									bgColor="transparent"
+									_hover={{
+										borderColor: theme.text.cyanLightPurple,
+										color: theme.text.cyanLightPurple,
+									}}
+									onClick={() => disconnect()}
+								>
+									Disconnect
+								</Button>
 							</Flex>
 						</Flex>
 						<Flex
@@ -202,7 +223,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 					justifyContent="flex-start"
 					borderBottomRadius={["0", "0", "18", "18"]}
 					h="max-content"
-					pb={["1.1rem", "1.1rem", "1.1rem", "1.1rem"]}
+					pb="1.4rem"
 				>
 					{txs.length === 0 ? (
 						<Text fontSize="sm" fontWeight="semibold" color={theme.text.mono}>

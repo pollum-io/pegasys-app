@@ -137,11 +137,14 @@
 		"remove": "Retirer",
 		"poolShare": "Votre part de la pool:",
 		"pooled": "Mis en commun",
+		"volume": "Volume",
 		"poolTokens": "Les jetons de votre pool:",
 		"manage": "Gérer",
 		"loading": "Chargement",
 		"yourPosition": "Votre position",
-		"byAddingLiquidityInfo": "En ajoutant de la liquidité, vous gagnerez 0,25 % de toutes les transactions sur cette paire, proportionnellement à votre part de la pool.\n Les frais sont ajoutés au pool, s'accumulent en temps réel et peuvent être réclamés en retirant votre liquidité."
+		"liquidity": "Liquidité",
+		"byAddingLiquidityInfo1": "En ajoutant de la liquidité, vous gagnerez 0,25 % de toutes les transactions sur cette paire, proportionnellement à votre part de la pool.",
+		"byAddingLiquidityInfo2": "Les frais sont ajoutés au pool, s'accumulent en temps réel et peuvent être réclamés en retirant votre liquidité."
 	},
 	"searchModal": {
 		"commonBases": "Bases communes",
@@ -304,15 +307,17 @@
 	},
 	"airdrop": {
 		"airdrop": "Airdrop",
+		"airdropTime": "C'est l'heure du parachutage !",
+		"mainText": "Si vous avez fait les démarches pour vous qualifier pour le largage PSYS, c'est ici que vous pouvez vérifier combien vous avez gagné et réclamer vos jetons.",
 		"claimPeriodEnded": "La période de réclamation de l'airdrop est terminée.",
 		"connectWalletViewLiquidity": "Connectez-vous à un portefeuille pour consulter vos liquidités.",
 		"noAvailableClaim": "Vous n'avez pas de réclamation disponible.",
 		"noUniNoSushi": "Vous n'avez pas de jetons UNI ou SUSHI. Veuillez suivre le tutoriel ici pour ajouter des jetons UNI ou SUSHI à votre portefeuille.",
 		"youHave": "Vous avez ",
 		"psysAvailableClaim": " PSYS disponible à réclamer",
-		"loading": "Chargement",
+		"loading": "Réclamant",
 		"welcomeToTeamPegasys": "Bienvenue dans l'équipe Pegasys",
-		"claim": "Réclamer "
+		"claim": "Réclamer maintenant"
 	},
 	"earnPage": {
 		"pegasysLiquidityMining": "Minage de la liquidité de Pegasys",
@@ -361,6 +366,8 @@
 		"viewStakedLiquidity": "Visualisez votre liquidité staké",
 		"yourLiquidity": "Vos liquidités",
 		"createPair": "Créer une paire",
+		"liquidity": "Liquidité",
+		"unavailable": "Jetons de liquidité non disponibles.",
 		"addLiquidity": "Ajouter de la liquidité",
 		"connectWalletToView": "Connectez-vous à un portefeuille pour voir vos liquidités.",
 		"loading": "Chargement",
@@ -368,7 +375,11 @@
 		"uniswapV1Found": "Liquidité Uniswap V1 trouvé !",
 		"noSeePoolJoined": "Vous ne voyez pas une pool que vous avez rejointe ?",
 		"migrateNow": "Migrer maintenant.",
-		"importIt": "Importez-le."
+		"yourPools": "Vos Pools",
+		"importIt": "Importez-le.",
+		"sort": "Trier par",
+		"poolsOverview": "Aperçu des pools",
+		"searchPair": "Recherche par symbole de jeton"
 	},
 	"poolFinder": {
 		"connectToFind": "Se connecter à un portefeuille pour trouver des pools",
@@ -389,14 +400,16 @@
 		"detailed": "Détaillé",
 		"receiveSys": "Recevoir SYS",
 		"receiveWsys": "Recevoir WSYS",
-		"price": "Prix:",
+		"receive": "Recevoir",
+		"price": "Prix",
 		"connectWallet": "Connecter le Portefeuille",
 		"approving": "Approbation",
 		"approve": "Approuver",
 		"approved": "Approuvé",
 		"remove": "Retirer",
 		"output": "Sortie",
-		"amount": "Montant"
+		"amount": "Montant",
+		"sign": "Signe"
 	},
 	"swapPage": {
 		"addSend": "+ Ajouter un envoi (facultatif)",

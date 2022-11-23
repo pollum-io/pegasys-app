@@ -27,6 +27,7 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 	const { t: translation } = useTranslation();
 	const [connectorSelected, setConnectorSelected] =
 		useState<IWalletInfo | null>(null);
+	const [connecting, setConnecting] = useState<boolean>(false);
 	const { toast } = useToasty();
 
 	const disconnect = () => {
@@ -34,6 +35,7 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 		setChainId(null);
 		setIsConnected(false);
 		setSigner(undefined);
+		setConnecting(false);
 		PersistentFramework.remove("wallet");
 	};
 
@@ -132,6 +134,8 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 			setWalletError,
 			connectorSelected,
 			setConnectorSelected,
+			connecting,
+			setConnecting,
 		}),
 		[
 			chainId,
@@ -150,6 +154,8 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 			setWalletError,
 			connectorSelected,
 			setConnectorSelected,
+			connecting,
+			setConnecting,
 		]
 	);
 
