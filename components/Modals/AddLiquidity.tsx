@@ -743,9 +743,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										parseFloat(selectedToken[1]?.formattedBalance)
 									}
 								>
-									{translation("swapHooks.insufficient")}
-									{selectedToken[1]?.symbol} {translation("swapHooks.balance")}.{" "}
-									{translation("swapHooks.validAmount")}.
 									<Flex flexDirection="row" gap="1" justifyContent="center">
 										<Text
 											fontSize="sm"
