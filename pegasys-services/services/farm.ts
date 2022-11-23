@@ -523,7 +523,7 @@ class FarmServices {
 						unclaimed: values.unclaimed,
 					});
 
-					const { swapFeeApr, superFarmApr, combinedApr } =
+					const { swapFeeApr, farmApr, combinedApr } =
 						await LpTokenServices.getAprs(poolId, !!extraRewardToken);
 
 					let tokenA: Token;
@@ -573,7 +573,7 @@ class FarmServices {
 						extraTotalRewardRatePerWeek,
 						extraUnclaimed,
 						swapFeeApr,
-						superFarmApr,
+						farmApr,
 						combinedApr,
 						poolId,
 						pair,

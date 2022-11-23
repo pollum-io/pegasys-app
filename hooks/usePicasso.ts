@@ -47,7 +47,7 @@ const usePicasso = () => {
 			),
 
 			borderExpertMode: useColorModeValue(
-				"icons/Border-gradient-02.png",
+				"icons/Border-light-gradient-02.png",
 				"icons/Border-gradient-02.png"
 			),
 			inputSearchIcon: useColorModeValue("#9F7AEA", "rgba(54, 180, 212, 0.5)"),
@@ -181,6 +181,8 @@ const usePicasso = () => {
 			connectWallet: useColorModeValue("#04d3c0", "#153d6f70"),
 			blueSys: useColorModeValue("#315df6", "#315df6"),
 			smoothGray: useColorModeValue("#e0e0e0", "rgba(255, 255, 255, 0.36)"),
+			focusBluePurple: useColorModeValue("#a39eed", "#3182CE"),
+			focusGray: useColorModeValue("#ababab", "#737373"),
 		},
 	};
 

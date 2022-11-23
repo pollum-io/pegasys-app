@@ -115,7 +115,7 @@ class LpTokenServices {
 		isSuperFarm?: boolean
 	): Promise<{
 		swapFeeApr: number;
-		superFarmApr?: number;
+		farmApr: number;
 		combinedApr: number;
 	}> {
 		try {
@@ -125,21 +125,16 @@ class LpTokenServices {
 
 			const { swapFeeApr, stakingApr, combinedApr } = data;
 
-			let superFarmApr: undefined | number;
-
-			if (isSuperFarm) {
-				superFarmApr = stakingApr;
-			}
-
 			return {
 				swapFeeApr,
-				superFarmApr,
-				combinedApr: superFarmApr ? combinedApr : swapFeeApr,
+				farmApr: stakingApr,
+				combinedApr: isSuperFarm ? combinedApr : swapFeeApr,
 			};
 		} catch (e) {
 			return {
 				swapFeeApr: 0,
 				combinedApr: 0,
+				farmApr: 0,
 			};
 		}
 	}

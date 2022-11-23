@@ -5,6 +5,7 @@ import {
 	ModalContent,
 	ModalOverlay,
 	Text,
+	useColorMode,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import React from "react";
@@ -18,6 +19,7 @@ interface IModal {
 export const LoadingTransition: React.FC<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
+	const { colorMode } = useColorMode();
 
 	return (
 		<Modal
@@ -38,7 +40,11 @@ export const LoadingTransition: React.FC<IModal> = props => {
 				pb="6"
 				px="6"
 				border="1px solid transparent"
-				background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				background={
+					colorMode === "dark"
+						? `linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`
+						: undefined
+				}
 			>
 				{onClose && (
 					<Flex
@@ -63,12 +69,12 @@ export const LoadingTransition: React.FC<IModal> = props => {
 				<Flex
 					flexDirection="column"
 					justifyContent="center"
-					align="center"
+					alignItems="center"
 					gap="3"
 					color={theme.text.mono}
 				>
 					<Img src="icons/loading.gif" w="35%" h="35%" className="blob" />
-					<Flex flexDirection="row">
+					<Flex flexDirection="row" alignItems="baseline" gap="1">
 						<Text fontSize="2xl" fontWeight="semibold">
 							Waiting for confirmation
 						</Text>

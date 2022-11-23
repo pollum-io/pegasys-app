@@ -30,7 +30,7 @@ const FarmCard: React.FC<IFarmCardsProps> = ({ stakeInfo }) => {
 			<Body
 				swapFeeApr={stakeInfo.swapFeeApr}
 				combinedApr={stakeInfo.combinedApr}
-				superFarmApr={stakeInfo.superFarmApr}
+				superFarmApr={stakeInfo.farmApr}
 				totalStakedInUsd={stakeInfo.totalStakedInUsd}
 				rewardRatePerWeek={stakeInfo.rewardRatePerWeek}
 				stakedInUsd={stakeInfo.stakedInUsd}

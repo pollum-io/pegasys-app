@@ -15,6 +15,7 @@ import {
 	ModalOverlay,
 	Switch,
 	Text,
+	useColorMode,
 } from "@chakra-ui/react";
 import {
 	parseENSAddress,
@@ -51,6 +52,8 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 	const { t: translation } = useTranslation();
 
 	const theme = usePicasso();
+
+	const { colorMode } = useColorMode();
 
 	const { current: currentList } =
 		currentTokenLists[listUrl] || currentTokenLists;
@@ -132,10 +135,13 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 							<Text
 								fontSize="xs"
 								transition="200ms ease-in-out"
-								color={theme.text.cyan}
+								color={theme.text.cyanPurple}
 								cursor="pointer"
 								onClick={() => openListLink(listUrl)}
 								fontWeight="semibold"
+								_hover={{
+									opacity: "0.9",
+								}}
 							>
 								{`${translation("searchModal.viewList")}`}
 							</Text>
@@ -143,10 +149,13 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 							<Text
 								fontSize="xs"
 								transition="200ms ease-in-out"
-								color={theme.text.cyan}
+								color={theme.text.cyanPurple}
 								cursor="pointer"
 								fontWeight="semibold"
 								onClick={() => removeListFromListState(listUrl)}
+								_hover={{
+									opacity: "0.9",
+								}}
 							>
 								{`${translation("searchModal.removeList")}`}
 							</Text>
@@ -292,7 +301,7 @@ export const ManageToken: React.FC<IModal> = props => {
 							maxH="32px"
 							maxW="320px"
 							bgColor={theme.bg.blackAlpha}
-							_focus={{ outline: "none" }}
+							_focus={{ outline: "none", borderColor: theme.border.focusGray }}
 							_hover={{}}
 							onChange={e => setListUrlInput(e.target.value)}
 						/>

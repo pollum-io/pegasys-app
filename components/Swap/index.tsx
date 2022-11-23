@@ -88,6 +88,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const {
 		isOpenWallet,
 		onCloseWallet,
+		isOpenSelectWalletModal,
+		onCloseSelectWalletModal,
 		onOpenCoin,
 		isOpenCoin,
 		onCloseCoin,
@@ -97,6 +99,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		onOpenTransaction,
 		isOpenTransaction,
 		onCloseTransaction,
+		onOpenSelectWalletModal,
 	} = useModal();
 	const {
 		setTransactions,
@@ -600,7 +603,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			px={["4", "0", "0", "0"]}
 			zIndex="1"
 		>
-			<SelectWallets isOpen={isOpenWallet} onClose={onCloseWallet} />
 			<SelectCoinModal
 				isOpen={isOpenCoin}
 				onClose={onCloseCoin}
@@ -673,7 +675,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								? theme.text.red400
 								: "#ff000000"
 						}
-						transition="500ms ease-in-out"
+						transition="500ms border ease-in-out"
 					>
 						<Flex
 							flexDirection="row"
@@ -696,6 +698,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						<Flex alignItems="center" justifyContent="space-between">
 							<Flex w="100%" alignItems="center" mt="0.313rem">
 								<Flex
+									justifyContent=""
 									alignItems="center"
 									id="0"
 									borderRadius={12}
@@ -753,7 +756,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						</Flex>
 					</Flex>
 					{tokenInputValue.currentInputTyped === "inputFrom" && (
-						<Flex flexDirection="row" gap="1">
+						<Flex flexDirection="row" gap="1" justifyContent="center">
 							<Collapse
 								in={
 									parseFloat(tokenInputValue.inputFrom.value) >
@@ -820,7 +823,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								? theme.text.red400
 								: "#ff000000"
 						}
-						transition="500ms ease-in-out"
+						transition="500ms border ease-in-out"
 					>
 						<Flex
 							flexDirection="row"
@@ -962,17 +965,27 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							py="6"
 							px="6"
 							borderRadius="67px"
-							onClick={() => {
-								onOpenConfirmSwap();
-								setTxType("swap");
-							}}
+							onClick={
+								!isConnected
+									? () => {
+											onOpenSelectWalletModal();
+									  }
+									: () => {
+											onOpenConfirmSwap();
+											setTxType("swap");
+									  }
+							}
 							bgColor={theme.bg.blueNavyLightness}
 							color={theme.text.cyan}
 							fontSize={["16px", "16px", "lg", "lg"]}
 							fontWeight="semibold"
-							disabled={!canSubmit || Boolean(returnedTradeValue?.inputErrors)}
+							disabled={
+								!isConnected
+									? false
+									: !canSubmit || Boolean(returnedTradeValue?.inputErrors)
+							}
 							_hover={
-								canSubmit
+								canSubmit || !isConnected
 									? { bgColor: theme.bg.bluePurple }
 									: { opacity: "0.3" }
 							}
@@ -1075,7 +1088,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						p="1.5rem"
 						background={theme.bg.blueNavy}
 						w={["20rem", "28rem", "28rem", "28rem"]}
-						borderRadius="xl"
+						borderRadius="30px"
 						mt="7"
 						mb={["2", "2", "2", "10rem"]}
 						zIndex="1"
@@ -1157,7 +1170,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 											justifyContent="space-between"
 											pt={["1rem", "1rem", "0", "0"]}
 										>
-											<Flex alignItems="center">
+											<Flex alignItems="center" pt="1.5rem" pb="0.3rem">
 												<Text fontSize="sm" mr="1" fontWeight="normal">
 													{translation("swap.route")}
 												</Text>
@@ -1213,27 +1226,21 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									"2"
 								}`}
 							>
-								<Flex>
-									{[0, 1].map(
-										(
-											_,
-											index // Array with number of elements to display in the screen
-										) => (
-											<Img
-												key={_ + Number(index)}
-												src={
-													index === 0
-														? tokensPairPosition[0]?.tokenInfo?.logoURI
-														: tokensPairPosition[1]?.tokenInfo?.logoURI
-												}
-												w="7"
-												h="7"
-												mr="0.5"
-											/>
-										)
-									)}
+								<Flex position="relative">
+									<Img
+										src={tokensPairPosition[0]?.tokenInfo?.logoURI}
+										w="7"
+										h="7"
+									/>
+									<Img
+										src={tokensPairPosition[1]?.tokenInfo?.logoURI}
+										w="7"
+										h="7"
+										position="absolute"
+										left="1.4rem"
+									/>
 
-									<Text fontWeight="700" fontSize="xl" ml="2.5">
+									<Text fontWeight="700" fontSize="xl" ml="2rem">
 										{tokensPairPosition[0]?.symbol} /{" "}
 										{tokensPairPosition[1]?.symbol}
 									</Text>
