@@ -28,7 +28,6 @@ import { useTranslation } from "react-i18next";
 export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
-	const { colorMode } = useColorMode();
 
 	const {
 		setCurrentTxHash,
