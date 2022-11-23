@@ -54,8 +54,8 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 			id: "toast1",
 			position: "top-right",
 			status: "success",
-			title: "Successfully copied",
-			description: "Address successfully copied to clipboard!",
+			title: translation("toasts.copied"),
+			description: translation("toasts.addressCopied"),
 		});
 	};
 
@@ -222,9 +222,9 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 				<ModalFooter
 					bgColor={theme.bg.darkBlueGray}
 					justifyContent="flex-start"
+					borderBottomRadius={["0", "0", "18", "18"]}
 					h="max-content"
 					pb="1.4rem"
-					borderBottomRadius="30px"
 				>
 					{txs.length === 0 ? (
 						<Text fontSize="sm" fontWeight="semibold" color={theme.text.mono}>

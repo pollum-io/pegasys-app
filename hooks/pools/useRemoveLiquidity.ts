@@ -152,7 +152,7 @@ export const UseRemoveLiquidity = (
 					closePendingTx();
 					toast({
 						status: "error",
-						title: "Transaction error",
+						title: t("toasts"),
 						description: `${error?.message.substring(
 							error?.message.indexOf(":") + 1
 						)} Code: ${error?.code}`,
@@ -398,7 +398,7 @@ export const UseRemoveLiquidity = (
 					console.log(error);
 					toast({
 						status: "error",
-						title: "Transaction error",
+						title: t("toasts.transactionError"),
 						description: `${error?.message.substring(
 							error?.message.indexOf(":") + 1
 						)} Code: ${error?.code}`,

@@ -1,10 +1,9 @@
 import React from "react";
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 import { usePicasso } from "hooks";
 import { useEarn } from "pegasys-services";
 import { AiOutlineClose } from "react-icons/ai";
-import { MdArrowBack } from "react-icons/md";
 import EarnHeaderButton from "./EarnHeaderButton";
 
 interface IEarnActionsHeaderProps {
@@ -72,27 +71,6 @@ const EarnActionsHeader: React.FC<IEarnActionsHeaderProps> = ({
 				>
 					<AiOutlineClose size={20} color={theme.icon.whiteGray} />
 				</Flex>
-				<Flex
-					display={{
-						base: "block",
-						sm: "block",
-						md: "none",
-						lg: "none",
-					}}
-				>
-					<MdArrowBack size={24} color={theme.text.gray} />
-				</Flex>
-				<Text
-					display={{
-						base: "block",
-						sm: "block",
-						md: "none",
-						lg: "none",
-					}}
-					color={theme.text.gray}
-				>
-					Stake
-				</Text>
 			</Flex>
 		</Flex>
 	);

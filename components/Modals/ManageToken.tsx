@@ -247,7 +247,7 @@ export const ManageToken: React.FC<IModal> = props => {
 	useEffect(() => {
 		if (errorMessage !== null && errorMessage !== "") {
 			toast({
-				title: "Can't add list",
+				title: translation("toasts.cantAdd"),
 				description: errorMessage,
 				status: "error",
 			});

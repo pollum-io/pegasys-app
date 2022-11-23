@@ -9,6 +9,7 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
+import { useTranslation } from "react-i18next";
 
 import { useFarm, useEarn } from "pegasys-services";
 import React from "react";
@@ -31,6 +32,7 @@ export const FarmActions: React.FC<IModal> = props => {
 	const { claim, withdraw, deposit, sign } = useFarm();
 	const { buttonId, selectedOpportunity, withdrawPercentage, reset } =
 		useEarn();
+	const { t } = useTranslation();
 
 	if (!selectedOpportunity) {
 		return null;
@@ -67,9 +69,9 @@ export const FarmActions: React.FC<IModal> = props => {
 				>
 					<EarnActionsHeader
 						onClose={onClose}
-						depositTitle="Deposit"
-						withdrawTitle="Withdraw"
-						claimTitle="Claim"
+						depositTitle={t("earnPages.deposit")}
+						withdrawTitle={t("earnPages.withdraw")}
+						claimTitle={t("earnPages.claim")}
 					/>
 				</ModalHeader>
 				<ModalBody
@@ -79,12 +81,12 @@ export const FarmActions: React.FC<IModal> = props => {
 				>
 					<EarnDepositAction
 						sign={sign}
-						buttonTitle="Deposit"
+						buttonTitle={t("earnPages.deposit")}
 						deposit={deposit}
 					/>
 					<EarnWithdrawAction
 						onClose={onClose}
-						buttonTitle="Withdraw"
+						buttonTitle={t("earnPages.withdraw")}
 						withdraw={withdraw}
 					/>
 					<EarnClaimAction claim={claim} />
@@ -125,18 +127,9 @@ export const FarmActions: React.FC<IModal> = props => {
 								textAlign="justify"
 							>
 								{withdrawPercentage === 100 ? (
-									<Text>
-										When you withdraw, your PSYS is claimed and your Pegasys
-										Liquidity tokens, PLP, are returned to you. You will no
-										longer earn PSYS rewards on this liquidity. Your original
-										token liquidity will remain in its liquidity pool.
-									</Text>
+									<Text>{t("earnPages.farmingWithdrawAndClaimTooltip")}</Text>
 								) : (
-									<Text>
-										When you withdraw, your Pegasys Liquidity Tokens, PLP, are
-										returned to you. Your original token liquidity will remain
-										in its liquidity pool.
-									</Text>
+									<Text>{t("earnPages.farmingWithdrawTooltip")}</Text>
 								)}
 							</Flex>
 						</Flex>
@@ -173,10 +166,7 @@ export const FarmActions: React.FC<IModal> = props => {
 								color={theme.text.mono}
 								textAlign="justify"
 							>
-								<Text>
-									Please note that when you claim without withdrawing your
-									liquidity remains in the mining pool.
-								</Text>
+								<Text>{t("earnPages.farmingClaimTooltip")}</Text>
 							</Flex>
 						</Flex>
 					)}

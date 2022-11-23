@@ -14,9 +14,9 @@ import {
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { MdOutlineCallMade, MdExpandMore } from "react-icons/md";
-
 import { LoadingTransition, SearchInput, FarmGrid } from "components";
 import { usePicasso, useModal } from "hooks";
+import { useTranslation } from "react-i18next";
 
 import {
 	useFarm,
@@ -26,12 +26,6 @@ import {
 } from "pegasys-services";
 import { FarmActions } from "components/Modals/FarmActions";
 
-const sortData = {
-	yours: "Your farms",
-	apr: "APR",
-	liquidity: "Liquidity",
-};
-
 export const FarmContainer: NextPage = () => {
 	const { setSearch, sort, setSort } = useFarm();
 	const { loading, signatureLoading, dataLoading } = useEarn();
@@ -40,6 +34,13 @@ export const FarmContainer: NextPage = () => {
 	const { colorMode } = useColorMode();
 	const { isOpenFarmActions, onCloseFarmActions } = useModal();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
+	const { t: translation } = useTranslation();
+
+	const sortData = {
+		yours: translation("earnPages.yourFarms"),
+		apr: "APR",
+		liquidity: translation("earnPages.liquidity"),
+	};
 
 	return (
 		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
@@ -64,14 +65,14 @@ export const FarmContainer: NextPage = () => {
 					<Flex
 						zIndex="docked"
 						flexDirection="column"
-						px="1.625rem"
-						py="1.375rem"
+						px={["1rem", "1.625rem", "1.625rem", "1.625rem"]}
+						py={["0.8rem", "1.375rem", "1.375rem", "1.375rem"]}
 						gap="3"
 						h={["9rem", "10rem", "10rem", "10rem"]}
 						color="white"
 					>
 						<Text fontWeight="bold" fontSize="md">
-							Pegasys Liquidity Mining
+							{translation("earnPages.farmingTitle")}
 						</Text>
 						<Text
 							fontWeight="medium"
@@ -79,8 +80,7 @@ export const FarmContainer: NextPage = () => {
 							lineHeight="shorter"
 							w={["100%", "70%", "50%", "50%"]}
 						>
-							Deposit your Pegasys Liquidity Provider PLP tokens to receive
-							PSYS, the Pegasys protocol governance token.
+							{translation("earnPages.farmingDescription")}
 						</Text>
 					</Flex>
 					<Flex
@@ -95,21 +95,23 @@ export const FarmContainer: NextPage = () => {
 						py="0.531rem"
 						color="white"
 					>
-						<Link
-							href={`https://info.pegasys.finance/account/${address}`}
-							target="_blank"
-							rel="noreferrer"
-							_hover={{ cursor: "pointer", opacity: "0.9" }}
-							flexDirection="row"
-						>
-							<Flex gap="2.5" alignItems="center">
-								<Text fontWeight="medium" fontSize="xs">
-									Read more about PSYS
-								</Text>
+						{!!address && (
+							<Link
+								href={`https://info.pegasys.finance/account/${address}`}
+								target="_blank"
+								rel="noreferrer"
+								_hover={{ cursor: "pointer", opacity: "0.9" }}
+								flexDirection="row"
+							>
+								<Flex gap="2.5" alignItems="center">
+									<Text fontWeight="medium" fontSize="xs">
+										{translation("earnPages.farmingLink")}
+									</Text>
 
-								<MdOutlineCallMade size={20} />
-							</Flex>
-						</Link>
+									<MdOutlineCallMade size={20} />
+								</Flex>
+							</Link>
+						)}
 					</Flex>
 				</Flex>
 				<Flex
@@ -118,7 +120,7 @@ export const FarmContainer: NextPage = () => {
 					my="8"
 					justifyContent="flex-start"
 					w="100%"
-					flexDirection={["initial", "initial", "row", "row"]}
+					flexDirection={["column", "column", "row", "row"]}
 					zIndex="docked"
 				>
 					<Flex
@@ -130,8 +132,11 @@ export const FarmContainer: NextPage = () => {
 						zIndex="docked"
 						flexDirection={["column-reverse", "unset"]}
 					>
-						<Text fontSize="2xl" fontWeight="semibold">
-							Farms
+						<Text
+							fontSize={["20px", "20px", "2xl", "2xl"]}
+							fontWeight="semibold"
+						>
+							{translation("earnPages.farms")}
 						</Text>
 					</Flex>
 					{address && (
@@ -141,7 +146,7 @@ export const FarmContainer: NextPage = () => {
 							gap="4"
 							id="c"
 							w="max-content"
-							position={["absolute", "absolute", "relative", "relative"]}
+							mt={["7", "7", "0", "0"]}
 						>
 							<SearchInput
 								setSearch={setSearch}
@@ -154,7 +159,7 @@ export const FarmContainer: NextPage = () => {
 							/>
 							<Flex
 								id="d"
-								flexDirection={["initial", "initial", "column", "column"]}
+								flexDirection="column"
 								alignItems={[
 									"baseline",
 									"baseline",
@@ -162,10 +167,11 @@ export const FarmContainer: NextPage = () => {
 									"flex-start",
 								]}
 								justifyContent="flex-start"
+								w="100%"
 							>
 								<Menu>
 									<Text fontSize="sm" pb="2" pr={["2", "2", "0", "0"]}>
-										Sort by
+										{translation("earnPages.sortBy")}
 									</Text>
 									<MenuButton
 										as={Button}
@@ -175,7 +181,7 @@ export const FarmContainer: NextPage = () => {
 										justifyContent="justify-content"
 										py={["0.2rem", "0.2rem", "1", "1"]}
 										pl="4"
-										pr="4"
+										pr="3"
 										w="max-content"
 										h="2.2rem"
 										bgColor={theme.bg.blueNavyLightness}
@@ -187,7 +193,7 @@ export const FarmContainer: NextPage = () => {
 										_active={{}}
 										borderRadius="full"
 									>
-										<Flex alignItems="center" color="white" gap="3rem">
+										<Flex alignItems="center" color="white" gap="2rem">
 											{sortData[sort]}
 											<Icon as={MdExpandMore} w="5" h="5" />
 										</Flex>
@@ -227,8 +233,7 @@ export const FarmContainer: NextPage = () => {
 							fontWeight="normal"
 							textAlign="center"
 						>
-							Please connect your wallet in the button bellow to be able to view
-							your farms.
+							{translation("earnPages.walletConnect")}
 						</Text>
 					</Flex>
 				)}
@@ -247,7 +252,7 @@ export const FarmContainer: NextPage = () => {
 								fontWeight="normal"
 								textAlign="center"
 							>
-								This feature is not available for this network
+								{translation("earnPages.featNotAvailable")}
 							</Text>
 						</Flex>
 					)}

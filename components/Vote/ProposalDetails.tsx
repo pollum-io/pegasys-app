@@ -231,7 +231,6 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 													: "max-content"
 											}
 											textAlign="center"
-											bgColor="red"
 										>
 											<Text
 												fontSize="12px"
@@ -312,7 +311,6 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 													: "max-content"
 											}
 											textAlign="center"
-											bgColor="red"
 										>
 											<Text
 												fontSize="12px"

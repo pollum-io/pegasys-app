@@ -10,6 +10,7 @@ import {
 import { usePicasso } from "hooks";
 import React from "react";
 import { MdOutlineClose } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 interface IModal {
 	isOpen: boolean;
@@ -19,6 +20,7 @@ interface IModal {
 export const LoadingTransition: React.FC<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
+	const { t: translation } = useTranslation();
 	const { colorMode } = useColorMode();
 
 	return (
@@ -76,11 +78,13 @@ export const LoadingTransition: React.FC<IModal> = props => {
 					<Img src="icons/loading.gif" w="35%" h="35%" className="blob" />
 					<Flex flexDirection="row" alignItems="baseline" gap="1">
 						<Text fontSize="2xl" fontWeight="semibold">
-							Waiting for confirmation
+							{translation("transactionConfirmation.waitingConfirmation")}
 						</Text>
 						<Text className="loading" />
 					</Flex>
-					<Text>Confirm this transaction in your wallet</Text>
+					<Text>
+						{translation("transactionConfirmation.confirmTransaction")}
+					</Text>
 				</Flex>
 			</ModalContent>
 		</Modal>

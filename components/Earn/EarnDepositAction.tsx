@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { Flex, Img, Text } from "@chakra-ui/react";
 import { JSBI } from "@pollum-io/pegasys-sdk";
+import { useTranslation } from "react-i18next";
 
 import { useTokens } from "hooks";
 import { BIG_INT_ZERO, useEarn } from "pegasys-services";
@@ -29,6 +30,7 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 		depositValue,
 	} = useEarn();
 	const { userTokensBalance } = useTokens();
+	const { t } = useTranslation();
 
 	const tokenALogo = useMemo(() => {
 		const tokenAWrapped = userTokensBalance.find(
@@ -76,21 +78,22 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 			</Flex>
 			<Flex flexDirection="column" gap="2" mt="6">
 				<Text fontWeight="normal">
-					Available to deposit:{" "}
+					{t("earnPages.availableToDeposit")}:{" "}
 					{selectedOpportunity.unstakedAmount.toSignificant()}{" "}
 					{selectedOpportunity.stakeToken.symbol}
 				</Text>
 				<EarnInput deposit />
 				<Text fontWeight="normal">
-					Weekly Rewards:{" "}
+					{t("earnPages.weeklyRewards")}:{" "}
 					{selectedOpportunity.totalRewardRatePerWeek.toSignificant()}{" "}
-					{selectedOpportunity.rewardToken.symbol} / Week
+					{selectedOpportunity.rewardToken.symbol} / {t("earnPages.week")}
 				</Text>
 				{selectedOpportunity.extraRewardToken && (
 					<Text fontWeight="normal">
-						Extra Reward:{" "}
+						{t("earnPages.extraRewards")}:{" "}
 						{selectedOpportunity.extraTotalRewardRatePerWeek?.toSignificant()}{" "}
-						{selectedOpportunity.extraRewardToken.symbol} / Week
+						{selectedOpportunity.extraRewardToken.symbol} /{" "}
+						{t("earnPages.week")}
 					</Text>
 				)}
 			</Flex>
@@ -112,7 +115,11 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				fontSize={16}
 				solid
 			>
-				{signatureLoading ? "LOADING" : signature ? buttonTitle : "Sign"}
+				{signatureLoading
+					? t("earnPages.loading")
+					: signature
+					? buttonTitle
+					: t("earnPages.sign")}
 			</EarnButton>
 		</Flex>
 	);

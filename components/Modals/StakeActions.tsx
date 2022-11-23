@@ -11,6 +11,7 @@ import {
 import { usePicasso } from "hooks";
 import { useEarn, useStake } from "pegasys-services";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { MdOutlineInfo } from "react-icons/md";
 import {
 	EarnActionsHeader,
@@ -29,6 +30,7 @@ export const StakeActions: React.FC<IModal> = props => {
 	const theme = usePicasso();
 	const { claim, stake, unstake, sign } = useStake();
 	const { selectedOpportunity, buttonId, reset } = useEarn();
+	const { t } = useTranslation();
 
 	if (!selectedOpportunity) {
 		return null;
@@ -68,16 +70,16 @@ export const StakeActions: React.FC<IModal> = props => {
 				>
 					<EarnActionsHeader
 						onClose={onClose}
-						depositTitle="Stake"
-						withdrawTitle="Unstake"
-						claimTitle="Claim"
+						depositTitle={t("earnPages.stake")}
+						withdrawTitle={t("earnPages.unstake")}
+						claimTitle={t("earnPages.claim")}
 					/>
 				</ModalHeader>
 				<ModalBody>
 					<EarnDepositAction sign={sign} buttonTitle="Stake" deposit={stake} />
 					<EarnWithdrawAction
 						onClose={onClose}
-						buttonTitle="Unstake"
+						buttonTitle={t("earnPages.unstake")}
 						withdraw={unstake}
 					/>
 					<EarnClaimAction claim={claim} />
@@ -109,15 +111,11 @@ export const StakeActions: React.FC<IModal> = props => {
 								color={theme.text.mono}
 								textAlign="justify"
 							>
-								<Text>
-									When you partially unstake your deposits, you will keep
-									earning rewards from this staking pool proportionally to your
-									remaining staked balance.
-								</Text>
+								<Text>{t("earnPages.stakeWithdrawTooltip")}</Text>
 							</Flex>
 						</Flex>
 					)}
-					{buttonId === "deposit" && (
+					{buttonId === "claim" && (
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
@@ -143,10 +141,7 @@ export const StakeActions: React.FC<IModal> = props => {
 								color={theme.text.mono}
 								textAlign="justify"
 							>
-								<Text>
-									Please note that when you claim without withdrawing your
-									liquidity remains in the staking pool.
-								</Text>
+								<Text>{t("earnPages.stakingClaimTooltip")}</Text>
 							</Flex>
 						</Flex>
 					)}

@@ -3,6 +3,7 @@ import { ChainId, JSBI } from "@pollum-io/pegasys-sdk";
 
 import { tryParseAmount, addTransaction } from "utils";
 import { useModal } from "hooks";
+import { useTranslation } from "react-i18next";
 import {
 	ApprovalState,
 	IEarnProviderProps,
@@ -36,6 +37,8 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 	const [buttonId, setButtonId] = useState<TButtonId>(null);
 	const [selectedOpportunity, setSelectedOpportunity] =
 		useState<IEarnInfo | null>(null);
+
+	const { t: translation } = useTranslation();
 
 	const { setTransactions, transactions, setCurrentTxHash, setApprovalState } =
 		useTransaction();
@@ -143,7 +146,7 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 				id: `${type}Toast`,
 				position: "top-right",
 				status: "error",
-				title: `Error on ${summary}`,
+				title: translation("toasts.errorOn") && ` ${summary}`,
 			});
 		} finally {
 			setLoading(false);
