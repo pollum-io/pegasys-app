@@ -10,6 +10,8 @@ import "styles/circleLoadingAnimation.css";
 import "styles/loadingDotsAnimation.css";
 import "styles/logoAnimation.css";
 import "helpers/translation";
+import "styles/scrollbarDarkmode.css";
+import "styles/scrollbarLightmode.css";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
 	const [isSSR, setIsSSR] = useState(true);
