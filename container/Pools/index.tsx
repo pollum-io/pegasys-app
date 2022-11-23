@@ -123,6 +123,7 @@ export const PoolsContainer: NextPage = () => {
 		token => token.chainId === currentChainId
 	);
 	useMemo(async () => {
+		setSearchTokens([]);
 		if (userTokensBalance.length === 0 || !isValid) return;
 
 		const tokens = getTokenPairs(
@@ -354,7 +355,7 @@ export const PoolsContainer: NextPage = () => {
 			twoDays: formattedTwoDaysCommonPairs,
 			general: formattedGeneralCommonPairs,
 		});
-	}, [userTokensBalance, isValid, currentNetworkChainId]);
+	}, [userTokensBalance, isValid, currentNetworkChainId, address]);
 
 	useMemo(() => {
 		if (searchTokens.length !== 0) {

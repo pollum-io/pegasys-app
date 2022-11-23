@@ -44,7 +44,7 @@ export function getTokenPairs(chainId: ChainId, allTokens: WrappedTokenInfo[]) {
 		WBTC,
 		WSYS,
 		PSYS,
-	];
+	].filter(item => item !== undefined);
 
 	const allCustomPairs = customPairs.flatMap((v, i) =>
 		customPairs.slice(i + 1).map(w => {
@@ -76,7 +76,7 @@ export function getTokenPairs(chainId: ChainId, allTokens: WrappedTokenInfo[]) {
 		: [];
 
 	const mixPairs =
-		chainId === ChainId.NEVM
+		chainId === ChainId.NEVM || chainId === ChainId.ROLLUX
 			? [...generatedPairs, ...allCustomPairs]
 			: [...generatedPairs];
 
