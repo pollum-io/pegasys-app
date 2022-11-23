@@ -13,6 +13,7 @@
 	},
 	"dependencies": {
 		"@chakra-ui/react": "^1.8.8",
+		"@chakra-ui/theme-tools": "^2.0.13",
 		"@emotion/react": "11",
 		"@emotion/styled": "11",
 		"@ethersproject/abi": "^5.6.4",
