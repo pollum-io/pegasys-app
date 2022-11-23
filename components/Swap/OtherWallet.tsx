@@ -3,6 +3,7 @@ import { usePicasso } from "hooks";
 import React, { FunctionComponent } from "react";
 import { MdOutlineArrowDownward } from "react-icons/md";
 import { BiTrashAlt } from "react-icons/bi";
+import { useTranslation } from "react-i18next";
 
 export const OtherWallet: FunctionComponent<{
 	setRecipientAddress: React.Dispatch<React.SetStateAction<string>>;
@@ -10,6 +11,7 @@ export const OtherWallet: FunctionComponent<{
 	const { setRecipientAddress } = props;
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
+	const { t: translation } = useTranslation();
 
 	const clearInput = (el: HTMLInputElement) => {
 		el.value = "";
@@ -21,7 +23,7 @@ export const OtherWallet: FunctionComponent<{
 				<MdOutlineArrowDownward size={22} color={theme.text.cyanPurple} />
 			</Flex>
 			<Flex flexDirection="column">
-				<Text fontWeight="500">Send to address</Text>
+				<Text fontWeight="500">{translation("swapPage.sendToAddress")}</Text>
 			</Flex>
 			<Flex
 				mt="0.406rem"
@@ -45,7 +47,7 @@ export const OtherWallet: FunctionComponent<{
 						fontSize="1rem"
 						border="none"
 						id="recipientAddress"
-						placeholder="Wallet Address"
+						placeholder={translation("addressInputPanel.walletAddress")}
 						_placeholder={{
 							color: theme.text.lightGray,
 							fontWeight: "normal",

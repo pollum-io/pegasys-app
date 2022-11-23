@@ -11,6 +11,7 @@ import { SwitchToSyscoin } from "components/Buttons";
 import { IoIosInformationCircle } from "react-icons/io";
 import { MdOutlineClose } from "react-icons/md";
 import { useWallet } from "pegasys-services";
+import { useTranslation } from "react-i18next";
 
 interface IModal {
 	isOpen: boolean;
@@ -21,6 +22,7 @@ export const SelectSyscoin: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const { walletError } = useWallet();
 	const theme = usePicasso();
+	const { t: translation } = useTranslation();
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen || walletError} onClose={onClose}>
@@ -34,7 +36,7 @@ export const SelectSyscoin: FunctionComponent<IModal> = props => {
 			>
 				<Flex alignItems="center" justifyContent="space-between">
 					<Text fontSize="lg" fontWeight="semibold">
-						Wrong Network
+						{translation("walletModal.wrongNetwork")}
 					</Text>
 					<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
 						<MdOutlineClose
@@ -47,7 +49,7 @@ export const SelectSyscoin: FunctionComponent<IModal> = props => {
 				<Flex py="1.5rem">
 					<IoIosInformationCircle size={26} color={theme.icon.whiteRed} />
 					<Text fontSize="md" fontWeight="normal" pl="1.125rem">
-						Please connect to the appropriate Syscoin network.
+						{translation("walletModal.pleaseConnectSyscoin")}
 					</Text>
 				</Flex>
 				<SwitchToSyscoin />

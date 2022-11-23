@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { FunctionComponent } from "react";
+import { useTranslation } from "react-i18next";
 import { useGovernance } from "pegasys-services";
 
 import { MdClose } from "react-icons/md";
@@ -26,6 +27,8 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 
 	const theme = usePicasso();
 	const { votersType } = useGovernance();
+
+	const { t: translation } = useTranslation();
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -53,7 +56,9 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 								w={["85%", "83%", "83%", "83%"]}
 							>
 								<Text fontSize="14px" fontWeight="semibold">
-									{votersType === "favor" ? "For" : "Against"}
+									{votersType === "favor"
+										? translation("votePage.for")
+										: translation("votePage.against")}
 								</Text>
 								{votersType === "favor" ? (
 									<Flex fontSize="14px">
@@ -113,8 +118,8 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 							fontSize="14px"
 							mb="1.5rem"
 						>
-							<Text>2 addresses</Text>
-							<Text>Votes</Text>
+							<Text>2 {translation("votePage.addresses")}</Text>
+							<Text>{translation("votePage.votes")}</Text>
 						</Flex>
 						<Flex w="100%" flexDirection="column" fontSize="14px" pr="0.5rem">
 							<Flex
@@ -167,7 +172,9 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 							}}
 							borderRadius="full"
 						>
-							{votersType === "favor" ? "Vote in Favor" : "Vote Against"}
+							{votersType === "favor"
+								? translation("votePage.voteInFavor")
+								: translation("votePage.voteAgainst")}
 						</Button>
 					</Flex>
 				</ModalBody>
@@ -184,7 +191,9 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 						_hover={{ cursor: "pointer" }}
 						fontWeight="semibold"
 					>
-						{votersType === "favor" ? "Vote in Favor" : "Vote Against"}
+						{votersType === "favor"
+							? translation("votePage.voteInFavor")
+							: translation("votePage.voteAgainst")}
 					</Text>
 				</ModalFooter>
 			</ModalContent>

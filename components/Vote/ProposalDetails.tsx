@@ -4,6 +4,7 @@ import { usePicasso, useModal } from "hooks";
 import Jazzicon from "react-jazzicon";
 import { FunctionComponent } from "react";
 import { CheckAllVotersModal } from "components/Modals/CheckAllVoters";
+import { useTranslation } from "react-i18next";
 import { useGovernance } from "pegasys-services";
 
 interface IProposalDetails {
@@ -44,6 +45,10 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 		onOpenCheckAllVotersModal();
 	};
 
+	const { t: translation, i18n } = useTranslation();
+
+	const { language } = i18n;
+
 	return (
 		<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
 			<CheckAllVotersModal
@@ -72,7 +77,7 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 						fontWeight="semibold"
 						color={theme.icon.whiteGray}
 					>
-						All Proposals
+						{translation("votePage.allProposals")}
 					</Text>
 				</Flex>
 				<Flex
@@ -95,13 +100,14 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 						<Flex
 							flexDirection={["column", "column", "row", "row"]}
 							justifyContent="flex-start"
-							w={["91%", "65%", "60%", "60%"]}
+							w={["91%", "65%", "max-content", "max-content"]}
 							h="max-content"
 							mt="1.5rem"
 							py="1"
 							backgroundColor={status === "executed" ? "#48BB78" : "#FC8181"}
 							borderRightRadius="full"
 							alignItems={["none", "none", "center", "center"]}
+							pr={["", "", "1rem", "1rem"]}
 						>
 							<Text
 								fontWeight="semibold"
@@ -113,7 +119,7 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 								{status}
 							</Text>
 							<Text fontWeight="normal" color="white" fontSize="12px" pl="1rem">
-								Voting ended {date}
+								{translation("votePage.votingEnded")} {date}
 							</Text>
 						</Flex>
 						<Flex mx={["4", "5", "5", "5"]} mt="4" flexDirection="column">
@@ -135,7 +141,7 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 								mb="1.5rem"
 							>
 								<Text color={theme.text.mono} fontWeight="bold" fontSize="16px">
-									Proposer
+									{translation("votePage.proposer")}
 								</Text>
 
 								<Flex
@@ -177,7 +183,7 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 										fontWeight="600"
 										color={theme.text.mono}
 									>
-										<Text>For</Text>
+										<Text>{translation("votePage.for")}</Text>
 										<Flex>
 											<Text mr="0.563rem">50,634,749</Text>
 											<Text fontWeight="400">/ 40,000,000</Text>
@@ -194,6 +200,7 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 										justifyContent="space-between"
 										alignItems="center"
 										mt={["0", "0", "1.5", "1.5"]}
+										bgColor="blue"
 									>
 										<Button
 											fontSize="12px"
@@ -208,17 +215,34 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 											_active={{}}
 											borderRadius="full"
 										>
-											Vote in Favor
+											{translation("votePage.voteInFavor")}
 										</Button>
-										<Text
-											fontSize="12px"
-											_hover={{ cursor: "pointer", opacity: "0.9" }}
-											transition="100ms ease-in-out"
-											onClick={isFavor}
-											color="#718096"
+										<Flex
+											w={
+												language === "es" || language === "tr"
+													? ["max-content", "max-content", "6.5rem", "6.5rem"]
+													: language === "vn"
+													? [
+															"6.5rem",
+															"max-content",
+															"max-content",
+															"max-content",
+													  ]
+													: "max-content"
+											}
+											textAlign="center"
+											bgColor="red"
 										>
-											Check all voters
-										</Text>
+											<Text
+												fontSize="12px"
+												_hover={{ cursor: "pointer", opacity: "0.9" }}
+												transition="100ms ease-in-out"
+												onClick={isFavor}
+												color="#718096"
+											>
+												{translation("votePage.checkAllVoters")}
+											</Text>
+										</Flex>
 									</Flex>
 								</Flex>
 								<Flex
@@ -234,7 +258,7 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 										fontWeight="600"
 										color={theme.text.mono}
 									>
-										<Text color="">Against</Text>
+										<Text color="">{translation("votePage.against")}</Text>
 										<Flex>
 											<Text>{against}</Text>
 										</Flex>
@@ -272,17 +296,34 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 											_active={{}}
 											borderRadius="full"
 										>
-											Vote Against
+											{translation("votePage.voteAgainst")}
 										</Button>
-										<Text
-											fontSize="12px"
-											_hover={{ cursor: "pointer", opacity: "0.9" }}
-											transition="100ms ease-in-out"
-											onClick={isAgainst}
-											color="#718096"
+										<Flex
+											w={
+												language === "es" || language === "tr"
+													? ["max-content", "max-content", "6.5rem", "6.5rem"]
+													: language === "vn"
+													? [
+															"6.5rem",
+															"max-content",
+															"max-content",
+															"max-content",
+													  ]
+													: "max-content"
+											}
+											textAlign="center"
+											bgColor="red"
 										>
-											Check all voters
-										</Text>
+											<Text
+												fontSize="12px"
+												_hover={{ cursor: "pointer", opacity: "0.9" }}
+												transition="100ms ease-in-out"
+												onClick={isAgainst}
+												color="#718096"
+											>
+												{translation("votePage.checkAllVoters")}
+											</Text>
+										</Flex>
 									</Flex>
 								</Flex>
 							</Flex>
@@ -301,7 +342,7 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 							flexDirection="column"
 							color={theme.text.mono}
 						>
-							<Text fontWeight="bold">Details</Text>
+							<Text fontWeight="bold">{translation("votePage.details")}</Text>
 							<Flex w="100%" flexDirection={["column", "column", "row", "row"]}>
 								<Text>1:</Text>
 								<Text
@@ -321,7 +362,7 @@ export const ProposalDetails: FunctionComponent<IProposalDetails> = props => {
 							flexDirection="column"
 						>
 							<Text color={theme.text.mono} fontWeight="bold">
-								Description
+								{translation("votePage.description")}
 							</Text>
 							<Flex mb="2rem">
 								<Text color={theme.text.mono}>

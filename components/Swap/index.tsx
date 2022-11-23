@@ -638,12 +638,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			<Flex alignItems="center" flexDirection="column">
 				<Flex
 					h="max-content"
-					width={[
-						"100%", // 0-30em
-						"md", // 30em-48em
-						"md", // 48em-62em
-						"md", // 62em+
-					]}
+					width={["100%", "md", "md", "md"]}
 					p="1.5rem"
 					flexDirection="column"
 					zIndex="1"
@@ -682,11 +677,19 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						}
 						transition="500ms border ease-in-out"
 					>
-						<Flex flexDirection="row" justifyContent="space-between">
+						<Flex
+							flexDirection="row"
+							justifyContent="space-between"
+							alignItems="center"
+						>
 							<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
 								{translation("swapPage.from")}
 							</Text>
-							<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
+							<Text
+								fontSize={["14px", "14px", "16px", "16px"]}
+								fontWeight="400"
+								color={theme.text.gray500}
+							>
 								{`${translation("header.balance")} ${
 									selectedToken[0]?.formattedBalance as string
 								}`}
@@ -770,15 +773,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									>
 										{translation("swapHooks.insufficient")}
 										{selectedToken[0]?.symbol}
-										{translation("swapHooks.balance")}.
-									</Text>
-									<Text
-										fontSize="sm"
-										pt="2"
-										textAlign="center"
-										color={theme.text.red400}
-										fontWeight="medium"
-									>
+										{translation("swapHooks.balance")}.{" "}
 										{translation("swapHooks.validAmount")}.
 									</Text>
 								</Flex>
@@ -830,11 +825,19 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						}
 						transition="500ms border ease-in-out"
 					>
-						<Flex flexDirection="row" justifyContent="space-between">
+						<Flex
+							flexDirection="row"
+							justifyContent="space-between"
+							alignItems="center"
+						>
 							<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
-								{translation("swapPage.to")}
+								{translation("currencyInputPanel.to")}
 							</Text>
-							<Text fontSize="md" fontWeight="400" color={theme.text.gray500}>
+							<Text
+								fontSize={["14px", "14px", "16px", "16px"]}
+								fontWeight="400"
+								color={theme.text.gray500}
+							>
 								{`${translation("header.balance")} ${
 									selectedToken[1]?.formattedBalance as string
 								}`}
@@ -881,12 +884,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							/>
 						</Flex>
 					</Flex>
-					<Flex
-						flexDirection="column"
-						gap="1"
-						justifyContent="flex-start"
-						alignItems="flex-start"
-					>
+					<Flex flexDirection="column" gap="1">
 						<Collapse
 							in={isConnected && verifyIfHaveInsufficientLiquidity && !isWrap}
 						>
@@ -979,7 +977,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							}
 							bgColor={theme.bg.blueNavyLightness}
 							color={theme.text.cyan}
-							fontSize="lg"
+							fontSize={["16px", "16px", "lg", "lg"]}
 							fontWeight="semibold"
 							disabled={
 								!isConnected
@@ -1225,7 +1223,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								mb={`${
 									!isLoadingGraphCandles &&
 									tokensGraphCandleData?.length === 0 &&
-									"5"
+									"2"
 								}`}
 							>
 								<Flex position="relative">
@@ -1295,14 +1293,14 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							<Img src="icons/loading.gif" className="blob" w="25%" h="25%" />
 						</Flex>
 					) : tokensGraphCandleData?.length === 0 ? (
-						<Flex flexDirection="column" ml="0">
+						<Flex flexDirection="column">
 							<Text
 								textAlign="center"
 								color={theme.text.mono}
 								fontWeight="medium"
 								fontSize="md"
 							>
-								Data not found for this pair of tokens.
+								{translation("swapPage.dataNotFound")}{" "}
 							</Text>
 
 							<Text
@@ -1311,7 +1309,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								fontWeight="normal"
 								fontSize="sm"
 							>
-								Please try again with another pair.
+								{translation("swapPage.tryWithAnother")}
 							</Text>
 						</Flex>
 					) : (
