@@ -72,11 +72,13 @@ export const LoadingTransition: React.FC<IModal> = props => {
 					<Img src="icons/loading.gif" w="35%" h="35%" className="blob" />
 					<Flex flexDirection="row">
 						<Text fontSize="2xl" fontWeight="semibold">
-							Waiting for confirmation
+							{translation("transactionConfirmation.waitingConfirmation")}
 						</Text>
 						<Text className="loading" />
 					</Flex>
-					<Text>Confirm this transaction in your wallet</Text>
+					<Text>
+						{translation("transactionConfirmation.confirmTransaction")}
+					</Text>
 				</Flex>
 			</ModalContent>
 		</Modal>

@@ -28,6 +28,7 @@ import {
 import { shortAddress, copyToClipboard, openWalletOnExplorer } from "utils";
 import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { ITransactionResponse } from "types";
+import { useTranslation } from "react-i18next";
 
 interface IModal {
 	isOpen: boolean;
@@ -43,6 +44,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { toast } = useToasty();
 	const { address, chainId, connectorSelected } = useWallet();
 	const [txs, setTxs] = useState<ITransactionResponse[]>([]);
+	const { t: translation } = useTranslation();
 
 	const handleCopyToClipboard = () => {
 		copyToClipboard(address);
@@ -51,8 +53,8 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 			id: "toast1",
 			position: "top-right",
 			status: "success",
-			title: "Successfully copied",
-			description: "Address sucessfully copied to clipboard!",
+			title: translation("toasts.copied"),
+			description: translation("toasts.addressCopied"),
 		});
 	};
 
@@ -198,7 +200,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 				<ModalFooter
 					bgColor={theme.bg.darkBlueGray}
 					justifyContent="flex-start"
-					borderBottomRadius={["0", "18"]}
+					borderBottomRadius={["0", "0", "18", "18"]}
 					h="max-content"
 					pb={["1.1rem", "1.1rem", "1.1rem", "1.1rem"]}
 				>

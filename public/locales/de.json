@@ -295,7 +295,7 @@
 		"initialPrices": "Ursprüngliche Preise",
 		"prices": "Preise",
 		"poolShare": "und Anteil am Pool",
-		"connectWallet": "Mit Wallet verbinden",
+		"connectWallet": "Brieftasche verbinden",
 		"approve": "Bestätigen ",
 		"supply": "Hinzufügen",
 		"per": " pro ",
@@ -561,7 +561,7 @@
 		"week": "Woche",
 		"claim": "Claim",
 		"withdraw": "Withdraw",
-		"andClaim": "und Claim",
+		"andClaim": " und Claim",
 		"deposit": "Einzahlung",
 		"unstake": "Unstake",
 		"stake": "Stake",
@@ -594,6 +594,18 @@
 		"farmingWithdrawAndClaimTooltip": "Wenn Sie sich zurückziehen, wird Ihr PSYS eingefordert und Ihre Pegasys Liquidity tokens, PLP, werden Ihnen zurückgegeben. Für diese Liquidität erhalten Sie keine PSYS-Prämien mehr. Ihre ursprüngliche Token-Liquidität verbleibt in ihrem Liquiditätspool.",
 		"farmingClaimTooltip": "Bitte beachten Sie, dass Ihre Liquidität im Mining-Pool verbleibt, wenn Sie einen Anspruch geltend machen, ohne etwas abzuheben.",
 		"yourFarms": "Ihr Farms",
-		"sortBy": "Sortieren nach"
+		"sortBy": "Sortieren nach",
+		"liquidity": "Liquidität"
+	},
+	"toasts": {
+		"copied": "Erfolgreich kopiert",
+		"addressCopied": "Adresse erfolgreich in die Zwischenablage kopiert!",
+		"cantAdd": "Kann keine Liste hinzufügen",
+		"transactionError": "Transaktionsfehler",
+		"errorOn": "Fehler bei",
+		"errorFarm": "Fehler beim Abrufen von Farms Opportunities",
+		"errorStake": "Fehler beim Abrufen von Stake-Möglichkeiten",
+		"transactionComp": "Transaktion erfolgreich abgeschlossen",
+		"connectingError": "Fehler beim Verbinden der Wallet"
 	}
 }

@@ -295,7 +295,7 @@
 		"initialPrices": "Preços inicias",
 		"prices": "Preços",
 		"poolShare": "e participação na pool",
-		"connectWallet": "Conectar a uma carteira",
+		"connectWallet": "Conectar carteira",
 		"approve": "Aprovar ",
 		"supply": "Supply",
 		"per": " por ",
@@ -593,7 +593,19 @@
 		"farmingWithdrawTooltip": "Quando você retira, seus Tokens de Liquidez Pegasys, PLP, são devolvidos à você. Sua liquidez de token original ficará em sua piscina de liquidez.",
 		"farmingWithdrawAndClaimTooltip": "Quando você retira, seus PSYS são resgatados e seus Tokens de Liquidez Pegasys, PLP, são devolvidos à você. Você não ganhará mais recompensas em PSYS nessa liquidez. Sua liquidez de token original ficará em sua piscina de liquidez.",
 		"farmingClaimTooltip": "Perceba que quando você resgata sem retirar os depósitos se mantém na piscina de mineiração.",
-		"yourFarms": "Your Farms",
-		"sortBy": "Sort By"
+		"yourFarms": "Suas Farms",
+		"sortBy": "Ordenar Por",
+		"liquidity": "Liquidez"
+	},
+	"toasts": {
+		"copied": "Copiado com sucesso",
+		"addressCopied": "Endereço copiado com sucesso para a área de transferência!",
+		"cantAdd": "Não é possível adicionar lista",
+		"transactionError": "Erro de transação",
+		"errorOn": "Erro em",
+		"errorFarm": "Erro na busca de oportunidades de farm",
+		"errorStake": "Erro na busca de oportunidades de stake",
+		"transactionComp": "Transação concluída com sucesso",
+		"connectingError": "Erro ao conectar a carteira"
 	}
 }

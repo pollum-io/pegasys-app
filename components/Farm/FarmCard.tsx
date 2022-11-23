@@ -91,13 +91,13 @@ const FarmCard: FunctionComponent<{
 			h="max-content"
 			d="inline-block"
 			flexDirection="column"
-			backgroundColor={theme.bg.blueNavy}
+			backgroundColor={theme.bg.blackAlpha}
 			px="6"
 			pb="6"
 			mb="4"
 			borderRadius="xl"
 			border="1px solid transparent;"
-			background={`linear-gradient(${theme.bg.blueNavy}, ${theme.bg.blueNavy}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+			background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 		>
 			<Flex justifyContent="space-between">
 				<Flex gap="2" pt="6">

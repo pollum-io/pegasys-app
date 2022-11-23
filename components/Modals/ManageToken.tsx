@@ -163,6 +163,8 @@ export const ManageToken: React.FC<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 
+	const { t: translation } = useTranslation();
+
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const [listUrlInput, setListUrlInput] = useState<string>("");
@@ -238,7 +240,7 @@ export const ManageToken: React.FC<IModal> = props => {
 	useEffect(() => {
 		if (errorMessage !== null && errorMessage !== "") {
 			toast({
-				title: "Can't add list",
+				title: translation("toasts.cantAdd"),
 				description: errorMessage,
 				status: "error",
 			});

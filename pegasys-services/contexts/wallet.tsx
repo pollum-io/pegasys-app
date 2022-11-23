@@ -2,6 +2,7 @@ import React, { useEffect, createContext, useState, useMemo } from "react";
 
 import { ChainId } from "@pollum-io/pegasys-sdk";
 import { IWalletInfo } from "types";
+import { useTranslation } from "react-i18next";
 import { SUPPORTED_NETWORK_CHAINS } from "../constants";
 import { useToasty } from "../hooks";
 import {
@@ -23,6 +24,7 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 	const [provider, setProvider] = useState<TProvider | null>(null);
 	const [signer, setSigner] = useState<TSigner | null>(null);
 	const [walletError, setWalletError] = useState<boolean>(false);
+	const { t: translation } = useTranslation();
 	const [connectorSelected, setConnectorSelected] =
 		useState<IWalletInfo | null>(null);
 	const { toast } = useToasty();
@@ -47,7 +49,7 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 			PersistentFramework.add("wallet", { isConnected: true });
 		} catch {
 			toast({
-				title: "Error while connecting the wallet.",
+				title: translation("toasts.connectingError"),
 				status: "error",
 			});
 			disconnect();

@@ -295,7 +295,7 @@
 		"initialPrices": "Initial Prices",
 		"prices": "Prices",
 		"poolShare": "and pool share",
-		"connectWallet": "Connect Wallet",
+		"connectWallet": "Connect wallet",
 		"approve": "Approve ",
 		"supply": "Supply",
 		"per": " per ",
@@ -594,6 +594,18 @@
 		"farmingWithdrawAndClaimTooltip": "When you withdraw, your PSYS is claimed and your Pegasys Liquidity tokens, PLP, are returned to you. You will no longer earn PSYS rewards on this liquidity. Your original token liquidity will remain in its liquidity pool.",
 		"farmingClaimTooltip": "Please note that when you claim without withdrawing your liquidity remains in the mining pool.",
 		"yourFarms": "Your Farms",
-		"sortBy": "Sort By"
+		"sortBy": "Sort By",
+		"liquidity": "Liquidity"
+	},
+	"toasts": {
+		"copied": "Successfully copied",
+		"addressCopied": "Address successfully copied to clipboard!",
+		"cantAdd": "Can't add list",
+		"transactionError": "Transaction error",
+		"errorOn": "Error on",
+		"errorFarm": "Error while fetching farms opportunities",
+		"errorStake": "Error while fetching stake opportunities",
+		"transactionComp": "Transaction completed successfully",
+		"connectingError": "Error while connecting the wallet"
 	}
 }

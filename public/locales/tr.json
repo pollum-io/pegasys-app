@@ -594,6 +594,18 @@
 		"farmingWithdrawAndClaimTooltip": "Para çektiğinizde, PSYS'niz talep edilir ve Pegasys Liquidity token'larınız PLP size iade edilir. Artık bu likidite üzerinden PSYS ödülleri kazanmayacaksınız. Orijinal token likiditeniz likidite havuzunda kalacaktır.",
 		"farmingClaimTooltip": "Lütfen para çekmeden talepte bulunduğunuzda likiditenizin madencilik havuzunda kaldığını unutmayın.",
 		"yourFarms": "Senin Farms",
-		"sortBy": "Sıralama"
+		"sortBy": "Sıralama",
+		"liquidity": "Likidite"
+	},
+	"toasts": {
+		"copied": "Başarıyla kopyalandı",
+		"addressCopied": "Adres başarıyla panoya kopyalandı!",
+		"cantAdd": "Liste eklenemiyor",
+		"transactionError": "İşlem hatası",
+		"errorOn": "Hata üzerinde",
+		"errorFarm": "Çiftlik fırsatları getirilirken hata farms",
+		"errorStake": "Çiftlik fırsatları getirilirken hata stake",
+		"transactionComp": "İşlem başarıyla tamamlandı",
+		"connectingError": "Cüzdan bağlanırken hata oluştu"
 	}
 }

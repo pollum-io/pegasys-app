@@ -594,6 +594,18 @@
 		"farmingWithdrawAndClaimTooltip": "Cuando se retira, se reclama su PSYS y se le devuelven sus tokens de liquidez de Pegasys, PLP. Ya no ganará recompensas de PSYS sobre esta liquidez. Su liquidez token original permanecerá en su fondo de liquidez.",
 		"farmingClaimTooltip": "Tenga en cuenta que cuando reclama sin retirar su liquidez permanece en el pool minero.",
 		"yourFarms": "Sus Farms",
-		"sortBy": "Ordenar Por"
+		"sortBy": "Ordenar Por",
+		"liquidity": "Liquidez"
+	},
+	"toasts": {
+		"copied": "Copiado con éxito",
+		"addressCopied": "¡Dirección copiada con éxito al portapapeles!",
+		"cantAdd": "No se puede añadir la lista",
+		"transactionError": "Error de transacción",
+		"errorOn": "Error en",
+		"errorFarm": "Error en la búsqueda de oportunidades en las farms",
+		"errorStake": "Error en la búsqueda de oportunidades de stake",
+		"transactionComp": "Transacción completada con éxito",
+		"connectingError": "Error al conectar la cartera"
 	}
 }

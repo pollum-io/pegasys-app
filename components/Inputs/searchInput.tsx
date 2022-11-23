@@ -38,7 +38,10 @@ const SearchInput: React.FC<ISearchInputProps> = ({
 		<InputGroup right="0rem">
 			<Input
 				placeholder={placeholder.value}
-				_placeholder={{ opacity: 1, color: placeholder.color }}
+				_placeholder={{
+					opacity: 1,
+					color: placeholder.color,
+				}}
 				borderColor={borderColor}
 				borderRadius="full"
 				w={["20rem", "28rem", "16rem", "16rem"]}
