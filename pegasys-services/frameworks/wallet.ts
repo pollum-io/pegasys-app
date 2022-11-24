@@ -98,6 +98,14 @@ class WalletFramework {
 		return signer ?? provider;
 	}
 
+	static async getBlock(blockNumber: string) {
+		const provider = this.getProvider();
+
+		const block = await provider.getBlock(Number(blockNumber));
+
+		return block;
+	}
+
 	static async getSignature({
 		address,
 		userDeadline,

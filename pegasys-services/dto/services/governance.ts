@@ -1,0 +1,96 @@
+import { ChainId } from "@pollum-io/pegasys-sdk";
+import { TContract } from "../framework";
+
+export interface IGovernaceServicesGetProposalCount {
+	chainId?: ChainId | null;
+	contract?: TContract;
+}
+
+export interface IGovernaceServicesGetQuorumCount {
+	chainId?: ChainId | null;
+	contract?: TContract;
+}
+
+export interface IGovernaceServicesGetProposalVotes {
+	chainId?: ChainId | null;
+	contract?: TContract;
+	proposalIndex: number;
+}
+
+export interface IGovernaceServicesGetProposal {
+	governanceContract?: TContract;
+}
+
+export interface IGovernaceServicesCastVote {
+	chainId?: ChainId | null;
+	contract?: TContract;
+	proposalIndex: number;
+	support?: boolean;
+}
+
+export interface IGovernaceServicesDelegate {
+	chainId?: ChainId | null;
+	contract?: TContract;
+	delegatee?: string;
+}
+
+export interface IGovernaceServicesGetDelegatee {
+	chainId?: ChainId | null;
+	contract?: TContract;
+	walletAddress?: string;
+}
+
+export interface IGovernaceServicesGetCurrentVotes {
+	chainId?: ChainId | null;
+	contract?: TContract;
+	walletAddress?: string;
+}
+
+export interface IProposal {
+	calldatas: [string];
+	description: string;
+	endBlock: string;
+	id: string;
+	proposer: { id: string };
+	signatures: [string];
+	targets: [string];
+	startBlock: string;
+	status: string;
+	votes: Array<{
+		support: boolean;
+		votes: string;
+		voter: {
+			id: string;
+		};
+	}>;
+}
+
+export interface IProposalVote {
+	voter: string;
+	votes: number;
+}
+
+export interface IFormattedProposal {
+	id: string;
+	title: string;
+	description: string[];
+	proposer: string;
+	status: string;
+	statusColor: string;
+	forVotes: number;
+	forVotesQuorumPercentage: number;
+	againstVotes: number;
+	againstVotesQuorumPercentage: number;
+	quorumCount: number;
+	startBlock: string;
+	endBlock: string;
+	endDate?: Date;
+	startDate: Date;
+	details: {
+		functionSig: string;
+		target: string;
+		callData: string;
+	};
+	supportVotes: IProposalVote[];
+	notSupportVotes: IProposalVote[];
+}

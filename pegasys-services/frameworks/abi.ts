@@ -5,6 +5,7 @@ import ROUTER_ABI from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-
 import PSYS_ABI from "@pollum-io/pegasys-protocol/artifacts/contracts/PegasysToken.sol/PegasysToken.json";
 import REWARDERVIAMULTIPLIER_ABI from "@pollum-io/pegasys-protocol/artifacts/contracts/earn/RewarderViaMultiplier.sol/RewarderViaMultiplier.json";
 
+import GOVERNANCE_ABI from "../abis/governance.json";
 import ERC20_ABI from "../abis/erc20.json";
 
 class AbiFramework {
@@ -34,6 +35,10 @@ class AbiFramework {
 
 	static getExtraRewardABi() {
 		return REWARDERVIAMULTIPLIER_ABI.abi;
+	}
+
+	static getGovernanceAbi() {
+		return GOVERNANCE_ABI;
 	}
 }
 
