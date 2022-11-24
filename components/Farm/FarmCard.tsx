@@ -158,12 +158,10 @@ const FarmCard: FunctionComponent<{
 					</Text>
 					<Text>{farmApr}%</Text>
 				</Flex>
-				{!!extraRewardToken && (
-					<Flex justifyContent="space-between" pb="3" fontSize="sm">
-						<Text fontWeight="semibold">{t("earnPages.totalApr")}</Text>
-						<Text>{combinedApr}%</Text>
-					</Flex>
-				)}
+				<Flex justifyContent="space-between" pb="3" fontSize="sm">
+					<Text fontWeight="semibold">{t("earnPages.totalApr")}</Text>
+					<Text>{combinedApr}%</Text>
+				</Flex>
 			</Flex>
 			{(JSBI.greaterThan(rewardRatePerWeek.raw, BIG_INT_ZERO) ||
 				JSBI.greaterThan(unclaimedAmount.raw, BIG_INT_ZERO)) && (
