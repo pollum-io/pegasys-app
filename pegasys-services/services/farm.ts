@@ -538,7 +538,7 @@ class FarmServices {
 					});
 
 					const { swapFeeApr, farmApr, combinedApr } =
-						await LpTokenServices.getAprs(poolId, !!extraRewardToken);
+						await LpTokenServices.getAprs(poolId);
 
 					let tokenA: Token;
 					let tokenB: Token;
