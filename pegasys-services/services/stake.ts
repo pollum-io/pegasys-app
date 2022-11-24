@@ -1,5 +1,6 @@
 import { ChainId, JSBI, TokenAmount, WSYS } from "@pollum-io/pegasys-sdk";
 
+import { pegasysClient, SYS_PRICE } from "apollo";
 import { ContractFramework } from "../frameworks";
 import {
 	BIG_INT_ONE,
@@ -26,6 +27,7 @@ import {
 } from "../dto";
 import PairServices from "./pair";
 import TokenServices from "./token";
+import LpTokenServices from "./lpToken";
 
 class StakeServices {
 	private static async getTotalStakedAmount({
@@ -244,6 +246,17 @@ class StakeServices {
 		};
 	}
 
+	private static async getPsysUsdPrice() {
+		const fetchSysPrice = await pegasysClient.query({
+			query: SYS_PRICE(),
+			fetchPolicy: "cache-first",
+		});
+
+		const sysPrice = fetchSysPrice?.data?.bundles[0]?.sysPrice;
+
+		return Number(sysPrice);
+	}
+
 	static async getDollarValues({
 		chainId,
 		totalStaked,
@@ -259,6 +272,12 @@ class StakeServices {
 		const [[sysPsysPairState, sysPsysPair]] = await PairServices.getPairs([
 			[wsys, psys],
 		]);
+
+		const totalSupply = await LpTokenServices.getTotalSupply({
+			contractAddress: psys.address,
+		});
+
+		const totalSupplyJSBI = JSBI.BigInt(totalSupply ?? 0);
 
 		const oneToken = JSBI.BigInt(`1${"0".repeat(18)}`);
 
@@ -294,7 +313,7 @@ class StakeServices {
 					JSBI.multiply(totalStaked.raw, totalStakedValueOfPsysInSys),
 					BIG_INT_TWO // this is b/c the value of LP shares are ~double the value of the wsys they entitle owner to
 				),
-				totalStaked.raw
+				totalSupplyJSBI
 			)
 		);
 
@@ -305,7 +324,7 @@ class StakeServices {
 					JSBI.multiply(staked.raw, stakedValueOfPsysInSys),
 					BIG_INT_TWO // this is b/c the value of LP shares are ~double the value of the wsys they entitle owner to
 				),
-				totalStaked.raw
+				totalSupplyJSBI
 			)
 		);
 
@@ -316,7 +335,7 @@ class StakeServices {
 					JSBI.multiply(unclaimedAmount.raw, unclaimedValueOfPsysInSys),
 					BIG_INT_TWO // this is b/c the value of LP shares are ~double the value of the wsys they entitle owner to
 				),
-				totalStaked.raw
+				totalSupplyJSBI
 			)
 		);
 
@@ -327,17 +346,17 @@ class StakeServices {
 					JSBI.multiply(rewardRatePerWeek.raw, rewardRateValueOfPsysInSys),
 					BIG_INT_TWO // this is b/c the value of LP shares are ~double the value of the wsys they entitle owner to
 				),
-				totalStaked.raw
+				totalSupplyJSBI
 			)
 		);
 
-		const usdPrice = await TokenServices.getUsdcPrice(wsys, chainId);
+		const usdPrice = await this.getPsysUsdPrice();
 
 		return {
-			totalStakedInUsd: Number(usdPrice?.quote(totalStakedInWsys).raw),
-			stakedInUsd: Number(usdPrice?.quote(stakedInWsys).raw),
-			unclaimedInUsd: Number(usdPrice?.quote(unclaimedInWsys).raw),
-			rewardRateInUsd: Number(usdPrice?.quote(rewardRateInWsys).raw),
+			totalStakedInUsd: Number(totalStakedInWsys.toSignificant()) * usdPrice,
+			stakedInUsd: Number(stakedInWsys.toSignificant()) * usdPrice,
+			unclaimedInUsd: Number(unclaimedInWsys.toSignificant()) * usdPrice,
+			rewardRateInUsd: Number(rewardRateInWsys.toSignificant()) * usdPrice,
 		};
 	}
 
