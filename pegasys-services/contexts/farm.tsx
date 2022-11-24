@@ -215,7 +215,6 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 				status: "error",
 				title: translation("toasts.errorFarm"),
 			});
-			console.log(e);
 		} finally {
 			setDataLoading(false);
 		}

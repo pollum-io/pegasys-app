@@ -517,8 +517,6 @@ class FarmServices {
 						chainId
 					);
 
-					console.log("values.stake: ", values.stake.toExact());
-
 					const stakedInUsd = this.getStakeInUsd(
 						values.totalStake,
 						values.stake,
