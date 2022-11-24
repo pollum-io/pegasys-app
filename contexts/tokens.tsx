@@ -52,7 +52,8 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		const WSYS = initialTokens.find(
 			(token: TokenInfo | WrappedTokenInfo) =>
 				token.symbol === "WSYS" &&
-				(token.chainId as ChainId) === currentNetworkChainId
+				token.chainId ===
+					((validatedCurrentChain ? currentNetworkChainId : 57) as number)
 		) as WrappedTokenInfo | ITokenInfoBalance;
 
 		const SYS: TokenInfo = {
