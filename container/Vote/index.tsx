@@ -107,7 +107,8 @@ export const VoteContainer: NextPage = () => {
 									px="1rem"
 								>
 									<Text fontWeight="500" fontSize="16px" color="white">
-										{currentVotes ? currentVotes.toSignificant() : 0} votes
+										Your Votes:{" "}
+										{currentVotes ? currentVotes.toSignificant() : 0}
 									</Text>
 									<Flex gap="4" fontSize="14px">
 										<Text color="white">

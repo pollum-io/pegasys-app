@@ -80,7 +80,7 @@ const Vote: React.FC = () => {
 					gap="2"
 					alignItems="center"
 				>
-					<Jazzicon diameter={18} seed={Math.round(Math.random() * 10000000)} />
+					<Jazzicon diameter={18} seed={Number(selectedProposals.proposer)} />
 					<Link
 						isExternal
 						href={getLink(selectedProposals.proposer)}

@@ -100,16 +100,6 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 	};
 
 	const onDelegate = async (delegatee?: string) => {
-		if (delegatee) {
-			if (delegatee === ZERO_ADDRESS) {
-				PersistentFramework.remove("governancePersistence");
-			} else {
-				PersistentFramework.add("governancePersistence", { delegatee });
-			}
-		} else {
-			PersistentFramework.add("governancePersistence", { delegatee: "Self" });
-		}
-
 		const { error } = await contractCall(
 			() =>
 				GovernanceServices.delegate({
@@ -160,20 +150,31 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 	}, [address]);
 
 	useEffect(() => {
+		const handleDelegatee = async () => {
+			const currentDelegatee = await GovernanceServices.getDelegatee({
+				contract: psysContract,
+				walletAddress: address,
+			});
+
+			if (!currentDelegatee) {
+				setVotesLocked(true);
+				setDelegatedTo("");
+				return;
+			}
+
+			setVotesLocked(false);
+			setDelegatedTo(currentDelegatee === address ? "Self" : currentDelegatee);
+		};
+
+		if (address) {
+			handleDelegatee();
+		}
+	}, [psysContract, address]);
+
+	useEffect(() => {
 		const init = async () => {
 			try {
 				setDataLoading(true);
-				const governancePersistence: { [k: string]: any } | undefined =
-					PersistentFramework.get("governancePersistence");
-
-				if (governancePersistence?.delegatee) {
-					setVotesLocked(false);
-					setDelegatedTo(
-						governancePersistence.delegatee === "Self"
-							? "Self"
-							: governancePersistence.delegatee
-					);
-				}
 
 				const fetchedProposals = await GovernanceServices.getProposals({
 					governanceContract,

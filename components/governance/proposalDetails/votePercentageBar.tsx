@@ -24,7 +24,7 @@ const ProposalDetailsPercentageBar: React.FC<IProposalDetailsPercentageBar> = ({
 				fontWeight="600"
 				color={theme.text.mono}
 			>
-				<Text>{support ? "For" : "against"}</Text>
+				<Text>{support ? "For" : "Against"}</Text>
 				<Flex>
 					<Text mr="0.563rem">
 						{support

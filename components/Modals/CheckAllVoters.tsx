@@ -96,18 +96,30 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 				>
 					<Flex flexDirection="column">
 						<Flex
+							width="100%"
 							justifyContent="space-between"
 							color={theme.text.cyanPurple}
 							fontSize="14px"
 							mb="1.5rem"
 						>
-							<Text>
-								{votersType === "favor"
-									? selectedProposals.supportVotes.length
-									: selectedProposals.notSupportVotes.length}{" "}
-								addresses
-							</Text>
-							<Text>Votes</Text>
+							{(votersType === "favor" &&
+								selectedProposals.supportVotes.length) ||
+							(votersType === "against" &&
+								selectedProposals.notSupportVotes.length) ? (
+								<>
+									<Text>
+										{votersType === "favor"
+											? selectedProposals.supportVotes.length
+											: selectedProposals.notSupportVotes.length}{" "}
+										addresses
+									</Text>
+									<Text>Votes</Text>
+								</>
+							) : (
+								<Text width="100%" align="center">
+									No Votes
+								</Text>
+							)}
 						</Flex>
 						<Flex w="100%" flexDirection="column" fontSize="14px" pr="0.5rem">
 							{(votersType === "favor"
@@ -129,7 +141,7 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 											{shortAddress(vote.voter)}
 										</Link>
 									</Flex>
-									<Text>{vote.votes}</Text>
+									<Text>{vote.votes.toFixed(2)}</Text>
 								</Flex>
 							))}
 						</Flex>
