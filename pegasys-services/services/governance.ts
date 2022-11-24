@@ -169,24 +169,20 @@ class GovernanceServices {
 					let statusColor;
 
 					switch (status.toLocaleLowerCase()) {
-						case "pending":
-							statusColor = "#ffff67";
-							break;
-						case "active":
-							statusColor = "#68D391";
-							break;
-						case "succeeded":
-							statusColor = "#68D391";
-							break;
-						case "queued":
-							statusColor = "#ffff67";
-							break;
 						case "executed":
 							statusColor = "#68D391";
 							break;
 
-						default:
+						case "defeated":
 							statusColor = "#FC8181";
+							break;
+
+						case "cancelled":
+							statusColor = "grey";
+							break;
+
+						default:
+							statusColor = "#F3841E";
 							break;
 					}
 

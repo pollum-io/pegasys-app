@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useMemo, useState } from "react";
 
 import { ChainId, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { addTransaction } from "utils";
-import { ZERO_ADDRESS } from "../constants";
+import { PegasysContracts, ZERO_ADDRESS } from "../constants";
 import { GovernanceServices } from "../services";
 import { useWallet, useTransaction, useToasty } from "../hooks";
 import {
@@ -57,6 +57,8 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 		summary: string,
 		type: string
 	) => {
+		let error: undefined | boolean;
+
 		try {
 			setLoading(true);
 
@@ -89,9 +91,12 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 				status: "error",
 				title: `Error on ${summary}`,
 			});
+
+			error = true;
 		} finally {
 			setLoading(false);
 		}
+		return { error };
 	};
 
 	const onDelegate = async (delegatee?: string) => {
@@ -105,7 +110,7 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 			PersistentFramework.add("governancePersistence", { delegatee: "Self" });
 		}
 
-		await contractCall(
+		const { error } = await contractCall(
 			() =>
 				GovernanceServices.delegate({
 					contract: psysContract,
@@ -114,6 +119,16 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 			"Delegate Votes",
 			"delegate-governance"
 		);
+
+		if (!error) {
+			if (delegatee === ZERO_ADDRESS) {
+				setDelegatedTo("");
+				setVotesLocked(true);
+			} else {
+				setVotesLocked(false);
+				setDelegatedTo(delegatee ?? "Self");
+			}
+		}
 	};
 
 	const vote = async (id: string, support?: boolean) => {
@@ -180,8 +195,10 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 			}
 		};
 
-		init();
-	}, []);
+		if (chainId && PegasysContracts[chainId]?.GOVERNANCE_ADDRESS) {
+			init();
+		}
+	}, [governanceContract]);
 
 	const providerValue = useMemo(
 		() => ({

@@ -12,28 +12,14 @@ const UnlockVotingFooter: React.FC<IUnlockVotingFooter> = ({
 	onClose,
 	setShowInput,
 }) => {
-	const {
-		votesLocked,
-		onDelegate,
-		setDelegatedTo,
-		setVotesLocked,
-		delegatedTo,
-	} = useGovernance();
+	const { votesLocked, onDelegate, delegatedTo } = useGovernance();
 	const theme = usePicasso();
 
-	const onDelegateVotes = () => {
+	const onDelegateVotes = async () => {
 		const isSelf =
 			(votesLocked && !showInput) || inputValue.toLocaleLowerCase() === "self";
 
-		if (inputValue === ZERO_ADDRESS) {
-			setDelegatedTo("");
-			setVotesLocked(true);
-		} else {
-			setVotesLocked(false);
-			setDelegatedTo(isSelf ? "Self" : inputValue);
-		}
-
-		onDelegate(isSelf ? undefined : inputValue);
+		await onDelegate(isSelf ? undefined : inputValue);
 		onClose();
 	};
 

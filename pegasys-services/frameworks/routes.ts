@@ -8,7 +8,7 @@ class RoutesFramework {
 	}
 
 	static getGovernanceAddress(chainId?: ChainId | null) {
-		return PegasysContracts[chainId ?? ChainId.NEVM].GOVERNANCE_ADDRESS ?? "";
+		return PegasysContracts[chainId ?? ChainId.NEVM]?.GOVERNANCE_ADDRESS ?? "";
 	}
 
 	static getRouterAddress(chainId?: ChainId | null) {
@@ -20,7 +20,7 @@ class RoutesFramework {
 	}
 
 	static getPsysAddress(chainId?: ChainId | null) {
-		const psys = PegasysTokens[chainId ?? ChainId.NEVM].PSYS;
+		const psys = PegasysTokens[chainId ?? ChainId.NEVM]?.PSYS;
 
 		return psys ? psys.address : "";
 	}

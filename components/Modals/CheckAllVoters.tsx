@@ -8,16 +8,22 @@ import {
 	ModalHeader,
 	ModalOverlay,
 	Text,
+	Link,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { FunctionComponent, useMemo } from "react";
-import { useGovernance, BIG_INT_ZERO } from "pegasys-services";
+import {
+	useGovernance,
+	BIG_INT_ZERO,
+	NETWORKS_CHAIN_PARAMS,
+	useWallet,
+} from "pegasys-services";
 
 import { MdClose } from "react-icons/md";
 import Jazzicon from "react-jazzicon";
 import { shortAddress } from "utils";
-import { JSBI } from "@pollum-io/pegasys-sdk";
 import { useTranslation } from "react-i18next";
+import { ChainId, JSBI } from "@pollum-io/pegasys-sdk";
 import { ProposalDetailsPercentageBar } from "../governance";
 
 interface IModal {
@@ -31,6 +37,12 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 
 	const theme = usePicasso();
 	const { votersType, selectedProposals, currentVotes, vote } = useGovernance();
+	const { chainId } = useWallet();
+
+	const getLink = (addr: string) =>
+		`${
+			NETWORKS_CHAIN_PARAMS[chainId ?? ChainId.NEVM].blockExplorerUrls[0]
+		}address/${addr}`;
 
 	const isOpenToVote = useMemo(() => {
 		if (selectedProposals?.endDate) return false;
@@ -113,7 +125,9 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 								>
 									<Flex gap="2">
 										<Jazzicon diameter={18} seed={Number(vote.voter)} />
-										<Text fontSize="14px">{shortAddress(vote.voter)}</Text>
+										<Link isExternal href={getLink(vote.voter)} fontSize="14px">
+											{shortAddress(vote.voter)}
+										</Link>
 									</Flex>
 									<Text>{vote.votes}</Text>
 								</Flex>

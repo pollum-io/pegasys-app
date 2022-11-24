@@ -1,9 +1,14 @@
 import React, { useMemo } from "react";
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Button, Flex, Text, Link } from "@chakra-ui/react";
 import { usePicasso, useModal } from "hooks";
 import Jazzicon from "react-jazzicon";
-import { BIG_INT_ZERO, useGovernance } from "pegasys-services";
-import { JSBI } from "@pollum-io/pegasys-sdk";
+import {
+	BIG_INT_ZERO,
+	NETWORKS_CHAIN_PARAMS,
+	useGovernance,
+	useWallet,
+} from "pegasys-services";
+import { ChainId, JSBI } from "@pollum-io/pegasys-sdk";
 import { shortAddress } from "utils";
 import { ProposalDetailsPercentageBar } from "../../governance";
 
@@ -12,6 +17,7 @@ const Vote: React.FC = () => {
 	const { setVotersType, selectedProposals, vote, currentVotes } =
 		useGovernance();
 	const { onOpenCheckAllVotersModal } = useModal();
+	const { chainId } = useWallet();
 
 	const isOpenToVote = useMemo(() => {
 		if (selectedProposals?.endDate) return false;
@@ -21,6 +27,15 @@ const Vote: React.FC = () => {
 
 		return true;
 	}, []);
+
+	const getLink = (addr: string) =>
+		`${
+			NETWORKS_CHAIN_PARAMS[chainId ?? ChainId.NEVM].blockExplorerUrls[0]
+		}address/${addr}`;
+
+	if (!selectedProposals) {
+		return null;
+	}
 
 	const isFavor = () => {
 		setVotersType("favor");
@@ -66,9 +81,13 @@ const Vote: React.FC = () => {
 					alignItems="center"
 				>
 					<Jazzicon diameter={18} seed={Math.round(Math.random() * 10000000)} />
-					<Text fontSize="14px">
+					<Link
+						isExternal
+						href={getLink(selectedProposals.proposer)}
+						fontSize="14px"
+					>
 						{shortAddress(selectedProposals.proposer)}
-					</Text>
+					</Link>
 				</Flex>
 			</Flex>
 			<Flex
@@ -93,8 +112,18 @@ const Vote: React.FC = () => {
 					<Flex
 						justifyContent="space-between"
 						alignItems="center"
+						flexDirection="row-reverse"
 						mt={["0", "0", "1.5", "1.5"]}
 					>
+						<Text
+							fontSize="12px"
+							_hover={{ cursor: "pointer", opacity: "0.9" }}
+							transition="100ms ease-in-out"
+							onClick={isFavor}
+							color="#718096"
+						>
+							Check all voters
+						</Text>
 						{isOpenToVote && (
 							<Button
 								fontSize="12px"
@@ -113,15 +142,6 @@ const Vote: React.FC = () => {
 								Vote in Favor
 							</Button>
 						)}
-						<Text
-							fontSize="12px"
-							_hover={{ cursor: "pointer", opacity: "0.9" }}
-							transition="100ms ease-in-out"
-							onClick={isFavor}
-							color="#718096"
-						>
-							Check all voters
-						</Text>
 					</Flex>
 				</Flex>
 				<Flex
@@ -134,7 +154,17 @@ const Vote: React.FC = () => {
 						justifyContent="space-between"
 						alignItems="center"
 						mt={["0", "0", "1.5", "1.5"]}
+						flexDirection="row-reverse"
 					>
+						<Text
+							fontSize="12px"
+							_hover={{ cursor: "pointer", opacity: "0.9" }}
+							transition="100ms ease-in-out"
+							onClick={isAgainst}
+							color="#718096"
+						>
+							Check all voters
+						</Text>
 						{isOpenToVote && (
 							<Button
 								fontSize="12px"
@@ -153,15 +183,6 @@ const Vote: React.FC = () => {
 								Vote Against
 							</Button>
 						)}
-						<Text
-							fontSize="12px"
-							_hover={{ cursor: "pointer", opacity: "0.9" }}
-							transition="100ms ease-in-out"
-							onClick={isAgainst}
-							color="#718096"
-						>
-							Check all voters
-						</Text>
 					</Flex>
 				</Flex>
 			</Flex>

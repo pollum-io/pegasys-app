@@ -12,13 +12,13 @@ import { NextPage } from "next";
 import { VoteCards, ProposalDetails, LoadingTransition } from "components";
 import { MdOutlineCallMade } from "react-icons/md";
 import { UnlockVotesModal } from "components/Modals/UnlockVoting";
-import { useWallet, useGovernance } from "pegasys-services";
 import { useTranslation } from "react-i18next";
+import { useWallet, useGovernance, PegasysContracts } from "pegasys-services";
 import { shortAddress } from "utils";
 
 export const VoteContainer: NextPage = () => {
 	const theme = usePicasso();
-	const { isConnected } = useWallet();
+	const { isConnected, chainId } = useWallet();
 	const {
 		selectedProposals,
 		showCancelled,
@@ -187,24 +187,28 @@ export const VoteContainer: NextPage = () => {
 											</Flex>
 										</Flex>
 									) : (
-										<Flex w="max-content" h="max-content">
-											<Button
-												fontSize="14px"
-												fontWeight="semibold"
-												px={["1.2rem", "1.5rem", "1.5rem", "1.5rem"]}
-												size="sm"
-												py="0.8rem"
-												bgColor={theme.bg.blueNavyLightness}
-												color={theme.text.cyan}
-												_hover={{
-													bgColor: theme.bg.bluePurple,
-												}}
-												onClick={onOpenUnlockVotesModal}
-												borderRadius="full"
-											>
-												{translation("votePage.unlockVoting")}
-											</Button>
-										</Flex>
+										isConnected &&
+										chainId &&
+										PegasysContracts[chainId]?.GOVERNANCE_ADDRESS && (
+											<Flex w="max-content" h="max-content">
+												<Button
+													fontSize="14px"
+													fontWeight="semibold"
+													px={["1.7rem", "1.5rem", "1.5rem", "1.5rem"]}
+													size="sm"
+													py="0.8rem"
+													bgColor={theme.bg.blueNavyLightness}
+													color={theme.text.cyan}
+													_hover={{
+														bgColor: theme.bg.bluePurple,
+													}}
+													onClick={onOpenUnlockVotesModal}
+													borderRadius="full"
+												>
+													Unlock Voting
+												</Button>
+											</Flex>
+										)
 									)}
 								</Flex>
 								{isConnected ? (
@@ -259,6 +263,23 @@ export const VoteContainer: NextPage = () => {
 											{translation("votePage.minimumThreshold")}
 										</Text>
 									</Flex>
+								</Flex>
+							) : !chainId || !PegasysContracts[chainId]?.GOVERNANCE_ADDRESS ? (
+								<Flex
+									w="100%"
+									mt={["3rem", "3rem", "4rem", "4rem"]}
+									flexDirection="column"
+									alignItems="center"
+									justifyContent="center"
+								>
+									<Text
+										fontSize={["sm", "sm", "md", "md"]}
+										fontWeight="semibold"
+										textAlign="center"
+										color={theme.text.mono}
+									>
+										This feature is not available for this network!
+									</Text>
 								</Flex>
 							) : dataLoading ? (
 								<Flex
