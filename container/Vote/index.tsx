@@ -68,7 +68,7 @@ export const VoteContainer: NextPage = () => {
 								position="absolute"
 								zIndex="base"
 								w="100%"
-								h={votesLocked ? "100%" : "85%"}
+								h="85%"
 							/>
 							<Flex
 								zIndex="docked"
@@ -93,42 +93,43 @@ export const VoteContainer: NextPage = () => {
 									{translation("votePage.youCanVote")}
 								</Text>
 							</Flex>
-							{!votesLocked && (
-								<Flex
-									alignItems={["flex-start", "center", "center", "center"]}
-									justifyContent="space-between"
-									flexDirection={["column", "row", "row", "row"]}
-									bgColor={theme.bg.alphaPurple}
-									zIndex="0"
-									position="relative"
-									top="4"
-									borderBottomRadius="xl"
-									py="0.531rem"
-									px="1rem"
-								>
-									<Text fontWeight="500" fontSize="16px" color="white">
-										Your Votes:{" "}
-										{currentVotes ? currentVotes.toSignificant() : 0}
-									</Text>
-									<Flex gap="4" fontSize="14px">
-										<Text color="white">
-											Delegated to:{" "}
-											{delegatedTo.toLocaleLowerCase() === "self"
-												? delegatedTo
-												: shortAddress(delegatedTo)}
+							<Flex
+								alignItems={["flex-start", "center", "center", "center"]}
+								justifyContent="space-between"
+								flexDirection={["column", "row", "row", "row"]}
+								bgColor={theme.bg.alphaPurple}
+								position="relative"
+								borderBottomRadius="xl"
+								h="15%"
+								py="0.531rem"
+								px="1rem"
+							>
+								{!votesLocked && (
+									<>
+										<Text fontWeight="500" fontSize="16px" color="white">
+											Your Votes:{" "}
+											{currentVotes ? currentVotes.toSignificant() : 0}
 										</Text>
-										<Text
-											fontWeight="semibold"
-											_hover={{ cursor: "pointer", opacity: "0.9" }}
-											transition="100ms ease-in-out"
-											color={theme.text.cyan}
-											onClick={onOpenUnlockVotesModal}
-										>
-											{translation("votePage.edit")}
-										</Text>
-									</Flex>
-								</Flex>
-							)}
+										<Flex gap="4" fontSize="14px">
+											<Text color="white">
+												Delegated to:{" "}
+												{delegatedTo.toLocaleLowerCase() === "self"
+													? delegatedTo
+													: shortAddress(delegatedTo)}
+											</Text>
+											<Text
+												fontWeight="semibold"
+												_hover={{ cursor: "pointer", opacity: "0.9" }}
+												transition="100ms ease-in-out"
+												color={theme.text.cyan}
+												onClick={onOpenUnlockVotesModal}
+											>
+												Edit
+											</Text>
+										</Flex>
+									</>
+								)}
+							</Flex>
 						</Flex>
 						<Flex
 							alignItems="flex-start"
