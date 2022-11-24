@@ -16,9 +16,10 @@ const CardItem: React.FC<ICardItemProps> = ({
 
 	return (
 		<Flex
+			width={["100%", "100%", "33%", "33%"]}
 			justifyContent="center"
 			flexDirection="column"
-			width={["100%", "100%", "30%", "30%"]}
+			// flex={1}
 		>
 			<Text
 				fontSize="sm"

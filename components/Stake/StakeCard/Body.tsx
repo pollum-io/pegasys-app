@@ -1,6 +1,5 @@
 import React from "react";
-import { Flex, Grid } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
+import { Flex } from "@chakra-ui/react";
 
 import { formattedNum } from "utils/convert/numberFormat";
 import { BIG_INT_ONE, formatBigNumbers } from "pegasys-services";
@@ -19,50 +18,57 @@ const Body: React.FC<IBodyProps> = ({
 	stakedAmount,
 	unclaimedInUsd,
 	unclaimedAmount,
-}) => {
-	const { t } = useTranslation();
-
-	return (
+}) => (
+	<Flex
+		flexDirection="column"
+		width="100%"
+		alignItems="center"
+		gap="1rem"
+		padding="1rem 0"
+	>
 		<Flex
 			alignItems={["flex-start", "flex-start", "center", "center"]}
-			width="100%"
+			justifyContent="space-between"
+			flexWrap="wrap"
+			rowGap="1rem"
+			width="85%"
 		>
-			<Grid
-				templateColumns={[
-					"repeat(1, 1fr)",
-					"repeat(1, 1fr)",
-					"repeat(3, 1fr)",
-					"repeat(3, 1fr)",
-				]}
-				gap={["1rem", "1rem", "2rem", "2rem"]}
-				px="8"
-			>
-				<CardItem text="APR" value={`${apr}%`} />
-				<CardItem
-					text={t("earnPages.totalStaked")}
-					usdValue={`${formattedNum(totalStakedInUsd, true)} USD`}
-					value={`${formatBigNumbers(
-						Number(totalStakedAmount.toSignificant())
-					)} ${symbol}`}
-				/>
-				<CardItem
-					text={t("earnPages.yourRate")}
-					usdValue={`${formattedNum(rewardRatePerWeekInUsd, true)} USD/Week`}
-					value={`${rewardRatePerWeek.toSignificant()} ${symbol}/Week`}
-				/>
-				<CardItem
-					text={t("earnPages.yourStake")}
-					usdValue={`${formattedNum(stakedInUsd, true)} USD`}
-					value={`${stakedAmount.toSignificant()} ${symbol}`}
-				/>
-				<CardItem
-					text={t("earnPages.yourUnclaimed")}
-					usdValue={`${formattedNum(unclaimedInUsd, true)} USD`}
-					value={`${unclaimedAmount.toSignificant()} ${symbol}`}
-				/>
-			</Grid>
+			<CardItem text="APR" value={`${apr}%`} />
+			<CardItem
+				text="Total staked"
+				usdValue={`${formattedNum(totalStakedInUsd, true)} USD`}
+				value={`${formatBigNumbers(
+					Number(totalStakedAmount.toSignificant())
+				)} ${symbol}`}
+				opacity={JSBI.lessThanOrEqual(totalStakedAmount.raw, BIG_INT_ONE)}
+			/>
+			<CardItem
+				text="Your rate"
+				usdValue={`${formattedNum(rewardRatePerWeekInUsd, true)} USD/Week`}
+				value={`${rewardRatePerWeek.toSignificant()} ${symbol}/Week`}
+				opacity={JSBI.lessThanOrEqual(rewardRatePerWeek.raw, BIG_INT_ONE)}
+			/>
 		</Flex>
-	);
-};
+		<Flex
+			alignItems={["flex-start", "flex-start", "center", "center"]}
+			width="85%"
+			rowGap="1rem"
+			flexWrap="wrap"
+		>
+			<CardItem
+				text="Your Staked"
+				usdValue={`${formattedNum(stakedInUsd, true)} USD`}
+				value={`${stakedAmount.toSignificant()} ${symbol}`}
+				opacity={JSBI.lessThanOrEqual(stakedAmount.raw, BIG_INT_ONE)}
+			/>
+			<CardItem
+				text="Your unclaimed"
+				usdValue={`${formattedNum(unclaimedInUsd, true)} USD`}
+				value={`${unclaimedAmount.toSignificant()} ${symbol}`}
+				opacity={JSBI.lessThanOrEqual(unclaimedAmount.raw, BIG_INT_ONE)}
+			/>
+		</Flex>
+	</Flex>
+);
 
 export default Body;
