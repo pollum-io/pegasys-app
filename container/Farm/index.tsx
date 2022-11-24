@@ -139,7 +139,7 @@ export const FarmContainer: NextPage = () => {
 							{translation("earnPages.farms")}
 						</Text>
 					</Flex>
-					{address && (
+					{address && !dataLoading && (
 						<Flex
 							flexDirection={["column-reverse", "column-reverse", "row", "row"]}
 							alignItems="flex-end"
@@ -219,44 +219,7 @@ export const FarmContainer: NextPage = () => {
 						</Flex>
 					)}
 				</Flex>
-				{!isConnected && (
-					<Flex
-						w="100%"
-						mt={["3rem", "3rem", "4rem", "4rem"]}
-						flexDirection="column"
-						alignItems="center"
-						justifyContent="center"
-						mb={["3rem", "3rem", "4rem", "4rem"]}
-					>
-						<Text
-							fontSize={["sm", "sm", "md", "md"]}
-							fontWeight="normal"
-							textAlign="center"
-						>
-							{translation("earnPages.walletConnect")}
-						</Text>
-					</Flex>
-				)}
-				{isConnected &&
-					(!chainId || !PegasysContracts[chainId].MINICHEF_ADDRESS) && (
-						<Flex
-							w="100%"
-							mt={["3rem", "3rem", "4rem", "4rem"]}
-							flexDirection="column"
-							alignItems="center"
-							justifyContent="center"
-							mb={["3rem", "3rem", "4rem", "4rem"]}
-						>
-							<Text
-								fontSize={["sm", "sm", "md", "md"]}
-								fontWeight="normal"
-								textAlign="center"
-							>
-								{translation("earnPages.featNotAvailable")}
-							</Text>
-						</Flex>
-					)}
-				{dataLoading && isConnected && (
+				{dataLoading ? (
 					<Flex
 						w="100%"
 						mt={["3rem", "3rem", "4rem", "4rem"]}
@@ -276,8 +239,43 @@ export const FarmContainer: NextPage = () => {
 							}
 						/>
 					</Flex>
+				) : !isConnected ? (
+					<Flex
+						w="100%"
+						mt={["3rem", "3rem", "4rem", "4rem"]}
+						flexDirection="column"
+						alignItems="center"
+						justifyContent="center"
+						mb={["3rem", "3rem", "4rem", "4rem"]}
+					>
+						<Text
+							fontSize={["sm", "sm", "md", "md"]}
+							fontWeight="normal"
+							textAlign="center"
+						>
+							{translation("earnPages.walletConnect")}
+						</Text>
+					</Flex>
+				) : !chainId || !PegasysContracts[chainId].MINICHEF_ADDRESS ? (
+					<Flex
+						w="100%"
+						mt={["3rem", "3rem", "4rem", "4rem"]}
+						flexDirection="column"
+						alignItems="center"
+						justifyContent="center"
+						mb={["3rem", "3rem", "4rem", "4rem"]}
+					>
+						<Text
+							fontSize={["sm", "sm", "md", "md"]}
+							fontWeight="normal"
+							textAlign="center"
+						>
+							{translation("earnPages.featNotAvailable")}
+						</Text>
+					</Flex>
+				) : (
+					<FarmGrid />
 				)}
-				<FarmGrid />
 			</Flex>
 		</Flex>
 	);
