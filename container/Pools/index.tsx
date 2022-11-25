@@ -606,135 +606,150 @@ export const PoolsContainer: NextPage = () => {
 								{translation("pool.poolsOverview")}
 							</Text>
 						</Flex>
-						<Flex
-							id="b"
-							justifyContent={
-								isConnected
-									? [
-											"space-between",
-											"space-between",
-											"space-between",
-											"space-between",
-									  ]
-									: ["space-between", "space-between", "flex-end", "flex-end"]
-							}
-							flexDirection={["column-reverse", "column-reverse", "row", "row"]}
-							zIndex="docked"
-							w="100%"
-							mt={["4", "6", "2", "2"]}
-							gap={["7", "none", "none", "none"]}
-							alignItems={["flex-start", "flex-start", "flex-end", "flex-end"]}
-						>
+						{searchTokens?.length !== 0 && (
 							<Flex
-								display={userHavePool && isConnected ? "flex" : "none"}
+								id="b"
+								justifyContent={
+									isConnected
+										? [
+												"space-between",
+												"space-between",
+												"space-between",
+												"space-between",
+										  ]
+										: ["space-between", "space-between", "flex-end", "flex-end"]
+								}
+								flexDirection={[
+									"column-reverse",
+									"column-reverse",
+									"row",
+									"row",
+								]}
+								zIndex="docked"
 								w="100%"
+								mt={["4", "6", "2", "2"]}
+								gap={["7", "none", "none", "none"]}
+								alignItems={[
+									"flex-start",
+									"flex-start",
+									"flex-end",
+									"flex-end",
+								]}
 							>
-								<InputGroup alignItems="center">
-									<InputLeftElement
-										pl="0.625rem"
-										pointerEvents="none"
-										pb="0.3rem"
-										// eslint-disable-next-line react/no-children-prop
-										children={
-											<MdSearch color={theme.icon.inputSearchIcon} size={20} />
-										}
-									/>
-									<Input
-										borderColor={theme.bg.blueNavyLightness}
-										placeholder={translation("pool.searchPair")}
-										_placeholder={{
-											color: theme.text.inputBluePurple,
-										}}
-										onChange={handleInput}
-										borderRadius="full"
-										w={["100%", "100%", "20rem", "20rem"]}
-										h="2.2rem"
-										py={["0.2rem", "0.2rem", "1", "1"]}
-										pl="10"
-										_focus={{
-											outline: "none",
-											borderColor: theme.border.focusBluePurple,
-										}}
-										_hover={{}}
-									/>
-								</InputGroup>
-							</Flex>
-							<Flex gap="4" alignItems="flex-end">
 								<Flex
-									flexDirection="column"
-									alignItems={[
-										"flex-end",
-										"flex-end",
-										"flex-start",
-										"flex-start",
-									]}
+									display={userHavePool && isConnected ? "flex" : "none"}
+									w="100%"
 								>
-									{isConnected && (
-										<Menu>
-											<Text fontSize="sm" pb="2" w="100%">
-												{translation("pool.sort")}
-											</Text>
-											<MenuButton
-												as={Button}
-												fontSize="sm"
-												fontWeight="semibold"
-												px="1rem"
-												size="sm"
-												h="2.2rem"
-												bgColor={theme.bg.blueNavyLightness}
-												color="white"
-												_hover={{
-													bgColor: theme.bg.bluePurple,
-												}}
-												_active={{}}
-												borderRadius="full"
-												rightIcon={<MdExpandMore size={20} />}
-											>
-												{!sortType
-													? translation("pool.yourPools")
-													: sortTypeName}
-											</MenuButton>
-											<MenuList
-												bgColor={theme.bg.blueNavy}
-												color="white"
-												borderColor="transparent"
-												p="4"
-												fontSize="sm"
-											>
-												<MenuItem
-													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.neutralGray }}
-													onClick={() => setSortType("liquidity")}
+									<InputGroup alignItems="center">
+										<InputLeftElement
+											pl="0.625rem"
+											pointerEvents="none"
+											pb="0.3rem"
+											// eslint-disable-next-line react/no-children-prop
+											children={
+												<MdSearch
+													color={theme.icon.inputSearchIcon}
+													size={20}
+												/>
+											}
+										/>
+										<Input
+											borderColor={theme.bg.blueNavyLightness}
+											placeholder={translation("pool.searchPair")}
+											_placeholder={{
+												color: theme.text.inputBluePurple,
+											}}
+											onChange={handleInput}
+											borderRadius="full"
+											w={["100%", "100%", "20rem", "20rem"]}
+											h="2.2rem"
+											py={["0.2rem", "0.2rem", "1", "1"]}
+											pl="10"
+											_focus={{
+												outline: "none",
+												borderColor: theme.border.focusBluePurple,
+											}}
+											_hover={{}}
+										/>
+									</InputGroup>
+								</Flex>
+								<Flex gap="4" alignItems="flex-end">
+									<Flex
+										flexDirection="column"
+										alignItems={[
+											"flex-end",
+											"flex-end",
+											"flex-start",
+											"flex-start",
+										]}
+									>
+										{isConnected && (
+											<Menu>
+												<Text fontSize="sm" pb="2" w="100%">
+													{translation("pool.sort")}
+												</Text>
+												<MenuButton
+													as={Button}
+													fontSize="sm"
+													fontWeight="semibold"
+													px="1rem"
+													size="sm"
+													h="2.2rem"
+													bgColor={theme.bg.blueNavyLightness}
+													color="white"
+													_hover={{
+														bgColor: theme.bg.bluePurple,
+													}}
+													_active={{}}
+													borderRadius="full"
+													rightIcon={<MdExpandMore size={20} />}
 												>
-													{translation("pool.liquidity")}
-												</MenuItem>
-												<MenuItem
-													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.neutralGray }}
-													onClick={() => setSortType("volume")}
+													{!sortType
+														? translation("pool.yourPools")
+														: sortTypeName}
+												</MenuButton>
+												<MenuList
+													bgColor={theme.bg.blueNavy}
+													color="white"
+													borderColor="transparent"
+													p="4"
+													fontSize="sm"
 												>
-													{translation("positionCard.volume")}
-												</MenuItem>
-												<MenuItem
-													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.neutralGray }}
-													onClick={() => setSortType("apr")}
-												>
-													APR
-												</MenuItem>
-												<MenuItem
-													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.neutralGray }}
-													onClick={() => setSortType("your-pools")}
-												>
-													{translation("pool.yourPools")}
-												</MenuItem>
-											</MenuList>
-										</Menu>
-									)}
+													<MenuItem
+														color={theme.text.mono}
+														_hover={{ bgColor: theme.bg.neutralGray }}
+														onClick={() => setSortType("liquidity")}
+													>
+														{translation("pool.liquidity")}
+													</MenuItem>
+													<MenuItem
+														color={theme.text.mono}
+														_hover={{ bgColor: theme.bg.neutralGray }}
+														onClick={() => setSortType("volume")}
+													>
+														{translation("positionCard.volume")}
+													</MenuItem>
+													<MenuItem
+														color={theme.text.mono}
+														_hover={{ bgColor: theme.bg.neutralGray }}
+														onClick={() => setSortType("apr")}
+													>
+														APR
+													</MenuItem>
+													<MenuItem
+														color={theme.text.mono}
+														_hover={{ bgColor: theme.bg.neutralGray }}
+														onClick={() => setSortType("your-pools")}
+													>
+														{translation("pool.yourPools")}
+													</MenuItem>
+												</MenuList>
+											</Menu>
+										)}
+									</Flex>
 								</Flex>
 							</Flex>
-						</Flex>
+						)}
 					</Flex>
 					{!isConnected ? (
 						<Flex
