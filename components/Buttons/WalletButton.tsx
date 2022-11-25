@@ -8,17 +8,18 @@ import {
 } from "@chakra-ui/react";
 import { SelectSyscoin, SelectWallets } from "components/Modals";
 import { useModal, usePicasso } from "hooks";
-import { FunctionComponent, useEffect } from "react";
+import { FunctionComponent, useEffect, useMemo } from "react";
 import { AddressInfoButton } from "components/Buttons";
 import { shortAddress } from "utils";
 import { ExpertMode } from "components/Header/ExpertMode";
 import {
 	useWallet,
 	usePegasys,
-	ApprovalState,
+	// ApprovalState,
 	useTransaction,
 } from "pegasys-services";
 import { useTranslation } from "react-i18next";
+import { ChainId } from "@pollum-io/pegasys-sdk";
 import { AddressButton } from "./AddressButton";
 
 export const WalletButton: FunctionComponent<ButtonProps> = props => {
@@ -36,17 +37,23 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 		onCloseAddress,
 	} = useModal();
 
-	const { approvalState, pendingTxLength } = useTransaction();
-	const { address, isConnected, walletError } = useWallet();
+	const { pendingTxs } = useTransaction();
+	const { address, isConnected, walletError, chainId } = useWallet();
 	const { expert } = usePegasys();
-
-	const isPending = approvalState.status === ApprovalState.PENDING;
 	const { colorMode } = useColorMode();
 	const { t: translation } = useTranslation();
 
 	useEffect(() => {
 		if (walletError) onOpenSelectSyscoin();
 	}, [walletError]);
+
+	const isPending = useMemo(() => {
+		if (pendingTxs[chainId ?? ChainId.NEVM].length) {
+			return true;
+		}
+
+		return false;
+	}, [chainId, pendingTxs]);
 
 	return (
 		<>
@@ -126,7 +133,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						justifyContent="center"
 					>
 						<Text fontSize="14px" color="white">
-							{pendingTxLength}
+							{pendingTxs[chainId ?? ChainId.NEVM]?.length ?? 0}
 						</Text>
 						<Flex
 							className="circleLoading"
@@ -137,7 +144,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 					</Flex>
 					<AddressButton
 						onClick={walletError ? onOpenSelectWalletModal : onOpenAddress}
-						pending={approvalState?.status === ApprovalState.PENDING}
+						pending={isPending}
 					>
 						{shortAddress(address)}
 					</AddressButton>

@@ -120,12 +120,14 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const [currPoolShare, setCurrPoolShare] = useState<string>("");
 	const { setCurrentLpAddress } = useWallet();
 	const {
-		setTransactions,
-		transactions,
-		setApprovalState,
-		approvalState,
-		setCurrentTxHash,
-		setCurrentSummary,
+		pendingTxs,
+		addTransactions,
+		// setTransactions,
+		// transactions,
+		// setApprovalState,
+		// approvalState,
+		// setCurrentTxHash,
+		// setCurrentSummary,
 	} = useTransaction();
 	const { address, chainId, isConnected, signer, provider } = psUseWallet();
 	const { userSlippageTolerance, userTransactionDeadlineValue } = usePegasys();
@@ -162,7 +164,13 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			selectedToken[1]?.symbol === "WSYS") ||
 		(selectedToken[0]?.symbol === "WSYS" && selectedToken[1]?.symbol === "SYS");
 
-	const isPending = approvalState.status === ApprovalState.PENDING;
+	const isPending = useMemo(() => {
+		if (pendingTxs[chainId ?? ChainId.NEVM].length) {
+			return true;
+		}
+
+		return false;
+	}, [chainId, pendingTxs]);
 
 	const inputValidation =
 		parseFloat(tokenInputValue.inputTo.value) >
@@ -170,9 +178,9 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		parseFloat(tokenInputValue.inputFrom.value) >
 			parseFloat(selectedToken[0]?.formattedBalance);
 
-	const isApproved =
-		approvalState.type === "approve" &&
-		approvalState.status === ApprovalState.APPROVED;
+	// const isApproved =
+	// 	approvalState.type === "approve" &&
+	// 	approvalState.status === ApprovalState.APPROVED;
 
 	const emptyInput =
 		!tokenInputValue.inputFrom.value || !tokenInputValue.inputTo.value;
@@ -405,20 +413,26 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		})
 			.then(res => {
 				if (res?.spender) {
-					setApprovalState({ type: "approve", status: ApprovalState.PENDING });
+					// setApprovalState({ type: "approve", status: ApprovalState.PENDING });
 					setApproveTokenStatus(ApprovalState.APPROVED);
-					setCurrentTxHash(res?.hash);
-					addTransaction(
-						res?.response,
-						walletInfo,
-						setTransactions,
-						transactions,
-						{
-							summary: `Approve ${tokenToApp?.symbol}`,
-							finished: false,
-						}
-					);
-					setCurrentSummary(`Approve ${tokenToApp?.symbol}`);
+					// setCurrentTxHash(res?.hash);
+					addTransactions({
+						hash: res.hash,
+						summary: `Approve ${tokenToApp?.symbol}`,
+						service: "poolsApproveAddLiquidity",
+					});
+
+					// addTransaction(
+					// 	res?.response,
+					// 	walletInfo,
+					// 	setTransactions,
+					// 	transactions,
+					// 	{
+					// 		summary: `Approve ${tokenToApp?.symbol}`,
+					// 		finished: false,
+					// 	}
+					// );
+					// setCurrentSummary(`Approve ${tokenToApp?.symbol}`);
 					closePendingTx();
 				}
 			})
@@ -446,20 +460,25 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			pair,
 		})
 			.then(res => {
-				console.log({ res });
-				setCurrentTxHash(res?.hash);
-				setApprovalState({
-					type: "add-liquidity",
-					status: ApprovalState.PENDING,
-				});
-				addTransaction(res, walletInfo, setTransactions, transactions, {
+				// console.log({ res });
+				// setCurrentTxHash(res?.hash);
+				// setApprovalState({
+				// 	type: "add-liquidity",
+				// 	status: ApprovalState.PENDING,
+				// });
+				addTransactions({
+					hash: res.hash,
 					summary: `Add ${tokenInputValue.inputFrom.value} ${selectedToken[0]?.symbol} and ${tokenInputValue.inputTo.value} ${selectedToken[1]?.symbol}`,
-					finished: false,
+					service: "poolsAddLiquidity",
 				});
+				// addTransaction(res, walletInfo, setTransactions, transactions, {
+				// 	summary: `Add ${tokenInputValue.inputFrom.value} ${selectedToken[0]?.symbol} and ${tokenInputValue.inputTo.value} ${selectedToken[1]?.symbol}`,
+				// 	finished: false,
+				// });
 				closePendingTx();
-				setCurrentSummary(
-					`Add ${tokenInputValue.inputFrom.value} ${selectedToken[0]?.symbol} and ${tokenInputValue.inputTo.value} ${selectedToken[1]?.symbol}`
-				);
+				// setCurrentSummary(
+				// 	`Add ${tokenInputValue.inputFrom.value} ${selectedToken[0]?.symbol} and ${tokenInputValue.inputTo.value} ${selectedToken[1]?.symbol}`
+				// );
 			})
 			.catch(err => {
 				console.log(err);

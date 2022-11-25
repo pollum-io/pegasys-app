@@ -15,11 +15,11 @@ import {
 import {
 	useToasty,
 	useWallet,
-	ApprovalState,
+	// ApprovalState,
 	useTransaction,
 } from "pegasys-services";
 import { usePicasso } from "hooks";
-import { FunctionComponent, useState, useEffect } from "react";
+import React, { FunctionComponent, useState, useEffect } from "react";
 import Jazzicon from "react-jazzicon";
 import {
 	MdContentCopy,
@@ -36,15 +36,80 @@ interface IModal {
 	onClose: () => void;
 }
 
+const TransactionRow: React.FC<{
+	pending?: boolean;
+	hash: string;
+	summary: string;
+	success?: boolean;
+}> = ({ pending, hash, summary, success }) => {
+	const { colorMode } = useColorMode();
+	const { chainId } = useWallet();
+
+	const explorerURL =
+		chainId === 5700
+			? "https://tanenbaum.io/tx"
+			: chainId === 57
+			? "https://explorer.syscoin.org/tx"
+			: "https://explorer.testnet.rollux.com/tx";
+
+	return (
+		<Flex alignItems="center" justifyContent="flex-start" w="100%">
+			{pending && (
+				<Flex
+					className="circleLoading"
+					id={
+						colorMode === "dark"
+							? "pendingTransactionsDark"
+							: "pendingTransactionsLight"
+					}
+				/>
+			)}
+			<Flex
+				justifyContent="space-between"
+				w="100%"
+				alignItems="center"
+				pl={pending ? "2" : "0"}
+			>
+				<Link
+					fontSize="sm"
+					href={`${explorerURL}/${hash}`}
+					target="_blank"
+					rel="noreferrer"
+					alignItems="center"
+				>
+					{summary}
+					<Icon
+						as={MdOutlineCallMade}
+						w="4"
+						h="4"
+						top="0.15rem"
+						left="0.5rem"
+						position="relative"
+					/>
+				</Link>
+				{!pending && (
+					<Flex>
+						{success ? (
+							<AiOutlineCheckCircle color="#25855A" />
+						) : (
+							<AiOutlineCloseCircle color="#E53E3E" />
+						)}
+					</Flex>
+				)}
+			</Flex>
+		</Flex>
+	);
+};
+
 export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
-	const { transactions, approvalState } = useTransaction();
-	const isPending = approvalState.status === ApprovalState.PENDING;
+	const { pendingTxs, finishedTxs, clearAll } = useTransaction();
+	// const isPending = approvalState.status === ApprovalState.PENDING;
 	const { toast } = useToasty();
 	const { address, chainId, connectorSelected, disconnect } = useWallet();
-	const [txs, setTxs] = useState<ITransactionResponse[]>([]);
+	// const [txs, setTxs] = useState<ITransactionResponse[]>([]);
 	const { t: translation } = useTranslation();
 
 	const handleCopyToClipboard = () => {
@@ -59,10 +124,10 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 		});
 	};
 
-	const isEmpty =
-		Object.keys(transactions[57]).length === 0 &&
-		Object.keys(transactions[5700]).length === 0 &&
-		Object.keys(transactions[2814]).length === 0;
+	// const isEmpty =
+	// 	Object.keys(transactions[57]).length === 0 &&
+	// 	Object.keys(transactions[5700]).length === 0 &&
+	// 	Object.keys(transactions[2814]).length === 0;
 
 	const explorerURL =
 		chainId === 5700
@@ -71,25 +136,25 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 			? "https://explorer.syscoin.org/tx"
 			: "https://explorer.testnet.rollux.com/tx";
 
-	useEffect(() => {
-		if (!isEmpty) {
-			// eslint-disable-next-line
-			const currentTxs: ITransactionResponse[] = [
-				...Object.values(transactions[5700]),
-				...Object.values(transactions[57]),
-				...Object.values(transactions[2814]),
-			];
+	// useEffect(() => {
+	// 	if (!isEmpty) {
+	// 		// eslint-disable-next-line
+	// 		const currentTxs: ITransactionResponse[] = [
+	// 			...Object.values(transactions[5700]),
+	// 			...Object.values(transactions[57]),
+	// 			...Object.values(transactions[2814]),
+	// 		];
 
-			setTxs(currentTxs);
-		}
-	}, [
-		transactions,
-		isEmpty,
-		transactions[57],
-		transactions[5700],
-		transactions[2814],
-		isPending,
-	]);
+	// 		setTxs(currentTxs);
+	// 	}
+	// }, [
+	// 	transactions,
+	// 	isEmpty,
+	// 	transactions[57],
+	// 	transactions[5700],
+	// 	transactions[2814],
+	// 	isPending,
+	// ]);
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -226,7 +291,8 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 					h="max-content"
 					pb="1.4rem"
 				>
-					{txs.length === 0 ? (
+					{!chainId ||
+					(!pendingTxs[chainId].length && !finishedTxs[chainId].length) ? (
 						<Text fontSize="sm" fontWeight="semibold" color={theme.text.mono}>
 							{translation("accountDetails.transactionAppear")}
 						</Text>
@@ -247,64 +313,29 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									fontWeight="semibold"
 									color={theme.text.cyanPurple}
 									_hover={{ cursor: "pointer", textDecoration: "underline" }}
-									onClick={() => setTxs([])}
+									onClick={clearAll}
 								>
 									{translation("accoutnDetails.clearAll")}
 								</Text>
 							</Flex>
 
 							<Flex flexDirection="column" gap={1} w="100%">
-								{txs.map((item: ITransactionResponse, index: number) => (
-									<Flex
-										alignItems="center"
-										justifyContent="flex-start"
-										w="100%"
-										key={item.nonce + index}
-									>
-										{isPending && !item?.finished && (
-											<Flex
-												className="circleLoading"
-												id={
-													colorMode === "dark"
-														? "pendingTransactionsDark"
-														: "pendingTransactionsLight"
-												}
-											/>
-										)}
-										<Flex
-											justifyContent="space-between"
-											w="100%"
-											alignItems="center"
-											pl={!item.finished ? "2" : "0"}
-										>
-											<Link
-												fontSize="sm"
-												href={`${explorerURL}/${item?.hash}`}
-												target="_blank"
-												rel="noreferrer"
-												alignItems="center"
-											>
-												{item?.summary}
-												<Icon
-													as={MdOutlineCallMade}
-													w="4"
-													h="4"
-													top="0.15rem"
-													left="0.5rem"
-													position="relative"
-												/>
-											</Link>
-											{item?.finished && (
-												<Flex>
-													{item.confirmations === 1 ? (
-														<AiOutlineCheckCircle color="#25855A" />
-													) : (
-														<AiOutlineCloseCircle color="#E53E3E" />
-													)}
-												</Flex>
-											)}
-										</Flex>
-									</Flex>
+								{(pendingTxs[chainId] ?? []).map(tx => (
+									<TransactionRow
+										key={tx.hash}
+										hash={tx.hash}
+										summary={tx.summary}
+										pending
+									/>
+								))}
+								{(finishedTxs[chainId] ?? []).map(tx => (
+									<TransactionRow
+										key={tx.hash}
+										hash={tx.hash}
+										summary={tx.summary}
+										success={tx.success}
+										pending
+									/>
 								))}
 							</Flex>
 						</Flex>
