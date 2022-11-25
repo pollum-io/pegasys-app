@@ -1,4 +1,5 @@
 export * from "./useModal";
+export * from "./usePools";
 export * from "./usePicasso";
 export * from "./useWallet";
 export * from "./useTokens";

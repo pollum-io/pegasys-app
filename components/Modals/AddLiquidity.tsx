@@ -898,90 +898,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					</Flex>
 				</Flex>
 				{tokenInputValue.inputTo.value &&
-					tokenInputValue.inputFrom.value &&
-					!invalidPair && (
-						<Flex
-							flexDirection="column"
-							p="1.5rem"
-							transition="200ms"
-							background={theme.bg.subModal}
-							position={["relative", "relative", "absolute", "absolute"]}
-							top={
-								parseFloat(tokenInputValue.inputTo.value) >
-									parseFloat(selectedToken[1]?.formattedBalance) &&
-								parseFloat(tokenInputValue.inputFrom.value) >
-									parseFloat(selectedToken[0]?.formattedBalance)
-									? ["unset", "unset", "35rem", "39rem"]
-									: parseFloat(tokenInputValue.inputTo.value) >
-											parseFloat(selectedToken[1]?.formattedBalance) ||
-									  parseFloat(tokenInputValue.inputFrom.value) >
-											parseFloat(selectedToken[0]?.formattedBalance)
-									? ["unset", "unset", "20rem", "37rem"]
-									: ["unset", "unset", "10rem", "35rem"]
-							}
-							w="100%"
-							borderRadius={["0", "0", "3xl", "3xl"]}
-							color={theme.text.mono}
-						>
-							<Text fontWeight="bold" fontSize="lg">
-								{translation("addLiquidity.willReceive")}
-							</Text>
-							<Flex
-								flexDirection="row"
-								justifyContent="space-between"
-								py="0.5rem"
-							>
-								<Flex
-									fontSize="lg"
-									fontWeight="bold"
-									align="center"
-									position="relative"
-								>
-									<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
-									<Img
-										src={selectedToken[1]?.logoURI}
-										w="6"
-										h="6"
-										position="absolute"
-										left="1.3rem"
-									/>
-									<Text pl="2" ml="1.2rem">
-										{selectedToken[0]?.symbol}/{selectedToken[1]?.symbol}
-									</Text>
-								</Flex>
-								<Text fontSize="lg" fontWeight="bold">
-									{liquidityMintendValue?.toSignificant(6) || "-"}
-								</Text>
-							</Flex>
-							<Flex flexDirection="column">
-								<Flex
-									flexDirection="row"
-									justifyContent="space-between"
-									pt="0.68rem"
-								>
-									<Text fontWeight="semibold">
-										{selectedToken[0]?.symbol} Deposited
-									</Text>
-									<Text fontWeight="normal">
-										{tokenInputValue.inputFrom.value}
-									</Text>
-								</Flex>
-								<Flex
-									flexDirection="row"
-									justifyContent="space-between"
-									pt="0.75rem"
-								>
-									<Text fontWeight="semibold">
-										{selectedToken[1]?.symbol} Deposited
-									</Text>
-									<Text fontWeight="normal">
-										{tokenInputValue.inputTo.value}
-									</Text>
-								</Flex>
-							</Flex>
-						</Flex>
-					)}
-				{tokenInputValue.inputTo.value &&
 				tokenInputValue.inputFrom.value &&
 				!invalidPair ? (
 					<Flex
@@ -1000,8 +916,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										parseFloat(selectedToken[1]?.formattedBalance) ||
 								  parseFloat(tokenInputValue.inputFrom.value) >
 										parseFloat(selectedToken[0]?.formattedBalance)
-								? ["unset", "unset", "20rem", "50.5rem"]
-								: ["unset", "unset", "10rem", "48rem"]
+								? ["unset", "unset", "20rem", "37rem"]
+								: ["unset", "unset", "10rem", "35rem"]
 						}
 						w="100%"
 						borderRadius={["0", "0", "3xl", "3xl"]}
@@ -1034,7 +950,10 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								</Text>
 							</Flex>
 							<Text fontSize="lg" fontWeight="bold">
-								{userPoolBalance || "-"}
+								{liquidityMintendValue
+									? Number(userPoolBalance) +
+									  Number(liquidityMintendValue?.toSignificant(6))
+									: userPoolBalance || "-"}
 							</Text>
 						</Flex>
 						<Flex flexDirection="column">
@@ -1058,7 +977,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								<Text fontWeight="semibold">{selectedToken[0]?.symbol}</Text>
 								<Text fontWeight="normal">
 									{depositedTokens
-										? depositedTokens.token0?.toSignificant(6)
+										? Number(depositedTokens.token0?.toSignificant(6)) +
+										  Number(tokenInputValue.inputFrom.value)
 										: "-"}
 								</Text>
 							</Flex>
@@ -1070,7 +990,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								<Text fontWeight="semibold">{selectedToken[1]?.symbol}</Text>
 								<Text fontWeight="normal">
 									{depositedTokens
-										? depositedTokens.token1?.toSignificant(6)
+										? Number(depositedTokens.token1?.toSignificant(6)) +
+										  Number(tokenInputValue.inputTo.value)
 										: "-"}
 								</Text>
 							</Flex>

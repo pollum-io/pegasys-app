@@ -1,4 +1,5 @@
 import { DefaultTemplate, PoolsContainer } from "container";
+import { PoolsProvider } from "contexts/pools";
 import type { NextPage } from "next";
 
 const Pools: NextPage = () => (
@@ -7,7 +8,9 @@ const Pools: NextPage = () => (
 		heightValue="100vh"
 		alignItemsValue="center"
 	>
-		<PoolsContainer />
+		<PoolsProvider>
+			<PoolsContainer />
+		</PoolsProvider>
 	</DefaultTemplate>
 );
 
