@@ -22,19 +22,11 @@ import {
 	RemoveLiquidity,
 } from "components";
 import { PoolCards } from "components/Pools/PoolCards";
-import { usePicasso, useModal, useTokens, usePairs } from "hooks";
+import { usePicasso, useModal, useTokens, usePairs, usePools } from "hooks";
 import { NextPage } from "next";
 import { ChangeEvent, useMemo, useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
-import {
-	WrappedTokenInfo,
-	IDeposited,
-	ICommonPairs,
-	IPoolsApr,
-	IPoolsWithLiquidity,
-	IPoolsLiquidity,
-	IPoolsVolume,
-} from "types";
+import { WrappedTokenInfo, IDeposited } from "types";
 import { useTranslation } from "react-i18next";
 import { useWallet, SUPPORTED_NETWORK_CHAINS } from "pegasys-services";
 import {
@@ -58,6 +50,17 @@ export const PoolsContainer: NextPage = () => {
 		onCloseTransaction,
 	} = useModal();
 
+	const {
+		setPairs,
+		pairInfo,
+		setPairInfo,
+		poolsWithLiquidity,
+		poolsApr,
+		poolsVolume,
+		poolsLiquidity,
+		isLoading,
+	} = usePools();
+
 	const { colorMode } = useColorMode();
 
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
@@ -80,12 +83,6 @@ export const PoolsContainer: NextPage = () => {
 	const [userPoolBalance, setUserPoolBalance] = useState<string>("");
 	const [sortType, setSortType] = useState<string>("your-pools");
 	const [searchTokens, setSearchTokens] = useState<Pair[]>([]);
-	const [poolsApr, setPoolsApr] = useState<IPoolsApr>();
-	const [poolsWithLiquidity, setPoolsWithLiquidity] =
-		useState<IPoolsWithLiquidity>();
-	const [poolsLiquidity, setPoolsLiquidity] = useState<IPoolsLiquidity>();
-	const [poolsVolume, setPoolsVolume] = useState<IPoolsVolume>();
-	const [pairInfo, setPairInfo] = useState<ICommonPairs>();
 	const [notFound, setNotFound] = useState<boolean>(false);
 	const [allTokens, setAllTokens] = useState<[Token, Token][]>([]);
 	const { t: translation, i18n } = useTranslation();
@@ -355,6 +352,7 @@ export const PoolsContainer: NextPage = () => {
 			twoDays: formattedTwoDaysCommonPairs,
 			general: formattedGeneralCommonPairs,
 		});
+		setPairs(allUniqueV2PairsWithLiquidity);
 	}, [userTokensBalance, isValid, currentNetworkChainId, address]);
 
 	useMemo(() => {
@@ -606,7 +604,7 @@ export const PoolsContainer: NextPage = () => {
 								{translation("pool.poolsOverview")}
 							</Text>
 						</Flex>
-						{searchTokens?.length !== 0 && (
+						{!isLoading && searchTokens?.length !== 0 && (
 							<Flex
 								id="b"
 								justifyContent={
@@ -776,7 +774,7 @@ export const PoolsContainer: NextPage = () => {
 							mt="10"
 							justifyContent={["center", "center", "unset", "unset"]}
 						>
-							{searchTokens?.length !== 0 && !notFound ? (
+							{!isLoading && searchTokens?.length !== 0 && !notFound ? (
 								searchTokens?.map(pair => (
 									<PoolCards
 										key={pair.liquidityToken.address}
@@ -789,10 +787,6 @@ export const PoolsContainer: NextPage = () => {
 										setDepositedTokens={setDepositedTokens}
 										setPoolPercentShare={setPoolPercentShare}
 										setUserPoolBalance={setUserPoolBalance}
-										setPoolsApr={setPoolsApr}
-										setPoolsWithLiquidity={setPoolsWithLiquidity}
-										setPoolsLiquidity={setPoolsLiquidity}
-										setPoolsVolume={setPoolsVolume}
 										pairInfo={pairInfo}
 									/>
 								))
