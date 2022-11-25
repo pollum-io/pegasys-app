@@ -59,7 +59,9 @@ export const PoolsContainer: NextPage = () => {
 		poolsVolume,
 		poolsLiquidity,
 		isLoading,
-		sortType, setSortType
+		sortType,
+		setSortType,
+		setIsLoading,
 	} = usePools();
 
 	const { colorMode } = useColorMode();
@@ -122,6 +124,7 @@ export const PoolsContainer: NextPage = () => {
 	useMemo(async () => {
 		setSearchTokens([]);
 		setPairs([]);
+		setIsLoading(true);
 		if (userTokensBalance.length === 0 || !isValid) return;
 
 		const tokens = getTokenPairs(
@@ -605,7 +608,7 @@ export const PoolsContainer: NextPage = () => {
 								{translation("pool.poolsOverview")}
 							</Text>
 						</Flex>
-						{!isLoading && searchTokens?.length !== 0 && (
+						{!isLoading && (
 							<Flex
 								id="b"
 								justifyContent={
