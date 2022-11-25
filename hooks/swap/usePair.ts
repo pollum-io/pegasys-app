@@ -16,9 +16,15 @@ export async function usePairs(
 ): Promise<[PairState, Pair | null][]> {
 	const { chainId, walletAddress, provider } = walletInfos;
 
+	if (!chainId) return [];
+
 	if (chainId === ChainId.ROLLUX) {
 		const pairAddresses = currencies.map(([tokenA, tokenB]) =>
-			tokenA && tokenB && !tokenA.equals(tokenB)
+			tokenA &&
+			tokenB &&
+			!tokenA.equals(tokenB) &&
+			tokenA.chainId === tokenB.chainId &&
+			tokenA.chainId === chainId
 				? Pair.getAddress(tokenA, tokenB, chainId)
 				: undefined
 		);
@@ -62,7 +68,11 @@ export async function usePairs(
 	]);
 
 	const pairAddresses = tokens.map(([tokenA, tokenB]) =>
-		tokenA && tokenB && !tokenA.equals(tokenB)
+		tokenA &&
+		tokenB &&
+		!tokenA.equals(tokenB) &&
+		tokenA.chainId === tokenB.chainId &&
+		tokenA.chainId === chainId
 			? Pair.getAddress(tokenA, tokenB, chainId)
 			: undefined
 	);
