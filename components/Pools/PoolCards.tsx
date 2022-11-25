@@ -15,15 +15,7 @@ import {
 	TokenAmount,
 } from "@pollum-io/pegasys-sdk";
 import { useTranslation } from "react-i18next";
-import {
-	WrappedTokenInfo,
-	IDeposited,
-	ICommonPairs,
-	IPoolsApr,
-	IPoolsWithLiquidity,
-	IPoolsLiquidity,
-	IPoolsVolume,
-} from "types";
+import { WrappedTokenInfo, IDeposited, ICommonPairs } from "types";
 import { Signer } from "ethers";
 import { formattedNum, formattedPercent } from "utils/convert/numberFormat";
 import { pegasysClient, SYS_PRICE } from "apollo";
@@ -41,16 +33,6 @@ interface IPoolCards {
 	>;
 	setPoolPercentShare: React.Dispatch<React.SetStateAction<string>>;
 	setUserPoolBalance: React.Dispatch<React.SetStateAction<string>>;
-	setPoolsApr: React.Dispatch<React.SetStateAction<IPoolsApr | undefined>>;
-	setPoolsWithLiquidity: React.Dispatch<
-		React.SetStateAction<IPoolsWithLiquidity | undefined>
-	>;
-	setPoolsLiquidity: React.Dispatch<
-		React.SetStateAction<IPoolsLiquidity | undefined>
-	>;
-	setPoolsVolume: React.Dispatch<
-		React.SetStateAction<IPoolsVolume | undefined>
-	>;
 	pairInfo: ICommonPairs | undefined;
 }
 
@@ -65,10 +47,6 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		setDepositedTokens,
 		setPoolPercentShare,
 		setUserPoolBalance,
-		setPoolsApr,
-		setPoolsWithLiquidity,
-		setPoolsLiquidity,
-		setPoolsVolume,
 		pairInfo,
 	} = props;
 	const theme = usePicasso();
@@ -229,69 +207,15 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 				) * sysPrice
 			}`
 		);
+	const isTestnet = chainId === 2814 || chainId === 5700;
 
-	const showPool =
-		chainId === 2814
-			? ""
-			: pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`] &&
-			  userTokensBalance.map(item => item.symbol).includes(currencyA.symbol) &&
-			  userTokensBalance.map(item => item.symbol).includes(currencyB.symbol)
-			? ""
-			: "none";
-
-	const isRollux = chainId === 2814;
-
-	useMemo(() => {
-		if (pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`]) {
-			setPoolsApr(prevState => {
-				const value = parseFloat(
-					(
-						(Number(currentDayVolume) * 0.003 * 365 * 100) /
-						(Number(
-							pairInfo?.general?.[`${currencyA.symbol}-${currencyB.symbol}`]
-								?.trackedReserveSYS
-						) *
-							sysPrice)
-					).toString()
-				);
-
-				return {
-					...prevState,
-					[`${currencyA.symbol}-${currencyB.symbol}`]: value,
-				};
-			});
-			setPoolsWithLiquidity(prevState => ({
-				...prevState,
-				[`${currencyA.symbol}-${currencyB.symbol}`]: +poolBalance,
-			}));
-			setPoolsLiquidity(prevState => ({
-				...prevState,
-				[`${currencyA.symbol}-${currencyB.symbol}`]:
-					Number(
-						pairInfo.general?.[`${currencyA.symbol}-${currencyB.symbol}`]
-							?.trackedReserveSYS
-					) * sysPrice,
-			}));
-			setPoolsVolume(prevState => ({
-				...prevState,
-				[`${currencyA.symbol}-${currencyB.symbol}`]:
-					Number(
-						pairInfo.general?.[`${currencyA.symbol}-${currencyB.symbol}`]
-							?.volumeUSD
-					) -
-					Number(
-						pairInfo.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`]
-							?.volumeUSD
-					),
-			}));
-		}
-		if (poolBalance) {
-			setPoolsWithLiquidity(prevState => ({
-				...prevState,
-				[`${currencyA.symbol}-${currencyB.symbol}`]: +poolBalance,
-			}));
-		}
-	}, [sysPrice, poolBalance]);
+	const showPool = isTestnet
+		? ""
+		: pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`] &&
+		  userTokensBalance.map(item => item.symbol).includes(currencyA.symbol) &&
+		  userTokensBalance.map(item => item.symbol).includes(currencyB.symbol)
+		? ""
+		: "none";
 
 	return (
 		<Flex
@@ -323,19 +247,19 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					<Text fontWeight="semibold" color={theme.text.mono}>
 						{translation("positionCard.liquidity")}
 					</Text>
-					<Text>{isRollux ? "-" : reserveUSD}</Text>
+					<Text>{isTestnet ? "-" : reserveUSD}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold" color={theme.text.mono}>
 						{translation("positionCard.volume")} (24h)
 					</Text>
-					<Text>{isRollux ? "-" : volumeUSD}</Text>
+					<Text>{isTestnet ? "-" : volumeUSD}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold" color={theme.text.mono}>
 						APR
 					</Text>
-					<Text>{isRollux ? "-" : apr || "0%"}</Text>
+					<Text>{isTestnet ? "-" : apr || "0%"}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text

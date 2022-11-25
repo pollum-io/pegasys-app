@@ -22,19 +22,11 @@ import {
 	RemoveLiquidity,
 } from "components";
 import { PoolCards } from "components/Pools/PoolCards";
-import { usePicasso, useModal, useTokens, usePairs } from "hooks";
+import { usePicasso, useModal, useTokens, usePairs, usePools } from "hooks";
 import { NextPage } from "next";
 import { ChangeEvent, useMemo, useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
-import {
-	WrappedTokenInfo,
-	IDeposited,
-	ICommonPairs,
-	IPoolsApr,
-	IPoolsWithLiquidity,
-	IPoolsLiquidity,
-	IPoolsVolume,
-} from "types";
+import { WrappedTokenInfo, IDeposited } from "types";
 import { useTranslation } from "react-i18next";
 import { useWallet, SUPPORTED_NETWORK_CHAINS } from "pegasys-services";
 import {
@@ -58,6 +50,19 @@ export const PoolsContainer: NextPage = () => {
 		onCloseTransaction,
 	} = useModal();
 
+	const {
+		setPairs,
+		pairInfo,
+		setPairInfo,
+		poolsWithLiquidity,
+		poolsApr,
+		poolsVolume,
+		poolsLiquidity,
+		isLoading,
+		sortType,
+		setSortType,
+	} = usePools();
+
 	const { colorMode } = useColorMode();
 
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
@@ -78,14 +83,7 @@ export const PoolsContainer: NextPage = () => {
 	const [depositedTokens, setDepositedTokens] = useState<IDeposited>();
 	const [poolPercentShare, setPoolPercentShare] = useState<string>("");
 	const [userPoolBalance, setUserPoolBalance] = useState<string>("");
-	const [sortType, setSortType] = useState<string>("your-pools");
 	const [searchTokens, setSearchTokens] = useState<Pair[]>([]);
-	const [poolsApr, setPoolsApr] = useState<IPoolsApr>();
-	const [poolsWithLiquidity, setPoolsWithLiquidity] =
-		useState<IPoolsWithLiquidity>();
-	const [poolsLiquidity, setPoolsLiquidity] = useState<IPoolsLiquidity>();
-	const [poolsVolume, setPoolsVolume] = useState<IPoolsVolume>();
-	const [pairInfo, setPairInfo] = useState<ICommonPairs>();
 	const [notFound, setNotFound] = useState<boolean>(false);
 	const [allTokens, setAllTokens] = useState<[Token, Token][]>([]);
 	const { t: translation, i18n } = useTranslation();
@@ -124,6 +122,7 @@ export const PoolsContainer: NextPage = () => {
 	);
 	useMemo(async () => {
 		setSearchTokens([]);
+		setPairs([]);
 		if (userTokensBalance.length === 0 || !isValid) return;
 
 		const tokens = getTokenPairs(
@@ -355,6 +354,7 @@ export const PoolsContainer: NextPage = () => {
 			twoDays: formattedTwoDaysCommonPairs,
 			general: formattedGeneralCommonPairs,
 		});
+		setPairs(allUniqueV2PairsWithLiquidity);
 	}, [userTokensBalance, isValid, currentNetworkChainId, address]);
 
 	useMemo(() => {
@@ -498,8 +498,8 @@ export const PoolsContainer: NextPage = () => {
 						zIndex="docked"
 						position="relative"
 						borderRadius="xl"
-						h={["11rem", "unset", "unset", "unset"]}
-						backgroundColor={address ? theme.bg.alphaPurple : "transparent"}
+						h={["11rem", "unset", "unset", "11rem"]}
+						backgroundColor={theme.bg.alphaPurple}
 					>
 						<Img
 							borderRadius="xl"
@@ -511,8 +511,8 @@ export const PoolsContainer: NextPage = () => {
 								address
 									? ["92%", "85%", "85%", "85%"]
 									: languages.includes(language)
-									? ["100%", "105%", "100%", "100%"]
-									: ["100%", "100%", "100%", "100%"]
+									? ["85%", "85%", "85%", "85%"]
+									: ["85%", "85%", "85%", "85%"]
 							}
 						/>
 						<Flex
@@ -606,136 +606,150 @@ export const PoolsContainer: NextPage = () => {
 								{translation("pool.poolsOverview")}
 							</Text>
 						</Flex>
-						<Flex
-							id="b"
-							justifyContent={
-								isConnected
-									? [
-											"space-between",
-											"space-between",
-											"space-between",
-											"space-between",
-									  ]
-									: ["space-between", "space-between", "flex-end", "flex-end"]
-							}
-							flexDirection={["column-reverse", "column-reverse", "row", "row"]}
-							zIndex="docked"
-							w="100%"
-							mt={["4", "6", "2", "2"]}
-							gap={["7", "none", "none", "none"]}
-							alignItems={["flex-start", "flex-start", "flex-end", "flex-end"]}
-						>
+						{!isLoading && searchTokens?.length !== 0 && (
 							<Flex
-								display={userHavePool && isConnected ? "flex" : "none"}
+								id="b"
+								justifyContent={
+									isConnected
+										? [
+												"space-between",
+												"space-between",
+												"space-between",
+												"space-between",
+										  ]
+										: ["space-between", "space-between", "flex-end", "flex-end"]
+								}
+								flexDirection={[
+									"column-reverse",
+									"column-reverse",
+									"row",
+									"row",
+								]}
+								zIndex="docked"
 								w="100%"
+								mt={["4", "6", "2", "2"]}
+								gap={["7", "none", "none", "none"]}
+								alignItems={[
+									"flex-start",
+									"flex-start",
+									"flex-end",
+									"flex-end",
+								]}
 							>
-								<InputGroup alignItems="center">
-									<InputLeftElement
-										pl="0.625rem"
-										pointerEvents="none"
-										pb="0.3rem"
-										// eslint-disable-next-line react/no-children-prop
-										children={
-											<MdSearch color={theme.icon.inputSearchIcon} size={20} />
-										}
-									/>
-									<Input
-										borderColor={theme.bg.blueNavyLightness}
-										placeholder={translation("pool.searchPair")}
-										_placeholder={{
-											color: theme.text.inputBluePurple,
-										}}
-										onChange={handleInput}
-										borderRadius="full"
-										w={["100%", "100%", "20rem", "20rem"]}
-										h="2.2rem"
-										py={["0.2rem", "0.2rem", "1", "1"]}
-										pl="10"
-										_focus={{
-											outline: "none",
-											borderColor: theme.border.focusBluePurple,
-										}}
-										_hover={{}}
-									/>
-								</InputGroup>
-							</Flex>
-							<Flex gap="4" alignItems="flex-end">
 								<Flex
-									flexDirection="column"
-									alignItems={[
-										"flex-end",
-										"flex-end",
-										"flex-start",
-										"flex-start",
-									]}
+									display={userHavePool && isConnected ? "flex" : "none"}
+									w="100%"
 								>
-									{isConnected && (
-										<Menu>
-											<Text fontSize="sm" pb="2" w="100%">
-												{translation("pool.sort")}
-											</Text>
-											<MenuButton
-												as={Button}
-												fontSize="sm"
-												fontWeight="semibold"
-												px="1rem"
-												size="sm"
-												h="2.2rem"
-												bgColor={theme.bg.blueNavyLightness}
-												color="white"
-												_hover={{
-													bgColor: theme.bg.bluePurple,
-												}}
-												_active={{}}
-												borderRadius="full"
-												rightIcon={<MdExpandMore size={20} />}
-											>
-												{!sortType
-													? translation("pool.yourPools")
-													: sortTypeName}
-											</MenuButton>
-											<MenuList
-												bgColor={theme.bg.blueNavy}
-												color="white"
-												borderColor="transparent"
-												p="4"
-												fontSize="sm"
-												zIndex="4"
-											>
-												<MenuItem
-													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.neutralGray }}
-													onClick={() => setSortType("liquidity")}
+									<InputGroup alignItems="center">
+										<InputLeftElement
+											pl="0.625rem"
+											pointerEvents="none"
+											pb="0.3rem"
+											// eslint-disable-next-line react/no-children-prop
+											children={
+												<MdSearch
+													color={theme.icon.inputSearchIcon}
+													size={20}
+												/>
+											}
+										/>
+										<Input
+											borderColor={theme.bg.blueNavyLightness}
+											placeholder={translation("pool.searchPair")}
+											_placeholder={{
+												color: theme.text.inputBluePurple,
+											}}
+											onChange={handleInput}
+											borderRadius="full"
+											w={["100%", "100%", "20rem", "20rem"]}
+											h="2.2rem"
+											py={["0.2rem", "0.2rem", "1", "1"]}
+											pl="10"
+											_focus={{
+												outline: "none",
+												borderColor: theme.border.focusBluePurple,
+											}}
+											_hover={{}}
+										/>
+									</InputGroup>
+								</Flex>
+								<Flex gap="4" alignItems="flex-end">
+									<Flex
+										flexDirection="column"
+										alignItems={[
+											"flex-end",
+											"flex-end",
+											"flex-start",
+											"flex-start",
+										]}
+									>
+										{isConnected && (
+											<Menu>
+												<Text fontSize="sm" pb="2" w="100%">
+													{translation("pool.sort")}
+												</Text>
+												<MenuButton
+													as={Button}
+													fontSize="sm"
+													fontWeight="semibold"
+													px="1rem"
+													size="sm"
+													h="2.2rem"
+													bgColor={theme.bg.blueNavyLightness}
+													color="white"
+													_hover={{
+														bgColor: theme.bg.bluePurple,
+													}}
+													_active={{}}
+													borderRadius="full"
+													rightIcon={<MdExpandMore size={20} />}
 												>
-													{translation("pool.liquidity")}
-												</MenuItem>
-												<MenuItem
-													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.neutralGray }}
-													onClick={() => setSortType("volume")}
+													{!sortType
+														? translation("pool.yourPools")
+														: sortTypeName}
+												</MenuButton>
+												<MenuList
+													bgColor={theme.bg.blueNavy}
+													color="white"
+													borderColor="transparent"
+													p="4"
+													fontSize="sm"
 												>
-													{translation("positionCard.volume")}
-												</MenuItem>
-												<MenuItem
-													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.neutralGray }}
-													onClick={() => setSortType("apr")}
-												>
-													APR
-												</MenuItem>
-												<MenuItem
-													color={theme.text.mono}
-													_hover={{ bgColor: theme.bg.neutralGray }}
-													onClick={() => setSortType("your-pools")}
-												>
-													{translation("pool.yourPools")}
-												</MenuItem>
-											</MenuList>
-										</Menu>
-									)}
+													<MenuItem
+														color={theme.text.mono}
+														_hover={{ bgColor: theme.bg.neutralGray }}
+														onClick={() => setSortType("liquidity")}
+													>
+														{translation("pool.liquidity")}
+													</MenuItem>
+													<MenuItem
+														color={theme.text.mono}
+														_hover={{ bgColor: theme.bg.neutralGray }}
+														onClick={() => setSortType("volume")}
+													>
+														{translation("positionCard.volume")}
+													</MenuItem>
+													<MenuItem
+														color={theme.text.mono}
+														_hover={{ bgColor: theme.bg.neutralGray }}
+														onClick={() => setSortType("apr")}
+													>
+														APR
+													</MenuItem>
+													<MenuItem
+														color={theme.text.mono}
+														_hover={{ bgColor: theme.bg.neutralGray }}
+														onClick={() => setSortType("your-pools")}
+													>
+														{translation("pool.yourPools")}
+													</MenuItem>
+												</MenuList>
+											</Menu>
+										)}
+									</Flex>
 								</Flex>
 							</Flex>
-						</Flex>
+						)}
 					</Flex>
 					{!isConnected ? (
 						<Flex
@@ -762,7 +776,7 @@ export const PoolsContainer: NextPage = () => {
 							mt="10"
 							justifyContent={["center", "center", "unset", "unset"]}
 						>
-							{searchTokens?.length !== 0 && !notFound ? (
+							{!isLoading && searchTokens?.length !== 0 && !notFound ? (
 								searchTokens?.map(pair => (
 									<PoolCards
 										key={pair.liquidityToken.address}
@@ -775,10 +789,6 @@ export const PoolsContainer: NextPage = () => {
 										setDepositedTokens={setDepositedTokens}
 										setPoolPercentShare={setPoolPercentShare}
 										setUserPoolBalance={setUserPoolBalance}
-										setPoolsApr={setPoolsApr}
-										setPoolsWithLiquidity={setPoolsWithLiquidity}
-										setPoolsLiquidity={setPoolsLiquidity}
-										setPoolsVolume={setPoolsVolume}
 										pairInfo={pairInfo}
 									/>
 								))
