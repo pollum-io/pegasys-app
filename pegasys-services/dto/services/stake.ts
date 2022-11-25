@@ -65,7 +65,7 @@ export interface IStakeServicesGetStakeReward {
 }
 
 export interface IStakeServicesGetDollarValues {
-	chainId?: ChainId;
+	chainId?: ChainId | null;
 	totalStaked: TokenAmount;
 	staked: TokenAmount;
 	rewardRatePerWeek: TokenAmount;

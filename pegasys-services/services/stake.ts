@@ -1,11 +1,9 @@
 import { ChainId, JSBI, TokenAmount, WSYS } from "@pollum-io/pegasys-sdk";
 
-import { pegasysClient, SYS_PRICE } from "apollo";
+import { PAIR_DATA, pegasysClient, SYS_PRICE } from "apollo";
 import { ContractFramework } from "../frameworks";
 import {
-	BIG_INT_ONE,
 	BIG_INT_ONE_WEEK_IN_SECONDS,
-	BIG_INT_TWO,
 	BIG_INT_ZERO,
 	PegasysTokens,
 } from "../constants";
@@ -26,8 +24,6 @@ import {
 	IStakeServicesGetDollarValues,
 } from "../dto";
 import PairServices from "./pair";
-import TokenServices from "./token";
-import LpTokenServices from "./lpToken";
 
 class StakeServices {
 	private static async getTotalStakedAmount({
@@ -267,96 +263,26 @@ class StakeServices {
 		const tokens = PegasysTokens[chainId ?? ChainId.NEVM];
 
 		const psys = tokens.PSYS;
-		const wsys = WSYS[chainId ?? ChainId.NEVM];
+		const usdc = tokens.USDC;
 
-		const [[sysPsysPairState, sysPsysPair]] = await PairServices.getPairs([
-			[wsys, psys],
+		const [[usdcPsysPairState, usdcPsysPair]] = await PairServices.getPairs([
+			[usdc, psys],
 		]);
 
-		const totalSupply = await LpTokenServices.getTotalSupply({
-			contractAddress: psys.address,
+		const pairAddr = await PairServices.getPairAddress([psys, usdc]);
+
+		const res = await pegasysClient.query({
+			query: PAIR_DATA(pairAddr.toLocaleLowerCase()),
+			fetchPolicy: "network-only",
 		});
 
-		const totalSupplyJSBI = JSBI.BigInt(totalSupply ?? 0);
-
-		const oneToken = JSBI.BigInt(`1${"0".repeat(18)}`);
-
-		const sysPsysRatio = JSBI.divide(
-			JSBI.multiply(oneToken, sysPsysPair?.reserveOf(wsys).raw ?? BIG_INT_ZERO),
-			sysPsysPair?.reserveOf(psys).raw ?? BIG_INT_ONE
-		);
-
-		const totalStakedValueOfPsysInSys = JSBI.divide(
-			JSBI.multiply(totalStaked.raw, sysPsysRatio),
-			oneToken
-		);
-
-		const stakedValueOfPsysInSys = JSBI.divide(
-			JSBI.multiply(staked.raw, sysPsysRatio),
-			oneToken
-		);
-
-		const unclaimedValueOfPsysInSys = JSBI.divide(
-			JSBI.multiply(unclaimedAmount.raw, sysPsysRatio),
-			oneToken
-		);
-
-		const rewardRateValueOfPsysInSys = JSBI.divide(
-			JSBI.multiply(rewardRatePerWeek.raw, sysPsysRatio),
-			oneToken
-		);
-
-		const totalStakedInWsys = new TokenAmount(
-			wsys,
-			JSBI.divide(
-				JSBI.multiply(
-					JSBI.multiply(totalStaked.raw, totalStakedValueOfPsysInSys),
-					BIG_INT_TWO // this is b/c the value of LP shares are ~double the value of the wsys they entitle owner to
-				),
-				totalSupplyJSBI
-			)
-		);
-
-		const stakedInWsys = new TokenAmount(
-			wsys,
-			JSBI.divide(
-				JSBI.multiply(
-					JSBI.multiply(staked.raw, stakedValueOfPsysInSys),
-					BIG_INT_TWO // this is b/c the value of LP shares are ~double the value of the wsys they entitle owner to
-				),
-				totalSupplyJSBI
-			)
-		);
-
-		const unclaimedInWsys = new TokenAmount(
-			wsys,
-			JSBI.divide(
-				JSBI.multiply(
-					JSBI.multiply(unclaimedAmount.raw, unclaimedValueOfPsysInSys),
-					BIG_INT_TWO // this is b/c the value of LP shares are ~double the value of the wsys they entitle owner to
-				),
-				totalSupplyJSBI
-			)
-		);
-
-		const rewardRateInWsys = new TokenAmount(
-			wsys,
-			JSBI.divide(
-				JSBI.multiply(
-					JSBI.multiply(rewardRatePerWeek.raw, rewardRateValueOfPsysInSys),
-					BIG_INT_TWO // this is b/c the value of LP shares are ~double the value of the wsys they entitle owner to
-				),
-				totalSupplyJSBI
-			)
-		);
-
-		const usdPrice = await this.getPsysUsdPrice();
+		const price = Number(res?.data.pairs[0]?.token0Price ?? "0");
 
 		return {
-			totalStakedInUsd: Number(totalStakedInWsys.toSignificant()) * usdPrice,
-			stakedInUsd: Number(stakedInWsys.toSignificant()) * usdPrice,
-			unclaimedInUsd: Number(unclaimedInWsys.toSignificant()) * usdPrice,
-			rewardRateInUsd: Number(rewardRateInWsys.toSignificant()) * usdPrice,
+			totalStakedInUsd: Number(totalStaked.toSignificant()) * price,
+			stakedInUsd: Number(staked.toSignificant()) * price,
+			unclaimedInUsd: Number(unclaimedAmount.toSignificant()) * price,
+			rewardRateInUsd: Number(rewardRatePerWeek.toSignificant()) * price,
 		};
 	}
 
