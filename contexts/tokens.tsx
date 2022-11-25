@@ -52,7 +52,8 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		const WSYS = initialTokens.find(
 			(token: TokenInfo | WrappedTokenInfo) =>
 				token.symbol === "WSYS" &&
-				(token.chainId as ChainId) === currentNetworkChainId
+				(token.chainId as ChainId) ===
+					(validatedCurrentChain ? currentNetworkChainId : 57)
 		) as WrappedTokenInfo | ITokenInfoBalance;
 
 		const SYS: TokenInfo = {
@@ -122,7 +123,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		if (tokens.length === 0) return;
 
-		if (!isConnected || !provider) {
+		if (!currentNetworkChainId || !isConnected || !provider) {
 			const tokensWithBalance = tokens.map(token => ({
 				...token,
 				balance: "0",
@@ -134,49 +135,49 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 			);
 
 			setUserTokensBalance([...convertTokens]);
+
+			return;
 		}
 
 		const { providerFullBalance, providerFormattedBalance, validatedAddress } =
 			await getProviderBalance(provider, walletAddress);
 
-		const tokensWithBalance = await Promise.all(
-			tokens.map(async token => {
-				if (token?.symbol === "SYS") {
+		const tokensWithBalance = (
+			await Promise.all(
+				tokens.map(async token => {
+					if (!token) return undefined;
+
+					if (token?.symbol === "SYS") {
+						return {
+							...token,
+							balance: providerFullBalance || ("0" as string),
+							formattedBalance: providerFormattedBalance,
+						};
+					}
+
+					const { balance, formattedBalance } = await getBalanceOfSingleCall(
+						token?.address as string,
+						validatedAddress as string,
+						provider,
+						token?.decimals as number
+					);
+
 					return {
 						...token,
-						balance: providerFullBalance || ("0" as string),
-						formattedBalance: providerFormattedBalance,
+						balance,
+						formattedBalance,
 					};
-				}
-
-				const { balance, formattedBalance } = await getBalanceOfSingleCall(
-					token?.address as string,
-					validatedAddress as string,
-					provider,
-					token?.decimals as number
-				);
-
-				return {
-					...token,
-					balance,
-					formattedBalance,
-				};
-			})
-		);
+				})
+			)
+		).filter(t => !!t);
 
 		const convertTokens = tokensWithBalance.map(
 			token => new WrappedTokenInfo(token as ITokenInfoBalance)
 		);
-
 		setUserTokensBalance([...convertTokens]);
 	};
 
 	useEffect(() => {
-		if (approvalState.status === ApprovalState.APPROVED) {
-			getDefaultUserTokensBalance();
-			return;
-		}
-
 		getDefaultUserTokensBalance();
 	}, [
 		currentNetworkChainId,
