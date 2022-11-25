@@ -583,7 +583,7 @@ export const PortfolioContainer: NextPage = () => {
 										<Input
 											fontSize={["14px", "14px", "13px", "14px"]}
 											borderColor={theme.bg.blueNavyLightness}
-											placeholder="Search by token name"
+											placeholder={translation("currencyInputPanel.searchBy")}
 											_placeholder={{
 												opacity: 1,
 												color: theme.text.inputBluePurple,

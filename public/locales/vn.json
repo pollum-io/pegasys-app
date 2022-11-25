@@ -53,7 +53,8 @@
 		"selectToken": "Chọn token",
 		"balance": "Số dư: ",
 		"max": "MAX",
-		"to": "Tới"
+		"to": "Tới",
+		"searchBy": "Tìm kiếm theo tên mã thông báo"
 	},
 	"earn": {
 		"claimAccumulated": "Yêu cầu phần thưởng {{symbol}} tích lũy được",

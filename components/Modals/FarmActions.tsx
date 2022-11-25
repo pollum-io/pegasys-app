@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 
 import { useFarm, useEarn } from "pegasys-services";
 import React from "react";
-import { MdOutlineInfo } from "react-icons/md";
+import { MdArrowBack, MdOutlineInfo } from "react-icons/md";
 import {
 	EarnActionsHeader,
 	EarnDepositAction,
@@ -47,17 +47,27 @@ export const FarmActions: React.FC<IModal> = props => {
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				mt={["8rem", "8", "10rem", "10rem"]}
+				mt={
+					buttonId === "withdraw"
+						? withdrawPercentage === 100
+							? ["8rem", "10.5rem", "10rem", "10rem"]
+							: ["8rem", "14.4rem", "10rem", "10rem"]
+						: buttonId === "deposit"
+						? ["8rem", "23.5rem", "10rem", "10rem"]
+						: ["8rem", "19.4rem", "10rem", "10rem"]
+				}
 				mb={["0", "0", "10rem", "10rem"]}
-				position={["fixed", "fixed", "relative", "relative"]}
+				position={["fixed", "relative", "relative", "relative"]}
 				bottom="0"
 				maxWidth="max-content"
-				w={["100vw", "100vw", "max-content", "max-content"]}
-				h={["max-content", "100vh", "max-content", "max-content"]}
+				w={["100vw", "30.625rem", "max-content", "max-content"]}
+				h={["max-content", "max-content", "max-content", "max-content"]}
 				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
 				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
 				bgColor={theme.bg.blueNavyLight}
 				border={["none", "1px solid transparent"]}
+				borderBottom={["none", "none", "", ""]}
+				boxShadow="0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04)"
 				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
@@ -67,6 +77,23 @@ export const FarmActions: React.FC<IModal> = props => {
 					justifyContent="space-between"
 					pl={["4", "5", "20", "20"]}
 				>
+					<Flex
+						flex="1"
+						display={{
+							base: "flex",
+							sm: "flex",
+							md: "none",
+							lg: "none",
+						}}
+						justifyContent="left"
+						gap="2"
+						onClick={onClose}
+						color={theme.text.callGray}
+						alignItems="center"
+					>
+						<MdArrowBack size={25} />
+						<Text>Farms</Text>
+					</Flex>
 					<EarnActionsHeader
 						onClose={onClose}
 						depositTitle={t("earnPages.deposit")}
@@ -104,12 +131,15 @@ export const FarmActions: React.FC<IModal> = props => {
 							]}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
-							bottom={["unset", "unset", "-9rem", "-9rem"]}
+							bottom={
+								withdrawPercentage === 100
+									? ["unset", "unset", "-12rem", "-12rem"]
+									: ["unset", "unset", "-9rem", "-9rem"]
+							}
 							borderTopRadius={["0", "0", "3xl", "3xl"]}
 							borderBottomRadius={["0", "0", "3xl", "3xl"]}
 							alignItems="flex-start"
 							gap="2"
-							mt={withdrawPercentage === 100 ? "3rem" : "1rem"}
 							transition="500ms"
 						>
 							<Flex>
@@ -146,7 +176,7 @@ export const FarmActions: React.FC<IModal> = props => {
 							]}
 							position={["relative", "relative", "absolute", "absolute"]}
 							w="100%"
-							bottom={["unset", "unset", "-7rem", "-7rem"]}
+							bottom={["unset", "unset", "-9.5rem", "-9.5rem"]}
 							borderTopRadius={["0", "0", "3xl", "3xl"]}
 							borderBottomRadius={["0", "0", "3xl", "3xl"]}
 							alignItems="flex-start"

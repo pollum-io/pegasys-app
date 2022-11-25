@@ -46,8 +46,8 @@ export const InfoDropdown: FunctionComponent = () => {
 		<Accordion allowMultiple>
 			<AccordionItem border="none">
 				<AccordionButton
-					pl={["24", "36", "6", "6"]}
-					pr={["24", "36", "6", "6"]}
+					pl={["24", "6", "6", "6"]}
+					pr={["24", "6", "6", "6"]}
 					py={["2", "2", "1", "1"]}
 					_expanded={{
 						bg: theme.bg.blackLightness,
@@ -91,7 +91,7 @@ export const InfoDropdown: FunctionComponent = () => {
 							<Flex key={links.name + Number(index)}>
 								<Link
 									position="relative"
-									left={["6.5rem", "9.5rem", "6", "6"]}
+									left="6"
 									href={links.href}
 									target="_blank"
 									_hover={{
@@ -111,8 +111,8 @@ export const InfoDropdown: FunctionComponent = () => {
 			</AccordionItem>
 			<AccordionItem border="none">
 				<AccordionButton
-					pl={["24", "36", "6", "6"]}
-					pr={["24", "36", "6", "6"]}
+					pl={["24", "6", "6", "6"]}
+					pr={["24", "6", "6", "6"]}
 					py={["2", "2", "1", "1"]}
 					_expanded={{
 						bg: theme.bg.blackLightness,

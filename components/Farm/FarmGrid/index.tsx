@@ -100,7 +100,7 @@ const FarmGrid = () => {
 				mt={["10", "10", "0", "0"]}
 				mb="10rem"
 				display={["none", "none", "flex", "flex"]}
-				gap="30px"
+				gap="18px"
 				justifyContent="space-between"
 			>
 				<Flex flexDirection="column" gap="2px" width="fit-content">
@@ -133,6 +133,7 @@ const FarmGrid = () => {
 				display={["flex", "flex", "none", "none"]}
 				gap="4px"
 				flexDirection="column"
+				alignItems="center"
 			>
 				{sortedPairs.map(p => (
 					<FarmCard

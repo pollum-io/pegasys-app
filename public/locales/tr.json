@@ -53,7 +53,8 @@
 		"selectToken": "Bir token seçin",
 		"balance": "Bakiye: ",
 		"max": "Max",
-		"to": "Hangi tokene"
+		"to": "Hangi tokene",
+		"searchBy": "Belirteç adına göre arama"
 	},
 	"earn": {
 		"claimAccumulated": "Birikmiş {{ symbol }} ödüllerini talep et",

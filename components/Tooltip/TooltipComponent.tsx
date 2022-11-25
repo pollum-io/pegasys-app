@@ -37,6 +37,8 @@ export const TooltipComponent: FunctionComponent<ITooltipComponent> = props => {
 			label={label}
 			placement={placement}
 			alignItems="center"
+			py="1"
+			px="2"
 		>
 			<Flex>
 				<Icon

@@ -53,7 +53,8 @@
 		"selectToken": "Selecione um token",
 		"balance": "Saldo: ",
 		"max": "MAX",
-		"to": "Para"
+		"to": "Para",
+		"searchBy": "Buscar por nome do token"
 	},
 	"earn": {
 		"claimAccumulated": "Resgate {{ symbol }} acumulados",

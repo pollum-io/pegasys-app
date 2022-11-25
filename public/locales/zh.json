@@ -53,7 +53,8 @@
 		"selectToken": "选择一个代币",
 		"balance": "资产: ",
 		"max": "最大值",
-		"to": "給"
+		"to": "給",
+		"searchBy": "按代币名称搜索"
 	},
 	"earn": {
 		"claimAccumulated": "领取累积的 {{ symbol }} 奖励",

@@ -53,7 +53,8 @@
 		"selectToken": "Выберите токен",
 		"balance": "Баланс: ",
 		"max": "MAX",
-		"to": "К"
+		"to": "К",
+		"searchBy": "Поиск по имени токена"
 	},
 	"earn": {
 		"claimAccumulated": "Получите накопленные {{ symbol }} награды",

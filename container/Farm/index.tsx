@@ -83,6 +83,7 @@ export const FarmContainer: NextPage = () => {
 							{translation("earnPages.farmingDescription")}
 						</Text>
 					</Flex>
+
 					<Flex
 						zIndex="0"
 						position="relative"
@@ -95,25 +96,24 @@ export const FarmContainer: NextPage = () => {
 						py="0.531rem"
 						color="white"
 					>
-						{!!address && (
-							<Link
-								href={`https://info.pegasys.finance/account/${address}`}
-								target="_blank"
-								rel="noreferrer"
-								_hover={{ cursor: "pointer", opacity: "0.9" }}
-								flexDirection="row"
-							>
-								<Flex gap="2.5" alignItems="center">
-									<Text fontWeight="medium" fontSize="xs">
-										{translation("earnPages.farmingLink")}
-									</Text>
+						<Link
+							href={`https://info.pegasys.finance/account/${address}`}
+							target="_blank"
+							rel="noreferrer"
+							_hover={{ cursor: "pointer" }}
+							flexDirection="row"
+						>
+							<Flex gap="2.5" alignItems="center">
+								<Text fontWeight="medium" fontSize="xs">
+									{translation("earnPage.readMoreAboutPsys")}
+								</Text>
 
-									<MdOutlineCallMade size={20} />
-								</Flex>
-							</Link>
-						)}
+								<MdOutlineCallMade size={18} />
+							</Flex>
+						</Link>
 					</Flex>
 				</Flex>
+
 				<Flex
 					id="a"
 					alignItems={["flex-start", "flex-start", "baseline", "baseline"]}
@@ -153,7 +153,7 @@ export const FarmContainer: NextPage = () => {
 								iconColor={theme.icon.inputSearchIcon}
 								borderColor={theme.bg.blueNavyLightness}
 								placeholder={{
-									value: "Search by token name",
+									value: translation("currencyInputPanel.searchBy"),
 									color: theme.text.inputBluePurple,
 								}}
 							/>

@@ -920,16 +920,31 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Text>
 							<Flex
 								flexDirection="row"
-								justifyContent="space-around"
+								justifyContent={[
+									"space-around",
+									"space-between",
+									"space-between",
+									"space-between",
+								]}
 								py="0.5rem"
 								borderRadius="2xl"
 								borderTop="1px solid"
 								borderColor={theme.text.cyanPurple}
 								bgColor={theme.bg.bluePink}
 								color={theme.text.mono}
+								px="3"
+								pr={["1.8rem", "2.8rem", "2.8rem", "2.8rem"]}
 							>
-								<Flex fontSize="sm" flexDirection="column" textAlign="center">
-									<Text fontWeight="semibold">
+								<Flex
+									fontSize="sm"
+									flexDirection="column"
+									textAlign="center"
+									alignItems="center"
+								>
+									<Text
+										fontWeight="semibold"
+										w={["8rem", "11rem", "11rem", "11rem"]}
+									>
 										{returnedTradeValue?.v2Trade
 											? returnedTradeValue?.v2Trade?.executionPrice?.toSignificant(
 													6
@@ -940,8 +955,16 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 										{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
 									</Text>
 								</Flex>
-								<Flex fontSize="sm" flexDirection="column" textAlign="center">
-									<Text fontWeight="semibold">
+								<Flex
+									fontSize="sm"
+									flexDirection="column"
+									textAlign="center"
+									alignItems="center"
+								>
+									<Text
+										fontWeight="semibold"
+										w={["4.2rem", "7rem", "7rem", "7rem"]}
+									>
 										{returnedTradeValue?.v2Trade
 											? returnedTradeValue?.v2Trade?.executionPrice
 													?.invert()
@@ -1082,19 +1105,26 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						!!tokenInputValue.inputFrom.value &&
 						!isWrap
 					}
+					style={{
+						width: "100%",
+					}}
 				>
 					<Flex
 						flexDirection="column"
 						p="1.5rem"
 						background={theme.bg.blueNavy}
-						w={["20rem", "28rem", "28rem", "28rem"]}
+						w={["100%", "28rem", "28rem", "28rem"]}
 						borderRadius="30px"
 						mt="7"
 						mb={["2", "2", "2", "10rem"]}
 						zIndex="1"
 					>
 						<Flex flexDirection="column">
-							<Flex flexDirection="row" justifyContent="space-between">
+							<Flex
+								flexDirection="row"
+								justifyContent="space-between"
+								alignItems="center"
+							>
 								<Flex alignItems="center">
 									<Text fontWeight="normal" mr="1" fontSize="sm">
 										{translation("swap.minimumReceived")}
@@ -1134,17 +1164,17 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								flexDirection="row"
 								justifyContent="space-between"
 								pt="0.75rem"
-								alignItems="baseline"
+								alignItems="center"
 							>
 								<Flex
 									w={["70%", "70%", "max-content", "max-content"]}
-									alignItems={["baseline", "baseline", "center", "center"]}
+									alignItems="center"
 								>
 									<Text
 										fontWeight="normal"
 										mr="1"
 										fontSize="sm"
-										w="max-content"
+										w={["60%", "max-content", "max-content", "max-content"]}
 									>
 										{translation("swap.liquidityProviderFee")}
 									</Text>
@@ -1203,7 +1233,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 			<Flex
 				h="max-content"
-				w={["18rem", "sm", "100%", "xl"]}
+				w={["90%", "md", "md", "xl"]}
 				ml={["0", "0", "0", "12"]}
 				mt={["8", "8", "8", "0"]}
 				mb={["24", "24", "24", "0"]}

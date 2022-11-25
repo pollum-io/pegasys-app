@@ -82,15 +82,15 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 				_focus={{
 					outline: "none",
 				}}
-				w={["100vw", "100vw", "max-content", "max-content"]}
+				w={["100vw", "max-content", "max-content", "max-content"]}
 				bgColor={theme.bg.blueNavyLight}
-				borderBottomRadius={["none", "none", "xl", "xl"]}
-				borderTopRadius={["2xl", "2xl", "xl", "xl"]}
+				borderBottomRadius={["none", "xl", "xl", "xl"]}
+				borderTopRadius={["2xl", "xl", "xl", "xl"]}
 				pt="2"
-				top={["3.5rem", "3.3rem", "0", "0"]}
-				position="relative"
-				right="0"
+				mr={["0", "4", "0", "0"]}
 				border={["none", "1px solid transparent"]}
+				top={["3.5rem", "0", "0", "0"]}
+				position="relative"
 			>
 				<PopoverArrow bg={theme.bg.blueNavyLight} />
 				<Flex
@@ -100,7 +100,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 					pt="0.5rem"
 					display={{
 						base: "flex",
-						sm: "flex",
+						sm: "none",
 						md: "none",
 						lg: "none",
 					}}
@@ -112,15 +112,15 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 					flexDirection="column"
 					zIndex="99"
 					px="0"
-					py={["0", "0", "1", "1"]}
+					py={["0", "1", "1", "1"]}
 				>
 					<Flex flexDirection="column">
 						<InfoDropdown />
 					</Flex>
 					<Flex
 						flexDirection="column"
-						pl={["24", "36", "4", "4"]}
-						pr={["24", "36", "4", "4"]}
+						pl={["24", "4", "4", "4"]}
+						pr={["24", "4", "4", "4"]}
 					>
 						{infos.map((links, index) => (
 							<Flex
@@ -130,7 +130,9 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 								key={links.name + Number(index)}
 								_hover={{ color: theme.text.cyanPurple }}
 							>
-								<Flex pl={["0", "0", "0.5rem", "0.5rem"]}>{links.icon}</Flex>
+								<Flex pl={["0", "0.5rem", "0.5rem", "0.5rem"]}>
+									{links.icon}
+								</Flex>
 								<InfoLinks isVote={links.name === "Vote"} href={links.link}>
 									{links.name}
 								</InfoLinks>

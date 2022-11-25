@@ -87,7 +87,7 @@ const FarmCard: FunctionComponent<{
 
 	return (
 		<Flex
-			w="xs"
+			w={["xs", "xs", "326px", "326px"]}
 			h="max-content"
 			d="inline-block"
 			flexDirection="column"
@@ -140,11 +140,11 @@ const FarmCard: FunctionComponent<{
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text
 						fontWeight={stakedInUsd <= 0 ? undefined : "semibold"}
-						color={stakedInUsd <= 0 ? "grey" : undefined}
+						color={stakedInUsd <= 0 ? theme.text.lightnessGray : undefined}
 					>
 						{t("earnPages.yourStake")}
 					</Text>
-					<Text color={stakedInUsd <= 0 ? "grey" : undefined}>
+					<Text color={stakedInUsd <= 0 ? theme.text.lightnessGray : undefined}>
 						{stakedInUsd <= 0 ? "-" : formattedNum(stakedInUsd, true)}
 					</Text>
 				</Flex>
@@ -176,16 +176,31 @@ const FarmCard: FunctionComponent<{
 					mt="0.688rem"
 					mb="1.5rem"
 				>
-					<Flex justifyContent="space-between" py="1.5" fontSize="sm">
-						<Text fontWeight="semibold">{t("earnPages.yourRate")}</Text>
-						<Text>
+					<Flex
+						justifyContent="space-between"
+						py="1.5"
+						fontSize="sm"
+						alignItems="center"
+					>
+						<Text fontWeight="semibold" w="50%">
+							{t("earnPages.yourRate")}
+						</Text>
+
+						<Text w="45%" textAlign="end">
 							{rewardRatePerWeek.toFixed(8)} {rewardToken.symbol}/
 							{t("earnPages.week")}
 						</Text>
 					</Flex>
-					<Flex justifyContent="space-between" py="1.5" fontSize="sm">
-						<Text fontWeight="semibold">{t("earnPages.yourUnclaimed")}</Text>
-						<Text>
+					<Flex
+						justifyContent="space-between"
+						py="1.5"
+						fontSize="sm"
+						alignItems="center"
+					>
+						<Text fontWeight="semibold" w="50%">
+							{t("earnPages.yourUnclaimed")}
+						</Text>
+						<Text w="45%" textAlign="end">
 							{unclaimedAmount.toSignificant()} {rewardToken.symbol}
 						</Text>
 					</Flex>

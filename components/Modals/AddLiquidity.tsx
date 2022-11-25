@@ -587,7 +587,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										color={theme.text.cyanPurple}
 										_hover={{ cursor: "pointer", opacity: "0.8" }}
 									>
-										{translation("currencyInputPanel.max")}
+										Max
 									</Text>
 								</Flex>
 
@@ -627,14 +627,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										>
 											{translation("swapHooks.insufficient")}{" "}
 											{selectedToken[0]?.symbol}{" "}
-											{translation("swapHooks.balance")}.
-										</Text>
-										<Text
-											fontSize="sm"
-											pt="2"
-											textAlign="center"
-											color={theme.text.red400}
-										>
+											{translation("swapHooks.balance")}.{" "}
 											{translation("swapHooks.validAmount")}.
 										</Text>
 									</Flex>
@@ -713,7 +706,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										color={theme.text.cyanPurple}
 										_hover={{ cursor: "pointer", opacity: "0.8" }}
 									>
-										{translation("currencyInputPanel.max")}
+										Max
 									</Text>
 								</Flex>
 
@@ -753,14 +746,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										>
 											{translation("swapHooks.insufficient")}{" "}
 											{selectedToken[1]?.symbol}{" "}
-											{translation("swapHooks.balance")}.
-										</Text>
-										<Text
-											fontSize="sm"
-											pt="2"
-											textAlign="center"
-											color={theme.text.red400}
-										>
+											{translation("swapHooks.balance")}.{" "}
 											{translation("swapHooks.validAmount")}.
 										</Text>
 									</Flex>

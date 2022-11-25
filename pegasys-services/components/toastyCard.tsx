@@ -34,8 +34,6 @@ const ToastyCard: React.FC<IToastyCardProps> = ({
 
 	const { colorMode } = useColorMode();
 
-	const [isMobile] = useMediaQuery("(max-width: 480px)");
-
 	return (
 		<Flex
 			h="max-content"

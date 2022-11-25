@@ -91,7 +91,7 @@ export const StakeContainer: NextPage = () => {
 						<Text fontWeight="medium" fontSize="xs">
 							{translation("earnPages.stakingLink")}
 						</Text>
-						<MdOutlineCallMade size={20} />
+						<MdOutlineCallMade size={18} />
 					</Flex>
 				</Flex>
 				<Flex

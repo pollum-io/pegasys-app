@@ -28,6 +28,7 @@ const usePicasso = () => {
 			gray45: useColorModeValue("gray.500", "gray.400"),
 			gray500: useColorModeValue("gray.500", "gray.500"),
 			gray300: useColorModeValue("#718096", "#CBD5E0"),
+			callGray: useColorModeValue("#718096", "#A0AEC0"),
 			greenSocial: useColorModeValue("#665EE1", "#67DBD8"),
 			psysBalance: useColorModeValue(
 				"linear-gradient(90deg, #19EBCE 0%, #8A15E6 84.28%);",
@@ -162,6 +163,7 @@ const usePicasso = () => {
 			lightGray: useColorModeValue("#A0AEC0", "#787d85"),
 			lightnessGray: useColorModeValue("#E2E8F0", "rgba(255, 255, 255, 0.24)"),
 			darkBlueGray: useColorModeValue("#CBD5E0", "rgba(0, 217, 239, 0.2)"),
+			darkBlueGrayHover: useColorModeValue("#b6bfc9", "#00c3d7"),
 			modalBorderShadow: useColorModeValue(
 				"0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.2);",
 				"0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4);"

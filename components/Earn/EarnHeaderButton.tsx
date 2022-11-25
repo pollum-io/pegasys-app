@@ -29,7 +29,7 @@ const EarnHeaderButton: React.FC<IEarnHeaderButtonProps> = ({
 			w="100%"
 			h="max-content"
 			py="3"
-			px={["6", "6", "8", "8"]}
+			px={["3", "3", "8", "8"]}
 			borderRadius="full"
 			onClick={() => setButtonId(id as TButtonId)}
 			bgColor={buttonId === id ? theme.bg.babyBluePurple : "transparent"}

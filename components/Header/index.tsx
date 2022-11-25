@@ -226,8 +226,8 @@ export const Header: React.FC = () => {
 				zIndex="999"
 				alignItems="center"
 				px={["0", "10"]}
-				pl={expert ? ["8", "6", "6", "10"] : ["1", "6", "6", "10"]}
-				pr={expert ? ["6", "6", "6", "10"] : ["0", "4", "6", "10"]}
+				pl={expert ? ["8", "6", "10", "10"] : ["7", "6", "10", "10"]}
+				pr={expert ? ["6", "6", "10", "10"] : ["6", "4", "10", "10"]}
 				py="2"
 				justifyContent={["space-around", "space-between"]}
 			>
@@ -235,7 +235,11 @@ export const Header: React.FC = () => {
 					<TokenButton onClick={onOpenPsysBreakdown} />
 					<NetworkButton />
 				</Flex>
-				<Flex flexDirection="column" pr={["0", "0", "4", "0"]}>
+				<Flex
+					flexDirection="column"
+					pl={["0", "2", "0", "0"]}
+					pr={["6rem", "0", "0", "0"]}
+				>
 					<WalletButton />
 				</Flex>
 				<Flex alignContent={["flex-start", "unset", "unset", "unset"]}>

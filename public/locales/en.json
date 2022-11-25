@@ -53,7 +53,8 @@
 		"selectToken": "Select a token",
 		"balance": "Balance: ",
 		"max": "MAX",
-		"to": "To"
+		"to": "To",
+		"searchBy": "Search by token name"
 	},
 	"earn": {
 		"claimAccumulated": "Claim accumulated {{ symbol }} rewards",

@@ -700,6 +700,7 @@ export const PoolsContainer: NextPage = () => {
 												borderColor="transparent"
 												p="4"
 												fontSize="sm"
+												zIndex="4"
 											>
 												<MenuItem
 													color={theme.text.mono}

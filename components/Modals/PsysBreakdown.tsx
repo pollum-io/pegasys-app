@@ -47,13 +47,13 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				borderTopRadius="3xl"
-				borderBottomRadius={["none", "none", "3xl", "3xl"]}
+				borderTopRadius="2xl"
+				borderBottomRadius={["none", "30px", "30px", "30px"]}
 				bgColor="transparent"
-				my={["0", "0", "40", "40"]}
-				w={["100vw", "100vw", "21.125", "21.125rem"]}
+				my={["0", "40", "40", "40"]}
+				w={["100vw", "21.125rem", "21.125rem", "21.125rem"]}
 				h="md"
-				position={["absolute", "absolute", "unset", "unset"]}
+				position={["absolute", "unset", "unset", "unset"]}
 				bottom={["0", "0", "", ""]}
 			>
 				<Flex
@@ -63,7 +63,6 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 					flexDirection="column"
 					zIndex="docked"
 					position="relative"
-					bgColor="transparent"
 				>
 					<Img
 						src={theme.bg.psysReward}
@@ -73,6 +72,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 						h="100%"
 						right="0"
 						top="0"
+						borderTop="2xl"
 					/>
 					<Flex
 						flexDirection="row"
@@ -102,8 +102,8 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 									? "icons/loading.gif"
 									: "icons/lightLoading.gif"
 							}
-							w="10"
-							h="10"
+							w="8"
+							h="8"
 							filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
 							className="blob"
 						/>
@@ -153,7 +153,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 					bgColor={theme.bg.blueNavyLight}
 					justifyContent="flex-start"
 					pb={["2rem", "2rem", "6", "6"]}
-					borderBottomRadius={["none", "none", "3xl", "2xl"]}
+					borderBottomRadius={["none", "30px", "30px", "30px"]}
 				>
 					<Button
 						w="100%"
@@ -169,7 +169,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 						}}
 						onClick={() => addTokenToWallet(psys as WrappedTokenInfo)}
 					>
-						Add PSYS to MetaMask
+						{translation("header.addMetamask")}
 					</Button>
 				</ModalFooter>
 			</ModalContent>

@@ -53,7 +53,8 @@
 		"selectToken": "Choisissez un jeton",
 		"balance": "Balance: ",
 		"max": "MAX",
-		"to": "Vers"
+		"to": "Vers",
+		"searchBy": "Recherche par nom de token"
 	},
 	"earn": {
 		"claimAccumulated": "Réclamer les récompenses {{ symbol }} accumulées",

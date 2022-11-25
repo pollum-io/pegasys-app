@@ -1,9 +1,9 @@
 import React from "react";
-import { Flex } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 
 import { usePicasso } from "hooks";
 import { useEarn } from "pegasys-services";
-import { AiOutlineClose } from "react-icons/ai";
+import { MdArrowBack, MdOutlineClose } from "react-icons/md";
 import EarnHeaderButton from "./EarnHeaderButton";
 
 interface IEarnActionsHeaderProps {
@@ -31,8 +31,10 @@ const EarnActionsHeader: React.FC<IEarnActionsHeaderProps> = ({
 			flexDirection={["column-reverse", "column-reverse", "row", "row"]}
 			justifyContent="space-between"
 			alignItems={["flex-start", "flex-start", "center", "center"]}
+			pl={["3", "3", "0", "0"]}
+			w="100%"
 		>
-			<Flex flex="1" pr="7" gap="2" mt={["6", "6", "2", "2"]}>
+			<Flex flex="2" pr="1rem" gap="2" mt={["6", "6", "2", "2"]}>
 				<EarnHeaderButton
 					id="deposit"
 					amount={selectedOpportunity.unstakedAmount}
@@ -67,9 +69,9 @@ const EarnActionsHeader: React.FC<IEarnActionsHeaderProps> = ({
 					}}
 					position="relative"
 					right="2"
-					bottom="4"
+					top="1"
 				>
-					<AiOutlineClose size={20} color={theme.icon.whiteGray} />
+					<MdOutlineClose size={22} color={theme.text.gray300} />
 				</Flex>
 			</Flex>
 		</Flex>
