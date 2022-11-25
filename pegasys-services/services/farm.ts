@@ -9,7 +9,6 @@ import {
 
 import { usePairs as getPairs } from "hooks";
 
-import { pegasysClient, SYS_PRICE } from "apollo";
 import {
 	IFarmInfo,
 	IFarmServicesClaim,
@@ -35,6 +34,7 @@ import {
 	ZERO_ADDRESS,
 } from "../constants";
 import PairServices from "./pair";
+import PriceServices from "./price";
 
 class FarmServices {
 	private static async getTotalStake({
@@ -215,17 +215,6 @@ class FarmServices {
 		return Number(tokenAmount.toSignificant());
 	}
 
-	private static async getPsysUsdPrice() {
-		const fetchSysPrice = await pegasysClient.query({
-			query: SYS_PRICE(),
-			fetchPolicy: "cache-first",
-		});
-
-		const sysPrice = fetchSysPrice?.data?.bundles[0]?.sysPrice;
-
-		return Number(sysPrice);
-	}
-
 	private static async getTotalStakeInUsd(
 		pair: Pair,
 		stakeToken: Token,
@@ -253,7 +242,7 @@ class FarmServices {
 		const wsys = WSYS[chainId ?? ChainId.NEVM];
 		const psys = tokens.PSYS;
 
-		const usdPrice = await this.getPsysUsdPrice();
+		const usdPrice = await PriceServices.getSysUsdPrice();
 
 		if (pair.involvesToken(dai)) {
 			totalStakedInUsd = this.getReservePrice(
@@ -334,12 +323,11 @@ class FarmServices {
 		stakedAmount: TokenAmount,
 		totalStakedInUsd: number
 	) {
-		const stakedInUsd = JSBI.multiply(
-			JSBI.BigInt(Math.floor(totalStakedInUsd)),
-			JSBI.divide(stakedAmount.raw, totalStake.raw)
-		);
+		const stakePortio = totalStakedInUsd / Number(totalStake.toSignificant());
 
-		return Number(stakedInUsd.toString());
+		const usdValue = Number(stakedAmount.toSignificant()) * stakePortio;
+
+		return usdValue;
 	}
 
 	private static async getExtraReward({
