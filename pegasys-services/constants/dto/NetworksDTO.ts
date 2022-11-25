@@ -10,6 +10,7 @@ type IChainParamsValues = {
 	};
 	rpcUrls: string[];
 	blockExplorerUrls: string[];
+	apiUrls: string[];
 };
 
 export type INetworksChainParams = {
