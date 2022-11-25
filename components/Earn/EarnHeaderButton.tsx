@@ -19,10 +19,6 @@ const EarnHeaderButton: React.FC<IEarnHeaderButtonProps> = ({
 	const theme = usePicasso();
 	const { setButtonId, buttonId } = useEarn();
 
-	if (JSBI.lessThanOrEqual(amount.raw, JSBI.BigInt(0))) {
-		return null;
-	}
-
 	return (
 		<Button
 			{...props}
@@ -36,6 +32,7 @@ const EarnHeaderButton: React.FC<IEarnHeaderButtonProps> = ({
 			color={buttonId === id ? theme.text.darkBluePurple : theme.text.lightGray}
 			fontWeight="semibold"
 			_hover={{ opacity: "0.9" }}
+			disabled={JSBI.lessThanOrEqual(amount.raw, JSBI.BigInt(0))}
 		/>
 	);
 };

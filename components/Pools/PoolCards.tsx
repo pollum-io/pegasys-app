@@ -239,6 +239,8 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			? ""
 			: "none";
 
+	const isRollux = chainId === 2814;
+
 	useMemo(() => {
 		if (pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`]) {
 			setPoolsApr(prevState => {
@@ -321,19 +323,19 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					<Text fontWeight="semibold" color={theme.text.mono}>
 						{translation("positionCard.liquidity")}
 					</Text>
-					<Text>{reserveUSD || "-"}</Text>
+					<Text>{isRollux ? "-" : reserveUSD}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold" color={theme.text.mono}>
 						{translation("positionCard.volume")} (24h)
 					</Text>
-					<Text>{volumeUSD || "-"}</Text>
+					<Text>{isRollux ? "-" : volumeUSD}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold" color={theme.text.mono}>
 						APR
 					</Text>
-					<Text>{apr || "0%"}</Text>
+					<Text>{isRollux ? "-" : apr || "0%"}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text

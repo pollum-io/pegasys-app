@@ -110,10 +110,7 @@ class LpTokenServices {
 		return rewarder;
 	}
 
-	static async getAprs(
-		poolId: number,
-		isSuperFarm?: boolean
-	): Promise<{
+	static async getAprs(poolId: number): Promise<{
 		swapFeeApr: number;
 		farmApr: number;
 		combinedApr: number;
@@ -128,7 +125,7 @@ class LpTokenServices {
 			return {
 				swapFeeApr,
 				farmApr: stakingApr,
-				combinedApr: isSuperFarm ? combinedApr : swapFeeApr,
+				combinedApr,
 			};
 		} catch (e) {
 			return {

@@ -112,7 +112,7 @@ export const StakeContainer: NextPage = () => {
 						<Text fontSize="2xl" fontWeight="semibold">
 							{translation("earnPages.stakes")}
 						</Text>
-						{address && (
+						{address && !dataLoading && (
 							<Flex
 								gap="1"
 								mt={["4", "4", "0", "0"]}
@@ -167,66 +167,7 @@ export const StakeContainer: NextPage = () => {
 						)}
 					</Flex>
 				</Flex>
-				{!isConnected && (
-					<Flex
-						w="100%"
-						mt={["3rem", "3rem", "4rem", "4rem"]}
-						flexDirection="column"
-						alignItems="center"
-						justifyContent="center"
-						mb={["3rem", "3rem", "4rem", "4rem"]}
-					>
-						<Text
-							fontSize={["sm", "sm", "md", "md"]}
-							fontWeight="normal"
-							textAlign="center"
-						>
-							{translation("earnPages.walletConnect")}
-						</Text>
-					</Flex>
-				)}
-				{isConnected &&
-					(!chainId || !PegasysContracts[chainId].MINICHEF_ADDRESS) && (
-						<Flex
-							w="100%"
-							mt={["3rem", "3rem", "4rem", "4rem"]}
-							flexDirection="column"
-							alignItems="center"
-							justifyContent="center"
-							mb={["3rem", "3rem", "4rem", "4rem"]}
-						>
-							<Text
-								fontSize={["sm", "sm", "md", "md"]}
-								fontWeight="normal"
-								textAlign="center"
-							>
-								{translation("earnPages.featNotAvailable")}
-							</Text>
-						</Flex>
-					)}
-				{!dataLoading &&
-					isConnected &&
-					chainId &&
-					PegasysContracts[chainId].MINICHEF_ADDRESS &&
-					!earnOpportunities.length && (
-						<Flex
-							w="100%"
-							mt={["3rem", "3rem", "4rem", "4rem"]}
-							flexDirection="column"
-							alignItems="center"
-							justifyContent="center"
-							mb={["3rem", "3rem", "4rem", "4rem"]}
-						>
-							<Text
-								fontSize={["sm", "sm", "md", "md"]}
-								fontWeight="normal"
-								textAlign="center"
-							>
-								{translation("earnPages.anyAvailableOpportunities")}
-							</Text>
-						</Flex>
-					)}
-				{dataLoading && isConnected && (
+				{dataLoading ? (
 					<Flex
 						w="100%"
 						mt={["3rem", "3rem", "4rem", "4rem"]}
@@ -246,17 +187,69 @@ export const StakeContainer: NextPage = () => {
 							}
 						/>
 					</Flex>
+				) : !isConnected ? (
+					<Flex
+						w="100%"
+						mt={["3rem", "3rem", "4rem", "4rem"]}
+						flexDirection="column"
+						alignItems="center"
+						justifyContent="center"
+						mb={["3rem", "3rem", "4rem", "4rem"]}
+					>
+						<Text
+							fontSize={["sm", "sm", "md", "md"]}
+							fontWeight="normal"
+							textAlign="center"
+						>
+							{translation("earnPages.walletConnect")}
+						</Text>
+					</Flex>
+				) : !chainId || !PegasysContracts[chainId].MINICHEF_ADDRESS ? (
+					<Flex
+						w="100%"
+						mt={["3rem", "3rem", "4rem", "4rem"]}
+						flexDirection="column"
+						alignItems="center"
+						justifyContent="center"
+						mb={["3rem", "3rem", "4rem", "4rem"]}
+					>
+						<Text
+							fontSize={["sm", "sm", "md", "md"]}
+							fontWeight="normal"
+							textAlign="center"
+						>
+							{translation("earnPages.featNotAvailable")}
+						</Text>
+					</Flex>
+				) : !earnOpportunities.length ? (
+					<Flex
+						w="100%"
+						mt={["3rem", "3rem", "4rem", "4rem"]}
+						flexDirection="column"
+						alignItems="center"
+						justifyContent="center"
+						mb={["3rem", "3rem", "4rem", "4rem"]}
+					>
+						<Text
+							fontSize={["sm", "sm", "md", "md"]}
+							fontWeight="normal"
+							textAlign="center"
+						>
+							{translation("earnPages.anyAvailableOpportunities")}
+						</Text>
+					</Flex>
+				) : (
+					<Flex
+						flexDirection="column"
+						gap="8"
+						mb="24"
+						alignItems={["center", "center", "center", "center"]}
+					>
+						{earnOpportunities.map((stakeInfo: IEarnInfo, index) => (
+							<StakeCard key={index} stakeInfo={stakeInfo as IStakeInfo} />
+						))}
+					</Flex>
 				)}
-				<Flex
-					flexDirection="column"
-					gap="8"
-					mb="24"
-					alignItems={["center", "center", "center", "center"]}
-				>
-					{earnOpportunities.map((stakeInfo: IEarnInfo, index) => (
-						<StakeCard key={index} stakeInfo={stakeInfo as IStakeInfo} />
-					))}
-				</Flex>
 			</Flex>
 		</Flex>
 	);

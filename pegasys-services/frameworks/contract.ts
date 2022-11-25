@@ -112,6 +112,16 @@ class ContractFramework {
 
 		return contract;
 	}
+
+	static GovernanceContract({ chainId, provider }: IGetSpecificContract) {
+		const contract = this.getContract({
+			address: RoutesFramework.getGovernanceAddress(chainId),
+			abi: AbiFramework.getGovernanceAbi(),
+			provider,
+		});
+
+		return contract;
+	}
 }
 
 export default ContractFramework;

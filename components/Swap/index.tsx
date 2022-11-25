@@ -57,7 +57,12 @@ import {
 import dynamic from "next/dynamic";
 import { useTranslation } from "react-i18next";
 import { Signer } from "ethers";
-import { computeTradePriceBreakdown, Field, maxAmountSpend } from "utils";
+import {
+	computeTradePriceBreakdown,
+	Field,
+	maxAmountSpend,
+	verifyZerosInBalanceAndFormat,
+} from "utils";
 import { getTokensGraphCandle } from "services/index";
 
 import { ConfirmSwap } from "components/Modals/ConfirmSwap";
@@ -1279,9 +1284,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								<Text pl="2" fontSize="lg" fontWeight="400">
 									{tokensGraphCandleData?.length === 0
 										? "-"
-										: `${parseFloat(
-												String(tokensGraphCandleData[0]?.close)
-										  ).toFixed(2)} ${tokensPairPosition[1]?.symbol}`}
+										: `${verifyZerosInBalanceAndFormat(
+												parseFloat(tokensGraphCandleData[0]?.close)
+										  )} ${tokensPairPosition[0]?.symbol}`}
 								</Text>
 							</Flex>
 							<Flex
