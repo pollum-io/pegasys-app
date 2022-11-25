@@ -156,10 +156,11 @@ export const PoolsProvider: React.FC<{ children: React.ReactNode }> = ({
 	}, [poolBalance]);
 
 	useEffect(() => {
+		if (!pairs.length) setSortType("apr");
 		if (!isLoading && pairs.length !== 0) {
 			setSortType("your-pools");
 		}
-	}, [isLoading]);
+	}, [isLoading, pairs]);
 
 	const providerValue = useMemo(
 		() => ({

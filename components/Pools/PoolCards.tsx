@@ -207,17 +207,15 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 				) * sysPrice
 			}`
 		);
+	const isTestnet = chainId === 2814 || chainId === 5700;
 
-	const showPool =
-		chainId === 2814
-			? ""
-			: pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`] &&
-			  userTokensBalance.map(item => item.symbol).includes(currencyA.symbol) &&
-			  userTokensBalance.map(item => item.symbol).includes(currencyB.symbol)
-			? ""
-			: "none";
-
-	const isRollux = chainId === 2814;
+	const showPool = isTestnet
+		? ""
+		: pairInfo?.oneDay?.[`${currencyA.symbol}-${currencyB.symbol}`] &&
+		  userTokensBalance.map(item => item.symbol).includes(currencyA.symbol) &&
+		  userTokensBalance.map(item => item.symbol).includes(currencyB.symbol)
+		? ""
+		: "none";
 
 	return (
 		<Flex
@@ -249,19 +247,19 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					<Text fontWeight="semibold" color={theme.text.mono}>
 						{translation("positionCard.liquidity")}
 					</Text>
-					<Text>{isRollux ? "-" : reserveUSD}</Text>
+					<Text>{isTestnet ? "-" : reserveUSD}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold" color={theme.text.mono}>
 						{translation("positionCard.volume")} (24h)
 					</Text>
-					<Text>{isRollux ? "-" : volumeUSD}</Text>
+					<Text>{isTestnet ? "-" : volumeUSD}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text fontWeight="semibold" color={theme.text.mono}>
 						APR
 					</Text>
-					<Text>{isRollux ? "-" : apr || "0%"}</Text>
+					<Text>{isTestnet ? "-" : apr || "0%"}</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text

@@ -121,6 +121,7 @@ export const PoolsContainer: NextPage = () => {
 	);
 	useMemo(async () => {
 		setSearchTokens([]);
+		setPairs([]);
 		if (userTokensBalance.length === 0 || !isValid) return;
 
 		const tokens = getTokenPairs(
