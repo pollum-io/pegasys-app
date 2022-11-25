@@ -59,6 +59,7 @@ export const PoolsContainer: NextPage = () => {
 		poolsVolume,
 		poolsLiquidity,
 		isLoading,
+		sortType, setSortType
 	} = usePools();
 
 	const { colorMode } = useColorMode();
@@ -81,7 +82,6 @@ export const PoolsContainer: NextPage = () => {
 	const [depositedTokens, setDepositedTokens] = useState<IDeposited>();
 	const [poolPercentShare, setPoolPercentShare] = useState<string>("");
 	const [userPoolBalance, setUserPoolBalance] = useState<string>("");
-	const [sortType, setSortType] = useState<string>("your-pools");
 	const [searchTokens, setSearchTokens] = useState<Pair[]>([]);
 	const [notFound, setNotFound] = useState<boolean>(false);
 	const [allTokens, setAllTokens] = useState<[Token, Token][]>([]);

@@ -1,5 +1,5 @@
 import { JSBI, Pair, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
-import { createContext, useMemo, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import {
 	IPoolsApr,
 	IPoolsLiquidity,
@@ -36,6 +36,8 @@ interface IPools {
 	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 	pairInfo: ICommonPairs | undefined;
 	setPairInfo: React.Dispatch<React.SetStateAction<ICommonPairs | undefined>>;
+	setSortType: React.Dispatch<React.SetStateAction<string>>;
+	sortType: string;
 }
 
 export const PoolsContext = createContext({} as IPools);
@@ -51,6 +53,7 @@ export const PoolsProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [pairInfo, setPairInfo] = useState<ICommonPairs>();
 	const [currenciesArr, setCurrenciesArr] = useState<string[]>([]);
+	const [sortType, setSortType] = useState<string>("apr");
 	// eslint-disable-next-line
 	const [poolBalance, setPoolBalance] = useState<any>();
 	const { address, provider } = useWallet();
@@ -152,6 +155,12 @@ export const PoolsProvider: React.FC<{ children: React.ReactNode }> = ({
 		});
 	}, [poolBalance]);
 
+	useEffect(() => {
+		if (!isLoading && pairs.length !== 0) {
+			setSortType("your-pools");
+		}
+	}, [isLoading]);
+
 	const providerValue = useMemo(
 		() => ({
 			poolsApr,
@@ -168,6 +177,8 @@ export const PoolsProvider: React.FC<{ children: React.ReactNode }> = ({
 			setIsLoading,
 			pairInfo,
 			setPairInfo,
+			sortType,
+			setSortType,
 		}),
 		[
 			poolsApr,
@@ -184,6 +195,8 @@ export const PoolsProvider: React.FC<{ children: React.ReactNode }> = ({
 			setIsLoading,
 			pairInfo,
 			setPairInfo,
+			sortType,
+			setSortType,
 		]
 	);
 
