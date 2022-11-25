@@ -18,6 +18,7 @@ export const NETWORKS_CHAIN_PARAMS: INetworksChainParams = {
 		},
 		rpcUrls: ["https://rpc.syscoin.org/"],
 		blockExplorerUrls: ["https://explorer.syscoin.org/"],
+		apiUrls: ["https://explorer.syscoin.org/api"],
 	},
 	[ChainId.TANENBAUM]: {
 		chainId: "0x1644", // A 0x-prefixed hexadecimal chainId
@@ -29,6 +30,7 @@ export const NETWORKS_CHAIN_PARAMS: INetworksChainParams = {
 		},
 		rpcUrls: ["https://rpc.tanenbaum.io"],
 		blockExplorerUrls: ["https://tanenbaum.io"],
+		apiUrls: ["https://tanenbaum.io/api"],
 	},
 	[ChainId.ROLLUX]: {
 		chainId: "0xafe", // A 0x-prefixed hexadecimal chainId
@@ -40,5 +42,6 @@ export const NETWORKS_CHAIN_PARAMS: INetworksChainParams = {
 		},
 		rpcUrls: ["https://testnet.rollux.com:2814/"],
 		blockExplorerUrls: ["https://explorer.testnet.rollux.com/"],
+		apiUrls: ["https://explorer.testnet.rollux.com/api"],
 	},
 };
