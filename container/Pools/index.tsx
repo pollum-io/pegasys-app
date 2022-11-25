@@ -498,8 +498,8 @@ export const PoolsContainer: NextPage = () => {
 						zIndex="docked"
 						position="relative"
 						borderRadius="xl"
-						h={["11rem", "unset", "unset", "unset"]}
-						backgroundColor={address ? theme.bg.alphaPurple : "transparent"}
+						h={["11rem", "unset", "unset", "11rem"]}
+						backgroundColor={theme.bg.alphaPurple}
 					>
 						<Img
 							borderRadius="xl"
@@ -511,8 +511,8 @@ export const PoolsContainer: NextPage = () => {
 								address
 									? ["92%", "85%", "85%", "85%"]
 									: languages.includes(language)
-									? ["100%", "105%", "100%", "100%"]
-									: ["100%", "100%", "100%", "100%"]
+									? ["85%", "85%", "85%", "85%"]
+									: ["85%", "85%", "85%", "85%"]
 							}
 						/>
 						<Flex
