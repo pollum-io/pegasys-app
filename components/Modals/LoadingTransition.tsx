@@ -35,17 +35,32 @@ export const LoadingTransition: React.FC<IModal> = props => {
 		>
 			<ModalOverlay />
 			<ModalContent
-				mt="10rem"
+				mt={["unset", "10rem", "10rem", "10rem"]}
 				borderRadius="3xl"
+				borderBottomRadius={["none", "3xl", "3xl", "3xl"]}
 				bgColor={theme.bg.blueNavy}
 				pt="0"
 				pb="6"
 				px="6"
-				border="1px solid transparent"
+				bottom={["0", "unset", "unset", "unset"]}
+				m="0"
+				border={[
+					"none",
+					"1px solid transparent",
+					"1px solid transparent",
+					"1px solid transparent",
+				]}
+				borderTop="1px solid transparent"
 				background={
 					colorMode === "dark"
 						? `linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`
 						: undefined
+				}
+				position={["absolute", "relative", "relative", "relative"]}
+				boxShadow={
+					colorMode === "dark"
+						? "0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4)"
+						: "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
 				}
 			>
 				{onClose && (
@@ -72,17 +87,21 @@ export const LoadingTransition: React.FC<IModal> = props => {
 					flexDirection="column"
 					justifyContent="center"
 					alignItems="center"
-					gap="3"
+					gap="4"
 					color={theme.text.mono}
 				>
-					<Img src="icons/loading.gif" w="35%" h="35%" className="blob" />
-					<Flex flexDirection="row" alignItems="baseline" gap="1">
-						<Text fontSize="2xl" fontWeight="semibold">
+					<Img src="icons/loading.gif" w="7rem" h="7rem" className="blob" />
+					<Flex
+						flexDirection={["column", "row", "row", "row"]}
+						alignItems={["center", "baseline", "baseline", "baseline"]}
+						gap="1"
+					>
+						<Text fontSize="2xl" fontWeight="semibold" textAlign="center">
 							{translation("transactionConfirmation.waitingConfirmation")}
 						</Text>
 						<Text className="loading" />
 					</Flex>
-					<Text>
+					<Text textAlign="center">
 						{translation("transactionConfirmation.confirmTransaction")}
 					</Text>
 				</Flex>

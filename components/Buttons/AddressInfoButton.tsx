@@ -100,7 +100,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 				h="max-content"
 				position="absolute"
 				mb={["0", "0", "none", "15rem"]}
-				borderRadius="30px"
+				borderRadius="3xl"
 			>
 				<ModalHeader
 					bgColor={theme.bg.blueNavyLight}
@@ -222,7 +222,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 				<ModalFooter
 					bgColor={theme.bg.darkBlueGray}
 					justifyContent="flex-start"
-					borderBottomRadius={["0", "0", "18", "18"]}
+					borderBottomRadius={["0", "3xl", "3xl", "3xl"]}
 					h="max-content"
 					pb="1.4rem"
 				>

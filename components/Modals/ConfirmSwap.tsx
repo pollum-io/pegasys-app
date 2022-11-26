@@ -9,6 +9,7 @@ import {
 	ModalOverlay,
 	Text,
 	ModalBody,
+	useColorMode,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import React from "react";
@@ -50,6 +51,8 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 
 	const { t: translation, i18n } = useTranslation();
 
+	const { colorMode } = useColorMode();
+
 	const txName =
 		txType === "approve"
 			? "Approve"
@@ -69,12 +72,27 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				position={["absolute", "absolute", "relative", "relative"]}
-				m={["0", "0", "10", "10"]}
-				bottom={["0", "0", "unset", "unset"]}
+				position={["absolute", "relative", "relative", "relative"]}
+				m={["0", "10", "10", "10"]}
+				bottom={["0", "unset", "unset", "unset"]}
 				borderRadius="3xl"
-				borderBottomRadius={["0", "0", "3xl", "3xl"]}
-				border={["none", "1px solid transparent"]}
+				borderBottomRadius={["0", "3xl", "3xl", "3xl"]}
+				border={[
+					"none",
+					"1px solid transparent",
+					"1px solid transparent",
+					"1px solid transparent",
+				]}
+				boxShadow={
+					colorMode === "dark"
+						? "0px 0px 0px 1px rgba(0, 0, 0, 0.1)"
+						: "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
+				}
+				filter={
+					colorMode === "dark"
+						? "drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.2)) drop-shadow(0px 15px 40px rgba(0, 0, 0, 0.4))"
+						: "none"
+				}
 				borderTop="1px solid transparent"
 				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
@@ -136,7 +154,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 				</ModalBody>
 				<Flex
 					bgColor={theme.bg.blackLightness}
-					borderBottomRadius={["0", "0", "3xl", "3xl"]}
+					borderBottomRadius={["0", "3xl", "3xl", "3xl"]}
 					flexDirection="column"
 					p="1.5rem"
 					pb={["3.75rem", "3.75rem", "1.5rem", "1.5rem"]}
