@@ -46,6 +46,7 @@ export const PoolsContainer: NextPage = () => {
 		isOpenAddLiquidity,
 		onCloseAddLiquidity,
 		isOpenTransaction,
+		onOpenAddLiquidity,
 		onOpenTransaction,
 		onCloseTransaction,
 	} = useModal();
@@ -607,6 +608,13 @@ export const PoolsContainer: NextPage = () => {
 							>
 								{translation("pool.poolsOverview")}
 							</Text>
+							<Button
+								w="10rem"
+								h="max-content"
+								onClick={() => onOpenAddLiquidity()}
+							>
+								connect
+							</Button>
 						</Flex>
 						{!isLoading && (
 							<Flex

@@ -73,16 +73,11 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 			<ModalOverlay />
 			<ModalContent
 				position={["absolute", "relative", "relative", "relative"]}
-				m={["0", "10", "10", "10"]}
+				mt={["0", "6rem", "6rem", "6rem"]}
+				mb={["0", "unset", "unset", "unset"]}
 				bottom={["0", "unset", "unset", "unset"]}
-				borderRadius="3xl"
-				borderBottomRadius={["0", "3xl", "3xl", "3xl"]}
-				border={[
-					"none",
-					"1px solid transparent",
-					"1px solid transparent",
-					"1px solid transparent",
-				]}
+				borderRadius="30px"
+				borderBottomRadius={["0", "30px", "30px", "30px"]}
 				boxShadow={
 					colorMode === "dark"
 						? "0px 0px 0px 1px rgba(0, 0, 0, 0.1)"
@@ -93,8 +88,12 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 						? "drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.2)) drop-shadow(0px 15px 40px rgba(0, 0, 0, 0.4))"
 						: "none"
 				}
-				borderTop="1px solid transparent"
-				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				borderTop={
+					colorMode === "dark"
+						? ["1px solid transparent", "none", "none", "none"]
+						: ["none", "none", "none", "none"]
+				}
+				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(270.16deg, rgba(24,54,61, 0.8) 90.76%, rgba(24,54,61, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
 					display="flex"
@@ -154,10 +153,11 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 				</ModalBody>
 				<Flex
 					bgColor={theme.bg.blackLightness}
-					borderBottomRadius={["0", "3xl", "3xl", "3xl"]}
+					borderBottomRadius={["0", "30px", "30px", "30px"]}
 					flexDirection="column"
 					p="1.5rem"
-					pb={["3.75rem", "3.75rem", "1.5rem", "1.5rem"]}
+					pb={["3.75rem", "1.5rem", "1.5rem", "1.5rem"]}
+					w="100%"
 				>
 					<Flex
 						flexDirection="column"
@@ -214,12 +214,11 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 						<Button
 							w="100%"
 							mt="1.5rem"
-							py="6"
-							px="6"
+							py={["0.5rem", "6", "6", "6"]}
 							borderRadius="67px"
 							bgColor={theme.bg.blueNavyLightness}
 							color={theme.text.cyan}
-							fontSize="lg"
+							fontSize={["16px", "lg", "lg", "lg"]}
 							onClick={() => {
 								if (!onTx) return;
 								openPendingTx();

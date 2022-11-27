@@ -214,6 +214,7 @@ export const Header: React.FC = () => {
 					</Flex>
 				)}
 			</Flex>
+
 			<Flex
 				w={["90%", "30rem", "37rem", "37rem"]}
 				h="max-content"
@@ -238,7 +239,7 @@ export const Header: React.FC = () => {
 				<Flex
 					flexDirection="column"
 					pl={["0", "2", "0", "0"]}
-					pr={["6rem", "0", "0", "0"]}
+					pr={["6rem", "1rem", "1.5rem", "1.5rem"]}
 				>
 					<WalletButton />
 				</Flex>

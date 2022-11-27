@@ -95,12 +95,28 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				my={["0", "40", "40", "40"]}
-				top={["0", "0", "0", "0"]}
+				mt={["0", "6rem", "6rem", "6rem"]}
 				h="max-content"
-				position="absolute"
-				mb={["0", "0", "none", "15rem"]}
-				borderRadius="3xl"
+				position={["absolute", "relative", "relative", "relative"]}
+				borderRadius={["30px", "35px", "35px", "35px"]}
+				bottom={["0", "unset", "unset", "unset"]}
+				mb={["0", "unset", "unset", "unset"]}
+				boxShadow={
+					colorMode === "dark"
+						? "0px 0px 0px 1px rgba(0, 0, 0, 0.1)"
+						: "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
+				}
+				filter={
+					colorMode === "dark"
+						? "drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.2)) drop-shadow(0px 15px 40px rgba(0, 0, 0, 0.4))"
+						: "none"
+				}
+				borderTop={
+					colorMode === "dark"
+						? ["1px solid transparent", "none", "none", "none"]
+						: ["none", "none", "none", "none"]
+				}
+				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(260.16deg, rgba(24,54,61, 0.8) 90.76%, rgba(24,54,61, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
 					bgColor={theme.bg.blueNavyLight}
@@ -123,7 +139,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 				</ModalHeader>
 				<ModalBody bgColor={theme.bg.blueNavyLight} pb="6">
 					<Flex
-						borderRadius={18}
+						borderRadius={12}
 						bgColor={theme.bg.blackLightness}
 						py="4"
 						px="4"
@@ -136,7 +152,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 						>
 							<Flex>
 								<Text
-									fontSize={["sm", "sm", "md", "md"]}
+									fontSize="14px"
 									fontWeight="semibold"
 									color={theme.text.cyanPurple}
 								>
@@ -154,10 +170,11 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									w="max-content"
 									h="max-content"
 									color={theme.text.whitePurple}
-									fontSize={["xs", "xs", "sm", "sm"]}
+									fontSize="12px"
 									fontWeight="bold"
 									alignItems="center"
 									bgColor="transparent"
+									textTransform="uppercase"
 									_hover={{
 										borderColor: theme.text.cyanLightPurple,
 										color: theme.text.cyanLightPurple,
@@ -222,21 +239,20 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 				<ModalFooter
 					bgColor={theme.bg.darkBlueGray}
 					justifyContent="flex-start"
-					borderBottomRadius={["0", "3xl", "3xl", "3xl"]}
+					borderBottomRadius={["0", "30px", "30px", "30px"]}
 					h="max-content"
-					pb="1.4rem"
+					pb={["3rem", "1.4rem", "1.4rem", "1.4rem"]}
 				>
 					{txs.length === 0 ? (
 						<Text fontSize="sm" fontWeight="semibold" color={theme.text.mono}>
 							{translation("accountDetails.transactionAppear")}
 						</Text>
 					) : (
-						<Flex flexDirection="column">
+						<Flex flexDirection="column" w="100%">
 							<Flex
 								justifyContent="space-between"
 								w="100%"
 								flexDirection="row"
-								gap="12rem"
 								pb={["1.1rem", "1.1rem", "1.1rem", "1.1rem"]}
 							>
 								<Text fontSize="sm" fontWeight="semibold">
@@ -283,6 +299,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 												target="_blank"
 												rel="noreferrer"
 												alignItems="center"
+												w={["65%", "max-content", "max-content", "max-content"]}
 											>
 												{item?.summary}
 												<Icon
@@ -294,8 +311,9 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 													position="relative"
 												/>
 											</Link>
+
 											{item?.finished && (
-												<Flex>
+												<Flex mb="0.2rem">
 													{item.confirmations === 1 ? (
 														<AiOutlineCheckCircle color="#25855A" />
 													) : (

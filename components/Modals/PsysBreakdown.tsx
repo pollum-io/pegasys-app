@@ -47,14 +47,25 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				borderTopRadius="2xl"
+				borderTopRadius="30px"
 				borderBottomRadius={["none", "30px", "30px", "30px"]}
 				bgColor="transparent"
-				my={["0", "40", "40", "40"]}
+				mt={["0", "6rem", "6rem", "6rem"]}
+				mb={["0", "unset", "unset", "unset"]}
 				w={["100vw", "21.125rem", "21.125rem", "21.125rem"]}
 				h="md"
-				position={["absolute", "unset", "unset", "unset"]}
-				bottom={["0", "0", "", ""]}
+				position={["absolute", "relative", "relative", "relative"]}
+				bottom={["0", "unset", "unset", "unset"]}
+				boxShadow={
+					colorMode === "dark"
+						? "0px 0px 0px 1px rgba(0, 0, 0, 0.1)"
+						: "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
+				}
+				filter={
+					colorMode === "dark"
+						? "drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.2)) drop-shadow(0px 15px 40px rgba(0, 0, 0, 0.4))"
+						: "none"
+				}
 			>
 				<Flex
 					w="100%"
@@ -72,7 +83,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 						h="100%"
 						right="0"
 						top="0"
-						borderTop="2xl"
+						borderTop="30px"
 					/>
 					<Flex
 						flexDirection="row"
@@ -152,7 +163,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 				<ModalFooter
 					bgColor={theme.bg.blueNavyLight}
 					justifyContent="flex-start"
-					pb={["2rem", "2rem", "6", "6"]}
+					pb={["3rem", "6", "6", "6"]}
 					borderBottomRadius={["none", "30px", "30px", "30px"]}
 				>
 					<Button

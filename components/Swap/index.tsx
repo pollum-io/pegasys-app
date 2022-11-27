@@ -715,7 +715,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								>
 									<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
 									<Text
-										fontSize="xl"
+										fontSize={["16px", "16px", "xl", "xl"]}
 										fontWeight="500"
 										px="3"
 										color={theme.text.mono}
@@ -740,7 +740,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Flex>
 
 							<Input
-								fontSize="2xl"
+								fontSize={["18px", "18px", "22px", "22px"]}
 								maxW="160px"
 								display="inline-block"
 								overflow="hidden"
@@ -863,13 +863,17 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								}}
 							>
 								<Img src={selectedToken[1]?.logoURI} w="6" h="6" />
-								<Text fontSize="xl" fontWeight="500" px="3">
+								<Text
+									fontSize={["16px", "16px", "xl", "xl"]}
+									fontWeight="500"
+									px="3"
+								>
 									{selectedToken[1]?.symbol}
 								</Text>
 								<Icon as={IoIosArrowDown} />
 							</Flex>
 							<Input
-								fontSize="2xl"
+								fontSize={["18px", "18px", "22px", "22px"]}
 								maxW="160px"
 								display="inline-block"
 								overflow="hidden"

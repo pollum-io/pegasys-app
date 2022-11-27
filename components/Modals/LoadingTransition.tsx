@@ -36,11 +36,10 @@ export const LoadingTransition: React.FC<IModal> = props => {
 			<ModalOverlay />
 			<ModalContent
 				mt={["unset", "10rem", "10rem", "10rem"]}
-				borderRadius="3xl"
-				borderBottomRadius={["none", "3xl", "3xl", "3xl"]}
-				bgColor={theme.bg.blueNavy}
+				borderRadius="30px"
+				borderBottomRadius={["none", "30px", "30px", "30px"]}
 				pt="0"
-				pb="6"
+				pb={["5rem", "6", "6", "6"]}
 				px="6"
 				bottom={["0", "unset", "unset", "unset"]}
 				m="0"
@@ -53,7 +52,7 @@ export const LoadingTransition: React.FC<IModal> = props => {
 				borderTop="1px solid transparent"
 				background={
 					colorMode === "dark"
-						? `linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`
+						? `linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 50.76%, rgba(86, 190, 216, 0) 97.76%) border-box`
 						: undefined
 				}
 				position={["absolute", "relative", "relative", "relative"]}
@@ -90,7 +89,17 @@ export const LoadingTransition: React.FC<IModal> = props => {
 					gap="4"
 					color={theme.text.mono}
 				>
-					<Img src="icons/loading.gif" w="7rem" h="7rem" className="blob" />
+					<Img
+						src={
+							colorMode === "dark"
+								? "icons/loading.gif"
+								: "icons/lightLoading.gif"
+						}
+						w="7rem"
+						h="7rem"
+						className="blob"
+						filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
+					/>
 					<Flex
 						flexDirection={["column", "row", "row", "row"]}
 						alignItems={["center", "baseline", "baseline", "baseline"]}
