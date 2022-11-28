@@ -33,11 +33,12 @@ export const InfoDropdown: FunctionComponent = () => {
 	const [state2, setState2] = useState<boolean>();
 
 	return (
-		<Flex flexDir="column" pt="0" pb="2" gap="1">
+		<Flex flexDir="column" pt="0" pb="2">
 			<Flex
 				flexDir="column"
-				py="2"
+				py="4"
 				bgColor={state1 ? theme.bg.blackLightness : "transparent"}
+				w={["100vw", "100vw", "unset", "unset"]}
 			>
 				<Flex
 					align="center"
@@ -45,6 +46,7 @@ export const InfoDropdown: FunctionComponent = () => {
 					pb="1"
 					onClick={() => setState1(!state1)}
 					_hover={{ cursor: "pointer", color: theme.text.cyanPurple }}
+					color={state1 ? theme.text.cyanPurple : theme.text.mono}
 				>
 					<Icon
 						position="absolute"
@@ -91,6 +93,7 @@ export const InfoDropdown: FunctionComponent = () => {
 			<Flex
 				flexDir="column"
 				bgColor={state2 ? theme.bg.blackLightness : "transparent"}
+				w={["100vw", "100vw", "unset", "unset"]}
 			>
 				<Flex
 					align="center"
@@ -98,6 +101,7 @@ export const InfoDropdown: FunctionComponent = () => {
 					pb="1"
 					onClick={() => setState2(!state2)}
 					_hover={{ cursor: "pointer", color: theme.text.cyanPurple }}
+					color={state2 ? theme.text.cyanPurple : theme.text.mono}
 				>
 					<Icon
 						position="absolute"
@@ -120,7 +124,7 @@ export const InfoDropdown: FunctionComponent = () => {
 					)}
 				</Flex>
 				<Collapse in={state2}>
-					<Flex flexDir="column" py="1">
+					<Flex flexDir="column" py="2">
 						{bridgeInfos.map((bridge: any) => (
 							<Link
 								key={bridge.id}
