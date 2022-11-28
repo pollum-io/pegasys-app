@@ -272,7 +272,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 						{percentShare !== 0 && percentShare
 							? percentShare > 0 && percentShare < 1
 								? "<0.01%"
-								: `${percentShare}%`
+								: `${percentShare.toFixed(2)}%`
 							: "-"}
 					</Text>
 				</Flex>
