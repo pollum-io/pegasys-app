@@ -130,14 +130,28 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const { address, chainId, isConnected, signer, provider } = psUseWallet();
 	const { userSlippageTolerance, userTransactionDeadlineValue } = usePegasys();
 
-	const chain = chainId === 57 ? ChainId.NEVM : ChainId.TANENBAUM;
+	let currentChainId: ChainId;
 
-	const router = PegasysContracts[chain].ROUTER_ADDRESS;
+	switch (chainId) {
+		case 57:
+			currentChainId = ChainId.NEVM;
+			break;
+		case 5700:
+			currentChainId = ChainId.TANENBAUM;
+			break;
+		case 2814:
+			currentChainId = ChainId.ROLLUX;
+			break;
+		default:
+			currentChainId = ChainId.NEVM;
+	}
+
+	const router = PegasysContracts[currentChainId].ROUTER_ADDRESS;
 
 	const walletInfo = useMemo(
 		() => ({
 			walletAddress: address,
-			chainId: chain,
+			chainId: currentChainId,
 			provider,
 		}),
 		[chainId, address, provider]
@@ -251,7 +265,10 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 		if (currentInputTyped === "inputFrom" && currPair) {
 			const parseInputValue = tryParseAmount(inputFromValue, selectedToken[0]);
-			const wrappedAmountValue = wrappedCurrencyAmount(parseInputValue, chain);
+			const wrappedAmountValue = wrappedCurrencyAmount(
+				parseInputValue,
+				currentChainId
+			);
 			const quoteValue =
 				wrappedAmountValue &&
 				currPair?.priceOf(currPair?.token0)?.quote(wrappedAmountValue);
@@ -262,7 +279,10 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 		if (currentInputTyped === "inputTo" && currPair) {
 			const parseInputValue = tryParseAmount(inputToValue, selectedToken[1]);
-			const wrappedAmountValue = wrappedCurrencyAmount(parseInputValue, chain);
+			const wrappedAmountValue = wrappedCurrencyAmount(
+				parseInputValue,
+				currentChainId
+			);
 			const quoteValue =
 				wrappedAmountValue &&
 				currPair?.priceOf(currPair?.token1)?.quote(wrappedAmountValue);
@@ -290,8 +310,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		);
 
 		const [tokenAmountA, tokenAmountB] = [
-			wrappedCurrencyAmount(currencyAmountA, chain),
-			wrappedCurrencyAmount(currencyAmountB, chain),
+			wrappedCurrencyAmount(currencyAmountA, currentChainId),
+			wrappedCurrencyAmount(currencyAmountB, currentChainId),
 		];
 
 		const liquidityMinted =
