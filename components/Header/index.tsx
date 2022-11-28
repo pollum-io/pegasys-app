@@ -199,7 +199,7 @@ export const Header: React.FC = () => {
 							</NavButton>
 						))}
 						<NavButton
-							href="/"
+							href="https://info.pegasys.finance/"
 							color={theme.icon.whiteGray}
 							display={{
 								base: "none",
