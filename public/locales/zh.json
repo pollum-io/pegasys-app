@@ -96,7 +96,8 @@
 		"withdrewStakingToken": "提取 {{ symbol }}!",
 		"approve": "批准",
 		"poolWeight": "泳池重量",
-		"extraReward": "额外奖励"
+		"extraReward": "额外奖励",
+		"unstakeEntire": "当你解除你的全部存款的赌注时，你的奖励就会被认领，你的存款就会回到你的手中。你将不再从这个赌注池获得奖励。"
 	},
 	"menu": {
 		"code": "Code",

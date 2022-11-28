@@ -501,7 +501,7 @@ export const PoolsContainer: NextPage = () => {
 						zIndex="docked"
 						position="relative"
 						borderRadius="xl"
-						h={["11rem", "unset", "unset", "11rem"]}
+						h={["13rem", "unset", "unset", "unset"]}
 						backgroundColor={theme.bg.alphaPurple}
 					>
 						<Img
@@ -512,8 +512,6 @@ export const PoolsContainer: NextPage = () => {
 							w="100%"
 							h={
 								address
-									? ["92%", "85%", "85%", "85%"]
-									: languages.includes(language)
 									? ["85%", "85%", "85%", "85%"]
 									: ["85%", "85%", "85%", "85%"]
 							}
@@ -522,12 +520,11 @@ export const PoolsContainer: NextPage = () => {
 							zIndex="docked"
 							flexDirection="column"
 							px={["1rem", "1rem", "1.625rem", "1.625rem"]}
-							py={["0.6rem", "0.7rem", "1rem", "1rem"]}
+							py={["0.8rem", "0.7rem", "1rem", "1rem"]}
 							gap="3"
-							h={["9rem", "10rem", "10rem", "10rem"]}
 							color="white"
 						>
-							<Text fontWeight="bold" fontSize={["14px", "md", "md", "md"]}>
+							<Text fontWeight="bold" fontSize={["md", "md", "md", "md"]}>
 								{translation("pool.liquidityProviderRewards")}
 							</Text>
 							<Text
@@ -560,7 +557,7 @@ export const PoolsContainer: NextPage = () => {
 								bgColor={theme.bg.alphaPurple}
 								zIndex="0"
 								position="relative"
-								top={["5", "2", "2", "2"]}
+								top={["1.8rem", "2", "2", "2"]}
 								borderBottomRadius="xl"
 								py="0.531rem"
 								pt={["0.3rem", "unset", "unset", "unset"]}
@@ -608,13 +605,6 @@ export const PoolsContainer: NextPage = () => {
 							>
 								{translation("pool.poolsOverview")}
 							</Text>
-							<Button
-								w="10rem"
-								h="max-content"
-								onClick={() => onOpenAddLiquidity()}
-							>
-								connect
-							</Button>
 						</Flex>
 						{!isLoading && (
 							<Flex
@@ -724,6 +714,7 @@ export const PoolsContainer: NextPage = () => {
 													borderColor="transparent"
 													p="4"
 													fontSize="sm"
+													zIndex="2"
 												>
 													<MenuItem
 														color={theme.text.mono}

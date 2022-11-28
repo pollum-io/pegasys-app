@@ -97,7 +97,8 @@
 		"sign": "Assinar",
 		"approve": "Aprovar ",
 		"poolWeight": "Peso da piscina",
-		"extraReward": "Recompensa Extra"
+		"extraReward": "Recompensa Extra",
+		"unstakeEntire": "Quando você descapitaliza todos os seus depósitos, suas recompensas são reclamadas e seu depósito retorna para você. Você não ganhará mais recompensas com esta staking pool."
 	},
 	"menu": {
 		"code": "Código",

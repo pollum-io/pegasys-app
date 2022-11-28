@@ -10,6 +10,7 @@ import {
 	ModalOverlay,
 	Text,
 	Collapse,
+	useMediaQuery,
 } from "@chakra-ui/react";
 import { useModal, usePicasso, useWallet, useAllCommonPairs } from "hooks";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -117,6 +118,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const [liquidityMintendValue, setLiquidityMintedValue] =
 		useState<TokenAmount>();
 	const [amounts, setAmounts] = useState<TokenAmount[]>([]);
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const [currPoolShare, setCurrPoolShare] = useState<string>("");
 	const { setCurrentLpAddress } = useWallet();
 	const {
@@ -466,14 +468,19 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			/>
 			<ModalOverlay />
 			<ModalContent
-				mb="0"
-				top={["9.5rem", "9.2rem", "2rem", "2rem"]}
-				bottom={["0", "0", "0", "0"]}
-				position={["relative", "relative", "relative", "relative"]}
-				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
-				h={["max-content", "max-content", "max-content", "max-content"]}
-				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
-				border={["none", "1px solid transparent"]}
+				top={["9.5rem", "2rem", "2rem", "2rem"]}
+				position={["absolute", "relative", "relative", "relative"]}
+				mb={["0", "25rem", "25rem", "25rem"]}
+				borderTopRadius="30px"
+				h="max-content"
+				borderBottomRadius={["0", "30px", "30px", "30px"]}
+				border={[
+					"none",
+					"1px solid transparent",
+					"1px solid transparent",
+					"1px solid transparent",
+				]}
+				borderTop="1px solid transparent"
 				background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
@@ -887,27 +894,27 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					<Flex
 						flexDirection="column"
 						p="1.5rem"
+						pb={["3rem", "1.5rem", "1.5rem", "1.5rem"]}
 						transition="200ms"
-						background={theme.bg.subModal}
-						position={["relative", "relative", "absolute", "absolute"]}
+						background={isMobile ? theme.bg.subModalMobile : theme.bg.subModal}
+						position={["relative", "absolute", "absolute", "absolute"]}
 						top={
 							parseFloat(tokenInputValue.inputTo.value) >
 								parseFloat(selectedToken[1]?.formattedBalance) &&
 							parseFloat(tokenInputValue.inputFrom.value) >
 								parseFloat(selectedToken[0]?.formattedBalance)
 								? language in languageList
-									? ["unset", "unset", "35rem", "39rem"]
-									: ["unset", "unset", "39rem", "39rem"]
+									? ["unset", "35rem", "35rem", "39rem"]
+									: ["unset", "38.5rem", "39.5rem", "39.5rem"]
 								: parseFloat(tokenInputValue.inputTo.value) >
 										parseFloat(selectedToken[1]?.formattedBalance) ||
 								  parseFloat(tokenInputValue.inputFrom.value) >
 										parseFloat(selectedToken[0]?.formattedBalance)
-								? ["unset", "unset", "37rem", "37rem"]
-								: ["unset", "unset", "10rem", "35rem"]
+								? ["unset", "36.5rem", "37.5rem", "37.5rem"]
+								: ["unset", "35rem", "35.5rem", "35.5rem"]
 						}
-						bottom={["0", "0", "unset", "unset"]}
 						w="100%"
-						borderRadius={["0", "0", "3xl", "3xl"]}
+						borderRadius={["0", "30px", "30px", "30px"]}
 						color={theme.text.mono}
 					>
 						<Text fontWeight="bold" fontSize="lg">
@@ -988,11 +995,12 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					<Flex
 						flexDirection="row"
 						p="1.5rem"
-						bgColor={theme.bg.subModal}
-						position={["relative", "relative", "absolute", "absolute"]}
+						pb={["3rem", "1.5rem", "1.5rem", "1.5rem"]}
+						background={isMobile ? theme.bg.subModalMobile : theme.bg.subModal}
+						position={["relative", "absolute", "absolute", "absolute"]}
 						w="100%"
-						top={["unset", "unset", "27.3rem", "27.3rem"]}
-						borderRadius={["0", "0", "3xl", "3xl"]}
+						top={["unset", "27rem", "28rem", "28rem"]}
+						borderRadius={["0", "30px", "30px", "30px"]}
 						alignItems="flex-start"
 						gap="2"
 					>

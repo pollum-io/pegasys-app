@@ -96,7 +96,8 @@
 		"withdrawAndClaim": "Retirar y reclamar",
 		"withdrewStakingToken": "{{ symbol }} retirados!",
 		"approve": "Aprobar",
-		"poolWeight": "Peso de la piscina"
+		"poolWeight": "Peso de la piscina",
+		"unstakeEntire": "Cuando se retira la totalidad de los depósitos, se reclaman las recompensas y se devuelve el depósito. Ya no obtendrá recompensas de este staking pool."
 	},
 	"menu": {
 		"code": "Código",

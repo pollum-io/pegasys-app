@@ -96,7 +96,8 @@
 		"withdrewStakingToken": "{{ symbol }} çekildi!",
 		"approve": "Onayla",
 		"poolWeight": "Havuz Ağırlığı",
-		"extraReward": "Ekstra Ödül"
+		"extraReward": "Ekstra Ödül",
+		"unstakeEntire": "Yatırdığınız paranın tamamını geri aldığınızda, ödülleriniz talep edilir ve yatırdığınız para size geri döner. Artık bu bahis havuzundan ödül kazanamazsınız."
 	},
 	"menu": {
 		"code": "Kod",

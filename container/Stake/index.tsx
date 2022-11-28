@@ -43,6 +43,7 @@ export const StakeContainer: NextPage = () => {
 					position="relative"
 					borderRadius="xl"
 					backgroundColor={theme.bg.alphaPurple}
+					h={["10.75rem", "unset", "unset", "unset"]}
 				>
 					<Img
 						borderRadius="xl"
@@ -55,8 +56,8 @@ export const StakeContainer: NextPage = () => {
 					<Flex
 						zIndex="docked"
 						flexDirection="column"
-						px="1.625rem"
-						py="1.375rem"
+						px={["1rem", "1.625rem", "1.625rem", "1.625rem"]}
+						py={["0.8rem", "1.375rem", "1.375rem", "1.375rem"]}
 						gap="3"
 						h={["7.5rem", "8rem", "10rem", "10rem"]}
 						color="white"
@@ -68,7 +69,7 @@ export const StakeContainer: NextPage = () => {
 							fontWeight="medium"
 							fontSize="sm"
 							lineHeight="shorter"
-							w={["70%", "50%", "50%", "50%"]}
+							w={["90%", "50%", "50%", "50%"]}
 						>
 							{translation("earnPages.stakingDescription")}
 						</Text>
@@ -80,7 +81,7 @@ export const StakeContainer: NextPage = () => {
 						bgColor={theme.bg.alphaPurple}
 						zIndex="0"
 						position="relative"
-						top="2"
+						top={["7", "3", "2", "2"]}
 						borderBottomRadius="xl"
 						py="0.531rem"
 						gap="2.5"

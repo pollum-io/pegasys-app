@@ -96,7 +96,8 @@
 		"withdrewStakingToken": "Withdrew {{ symbol }}!",
 		"approve": "Approve",
 		"poolWeight": "Pool Weight",
-		"extraReward": "Extra Reward"
+		"extraReward": "Extra Reward",
+		"unstakeEntire": "When you unstake your entire deposits, your rewards are claimed and your deposit returns to you. You will no longer earn rewards from this staking pool."
 	},
 	"menu": {
 		"code": "Code",

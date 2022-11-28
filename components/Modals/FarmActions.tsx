@@ -47,32 +47,26 @@ export const FarmActions: React.FC<IModal> = props => {
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				mt={
-					buttonId === "withdraw"
-						? withdrawPercentage === 100
-							? ["8rem", "10.5rem", "10rem", "10rem"]
-							: ["8rem", "14.4rem", "10rem", "10rem"]
-						: buttonId === "deposit"
-						? ["8rem", "23.5rem", "10rem", "10rem"]
-						: ["8rem", "19.4rem", "10rem", "10rem"]
-				}
-				mb={["0", "0", "10rem", "10rem"]}
-				position={["fixed", "relative", "relative", "relative"]}
+				mt={["0", "6rem", "6rem", "6rem"]}
+				mb={["0", "unset", "unset", "unset"]}
+				position={["absolute", "relative", "relative", "relative"]}
 				bottom="0"
-				maxWidth="max-content"
-				w={["100vw", "30.625rem", "max-content", "max-content"]}
-				h={["max-content", "max-content", "max-content", "max-content"]}
-				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
-				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
-				bgColor={theme.bg.blueNavyLight}
-				border={["none", "1px solid transparent"]}
-				borderBottom={["none", "none", "", ""]}
+				w={["100vw", "32rem", "32rem", "32rem"]}
+				borderTopRadius={["30px", "30px", "30px", "30px"]}
+				borderBottomRadius={["0px", "30px", "30px", "30px"]}
+				border={[
+					"none",
+					"1px solid transparent",
+					"1px solid transparent",
+					"1px solid transparent",
+				]}
+				borderTop="1px solid transparent"
 				boxShadow="0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04)"
 				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
 					backgroundColor={theme.bg.blueNavyLight}
-					borderTopRadius="3xl"
+					borderTopRadius="30px"
 					alignItems="baseline"
 					justifyContent="space-between"
 					pl={["4", "5", "20", "20"]}
@@ -81,7 +75,7 @@ export const FarmActions: React.FC<IModal> = props => {
 						flex="1"
 						display={{
 							base: "flex",
-							sm: "flex",
+							sm: "none",
 							md: "none",
 							lg: "none",
 						}}
@@ -124,20 +118,20 @@ export const FarmActions: React.FC<IModal> = props => {
 							flexDirection="row"
 							p="1.5rem"
 							background={[
-								theme.bg.smoothGray,
-								theme.bg.smoothGray,
+								theme.bg.subModalMobile,
+								theme.bg.subModal,
 								theme.bg.subModal,
 								theme.bg.subModal,
 							]}
-							position={["relative", "relative", "absolute", "absolute"]}
+							position={["relative", "absolute", "absolute", "absolute"]}
 							w="100%"
-							bottom={
+							top={
 								withdrawPercentage === 100
-									? ["unset", "unset", "-12rem", "-12rem"]
-									: ["unset", "unset", "-9rem", "-9rem"]
+									? ["0", "30rem", "30rem", "30rem"]
+									: ["0", "30rem", "-9rem", "30rem"]
 							}
-							borderTopRadius={["0", "0", "3xl", "3xl"]}
-							borderBottomRadius={["0", "0", "3xl", "3xl"]}
+							borderTopRadius={["0", "30px", "30px", "30px"]}
+							borderBottomRadius={["0", "30px", "30px", "30px"]}
 							alignItems="flex-start"
 							gap="2"
 							transition="500ms"
@@ -169,16 +163,16 @@ export const FarmActions: React.FC<IModal> = props => {
 							flexDirection="row"
 							p="1.5rem"
 							background={[
-								theme.bg.smoothGray,
-								theme.bg.smoothGray,
+								theme.bg.subModalMobile,
+								theme.bg.subModal,
 								theme.bg.subModal,
 								theme.bg.subModal,
 							]}
-							position={["relative", "relative", "absolute", "absolute"]}
+							position={["relative", "absolute", "absolute", "absolute"]}
 							w="100%"
-							bottom={["unset", "unset", "-9.5rem", "-9.5rem"]}
-							borderTopRadius={["0", "0", "3xl", "3xl"]}
-							borderBottomRadius={["0", "0", "3xl", "3xl"]}
+							top={["unset", "30rem", "30rem", "30rem"]}
+							borderTopRadius={["0", "30px", "30px", "30px"]}
+							borderBottomRadius={["0", "30px", "30px", "30px"]}
 							alignItems="flex-start"
 							gap="2"
 						>

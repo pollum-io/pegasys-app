@@ -96,7 +96,8 @@
 		"withdrewStakingToken": "{{ symbol }} abgebucht!",
 		"approve": "Bestätigen",
 		"poolWeight": "Beckengewicht",
-		"extraReward": "Zusätzliche Belohnung"
+		"extraReward": "Zusätzliche Belohnung",
+		"unstakeEntire": "Wenn Sie Ihre gesamten Einsätze zurücknehmen, werden Ihre Prämien eingefordert und Sie erhalten Ihre Einlage zurück. Sie erhalten dann keine Prämien mehr aus diesem Staked-Pool."
 	},
 	"menu": {
 		"code": "Code",

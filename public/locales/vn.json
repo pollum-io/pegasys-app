@@ -96,7 +96,8 @@
 		"withdrewStakingToken": "Đã rút!{{ symbol }}",
 		"approve": "Chấp nhận",
 		"poolWeight": "Khối lượng bể",
-		"extraReward": "Phần thưởng bổ sung"
+		"extraReward": "Phần thưởng bổ sung",
+		"unstakeEntire": "Khi bạn hủy đặt cược toàn bộ tiền gửi của mình, phần thưởng của bạn sẽ được yêu cầu và tiền gửi của bạn sẽ được trả lại cho bạn. Bạn sẽ không còn kiếm được phần thưởng từ nhóm đặt cược này nữa."
 	},
 	"menu": {
 		"code": "Mã",

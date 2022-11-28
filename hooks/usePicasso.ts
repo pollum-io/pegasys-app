@@ -90,6 +90,7 @@ const usePicasso = () => {
 				"rgba(255, 255, 255, 0.92)",
 				"rgba(11, 23, 44, 0.8)"
 			),
+			subModalMobile: useColorModeValue("#F7FAFC", "rgba(255, 255, 255, 0.06)"),
 			farmBanner: useColorModeValue(
 				"/images/backgrounds/LightBannerFarm.png",
 				"/images/backgrounds/BannerFarm.png"

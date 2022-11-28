@@ -52,7 +52,6 @@ const EarnClaimAction: React.FC<IEarnClaimActionProps> = ({ claim }) => {
 				py="2"
 				gap="2"
 				borderRadius="xl"
-				w="100%"
 			>
 				<Flex flexDirection="row" alignItems="center">
 					<Img src="icons/pegasys.png" w="6" h="6" />

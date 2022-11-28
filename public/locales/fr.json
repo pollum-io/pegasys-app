@@ -96,7 +96,8 @@
 		"withdrewStakingToken": "{{ symbol }} Retiré!",
 		"approve": "Approuver",
 		"poolWeight": "Poids de la piscine",
-		"extraReward": "Récompense supplémentaire"
+		"extraReward": "Récompense supplémentaire",
+		"unstakeEntire": "Lorsque vous désengagez la totalité de votre dépôt, vos récompenses sont réclamées et votre dépôt vous est rendu. Vous ne gagnerez plus de récompenses de ce pool de jalonnement."
 	},
 	"menu": {
 		"code": "Code",

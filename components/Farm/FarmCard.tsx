@@ -87,7 +87,7 @@ const FarmCard: FunctionComponent<{
 
 	return (
 		<Flex
-			w={["xs", "xs", "326px", "326px"]}
+			w={["xs", "xs", "20.375rem", "20.375rem"]}
 			h="max-content"
 			d="inline-block"
 			flexDirection="column"

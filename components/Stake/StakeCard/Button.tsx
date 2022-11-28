@@ -41,7 +41,12 @@ const Buttons: React.FC<IButtonsProps> = ({
 	};
 
 	return (
-		<Flex gap={["2", "2", "6", "6"]} mb="6" height="2.2rem">
+		<Flex
+			gap={["4", "4", "6", "6"]}
+			mb="6"
+			height="2.2rem"
+			w={["85%", "85%", "60%", "60%"]}
+		>
 			{getStakeToken ? (
 				<EarnButton {...btnProps} onClick={() => router.push("/farms")} solid>
 					{`${t("earnPages.get")} ${symbol}`}
@@ -53,6 +58,7 @@ const Buttons: React.FC<IButtonsProps> = ({
 						id="withdraw"
 						onClick={onClick}
 						amount={stakedAmount}
+						width={["50%", "50%", "50%", ""]}
 					>
 						{t("earnPages.unstake")}
 					</EarnButton>
@@ -62,22 +68,11 @@ const Buttons: React.FC<IButtonsProps> = ({
 						onClick={onClick}
 						amount={unstakedAmount}
 						solid
+						width={["50%", "50%", "50%", ""]}
 					>
 						{t("earnPages.stake")}
 					</EarnButton>
 				</>
-				// buttons.map(([amount, text, id], index) => (
-				// 	<EarnButton
-				// 		{...btnProps}
-				// 		key={text}
-				// 		id={id}
-				// 		onClick={onClick}
-				// 		amount={amount}
-				// 		solid={!!index}
-				// 	>
-				// 		{text}
-				// 	</EarnButton>
-				// ))
 			)}
 		</Flex>
 	);

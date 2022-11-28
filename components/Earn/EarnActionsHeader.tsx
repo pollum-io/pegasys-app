@@ -28,13 +28,13 @@ const EarnActionsHeader: React.FC<IEarnActionsHeaderProps> = ({
 
 	return (
 		<Flex
-			flexDirection={["column-reverse", "column-reverse", "row", "row"]}
+			flexDirection={["column-reverse", "row", "row", "row"]}
 			justifyContent="space-between"
-			alignItems={["flex-start", "flex-start", "center", "center"]}
-			pl={["3", "3", "0", "0"]}
+			alignItems={["flex-start", "center", "center", "center"]}
+			pl={["3", "0", "0", "0"]}
 			w="100%"
 		>
-			<Flex flex="2" pr="1rem" gap="2" mt={["6", "6", "2", "2"]}>
+			<Flex flex="2" pr="1rem" gap="2" mt={["6", "2", "2", "2"]} w="100%">
 				<EarnHeaderButton
 					id="deposit"
 					amount={selectedOpportunity.unstakedAmount}
@@ -63,7 +63,7 @@ const EarnActionsHeader: React.FC<IEarnActionsHeaderProps> = ({
 				<Flex
 					display={{
 						base: "none",
-						sm: "none",
+						sm: "flex",
 						md: "flex",
 						lg: "flex",
 					}}

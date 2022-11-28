@@ -105,7 +105,7 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				py="3"
 				px="1.5rem"
 				mt="1.5rem"
-				mb="1rem"
+				mb={["3rem", "1rem", "1rem", "1rem"]}
 				disabled={
 					!depositTypedValue ||
 					signatureLoading ||

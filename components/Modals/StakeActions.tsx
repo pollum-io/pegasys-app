@@ -7,12 +7,13 @@ import {
 	ModalHeader,
 	ModalOverlay,
 	Text,
+	useMediaQuery,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { useEarn, useStake } from "pegasys-services";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { MdOutlineInfo } from "react-icons/md";
+import { MdArrowBack, MdOutlineInfo } from "react-icons/md";
 import {
 	EarnActionsHeader,
 	EarnDepositAction,
@@ -29,7 +30,9 @@ export const StakeActions: React.FC<IModal> = props => {
 	const { isOpen, onClose: close } = props;
 	const theme = usePicasso();
 	const { claim, stake, unstake, sign } = useStake();
-	const { selectedOpportunity, buttonId, reset } = useEarn();
+	const { selectedOpportunity, buttonId, reset, withdrawPercentage } =
+		useEarn();
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const { t } = useTranslation();
 
 	if (!selectedOpportunity) {
@@ -45,29 +48,41 @@ export const StakeActions: React.FC<IModal> = props => {
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				mt={["0", "0", "10rem", "10rem"]}
-				mb="0"
-				position={["absolute", "absolute", "relative", "relative"]}
+				mt={["0", "6rem", "6rem", "6rem"]}
+				mb={["0", "unset", "unset", "unset"]}
+				position={["absolute", "relative", "relative", "relative"]}
 				bottom="0"
-				w={["100vw", "100vw", "max-content", "max-content"]}
-				h={["max-content", "max-content", "max-content", "max-content"]}
-				borderRadius="3xl"
+				w={["100vw", "32rem", "32rem", "32rem"]}
+				h="max-content"
+				borderRadius="1.875rem"
 				bgColor={theme.bg.blueNavyLight}
-				border={[
-					"none",
-					"none",
-					"1px solid transparent",
-					"1px solid transparent",
-				]}
-				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
+				borderTop={["1px solid transparent", "none", "none", "none"]}
+				borderBottomRadius={["0px", "1.875rem", "1.875rem", "1.875rem"]}
 				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
 					backgroundColor={theme.bg.blueNavyLight}
-					borderTopRadius="3xl"
+					borderTopRadius="1.875rem"
 					alignItems="baseline"
 					justifyContent="space-between"
 				>
+					<Flex
+						flex="1"
+						display={{
+							base: "flex",
+							sm: "none",
+							md: "none",
+							lg: "none",
+						}}
+						justifyContent="left"
+						gap="2"
+						onClick={onClose}
+						color={theme.text.callGray}
+						alignItems="center"
+					>
+						<MdArrowBack size={25} />
+						<Text>Stake</Text>
+					</Flex>
 					<EarnActionsHeader
 						onClose={onClose}
 						depositTitle={t("earnPages.stake")}
@@ -89,11 +104,18 @@ export const StakeActions: React.FC<IModal> = props => {
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
-							background={theme.bg.subModal}
-							position={["relative", "relative", "absolute", "absolute"]}
+							pb={["3rem", "1.5rem", "1.5rem", "1.5rem"]}
+							background={
+								isMobile ? theme.bg.subModalMobile : theme.bg.subModal
+							}
+							position={["relative", "absolute", "absolute", "absolute"]}
 							w="100%"
-							top={["unset", "unset", "24rem", "24rem"]}
-							borderRadius={["0", "0", "3xl", "3xl"]}
+							top={
+								withdrawPercentage === 100
+									? ["unset", "25rem", "25rem", "25rem"]
+									: ["unset", "23rem", "23rem", "23rem"]
+							}
+							borderRadius={["0", "30px", "30px", "30px"]}
 							alignItems="flex-start"
 							gap="2"
 						>
@@ -111,7 +133,11 @@ export const StakeActions: React.FC<IModal> = props => {
 								color={theme.text.mono}
 								textAlign="justify"
 							>
-								<Text>{t("earnPages.stakeWithdrawTooltip")}</Text>
+								<Text>
+									{withdrawPercentage === 100
+										? t("earn.unstakeEntire")
+										: t("earnPages.stakeWithdrawTooltip")}
+								</Text>
 							</Flex>
 						</Flex>
 					)}
@@ -119,11 +145,14 @@ export const StakeActions: React.FC<IModal> = props => {
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
-							background={theme.bg.subModal}
-							position={["relative", "relative", "absolute", "absolute"]}
+							pb={["3rem", "1.5rem", "1.5rem", "1.5rem"]}
+							background={
+								isMobile ? theme.bg.subModalMobile : theme.bg.subModal
+							}
+							position={["relative", "absolute", "absolute", "absolute"]}
 							w="100%"
-							top={["unset", "unset", "24rem", "23rem"]}
-							borderRadius={["0", "0", "3xl", "3xl"]}
+							top={["unset", "19.5rem", "19.5rem", "19.5rem"]}
+							borderRadius={["0", "30px", "30px", "30px"]}
 							alignItems="flex-start"
 							gap="2"
 						>
