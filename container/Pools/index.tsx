@@ -806,89 +806,95 @@ export const PoolsContainer: NextPage = () => {
 							!notFound
 						}
 					>
-						<Flex
-							flexWrap="wrap"
-							gap="7"
-							zIndex="1"
-							mt="10"
-							justifyContent={["center", "center", "unset", "unset"]}
-						>
-							{!isLoading &&
-								searchTokens?.length !== 0 &&
-								!notFound &&
-								searchTokens?.map(pair => (
-									<PoolCards
-										key={pair.liquidityToken.address}
-										setIsCreate={setIsCreate}
-										pair={pair}
-										userTokens={userTokensBalance}
-										setSelectedToken={setSelectedToken}
-										setCurrPair={setCurrPair}
-										setSliderValue={setSliderValue}
-										setDepositedTokens={setDepositedTokens}
-										setPoolPercentShare={setPoolPercentShare}
-										setUserPoolBalance={setUserPoolBalance}
-										pairInfo={pairInfo}
-									/>
-								))}
-						</Flex>
-					</Collapse>
-
-					<Collapse in={isConnected && notFound}>
-						<Flex
-							flexWrap="wrap"
-							gap="7"
-							zIndex="1"
-							mt="10"
-							justifyContent={["center", "center", "unset", "unset"]}
-						>
-							<Flex
-								w="100%"
-								mt={["3rem", "3rem", "4rem", "4rem"]}
-								flexDirection="column"
-								alignItems="center"
-								justifyContent="center"
-								gap="16"
-							>
-								<Text
-									fontSize={["sm", "sm", "md", "md"]}
-									fontWeight="normal"
-									textAlign="center"
+						{isConnected &&
+							!isLoading &&
+							searchTokens?.length !== 0 &&
+							!notFound && (
+								<Flex
+									flexWrap="wrap"
+									gap="7"
+									zIndex="1"
+									mt="10"
+									justifyContent={["center", "center", "unset", "unset"]}
 								>
-									{translation("pool.unavailable")}
-								</Text>
-							</Flex>
-						</Flex>
+									{searchTokens?.map(pair => (
+										<PoolCards
+											key={pair.liquidityToken.address}
+											setIsCreate={setIsCreate}
+											pair={pair}
+											userTokens={userTokensBalance}
+											setSelectedToken={setSelectedToken}
+											setCurrPair={setCurrPair}
+											setSliderValue={setSliderValue}
+											setDepositedTokens={setDepositedTokens}
+											setPoolPercentShare={setPoolPercentShare}
+											setUserPoolBalance={setUserPoolBalance}
+											pairInfo={pairInfo}
+										/>
+									))}
+								</Flex>
+							)}
 					</Collapse>
 
-					<Collapse in={isConnected && !notFound}>
-						<Flex
-							flexWrap="wrap"
-							gap="7"
-							zIndex="1"
-							mt="10"
-							justifyContent={["center", "center", "unset", "unset"]}
-						>
+					<Collapse in={isConnected && notFound && !isLoading}>
+						{isConnected && notFound && !isLoading && (
 							<Flex
-								w="100%"
-								mt={["3rem", "3rem", "4rem", "-1rem"]}
-								flexDirection="column"
-								alignItems="center"
-								justifyContent="center"
-								gap="16"
+								flexWrap="wrap"
+								gap="7"
+								zIndex="1"
+								mt="10"
+								justifyContent={["center", "center", "unset", "unset"]}
 							>
 								<Flex
-									className="circleLoading"
-									width="60px !important"
-									height="60px !important"
-									id={
-										colorMode === "dark"
-											? "pendingTransactionsDark"
-											: "pendingTransactionsLight"
-									}
-								/>
+									w="100%"
+									mt={["3rem", "3rem", "4rem", "4rem"]}
+									flexDirection="column"
+									alignItems="center"
+									justifyContent="center"
+									gap="16"
+								>
+									<Text
+										fontSize={["sm", "sm", "md", "md"]}
+										fontWeight="normal"
+										textAlign="center"
+									>
+										{translation("pool.unavailable")}
+									</Text>
+								</Flex>
 							</Flex>
-						</Flex>
+						)}
+					</Collapse>
+
+					<Collapse in={isConnected && !notFound && isLoading}>
+						{isConnected && !notFound && isLoading && (
+							<Flex
+								flexWrap="wrap"
+								gap="7"
+								zIndex="1"
+								mt="10"
+								justifyContent={["center", "center", "unset", "unset"]}
+							>
+								<Flex
+									w="100%"
+									mt={["3rem", "3rem", "4rem", "-1rem"]}
+									flexDirection="column"
+									alignItems="center"
+									justifyContent="center"
+									gap="16"
+								>
+									<Flex
+										className="circleLoading"
+										width="60px !important"
+										height="60px !important"
+										id={
+											colorMode === "dark"
+												? "pendingTransactionsDark"
+												: "pendingTransactionsLight"
+										}
+									/>
+								</Flex>
+							</Flex>
+						)}
 					</Collapse>
 				</Flex>
 			</Flex>
