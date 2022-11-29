@@ -113,6 +113,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 					zIndex="99"
 					px="0"
 					py={["0", "0", "1", "1"]}
+					w="max"
 				>
 					<Flex flexDirection="column">
 						<InfoDropdown />
