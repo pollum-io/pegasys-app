@@ -81,17 +81,14 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 					alignItems="center"
 				>
 					<Flex gap="4" alignItems="center">
-						<Img src={currentList?.logoURI} w="24px" h="24px" />
-						<Flex
-							flexDirection="column"
-							w={["10rem", "max-content", "max-content", "max-content"]}
-						>
+						<Img src={currentList?.logoURI} w="1.5rem" h="1.5rem" />
+						<Flex flexDirection="column">
 							<Text fontSize="sm" fontWeight="semibold">
 								{currentList?.name}
 							</Text>
 							<Flex
 								display="inline-block"
-								maxW="160px"
+								maxW="10rem"
 								overflow="hidden"
 								textOverflow="ellipsis"
 								whiteSpace="nowrap"
@@ -309,8 +306,8 @@ export const ManageToken: React.FC<IModal> = props => {
 							h="max-content"
 							py="1"
 							px="6"
-							maxH="32px"
-							maxW="320px"
+							maxH="2rem"
+							maxW="20rem"
 							bgColor={theme.bg.blackAlpha}
 							_focus={{ outline: "none", borderColor: theme.border.focusGray }}
 							_hover={{}}

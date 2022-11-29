@@ -13,7 +13,7 @@ const UnlockVotingHeader: React.FC<IUnlockVotingHeader> = ({ onClose }) => {
 
 	return (
 		<Flex alignItems="center" position="relative" mb="1rem">
-			<Text fontSize="18px" fontWeight="semibold">
+			<Text fontSize="1.125rem" fontWeight="semibold">
 				{votesLocked
 					? translation("votePage.unlockVotes")
 					: translation("votePage.editVoteDelegation")}

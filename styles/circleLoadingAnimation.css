@@ -2,38 +2,43 @@
 	box-sizing: border-box;
 	display: block;
 	position: relative;
-	width: 22px;
-	height: 22px;
+	width: 1.375rem;
+	height: 1.375rem;
 	border: 2px solid #fff;
 	border-radius: 50%;
 	animation: circleLoading 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-	border-color:  #00D9EF #666666 #666666 #666666;
+	border-color: #00d9ef #666666 #666666 #666666;
 }
 #smallPendingDark {
-	width: 13px;
-	height: 13px;
-	border-color:  #00D9EF rgba(255, 255, 255, 0.48) rgba(255, 255, 255, 0.48) rgba(255, 255, 255, 0.48);
+	width: 0.8125rem;
+	height: 0.8125rem;
+	border-color: #00d9ef rgba(255, 255, 255, 0.48) rgba(255, 255, 255, 0.48)
+		rgba(255, 255, 255, 0.48);
 }
 #smallPendingLight {
-	width: 13px;
-	height: 13px;
-	border-color:  #00D9EF rgba(255, 255, 255, 0.48) rgba(255, 255, 255, 0.48) rgba(255, 255, 255, 0.48);
+	width: 0.8125rem;
+	height: 0.8125rem;
+	border-color: #00d9ef rgba(255, 255, 255, 0.48) rgba(255, 255, 255, 0.48)
+		rgba(255, 255, 255, 0.48);
 }
 #walletLoadingDark {
-	border-color:  #00D9EF rgba(255, 255, 255, 0.24) rgba(255, 255, 255, 0.24) rgba(255, 255, 255, 0.24);
+	border-color: #00d9ef rgba(255, 255, 255, 0.24) rgba(255, 255, 255, 0.24)
+		rgba(255, 255, 255, 0.24);
 }
 #walletLoadingLight {
-	border-color:  #00D9EF  rgba(0, 0, 0, 0.08)  rgba(0, 0, 0, 0.08)  rgba(0, 0, 0, 0.08);
+	border-color: #00d9ef rgba(0, 0, 0, 0.08) rgba(0, 0, 0, 0.08)
+		rgba(0, 0, 0, 0.08);
 }
 #pendingTransactionsDark {
-	width: 15px;
-	height: 15px;
-	border-color:  #00D9EF rgba(255, 255, 255, 0.24) rgba(255, 255, 255, 0.24) rgba(255, 255, 255, 0.24);
+	width: 0.9375rem;
+	height: 0.9375rem;
+	border-color: #00d9ef rgba(255, 255, 255, 0.24) rgba(255, 255, 255, 0.24)
+		rgba(255, 255, 255, 0.24);
 }
 #pendingTransactionsLight {
-	width: 15px;
-	height: 15px;
-	border-color:  #665EE1  #FFFFFF  #FFFFFF  #FFFFFF;
+	width: 0.9375rem;
+	height: 0.9375rem;
+	border-color: #665ee1 #ffffff #ffffff #ffffff;
 }
 .circleLoading:nth-child(1) {
 	animation-delay: -0.45s;

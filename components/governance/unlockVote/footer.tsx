@@ -67,7 +67,7 @@ const UnlockVotingFooter: React.FC<IUnlockVotingFooter> = ({
 				transition="100ms ease-in-out"
 				textAlign="center"
 				color={theme.text.cyanPurple}
-				fontSize="14px"
+				fontSize="0.875rem"
 				gap="1"
 				onClick={() => setShowInput(!showInput)}
 			>

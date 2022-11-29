@@ -9,11 +9,11 @@ const UnlockVotingBody: React.FC = () => {
 
 	return (
 		<Flex gap="6" flexDirection="column" w="100%" textAlign="justify">
-			<Text fontSize="16px" color={theme.text.mono}>
+			<Text fontSize="1rem" color={theme.text.mono}>
 				{translation("vote.earnedPsys")}
 			</Text>
 
-			<Text fontSize="16px" color={theme.text.mono}>
+			<Text fontSize="1rem" color={theme.text.mono}>
 				{translation("vote.canEitherVote")}
 			</Text>
 		</Flex>

@@ -18,7 +18,11 @@ const ProposalDetails: React.FC = () => {
 			onClick={() => setSelectedProposals(null)}
 		>
 			<MdArrowBack size={21} color={theme.icon.whiteGray} />
-			<Text fontSize="18px" fontWeight="semibold" color={theme.icon.whiteGray}>
+			<Text
+				fontSize="1.125rem"
+				fontWeight="semibold"
+				color={theme.icon.whiteGray}
+			>
 				{translation("votePage.allProposals")}
 			</Text>
 		</Flex>

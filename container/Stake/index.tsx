@@ -180,8 +180,8 @@ export const StakeContainer: NextPage = () => {
 					>
 						<Flex
 							className="circleLoading"
-							width="60px !important"
-							height="60px !important"
+							width="3.75rem !important"
+							height="3.75rem !important"
 							id={
 								colorMode === "dark"
 									? "pendingTransactionsDark"

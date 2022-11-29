@@ -121,7 +121,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						alignItems="center"
 						justifyContent="center"
 					>
-						<Text fontSize="14px" color="white">
+						<Text fontSize="0.875rem" color="white">
 							{pendingTxLength}
 						</Text>
 						<Flex

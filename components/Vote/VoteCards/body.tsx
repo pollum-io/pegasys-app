@@ -15,13 +15,13 @@ const Body: React.FC<IBodyProps> = ({ title, version }) => {
 			<Text
 				color={theme.text.softGray}
 				pl="3"
-				fontSize={["14.5px", "14.5px", "14.5px", "14.5px"]}
+				fontSize={["0.9063rem", "0.9063rem", "0.9063rem", "0.9063rem"]}
 			>
 				{version}
 			</Text>
 			<Text
 				color={theme.text.mono}
-				fontSize={["14.5px", "14.5px", "14.5px", "14.5px"]}
+				fontSize={["0.9063rem", "0.9063rem", "0.9063rem", "0.9063rem"]}
 				pr={["2", "2", "0", "0"]}
 			>
 				{title}

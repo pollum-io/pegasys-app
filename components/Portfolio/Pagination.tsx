@@ -31,7 +31,7 @@ export const PaginationComponent: React.FunctionComponent<
 		bg: "transparent",
 		color: theme.text.lightGray,
 		_hover: { opacity: "0.9" },
-		fontSize: "14px",
+		fontSize: "0.875rem",
 		fontWeight: "400",
 	};
 
@@ -39,7 +39,7 @@ export const PaginationComponent: React.FunctionComponent<
 		color: theme.text.cyanPurple,
 		bg: "transparent",
 		_hover: { opacity: "0.9" },
-		fontSize: "14px",
+		fontSize: "0.875rem",
 		fontWeight: "600",
 	};
 

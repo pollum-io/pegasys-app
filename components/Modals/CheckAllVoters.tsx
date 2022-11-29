@@ -117,7 +117,7 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 							width="100%"
 							justifyContent="space-between"
 							color={theme.text.cyanPurple}
-							fontSize="14px"
+							fontSize="0.875rem"
 							mb="1.5rem"
 						>
 							{(votersType === "favor" &&
@@ -155,7 +155,11 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 								>
 									<Flex gap="2">
 										<Jazzicon diameter={18} seed={Number(vote.voter)} />
-										<Link isExternal href={getLink(vote.voter)} fontSize="14px">
+										<Link
+											isExternal
+											href={getLink(vote.voter)}
+											fontSize="0.875rem"
+										>
 											{shortAddress(vote.voter)}
 										</Link>
 									</Flex>
@@ -170,7 +174,7 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 								mb="3rem"
 								fontWeight="semibold"
 								w="100%"
-								fontSize="16px"
+								fontSize="1rem"
 								py="0.5rem"
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
@@ -198,7 +202,7 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 						display={["none", "flex", "flex", "flex"]}
 					>
 						<Text
-							fontSize="14px"
+							fontSize="0.875rem"
 							color={theme.text.cyanPurple}
 							_hover={{ cursor: "pointer" }}
 							fontWeight="semibold"

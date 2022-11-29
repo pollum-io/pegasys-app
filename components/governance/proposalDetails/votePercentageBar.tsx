@@ -22,7 +22,7 @@ const ProposalDetailsPercentageBar: React.FC<IProposalDetailsPercentageBar> = ({
 				justifyContent="space-between"
 				w="full-content"
 				pb={["4", "4", "4", "4"]}
-				fontSize="12px"
+				fontSize="0.75rem"
 				fontWeight="600"
 				color={theme.text.mono}
 			>
@@ -47,7 +47,7 @@ const ProposalDetailsPercentageBar: React.FC<IProposalDetailsPercentageBar> = ({
 				borderRadius="xl"
 				h="0.375rem"
 				bgColor={theme.bg.voteGray}
-				mb={["15px", "15px", "8px", "8px"]}
+				mb={["0.9375rem", "0.9375rem", "0.5rem", "0.5rem"]}
 			>
 				<Flex
 					w={`${
@@ -58,7 +58,7 @@ const ProposalDetailsPercentageBar: React.FC<IProposalDetailsPercentageBar> = ({
 					borderRadius="xl"
 					h="0.375rem"
 					bgColor={support ? "#48BB78" : "#F56565"}
-					mb={["15px", "15px", "8px", "8px"]}
+					mb={["0.9375rem", "0.9375rem", "0.5rem", "0.5rem"]}
 				/>
 			</Flex>
 		</Flex>

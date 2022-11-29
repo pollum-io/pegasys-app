@@ -254,7 +254,7 @@ export const Header: React.FC = () => {
 								color: theme.text.cyanPurple,
 							}}
 							aria-label="Theme"
-							icon={<theme.icon.theme size="20px" />}
+							icon={<theme.icon.theme size="1.25rem" />}
 							onClick={() => toggleColorMode()}
 						/>
 					</Flex>

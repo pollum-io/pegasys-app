@@ -260,7 +260,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 											role="img"
 											aria-label="warning"
 											position="absolute"
-											left="10px"
+											left="0.625rem"
 										>
 											<IoWarningOutline color="orange" />
 										</Text>

@@ -89,8 +89,8 @@ const useToasty = () => {
 				<Flex
 					h="fit-content"
 					w="100%"
-					mt="50px"
-					mr="40px"
+					mt="3.125rem"
+					mr="2.5rem"
 					p={3}
 					bg={theme.bg.blackAlpha}
 					borderRadius="0.2rem"

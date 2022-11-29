@@ -59,7 +59,7 @@ const Vote: React.FC = () => {
 				mr={["4", "4", "4", "0"]}
 				fontWeight="semibold"
 				color={theme.text.mono}
-				fontSize={["16px", "16", "24px", "24px"]}
+				fontSize={["1rem", "1rem", "1.5rem", "1.5rem"]}
 				mb="0.6rem"
 			>
 				{selectedProposals.title}
@@ -72,7 +72,7 @@ const Vote: React.FC = () => {
 				alignItems="center"
 				mb="1.5rem"
 			>
-				<Text color={theme.text.mono} fontWeight="bold" fontSize="16px">
+				<Text color={theme.text.mono} fontWeight="bold" fontSize="1rem">
 					{translation("votePage.proposer")}
 				</Text>
 
@@ -86,7 +86,7 @@ const Vote: React.FC = () => {
 					<Link
 						isExternal
 						href={getLink(selectedProposals.proposer)}
-						fontSize="14px"
+						fontSize="0.875rem"
 					>
 						{shortAddress(selectedProposals.proposer)}
 					</Link>
@@ -118,7 +118,7 @@ const Vote: React.FC = () => {
 						mt={["0", "0", "1.5", "1.5"]}
 					>
 						<Text
-							fontSize="12px"
+							fontSize="0.75rem"
 							_hover={{ cursor: "pointer", opacity: "0.9" }}
 							transition="100ms ease-in-out"
 							onClick={isFavor}
@@ -128,7 +128,7 @@ const Vote: React.FC = () => {
 						</Text>
 						{isOpenToVote && (
 							<Button
-								fontSize="12px"
+								fontSize="0.75rem"
 								fontWeight="normal"
 								px="0.8rem"
 								h="1.5rem"
@@ -159,7 +159,7 @@ const Vote: React.FC = () => {
 						flexDirection="row-reverse"
 					>
 						<Text
-							fontSize="12px"
+							fontSize="0.75rem"
 							_hover={{ cursor: "pointer", opacity: "0.9" }}
 							transition="100ms ease-in-out"
 							onClick={isAgainst}
@@ -169,7 +169,7 @@ const Vote: React.FC = () => {
 						</Text>
 						{isOpenToVote && (
 							<Button
-								fontSize="12px"
+								fontSize="0.75rem"
 								fontWeight="normal"
 								px="0.8rem"
 								h="1.5rem"

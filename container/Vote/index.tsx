@@ -106,11 +106,11 @@ export const VoteContainer: NextPage = () => {
 							>
 								{!votesLocked && (
 									<>
-										<Text fontWeight="500" fontSize="16px" color="white">
+										<Text fontWeight="500" fontSize="1rem" color="white">
 											{translation("votePage.yourVotes")}:{" "}
 											{currentVotes ? currentVotes.toSignificant() : 0}
 										</Text>
-										<Flex gap="4" fontSize="14px">
+										<Flex gap="4" fontSize="0.875rem">
 											<Text color="white">
 												{translation("votePage.delegatedTo")}{" "}
 												{delegatedTo.toLocaleLowerCase() === "self"
@@ -157,7 +157,7 @@ export const VoteContainer: NextPage = () => {
 								>
 									<Flex>
 										<Text
-											fontSize={["20px", "20px", "2xl", "2xl"]}
+											fontSize={["1.25rem", "1.25rem", "2xl", "2xl"]}
 											fontWeight="semibold"
 											color={theme.text.mono}
 										>
@@ -165,7 +165,7 @@ export const VoteContainer: NextPage = () => {
 										</Text>
 									</Flex>
 									{!votesLocked ? (
-										<Flex gap="2.5rem" fontSize="14px">
+										<Flex gap="2.5rem" fontSize="0.875rem">
 											<Flex
 												gap="2"
 												alignItems="center"
@@ -194,7 +194,7 @@ export const VoteContainer: NextPage = () => {
 										PegasysContracts[chainId]?.GOVERNANCE_ADDRESS && (
 											<Flex w="max-content" h="max-content">
 												<Button
-													fontSize="14px"
+													fontSize="0.875rem"
 													fontWeight="semibold"
 													px={["1.7rem", "1.5rem", "1.5rem", "1.5rem"]}
 													size="sm"
@@ -215,7 +215,7 @@ export const VoteContainer: NextPage = () => {
 								</Flex>
 								{isConnected ? (
 									<Flex
-										fontSize="14px"
+										fontSize="0.875rem"
 										gap="2"
 										alignItems="center"
 										display={["flex", "flex", "none", "none"]}
@@ -254,7 +254,7 @@ export const VoteContainer: NextPage = () => {
 									>
 										{translation("votePage.proposalCommunityMembers")}
 									</Text>
-									<Flex mt="15px">
+									<Flex mt="0.9375rem">
 										<Text
 											fontSize={["sm", "sm", "md", "md"]}
 											fontWeight="normal"
@@ -294,8 +294,8 @@ export const VoteContainer: NextPage = () => {
 								>
 									<Flex
 										className="circleLoading"
-										width="60px !important"
-										height="60px !important"
+										width="3.75rem !important"
+										height="3.75rem !important"
 										id={
 											colorMode === "dark"
 												? "pendingTransactionsDark"

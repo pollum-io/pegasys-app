@@ -250,10 +250,10 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					overflow="auto"
 					css={{
 						"&::-webkit-scrollbar": {
-							width: "6px",
+							width: "0.375rem",
 						},
 						"&::-webkit-scrollbar-track": {
-							width: "6px",
+							width: "0.375rem",
 							scrollbarColor: " #0b172c",
 						},
 						"&::-webkit-scrollbar-thumb": {

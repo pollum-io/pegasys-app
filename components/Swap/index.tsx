@@ -691,7 +691,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								{translation("swapPage.from")}
 							</Text>
 							<Text
-								fontSize={["14px", "14px", "16px", "16px"]}
+								fontSize={["0.875rem", "0.875rem", "1rem", "1rem"]}
 								fontWeight="400"
 								color={theme.text.gray500}
 							>
@@ -715,7 +715,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								>
 									<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
 									<Text
-										fontSize={["16px", "16px", "xl", "xl"]}
+										fontSize={["1rem", "1rem", "xl", "xl"]}
 										fontWeight="500"
 										px="3"
 										color={theme.text.mono}
@@ -740,7 +740,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Flex>
 
 							<Input
-								fontSize={["18px", "18px", "22px", "22px"]}
+								fontSize={["1.125rem", "1.125rem", "1.375rem", "1.375rem"]}
 								maxW="160px"
 								display="inline-block"
 								overflow="hidden"
@@ -839,7 +839,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								{translation("currencyInputPanel.to")}
 							</Text>
 							<Text
-								fontSize={["14px", "14px", "16px", "16px"]}
+								fontSize={["0.875rem", "0.875rem", "1rem", "1rem"]}
 								fontWeight="400"
 								color={theme.text.gray500}
 							>
@@ -864,7 +864,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							>
 								<Img src={selectedToken[1]?.logoURI} w="6" h="6" />
 								<Text
-									fontSize={["16px", "16px", "xl", "xl"]}
+									fontSize={["1rem", "1rem", "xl", "xl"]}
 									fontWeight="500"
 									px="3"
 								>
@@ -873,8 +873,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								<Icon as={IoIosArrowDown} />
 							</Flex>
 							<Input
-								fontSize={["18px", "18px", "22px", "22px"]}
-								maxW="160px"
+								fontSize={["1.125rem", "1.125rem", "1.375rem", "1.375rem"]}
+								maxW="10rem"
 								display="inline-block"
 								overflow="hidden"
 								whiteSpace="nowrap"
@@ -1009,7 +1009,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							}
 							bgColor={theme.bg.blueNavyLightness}
 							color={theme.text.cyan}
-							fontSize={["16px", "16px", "lg", "lg"]}
+							fontSize={["1rem", "1rem", "lg", "lg"]}
 							fontWeight="semibold"
 							disabled={
 								!isConnected
@@ -1303,7 +1303,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							>
 								<SlideFade
 									in={tokensGraphCandleData?.length !== 0}
-									offsetY="20px"
+									offsetY="1.25rem"
 								>
 									<FilterButton
 										periodStateValue={tokensGraphCandlePeriod}
@@ -1317,7 +1317,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				<Flex
 					direction="column"
 					justifyContent="center"
-					maxW={isLoadingGraphCandles ? "475px" : ""}
+					maxW={isLoadingGraphCandles ? "29.6875rem" : ""}
 				>
 					{isLoadingGraphCandles ? (
 						<Flex
@@ -1354,7 +1354,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					) : (
 						<SlideFade
 							in={!isLoadingGraphCandles || tokensGraphCandleData}
-							offsetY="20px"
+							offsetY="1.25rem"
 						>
 							<ChartComponent data={tokensGraphCandleData} />
 						</SlideFade>

@@ -30,7 +30,7 @@ const Status: React.FC = () => {
 			>
 				{selectedProposals.status}
 			</Text>
-			<Text fontWeight="normal" color="white" fontSize="12px" pl="1rem">
+			<Text fontWeight="normal" color="white" fontSize="0.75rem" pl="1rem">
 				{selectedProposals.endDate
 					? `Voting ended ${selectedProposals.endDate.toUTCString()}`
 					: `Voting ends at block ${selectedProposals.endBlock}`}
