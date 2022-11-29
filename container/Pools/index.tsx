@@ -12,6 +12,8 @@ import {
 	InputLeftElement,
 	useMediaQuery,
 	useColorMode,
+	Collapse,
+	SlideFade,
 } from "@chakra-ui/react";
 import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
 import { PAIRS_CURRENT, PAIR_DATA, pegasysClient } from "apollo";
@@ -495,282 +497,346 @@ export const PoolsContainer: NextPage = () => {
 			/>
 			<Flex alignItems="flex-start" justifyContent="center" mb="6.2rem">
 				<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
-					<Flex
-						flexDirection="column"
-						zIndex="docked"
-						position="relative"
-						borderRadius="xl"
-						h={["11rem", "unset", "unset", "11rem"]}
-						backgroundColor={theme.bg.alphaPurple}
+					<SlideFade
+						in={Boolean(isConnected || address || !!isMobile)}
+						offsetY="-30px"
 					>
-						<Img
-							borderRadius="xl"
-							src={isMobile ? theme.bg.poolsBannerMobile : theme.bg.poolsBanner}
-							position="absolute"
-							zIndex="base"
-							w="100%"
-							h={
-								address
-									? ["92%", "85%", "85%", "85%"]
-									: languages.includes(language)
-									? ["85%", "85%", "85%", "85%"]
-									: ["85%", "85%", "85%", "85%"]
-							}
-						/>
 						<Flex
-							zIndex="docked"
 							flexDirection="column"
-							px={["1rem", "1rem", "1.625rem", "1.625rem"]}
-							py={["0.6rem", "0.7rem", "1rem", "1rem"]}
-							gap="3"
-							h={["9rem", "10rem", "10rem", "10rem"]}
-							color="white"
+							zIndex="docked"
+							position="relative"
+							borderRadius="xl"
+							h={["11rem", "unset", "unset", "11rem"]}
+							backgroundColor={theme.bg.alphaPurple}
 						>
-							<Text fontWeight="bold" fontSize={["14px", "md", "md", "md"]}>
-								{translation("pool.liquidityProviderRewards")}
-							</Text>
-							<Text
-								color="white"
-								fontWeight="medium"
-								fontSize={
-									languages.includes(language)
-										? ["13px", "sm", "sm", "sm"]
-										: "sm"
+							<Img
+								borderRadius="xl"
+								src={
+									isMobile ? theme.bg.poolsBannerMobile : theme.bg.poolsBanner
 								}
-								lineHeight="shorter"
-								w={
-									!isMobile
-										? language === "fr" || language === "de"
-											? ["80%", "80%", "64%", "64%"]
-											: ["100%", "70%", "60%", "60%"]
-										: languages.includes(language) || language === "tr"
-										? ["100%", "80%", "64%", "64%"]
-										: ["100%", "80%", "64%", "64%"]
+								position="absolute"
+								zIndex="base"
+								w="100%"
+								h={
+									address
+										? ["92%", "85%", "85%", "85%"]
+										: languages.includes(language)
+										? ["85%", "85%", "85%", "85%"]
+										: ["85%", "85%", "85%", "85%"]
 								}
-							>
-								{translation("pool.liquidityProvidersEarn")}
-							</Text>
-						</Flex>
-						{address && (
+							/>
+
 							<Flex
-								alignItems="center"
-								justifyContent="center"
-								flexDirection="row"
-								bgColor={theme.bg.alphaPurple}
-								zIndex="0"
-								position="relative"
-								top={["5", "2", "2", "2"]}
-								borderBottomRadius="xl"
-								py="0.531rem"
-								pt={["0.3rem", "unset", "unset", "unset"]}
-								gap="2.5"
-								cursor="pointer"
-								onClick={() =>
-									window.open(`https://info.pegasys.finance/account/${address}`)
-								}
+								zIndex="docked"
+								flexDirection="column"
+								px={["1rem", "1rem", "1.625rem", "1.625rem"]}
+								py={["0.6rem", "0.7rem", "1rem", "1rem"]}
+								gap="3"
+								h={["9rem", "10rem", "10rem", "10rem"]}
+								color="white"
 							>
-								<Text
-									fontWeight="medium"
-									fontSize={language === "vn" && isMobile ? "11px" : "xs"}
-									color="white"
-								>
-									{translation("pool.viewStakedLiquidity")}
+								<Text fontWeight="bold" fontSize={["14px", "md", "md", "md"]}>
+									{translation("pool.liquidityProviderRewards")}
 								</Text>
-								<MdOutlineCallMade size={18} color="white" />
+								<Text
+									color="white"
+									fontWeight="medium"
+									fontSize={
+										languages.includes(language)
+											? ["13px", "sm", "sm", "sm"]
+											: "sm"
+									}
+									lineHeight="shorter"
+									w={
+										!isMobile
+											? language === "fr" || language === "de"
+												? ["80%", "80%", "64%", "64%"]
+												: ["100%", "70%", "60%", "60%"]
+											: languages.includes(language) || language === "tr"
+											? ["100%", "80%", "64%", "64%"]
+											: ["100%", "80%", "64%", "64%"]
+									}
+								>
+									{translation("pool.liquidityProvidersEarn")}
+								</Text>
 							</Flex>
-						)}
-					</Flex>
-					<Flex
-						id="a"
-						alignItems={["flex-start", "flex-start", "baseline", "baseline"]}
-						my={["8", "4", "8", "8"]}
-						justifyContent="space-between"
-						w="100%"
-						flexDirection={
-							isConnected
-								? ["column", "column", "column", "column"]
-								: ["column", "column", "row", "row"]
-						}
-						zIndex="docked"
+							{address && (
+								<Flex
+									alignItems="center"
+									justifyContent="center"
+									flexDirection="row"
+									bgColor={theme.bg.alphaPurple}
+									zIndex="0"
+									position="relative"
+									top={["5", "2", "2", "2"]}
+									borderBottomRadius="xl"
+									py="0.531rem"
+									pt={["0.3rem", "unset", "unset", "unset"]}
+									gap="2.5"
+									cursor="pointer"
+									onClick={() =>
+										window.open(
+											`https://info.pegasys.finance/account/${address}`
+										)
+									}
+								>
+									<Text
+										fontWeight="medium"
+										fontSize={language === "vn" && isMobile ? "11px" : "xs"}
+										color="white"
+									>
+										{translation("pool.viewStakedLiquidity")}
+									</Text>
+									<MdOutlineCallMade size={18} color="white" />
+								</Flex>
+							)}
+						</Flex>
+					</SlideFade>
+					<SlideFade
+						in={Boolean(isConnected || address || !!isMobile)}
+						offsetY="-50px"
 					>
 						<Flex
-							mt={["2rem", "2rem", "4", "4"]}
-							flexDirection="row"
+							id="a"
+							alignItems={["flex-start", "flex-start", "baseline", "baseline"]}
+							my={["8", "4", "8", "8"]}
 							justifyContent="space-between"
 							w="100%"
+							flexDirection={
+								isConnected
+									? ["column", "column", "column", "column"]
+									: ["column", "column", "row", "row"]
+							}
 							zIndex="docked"
 						>
-							<Text
-								fontSize="2xl"
-								fontWeight="semibold"
-								color={theme.text.mono}
-							>
-								{translation("pool.poolsOverview")}
-							</Text>
-						</Flex>
-						{!isLoading && (
 							<Flex
-								id="b"
-								justifyContent={
-									isConnected
-										? [
-												"space-between",
-												"space-between",
-												"space-between",
-												"space-between",
-										  ]
-										: ["space-between", "space-between", "flex-end", "flex-end"]
-								}
-								flexDirection={[
-									"column-reverse",
-									"column-reverse",
-									"row",
-									"row",
-								]}
-								zIndex="docked"
+								mt={["2rem", "2rem", "4", "4"]}
+								flexDirection="row"
+								justifyContent="space-between"
 								w="100%"
-								mt={["4", "6", "2", "2"]}
-								gap={["7", "none", "none", "none"]}
-								alignItems={[
-									"flex-start",
-									"flex-start",
-									"flex-end",
-									"flex-end",
-								]}
+								zIndex="docked"
 							>
-								<Flex
-									display={userHavePool && isConnected ? "flex" : "none"}
-									w="100%"
+								<Text
+									fontSize="2xl"
+									fontWeight="semibold"
+									color={theme.text.mono}
 								>
-									<InputGroup alignItems="center">
-										<InputLeftElement
-											pl="0.625rem"
-											pointerEvents="none"
-											pb="0.3rem"
-											// eslint-disable-next-line react/no-children-prop
-											children={
-												<MdSearch
-													color={theme.icon.inputSearchIcon}
-													size={20}
-												/>
-											}
-										/>
-										<Input
-											borderColor={theme.bg.blueNavyLightness}
-											placeholder={translation("pool.searchPair")}
-											_placeholder={{
-												color: theme.text.inputBluePurple,
-											}}
-											onChange={handleInput}
-											borderRadius="full"
-											w={["100%", "100%", "20rem", "20rem"]}
-											h="2.2rem"
-											py={["0.2rem", "0.2rem", "1", "1"]}
-											pl="10"
-											_focus={{
-												outline: "none",
-												borderColor: theme.border.focusBluePurple,
-											}}
-											_hover={{}}
-										/>
-									</InputGroup>
-								</Flex>
-								<Flex gap="4" alignItems="flex-end">
+									{translation("pool.poolsOverview")}
+								</Text>
+							</Flex>
+
+							<Collapse in={!isLoading}>
+								<Flex
+									id="b"
+									justifyContent={
+										isConnected
+											? [
+													"space-between",
+													"space-between",
+													"space-between",
+													"space-between",
+											  ]
+											: [
+													"space-between",
+													"space-between",
+													"flex-end",
+													"flex-end",
+											  ]
+									}
+									flexDirection={[
+										"column-reverse",
+										"column-reverse",
+										"row",
+										"row",
+									]}
+									zIndex="docked"
+									w="100%"
+									mt={["4", "6", "2", "2"]}
+									gap={["7", "none", "none", "none"]}
+									alignItems={[
+										"flex-start",
+										"flex-start",
+										"flex-end",
+										"flex-end",
+									]}
+								>
 									<Flex
-										flexDirection="column"
-										alignItems={[
-											"flex-end",
-											"flex-end",
-											"flex-start",
-											"flex-start",
-										]}
+										display={userHavePool && isConnected ? "flex" : "none"}
+										w="100%"
 									>
-										{isConnected && (
-											<Menu>
-												<Text fontSize="sm" pb="2" w="100%">
-													{translation("pool.sort")}
-												</Text>
-												<MenuButton
-													as={Button}
-													fontSize="sm"
-													fontWeight="semibold"
-													px="1rem"
-													size="sm"
-													h="2.2rem"
-													bgColor={theme.bg.blueNavyLightness}
-													color="white"
-													_hover={{
-														bgColor: theme.bg.bluePurple,
-													}}
-													_active={{}}
-													borderRadius="full"
-													rightIcon={<MdExpandMore size={20} />}
-												>
-													{!sortType
-														? translation("pool.yourPools")
-														: sortTypeName}
-												</MenuButton>
-												<MenuList
-													bgColor={theme.bg.blueNavy}
-													color="white"
-													borderColor="transparent"
-													p="4"
-													fontSize="sm"
-												>
-													<MenuItem
-														color={theme.text.mono}
-														_hover={{ bgColor: theme.bg.neutralGray }}
-														onClick={() => setSortType("liquidity")}
+										<InputGroup alignItems="center">
+											<InputLeftElement
+												pl="0.625rem"
+												pointerEvents="none"
+												pb="0.3rem"
+												// eslint-disable-next-line react/no-children-prop
+												children={
+													<MdSearch
+														color={theme.icon.inputSearchIcon}
+														size={20}
+													/>
+												}
+											/>
+											<Input
+												borderColor={theme.bg.blueNavyLightness}
+												placeholder={translation("pool.searchPair")}
+												_placeholder={{
+													color: theme.text.inputBluePurple,
+												}}
+												onChange={handleInput}
+												borderRadius="full"
+												w={["100%", "100%", "20rem", "20rem"]}
+												h="2.2rem"
+												py={["0.2rem", "0.2rem", "1", "1"]}
+												pl="10"
+												_focus={{
+													outline: "none",
+													borderColor: theme.border.focusBluePurple,
+												}}
+												_hover={{}}
+											/>
+										</InputGroup>
+									</Flex>
+									<Flex gap="4" alignItems="flex-end">
+										<Flex
+											flexDirection="column"
+											alignItems={[
+												"flex-end",
+												"flex-end",
+												"flex-start",
+												"flex-start",
+											]}
+										>
+											{isConnected && (
+												<Menu>
+													<Text fontSize="sm" pb="2" w="100%">
+														{translation("pool.sort")}
+													</Text>
+													<MenuButton
+														as={Button}
+														fontSize="sm"
+														fontWeight="semibold"
+														px="1rem"
+														size="sm"
+														h="2.2rem"
+														bgColor={theme.bg.blueNavyLightness}
+														color="white"
+														_hover={{
+															bgColor: theme.bg.bluePurple,
+														}}
+														_active={{}}
+														borderRadius="full"
+														rightIcon={<MdExpandMore size={20} />}
 													>
-														{translation("pool.liquidity")}
-													</MenuItem>
-													<MenuItem
-														color={theme.text.mono}
-														_hover={{ bgColor: theme.bg.neutralGray }}
-														onClick={() => setSortType("volume")}
+														{!sortType
+															? translation("pool.yourPools")
+															: sortTypeName}
+													</MenuButton>
+													<MenuList
+														bgColor={theme.bg.blueNavy}
+														color="white"
+														borderColor="transparent"
+														p="4"
+														fontSize="sm"
 													>
-														{translation("positionCard.volume")}
-													</MenuItem>
-													<MenuItem
-														color={theme.text.mono}
-														_hover={{ bgColor: theme.bg.neutralGray }}
-														onClick={() => setSortType("apr")}
-													>
-														APR
-													</MenuItem>
-													<MenuItem
-														color={theme.text.mono}
-														_hover={{ bgColor: theme.bg.neutralGray }}
-														onClick={() => setSortType("your-pools")}
-													>
-														{translation("pool.yourPools")}
-													</MenuItem>
-												</MenuList>
-											</Menu>
-										)}
+														<MenuItem
+															color={theme.text.mono}
+															_hover={{ bgColor: theme.bg.neutralGray }}
+															onClick={() => setSortType("liquidity")}
+														>
+															{translation("pool.liquidity")}
+														</MenuItem>
+														<MenuItem
+															color={theme.text.mono}
+															_hover={{ bgColor: theme.bg.neutralGray }}
+															onClick={() => setSortType("volume")}
+														>
+															{translation("positionCard.volume")}
+														</MenuItem>
+														<MenuItem
+															color={theme.text.mono}
+															_hover={{ bgColor: theme.bg.neutralGray }}
+															onClick={() => setSortType("apr")}
+														>
+															APR
+														</MenuItem>
+														<MenuItem
+															color={theme.text.mono}
+															_hover={{ bgColor: theme.bg.neutralGray }}
+															onClick={() => setSortType("your-pools")}
+														>
+															{translation("pool.yourPools")}
+														</MenuItem>
+													</MenuList>
+												</Menu>
+											)}
+										</Flex>
 									</Flex>
 								</Flex>
+							</Collapse>
+						</Flex>
+					</SlideFade>
+
+					<Collapse in={!isConnected}>
+						{!isConnected && (
+							<Flex
+								w="100%"
+								mt={["3rem", "3rem", "4rem", "4rem"]}
+								flexDirection="column"
+								alignItems="center"
+								justifyContent="center"
+								mb={["3rem", "3rem", "4rem", "4rem"]}
+							>
+								<Text
+									fontSize={["sm", "sm", "md", "md"]}
+									fontWeight="normal"
+									textAlign="center"
+								>
+									{translation("pool.connectWalletToView")}
+								</Text>
 							</Flex>
 						)}
-					</Flex>
-					{!isConnected ? (
-						<Flex
-							w="100%"
-							mt={["3rem", "3rem", "4rem", "4rem"]}
-							flexDirection="column"
-							alignItems="center"
-							justifyContent="center"
-							mb={["3rem", "3rem", "4rem", "4rem"]}
-						>
-							<Text
-								fontSize={["sm", "sm", "md", "md"]}
-								fontWeight="normal"
-								textAlign="center"
+					</Collapse>
+
+					<Collapse
+						in={
+							isConnected &&
+							!isLoading &&
+							searchTokens?.length !== 0 &&
+							!notFound
+						}
+					>
+						{isConnected && (
+							<Flex
+								flexWrap="wrap"
+								gap="7"
+								zIndex="1"
+								mt="10"
+								justifyContent={["center", "center", "unset", "unset"]}
 							>
-								{translation("pool.connectWalletToView")}
-							</Text>
-						</Flex>
-					) : (
+								{!isLoading &&
+									searchTokens?.length !== 0 &&
+									!notFound &&
+									searchTokens?.map(pair => (
+										<PoolCards
+											key={pair.liquidityToken.address}
+											setIsCreate={setIsCreate}
+											pair={pair}
+											userTokens={userTokensBalance}
+											setSelectedToken={setSelectedToken}
+											setCurrPair={setCurrPair}
+											setSliderValue={setSliderValue}
+											setDepositedTokens={setDepositedTokens}
+											setPoolPercentShare={setPoolPercentShare}
+											setUserPoolBalance={setUserPoolBalance}
+											pairInfo={pairInfo}
+										/>
+									))}
+							</Flex>
+						)}
+					</Collapse>
+
+					<Collapse in={isConnected && notFound}>
 						<Flex
 							flexWrap="wrap"
 							gap="7"
@@ -778,62 +844,54 @@ export const PoolsContainer: NextPage = () => {
 							mt="10"
 							justifyContent={["center", "center", "unset", "unset"]}
 						>
-							{!isLoading && searchTokens?.length !== 0 && !notFound ? (
-								searchTokens?.map(pair => (
-									<PoolCards
-										key={pair.liquidityToken.address}
-										setIsCreate={setIsCreate}
-										pair={pair}
-										userTokens={userTokensBalance}
-										setSelectedToken={setSelectedToken}
-										setCurrPair={setCurrPair}
-										setSliderValue={setSliderValue}
-										setDepositedTokens={setDepositedTokens}
-										setPoolPercentShare={setPoolPercentShare}
-										setUserPoolBalance={setUserPoolBalance}
-										pairInfo={pairInfo}
-									/>
-								))
-							) : notFound ? (
-								<Flex
-									w="100%"
-									mt={["3rem", "3rem", "4rem", "4rem"]}
-									flexDirection="column"
-									alignItems="center"
-									justifyContent="center"
-									gap="16"
+							<Flex
+								w="100%"
+								mt={["3rem", "3rem", "4rem", "4rem"]}
+								flexDirection="column"
+								alignItems="center"
+								justifyContent="center"
+								gap="16"
+							>
+								<Text
+									fontSize={["sm", "sm", "md", "md"]}
+									fontWeight="normal"
+									textAlign="center"
 								>
-									<Text
-										fontSize={["sm", "sm", "md", "md"]}
-										fontWeight="normal"
-										textAlign="center"
-									>
-										{translation("pool.unavailable")}
-									</Text>
-								</Flex>
-							) : (
-								<Flex
-									w="100%"
-									mt={["3rem", "3rem", "4rem", "-1rem"]}
-									flexDirection="column"
-									alignItems="center"
-									justifyContent="center"
-									gap="16"
-								>
-									<Flex
-										className="circleLoading"
-										width="60px !important"
-										height="60px !important"
-										id={
-											colorMode === "dark"
-												? "pendingTransactionsDark"
-												: "pendingTransactionsLight"
-										}
-									/>
-								</Flex>
-							)}
+									{translation("pool.unavailable")}
+								</Text>
+							</Flex>
 						</Flex>
-					)}
+					</Collapse>
+
+					<Collapse in={isConnected && !notFound}>
+						<Flex
+							flexWrap="wrap"
+							gap="7"
+							zIndex="1"
+							mt="10"
+							justifyContent={["center", "center", "unset", "unset"]}
+						>
+							<Flex
+								w="100%"
+								mt={["3rem", "3rem", "4rem", "-1rem"]}
+								flexDirection="column"
+								alignItems="center"
+								justifyContent="center"
+								gap="16"
+							>
+								<Flex
+									className="circleLoading"
+									width="60px !important"
+									height="60px !important"
+									id={
+										colorMode === "dark"
+											? "pendingTransactionsDark"
+											: "pendingTransactionsLight"
+									}
+								/>
+							</Flex>
+						</Flex>
+					</Collapse>
 				</Flex>
 			</Flex>
 		</Flex>
