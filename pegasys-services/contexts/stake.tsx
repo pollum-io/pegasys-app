@@ -14,7 +14,7 @@ export const StakeContext = createContext({} as IStakeProviderValue);
 const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 	const [showInUsd, setShowInUsd] = useState<boolean>(false);
 	const { chainId, address } = useWallet();
-	const { approvalState } = useTransaction();
+	const { pendingTxs } = useTransaction();
 	const { toast } = useToasty();
 	const { t: translation } = useTranslation();
 	const {
@@ -137,16 +137,29 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 		}
 	};
 
+	const stakePendingClaim = useMemo(() => {
+		if (!chainId) return [];
+
+		return [...pendingTxs[chainId].filter(tx => tx.service === "claim-stake")];
+	}, [pendingTxs, chainId]);
+
+	const stakePendingDeposit = useMemo(() => {
+		if (!chainId) return [];
+
+		return [...pendingTxs[chainId].filter(tx => tx.service === "stake-stake")];
+	}, [pendingTxs, chainId]);
+
+	const stakePendingWithdraw = useMemo(() => {
+		if (!chainId) return [];
+
+		return [
+			...pendingTxs[chainId].filter(tx => tx.service === "unstake-stake"),
+		];
+	}, [pendingTxs, chainId]);
+
 	useEffect(() => {
-		if (
-			approvalState.status === ApprovalState.APPROVED &&
-			(approvalState.type === "stake-stake" ||
-				approvalState.type === "claim-stake" ||
-				approvalState.type === "unstake-stake")
-		) {
-			getStakes();
-		}
-	}, [approvalState]);
+		getStakes();
+	}, [stakePendingClaim, stakePendingDeposit, stakePendingWithdraw]);
 
 	useEffect(() => {
 		getStakes();

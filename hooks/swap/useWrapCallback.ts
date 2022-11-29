@@ -72,24 +72,11 @@ export function UseWrapCallback(
 								const txReceipt = await wethContract.deposit({
 									value: `0x${inputAmount.raw.toString(16)}`,
 								});
-								addTransaction(
-									txReceipt,
-									walletInfos,
-									setTransaction,
-									transactions,
-									{
-										summary: `Wrap ${inputAmount.toSignificant(6)} SYS to WSYS`,
-										finished: false,
-									}
-								);
-								setApprovalState({
-									status: ApprovalState.PENDING,
-									type: "wrap",
+								addTransactions({
+									summary: `Wrap ${inputAmount.toSignificant(6)} SYS to WSYS`,
+									hash: txReceipt.hash,
+									service: "swapWethContractDeposit",
 								});
-								setCurrentTxHash(`${txReceipt?.hash}`);
-								setCurrentSummary(
-									`Wrap ${inputAmount.toSignificant(6)} SYS to WSYS`
-								);
 								onCloseTransaction();
 							} catch (error) {
 								onCloseTransaction();
@@ -111,11 +98,9 @@ export function UseWrapCallback(
 									`0x${inputAmount.raw.toString(16)}`
 								);
 								addTransactions({
-									summary: `Unwrap ${inputAmount.toSignificant(
-										6
-									)} WSYS to SYS`,
+									summary: `Unwrap ${inputAmount.toSignificant(6)} WSYS to SYS`,
 									hash: txReceipt.hash,
-									service
+									service: "swapWethContractWithdraw",
 								});
 								// addTransaction(
 								// 	txReceipt,

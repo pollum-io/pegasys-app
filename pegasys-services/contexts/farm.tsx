@@ -27,7 +27,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	const { userTokensBalance } = useTokens();
 	const { chainId, address, provider } = useWallet();
 	const { t: translation } = useTranslation();
-	const { approvalState } = useTransaction();
+	const { pendingTxs } = useTransaction();
 	const { toast } = useToasty();
 	const {
 		signature,
@@ -220,16 +220,29 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 		}
 	};
 
+	const farmPendingClaim = useMemo(() => {
+		if (!chainId) return [];
+
+		return [...pendingTxs[chainId].filter(tx => tx.service === "claim-farm")];
+	}, [pendingTxs, chainId]);
+
+	const farmPendingDeposit = useMemo(() => {
+		if (!chainId) return [];
+
+		return [...pendingTxs[chainId].filter(tx => tx.service === "deposit-farm")];
+	}, [pendingTxs, chainId]);
+
+	const farmPendingWithdraw = useMemo(() => {
+		if (!chainId) return [];
+
+		return [
+			...pendingTxs[chainId].filter(tx => tx.service === "withdraw-farm"),
+		];
+	}, [pendingTxs, chainId]);
+
 	useEffect(() => {
-		if (
-			approvalState.status === ApprovalState.APPROVED &&
-			(approvalState.type === "deposit-farm" ||
-				approvalState.type === "claim-farm" ||
-				approvalState.type === "withdraw-farm")
-		) {
-			getAvailablePair();
-		}
-	}, [approvalState]);
+		getAvailablePair();
+	}, [farmPendingClaim, farmPendingDeposit, farmPendingWithdraw]);
 
 	useEffect(() => {
 		getAvailablePair();

@@ -85,28 +85,29 @@ export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 	// 	});
 	// };
 
-	const addTransactions = (tx: IPendingTx | IFinishedTx, pending?: boolean) => {
+	const addTransactions = (tx: IPendingTx | IFinishedTx, pending = true) => {
 		if (!address || !chainId) return;
 
-		let newPendingTransactions: any[] = [];
+		let newPersistTransactions: any[] = [];
 
 		const persistentKey = pending
 			? "pegasysPendingTransactions"
 			: "pegasysFinishedTransactions";
 
-		const persistPendingTxs = PersistentFramework.get(persistentKey);
+		const persistTxs = PersistentFramework.get(persistentKey);
 
-		if (persistPendingTxs) {
-			newPendingTransactions = persistPendingTxs as any[];
+		if (persistTxs) {
+			newPersistTransactions = persistTxs as any[];
 		}
 
-		newPendingTransactions.push({
+		if (newPersistTransactions.find(persistTx => persistTx.hash === tx.hash))
+			return;
+
+		newPersistTransactions.push({
 			...tx,
 			walletAddress: address,
 			chainId,
 		});
-
-		PersistentFramework.add(persistentKey, newPendingTransactions);
 
 		if (pending) {
 			setPendingTxs({
@@ -116,17 +117,25 @@ export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 		} else {
 			const maxTxs = 50;
 
-			let start = 0;
+			let txs = newPersistTransactions;
 
-			if (finishedTxs[chainId].length >= maxTxs) {
-				start = finishedTxs[chainId].length - maxTxs + 1;
+			if (finishedTxs[chainId].length > maxTxs) {
+				txs = finishedTxs[chainId].slice(
+					finishedTxs[chainId].length - maxTxs + 1
+				);
+
+				newPersistTransactions = newPersistTransactions[chainId].slice(
+					finishedTxs[chainId].length - maxTxs + 1
+				);
 			}
 
 			setFinishedTxs({
 				...finishedTxs,
-				[chainId]: [...finishedTxs[chainId].slice(start, 49 + start), tx],
+				[chainId]: [...txs, tx],
 			});
 		}
+
+		PersistentFramework.add(persistentKey, newPersistTransactions);
 	};
 
 	const removeTransactions = (hash: string, pending?: boolean) => {
@@ -168,10 +177,10 @@ export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 		});
 	};
 
-	const getPendingTxs = useCallback(
-		() => TransactionFramework.getPendingTxs(address, chainId),
-		[chainId, address]
-	);
+	// const getPendingTxs = useCallback(
+	// 	() => TransactionFramework.getPendingTxs(address, chainId),
+	// 	[chainId, address]
+	// );
 
 	const timeValue = useMemo(
 		() => (chainId === ChainId.ROLLUX ? 3000 : 10000),
@@ -194,11 +203,14 @@ export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 							tx.confirmations !== 0
 						) {
 							removeTransactions(currTx.hash, true);
-							addTransactions({
-								summary: currTx.summary,
-								hash: currTx.hash,
-								success: tx.confirmations === 1,
-							});
+							addTransactions(
+								{
+									summary: currTx.summary,
+									hash: currTx.hash,
+									success: tx.confirmations === 1,
+								},
+								false
+							);
 						}
 					})
 				);

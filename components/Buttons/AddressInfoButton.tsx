@@ -308,7 +308,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									_hover={{ cursor: "pointer", textDecoration: "underline" }}
 									onClick={clearAll}
 								>
-									{translation("accoutnDetails.clearAll")}
+									{translation("accountDetails.clearAll")}
 								</Text>
 							</Flex>
 
@@ -327,7 +327,6 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 										hash={tx.hash}
 										summary={tx.summary}
 										success={tx.success}
-										pending
 									/>
 								))}
 							</Flex>

@@ -29,8 +29,13 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 	const [selectedProposals, setSelectedProposals] =
 		useState<IFormattedProposal | null>(null);
 	const { chainId, provider, address } = useWallet();
-	const { setTransactions, transactions, setCurrentTxHash, setApprovalState } =
-		useTransaction();
+	const {
+		// setTransactions,
+		// transactions,
+		// setCurrentTxHash,
+		// setApprovalState,
+		addTransactions,
+	} = useTransaction();
 	const { toast } = useToasty();
 
 	const governanceContract = useMemo(() => {
@@ -65,24 +70,30 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 			const res = await promise();
 
 			if (res) {
-				const { response, hash } = res;
+				const { hash } = res;
 
-				const walletInfo = {
-					walletAddress: address,
-					chainId: ChainId.NEVM,
-					provider,
-				};
+				// const walletInfo = {
+				// 	walletAddress: address,
+				// 	chainId: ChainId.NEVM,
+				// 	provider,
+				// };
 
-				addTransaction(response, walletInfo, setTransactions, transactions, {
+				addTransactions({
+					hash,
+					service: type,
 					summary,
-					finished: false,
 				});
-				setCurrentTxHash(hash);
 
-				setApprovalState({
-					type,
-					status: ApprovalState.PENDING,
-				});
+				// addTransaction(response, walletInfo, setTransactions, transactions, {
+				// 	summary,
+				// 	finished: false,
+				// });
+				// setCurrentTxHash(hash);
+
+				// setApprovalState({
+				// 	type,
+				// 	status: ApprovalState.PENDING,
+				// });
 			}
 		} catch (e) {
 			toast({
