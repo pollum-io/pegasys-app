@@ -30,11 +30,13 @@ export const AirdropContainer: NextPage = () => {
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	const {
-		setCurrentTxHash,
-		setApprovalState,
-		approvalState,
-		setTransactions,
-		transactions,
+		pendingTxs,
+		finishedTxs,
+		// setCurrentTxHash,
+		// setApprovalState,
+		// approvalState,
+		// setTransactions,
+		// transactions,
 	} = useTransaction();
 
 	const {
@@ -51,6 +53,8 @@ export const AirdropContainer: NextPage = () => {
 	const [isAvailable, setIsAvailable] = useState<boolean>(true);
 	const [isClaim, setIsClaim] = useState<boolean>(false);
 	const [isClaimed, setIsClaimed] = useState<boolean>(false);
+	const [isClaiming, setIsClaiming] = useState<boolean>(false);
+	const [currPendingTx, setCurrPendingTx] = useState<string>("");
 	const [availableClaimAmount, setAvailableClaimAmount] =
 		useState<TokenAmount>();
 
@@ -60,25 +64,25 @@ export const AirdropContainer: NextPage = () => {
 
 	const { colorMode } = useColorMode();
 
-	const isClaiming =
-		approvalState.status === ApprovalState.PENDING &&
-		approvalState.type === "claim";
+	// const isClaiming =
+	// 	approvalState.status === ApprovalState.PENDING &&
+	// 	approvalState.type === "claim";
 
-	const walletInfos = {
-		walletAddress,
-		provider,
-		chainId,
-	};
+	// const walletInfos = {
+	// 	walletAddress,
+	// 	provider,
+	// 	chainId,
+	// };
 
 	const { claimCallback } = useClaimCallback(
 		walletAddress,
 		chainId,
-		signer as Signer,
-		walletInfos,
-		setApprovalState,
-		setCurrentTxHash,
-		setTransactions,
-		transactions
+		signer as Signer
+		// walletInfos,
+		// setApprovalState,
+		// setCurrentTxHash,
+		// setTransactions,
+		// transactions
 	);
 
 	useMemo(async () => {
@@ -102,13 +106,39 @@ export const AirdropContainer: NextPage = () => {
 		return null;
 	}, [isConnected, isClaiming]);
 
+	const airdropClaimPendingTxs = useMemo(() => {
+		if (!chainId) return [];
+
+		return pendingTxs[chainId].filter(tx => tx.service === "airdropClaim");
+	}, [pendingTxs, chainId]);
+
 	useEffect(() => {
-		if (
-			approvalState.status === ApprovalState.APPROVED &&
-			approvalState.type === "claim"
-		)
-			setIsClaimed(true);
-	}, [isClaiming]);
+		if (chainId) {
+			if (airdropClaimPendingTxs.length) {
+				setCurrPendingTx(
+					airdropClaimPendingTxs[airdropClaimPendingTxs.length - 1].hash
+				);
+				setIsClaiming(true);
+			} else if (currPendingTx) {
+				const currFullTx = finishedTxs[chainId].find(
+					tx => tx.hash === currPendingTx
+				);
+
+				if (currFullTx?.success) {
+					setIsClaimed(true);
+					setCurrPendingTx("");
+				} else {
+					setCurrPendingTx("");
+					setIsClaimed(false);
+					setIsClaiming(false);
+				}
+			} else {
+				setCurrPendingTx("");
+				setIsClaimed(false);
+				setIsClaiming(false);
+			}
+		}
+	}, [airdropClaimPendingTxs, chainId]);
 
 	return (
 		<Flex alignItems="flex-start" justifyContent="center" mb="6.2rem">

@@ -106,10 +106,8 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
 	const { pendingTxs, finishedTxs, clearAll } = useTransaction();
-	// const isPending = approvalState.status === ApprovalState.PENDING;
 	const { toast } = useToasty();
 	const { address, chainId, connectorSelected, disconnect } = useWallet();
-	// const [txs, setTxs] = useState<ITransactionResponse[]>([]);
 	const { t: translation } = useTranslation();
 
 	const handleCopyToClipboard = () => {
@@ -123,11 +121,6 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 			description: translation("toasts.addressCopied"),
 		});
 	};
-
-	// const isEmpty =
-	// 	Object.keys(transactions[57]).length === 0 &&
-	// 	Object.keys(transactions[5700]).length === 0 &&
-	// 	Object.keys(transactions[2814]).length === 0;
 
 	const explorerURL =
 		chainId === 5700

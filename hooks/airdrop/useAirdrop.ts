@@ -5,7 +5,8 @@ import {
 	PegasysContracts,
 	PegasysTokens,
 	ApprovalState,
-	IApprovalState,
+	// IApprovalState,
+	useTransaction,
 } from "pegasys-services";
 import AIRDROP_ABI from "utils/abis/airdropAbi.json";
 import {
@@ -82,13 +83,15 @@ export const useClaimCallback = (
 		| ethers.providers.Web3Provider
 		| ethers.providers.JsonRpcProvider
 		| Signer
-		| undefined,
-	walletInfos: IWalletHookInfos,
-	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
-	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
-	setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
-	transactions: ITx
+		| undefined
+	// walletInfos: IWalletHookInfos
+	// setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
+	// setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
+	// setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
+	// transactions: ITx
 ) => {
+	const { addTransactions } = useTransaction();
+
 	// eslint-disable-next-line
 	// @ts-ignore
 	const userClaimData = AirdropInfo.claims[address || ""];
@@ -117,18 +120,23 @@ export const useClaimCallback = (
 						gasLimit: calculateGasMargin(estimatedGasLimit),
 					})
 					.then((response: ITransactionResponse) => {
-						addTransaction(
-							response,
-							walletInfos,
-							setTransactions,
-							transactions,
-							{
-								summary: `Claimed PSYS`,
-								claim: { recipient: address },
-							}
-						);
-						setApprovalState({ status: ApprovalState.PENDING, type: "claim" });
-						setCurrentTxHash(response?.hash);
+						addTransactions({
+							summary: `Claimed PSYS`,
+							service: "airdropClaim",
+							hash: response.hash,
+						});
+						// addTransaction(
+						// 	response,
+						// 	walletInfos,
+						// 	setTransactions,
+						// 	transactions,
+						// 	{
+						// 		summary: `Claimed PSYS`,
+						// 		claim: { recipient: address },
+						// 	}
+						// );
+						// setApprovalState({ status: ApprovalState.PENDING, type: "claim" });
+						// setCurrentTxHash(response?.hash);
 					})
 					.catch((err: any) => {
 						console.log(err);

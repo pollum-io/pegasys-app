@@ -9,7 +9,8 @@ import { UseBestSwapMethod } from "./useBestSwapMethod";
 import { UseToastOptions } from "@chakra-ui/react";
 import { ApprovalState } from "./useApproveCallback";
 import { TransactionResponse } from "@ethersproject/providers";
-import { IApprovalState } from "pegasys-services";
+import { useTransaction } from "pegasys-services";
+// import { IApprovalState } from "pegasys-services";
 
 export enum SwapCallbackState {
 	INVALID,
@@ -24,19 +25,21 @@ export function UseSwapCallback(
 	walletInfos: IWalletHookInfos,
 	signer: Signer,
 	recipientAddress: string,
-	setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
-	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
-	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
-	setCurrentSummary: React.Dispatch<React.SetStateAction<string>>,
+	// setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
+	// setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
+	// setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
+	// setCurrentSummary: React.Dispatch<React.SetStateAction<string>>,
 	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
 	txType: string,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
-	transactions: ITx,
+	// transactions: ITx,
 	onCloseTransaction: () => void
 ) {
 	const { walletAddress, chainId: chain } = walletInfos;
 
 	const recipient = !recipientAddress ? walletAddress : recipientAddress;
+
+	const { addTransactions } = useTransaction();
 
 	const swapCalls = UseBestSwapMethod(
 		trade as Trade,
@@ -181,13 +184,18 @@ export function UseSwapCallback(
 							? withRecipient
 							: `${withRecipient} on ${tradeVersion.toUpperCase()}`;
 
-					addTransaction(response, walletInfos, setTransactions, transactions, {
-						summary: withVersion,
-						finished: false,
-					});
-					setCurrentSummary(withVersion);
-					setApprovalState({ status: ApprovalState.PENDING, type: txType });
-					setCurrentTxHash(`${response?.hash}`);
+							addTransactions({
+								summary: withVersion,
+										hash: response.hash,
+										service: "swapCallback",
+							})
+					// addTransaction(response, walletInfos, setTransactions, transactions, {
+					// 	summary: withVersion,
+					// 	finished: false,
+					// });
+					// setCurrentSummary(withVersion);
+					// setApprovalState({ status: ApprovalState.PENDING, type: txType });
+					// setCurrentTxHash(`${response?.hash}`);
 					setCurrentInputTokenName(`${inputSymbol}`);
 					onCloseTransaction();
 

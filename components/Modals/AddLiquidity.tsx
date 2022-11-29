@@ -10,6 +10,7 @@ import {
 	ModalOverlay,
 	Text,
 	Collapse,
+	toast,
 } from "@chakra-ui/react";
 import { useModal, usePicasso, useWallet, useAllCommonPairs } from "hooks";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -30,6 +31,7 @@ import {
 	ONE_BIPS,
 	ApprovalState,
 	useTransaction,
+	useToasty,
 } from "pegasys-services";
 import {
 	addTransaction,
@@ -118,9 +120,12 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		useState<TokenAmount>();
 	const [amounts, setAmounts] = useState<TokenAmount[]>([]);
 	const [currPoolShare, setCurrPoolShare] = useState<string>("");
+	const [currPendingTx, setCurrPendingTx] = useState<string>("");
+	const [isApproved, setIsApproved] = useState<boolean>(false);
 	const { setCurrentLpAddress } = useWallet();
 	const {
 		pendingTxs,
+		finishedTxs,
 		addTransactions,
 		// setTransactions,
 		// transactions,
@@ -131,6 +136,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	} = useTransaction();
 	const { address, chainId, isConnected, signer, provider } = psUseWallet();
 	const { userSlippageTolerance, userTransactionDeadlineValue } = usePegasys();
+	const { toast } = useToasty();
 
 	let currentChainId: ChainId;
 
@@ -177,10 +183,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			parseFloat(selectedToken[1]?.formattedBalance) ||
 		parseFloat(tokenInputValue.inputFrom.value) >
 			parseFloat(selectedToken[0]?.formattedBalance);
-
-	// const isApproved =
-	// 	approvalState.type === "approve" &&
-	// 	approvalState.status === ApprovalState.APPROVED;
 
 	const emptyInput =
 		!tokenInputValue.inputFrom.value || !tokenInputValue.inputTo.value;
@@ -421,18 +423,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						summary: `Approve ${tokenToApp?.symbol}`,
 						service: "poolsApproveAddLiquidity",
 					});
-
-					// addTransaction(
-					// 	res?.response,
-					// 	walletInfo,
-					// 	setTransactions,
-					// 	transactions,
-					// 	{
-					// 		summary: `Approve ${tokenToApp?.symbol}`,
-					// 		finished: false,
-					// 	}
-					// );
-					// setCurrentSummary(`Approve ${tokenToApp?.symbol}`);
 					closePendingTx();
 				}
 			})
@@ -460,36 +450,64 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			pair,
 		})
 			.then(res => {
-				// console.log({ res });
-				// setCurrentTxHash(res?.hash);
-				// setApprovalState({
-				// 	type: "add-liquidity",
-				// 	status: ApprovalState.PENDING,
-				// });
 				addTransactions({
 					hash: res.hash,
 					summary: `Add ${tokenInputValue.inputFrom.value} ${selectedToken[0]?.symbol} and ${tokenInputValue.inputTo.value} ${selectedToken[1]?.symbol}`,
 					service: "poolsAddLiquidity",
 				});
-				// addTransaction(res, walletInfo, setTransactions, transactions, {
-				// 	summary: `Add ${tokenInputValue.inputFrom.value} ${selectedToken[0]?.symbol} and ${tokenInputValue.inputTo.value} ${selectedToken[1]?.symbol}`,
-				// 	finished: false,
-				// });
-				closePendingTx();
-				// setCurrentSummary(
-				// 	`Add ${tokenInputValue.inputFrom.value} ${selectedToken[0]?.symbol} and ${tokenInputValue.inputTo.value} ${selectedToken[1]?.symbol}`
-				// );
 			})
 			.catch(err => {
+				toast({
+					id: "toast1",
+					position: "top-right",
+					status: "success",
+					title: "error while adding liquidity",
+				});
 				console.log(err);
-				closePendingTx();
 			});
 	};
+
+	const approveAddLiquidityPendingTxs = useMemo(() => {
+		if (!chainId) return [];
+
+		return pendingTxs[chainId].filter(
+			tx => tx.service === "poolsApproveAddLiquidity"
+		);
+	}, [pendingTxs, chainId]);
+
+	useEffect(() => {
+		if (chainId) {
+			if (approveAddLiquidityPendingTxs.length) {
+				setCurrPendingTx(
+					approveAddLiquidityPendingTxs[
+						approveAddLiquidityPendingTxs.length - 1
+					].hash
+				);
+				setIsApproved(false);
+			} else if (currPendingTx) {
+				const currFullTx = finishedTxs[chainId].find(
+					tx => tx.hash === currPendingTx
+				);
+
+				if (currFullTx?.success) {
+					setIsApproved(true);
+					setCurrPendingTx("");
+				} else {
+					setCurrPendingTx("");
+					setIsApproved(false);
+				}
+			} else {
+				setCurrPendingTx("");
+				setIsApproved(false);
+			}
+		}
+	}, [approveAddLiquidityPendingTxs, chainId]);
 
 	useEffect(() => {
 		setTokenInputValue(initialTokenInputValue);
 		setApproveTokenStatus(ApprovalState.UNKNOWN);
 	}, [isModalOpen]);
+
 	return (
 		<Modal blockScrollOnMount isOpen={isModalOpen} onClose={onModalClose}>
 			<SelectCoinModal

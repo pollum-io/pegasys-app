@@ -24,11 +24,7 @@ import { IDeposited, WrappedTokenInfo } from "types";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
 import { useTranslation } from "react-i18next";
 import { unwrappedToken } from "utils";
-import {
-	useWallet as psUseWallet,
-	usePegasys,
-	useTransaction,
-} from "pegasys-services";
+import { useWallet as psUseWallet, usePegasys } from "pegasys-services";
 import { SelectCoinModal } from "./SelectCoin";
 
 interface IModal {
@@ -74,14 +70,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 
 	const { userTokensBalance } = useTokens();
 	const { currentLpAddress } = useWallet();
-	const {
-		setTransactions,
-		transactions,
-		setCurrentTxHash,
-		setCurrentSummary,
-		setApprovalState,
-		approvalState,
-	} = useTransaction();
+
 	const { userSlippageTolerance, userTransactionDeadlineValue } = usePegasys();
 
 	const { address, chainId, provider, signer } = psUseWallet();
@@ -138,12 +127,6 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 		signer as Signer,
 		selectedToken,
 		userSlippageTolerance,
-		setTransactions,
-		transactions,
-		setCurrentTxHash,
-		setCurrentSummary,
-		setApprovalState,
-		approvalState,
 		setTxSignature,
 		userTransactionDeadlineValue,
 		closePendingTx

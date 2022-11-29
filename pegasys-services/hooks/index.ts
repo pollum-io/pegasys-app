@@ -6,3 +6,4 @@ export { default as useEarn } from "./useEarn";
 export { default as usePegasys } from "./usePegasys";
 export { default as useTransaction } from "./useTransaction";
 export { default as useGovernance } from "./useGovernance";
+export { default as useSwap } from "./useSwap";
