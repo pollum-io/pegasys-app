@@ -104,6 +104,7 @@ const EarnClaimAction: React.FC<IEarnClaimActionProps> = ({ claim }) => {
 				px="1.5rem"
 				py="3"
 				my="4"
+				mb={["4", "2", "2", "2"]}
 				onClick={claim}
 				disabled={loading}
 				fontSize={16}

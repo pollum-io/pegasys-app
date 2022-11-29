@@ -488,7 +488,8 @@
 		"youCanVote": "Bạn có thể tự bỏ phiếu cho từng đề xuất hoặc ủy thác phiếu bầu của mình cho bên thứ ba.",
 		"showCancelled": "Trình diễn bị hủy bỏ",
 		"discussAtTheForum": "Thảo luận tại Diễn đàn",
-		"editVoteDelegation": "Chỉnh sửa Ủy quyền Bỏ phiếu"
+		"editVoteDelegation": "Chỉnh sửa Ủy quyền Bỏ phiếu",
+		"yourVotes": "phiếu bầu của bạn"
 	},
 	"IDOPage": {
 		"pegasysIDOs": "Initial DEX Offering (IDO)",

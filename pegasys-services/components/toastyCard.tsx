@@ -38,9 +38,9 @@ const ToastyCard: React.FC<IToastyCardProps> = ({
 		<Flex
 			h="max-content"
 			w={["300px", "356px", "356px", "356px", "356px"]}
-			mt="50px"
 			mr={["unset", "1.5rem", "2.5rem", "2.5rem"]}
 			py="0.7rem"
+			mt="3.125rem"
 			px="0.5rem"
 			bg={bg}
 			borderRadius="0.2rem"

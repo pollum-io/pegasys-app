@@ -65,8 +65,8 @@ export const FarmContainer: NextPage = () => {
 					<Flex
 						zIndex="docked"
 						flexDirection="column"
-						px={["1rem", "1.625rem", "1.625rem", "1.625rem"]}
-						py={["0.8rem", "1.375rem", "1.375rem", "1.375rem"]}
+						px={["1rem", "1.325rem", "1.625rem", "1.625rem"]}
+						py={["0.8rem", "1.1rem", "1.375rem", "1.375rem"]}
 						gap="3"
 						h={["9rem", "10rem", "10rem", "10rem"]}
 						color="white"
@@ -78,7 +78,7 @@ export const FarmContainer: NextPage = () => {
 							fontWeight="medium"
 							fontSize="sm"
 							lineHeight="shorter"
-							w={["100%", "70%", "50%", "50%"]}
+							w={["100%", "65%", "50%", "50%"]}
 						>
 							{translation("earnPages.farmingDescription")}
 						</Text>
@@ -87,13 +87,14 @@ export const FarmContainer: NextPage = () => {
 					<Flex
 						zIndex="0"
 						position="relative"
-						top="2"
+						top={["1.5", "1", "1", "1"]}
 						alignItems="center"
 						justifyContent="center"
 						flexDirection="row"
 						bgColor={theme.bg.alphaPurple}
 						borderBottomRadius="xl"
 						py="0.531rem"
+						pt="0.2rem"
 						color="white"
 					>
 						<Link
@@ -168,6 +169,7 @@ export const FarmContainer: NextPage = () => {
 								]}
 								justifyContent="flex-start"
 								w="100%"
+								mb={["0.8rem", "0.8rem", "0", "0"]}
 							>
 								<Menu>
 									<Text fontSize="sm" pb="2" pr={["2", "2", "0", "0"]}>
@@ -205,14 +207,26 @@ export const FarmContainer: NextPage = () => {
 										p="4"
 										fontSize="sm"
 									>
-										{Object.keys(sortData).map((key, i) => (
-											<MenuItem
-												onClick={() => setSort(key as keyof typeof sortData)}
-												key={i}
-											>
-												{sortData[key as keyof typeof sortData]}
-											</MenuItem>
-										))}
+										{Object.keys(sortData).map((key, i) => {
+											console.log(key, key === sort);
+											return (
+												<MenuItem
+													onClick={() => setSort(key as keyof typeof sortData)}
+													key={i}
+													borderRadius="md"
+													bgColor={
+														key === sort ? theme.bg.neutralGray : "transparent"
+													}
+													// _hover={
+													// 	key !== sort
+													// 		? { bgColor: theme.bg.neutralGray }
+													// 		: { bgColor: "transparent" }
+													// }
+												>
+													{sortData[key as keyof typeof sortData]}
+												</MenuItem>
+											);
+										})}
 									</MenuList>
 								</Menu>
 							</Flex>

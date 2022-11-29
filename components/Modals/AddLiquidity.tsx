@@ -11,6 +11,7 @@ import {
 	Text,
 	Collapse,
 	useMediaQuery,
+	useColorMode,
 } from "@chakra-ui/react";
 import { useModal, usePicasso, useWallet, useAllCommonPairs } from "hooks";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -55,7 +56,6 @@ interface IModal {
 	isModalOpen: boolean;
 	onModalClose: () => void;
 	isCreate?: boolean;
-	setIsCreate?: React.Dispatch<React.SetStateAction<boolean>>;
 	haveValue?: boolean;
 	setSelectedToken: React.Dispatch<React.SetStateAction<WrappedTokenInfo[]>>;
 	selectedToken: WrappedTokenInfo[];
@@ -88,7 +88,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		currPair,
 		openPendingTx,
 		closePendingTx,
-		setIsCreate,
 	} = props;
 
 	const initialTokenInputValue = {
@@ -106,7 +105,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const { t: translation, i18n } = useTranslation();
 	const theme = usePicasso();
 	const { isOpenCoin, onCloseCoin } = useModal();
-	const [buttonId, setButtonId] = useState<number>(0);
+	const [buttonId] = useState<number>(0);
+	const { colorMode } = useColorMode();
 	const [tokenInputValue, setTokenInputValue] = useState<ITokenInputValue>(
 		initialTokenInputValue
 	);
@@ -474,6 +474,11 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 				borderTopRadius="30px"
 				h="max-content"
 				borderBottomRadius={["0", "30px", "30px", "30px"]}
+				boxShadow={
+					colorMode === "light"
+						? "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
+						: "none"
+				}
 				border={[
 					"none",
 					"1px solid transparent",
@@ -903,14 +908,14 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								parseFloat(selectedToken[1]?.formattedBalance) &&
 							parseFloat(tokenInputValue.inputFrom.value) >
 								parseFloat(selectedToken[0]?.formattedBalance)
-								? language in languageList
-									? ["unset", "35rem", "35rem", "39rem"]
+								? languageList.includes(language)
+									? ["unset", "42rem", "42rem", "42rem"]
 									: ["unset", "38.5rem", "39.5rem", "39.5rem"]
 								: parseFloat(tokenInputValue.inputTo.value) >
 										parseFloat(selectedToken[1]?.formattedBalance) ||
 								  parseFloat(tokenInputValue.inputFrom.value) >
 										parseFloat(selectedToken[0]?.formattedBalance)
-								? ["unset", "36.5rem", "37.5rem", "37.5rem"]
+								? ["unset", "38rem", "39rem", "39rem"]
 								: ["unset", "35rem", "35.5rem", "35.5rem"]
 						}
 						w="100%"

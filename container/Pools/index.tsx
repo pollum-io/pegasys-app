@@ -17,14 +17,13 @@ import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
 import { PAIRS_CURRENT, PAIR_DATA, pegasysClient } from "apollo";
 import {
 	AddLiquidityModal,
-	ImportPoolModal,
 	LoadingTransition,
 	RemoveLiquidity,
 } from "components";
 import { PoolCards } from "components/Pools/PoolCards";
 import { usePicasso, useModal, useTokens, usePairs, usePools } from "hooks";
 import { NextPage } from "next";
-import { ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
 import { WrappedTokenInfo, IDeposited } from "types";
 import { useTranslation } from "react-i18next";
@@ -39,14 +38,11 @@ import {
 export const PoolsContainer: NextPage = () => {
 	const theme = usePicasso();
 	const {
-		isOpenImportPool,
-		onCloseImportPool,
 		isOpenRemoveLiquidity,
 		onCloseRemoveLiquidity,
 		isOpenAddLiquidity,
 		onCloseAddLiquidity,
 		isOpenTransaction,
-		onOpenAddLiquidity,
 		onOpenTransaction,
 		onCloseTransaction,
 	} = useModal();
@@ -430,7 +426,7 @@ export const PoolsContainer: NextPage = () => {
 
 	const { language } = i18n;
 
-	const languages = ["de", "fr", "pt-br", "vn", "es"];
+	const languages = ["de", "tr", "fr", "pt-br", "vn", "es"];
 
 	const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
 		const inputValue = event.target.value;
@@ -466,7 +462,6 @@ export const PoolsContainer: NextPage = () => {
 				poolPercentShare={poolPercentShare}
 				userPoolBalance={userPoolBalance}
 				currPair={currPair}
-				setIsCreate={setIsCreate}
 				openPendingTx={onOpenTransaction}
 				closePendingTx={onCloseTransaction}
 			/>
@@ -486,10 +481,7 @@ export const PoolsContainer: NextPage = () => {
 				openPendingTx={onOpenTransaction}
 				closePendingTx={onCloseTransaction}
 			/>
-			<ImportPoolModal
-				isModalOpen={isOpenImportPool}
-				onModalClose={onCloseImportPool}
-			/>
+
 			<LoadingTransition
 				isOpen={isOpenTransaction}
 				onClose={onCloseTransaction}
@@ -501,8 +493,14 @@ export const PoolsContainer: NextPage = () => {
 						zIndex="docked"
 						position="relative"
 						borderRadius="xl"
-						h={["13rem", "unset", "unset", "unset"]}
 						backgroundColor={theme.bg.alphaPurple}
+						h={
+							!address
+								? ["max-content", "max-content", "unset", "unset"]
+								: languages.includes(language)
+								? ["max-content", "max-content", "unset", "unset"]
+								: "unset"
+						}
 					>
 						<Img
 							borderRadius="xl"
@@ -510,17 +508,18 @@ export const PoolsContainer: NextPage = () => {
 							position="absolute"
 							zIndex="base"
 							w="100%"
-							h={
-								address
-									? ["85%", "85%", "85%", "85%"]
-									: ["85%", "85%", "85%", "85%"]
-							}
+							h={address ? ["90%", "85%", "85%", "85%"] : "100%"}
 						/>
 						<Flex
 							zIndex="docked"
 							flexDirection="column"
-							px={["1rem", "1rem", "1.625rem", "1.625rem"]}
-							py={["0.8rem", "0.7rem", "1rem", "1rem"]}
+							px={["1rem", "1.3rem", "1.625rem", "1.625rem"]}
+							py={["0.8rem", "1.1rem", "1.375rem", "1.375rem"]}
+							h={
+								languages.includes(language)
+									? ["13rem", "11rem", "11rem", "11rem"]
+									: ["12rem", "10rem", "10rem", "10rem"]
+							}
 							gap="3"
 							color="white"
 						>
@@ -530,21 +529,9 @@ export const PoolsContainer: NextPage = () => {
 							<Text
 								color="white"
 								fontWeight="medium"
-								fontSize={
-									languages.includes(language)
-										? ["13px", "sm", "sm", "sm"]
-										: "sm"
-								}
+								fontSize="sm"
 								lineHeight="shorter"
-								w={
-									!isMobile
-										? language === "fr" || language === "de"
-											? ["80%", "80%", "64%", "64%"]
-											: ["100%", "70%", "60%", "60%"]
-										: languages.includes(language) || language === "tr"
-										? ["100%", "80%", "64%", "64%"]
-										: ["100%", "80%", "64%", "64%"]
-								}
+								w={["100%", "80%", "60%", "60%"]}
 							>
 								{translation("pool.liquidityProvidersEarn")}
 							</Text>
@@ -557,7 +544,7 @@ export const PoolsContainer: NextPage = () => {
 								bgColor={theme.bg.alphaPurple}
 								zIndex="0"
 								position="relative"
-								top={["1.8rem", "2", "2", "2"]}
+								top={["0.6rem", "0.2rem", "0.2rem", "0.2rem"]}
 								borderBottomRadius="xl"
 								py="0.531rem"
 								pt={["0.3rem", "unset", "unset", "unset"]}

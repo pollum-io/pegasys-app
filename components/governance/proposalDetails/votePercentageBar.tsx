@@ -3,6 +3,7 @@ import { useGovernance } from "pegasys-services";
 import { Flex, Text } from "@chakra-ui/react";
 
 import { usePicasso } from "hooks";
+import { useTranslation } from "react-i18next";
 import { IProposalDetailsPercentageBar } from "./dto";
 
 const ProposalDetailsPercentageBar: React.FC<IProposalDetailsPercentageBar> = ({
@@ -11,6 +12,7 @@ const ProposalDetailsPercentageBar: React.FC<IProposalDetailsPercentageBar> = ({
 }) => {
 	const { selectedProposals } = useGovernance();
 	const theme = usePicasso();
+	const { t: translation } = useTranslation();
 
 	if (!selectedProposals) return null;
 
@@ -24,7 +26,11 @@ const ProposalDetailsPercentageBar: React.FC<IProposalDetailsPercentageBar> = ({
 				fontWeight="600"
 				color={theme.text.mono}
 			>
-				<Text>{support ? "For" : "Against"}</Text>
+				<Text>
+					{support
+						? translation("votePage.for")
+						: translation("votePage.against")}
+				</Text>
 				<Flex>
 					<Text mr="0.563rem">
 						{support

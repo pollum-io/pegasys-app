@@ -54,14 +54,8 @@ export const FarmActions: React.FC<IModal> = props => {
 				w={["100vw", "32rem", "32rem", "32rem"]}
 				borderTopRadius={["30px", "30px", "30px", "30px"]}
 				borderBottomRadius={["0px", "30px", "30px", "30px"]}
-				border={[
-					"none",
-					"1px solid transparent",
-					"1px solid transparent",
-					"1px solid transparent",
-				]}
-				borderTop="1px solid transparent"
 				boxShadow="0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04)"
+				borderTop={["1px solid transparent", "none", "none", "none"]}
 				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
@@ -69,7 +63,7 @@ export const FarmActions: React.FC<IModal> = props => {
 					borderTopRadius="30px"
 					alignItems="baseline"
 					justifyContent="space-between"
-					pl={["4", "5", "20", "20"]}
+					pl={["4", "5", "5", "5"]}
 				>
 					<Flex
 						flex="1"
@@ -85,7 +79,7 @@ export const FarmActions: React.FC<IModal> = props => {
 						color={theme.text.callGray}
 						alignItems="center"
 					>
-						<MdArrowBack size={25} />
+						<MdArrowBack size={22} />
 						<Text>Farms</Text>
 					</Flex>
 					<EarnActionsHeader
@@ -97,7 +91,7 @@ export const FarmActions: React.FC<IModal> = props => {
 				</ModalHeader>
 				<ModalBody
 					mb="2"
-					borderBottomRadius={["0", "0", "3xl", "3xl"]}
+					borderBottomRadius={["0", "20px", "20px", "20px"]}
 					background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					<EarnDepositAction
@@ -117,6 +111,7 @@ export const FarmActions: React.FC<IModal> = props => {
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
+							pb={["3rem", "1.5rem", "1.5rem", "1.5rem"]}
 							background={[
 								theme.bg.subModalMobile,
 								theme.bg.subModal,
@@ -127,8 +122,8 @@ export const FarmActions: React.FC<IModal> = props => {
 							w="100%"
 							top={
 								withdrawPercentage === 100
-									? ["0", "30rem", "30rem", "30rem"]
-									: ["0", "30rem", "-9rem", "30rem"]
+									? ["0", "25rem", "25rem", "25rem"]
+									: ["0", "23rem", "23rem", "23rem"]
 							}
 							borderTopRadius={["0", "30px", "30px", "30px"]}
 							borderBottomRadius={["0", "30px", "30px", "30px"]}
@@ -162,6 +157,7 @@ export const FarmActions: React.FC<IModal> = props => {
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
+							pb={["3rem", "1.5rem", "1.5rem", "1.5rem"]}
 							background={[
 								theme.bg.subModalMobile,
 								theme.bg.subModal,
@@ -170,7 +166,7 @@ export const FarmActions: React.FC<IModal> = props => {
 							]}
 							position={["relative", "absolute", "absolute", "absolute"]}
 							w="100%"
-							top={["unset", "30rem", "30rem", "30rem"]}
+							top={["unset", "19.5rem", "19.5rem", "19.5rem"]}
 							borderTopRadius={["0", "30px", "30px", "30px"]}
 							borderBottomRadius={["0", "30px", "30px", "30px"]}
 							alignItems="flex-start"

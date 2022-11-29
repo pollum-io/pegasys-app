@@ -2,10 +2,12 @@ import React from "react";
 import { Flex, Text, Link } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { useGovernance } from "pegasys-services";
+import { useTranslation } from "react-i18next";
 
 const Description: React.FC = () => {
 	const theme = usePicasso();
 	const { selectedProposals } = useGovernance();
+	const { t: translation } = useTranslation();
 
 	if (!selectedProposals) {
 		return null;
@@ -19,7 +21,7 @@ const Description: React.FC = () => {
 			flexDirection="column"
 		>
 			<Text color={theme.text.mono} fontWeight="bold">
-				Description
+				{translation("votePage.description")}
 			</Text>
 			<Flex mb="2rem" flexDirection="column">
 				{selectedProposals.description.map((description, index) => {

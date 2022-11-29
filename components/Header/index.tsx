@@ -239,7 +239,11 @@ export const Header: React.FC = () => {
 				<Flex
 					flexDirection="column"
 					pl={["0", "2", "0", "0"]}
-					pr={["6rem", "1rem", "1.5rem", "1.5rem"]}
+					pr={
+						address
+							? ["6rem", "1rem", "1.5rem", "1.5rem"]
+							: ["6rem", "0", "0", "0.3rem"]
+					}
 				>
 					<WalletButton />
 				</Flex>

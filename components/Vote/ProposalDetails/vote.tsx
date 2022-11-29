@@ -10,6 +10,7 @@ import {
 } from "pegasys-services";
 import { ChainId, JSBI } from "@pollum-io/pegasys-sdk";
 import { shortAddress } from "utils";
+import { useTranslation } from "react-i18next";
 import { ProposalDetailsPercentageBar } from "../../governance";
 
 const Vote: React.FC = () => {
@@ -18,6 +19,7 @@ const Vote: React.FC = () => {
 		useGovernance();
 	const { onOpenCheckAllVotersModal } = useModal();
 	const { chainId } = useWallet();
+	const { t: translation } = useTranslation();
 
 	const isOpenToVote = useMemo(() => {
 		if (selectedProposals?.endDate) return false;
@@ -71,7 +73,7 @@ const Vote: React.FC = () => {
 				mb="1.5rem"
 			>
 				<Text color={theme.text.mono} fontWeight="bold" fontSize="16px">
-					Proposer
+					{translation("votePage.proposer")}
 				</Text>
 
 				<Flex
@@ -92,7 +94,6 @@ const Vote: React.FC = () => {
 			</Flex>
 			<Flex
 				flexDirection={["column", "column", "row", "row"]}
-				bgColor="rgba(255, 255, 255, 0.04)"
 				w="100%"
 				h="max-content"
 				borderRadius="xl"
@@ -102,6 +103,7 @@ const Vote: React.FC = () => {
 				color={theme.text.mono}
 				flexWrap="wrap"
 				gap="6"
+				bgColor={theme.bg.whiteGray}
 			>
 				<Flex
 					justifyContent="space-between"
@@ -122,7 +124,7 @@ const Vote: React.FC = () => {
 							onClick={isFavor}
 							color="#718096"
 						>
-							Check all voters
+							{translation("votePage.checkAllVoters")}
 						</Text>
 						{isOpenToVote && (
 							<Button
@@ -139,7 +141,7 @@ const Vote: React.FC = () => {
 								borderRadius="full"
 								onClick={() => vote(selectedProposals.id, true)}
 							>
-								Vote in Favor
+								{translation("votePage.voteInFavor")}
 							</Button>
 						)}
 					</Flex>
@@ -163,7 +165,7 @@ const Vote: React.FC = () => {
 							onClick={isAgainst}
 							color="#718096"
 						>
-							Check all voters
+							{translation("votePage.checkAllVoters")}
 						</Text>
 						{isOpenToVote && (
 							<Button
@@ -180,7 +182,7 @@ const Vote: React.FC = () => {
 								borderRadius="full"
 								onClick={() => vote(selectedProposals.id, false)}
 							>
-								Vote Against
+								{translation("votePage.voteAgainst")}
 							</Button>
 						)}
 					</Flex>

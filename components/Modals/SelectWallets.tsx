@@ -7,7 +7,7 @@ import {
 	Img,
 	useColorMode,
 } from "@chakra-ui/react";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso } from "hooks";
 import { WalletOptions } from "components/WalletOptions";
 import { MdOutlineClose } from "react-icons/md";
 import { useWallet as psUseWallet } from "pegasys-services";

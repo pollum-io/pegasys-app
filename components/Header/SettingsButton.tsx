@@ -11,7 +11,6 @@ import {
 	Switch,
 	PopoverArrow,
 	PopoverCloseButton,
-	useColorMode,
 } from "@chakra-ui/react";
 import React, { FunctionComponent, ReactNode, useState } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
@@ -48,7 +47,6 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	const [deadlineInputValue, setDeadlineInputValue] = useState<string>("");
 
 	const theme = usePicasso();
-	const { colorMode } = useColorMode();
 	// const [expert, setExpert] = useState(false)
 	const {
 		userSlippageTolerance,
@@ -178,7 +176,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 					pt="0rem"
 					pb="2"
 					h="max-content"
-					display={["flex", "flex", "none", "none"]}
+					display={["flex", "none", "none", "none"]}
 				>
 					<PopoverCloseButton position="relative" size="md" />
 				</Flex>

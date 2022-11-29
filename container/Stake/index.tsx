@@ -56,8 +56,8 @@ export const StakeContainer: NextPage = () => {
 					<Flex
 						zIndex="docked"
 						flexDirection="column"
-						px={["1rem", "1.625rem", "1.625rem", "1.625rem"]}
-						py={["0.8rem", "1.375rem", "1.375rem", "1.375rem"]}
+						px={["1rem", "1.325rem", "1.625rem", "1.625rem"]}
+						py={["0.8rem", "1.1rem", "1.375rem", "1.375rem"]}
 						gap="3"
 						h={["7.5rem", "8rem", "10rem", "10rem"]}
 						color="white"
@@ -81,9 +81,10 @@ export const StakeContainer: NextPage = () => {
 						bgColor={theme.bg.alphaPurple}
 						zIndex="0"
 						position="relative"
-						top={["7", "3", "2", "2"]}
+						top={["7", "2", "1", "1"]}
 						borderBottomRadius="xl"
 						py="0.531rem"
+						pt="0.2rem"
 						gap="2.5"
 						color="white"
 						cursor="pointer"

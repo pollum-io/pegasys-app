@@ -329,7 +329,7 @@
 		"pegasysLiquidityMining": "Pegasys Liquidity-Mining",
 		"pegasysLiquidityStaking": "Pegasys PSYS staking",
 		"depositPegasysLiquidity": "Zahle deine Pegasys Liquiditätsprovider-Token (PLP) ein, um PSYS, den Governance-Token des Pegasys-Protokolls zu erhalten.",
-		"depositPegasysStaking": "Deposit and stake your PSYS tokens to earn more tokens.",
+		"depositPegasysStaking": "Zahlen Sie Ihre PSYS-Tokens ein und setzen Sie sie, um mehr Tokens zu verdienen.",
 		"currentOpportunities": "Current opportunities",
 		"readMoreAboutPsys": "Erfahre mehr über PSYS",
 		"getInsuranceCoverage": "Versichern Sie sich auf InsurAce.io",
@@ -488,7 +488,8 @@
 		"youCanVote": "Sie können entweder selbst über jeden Vorschlag abstimmen oder Ihre Stimmabgabe an eine dritte Partei.",
 		"showCancelled": "Zeigen Abgesagt",
 		"discussAtTheForum": "Diskutieren Sie im Forum",
-		"editVoteDelegation": "Abstimmungsdelegation Bearbeiten"
+		"editVoteDelegation": "Abstimmungsdelegation Bearbeiten",
+		"yourVotes": "Ihre Stimmen"
 	},
 	"IDOPage": {
 		"pegasysIDOs": "Initial DEX Offering (IDO)",

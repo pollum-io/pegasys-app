@@ -73,8 +73,8 @@ export const VoteContainer: NextPage = () => {
 							<Flex
 								zIndex="docked"
 								flexDirection="column"
-								px={["1rem", "1.3rem", "1.6rem", "1.6rem"]}
-								py={["0.8rem", "1.375rem", "1.375rem", "2.1rem"]}
+								px={["1rem", "1.3rem", "1.625rem", "1.625rem"]}
+								py={["0.8rem", "1.1rem", "1.375rem", "1.375rem"]}
 								gap="2"
 								h={["9rem", "10rem", "10rem", "10rem"]}
 								color="white"
@@ -100,19 +100,19 @@ export const VoteContainer: NextPage = () => {
 								bgColor={theme.bg.alphaPurple}
 								position="relative"
 								borderBottomRadius="xl"
-								h="15%"
+								top={["2rem", "3", "3", "3"]}
 								py="0.531rem"
 								px="1rem"
 							>
 								{!votesLocked && (
 									<>
 										<Text fontWeight="500" fontSize="16px" color="white">
-											Your Votes:{" "}
+											{translation("votePage.yourVotes")}:{" "}
 											{currentVotes ? currentVotes.toSignificant() : 0}
 										</Text>
 										<Flex gap="4" fontSize="14px">
 											<Text color="white">
-												Delegated to:{" "}
+												{translation("votePage.delegatedTo")}{" "}
 												{delegatedTo.toLocaleLowerCase() === "self"
 													? delegatedTo
 													: shortAddress(delegatedTo)}
@@ -124,7 +124,7 @@ export const VoteContainer: NextPage = () => {
 												color={theme.text.cyan}
 												onClick={onOpenUnlockVotesModal}
 											>
-												Edit
+												{translation("votePage.edit")}
 											</Text>
 										</Flex>
 									</>
@@ -134,6 +134,7 @@ export const VoteContainer: NextPage = () => {
 						<Flex
 							alignItems="flex-start"
 							my={["1", "4", "8", "8"]}
+							mt={["3rem", "3rem", "3rem", "3rem"]}
 							justifyContent="flex-start"
 							w="100%"
 							flexDirection="column"
@@ -150,9 +151,8 @@ export const VoteContainer: NextPage = () => {
 								<Flex
 									flexDirection="row"
 									justifyContent="space-between"
-									alignItems="center"
+									alignItems="baseline"
 									w="100%"
-									bgColor=""
 									h="max-content"
 								>
 									<Flex>

@@ -1,9 +1,10 @@
 import React from "react";
 import { Button, Flex, Text } from "@chakra-ui/react";
 
-import { useGovernance, ZERO_ADDRESS } from "pegasys-services";
+import { useGovernance } from "pegasys-services";
 import { usePicasso } from "hooks";
 import { FaLessThan } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 import { IUnlockVotingFooter } from "./dto";
 
 const UnlockVotingFooter: React.FC<IUnlockVotingFooter> = ({
@@ -14,6 +15,8 @@ const UnlockVotingFooter: React.FC<IUnlockVotingFooter> = ({
 }) => {
 	const { votesLocked, onDelegate, delegatedTo } = useGovernance();
 	const theme = usePicasso();
+	const { t: translation, i18n } = useTranslation();
+	const { language } = i18n;
 
 	const onDelegateVotes = async () => {
 		const isSelf =
@@ -31,7 +34,7 @@ const UnlockVotingFooter: React.FC<IUnlockVotingFooter> = ({
 						id="self"
 						fontWeight="semibold"
 						w="100%"
-						fontSize="16px"
+						fontSize={language === "de" || language === "fr" ? "13px" : "16px"}
 						py="0.8rem"
 						bgColor={theme.bg.blueNavyLightness}
 						color={theme.text.cyan}
@@ -50,9 +53,9 @@ const UnlockVotingFooter: React.FC<IUnlockVotingFooter> = ({
 					>
 						{votesLocked
 							? showInput
-								? "Delegate Votes"
-								: "Self Delegate"
-							: "Update Vote Delegation"}
+								? translation("vote.delegateVotes")
+								: translation("vote.selfDelegate")
+							: translation("votePage.updateDelegation")}
 					</Button>
 				</Flex>
 			)}
@@ -70,13 +73,15 @@ const UnlockVotingFooter: React.FC<IUnlockVotingFooter> = ({
 			>
 				{!showInput ? (
 					<Flex gap="1">
-						<Text>Add delegate</Text>
+						<Text>
+							{translation("searchModal.add")} {translation("vote.delegate")}
+						</Text>
 						<Text>+</Text>
 					</Flex>
 				) : (
 					<Flex alignItems="baseline" gap="1">
 						<FaLessThan size={10} fontWeight="normal" />
-						<Text fontWeight="semibold">Back</Text>
+						<Text fontWeight="semibold">{translation("migratePage.back")}</Text>
 					</Flex>
 				)}
 			</Flex>

@@ -994,7 +994,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						<Button
 							w="100%"
 							mt={isExpert ? "1.8rem" : "1.5rem"}
-							py="6"
+							py={["5", "6", "6", "6"]}
 							px="6"
 							borderRadius="67px"
 							onClick={

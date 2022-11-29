@@ -14,6 +14,7 @@ import {
 	SliderFilledTrack,
 	SliderThumb,
 	useMediaQuery,
+	useColorMode,
 } from "@chakra-ui/react";
 import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
@@ -75,6 +76,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 
 	const { userTokensBalance } = useTokens();
 	const { currentLpAddress } = useWallet();
+	const { colorMode } = useColorMode();
 	const {
 		setTransactions,
 		transactions,
@@ -223,6 +225,11 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 					"1px solid transparent",
 					"1px solid transparent",
 				]}
+				boxShadow={
+					colorMode === "light"
+						? "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
+						: "none"
+				}
 				borderTop="1px solid transparent"
 				borderTopRadius="30px"
 				borderBottomRadius={["0", "30px", "30px", "30px"]}

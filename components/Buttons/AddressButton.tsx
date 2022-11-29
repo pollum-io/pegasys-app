@@ -13,7 +13,7 @@ interface IButtonProps extends ButtonProps {
 
 export const AddressButton: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
-	const { children, pending, ...rest } = props;
+	const { children, ...rest } = props;
 	const { expert } = usePegasys();
 	const { walletError, address } = useWallet();
 

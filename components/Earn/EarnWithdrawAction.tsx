@@ -47,7 +47,7 @@ const EarnWithdrawAction: React.FC<IEarnWithdrawActionProps> = ({
 			</Text>
 			<EarnInput />
 			<EarnSlider />
-			<Flex mt="1.5rem" mb="1rem" gap="4">
+			<Flex mt="1.5rem" mb={["1rem", "0.5rem", "0.5rem", "0.5rem"]} gap="4">
 				<EarnButton
 					width="100%"
 					height="2.5rem"

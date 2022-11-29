@@ -488,7 +488,8 @@
 		"youCanVote": "你可以自己对每个提案进行投票，也可以将你的投票委托给第三方。",
 		"showCancelled": "显示取消了",
 		"discussAtTheForum": "在论坛上讨论",
-		"editVoteDelegation": "编辑投票授权"
+		"editVoteDelegation": "编辑投票授权",
+		"yourVotes": "您的投票"
 	},
 	"IDOPage": {
 		"pegasysIDOs": "Initial DEX Offering (IDO)",

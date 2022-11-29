@@ -486,7 +486,8 @@
 		"youCanVote": "You can either vote on each proposal yourself or delegate your votes to a third party.",
 		"showCancelled": "Show Cancelled",
 		"discussAtTheForum": "Discuss at the Forum",
-		"editVoteDelegation": "Edit Vote Delegation"
+		"editVoteDelegation": "Edit Vote Delegation",
+		"yourVotes": "Your Votes"
 	},
 	"IDOPage": {
 		"pegasysIDOs": "Initial DEX Offering (IDO)",

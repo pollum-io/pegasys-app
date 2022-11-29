@@ -82,7 +82,10 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 				>
 					<Flex gap="4" alignItems="center">
 						<Img src={currentList?.logoURI} w="24px" h="24px" />
-						<Flex flexDirection="column">
+						<Flex
+							flexDirection="column"
+							w={["10rem", "max-content", "max-content", "max-content"]}
+						>
 							<Text fontSize="sm" fontWeight="semibold">
 								{currentList?.name}
 							</Text>
@@ -129,7 +132,11 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 							</Text>
 						</Flex>
 
-						<Flex w="100%" justifyContent="space-between">
+						<Flex
+							w="100%"
+							justifyContent="space-between"
+							gap={["3", "unset", "unset", "unset"]}
+						>
 							<Text
 								fontSize="xs"
 								transition="200ms ease-in-out"

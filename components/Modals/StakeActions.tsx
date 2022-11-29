@@ -80,7 +80,7 @@ export const StakeActions: React.FC<IModal> = props => {
 						color={theme.text.callGray}
 						alignItems="center"
 					>
-						<MdArrowBack size={25} />
+						<MdArrowBack size={22} />
 						<Text>Stake</Text>
 					</Flex>
 					<EarnActionsHeader

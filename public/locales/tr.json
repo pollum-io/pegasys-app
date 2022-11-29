@@ -488,7 +488,8 @@
 		"youCanVote": "Her bir teklif için kendiniz oy kullanabilir ya da oylarınızı üçüncü bir tarafa devredebilirsiniz.",
 		"showCancelled": "Göster İptal Edildi",
 		"discussAtTheForum": "Forumda Tartışın",
-		"editVoteDelegation": "Oy Delegasyonunu Düzenle"
+		"editVoteDelegation": "Oy Delegasyonunu Düzenle",
+		"yourVotes": "Oylarınız"
 	},
 	"IDOPage": {
 		"pegasysIDOs": "Initial DEX Offering (IDO)",

@@ -2,6 +2,7 @@ import React from "react";
 import { Flex } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { useGovernance } from "pegasys-services";
+
 import Status from "./status";
 import Vote from "./vote";
 import Details from "./details";

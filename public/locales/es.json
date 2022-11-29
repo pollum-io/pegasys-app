@@ -488,7 +488,8 @@
 		"youCanVote": "Puede votar cada propuesta usted mismo o delegar sus votos en un tercero.",
 		"showCancelled": "Mostrar Canceladas",
 		"discussAtTheForum": "Discutir en el Foro",
-		"editVoteDelegation": "Editar la Delegación de Voto"
+		"editVoteDelegation": "Editar la Delegación de Voto",
+		"yourVotes": "Sus Votos"
 	},
 	"IDOPage": {
 		"pegasysIDOs": "Initial DEX Offering (IDO)",
