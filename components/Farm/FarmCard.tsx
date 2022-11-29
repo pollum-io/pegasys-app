@@ -98,6 +98,7 @@ const FarmCard: FunctionComponent<{
 			borderRadius="xl"
 			border="1px solid transparent;"
 			background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+			zIndex="1"
 		>
 			<Flex justifyContent="space-between">
 				<Flex gap="2" pt="6">
