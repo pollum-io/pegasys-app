@@ -806,34 +806,32 @@ export const PoolsContainer: NextPage = () => {
 							!notFound
 						}
 					>
-						{isConnected && (
-							<Flex
-								flexWrap="wrap"
-								gap="7"
-								zIndex="1"
-								mt="10"
-								justifyContent={["center", "center", "unset", "unset"]}
-							>
-								{!isLoading &&
-									searchTokens?.length !== 0 &&
-									!notFound &&
-									searchTokens?.map(pair => (
-										<PoolCards
-											key={pair.liquidityToken.address}
-											setIsCreate={setIsCreate}
-											pair={pair}
-											userTokens={userTokensBalance}
-											setSelectedToken={setSelectedToken}
-											setCurrPair={setCurrPair}
-											setSliderValue={setSliderValue}
-											setDepositedTokens={setDepositedTokens}
-											setPoolPercentShare={setPoolPercentShare}
-											setUserPoolBalance={setUserPoolBalance}
-											pairInfo={pairInfo}
-										/>
-									))}
-							</Flex>
-						)}
+						<Flex
+							flexWrap="wrap"
+							gap="7"
+							zIndex="1"
+							mt="10"
+							justifyContent={["center", "center", "unset", "unset"]}
+						>
+							{!isLoading &&
+								searchTokens?.length !== 0 &&
+								!notFound &&
+								searchTokens?.map(pair => (
+									<PoolCards
+										key={pair.liquidityToken.address}
+										setIsCreate={setIsCreate}
+										pair={pair}
+										userTokens={userTokensBalance}
+										setSelectedToken={setSelectedToken}
+										setCurrPair={setCurrPair}
+										setSliderValue={setSliderValue}
+										setDepositedTokens={setDepositedTokens}
+										setPoolPercentShare={setPoolPercentShare}
+										setUserPoolBalance={setUserPoolBalance}
+										pairInfo={pairInfo}
+									/>
+								))}
+						</Flex>
 					</Collapse>
 
 					<Collapse in={isConnected && notFound}>
