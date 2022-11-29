@@ -31,7 +31,7 @@ const UnlockVotingFooter: React.FC<IUnlockVotingFooter> = ({
 						id="self"
 						fontWeight="semibold"
 						w="100%"
-						fontSize="16px"
+						fontSize="1rem"
 						py="0.8rem"
 						bgColor={theme.bg.blueNavyLightness}
 						color={theme.text.cyan}
@@ -64,7 +64,7 @@ const UnlockVotingFooter: React.FC<IUnlockVotingFooter> = ({
 				transition="100ms ease-in-out"
 				textAlign="center"
 				color={theme.text.cyanPurple}
-				fontSize="14px"
+				fontSize="0.875rem"
 				gap="1"
 				onClick={() => setShowInput(!showInput)}
 			>

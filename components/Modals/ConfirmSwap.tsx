@@ -162,7 +162,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 					<Flex
 						flexDirection="column"
 						gap="2"
-						fontSize={["14px", "16px", "16px", "16px"]}
+						fontSize={["0.875rem", "1rem", "1rem", "1rem"]}
 					>
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text>{translation("swapPage.price")}</Text>
@@ -218,7 +218,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 							borderRadius="67px"
 							bgColor={theme.bg.blueNavyLightness}
 							color={theme.text.cyan}
-							fontSize={["16px", "lg", "lg", "lg"]}
+							fontSize={["1rem", "lg", "lg", "lg"]}
 							onClick={() => {
 								if (!onTx) return;
 								openPendingTx();

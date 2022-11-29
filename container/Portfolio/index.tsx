@@ -92,7 +92,7 @@ export const PortfolioContainer: NextPage = () => {
 							<Flex w={["", "25rem", "10rem", "12rem"]}>
 								<Text
 									fontWeight="semibold"
-									fontSize={["20px", "22px", "24px", "24px"]}
+									fontSize={["1.25rem", "1.375rem", "1.5rem", "1.5rem"]}
 									color={theme.text.whitePurple}
 								>
 									{translation("portfolioPage.walletStats")}
@@ -124,14 +124,14 @@ export const PortfolioContainer: NextPage = () => {
 								>
 									<Text
 										fontWeight="semibold"
-										fontSize={["20px", "20px", "22px", "24px"]}
+										fontSize={["1.25rem", "1.25rem", "1.375rem", "1.5rem"]}
 										order={[1, 1, 0, 0]}
 										w="11rem"
 									>
 										{isConnected ? "$1.21" : "-"}
 									</Text>
 									<Text
-										fontSize={["12px", "14px", "14px", "14px"]}
+										fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
 										w={["40%", "max-content", "9rem", "11rem"]}
 									>
 										{translation("portfolioPage.totalValueSwapped")}
@@ -157,14 +157,14 @@ export const PortfolioContainer: NextPage = () => {
 								>
 									<Text
 										fontWeight="semibold"
-										fontSize={["20px", "20px", "22px", "24px"]}
+										fontSize={["1.25rem", "1.25rem", "1.375rem", "1.5rem"]}
 										order={[1, 1, 0, 0]}
 										w={["11rem", "11rem", "9rem", "11rem"]}
 									>
 										{isConnected ? "$1450,00" : "-"}
 									</Text>
 									<Text
-										fontSize={["12px", "14px", "14px", "14px"]}
+										fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
 										w={["40%", "max-content", "9rem", "8rem"]}
 									>
 										{translation("portfolioPage.totalFeesPaid")}
@@ -190,14 +190,14 @@ export const PortfolioContainer: NextPage = () => {
 								>
 									<Text
 										fontWeight="semibold"
-										fontSize={["20px", "20px", "22px", "24px"]}
+										fontSize={["1.25rem", "1.25rem", "1.375rem", "1.5rem"]}
 										order={[1, 1, 0, 0]}
 										w={["11rem", "11rem", "8rem", "8rem"]}
 									>
 										{isConnected ? "12" : "-"}
 									</Text>
 									<Text
-										fontSize={["12px", "14px", "14px", "14px"]}
+										fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
 										w={["40%", "max-content", "8rem", "8rem"]}
 									>
 										{translation("portfolioPage.totalTransactions")}
@@ -218,7 +218,7 @@ export const PortfolioContainer: NextPage = () => {
 							<Text
 								color={theme.text.whitePurple}
 								fontWeight="600"
-								fontSize="20px"
+								fontSize="1.25rem"
 							>
 								{translation("portfolioPage.walletBalance")}
 							</Text>
@@ -230,7 +230,7 @@ export const PortfolioContainer: NextPage = () => {
 							color={theme.text.mono}
 							mt="3rem"
 							display={["none", "none", "flex", "flex"]}
-							fontSize="14px"
+							fontSize="0.875rem"
 						>
 							<Flex alignItems="center" w="100%" pl={["4", "4", "6", "6"]}>
 								<Flex alignItems="center" w={["55%", "40%", "24.1%", "24%"]}>
@@ -302,7 +302,7 @@ export const PortfolioContainer: NextPage = () => {
 									>
 										<Text
 											fontWeight="semibold"
-											fontSize={["20px", "20px", "24px", "24px"]}
+											fontSize={["1.25rem", "1.25rem", "1.5rem", "1.5rem"]}
 											color={theme.text.whitePurple}
 										>
 											{translation("portfolioPage.liquidityPositions")}
@@ -336,14 +336,19 @@ export const PortfolioContainer: NextPage = () => {
 										>
 											<Text
 												fontWeight="semibold"
-												fontSize={["20px", "20px", "22px", "24px"]}
+												fontSize={["1.25rem", "1.25rem", "1.375rem", "1.5rem"]}
 												order={[1, 1, 0, 0]}
 												w="11rem"
 											>
 												{isConnected ? "$0.03" : "-"}
 											</Text>
 											<Text
-												fontSize={["12px", "14px", "14px", "14px"]}
+												fontSize={[
+													"0.75rem",
+													"0.875rem",
+													"0.875rem",
+													"0.875rem",
+												]}
 												w={["50%", "50%", "12rem", "12rem"]}
 											>
 												{translation("portfolioPage.liquidity")}{" "}
@@ -364,7 +369,7 @@ export const PortfolioContainer: NextPage = () => {
 										>
 											<Text
 												fontWeight="semibold"
-												fontSize={["20px", "20px", "22px", "24px"]}
+												fontSize={["1.25rem", "1.25rem", "1.375rem", "1.5rem"]}
 												order={[1, 1, 0, 0]}
 												color="#38A169"
 												w="10.7rem"
@@ -373,7 +378,12 @@ export const PortfolioContainer: NextPage = () => {
 											</Text>
 
 											<Text
-												fontSize={["12px", "14px", "14px", "14px"]}
+												fontSize={[
+													"0.75rem",
+													"0.875rem",
+													"0.875rem",
+													"0.875rem",
+												]}
 												color="#38A169"
 												w={["50%", "50%", "12rem", "13rem"]}
 											>
@@ -404,7 +414,7 @@ export const PortfolioContainer: NextPage = () => {
 									alignItems="center"
 									justifyContent="space-between"
 									w={["0", "0", "87%", "90%"]}
-									fontSize="14px"
+									fontSize="0.875rem"
 								>
 									<Flex
 										flexDirection="row"
@@ -452,7 +462,7 @@ export const PortfolioContainer: NextPage = () => {
 							>
 								<Flex mb="6">
 									<Text
-										fontSize={["20px", "20px", "24px", "24px"]}
+										fontSize={["1.25rem", "1.25rem", "1.5rem", "1.5rem"]}
 										fontWeight="semibold"
 										color={theme.text.whitePurple}
 									>
@@ -581,7 +591,12 @@ export const PortfolioContainer: NextPage = () => {
 											}
 										/>
 										<Input
-											fontSize={["14px", "14px", "13px", "14px"]}
+											fontSize={[
+												"0.875rem",
+												"0.875rem",
+												"0.8125rem",
+												"0.875rem",
+											]}
 											borderColor={theme.bg.blueNavyLightness}
 											placeholder={translation("currencyInputPanel.searchBy")}
 											_placeholder={{
@@ -632,7 +647,7 @@ export const PortfolioContainer: NextPage = () => {
 											alignItems="center"
 											justifyContent="space-between"
 											w={["45%", "42%", "72.6%", "100%"]}
-											fontSize="14px"
+											fontSize="0.875rem"
 										>
 											<Flex w="5rem">
 												<Text>{translation("portfolioPage.totalValue")}</Text>

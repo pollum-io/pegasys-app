@@ -8,11 +8,11 @@ const UnlockVotingBody: React.FC = () => {
 
 	return (
 		<Flex gap="6" flexDirection="column" w="100%" textAlign="justify">
-			<Text fontSize="16px" color={theme.text.mono}>
+			<Text fontSize="1rem" color={theme.text.mono}>
 				Earned PSYS tokens represent voting shares in Pegasys governance.
 			</Text>
 
-			<Text fontSize="16px" color={theme.text.mono}>
+			<Text fontSize="1rem" color={theme.text.mono}>
 				You can either vote on each proposal yourself or delegate your votes to
 				a third party.
 			</Text>

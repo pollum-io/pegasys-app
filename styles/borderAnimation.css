@@ -5,7 +5,7 @@
 	border-radius: 3px;
 	overflow: hidden;
 	z-index: 1;
-	bottom: 15px;
+	bottom: 0.9375rem;
 }
 .gradientBorder:focus,
 .gradientBorder:active {
@@ -44,7 +44,7 @@
 	background-size: 200% 200%;
 }
 .gradientBorder:after {
-	margin: 3px;
+	margin: 0.1875rem;
 }
 /* TODO: Apply fast animarion on hover  */
 /* .gradientBorder:hover:before,

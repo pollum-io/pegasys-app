@@ -1,6 +1,6 @@
 .loading:after {
 	content: " .";
-	font-size: 24px;
+	font-size: 1.5rem;
 	animation: dots 2s steps(5, end) infinite;
 }
 

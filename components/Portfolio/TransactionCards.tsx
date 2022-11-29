@@ -88,13 +88,13 @@ export const TransactionCards: FunctionComponent = () => {
 								>
 									<Text
 										fontWeight="bold"
-										fontSize="14px"
+										fontSize="0.875rem"
 										color={theme.text.cyanPurple}
 									>
 										{cardsValue.type}
 									</Text>
 									<Flex display={["flex", "flex", "none", "none"]}>
-										<Text fontSize="14px" fontStyle="italic">
+										<Text fontSize="0.875rem" fontStyle="italic">
 											{cardsValue.time}
 										</Text>
 									</Flex>
@@ -112,10 +112,10 @@ export const TransactionCards: FunctionComponent = () => {
 									display={["none", "flex", "none", "none"]}
 								>
 									<Flex w="8rem">
-										<Text fontSize="14px">{cardsValue.totalAmount}</Text>
+										<Text fontSize="0.875rem">{cardsValue.totalAmount}</Text>
 									</Flex>
 									<Flex w="8rem">
-										<Text fontSize="14px">{cardsValue.tokenAmount}</Text>
+										<Text fontSize="0.875rem">{cardsValue.tokenAmount}</Text>
 									</Flex>
 								</Flex>
 								<Flex
@@ -127,20 +127,26 @@ export const TransactionCards: FunctionComponent = () => {
 										"flex-start",
 									]}
 								>
-									<Text fontSize="14px" order={[0, 1, 0, 0]} flexWrap="wrap">
+									<Text
+										fontSize="0.875rem"
+										order={[0, 1, 0, 0]}
+										flexWrap="wrap"
+									>
 										{cardsValue.totalValue}
 									</Text>
 								</Flex>
 								<Flex w="8rem" display={["none", "none", "flex", "flex"]}>
 									<Text
 										order={[1, 0, 0, 0]}
-										fontSize={["12px", "14px", "14px", "14px"]}
+										fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
 									>
 										{cardsValue.totalAmount}
 									</Text>
 								</Flex>
 								<Flex w="8rem" display={["none", "none", "flex", "flex"]}>
-									<Text fontSize={["12px", "14px", "14px", "14px"]}>
+									<Text
+										fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
+									>
 										{cardsValue.tokenAmount}
 									</Text>
 								</Flex>

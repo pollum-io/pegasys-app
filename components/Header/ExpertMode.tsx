@@ -13,7 +13,7 @@ export const ExpertMode: FunctionComponent = () => {
 			{expert && (
 				<Flex
 					position="fixed"
-					fontSize="12px"
+					fontSize="0.75rem"
 					zIndex="-99"
 					background={
 						colorMode === "dark"

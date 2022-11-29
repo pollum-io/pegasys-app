@@ -95,15 +95,15 @@ const FarmGrid = () => {
 			)}
 			<Flex
 				w="100%"
-				maxW="900px"
+				maxW="56.25rem"
 				zIndex="1"
 				mt={["10", "10", "0", "0"]}
 				mb="10rem"
 				display={["none", "none", "flex", "flex"]}
-				gap="18px"
+				gap="1.125rem"
 				justifyContent="space-between"
 			>
-				<Flex flexDirection="column" gap="2px" width="fit-content">
+				<Flex flexDirection="column" gap="0.125rem" width="fit-content">
 					{even.map(p => (
 						<FarmCard
 							key={p.poolId}
@@ -113,7 +113,7 @@ const FarmGrid = () => {
 						/>
 					))}
 				</Flex>
-				<Flex flexDirection="column" gap="2px" width="fit-content">
+				<Flex flexDirection="column" gap="0.125rem" width="fit-content">
 					{odds.map(p => (
 						<FarmCard
 							key={p.poolId}
@@ -126,12 +126,12 @@ const FarmGrid = () => {
 			</Flex>
 			<Flex
 				w="100%"
-				maxW="900px"
+				maxW="56.25rem"
 				zIndex="1"
 				mt={["10", "10", "0", "0"]}
 				mb="10rem"
 				display={["flex", "flex", "none", "none"]}
-				gap="4px"
+				gap="0.25rem"
 				flexDirection="column"
 				alignItems="center"
 			>

@@ -532,7 +532,7 @@ export const PoolsContainer: NextPage = () => {
 								fontWeight="medium"
 								fontSize={
 									languages.includes(language)
-										? ["13px", "sm", "sm", "sm"]
+										? ["0.8125rem", "sm", "sm", "sm"]
 										: "sm"
 								}
 								lineHeight="shorter"
@@ -821,8 +821,8 @@ export const PoolsContainer: NextPage = () => {
 								>
 									<Flex
 										className="circleLoading"
-										width="60px !important"
-										height="60px !important"
+										width="3.75rem !important"
+										height="3.75rem !important"
 										id={
 											colorMode === "dark"
 												? "pendingTransactionsDark"

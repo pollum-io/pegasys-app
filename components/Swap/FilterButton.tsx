@@ -35,8 +35,8 @@ export const FilterButton: FunctionComponent<IFilterPorps> = ({
 					color={id === periods.id ? "white" : theme.text.lightGray}
 					px="3"
 					py="3"
-					w="42px"
-					h="42px"
+					w="2.625rem"
+					h="2.625rem"
 					display="flex"
 					alignItems="center"
 					justifyContent="center"

@@ -152,7 +152,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 						>
 							<Flex>
 								<Text
-									fontSize="14px"
+									fontSize="0.875rem"
 									fontWeight="semibold"
 									color={theme.text.cyanPurple}
 								>
@@ -170,7 +170,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 									w="max-content"
 									h="max-content"
 									color={theme.text.whitePurple}
-									fontSize="12px"
+									fontSize="0.75rem"
 									fontWeight="bold"
 									alignItems="center"
 									bgColor="transparent"

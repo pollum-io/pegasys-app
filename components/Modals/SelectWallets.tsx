@@ -110,7 +110,7 @@ export const SelectWallets: React.FC<IModal> = props => {
 						>
 							<Flex pt="0.4">
 								<Flex
-									mb="5px"
+									mb="0.3125rem"
 									className="circleLoading"
 									id={
 										colorMode === "dark"
@@ -128,9 +128,9 @@ export const SelectWallets: React.FC<IModal> = props => {
 								pt="2"
 								py="0"
 								bgColor="transparent"
-								h="48px"
+								h="3rem"
 								justifyContent="space-between"
-								w="290px"
+								w="18.125rem"
 								mx="0"
 								my="2"
 								mb={["2rem", "unset", "unset", "unset"]}

@@ -15,12 +15,12 @@ export const SwapExpertMode: FunctionComponent = () => {
 					color={theme.text.cyanPurple}
 					onClick={() => setOtherWallet(!otherWallet)}
 					_hover={{ cursor: "pointer", opacity: "0.9" }}
-					fontSize="14px"
+					fontSize="0.875rem"
 					fontWeight="semibold"
 				>
 					{translation("swapPage.sendToAnother")}{" "}
 				</Flex>
-				<Text color="#718096" fontSize="14px" fontWeight="semibold">
+				<Text color="#718096" fontSize="0.875rem" fontWeight="semibold">
 					{translation("swapPage.optional")}
 				</Text>
 			</Flex>

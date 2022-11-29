@@ -37,8 +37,8 @@ const ToastyCard: React.FC<IToastyCardProps> = ({
 	return (
 		<Flex
 			h="max-content"
-			w={["300px", "356px", "356px", "356px", "356px"]}
-			mt="50px"
+			w={["18.75rem", "22.25rem", "22.25rem", "22.25rem", "22.25rem"]}
+			mt="3.125rem"
 			mr={["unset", "1.5rem", "2.5rem", "2.5rem"]}
 			py="0.7rem"
 			px="0.5rem"
@@ -72,7 +72,7 @@ const ToastyCard: React.FC<IToastyCardProps> = ({
 					w="16rem"
 				>
 					<Text font-weight="bold"> {`${state?.title}`}</Text>
-					<Text fontSize="16px" font-weight="normal">
+					<Text fontSize="1rem" font-weight="normal">
 						{state.description}
 					</Text>
 				</Flex>

@@ -133,7 +133,7 @@ export const FarmContainer: NextPage = () => {
 						flexDirection={["column-reverse", "unset"]}
 					>
 						<Text
-							fontSize={["20px", "20px", "2xl", "2xl"]}
+							fontSize={["1.25rem", "1.25rem", "2xl", "2xl"]}
 							fontWeight="semibold"
 						>
 							{translation("earnPages.farms")}
@@ -230,8 +230,8 @@ export const FarmContainer: NextPage = () => {
 					>
 						<Flex
 							className="circleLoading"
-							width="60px !important"
-							height="60px !important"
+							width="3.75rem !important"
+							height="3.75rem !important"
 							id={
 								colorMode === "dark"
 									? "pendingTransactionsDark"

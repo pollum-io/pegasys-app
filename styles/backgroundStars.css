@@ -1,16 +1,16 @@
 #starsLightMode,
 #starsLightMode:after {
-	height: 1px;
-	width: 1px;
+	height: 0.0625rem;
+	width: 0.0625rem;
 	position: absolute;
 	left: 0px;
 }
 .icon {
 	display: inline-block;
-	font-size: 40px;
+	font-size: 2.5rem;
 }
 .feature {
-	margin-top: 20px;
+	margin-top: 1.25rem;
 }
 #starsLightMode {
 	-webkit-animation: animParticle 60s linear infinite;
