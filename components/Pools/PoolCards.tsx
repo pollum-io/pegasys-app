@@ -226,6 +226,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 			border="1px solid rgb(86,190,216, 0.4)"
 			background={theme.bg.blackAlpha}
 			display={showPool}
+			zIndex="1"
 		>
 			<Flex gap="7">
 				<Flex position="relative">
@@ -272,7 +273,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 						{percentShare !== 0 && percentShare
 							? percentShare > 0 && percentShare < 1
 								? "<0.01%"
-								: `${percentShare}%`
+								: `${percentShare.toFixed(2)}%`
 							: "-"}
 					</Text>
 				</Flex>

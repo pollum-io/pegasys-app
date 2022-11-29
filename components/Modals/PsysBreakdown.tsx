@@ -16,6 +16,7 @@ import { MdOutlineClose } from "react-icons/md";
 import { WrappedTokenInfo } from "types";
 import { addTokenToWallet } from "utils";
 import { useTranslation } from "react-i18next";
+import { useWallet } from "pegasys-services";
 
 interface IModal {
 	isOpen: boolean;
@@ -37,7 +38,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 		totalSuply,
 		psys,
 	} = props;
-
+	const { isConnected } = useWallet();
 	const theme = usePicasso();
 	const { t: translation } = useTranslation();
 
@@ -113,7 +114,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 							ml="2"
 							color={theme.text.mono}
 						>
-							{psysBalance} PSYS
+							{!isConnected ? "-" : psysBalance} PSYS
 						</Text>
 					</Flex>
 					<Flex flexDirection="column" gap="4" mt="8" color={theme.text.mono}>
@@ -125,7 +126,9 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 							<Text fontSize="sm" fontWeight="semibold">
 								{translation("header.unclaimed")}
 							</Text>
-							<Text fontSize="sm">{psysUnclaimed} PSYS</Text>
+							<Text fontSize="sm">
+								{!isConnected ? "-" : psysUnclaimed} PSYS
+							</Text>
 						</Flex>
 						<Flex
 							alignItems="center"
@@ -135,7 +138,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 							<Text fontSize="sm" fontWeight="semibold">
 								{translation("header.psysPrice")}
 							</Text>
-							<Text fontSize="sm">{psysPriceSys} SYS</Text>
+							<Text fontSize="sm">{!isConnected ? "-" : psysPriceSys} SYS</Text>
 						</Flex>
 						<Flex
 							alignItems="center"
@@ -145,7 +148,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 							<Text fontSize="sm" fontWeight="semibold">
 								{translation("header.totalSupply")}
 							</Text>
-							<Text fontSize="sm">{totalSuply}</Text>
+							<Text fontSize="sm">{!isConnected ? "-" : totalSuply}</Text>
 						</Flex>
 					</Flex>
 				</ModalBody>
