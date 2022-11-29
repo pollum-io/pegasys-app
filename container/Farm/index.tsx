@@ -49,10 +49,7 @@ export const FarmContainer: NextPage = () => {
 			<LoadingTransition isOpen={loading || signatureLoading} />
 			<FarmActions isOpen={isOpenFarmActions} onClose={onCloseFarmActions} />
 			<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
-				<SlideFade
-					in={Boolean(isConnected || address || !!isMobile)}
-					offsetY="-30px"
-				>
+				<SlideFade in={Boolean(isMobile || !isMobile)} offsetY="-30px">
 					<Flex
 						flexDirection="column"
 						zIndex="docked"
@@ -133,10 +130,7 @@ export const FarmContainer: NextPage = () => {
 					}
 					zIndex="docked"
 				>
-					<SlideFade
-						in={Boolean(isConnected || address || !!isMobile)}
-						offsetY="-50px"
-					>
+					<SlideFade in={Boolean(isMobile || !isMobile)} offsetY="-50px">
 						<Flex
 							id="b"
 							mt={["0", "0", "2", "2"]}

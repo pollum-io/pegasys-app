@@ -39,10 +39,7 @@ export const StakeContainer: NextPage = () => {
 			<LoadingTransition isOpen={loading || signatureLoading} />
 			<StakeActions isOpen={isOpenStakeActions} onClose={onCloseStakeActions} />
 			<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
-				<SlideFade
-					in={Boolean(isConnected || address || !!isMobile)}
-					offsetY="-30px"
-				>
+				<SlideFade in={Boolean(isMobile || !isMobile)} offsetY="-30px">
 					<Flex
 						flexDirection="column"
 						zIndex="docked"
@@ -116,10 +113,7 @@ export const StakeContainer: NextPage = () => {
 						w="100%"
 						zIndex="docked"
 					>
-						<SlideFade
-							in={Boolean(isConnected || address || !!isMobile)}
-							offsetY="-50px"
-						>
+						<SlideFade in={Boolean(isMobile || !isMobile)} offsetY="-50px">
 							<Text fontSize="2xl" fontWeight="semibold">
 								{translation("earnPages.stakes")}
 							</Text>

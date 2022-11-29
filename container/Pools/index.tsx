@@ -497,10 +497,7 @@ export const PoolsContainer: NextPage = () => {
 			/>
 			<Flex alignItems="flex-start" justifyContent="center" mb="6.2rem">
 				<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
-					<SlideFade
-						in={Boolean(isConnected || address || !!isMobile)}
-						offsetY="-30px"
-					>
+					<SlideFade in={Boolean(isMobile || !isMobile)} offsetY="-30px">
 						<Flex
 							flexDirection="column"
 							zIndex="docked"
@@ -592,10 +589,7 @@ export const PoolsContainer: NextPage = () => {
 							)}
 						</Flex>
 					</SlideFade>
-					<SlideFade
-						in={Boolean(isConnected || address || !!isMobile)}
-						offsetY="-50px"
-					>
+					<SlideFade in={Boolean(isMobile || !isMobile)} offsetY="-50px">
 						<Flex
 							id="a"
 							alignItems={["flex-start", "flex-start", "baseline", "baseline"]}
