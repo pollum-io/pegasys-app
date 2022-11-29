@@ -226,8 +226,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		tokenInputValue.lastInputTyped === 0
 			? parseFloat(selectedToken[0]?.tokenInfo?.balance as string) >=
 			  parseFloat(tokenInputValue?.inputFrom?.value)
-			: parseFloat(selectedToken[1]?.tokenInfo?.balance as string) >=
-			  parseFloat(tokenInputValue?.inputTo?.value),
+			: parseFloat(selectedToken[0]?.tokenInfo?.balance as string) >=
+			  parseFloat(tokenInputValue?.inputFrom?.value),
 	];
 
 	const canSubmit = submitValidation.every(validation => validation === true);
