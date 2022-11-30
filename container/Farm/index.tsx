@@ -148,7 +148,7 @@ export const FarmContainer: NextPage = () => {
 							</Text>
 						</Flex>
 					</SlideFade>
-					<Collapse in={!dataLoading}>
+					<Collapse in={Boolean(!dataLoading && address)}>
 						{address && !dataLoading && (
 							<Flex
 								flexDirection={[
