@@ -191,7 +191,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	const getAvailablePair = async () => {
 		try {
 			setDataLoading(true);
-			if (chainId && address && PegasysContracts[chainId].MINICHEF_ADDRESS) {
+			if (chainId && address && RoutesFramework.getMinichefAddress(chainId)) {
 				const pairsTokens = getTokenPairs(chainId, userTokensBalance);
 
 				const stakeInfos = await FarmServices.getFarmOpportunities({
@@ -223,30 +223,41 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	const farmPendingClaim = useMemo(() => {
 		if (!chainId) return [];
 
-		return [...pendingTxs[chainId].filter(tx => tx.service === "claim-farm")];
+		return [
+			...(pendingTxs[chainId] ?? []).filter(tx => tx.service === "claim-farm"),
+		];
 	}, [pendingTxs, chainId]);
 
 	const farmPendingDeposit = useMemo(() => {
 		if (!chainId) return [];
 
-		return [...pendingTxs[chainId].filter(tx => tx.service === "deposit-farm")];
+		return [
+			...(pendingTxs[chainId] ?? []).filter(
+				tx => tx.service === "deposit-farm"
+			),
+		];
 	}, [pendingTxs, chainId]);
 
 	const farmPendingWithdraw = useMemo(() => {
 		if (!chainId) return [];
 
 		return [
-			...pendingTxs[chainId].filter(tx => tx.service === "withdraw-farm"),
+			...(pendingTxs[chainId] ?? []).filter(
+				tx => tx.service === "withdraw-farm"
+			),
 		];
 	}, [pendingTxs, chainId]);
 
 	useEffect(() => {
 		getAvailablePair();
-	}, [farmPendingClaim, farmPendingDeposit, farmPendingWithdraw]);
-
-	useEffect(() => {
-		getAvailablePair();
-	}, [userTokensBalance, chainId, address]);
+	}, [
+		userTokensBalance,
+		chainId,
+		address,
+		farmPendingClaim.length,
+		farmPendingDeposit.length,
+		farmPendingWithdraw.length,
+	]);
 
 	useEffect(() => {
 		let pairsToRender: IFarmInfo[] = [];

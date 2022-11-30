@@ -109,7 +109,9 @@ export const AirdropContainer: NextPage = () => {
 	const airdropClaimPendingTxs = useMemo(() => {
 		if (!chainId) return [];
 
-		return pendingTxs[chainId].filter(tx => tx.service === "airdropClaim");
+		return (pendingTxs[chainId] ?? []).filter(
+			tx => tx.service === "airdropClaim"
+		);
 	}, [pendingTxs, chainId]);
 
 	useEffect(() => {

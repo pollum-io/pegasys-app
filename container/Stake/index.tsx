@@ -19,7 +19,7 @@ import {
 	useEarn,
 	IStakeInfo,
 	IEarnInfo,
-	PegasysContracts,
+	RoutesFramework,
 } from "pegasys-services";
 import { StakeActions } from "components/Modals/StakeActions";
 
@@ -228,12 +228,12 @@ export const StakeContainer: NextPage = () => {
 					in={
 						!dataLoading &&
 						isConnected &&
-						(!chainId || !PegasysContracts[chainId].MINICHEF_ADDRESS)
+						(!chainId || !RoutesFramework.getStakeAddress(chainId))
 					}
 				>
 					{!dataLoading &&
 						isConnected &&
-						(!chainId || !PegasysContracts[chainId].MINICHEF_ADDRESS) && (
+						(!chainId || !RoutesFramework.getStakeAddress(chainId)) && (
 							<Flex
 								w="100%"
 								mt={["3rem", "3rem", "4rem", "4rem"]}
@@ -257,13 +257,13 @@ export const StakeContainer: NextPage = () => {
 					in={Boolean(
 						!dataLoading &&
 							isConnected &&
-							!(!chainId || !PegasysContracts[chainId].MINICHEF_ADDRESS) &&
+							!(!chainId || !RoutesFramework.getStakeAddress(chainId)) &&
 							!earnOpportunities.length
 					)}
 				>
 					{!dataLoading &&
 						isConnected &&
-						!(!chainId || !PegasysContracts[chainId].MINICHEF_ADDRESS) &&
+						!(!chainId || !RoutesFramework.getStakeAddress(chainId)) &&
 						!earnOpportunities.length && (
 							<Flex
 								w="100%"
@@ -288,13 +288,13 @@ export const StakeContainer: NextPage = () => {
 					in={Boolean(
 						!dataLoading &&
 							isConnected &&
-							!(!chainId || !PegasysContracts[chainId].MINICHEF_ADDRESS) &&
+							!(!chainId || !RoutesFramework.getStakeAddress(chainId)) &&
 							earnOpportunities.length
 					)}
 				>
 					{!dataLoading &&
 						isConnected &&
-						!(!chainId || !PegasysContracts[chainId].MINICHEF_ADDRESS) &&
+						!(!chainId || !RoutesFramework.getStakeAddress(chainId)) &&
 						earnOpportunities.length && (
 							<Flex
 								flexDirection="column"

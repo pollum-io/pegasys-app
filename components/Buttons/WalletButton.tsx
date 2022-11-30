@@ -48,7 +48,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 	}, [walletError]);
 
 	const isPending = useMemo(() => {
-		if (pendingTxs[chainId ?? ChainId.NEVM].length) {
+		if (pendingTxs[chainId ?? ChainId.NEVM]?.length) {
 			return true;
 		}
 

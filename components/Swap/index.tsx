@@ -210,7 +210,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const approvePendingTxs = useMemo(() => {
 		if (!chainId) return [];
 
-		return pendingTxs[chainId].filter(
+		return (pendingTxs[chainId] ?? []).filter(
 			tx => tx.service === "poolsApproveAddLiquidity"
 		);
 	}, [pendingTxs, chainId]);

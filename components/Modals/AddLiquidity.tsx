@@ -171,7 +171,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		(selectedToken[0]?.symbol === "WSYS" && selectedToken[1]?.symbol === "SYS");
 
 	const isPending = useMemo(() => {
-		if (pendingTxs[chainId ?? ChainId.NEVM].length) {
+		if (pendingTxs[chainId ?? ChainId.NEVM]?.length) {
 			return true;
 		}
 
@@ -470,7 +470,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const approveAddLiquidityPendingTxs = useMemo(() => {
 		if (!chainId) return [];
 
-		return pendingTxs[chainId].filter(
+		return (pendingTxs[chainId] ?? []).filter(
 			tx => tx.service === "poolsApproveAddLiquidity"
 		);
 	}, [pendingTxs, chainId]);

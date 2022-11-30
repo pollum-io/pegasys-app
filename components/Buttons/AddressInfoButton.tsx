@@ -285,7 +285,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 					pb="1.4rem"
 				>
 					{!chainId ||
-					(!pendingTxs[chainId].length && !finishedTxs[chainId].length) ? (
+					(!pendingTxs[chainId]?.length && !finishedTxs[chainId]?.length) ? (
 						<Text fontSize="sm" fontWeight="semibold" color={theme.text.mono}>
 							{translation("accountDetails.transactionAppear")}
 						</Text>

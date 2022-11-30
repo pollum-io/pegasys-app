@@ -103,27 +103,15 @@ export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 		if (newPersistTransactions.find(persistTx => persistTx.hash === tx.hash))
 			return;
 
-		newPersistTransactions.push({
-			...tx,
-			walletAddress: address,
-			chainId,
-		});
-
 		if (pending) {
 			setPendingTxs({
 				...pendingTxs,
-				[chainId]: [...pendingTxs[chainId], tx],
+				[chainId]: [...(pendingTxs[chainId] ?? []), tx],
 			});
 		} else {
 			const maxTxs = 50;
 
-			let txs = newPersistTransactions;
-
 			if (finishedTxs[chainId].length > maxTxs) {
-				txs = finishedTxs[chainId].slice(
-					finishedTxs[chainId].length - maxTxs + 1
-				);
-
 				newPersistTransactions = newPersistTransactions[chainId].slice(
 					finishedTxs[chainId].length - maxTxs + 1
 				);
@@ -131,9 +119,15 @@ export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 
 			setFinishedTxs({
 				...finishedTxs,
-				[chainId]: [...txs, tx],
+				[chainId]: [...newPersistTransactions, tx],
 			});
 		}
+
+		newPersistTransactions.push({
+			...tx,
+			walletAddress: address,
+			chainId,
+		});
 
 		PersistentFramework.add(persistentKey, newPersistTransactions);
 	};
@@ -158,12 +152,12 @@ export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 		if (pending) {
 			setPendingTxs({
 				...pendingTxs,
-				[chainId]: pendingTxs[chainId].filter(tx => tx.hash !== hash),
+				[chainId]: (pendingTxs[chainId] ?? []).filter(tx => tx.hash !== hash),
 			});
 		} else {
 			setFinishedTxs({
 				...finishedTxs,
-				[chainId]: finishedTxs[chainId].filter(tx => tx.hash !== hash),
+				[chainId]: (finishedTxs[chainId] ?? []).filter(tx => tx.hash !== hash),
 			});
 		}
 	};
@@ -190,10 +184,10 @@ export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 	useMemo(() => {
 		if (chainId && isConnected) {
 			const timer = setInterval(async () => {
-				if (!pendingTxs[chainId].length) clearInterval(timer);
+				if (!pendingTxs[chainId]?.length) clearInterval(timer);
 
 				await Promise.all(
-					pendingTxs[chainId].map(async currTx => {
+					(pendingTxs[chainId] ?? []).map(async currTx => {
 						const tx = await provider?.getTransaction(currTx.hash);
 
 						if (!tx) return;

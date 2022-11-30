@@ -114,7 +114,7 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 	const getStakes = async () => {
 		try {
 			setDataLoading(true);
-			if (address && chainId && PegasysContracts[chainId].STAKE_ADDRESS) {
+			if (address && chainId && RoutesFramework.getStakeAddress(chainId)) {
 				const stakeInfos = await StakeServices.getStakeOpportunities({
 					stakeContract,
 					chainId,
@@ -140,30 +140,38 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 	const stakePendingClaim = useMemo(() => {
 		if (!chainId) return [];
 
-		return [...pendingTxs[chainId].filter(tx => tx.service === "claim-stake")];
+		return [
+			...(pendingTxs[chainId] ?? []).filter(tx => tx.service === "claim-stake"),
+		];
 	}, [pendingTxs, chainId]);
 
 	const stakePendingDeposit = useMemo(() => {
 		if (!chainId) return [];
 
-		return [...pendingTxs[chainId].filter(tx => tx.service === "stake-stake")];
+		return [
+			...(pendingTxs[chainId] ?? []).filter(tx => tx.service === "stake-stake"),
+		];
 	}, [pendingTxs, chainId]);
 
 	const stakePendingWithdraw = useMemo(() => {
 		if (!chainId) return [];
 
 		return [
-			...pendingTxs[chainId].filter(tx => tx.service === "unstake-stake"),
+			...(pendingTxs[chainId] ?? []).filter(
+				tx => tx.service === "unstake-stake"
+			),
 		];
 	}, [pendingTxs, chainId]);
 
 	useEffect(() => {
 		getStakes();
-	}, [stakePendingClaim, stakePendingDeposit, stakePendingWithdraw]);
-
-	useEffect(() => {
-		getStakes();
-	}, [address, chainId]);
+	}, [
+		address,
+		chainId,
+		stakePendingClaim.length,
+		stakePendingDeposit.length,
+		stakePendingWithdraw.length,
+	]);
 
 	const providerValue = useMemo(
 		() => ({
