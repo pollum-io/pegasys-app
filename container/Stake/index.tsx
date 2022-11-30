@@ -118,7 +118,7 @@ export const StakeContainer: NextPage = () => {
 								{translation("earnPages.stakes")}
 							</Text>
 						</SlideFade>
-						<Collapse in={!dataLoading}>
+						<Collapse in={Boolean(!dataLoading && address)}>
 							{address && !dataLoading && (
 								<Flex
 									gap="1"
