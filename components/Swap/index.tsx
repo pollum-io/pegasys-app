@@ -226,8 +226,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		tokenInputValue.lastInputTyped === 0
 			? parseFloat(selectedToken[0]?.tokenInfo?.balance as string) >=
 			  parseFloat(tokenInputValue?.inputFrom?.value)
-			: parseFloat(selectedToken[1]?.tokenInfo?.balance as string) >=
-			  parseFloat(tokenInputValue?.inputTo?.value),
+			: parseFloat(selectedToken[0]?.tokenInfo?.balance as string) >=
+			  parseFloat(tokenInputValue?.inputFrom?.value),
 	];
 
 	const canSubmit = submitValidation.every(validation => validation === true);
@@ -640,135 +640,166 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				isOpen={isOpenTransaction}
 				onClose={onCloseTransaction}
 			/>
-			<Flex alignItems="center" flexDirection="column">
-				<Flex
-					h="max-content"
-					width={["100%", "md", "md", "md"]}
-					p="1.5rem"
-					flexDirection="column"
-					zIndex="1"
-					borderRadius={30}
-					border="1px solid transparent;"
-					boxShadow={
-						colorMode === "light"
-							? "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
-							: "0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4)"
-					}
-					background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
-				>
-					<Flex flexDirection="row" justifyContent="space-between" pb="1.5rem">
-						<Text fontWeight="semibold" fontSize={["xl", "2xl", "2xl", "2xl"]}>
-							Swap
-						</Text>
-					</Flex>
+			<SlideFade in={Boolean(userTokensBalance.length)} offsetY="-50px">
+				<Flex alignItems="center" flexDirection="column">
 					<Flex
-						borderRadius="2xl"
-						bgColor={theme.bg.blueNavy}
+						h="max-content"
+						width={["100%", "md", "md", "md"]}
+						p="1.5rem"
 						flexDirection="column"
-						py="1rem"
-						px="1.25rem"
-						border="1px solid"
-						borderColor={
-							(isConnected &&
-								tokenInputValue.currentInputTyped === "inputFrom" &&
-								parseFloat(tokenInputValue.inputFrom.value) >
-									parseFloat(selectedToken[0]?.balance as string)) ||
-							(tokenInputValue.currentInputTyped === "inputTo" &&
-								parseFloat(tokenInputValue.inputFrom.value) >
-									parseFloat(selectedToken[0]?.balance as string)) ||
-							(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap)
-								? theme.text.red400
-								: "#ff000000"
+						zIndex="1"
+						borderRadius={30}
+						border="1px solid transparent;"
+						boxShadow={
+							colorMode === "light"
+								? "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
+								: "0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4)"
 						}
-						transition="500ms border ease-in-out"
+						background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 					>
 						<Flex
 							flexDirection="row"
 							justifyContent="space-between"
-							alignItems="center"
+							pb="1.5rem"
 						>
-							<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
-								{translation("swapPage.from")}
-							</Text>
 							<Text
-								fontSize={["0.875rem", "0.875rem", "1rem", "1rem"]}
-								fontWeight="400"
-								color={theme.text.gray500}
+								fontWeight="semibold"
+								fontSize={["xl", "2xl", "2xl", "2xl"]}
 							>
-								{`${translation("header.balance")} ${
-									selectedToken[0]?.formattedBalance as string
-								}`}
+								Swap
 							</Text>
 						</Flex>
-						<Flex alignItems="center" justifyContent="space-between">
-							<Flex w="100%" alignItems="center" mt="0.313rem">
-								<Flex
-									justifyContent=""
-									alignItems="center"
-									id="0"
-									borderRadius={12}
-									cursor="pointer"
-									onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-										setButtonId(Number(event.currentTarget.id));
-										onOpenCoin();
-									}}
+						<Flex
+							borderRadius="2xl"
+							bgColor={theme.bg.blueNavy}
+							flexDirection="column"
+							py="1rem"
+							px="1.25rem"
+							border="1px solid"
+							borderColor={
+								(isConnected &&
+									tokenInputValue.currentInputTyped === "inputFrom" &&
+									parseFloat(tokenInputValue.inputFrom.value) >
+										parseFloat(selectedToken[0]?.balance as string)) ||
+								(tokenInputValue.currentInputTyped === "inputTo" &&
+									parseFloat(tokenInputValue.inputFrom.value) >
+										parseFloat(selectedToken[0]?.balance as string)) ||
+								(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap)
+									? theme.text.red400
+									: "#ff000000"
+							}
+							transition="500ms border ease-in-out"
+						>
+							<Flex
+								flexDirection="row"
+								justifyContent="space-between"
+								alignItems="center"
+							>
+								<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
+									{translation("swapPage.from")}
+								</Text>
+								<Text
+									fontSize={["0.875rem", "0.875rem", "1rem", "1rem"]}
+									fontWeight="400"
+									color={theme.text.gray500}
 								>
-									<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
-									<Text
-										fontSize={["1rem", "1rem", "xl", "xl"]}
-										fontWeight="500"
-										px="3"
-										color={theme.text.mono}
+									{`${translation("header.balance")} ${
+										selectedToken[0]?.formattedBalance as string
+									}`}
+								</Text>
+							</Flex>
+							<Flex alignItems="center" justifyContent="space-between">
+								<Flex w="100%" alignItems="center" mt="0.313rem">
+									<Flex
+										alignItems="center"
+										id="0"
+										borderRadius={12}
+										cursor="pointer"
+										onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+											setButtonId(Number(event.currentTarget.id));
+											onOpenCoin();
+										}}
 									>
-										{selectedToken[0]?.symbol}
-									</Text>
-									<Icon as={IoIosArrowDown} />
+										<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
+										<Text
+											fontSize={["1rem", "1rem", "xl", "xl"]}
+											fontWeight="500"
+											px="3"
+											color={theme.text.mono}
+										>
+											{selectedToken[0]?.symbol}
+										</Text>
+										<Icon as={IoIosArrowDown} />
+									</Flex>
+
+									{isConnected &&
+										!preventShowMaxButton &&
+										parseFloat(selectedToken[0]?.balance as string) !== 0 && (
+											<Flex ml="8" onClick={() => handleMaxInput()}>
+												<Text
+													color={theme.text.cyanPurple}
+													_hover={{ cursor: "pointer", opacity: "0.8" }}
+												>
+													Max
+												</Text>
+											</Flex>
+										)}
 								</Flex>
 
-								{isConnected &&
-									!preventShowMaxButton &&
-									parseFloat(selectedToken[0]?.balance as string) !== 0 && (
-										<Flex ml="8" onClick={() => handleMaxInput()}>
-											<Text
-												color={theme.text.cyanPurple}
-												_hover={{ cursor: "pointer", opacity: "0.8" }}
-											>
-												Max
-											</Text>
-										</Flex>
-									)}
+								<Input
+									fontSize={["1.125rem", "1.125rem", "1.375rem", "1.375rem"]}
+									maxW="160px"
+									display="inline-block"
+									overflow="hidden"
+									whiteSpace="nowrap"
+									textOverflow="ellipsis"
+									border="none"
+									placeholder="0.00"
+									textAlign="right"
+									mt="2"
+									px={["0.1rem", "1.5", "1.5", "1.5"]}
+									ml={["10", "50", "50", "50"]}
+									type="text"
+									onChange={handleOnChangeTokenInputs}
+									name="inputFrom"
+									value={tokenInputValue?.inputFrom?.value}
+									_focus={{ outline: "none" }}
+								/>
 							</Flex>
-
-							<Input
-								fontSize={["1.125rem", "1.125rem", "1.375rem", "1.375rem"]}
-								maxW="160px"
-								display="inline-block"
-								overflow="hidden"
-								whiteSpace="nowrap"
-								textOverflow="ellipsis"
-								border="none"
-								placeholder="0.00"
-								textAlign="right"
-								mt="2"
-								px={["0.1rem", "1.5", "1.5", "1.5"]}
-								ml={["10", "50", "50", "50"]}
-								type="text"
-								onChange={handleOnChangeTokenInputs}
-								name="inputFrom"
-								value={tokenInputValue?.inputFrom?.value}
-								_focus={{ outline: "none" }}
-							/>
 						</Flex>
-					</Flex>
-					{tokenInputValue.currentInputTyped === "inputFrom" && (
-						<Flex flexDirection="row" gap="1" justifyContent="center">
-							<Collapse
-								in={
-									parseFloat(tokenInputValue.inputFrom.value) >
-									parseFloat(selectedToken[0]?.balance as string)
-								}
-							>
-								<Flex gap="1">
+						{tokenInputValue.currentInputTyped === "inputFrom" && (
+							<Flex flexDirection="row" gap="1" justifyContent="center">
+								<Collapse
+									in={
+										parseFloat(tokenInputValue.inputFrom.value) >
+										parseFloat(selectedToken[0]?.balance as string)
+									}
+								>
+									<Flex gap="1">
+										<Text
+											fontSize="sm"
+											pt="2"
+											textAlign="center"
+											color={theme.text.red400}
+											fontWeight="semibold"
+										>
+											{translation("swapHooks.insufficient")}
+											{selectedToken[0]?.symbol}
+											{translation("swapHooks.balance")}.{" "}
+											{translation("swapHooks.validAmount")}.
+										</Text>
+									</Flex>
+								</Collapse>
+							</Flex>
+						)}
+						{tokenInputValue.currentInputTyped === "inputTo" && (
+							<Flex flexDirection="row" gap="1" justifyContent="center">
+								<Collapse
+									in={
+										parseFloat(tokenInputValue.inputFrom.value) >
+										parseFloat(selectedToken[0]?.balance as string)
+									}
+								>
 									<Text
 										fontSize="sm"
 										pt="2"
@@ -778,20 +809,100 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									>
 										{translation("swapHooks.insufficient")}
 										{selectedToken[0]?.symbol}
-										{translation("swapHooks.balance")}.{" "}
+										{translation("swapHooks.balance")}.
 										{translation("swapHooks.validAmount")}.
 									</Text>
-								</Flex>
-							</Collapse>
+								</Collapse>
+							</Flex>
+						)}
+						<Flex
+							margin="0 auto"
+							py="4"
+							onClick={switchTokensPosition}
+							_hover={{ cursor: "pointer" }}
+						>
+							<MdWifiProtectedSetup size={25} color={theme.text.cyanPurple} />
 						</Flex>
-					)}
-					{tokenInputValue.currentInputTyped === "inputTo" && (
-						<Flex flexDirection="row" gap="1" justifyContent="center">
+						<Flex
+							borderRadius="2xl"
+							bgColor={theme.bg.blueNavy}
+							flexDirection="column"
+							py="1rem"
+							px="1.25rem"
+							border="1px solid"
+							borderColor={
+								isConnected && verifyIfHaveInsufficientLiquidity && !isWrap
+									? theme.text.red400
+									: "#ff000000"
+							}
+							transition="500ms border ease-in-out"
+						>
+							<Flex
+								flexDirection="row"
+								justifyContent="space-between"
+								alignItems="center"
+							>
+								<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
+									{translation("currencyInputPanel.to")}
+								</Text>
+								<Text
+									fontSize={["0.875rem", "0.875rem", "1rem", "1rem"]}
+									fontWeight="400"
+									color={theme.text.gray500}
+								>
+									{`${translation("header.balance")} ${
+										selectedToken[1]?.formattedBalance as string
+									}`}
+								</Text>
+							</Flex>
+
+							<Flex alignItems="center" justifyContent="space-between">
+								<Flex
+									mt="0.313rem"
+									alignItems="center"
+									id="1"
+									borderRadius={12}
+									cursor="pointer"
+									_hover={{}}
+									onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+										setButtonId(Number(event.currentTarget.id));
+										onOpenCoin();
+									}}
+								>
+									<Img src={selectedToken[1]?.logoURI} w="6" h="6" />
+									<Text
+										fontSize={["1rem", "1rem", "xl", "xl"]}
+										fontWeight="500"
+										px="3"
+									>
+										{selectedToken[1]?.symbol}
+									</Text>
+									<Icon as={IoIosArrowDown} />
+								</Flex>
+								<Input
+									fontSize={["1.125rem", "1.125rem", "1.375rem", "1.375rem"]}
+									maxW="10rem"
+									display="inline-block"
+									overflow="hidden"
+									whiteSpace="nowrap"
+									textOverflow="ellipsis"
+									border="none"
+									placeholder="0.00"
+									textAlign="right"
+									mt="2"
+									px={["0.1rem", "1.5", "1.5", "1.5"]}
+									ml={["50", "50", "50", "50"]}
+									type="text"
+									onChange={handleOnChangeTokenInputs}
+									name="inputTo"
+									value={tokenInputValue?.inputTo?.value}
+									_focus={{ outline: "none" }}
+								/>
+							</Flex>
+						</Flex>
+						<Flex flexDirection="column" gap="1">
 							<Collapse
-								in={
-									parseFloat(tokenInputValue.inputFrom.value) >
-									parseFloat(selectedToken[0]?.balance as string)
-								}
+								in={isConnected && verifyIfHaveInsufficientLiquidity && !isWrap}
 							>
 								<Text
 									fontSize="sm"
@@ -800,113 +911,214 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									color={theme.text.red400}
 									fontWeight="semibold"
 								>
-									{translation("swapHooks.insufficient")}
-									{selectedToken[0]?.symbol}
-									{translation("swapHooks.balance")}.
-									{translation("swapHooks.validAmount")}.
+									{translation("swapPage.insufficientLiquidity")}
 								</Text>
 							</Collapse>
 						</Flex>
-					)}
-					<Flex
-						margin="0 auto"
-						py="4"
-						onClick={switchTokensPosition}
-						_hover={{ cursor: "pointer" }}
-					>
-						<MdWifiProtectedSetup size={25} color={theme.text.cyanPurple} />
-					</Flex>
-					<Flex
-						borderRadius="2xl"
-						bgColor={theme.bg.blueNavy}
-						flexDirection="column"
-						py="1rem"
-						px="1.25rem"
-						border="1px solid"
-						borderColor={
-							isConnected && verifyIfHaveInsufficientLiquidity && !isWrap
-								? theme.text.red400
-								: "#ff000000"
-						}
-						transition="500ms border ease-in-out"
-					>
-						<Flex
-							flexDirection="row"
-							justifyContent="space-between"
-							alignItems="center"
-						>
-							<Text fontSize="md" fontWeight="500" color={theme.text.mono}>
-								{translation("currencyInputPanel.to")}
-							</Text>
-							<Text
-								fontSize={["0.875rem", "0.875rem", "1rem", "1rem"]}
-								fontWeight="400"
-								color={theme.text.gray500}
-							>
-								{`${translation("header.balance")} ${
-									selectedToken[1]?.formattedBalance as string
-								}`}
-							</Text>
-						</Flex>
-
-						<Flex alignItems="center" justifyContent="space-between">
-							<Flex
-								mt="0.313rem"
-								alignItems="center"
-								id="1"
-								borderRadius={12}
-								cursor="pointer"
-								_hover={{}}
-								onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-									setButtonId(Number(event.currentTarget.id));
-									onOpenCoin();
-								}}
-							>
-								<Img src={selectedToken[1]?.logoURI} w="6" h="6" />
-								<Text
-									fontSize={["1rem", "1rem", "xl", "xl"]}
-									fontWeight="500"
-									px="3"
-								>
-									{selectedToken[1]?.symbol}
-								</Text>
-								<Icon as={IoIosArrowDown} />
-							</Flex>
-							<Input
-								fontSize={["1.125rem", "1.125rem", "1.375rem", "1.375rem"]}
-								maxW="10rem"
-								display="inline-block"
-								overflow="hidden"
-								whiteSpace="nowrap"
-								textOverflow="ellipsis"
-								border="none"
-								placeholder="0.00"
-								textAlign="right"
-								mt="2"
-								px={["0.1rem", "1.5", "1.5", "1.5"]}
-								ml={["50", "50", "50", "50"]}
-								type="text"
-								onChange={handleOnChangeTokenInputs}
-								name="inputTo"
-								value={tokenInputValue?.inputTo?.value}
-								_focus={{ outline: "none" }}
-							/>
-						</Flex>
-					</Flex>
-					<Flex flexDirection="column" gap="1">
 						<Collapse
-							in={isConnected && verifyIfHaveInsufficientLiquidity && !isWrap}
+							in={
+								!!tokenInputValue.inputTo.value &&
+								!!tokenInputValue.inputFrom.value &&
+								!isWrap
+							}
 						>
-							<Text
-								fontSize="sm"
-								pt="2"
-								textAlign="center"
-								color={theme.text.red400}
-								fontWeight="semibold"
+							<Flex
+								w="100%"
+								flexDirection="column"
+								borderRadius="2xl"
+								borderWidth="1px"
+								borderColor={theme.text.cyanPurple}
+								mt="1.5rem"
+								color={theme.text.mono}
 							>
-								{translation("swapPage.insufficientLiquidity")}
-							</Text>
+								<Text
+									fontSize="md"
+									fontWeight="medium"
+									px="1.375rem"
+									py="0.5rem"
+								>
+									{translation("swap.price")}
+								</Text>
+								<Flex
+									flexDirection="row"
+									justifyContent={[
+										"space-around",
+										"space-between",
+										"space-between",
+										"space-between",
+									]}
+									py="0.5rem"
+									borderRadius="2xl"
+									borderTop="1px solid"
+									borderColor={theme.text.cyanPurple}
+									bgColor={theme.bg.bluePink}
+									color={theme.text.mono}
+									px="3"
+									pr={["1.8rem", "2.8rem", "2.8rem", "2.8rem"]}
+								>
+									<Flex
+										fontSize="sm"
+										flexDirection="column"
+										textAlign="center"
+										alignItems="center"
+									>
+										<Text
+											fontWeight="semibold"
+											w={["8rem", "11rem", "11rem", "11rem"]}
+										>
+											{returnedTradeValue?.v2Trade
+												? returnedTradeValue?.v2Trade?.executionPrice?.toSignificant(
+														6
+												  )
+												: "-"}
+										</Text>
+										<Text fontWeight="normal">
+											{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
+										</Text>
+									</Flex>
+									<Flex
+										fontSize="sm"
+										flexDirection="column"
+										textAlign="center"
+										alignItems="center"
+									>
+										<Text
+											fontWeight="semibold"
+											w={["4.2rem", "7rem", "7rem", "7rem"]}
+										>
+											{returnedTradeValue?.v2Trade
+												? returnedTradeValue?.v2Trade?.executionPrice
+														?.invert()
+														.toSignificant(6)
+												: "-"}
+										</Text>
+										<Text fontWeight="normal">
+											{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
+										</Text>
+									</Flex>
+								</Flex>
+							</Flex>
 						</Collapse>
+						<Collapse in={expert && isConnected}>{isExpert}</Collapse>
+						<Collapse in={otherWallet && expert}>{isOtherWallet}</Collapse>
+
+						{!isERC20 && !isWrap && (
+							<Button
+								w="100%"
+								mt={isExpert ? "1.8rem" : "1.5rem"}
+								py={["5", "6", "6", "6"]}
+								px="6"
+								borderRadius="4.1875rem"
+								onClick={
+									!isConnected
+										? () => {
+												onOpenSelectWalletModal();
+										  }
+										: () => {
+												onOpenConfirmSwap();
+												setTxType("swap");
+										  }
+								}
+								bgColor={theme.bg.blueNavyLightness}
+								color={theme.text.cyan}
+								fontSize={["1rem", "1rem", "lg", "lg"]}
+								fontWeight="semibold"
+								disabled={
+									!isConnected
+										? false
+										: !canSubmit || Boolean(returnedTradeValue?.inputErrors)
+								}
+								_hover={
+									canSubmit || !isConnected
+										? { bgColor: theme.bg.bluePurple }
+										: { opacity: "0.3" }
+								}
+							>
+								{isConnected &&
+								(tokenInputValue.typedValue === "" ||
+									parseFloat(tokenInputValue.typedValue) === 0)
+									? translation("swapHooks.enterAmount")
+									: `${swapButtonValidation}`}
+							</Button>
+						)}
+						<Flex>
+							{isERC20 && !isWrap && (
+								<Button
+									w="100%"
+									mt="2rem"
+									py="6"
+									px="6"
+									borderRadius="4.1875rem"
+									onClick={
+										approveValidation && !alreadyApproved
+											? () => {
+													onOpenConfirmSwap();
+													setTxType("approve");
+											  }
+											: () => {
+													onOpenConfirmSwap();
+													setTxType("approve-swap");
+											  }
+									}
+									bgColor={theme.bg.blueNavyLightness}
+									color={theme.text.cyan}
+									fontSize="lg"
+									fontWeight="semibold"
+									disabled={!canSubmit || isPending}
+									_hover={{
+										opacity: 0.9,
+									}}
+								>
+									{isConnected
+										? tokenInputValue.typedValue === "" ||
+										  parseFloat(tokenInputValue.typedValue) === 0
+											? translation("swapHooks.enterAmount")
+											: `${
+													approveValidation && !alreadyApproved
+														? translation("swapPage.approve")
+														: translation("swapPage.swap")
+											  }`
+										: `${swapButtonValidation}`}
+								</Button>
+							)}
+							{isWrap && (
+								<Button
+									w="100%"
+									mt="2rem"
+									py="6"
+									px="6"
+									borderRadius="4.1875rem"
+									onClick={() => {
+										if (!onWrap) return;
+										onWrap();
+										setTxType("wrap");
+									}}
+									bgColor={theme.bg.blueNavyLightness}
+									color={theme.text.cyan}
+									fontSize="lg"
+									fontWeight="semibold"
+									disabled={
+										!canWrap ||
+										(tokenInputValue.currentInputTyped === "inputFrom" &&
+											parseFloat(tokenInputValue.typedValue) >
+												parseFloat(
+													selectedToken[0]?.tokenInfo?.balance as string
+												)) ||
+										(tokenInputValue.currentInputTyped === "inputTo" &&
+											parseFloat(tokenInputValue.typedValue) >
+												parseFloat(
+													selectedToken[1]?.tokenInfo?.balance as string
+												))
+									}
+								>
+									{isConnected &&
+									(tokenInputValue.typedValue === "" ||
+										parseFloat(tokenInputValue.typedValue) === 0)
+										? translation("swapHooks.enterAmount")
+										: `${wrapOrUnwrap}`}
+								</Button>
+							)}
+						</Flex>
 					</Flex>
 					<Collapse
 						in={
@@ -914,331 +1126,133 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							!!tokenInputValue.inputFrom.value &&
 							!isWrap
 						}
+						style={{
+							width: "100%",
+						}}
 					>
 						<Flex
-							w="100%"
 							flexDirection="column"
-							borderRadius="2xl"
-							borderWidth="1px"
-							borderColor={theme.text.cyanPurple}
-							mt="1.5rem"
-							color={theme.text.mono}
+							p="1.5rem"
+							background={theme.bg.blueNavy}
+							w={["100%", "28rem", "28rem", "28rem"]}
+							borderRadius="30px"
+							mt="7"
+							mb={["2", "2", "2", "10rem"]}
+							zIndex="1"
 						>
-							<Text fontSize="md" fontWeight="medium" px="1.375rem" py="0.5rem">
-								{translation("swap.price")}
-							</Text>
-							<Flex
-								flexDirection="row"
-								justifyContent={[
-									"space-around",
-									"space-between",
-									"space-between",
-									"space-between",
-								]}
-								py="0.5rem"
-								borderRadius="2xl"
-								borderTop="1px solid"
-								borderColor={theme.text.cyanPurple}
-								bgColor={theme.bg.bluePink}
-								color={theme.text.mono}
-								px="3"
-								pr={["1.8rem", "2.8rem", "2.8rem", "2.8rem"]}
-							>
+							<Flex flexDirection="column">
 								<Flex
-									fontSize="sm"
-									flexDirection="column"
-									textAlign="center"
+									flexDirection="row"
+									justifyContent="space-between"
 									alignItems="center"
 								>
-									<Text
-										fontWeight="semibold"
-										w={["8rem", "11rem", "11rem", "11rem"]}
-									>
-										{returnedTradeValue?.v2Trade
-											? returnedTradeValue?.v2Trade?.executionPrice?.toSignificant(
-													6
-											  )
+									<Flex alignItems="center">
+										<Text fontWeight="normal" mr="1" fontSize="sm">
+											{translation("swap.minimumReceived")}
+										</Text>
+
+										<TooltipComponent
+											label={translation("swap.transactionRevertHelper")}
+											icon={MdHelpOutline}
+										/>
+									</Flex>
+									<Text fontWeight="medium" fontSize="sm">
+										{returnedTradeValue?.v2Trade &&
+										returnedTradeValue?.slippageAdjustedAmounts
+											? `${minimumReceived} ${returnedTradeValue?.v2Trade?.outputAmount?.currency.symbol}`
 											: "-"}
 									</Text>
-									<Text fontWeight="normal">
-										{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
-									</Text>
 								</Flex>
 								<Flex
-									fontSize="sm"
-									flexDirection="column"
-									textAlign="center"
-									alignItems="center"
+									flexDirection="row"
+									justifyContent="space-between"
+									pt="0.75rem"
 								>
-									<Text
-										fontWeight="semibold"
-										w={["4.2rem", "7rem", "7rem", "7rem"]}
-									>
-										{returnedTradeValue?.v2Trade
-											? returnedTradeValue?.v2Trade?.executionPrice
-													?.invert()
-													.toSignificant(6)
-											: "-"}
-									</Text>
-									<Text fontWeight="normal">
-										{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
-									</Text>
-								</Flex>
-							</Flex>
-						</Flex>
-					</Collapse>
-					<Collapse in={expert && isConnected}>{isExpert}</Collapse>
-					<Collapse in={otherWallet && expert}>{isOtherWallet}</Collapse>
-
-					{!isERC20 && !isWrap && (
-						<Button
-							w="100%"
-							mt={isExpert ? "1.8rem" : "1.5rem"}
-							py={["5", "6", "6", "6"]}
-							px="6"
-							borderRadius="67px"
-							onClick={
-								!isConnected
-									? () => {
-											onOpenSelectWalletModal();
-									  }
-									: () => {
-											onOpenConfirmSwap();
-											setTxType("swap");
-									  }
-							}
-							bgColor={theme.bg.blueNavyLightness}
-							color={theme.text.cyan}
-							fontSize={["1rem", "1rem", "lg", "lg"]}
-							fontWeight="semibold"
-							disabled={
-								!isConnected
-									? false
-									: !canSubmit || Boolean(returnedTradeValue?.inputErrors)
-							}
-							_hover={
-								canSubmit || !isConnected
-									? { bgColor: theme.bg.bluePurple }
-									: { opacity: "0.3" }
-							}
-						>
-							{isConnected &&
-							(tokenInputValue.typedValue === "" ||
-								parseFloat(tokenInputValue.typedValue) === 0)
-								? translation("swapHooks.enterAmount")
-								: `${swapButtonValidation}`}
-						</Button>
-					)}
-					<Flex>
-						{isERC20 && !isWrap && (
-							<Button
-								w="100%"
-								mt="2rem"
-								py="6"
-								px="6"
-								borderRadius="67px"
-								onClick={
-									approveValidation && !alreadyApproved
-										? () => {
-												onOpenConfirmSwap();
-												setTxType("approve");
-										  }
-										: () => {
-												onOpenConfirmSwap();
-												setTxType("approve-swap");
-										  }
-								}
-								bgColor={theme.bg.blueNavyLightness}
-								color={theme.text.cyan}
-								fontSize="lg"
-								fontWeight="semibold"
-								disabled={!canSubmit || isPending}
-								_hover={{
-									opacity: 0.9,
-								}}
-							>
-								{isConnected
-									? tokenInputValue.typedValue === "" ||
-									  parseFloat(tokenInputValue.typedValue) === 0
-										? translation("swapHooks.enterAmount")
-										: `${
-												approveValidation && !alreadyApproved
-													? translation("swapPage.approve")
-													: translation("swapPage.swap")
-										  }`
-									: `${swapButtonValidation}`}
-							</Button>
-						)}
-						{isWrap && (
-							<Button
-								w="100%"
-								mt="2rem"
-								py="6"
-								px="6"
-								borderRadius="67px"
-								onClick={() => {
-									if (!onWrap) return;
-									onWrap();
-									setTxType("wrap");
-								}}
-								bgColor={theme.bg.blueNavyLightness}
-								color={theme.text.cyan}
-								fontSize="lg"
-								fontWeight="semibold"
-								disabled={
-									!canWrap ||
-									(tokenInputValue.currentInputTyped === "inputFrom" &&
-										parseFloat(tokenInputValue.typedValue) >
-											parseFloat(
-												selectedToken[0]?.tokenInfo?.balance as string
-											)) ||
-									(tokenInputValue.currentInputTyped === "inputTo" &&
-										parseFloat(tokenInputValue.typedValue) >
-											parseFloat(
-												selectedToken[1]?.tokenInfo?.balance as string
-											))
-								}
-							>
-								{isConnected &&
-								(tokenInputValue.typedValue === "" ||
-									parseFloat(tokenInputValue.typedValue) === 0)
-									? translation("swapHooks.enterAmount")
-									: `${wrapOrUnwrap}`}
-							</Button>
-						)}
-					</Flex>
-				</Flex>
-				<Collapse
-					in={
-						!!tokenInputValue.inputTo.value &&
-						!!tokenInputValue.inputFrom.value &&
-						!isWrap
-					}
-					style={{
-						width: "100%",
-					}}
-				>
-					<Flex
-						flexDirection="column"
-						p="1.5rem"
-						background={theme.bg.blueNavy}
-						w={["100%", "28rem", "28rem", "28rem"]}
-						borderRadius="30px"
-						mt="7"
-						mb={["2", "2", "2", "10rem"]}
-						zIndex="1"
-					>
-						<Flex flexDirection="column">
-							<Flex
-								flexDirection="row"
-								justifyContent="space-between"
-								alignItems="center"
-							>
-								<Flex alignItems="center">
-									<Text fontWeight="normal" mr="1" fontSize="sm">
-										{translation("swap.minimumReceived")}
-									</Text>
-
-									<TooltipComponent
-										label={translation("swap.transactionRevertHelper")}
-										icon={MdHelpOutline}
+									<Flex alignItems="center">
+										<Text fontWeight="normal" mr="1" fontSize="sm">
+											{translation("swap.priceImpact")}
+										</Text>
+										<TooltipComponent
+											label={translation("swap.priceImpactHelper")}
+											icon={MdHelpOutline}
+										/>
+									</Flex>
+									<FormattedPriceImpat
+										priceImpact={returnedTradeValue?.v2Trade?.priceImpact}
 									/>
 								</Flex>
-								<Text fontWeight="medium" fontSize="sm">
-									{returnedTradeValue?.v2Trade &&
-									returnedTradeValue?.slippageAdjustedAmounts
-										? `${minimumReceived} ${returnedTradeValue?.v2Trade?.outputAmount?.currency.symbol}`
-										: "-"}
-								</Text>
-							</Flex>
-							<Flex
-								flexDirection="row"
-								justifyContent="space-between"
-								pt="0.75rem"
-							>
-								<Flex alignItems="center">
-									<Text fontWeight="normal" mr="1" fontSize="sm">
-										{translation("swap.priceImpact")}
-									</Text>
-									<TooltipComponent
-										label={translation("swap.priceImpactHelper")}
-										icon={MdHelpOutline}
-									/>
-								</Flex>
-								<FormattedPriceImpat
-									priceImpact={returnedTradeValue?.v2Trade?.priceImpact}
-								/>
-							</Flex>
-							<Flex
-								flexDirection="row"
-								justifyContent="space-between"
-								pt="0.75rem"
-								alignItems="center"
-							>
 								<Flex
-									w={["70%", "70%", "max-content", "max-content"]}
+									flexDirection="row"
+									justifyContent="space-between"
+									pt="0.75rem"
 									alignItems="center"
 								>
-									<Text
-										fontWeight="normal"
-										mr="1"
-										fontSize="sm"
-										w={["60%", "max-content", "max-content", "max-content"]}
+									<Flex
+										w={["70%", "70%", "max-content", "max-content"]}
+										alignItems="center"
 									>
-										{translation("swap.liquidityProviderFee")}
-									</Text>
-
-									<TooltipComponent
-										label={translation("swap.liquidityProviderHelper")}
-										icon={MdHelpOutline}
-									/>
-								</Flex>
-								<Text fontWeight="medium" fontSize="sm" textAlign="right">
-									{realizedLPFee
-										? `${realizedLPFee.toSignificant(4)} ${
-												returnedTradeValue?.v2Trade?.inputAmount.currency.symbol
-										  }`
-										: "-"}
-								</Text>
-							</Flex>
-							{returnedTradeValue?.v2TradeRoute &&
-								returnedTradeValue.v2TradeRoute.length > 2 && (
-									<Flex flexDirection="column" w="100%">
-										<Flex
-											flexDirection="row"
-											justifyContent="space-between"
-											pt={["1rem", "1rem", "0", "0"]}
+										<Text
+											fontWeight="normal"
+											mr="1"
+											fontSize="sm"
+											w={["60%", "max-content", "max-content", "max-content"]}
 										>
-											<Flex alignItems="center" pt="1.5rem" pb="0.3rem">
-												<Text fontSize="sm" mr="1" fontWeight="normal">
-													{translation("swap.route")}
-												</Text>
+											{translation("swap.liquidityProviderFee")}
+										</Text>
 
-												<TooltipComponent
-													label={translation("swap.routingHelper")}
-													icon={MdHelpOutline}
+										<TooltipComponent
+											label={translation("swap.liquidityProviderHelper")}
+											icon={MdHelpOutline}
+										/>
+									</Flex>
+									<Text fontWeight="medium" fontSize="sm" textAlign="right">
+										{realizedLPFee
+											? `${realizedLPFee.toSignificant(4)} ${
+													returnedTradeValue?.v2Trade?.inputAmount.currency
+														.symbol
+											  }`
+											: "-"}
+									</Text>
+								</Flex>
+								{returnedTradeValue?.v2TradeRoute &&
+									returnedTradeValue.v2TradeRoute.length > 2 && (
+										<Flex flexDirection="column" w="100%">
+											<Flex
+												flexDirection="row"
+												justifyContent="space-between"
+												pt={["1rem", "1rem", "0", "0"]}
+											>
+												<Flex alignItems="center" pt="1.5rem" pb="0.3rem">
+													<Text fontSize="sm" mr="1" fontWeight="normal">
+														{translation("swap.route")}
+													</Text>
+
+													<TooltipComponent
+														label={translation("swap.routingHelper")}
+														icon={MdHelpOutline}
+													/>
+												</Flex>
+											</Flex>
+											<Flex
+												border="1px solid rgba(160, 174, 192, 1)"
+												py="2.5"
+												px="1"
+												borderRadius="xl"
+												alignItems="center"
+												flexWrap="wrap"
+												mt="2"
+											>
+												<TradeRouteComponent
+													transactionRoute={returnedTradeValue?.v2TradeRoute}
 												/>
 											</Flex>
 										</Flex>
-										<Flex
-											border="1px solid rgba(160, 174, 192, 1)"
-											py="2.5"
-											px="1"
-											borderRadius="xl"
-											alignItems="center"
-											flexWrap="wrap"
-											mt="2"
-										>
-											<TradeRouteComponent
-												transactionRoute={returnedTradeValue?.v2TradeRoute}
-											/>
-										</Flex>
-									</Flex>
-								)}
+									)}
+							</Flex>
 						</Flex>
-					</Flex>
-				</Collapse>
-			</Flex>
+					</Collapse>
+				</Flex>
+			</SlideFade>
 
 			<Flex
 				h="max-content"

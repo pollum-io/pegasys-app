@@ -38,3 +38,10 @@ export interface ITransactionCardsMockedData {
 	tokenAmount: string;
 	time: string;
 }
+
+export interface ISocialInfoData {
+	id: number;
+	name: string;
+	href?: string;
+	link?: string;
+}

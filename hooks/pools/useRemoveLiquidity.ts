@@ -53,7 +53,7 @@ export const UseRemoveLiquidity = (
 	const deadline = useTransactionDeadline(transactionDeadlineValue);
 	const { toast } = useToasty();
 	const [currencyA, currencyB] = [tradeTokens[0], tradeTokens[1]];
-	const chainRouter = PegasysContracts[chainId];
+	const chainRouter = PegasysContracts[chainId].ROUTER_ADDRESS;
 
 	const pairContract =
 		pairAddress &&

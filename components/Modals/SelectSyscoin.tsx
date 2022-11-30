@@ -11,7 +11,6 @@ import { FunctionComponent } from "react";
 import { SwitchToSyscoin } from "components/Buttons";
 import { IoIosInformationCircle } from "react-icons/io";
 import { MdOutlineClose } from "react-icons/md";
-import { useWallet } from "pegasys-services";
 import { useTranslation } from "react-i18next";
 
 interface IModal {
@@ -21,13 +20,12 @@ interface IModal {
 
 export const SelectSyscoin: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
-	const { walletError } = useWallet();
 	const theme = usePicasso();
 	const { t: translation } = useTranslation();
 	const { colorMode } = useColorMode();
 
 	return (
-		<Modal blockScrollOnMount isOpen={isOpen || walletError} onClose={onClose}>
+		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
 				borderTopRadius="30px"

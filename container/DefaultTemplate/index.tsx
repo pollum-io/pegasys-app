@@ -1,5 +1,5 @@
-import { Flex, useColorMode, useMediaQuery } from "@chakra-ui/react";
-import { FunctionComponent, ReactNode, useEffect, useMemo } from "react";
+import { Flex, useColorMode } from "@chakra-ui/react";
+import { FunctionComponent, ReactNode } from "react";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Header } from "components";
 import {
@@ -27,15 +27,6 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 }) => {
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
-	const [isMobile] = useMediaQuery("(max-width: 480px)");
-
-	const className = useMemo(() => {
-		if (colorMode === "dark") {
-			return "scrollbarDark";
-		}
-
-		return "scrollbarLight";
-	}, [colorMode]);
 
 	return (
 		<PegasysProvider

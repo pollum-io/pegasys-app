@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { SelectSyscoin, SelectWallets } from "components/Modals";
 import { useModal, usePicasso } from "hooks";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect } from "react";
 import { AddressInfoButton } from "components/Buttons";
 import { shortAddress } from "utils";
 import { ExpertMode } from "components/Header/ExpertMode";
@@ -43,6 +43,10 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 	const isPending = approvalState.status === ApprovalState.PENDING;
 	const { colorMode } = useColorMode();
 	const { t: translation } = useTranslation();
+
+	useEffect(() => {
+		if (walletError) onOpenSelectSyscoin();
+	}, [walletError]);
 
 	return (
 		<>

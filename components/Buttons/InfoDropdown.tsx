@@ -1,175 +1,139 @@
-import {
-	Accordion,
-	AccordionButton,
-	AccordionIcon,
-	AccordionItem,
-	AccordionPanel,
-	Box,
-	Flex,
-	Icon,
-	Link,
-} from "@chakra-ui/react";
+import { Collapse, Flex, Icon, Link, Text } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { MdOutlineCallMade, MdOutlineModeComment } from "react-icons/md";
+import { ISocialInfoData } from "types";
+
+const socialInfos: ISocialInfoData[] = [
+	{ id: 1, name: "Discord", link: "https://discord.com/invite/UzjWbWWERz" },
+	{ id: 2, name: "Telegram", link: "https://t.me/joinchat/GNosBd1_76E5MTVh" },
+	{ id: 3, name: "Twitter", link: "https://twitter.com/PegasysDEX" },
+];
+
+const bridgeInfos: ISocialInfoData[] = [
+	{ id: 1, name: "Multichain", href: "https://app.multichain.org/#/router" },
+	{ id: 2, name: "Syscoin", href: "https://bridge.syscoin.org/" },
+];
 
 export const InfoDropdown: FunctionComponent = () => {
 	const theme = usePicasso();
-
-	const socialInfos = [
-		{
-			name: "Discord",
-			link: "https://discord.com/invite/UzjWbWWERz",
-		},
-		{
-			name: "Telegram",
-			link: "https://t.me/joinchat/GNosBd1_76E5MTVh",
-		},
-		{
-			name: "Twitter",
-			link: "https://twitter.com/PegasysDEX",
-		},
-	];
-
-	const bridgeInfos = [
-		{
-			name: "Multichain",
-			href: "https://app.multichain.org/#/router",
-		},
-		{
-			name: "Syscoin",
-			href: "https://bridge.syscoin.org/",
-		},
-	];
+	const [state1, setState1] = useState<boolean>();
+	const [state2, setState2] = useState<boolean>();
 
 	return (
-		<Accordion allowMultiple>
-			<AccordionItem border="none">
-				<AccordionButton
-					pl={["24", "6", "6", "6"]}
-					pr={["24", "6", "6", "6"]}
-					py={["2", "2", "1", "1"]}
-					_expanded={{
-						bg: theme.bg.blackLightness,
-						color: theme.text.cyanPurple,
-					}}
-					_focus={{
-						outline: "none",
-					}}
-					_hover={{
-						color: theme.text.cyanPurple,
-						backgroundColor: "transparent",
-					}}
+		<Flex flexDir="column" pt="0" pb="2">
+			<Flex
+				flexDir="column"
+				py="4"
+				bgColor={state1 ? theme.bg.blackLightness : "transparent"}
+				w={["100vw", "100vw", "unset", "unset"]}
+			>
+				<Flex
+					align="center"
+					gap="2"
+					pb="1"
+					onClick={() => setState1(!state1)}
+					_hover={{ cursor: "pointer", color: theme.text.cyanPurple }}
+					color={state1 ? theme.text.cyanPurple : theme.text.mono}
 				>
-					<Icon as={MdOutlineCallMade} />
-					<Box
-						flex="1"
-						pl="0.5rem"
-						pr="10"
-						textAlign="left"
-						fontSize="md"
-						fontWeight="normal"
-						alignItems="center"
-						color={theme.text.mono}
-						m="0"
-						_hover={{
-							color: theme.text.cyanPurple,
-							backgroundColor: "transparent",
-						}}
-						_expanded={{
-							bg: theme.bg.blackLightness,
-							color: theme.text.cyanPurple,
-						}}
-					>
-						Bridge
-					</Box>
-					<AccordionIcon />
-				</AccordionButton>
-				<Flex flexDirection="column">
-					<AccordionPanel pb={4} bgColor={theme.bg.blackLightness}>
-						{bridgeInfos.map((links, index) => (
-							<Flex key={links.name + Number(index)}>
-								<Link
-									position="relative"
-									left="6"
-									href={links.href}
-									target="_blank"
-									_hover={{
-										textDecoration: "none",
-										bgColor: "transparent",
-										color: theme.text.cyanPurple,
-									}}
-									_active={{ bgColor: "transparent" }}
-									py="1"
-								>
-									{links.name}
-								</Link>
-							</Flex>
-						))}
-					</AccordionPanel>
+					<Icon
+						position="absolute"
+						left={["6rem", "9rem", "6", "6"]}
+						as={MdOutlineModeComment}
+					/>
+					<Text px={["7.5rem", "10.5rem", "12", "12"]}>Socials</Text>
+					{state1 ? (
+						<Icon
+							position={["absolute", "absolute", "relative", "relative"]}
+							right={["5rem", "9rem", "0.7rem", "0.7rem"]}
+							as={IoIosArrowUp}
+						/>
+					) : (
+						<Icon
+							position={["absolute", "absolute", "relative", "relative"]}
+							right={["5rem", "9rem", "0.7rem", "0.7rem"]}
+							as={IoIosArrowDown}
+						/>
+					)}
 				</Flex>
-			</AccordionItem>
-			<AccordionItem border="none">
-				<AccordionButton
-					pl={["24", "6", "6", "6"]}
-					pr={["24", "6", "6", "6"]}
-					py={["2", "2", "1", "1"]}
-					_expanded={{
-						bg: theme.bg.blackLightness,
-						color: theme.text.cyanPurple,
-					}}
-					_focus={{
-						outline: "none",
-					}}
-					_hover={{
-						color: theme.text.cyanPurple,
-						backgroundColor: "transparent",
-					}}
+				<Collapse in={state1}>
+					<Flex flexDir="column" py="1">
+						{socialInfos.map((social: ISocialInfoData) => (
+							<Link
+								key={social.id}
+								href={social.link}
+								target="_blank"
+								_hover={{ textDecoration: "none", bgColor: "transparent" }}
+								_active={{ bgColor: "transparent" }}
+							>
+								<Text
+									px={["7.5rem", "10.5rem", "12", "12"]}
+									pb="1"
+									_hover={{ cursor: "pointer", color: theme.text.cyanPurple }}
+								>
+									{social.name}
+								</Text>
+							</Link>
+						))}
+					</Flex>
+				</Collapse>
+			</Flex>
+			<Flex
+				flexDir="column"
+				bgColor={state2 ? theme.bg.blackLightness : "transparent"}
+				w={["100vw", "100vw", "unset", "unset"]}
+			>
+				<Flex
+					align="center"
+					gap="2"
+					pb="1"
+					onClick={() => setState2(!state2)}
+					_hover={{ cursor: "pointer", color: theme.text.cyanPurple }}
+					color={state2 ? theme.text.cyanPurple : theme.text.mono}
 				>
-					<Icon as={MdOutlineModeComment} />
-					<Box
-						flex="1"
-						pl="0.5rem"
-						pr="10"
-						textAlign="left"
-						fontSize="md"
-						fontWeight="normal"
-						alignItems="center"
-						color={theme.text.mono}
-						m="0"
-						_hover={{
-							color: theme.text.cyanPurple,
-							backgroundColor: "transparent",
-						}}
-					>
-						Social
-					</Box>
-					<AccordionIcon />
-				</AccordionButton>
-				<Flex flexDirection="column">
-					<AccordionPanel pb={4} bgColor={theme.bg.blackLightness}>
-						{socialInfos.map((links, index) => (
-							<Flex key={links.name + Number(index)}>
-								<Link
-									href="https://app.multichain.org/#/router"
-									target="_blank"
-									position="relative"
-									left={["6.5rem", "9.5rem", "6", "6"]}
-									_hover={{
-										textDecoration: "none",
-										bgColor: "transparent",
-										color: theme.text.cyanPurple,
-									}}
-									_active={{ bgColor: "transparent" }}
-									py="1"
-								>
-									{links.name}
-								</Link>
-							</Flex>
-						))}
-					</AccordionPanel>
+					<Icon
+						position="absolute"
+						left={["6rem", "9rem", "6", "6"]}
+						as={MdOutlineCallMade}
+					/>
+					<Text px={["7.5rem", "10.5rem", "12", "12"]}>Bridges</Text>
+					{state2 ? (
+						<Icon
+							position={["absolute", "absolute", "relative", "relative"]}
+							right={["5rem", "9rem", "1rem", "1rem"]}
+							as={IoIosArrowUp}
+						/>
+					) : (
+						<Icon
+							position={["absolute", "absolute", "relative", "relative"]}
+							right={["5rem", "9rem", "1rem", "1rem"]}
+							as={IoIosArrowDown}
+						/>
+					)}
 				</Flex>
-			</AccordionItem>
-		</Accordion>
+				<Collapse in={state2}>
+					<Flex flexDir="column" py="2">
+						{bridgeInfos.map((bridge: ISocialInfoData) => (
+							<Link
+								key={bridge.id}
+								href={bridge.link}
+								target="_blank"
+								_hover={{ textDecoration: "none", bgColor: "transparent" }}
+								_active={{ bgColor: "transparent" }}
+							>
+								<Text
+									px={["7.5rem", "10.5rem", "12", "12"]}
+									pb="1"
+									_hover={{ cursor: "pointer", color: theme.text.cyanPurple }}
+								>
+									{bridge.name}
+								</Text>
+							</Link>
+						))}
+					</Flex>
+				</Collapse>
+			</Flex>
+		</Flex>
 	);
 };
