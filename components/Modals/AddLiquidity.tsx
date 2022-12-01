@@ -908,9 +908,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								py={["4", "4", "6", "6"]}
 								px="6"
 								borderRadius="67px"
-								disabled={
-									invalidPair || emptyInput || isPending || inputValidation
-								}
+								disabled={invalidPair || emptyInput || inputValidation}
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
 								fontSize="lg"
