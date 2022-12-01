@@ -16,8 +16,13 @@ import { HiOutlineMenu } from "react-icons/hi";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
 import { useRouter } from "next/router";
 import { getTotalSupply, formattedNum } from "utils";
-import { useEarn, useWallet, usePegasys } from "pegasys-services";
-import { ChainId, Token } from "@pollum-io/pegasys-sdk";
+import {
+	useWallet,
+	usePegasys,
+	StakeServices,
+	ContractFramework,
+} from "pegasys-services";
+import { ChainId, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
@@ -42,9 +47,9 @@ export const Header: React.FC = () => {
 	const [isMobile] = useMediaQuery("(max-width: 750px)");
 	const btnRef: any = React.useRef();
 	const { expert } = usePegasys();
-	const { address, chainId, provider, signer } = useWallet();
+	const { address, chainId, provider, signer, isConnected } = useWallet();
 	const { userTokensBalance } = useTokens();
-	const { earnOpportunities } = useEarn();
+	const [unclaimed, setUnclaimed] = useState<TokenAmount>();
 	const [psysInfo, setPsysInfo] = useState({
 		balance: "0",
 		unclaimed: "0",
@@ -79,6 +84,25 @@ export const Header: React.FC = () => {
 			url: "/stake",
 		},
 	];
+	const stakeContract = useMemo(
+		() =>
+			ContractFramework.StakeContract({
+				chainId: chainId ?? ChainId.NEVM,
+			}),
+		[chainId]
+	);
+
+	useMemo(async () => {
+		if (address) {
+			const unclaimedValue = await StakeServices.getStakeOpportunities({
+				stakeContract,
+				chainId: chainId ?? ChainId.NEVM,
+				walletAddress: address,
+			});
+
+			setUnclaimed(unclaimedValue[0]?.unclaimedAmount);
+		}
+	}, [chainId, isConnected]);
 
 	useMemo(async () => {
 		if (PSYS?.formattedBalance !== "0") {
@@ -101,15 +125,10 @@ export const Header: React.FC = () => {
 
 		const pair = pairs?.[0]?.[1];
 
-		if (
-			earnOpportunities[0]?.unclaimedAmount.toSignificant(6) &&
-			earnOpportunities[0]?.unclaimedAmount.toSignificant(6) !== "0"
-		) {
+		if (unclaimed?.toSignificant(6) && unclaimed?.toSignificant(6) !== "0") {
 			setPsysInfo(prevState => ({
 				...prevState,
-				unclaimed: earnOpportunities[0]?.unclaimedAmount.toSignificant(
-					6
-				) as string,
+				unclaimed: unclaimed?.toSignificant(6) as string,
 			}));
 		}
 
@@ -120,7 +139,7 @@ export const Header: React.FC = () => {
 			) as string,
 			price: pair?.priceOf(pair.token1).toSignificant(6) as string,
 		}));
-	}, [userTokensBalance, earnOpportunities]);
+	}, [userTokensBalance, unclaimed]);
 
 	return (
 		<Flex
