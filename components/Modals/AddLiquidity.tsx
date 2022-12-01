@@ -34,7 +34,6 @@ import {
 	useToasty,
 } from "pegasys-services";
 import {
-	addTransaction,
 	getTokenAllowance,
 	getTotalSupply,
 	tryParseAmount,
@@ -123,17 +122,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const [currPendingTx, setCurrPendingTx] = useState<string>("");
 	const [isApproved, setIsApproved] = useState<boolean>(false);
 	const { setCurrentLpAddress } = useWallet();
-	const {
-		pendingTxs,
-		finishedTxs,
-		addTransactions,
-		// setTransactions,
-		// transactions,
-		// setApprovalState,
-		// approvalState,
-		// setCurrentTxHash,
-		// setCurrentSummary,
-	} = useTransaction();
+	const { pendingTxs, finishedTxs, addTransactions } = useTransaction();
 	const { address, chainId, isConnected, signer, provider } = psUseWallet();
 	const { userSlippageTolerance, userTransactionDeadlineValue } = usePegasys();
 	const { toast } = useToasty();
@@ -171,7 +160,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		(selectedToken[0]?.symbol === "WSYS" && selectedToken[1]?.symbol === "SYS");
 
 	const isPending = useMemo(() => {
-		if (pendingTxs[chainId ?? ChainId.NEVM]?.length) {
+		if (pendingTxs.length) {
 			return true;
 		}
 
@@ -415,9 +404,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		})
 			.then(res => {
 				if (res?.spender) {
-					// setApprovalState({ type: "approve", status: ApprovalState.PENDING });
 					setApproveTokenStatus(ApprovalState.APPROVED);
-					// setCurrentTxHash(res?.hash);
 					addTransactions({
 						hash: res.hash,
 						summary: `Approve ${tokenToApp?.symbol}`,
@@ -460,7 +447,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 				toast({
 					id: "toast1",
 					position: "top-right",
-					status: "success",
+					status: "error",
 					title: "error while adding liquidity",
 				});
 				console.log(err);
@@ -470,9 +457,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const approveAddLiquidityPendingTxs = useMemo(() => {
 		if (!chainId) return [];
 
-		return (pendingTxs[chainId] ?? []).filter(
-			tx => tx.service === "poolsApproveAddLiquidity"
-		);
+		return pendingTxs.filter(tx => tx.service === "poolsApproveAddLiquidity");
 	}, [pendingTxs, chainId]);
 
 	useEffect(() => {
@@ -485,9 +470,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 				);
 				setIsApproved(false);
 			} else if (currPendingTx) {
-				const currFullTx = finishedTxs[chainId].find(
-					tx => tx.hash === currPendingTx
-				);
+				const currFullTx = finishedTxs.find(tx => tx.hash === currPendingTx);
 
 				if (currFullTx?.success) {
 					setIsApproved(true);

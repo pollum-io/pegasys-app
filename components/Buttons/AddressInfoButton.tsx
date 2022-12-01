@@ -12,14 +12,9 @@ import {
 	Text,
 	useColorMode,
 } from "@chakra-ui/react";
-import {
-	useToasty,
-	useWallet,
-	// ApprovalState,
-	useTransaction,
-} from "pegasys-services";
+import { useToasty, useWallet, useTransaction } from "pegasys-services";
 import { usePicasso } from "hooks";
-import React, { FunctionComponent, useState, useEffect } from "react";
+import React, { FunctionComponent } from "react";
 import Jazzicon from "react-jazzicon";
 import {
 	MdContentCopy,
@@ -28,7 +23,6 @@ import {
 } from "react-icons/md";
 import { shortAddress, copyToClipboard, openWalletOnExplorer } from "utils";
 import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
-import { ITransactionResponse } from "types";
 import { useTranslation } from "react-i18next";
 
 interface IModal {
@@ -104,7 +98,6 @@ const TransactionRow: React.FC<{
 export const AddressInfoButton: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const theme = usePicasso();
-	const { colorMode } = useColorMode();
 	const { pendingTxs, finishedTxs, clearAll } = useTransaction();
 	const { toast } = useToasty();
 	const { address, chainId, connectorSelected, disconnect } = useWallet();
@@ -121,33 +114,6 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 			description: translation("toasts.addressCopied"),
 		});
 	};
-
-	const explorerURL =
-		chainId === 5700
-			? "https://tanenbaum.io/tx"
-			: chainId === 57
-			? "https://explorer.syscoin.org/tx"
-			: "https://explorer.testnet.rollux.com/tx";
-
-	// useEffect(() => {
-	// 	if (!isEmpty) {
-	// 		// eslint-disable-next-line
-	// 		const currentTxs: ITransactionResponse[] = [
-	// 			...Object.values(transactions[5700]),
-	// 			...Object.values(transactions[57]),
-	// 			...Object.values(transactions[2814]),
-	// 		];
-
-	// 		setTxs(currentTxs);
-	// 	}
-	// }, [
-	// 	transactions,
-	// 	isEmpty,
-	// 	transactions[57],
-	// 	transactions[5700],
-	// 	transactions[2814],
-	// 	isPending,
-	// ]);
 
 	return (
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
@@ -284,8 +250,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 					h="max-content"
 					pb="1.4rem"
 				>
-					{!chainId ||
-					(!pendingTxs[chainId]?.length && !finishedTxs[chainId]?.length) ? (
+					{!chainId || (!pendingTxs.length && !finishedTxs.length) ? (
 						<Text fontSize="sm" fontWeight="semibold" color={theme.text.mono}>
 							{translation("accountDetails.transactionAppear")}
 						</Text>
@@ -313,7 +278,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 							</Flex>
 
 							<Flex flexDirection="column" gap={1} w="100%">
-								{(pendingTxs[chainId] ?? []).map(tx => (
+								{pendingTxs.map(tx => (
 									<TransactionRow
 										key={tx.hash}
 										hash={tx.hash}
@@ -321,7 +286,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 										pending
 									/>
 								))}
-								{(finishedTxs[chainId] ?? []).map(tx => (
+								{finishedTxs.map(tx => (
 									<TransactionRow
 										key={tx.hash}
 										hash={tx.hash}

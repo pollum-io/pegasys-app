@@ -12,14 +12,8 @@ import { FunctionComponent, useEffect, useMemo } from "react";
 import { AddressInfoButton } from "components/Buttons";
 import { shortAddress } from "utils";
 import { ExpertMode } from "components/Header/ExpertMode";
-import {
-	useWallet,
-	usePegasys,
-	// ApprovalState,
-	useTransaction,
-} from "pegasys-services";
+import { useWallet, usePegasys, useTransaction } from "pegasys-services";
 import { useTranslation } from "react-i18next";
-import { ChainId } from "@pollum-io/pegasys-sdk";
 import { AddressButton } from "./AddressButton";
 
 export const WalletButton: FunctionComponent<ButtonProps> = props => {
@@ -48,7 +42,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 	}, [walletError]);
 
 	const isPending = useMemo(() => {
-		if (pendingTxs[chainId ?? ChainId.NEVM]?.length) {
+		if (pendingTxs.length) {
 			return true;
 		}
 
@@ -133,7 +127,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						justifyContent="center"
 					>
 						<Text fontSize="14px" color="white">
-							{pendingTxs[chainId ?? ChainId.NEVM]?.length ?? 0}
+							{pendingTxs.length ?? 0}
 						</Text>
 						<Flex
 							className="circleLoading"

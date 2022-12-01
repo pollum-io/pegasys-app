@@ -1,7 +1,6 @@
 import React, { createContext, useEffect, useMemo, useState } from "react";
 
-import { ChainId, TokenAmount } from "@pollum-io/pegasys-sdk";
-import { addTransaction } from "utils";
+import { TokenAmount } from "@pollum-io/pegasys-sdk";
 import { PegasysContracts, ZERO_ADDRESS } from "../constants";
 import { GovernanceServices } from "../services";
 import { useWallet, useTransaction, useToasty } from "../hooks";
@@ -9,9 +8,8 @@ import {
 	IGovernanceProviderValue,
 	IGovernanceProviderProps,
 	IFormattedProposal,
-	ApprovalState,
 } from "../dto";
-import { ContractFramework, PersistentFramework } from "../frameworks";
+import { ContractFramework } from "../frameworks";
 
 export const GovernanceContext = createContext({} as IGovernanceProviderValue);
 
@@ -28,14 +26,8 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 	const [currentVotes, setCurrentVotes] = useState<TokenAmount | null>(null);
 	const [selectedProposals, setSelectedProposals] =
 		useState<IFormattedProposal | null>(null);
-	const { chainId, provider, address } = useWallet();
-	const {
-		// setTransactions,
-		// transactions,
-		// setCurrentTxHash,
-		// setApprovalState,
-		addTransactions,
-	} = useTransaction();
+	const { chainId, address } = useWallet();
+	const { addTransactions } = useTransaction();
 	const { toast } = useToasty();
 
 	const governanceContract = useMemo(() => {
@@ -72,28 +64,11 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 			if (res) {
 				const { hash } = res;
 
-				// const walletInfo = {
-				// 	walletAddress: address,
-				// 	chainId: ChainId.NEVM,
-				// 	provider,
-				// };
-
 				addTransactions({
 					hash,
 					service: type,
 					summary,
 				});
-
-				// addTransaction(response, walletInfo, setTransactions, transactions, {
-				// 	summary,
-				// 	finished: false,
-				// });
-				// setCurrentTxHash(hash);
-
-				// setApprovalState({
-				// 	type,
-				// 	status: ApprovalState.PENDING,
-				// });
 			}
 		} catch (e) {
 			toast({

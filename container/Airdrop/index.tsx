@@ -22,22 +22,14 @@ import { MdOutlineCallMade } from "react-icons/md";
 import { BorderAnimation } from "components/Airdrop/BorderAnimation";
 import { ChainId, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
-import { useWallet, ApprovalState, useTransaction } from "pegasys-services";
+import { useWallet, useTransaction } from "pegasys-services";
 import { useTranslation } from "react-i18next";
 
 export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
-	const {
-		pendingTxs,
-		finishedTxs,
-		// setCurrentTxHash,
-		// setApprovalState,
-		// approvalState,
-		// setTransactions,
-		// transactions,
-	} = useTransaction();
+	const { pendingTxs, finishedTxs } = useTransaction();
 
 	const {
 		chainId: currentNetworkChainId,
@@ -64,25 +56,10 @@ export const AirdropContainer: NextPage = () => {
 
 	const { colorMode } = useColorMode();
 
-	// const isClaiming =
-	// 	approvalState.status === ApprovalState.PENDING &&
-	// 	approvalState.type === "claim";
-
-	// const walletInfos = {
-	// 	walletAddress,
-	// 	provider,
-	// 	chainId,
-	// };
-
 	const { claimCallback } = useClaimCallback(
 		walletAddress,
 		chainId,
 		signer as Signer
-		// walletInfos,
-		// setApprovalState,
-		// setCurrentTxHash,
-		// setTransactions,
-		// transactions
 	);
 
 	useMemo(async () => {
@@ -109,9 +86,7 @@ export const AirdropContainer: NextPage = () => {
 	const airdropClaimPendingTxs = useMemo(() => {
 		if (!chainId) return [];
 
-		return (pendingTxs[chainId] ?? []).filter(
-			tx => tx.service === "airdropClaim"
-		);
+		return pendingTxs.filter(tx => tx.service === "airdropClaim");
 	}, [pendingTxs, chainId]);
 
 	useEffect(() => {
@@ -122,9 +97,7 @@ export const AirdropContainer: NextPage = () => {
 				);
 				setIsClaiming(true);
 			} else if (currPendingTx) {
-				const currFullTx = finishedTxs[chainId].find(
-					tx => tx.hash === currPendingTx
-				);
+				const currFullTx = finishedTxs.find(tx => tx.hash === currPendingTx);
 
 				if (currFullTx?.success) {
 					setIsClaimed(true);

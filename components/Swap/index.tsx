@@ -210,9 +210,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const approvePendingTxs = useMemo(() => {
 		if (!chainId) return [];
 
-		return (pendingTxs[chainId] ?? []).filter(
-			tx => tx.service === "poolsApproveAddLiquidity"
-		);
+		return pendingTxs.filter(tx => tx.service === "useApproveCallback");
 	}, [pendingTxs, chainId]);
 
 	const approveValidation =
@@ -311,14 +309,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			walletInfos,
 			signer,
 			recipientAddress,
-			// setTransactions,
-			// setApprovalState,
-			// setCurrentTxHash,
-			// setCurrentSummary,
 			setCurrentInputTokenName,
 			txType,
 			toast,
-			// transactions,
 			onCloseTransaction
 		);
 
@@ -401,11 +394,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		selectedToken,
 		tokenInputValue,
 		walletInfos,
-		// setTransactions,
-		// transactions,
-		// setApprovalState,
-		// setCurrentTxHash,
-		// setCurrentSummary,
 		signer as Signer,
 		onCloseTransaction
 	);
@@ -450,13 +438,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		},
 		signer as Signer,
 		tokenInputValue,
-		// setApprovalState,
-		// setTransactions,
-		// transactions,
 		toast,
-		// setApprovalSubmitted,
-		// setCurrentTxHash,
-		// setCurrentSummary,
 		setCurrentInputTokenName,
 		setApproveTokenStatus,
 		onCloseTransaction,
@@ -593,9 +575,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				setCurrPendingTx(approvePendingTxs[approvePendingTxs.length - 1].hash);
 				setIsApproved(false);
 			} else if (currPendingTx) {
-				const currFullTx = finishedTxs[chainId].find(
-					tx => tx.hash === currPendingTx
-				);
+				const currFullTx = finishedTxs.find(tx => tx.hash === currPendingTx);
 
 				if (currFullTx?.success) {
 					setIsApproved(true);

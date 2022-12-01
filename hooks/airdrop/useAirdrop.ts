@@ -4,19 +4,16 @@ import AirdropInfo from "helpers/airdrop.json";
 import {
 	PegasysContracts,
 	PegasysTokens,
-	ApprovalState,
-	// IApprovalState,
 	useTransaction,
 } from "pegasys-services";
 import AIRDROP_ABI from "utils/abis/airdropAbi.json";
 import {
-	addTransaction,
 	calculateGasMargin,
 	createContractUsingAbi,
 	singleCallWithoutParams,
 } from "utils";
 import { Signer, ethers } from "ethers";
-import { ITransactionResponse, ITx, IWalletHookInfos } from "types";
+import { ITransactionResponse } from "types";
 
 export const userHasAvailableClaim = async (
 	address: string,
@@ -84,11 +81,6 @@ export const useClaimCallback = (
 		| ethers.providers.JsonRpcProvider
 		| Signer
 		| undefined
-	// walletInfos: IWalletHookInfos
-	// setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
-	// setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
-	// setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
-	// transactions: ITx
 ) => {
 	const { addTransactions } = useTransaction();
 
@@ -125,18 +117,6 @@ export const useClaimCallback = (
 							service: "airdropClaim",
 							hash: response.hash,
 						});
-						// addTransaction(
-						// 	response,
-						// 	walletInfos,
-						// 	setTransactions,
-						// 	transactions,
-						// 	{
-						// 		summary: `Claimed PSYS`,
-						// 		claim: { recipient: address },
-						// 	}
-						// );
-						// setApprovalState({ status: ApprovalState.PENDING, type: "claim" });
-						// setCurrentTxHash(response?.hash);
 					})
 					.catch((err: any) => {
 						console.log(err);

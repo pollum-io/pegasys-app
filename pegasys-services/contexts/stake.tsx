@@ -140,27 +140,19 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 	const stakePendingClaim = useMemo(() => {
 		if (!chainId) return [];
 
-		return [
-			...(pendingTxs[chainId] ?? []).filter(tx => tx.service === "claim-stake"),
-		];
+		return [...pendingTxs.filter(tx => tx.service === "claim-stake")];
 	}, [pendingTxs, chainId]);
 
 	const stakePendingDeposit = useMemo(() => {
 		if (!chainId) return [];
 
-		return [
-			...(pendingTxs[chainId] ?? []).filter(tx => tx.service === "stake-stake"),
-		];
+		return [...pendingTxs.filter(tx => tx.service === "stake-stake")];
 	}, [pendingTxs, chainId]);
 
 	const stakePendingWithdraw = useMemo(() => {
 		if (!chainId) return [];
 
-		return [
-			...(pendingTxs[chainId] ?? []).filter(
-				tx => tx.service === "unstake-stake"
-			),
-		];
+		return [...pendingTxs.filter(tx => tx.service === "unstake-stake")];
 	}, [pendingTxs, chainId]);
 
 	useEffect(() => {

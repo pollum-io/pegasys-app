@@ -3,10 +3,9 @@ import { JSBI, Token } from "@pollum-io/pegasys-sdk";
 
 import { getTokenPairs } from "utils";
 import { WrappedTokenInfo } from "types";
-import { ApprovalState, useTokens } from "hooks";
+import { useTokens } from "hooks";
 
 import { useTranslation } from "react-i18next";
-import { PegasysContracts } from "../constants";
 import { ContractFramework, RoutesFramework } from "../frameworks";
 import { FarmServices } from "../services";
 import { useWallet, useEarn, useTransaction, useToasty } from "../hooks";
@@ -223,29 +222,19 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	const farmPendingClaim = useMemo(() => {
 		if (!chainId) return [];
 
-		return [
-			...(pendingTxs[chainId] ?? []).filter(tx => tx.service === "claim-farm"),
-		];
+		return [...pendingTxs.filter(tx => tx.service === "claim-farm")];
 	}, [pendingTxs, chainId]);
 
 	const farmPendingDeposit = useMemo(() => {
 		if (!chainId) return [];
 
-		return [
-			...(pendingTxs[chainId] ?? []).filter(
-				tx => tx.service === "deposit-farm"
-			),
-		];
+		return [...pendingTxs.filter(tx => tx.service === "deposit-farm")];
 	}, [pendingTxs, chainId]);
 
 	const farmPendingWithdraw = useMemo(() => {
 		if (!chainId) return [];
 
-		return [
-			...(pendingTxs[chainId] ?? []).filter(
-				tx => tx.service === "withdraw-farm"
-			),
-		];
+		return [...pendingTxs.filter(tx => tx.service === "withdraw-farm")];
 	}, [pendingTxs, chainId]);
 
 	useEffect(() => {

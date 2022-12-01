@@ -12,7 +12,7 @@ import {
 	Text,
 	InputGroup,
 } from "@chakra-ui/react";
-import { ApprovalState, useModal, usePicasso, useTokens } from "hooks";
+import { useModal, usePicasso, useTokens } from "hooks";
 import React, {
 	ChangeEvent,
 	useMemo,
@@ -25,7 +25,6 @@ import {
 	MdArrowDownward,
 	MdArrowUpward,
 	MdSearch,
-	MdOutlineClose,
 } from "react-icons/md";
 import { WrappedTokenInfo } from "types";
 import BigNumber from "bignumber.js";
@@ -114,15 +113,6 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const handleSelectToken = useCallback(
 		(id: number, token: WrappedTokenInfo) => {
 			if (!selectedToken) return;
-			// if (
-			// 	approvalState.status === ApprovalState.APPROVED &&
-			// 	approvalState.type !== "approve"
-			// ) {
-			// 	setApprovalState({
-			// 		status: ApprovalState.UNKNOWN,
-			// 		type: approvalState.type,
-			// 	});
-			// }
 			setSelectedToken((prevState: WrappedTokenInfo[]) => {
 				prevState[id] = new WrappedTokenInfo(token.tokenInfo);
 
