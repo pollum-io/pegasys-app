@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useMemo, useState } from "react";
 
 import { TokenAmount } from "@pollum-io/pegasys-sdk";
-import { PegasysContracts, ZERO_ADDRESS } from "../constants";
+import { ZERO_ADDRESS } from "../constants";
 import { GovernanceServices } from "../services";
 import { useWallet, useTransaction, useToasty } from "../hooks";
 import {
@@ -9,7 +9,7 @@ import {
 	IGovernanceProviderProps,
 	IFormattedProposal,
 } from "../dto";
-import { ContractFramework } from "../frameworks";
+import { ContractFramework, RoutesFramework } from "../frameworks";
 
 export const GovernanceContext = createContext({} as IGovernanceProviderValue);
 
@@ -27,7 +27,7 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 	const [selectedProposals, setSelectedProposals] =
 		useState<IFormattedProposal | null>(null);
 	const { chainId, address } = useWallet();
-	const { addTransactions } = useTransaction();
+	const { addTransactions, pendingTxs } = useTransaction();
 	const { toast } = useToasty();
 
 	const governanceContract = useMemo(() => {
@@ -129,6 +129,18 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 		setCurrentVotes(crrVotes);
 	};
 
+	const governancePendingVote = useMemo(() => {
+		if (!chainId) return [];
+
+		return [...pendingTxs.filter(tx => tx.service === "vote-governance")];
+	}, [pendingTxs, chainId]);
+
+	const governancePendingDelegatee = useMemo(() => {
+		if (!chainId) return [];
+
+		return [...pendingTxs.filter(tx => tx.service === "unstake-stake")];
+	}, [pendingTxs, chainId]);
+
 	useEffect(() => {
 		if (address) {
 			getCurrentVotes();
@@ -155,7 +167,7 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 		if (address) {
 			handleDelegatee();
 		}
-	}, [psysContract, address]);
+	}, [psysContract, address, governancePendingDelegatee.length]);
 
 	useEffect(() => {
 		const init = async () => {
@@ -182,10 +194,10 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 			}
 		};
 
-		if (chainId && PegasysContracts[chainId]?.GOVERNANCE_ADDRESS) {
+		if (chainId && RoutesFramework.getGovernanceAddress(chainId)) {
 			init();
 		}
-	}, [governanceContract]);
+	}, [governanceContract, governancePendingVote.length]);
 
 	const providerValue = useMemo(
 		() => ({
