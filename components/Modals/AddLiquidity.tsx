@@ -32,6 +32,7 @@ import {
 	ApprovalState,
 	useTransaction,
 	useToasty,
+	PersistentFramework,
 } from "pegasys-services";
 import {
 	getTokenAllowance,
@@ -120,7 +121,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const [amounts, setAmounts] = useState<TokenAmount[]>([]);
 	const [currPoolShare, setCurrPoolShare] = useState<string>("");
 	const [currPendingTx, setCurrPendingTx] = useState<string>("");
-	const [isApproved, setIsApproved] = useState<boolean>(false);
+	const [finishApproveTx, setFinishApproveTx] = useState<boolean>(false);
 	const { setCurrentLpAddress } = useWallet();
 	const { pendingTxs, finishedTxs, addTransactions } = useTransaction();
 	const { address, chainId, isConnected, signer, provider } = psUseWallet();
@@ -468,20 +469,28 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 						approveAddLiquidityPendingTxs.length - 1
 					].hash
 				);
-				setIsApproved(false);
+				PersistentFramework.add("currentApproveAddLiquidityPendingTxs", {
+					hash: approveAddLiquidityPendingTxs[
+						approveAddLiquidityPendingTxs.length - 1
+					].hash,
+				});
+				setFinishApproveTx(false);
 			} else if (currPendingTx) {
 				const currFullTx = finishedTxs.find(tx => tx.hash === currPendingTx);
 
 				if (currFullTx?.success) {
-					setIsApproved(true);
+					setFinishApproveTx(true);
 					setCurrPendingTx("");
+					PersistentFramework.remove("currentApproveAddLiquidityPendingTxs");
 				} else {
 					setCurrPendingTx("");
-					setIsApproved(false);
+					PersistentFramework.remove("currentApproveAddLiquidityPendingTxs");
+					setFinishApproveTx(false);
 				}
 			} else {
 				setCurrPendingTx("");
-				setIsApproved(false);
+				PersistentFramework.remove("currentApproveAddLiquidityPendingTxs");
+				setFinishApproveTx(false);
 			}
 		}
 	}, [approveAddLiquidityPendingTxs, chainId]);
@@ -913,7 +922,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								}
 								onClick={
 									approveTokenStatus === ApprovalState.NOT_APPROVED &&
-									!isApproved
+									!finishApproveTx
 										? () => {
 												approve();
 												openPendingTx();
@@ -930,7 +939,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									: invalidPair
 									? "Invalid Pair"
 									: approveTokenStatus === ApprovalState.NOT_APPROVED &&
-									  !isApproved
+									  !finishApproveTx
 									? `${translation("earn.approve")} ${tokenToApp?.symbol}`
 									: translation("positionCard.add")}
 							</Button>
