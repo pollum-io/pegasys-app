@@ -17,6 +17,7 @@ import {
 	ONE_DAY_IN_SECONDS,
 	SUPPORTED_NETWORK_CHAINS,
 	useTransaction,
+	useSwap,
 } from "pegasys-services";
 import {
 	useModal,
@@ -106,17 +107,11 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		onCloseTransaction,
 		onOpenSelectWalletModal,
 	} = useModal();
-	const {
-		setTransactions,
-		transactions,
-		setApprovalState,
-		approvalState,
-		setApprovalSubmitted,
-		setCurrentTxHash,
-		setCurrentSummary,
-		setCurrentInputTokenName,
-	} = useTransaction();
+	const { setCurrentInputTokenName } = useSwap();
 	const { otherWallet } = useWallet();
+	const { pendingTxs, finishedTxs } = useTransaction();
+	const [isApproved, setIsApproved] = useState<boolean>(false);
+	const [currPendingTx, setCurrPendingTx] = useState<string>("");
 
 	const { address, chainId, isConnected, provider, signer } = psUseWallet();
 	const { userSlippageTolerance, userTransactionDeadlineValue, expert } =
@@ -212,11 +207,16 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const isERC20 =
 		selectedToken[0]?.symbol !== "SYS" && selectedToken[0]?.symbol !== "PSYS";
 
-	const approveValidation =
-		(isERC20 && approvalState.status === ApprovalState.UNKNOWN) ||
-		(isERC20 && approvalState.status === ApprovalState.PENDING);
+	const approvePendingTxs = useMemo(() => {
+		if (!chainId) return [];
 
-	const isPending = approvalState.status === ApprovalState.PENDING;
+		return pendingTxs.filter(tx => tx.service === "useApproveCallback");
+	}, [pendingTxs, chainId]);
+
+	const approveValidation =
+		(isERC20 && currPendingTx) || (isERC20 && approvePendingTxs.length);
+
+	const isPending = !!approvePendingTxs.length;
 
 	const wrapOrUnwrap = selectedToken[0]?.symbol === "SYS" ? "Wrap" : "Unwrap";
 
@@ -309,14 +309,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			walletInfos,
 			signer,
 			recipientAddress,
-			setTransactions,
-			setApprovalState,
-			setCurrentTxHash,
-			setCurrentSummary,
 			setCurrentInputTokenName,
 			txType,
 			toast,
-			transactions,
 			onCloseTransaction
 		);
 
@@ -399,11 +394,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		selectedToken,
 		tokenInputValue,
 		walletInfos,
-		setTransactions,
-		transactions,
-		setApprovalState,
-		setCurrentTxHash,
-		setCurrentSummary,
 		signer as Signer,
 		onCloseTransaction
 	);
@@ -448,13 +438,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		},
 		signer as Signer,
 		tokenInputValue,
-		setApprovalState,
-		setTransactions,
-		transactions,
 		toast,
-		setApprovalSubmitted,
-		setCurrentTxHash,
-		setCurrentSummary,
 		setCurrentInputTokenName,
 		setApproveTokenStatus,
 		onCloseTransaction,
@@ -584,6 +568,28 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		}
 		return <Flex />;
 	}, [expert]);
+
+	useEffect(() => {
+		if (chainId) {
+			if (approvePendingTxs.length) {
+				setCurrPendingTx(approvePendingTxs[approvePendingTxs.length - 1].hash);
+				setIsApproved(false);
+			} else if (currPendingTx) {
+				const currFullTx = finishedTxs.find(tx => tx.hash === currPendingTx);
+
+				if (currFullTx?.success) {
+					setIsApproved(true);
+					setCurrPendingTx("");
+				} else {
+					setCurrPendingTx("");
+					setIsApproved(false);
+				}
+			} else {
+				setCurrPendingTx("");
+				setIsApproved(false);
+			}
+		}
+	}, [approvePendingTxs, chainId]);
 
 	// END REACT HOOKS //
 

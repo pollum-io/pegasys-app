@@ -40,8 +40,10 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 
 	const { t: translation } = useTranslation();
 
-	const { setTransactions, transactions, setCurrentTxHash, setApprovalState } =
-		useTransaction();
+	const {
+		addTransactions,
+		// setTransactions, transactions, setCurrentTxHash, setApprovalState
+	} = useTransaction();
 	const { onCloseStakeActions, onCloseFarmActions } = useModal();
 
 	const { chainId, address, provider } = psUseWallet();
@@ -114,36 +116,31 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 	const onContractCall = async (
 		promise: () => Promise<{ hash: string; response: any } | undefined>,
 		summary: string,
-		type: string
+		service: string
 	) => {
 		try {
 			setLoading(true);
 
-			const walletInfo = {
-				walletAddress: address,
-				chainId: ChainId.NEVM,
-				provider,
-			};
+			// const walletInfo = {
+			// 	walletAddress: address,
+			// 	chainId: ChainId.NEVM,
+			// 	provider,
+			// };
 
 			const res = await promise();
 
 			if (res) {
-				const { response, hash } = res;
+				const { hash } = res;
 
-				addTransaction(response, walletInfo, setTransactions, transactions, {
+				addTransactions({
 					summary,
-					finished: false,
-				});
-				setCurrentTxHash(hash);
-
-				setApprovalState({
-					type,
-					status: ApprovalState.PENDING,
+					hash,
+					service,
 				});
 			}
 		} catch (e) {
 			toast({
-				id: `${type}Toast`,
+				id: `${service}Toast`,
 				position: "top-right",
 				status: "error",
 				title: translation("toasts.errorOn") && ` ${summary}`,

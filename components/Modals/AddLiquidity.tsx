@@ -10,6 +10,7 @@ import {
 	ModalOverlay,
 	Text,
 	Collapse,
+	toast,
 } from "@chakra-ui/react";
 import { useModal, usePicasso, useWallet, useAllCommonPairs } from "hooks";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -30,9 +31,10 @@ import {
 	ONE_BIPS,
 	ApprovalState,
 	useTransaction,
+	useToasty,
+	PersistentFramework,
 } from "pegasys-services";
 import {
-	addTransaction,
 	getTokenAllowance,
 	getTotalSupply,
 	tryParseAmount,
@@ -118,17 +120,13 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		useState<TokenAmount>();
 	const [amounts, setAmounts] = useState<TokenAmount[]>([]);
 	const [currPoolShare, setCurrPoolShare] = useState<string>("");
+	const [currPendingTx, setCurrPendingTx] = useState<string>("");
+	const [finishApproveTx, setFinishApproveTx] = useState<boolean>(false);
 	const { setCurrentLpAddress } = useWallet();
-	const {
-		setTransactions,
-		transactions,
-		setApprovalState,
-		approvalState,
-		setCurrentTxHash,
-		setCurrentSummary,
-	} = useTransaction();
+	const { pendingTxs, finishedTxs, addTransactions } = useTransaction();
 	const { address, chainId, isConnected, signer, provider } = psUseWallet();
 	const { userSlippageTolerance, userTransactionDeadlineValue } = usePegasys();
+	const { toast } = useToasty();
 
 	let currentChainId: ChainId;
 
@@ -162,17 +160,19 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			selectedToken[1]?.symbol === "WSYS") ||
 		(selectedToken[0]?.symbol === "WSYS" && selectedToken[1]?.symbol === "SYS");
 
-	const isPending = approvalState.status === ApprovalState.PENDING;
+	const isPending = useMemo(() => {
+		if (pendingTxs.length) {
+			return true;
+		}
+
+		return false;
+	}, [chainId, pendingTxs]);
 
 	const inputValidation =
 		parseFloat(tokenInputValue.inputTo.value) >
 			parseFloat(selectedToken[1]?.formattedBalance) ||
 		parseFloat(tokenInputValue.inputFrom.value) >
 			parseFloat(selectedToken[0]?.formattedBalance);
-
-	const isApproved =
-		approvalState.type === "approve" &&
-		approvalState.status === ApprovalState.APPROVED;
 
 	const emptyInput =
 		!tokenInputValue.inputFrom.value || !tokenInputValue.inputTo.value;
@@ -405,20 +405,12 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		})
 			.then(res => {
 				if (res?.spender) {
-					setApprovalState({ type: "approve", status: ApprovalState.PENDING });
 					setApproveTokenStatus(ApprovalState.APPROVED);
-					setCurrentTxHash(res?.hash);
-					addTransaction(
-						res?.response,
-						walletInfo,
-						setTransactions,
-						transactions,
-						{
-							summary: `Approve ${tokenToApp?.symbol}`,
-							finished: false,
-						}
-					);
-					setCurrentSummary(`Approve ${tokenToApp?.symbol}`);
+					addTransactions({
+						hash: res.hash,
+						summary: `Approve ${tokenToApp?.symbol}`,
+						service: "poolsApproveAddLiquidity",
+					});
 					closePendingTx();
 				}
 			})
@@ -446,31 +438,68 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			pair,
 		})
 			.then(res => {
-				console.log({ res });
-				setCurrentTxHash(res?.hash);
-				setApprovalState({
-					type: "add-liquidity",
-					status: ApprovalState.PENDING,
-				});
-				addTransaction(res, walletInfo, setTransactions, transactions, {
+				addTransactions({
+					hash: res.hash,
 					summary: `Add ${tokenInputValue.inputFrom.value} ${selectedToken[0]?.symbol} and ${tokenInputValue.inputTo.value} ${selectedToken[1]?.symbol}`,
-					finished: false,
+					service: "poolsAddLiquidity",
 				});
-				closePendingTx();
-				setCurrentSummary(
-					`Add ${tokenInputValue.inputFrom.value} ${selectedToken[0]?.symbol} and ${tokenInputValue.inputTo.value} ${selectedToken[1]?.symbol}`
-				);
 			})
 			.catch(err => {
+				toast({
+					id: "toast1",
+					position: "top-right",
+					status: "error",
+					title: "error while adding liquidity",
+				});
 				console.log(err);
-				closePendingTx();
 			});
 	};
+
+	const approveAddLiquidityPendingTxs = useMemo(() => {
+		if (!chainId) return [];
+
+		return pendingTxs.filter(tx => tx.service === "poolsApproveAddLiquidity");
+	}, [pendingTxs, chainId]);
+
+	useEffect(() => {
+		if (chainId) {
+			if (approveAddLiquidityPendingTxs.length) {
+				setCurrPendingTx(
+					approveAddLiquidityPendingTxs[
+						approveAddLiquidityPendingTxs.length - 1
+					].hash
+				);
+				PersistentFramework.add("currentApproveAddLiquidityPendingTxs", {
+					hash: approveAddLiquidityPendingTxs[
+						approveAddLiquidityPendingTxs.length - 1
+					].hash,
+				});
+				setFinishApproveTx(false);
+			} else if (currPendingTx) {
+				const currFullTx = finishedTxs.find(tx => tx.hash === currPendingTx);
+
+				if (currFullTx?.success) {
+					setFinishApproveTx(true);
+					setCurrPendingTx("");
+					PersistentFramework.remove("currentApproveAddLiquidityPendingTxs");
+				} else {
+					setCurrPendingTx("");
+					PersistentFramework.remove("currentApproveAddLiquidityPendingTxs");
+					setFinishApproveTx(false);
+				}
+			} else {
+				setCurrPendingTx("");
+				PersistentFramework.remove("currentApproveAddLiquidityPendingTxs");
+				setFinishApproveTx(false);
+			}
+		}
+	}, [approveAddLiquidityPendingTxs, chainId]);
 
 	useEffect(() => {
 		setTokenInputValue(initialTokenInputValue);
 		setApproveTokenStatus(ApprovalState.UNKNOWN);
 	}, [isModalOpen]);
+
 	return (
 		<Modal blockScrollOnMount isOpen={isModalOpen} onClose={onModalClose}>
 			<SelectCoinModal
@@ -893,7 +922,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								}
 								onClick={
 									approveTokenStatus === ApprovalState.NOT_APPROVED &&
-									!isApproved
+									!finishApproveTx
 										? () => {
 												approve();
 												openPendingTx();
@@ -910,7 +939,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									: invalidPair
 									? "Invalid Pair"
 									: approveTokenStatus === ApprovalState.NOT_APPROVED &&
-									  !isApproved
+									  !finishApproveTx
 									? `${translation("earn.approve")} ${tokenToApp?.symbol}`
 									: translation("positionCard.add")}
 							</Button>

@@ -4,7 +4,7 @@ import { PegasysContracts, PegasysTokens } from "../constants";
 
 class RoutesFramework {
 	static getMinichefAddress(chainId?: ChainId | null) {
-		return PegasysContracts[chainId ?? ChainId.NEVM].MINICHEF_ADDRESS ?? "";
+		return PegasysContracts[chainId ?? ChainId.NEVM]?.MINICHEF_ADDRESS ?? "";
 	}
 
 	static getGovernanceAddress(chainId?: ChainId | null) {
@@ -12,11 +12,11 @@ class RoutesFramework {
 	}
 
 	static getRouterAddress(chainId?: ChainId | null) {
-		return PegasysContracts[chainId ?? ChainId.NEVM].ROUTER_ADDRESS;
+		return PegasysContracts[chainId ?? ChainId.NEVM]?.ROUTER_ADDRESS;
 	}
 
 	static getStakeAddress(chainId?: ChainId | null) {
-		return PegasysContracts[ChainId.NEVM].STAKE_ADDRESS;
+		return PegasysContracts[ChainId.NEVM]?.STAKE_ADDRESS;
 	}
 
 	static getPsysAddress(chainId?: ChainId | null) {

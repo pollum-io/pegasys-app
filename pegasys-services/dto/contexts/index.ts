@@ -6,3 +6,4 @@ export * from "./stake";
 export * from "./earn";
 export * from "./transaction";
 export * from "./governance";
+export * from "./swap";

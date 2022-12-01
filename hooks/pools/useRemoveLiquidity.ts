@@ -6,11 +6,10 @@ import IPegasysRouterABI from "@pollum-io/pegasys-protocol/artifacts/contracts/p
 import { JSBI, Percent, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { BigNumber, Signer } from "ethers";
 import { splitSignature } from "ethers/lib/utils";
-import { PegasysContracts } from "pegasys-services/constants";
+import { PegasysContracts, useTransaction, useToasty } from "pegasys-services";
 import { useTransactionDeadline } from "hooks/swap/useTransactionDeadline";
 import { ITx, IWalletHookInfos, WrappedTokenInfo } from "types";
 import {
-	addTransaction,
 	calculateGasMargin,
 	calculateSlippageAmount,
 	createContractUsingAbi,
@@ -18,9 +17,8 @@ import {
 	getContract,
 	getTotalSupply,
 } from "utils";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Token } from "@pollum-io/pegasys-sdk";
-import { ApprovalState, IApprovalState, useToasty } from "pegasys-services";
 import { useTranslation } from "react-i18next";
 import { IAmounts } from "components";
 import { useAllCommonPairs } from "hooks";
@@ -32,12 +30,6 @@ export const UseRemoveLiquidity = (
 	signer: Signer,
 	tradeTokens: WrappedTokenInfo[],
 	allowedSlippage: number,
-	setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
-	transactions: ITx,
-	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
-	setCurrentSummary: React.Dispatch<React.SetStateAction<string>>,
-	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
-	approvalState: IApprovalState,
 	setTxSignature: React.Dispatch<React.SetStateAction<boolean>>,
 	transactionDeadlineValue: BigNumber | number,
 	closePendingTx: () => void
@@ -47,13 +39,46 @@ export const UseRemoveLiquidity = (
 		r: string;
 		s: string;
 		deadline: number;
-	} | null>(null);
+	} | null>(null)
+	const [currPendingTx, setCurrPendingTx] = useState<string>("");
 	const { t } = useTranslation();
+	const { addTransactions, pendingTxs, finishedTxs } = useTransaction();
 	const { walletAddress: account, chainId, provider } = walletInfos;
 	const deadline = useTransactionDeadline(transactionDeadlineValue);
 	const { toast } = useToasty();
 	const [currencyA, currencyB] = [tradeTokens[0], tradeTokens[1]];
 	const chainRouter = PegasysContracts[chainId].ROUTER_ADDRESS;
+
+
+	const removeLiquidityPendingTxs = useMemo(() => {
+		if (!chainId) return [];
+
+		return pendingTxs.filter(tx => tx.service === "poolsRemoveLiquidity");
+	}, [pendingTxs, chainId]);
+
+	const isApproved = useMemo(() => {
+		if (removeLiquidityPendingTxs.length) {
+			setCurrPendingTx(
+				removeLiquidityPendingTxs[
+					removeLiquidityPendingTxs.length - 1
+				].hash
+			);
+			return(false);
+		} else if (currPendingTx) {
+			const currFullTx = finishedTxs.find(tx => tx.hash === currPendingTx);
+
+			if (currFullTx?.success) {
+				setCurrPendingTx("");
+				return(true);
+			} else {
+				setCurrPendingTx("");
+				return(false);
+			}
+		} else {
+			setCurrPendingTx("");
+			return false;
+		}
+	}, [removeLiquidityPendingTxs.length]);
 
 	const pairContract =
 		pairAddress &&
@@ -259,7 +284,7 @@ export const UseRemoveLiquidity = (
 		let methodNames: string[],
 			args: Array<string | string[] | number | boolean>;
 		// we have approval, use normal remove liquidity
-		if (approvalState.status === ApprovalState.APPROVED) {
+		if (isApproved) {
 			// removeLiquiditySYS
 			if (oneCurrencyIsETH) {
 				methodNames = [
@@ -359,35 +384,19 @@ export const UseRemoveLiquidity = (
 				gasLimit: safeGasEstimate,
 			})
 				.then((response: TransactionResponse) => {
-					addTransaction(response, walletInfos, setTransactions, transactions, {
-						summary:
-							t("removeLiquidity.remove") +
-							" " +
-							currencyAmountA?.toSignificant(3) +
-							" " +
-							currencyA?.symbol +
-							" and " +
-							currencyAmountB?.toSignificant(3) +
-							" " +
-							currencyB?.symbol,
-						finished: false,
-					});
-					setCurrentSummary(
-						t("removeLiquidity.remove") +
-							" " +
-							currencyAmountA?.toSignificant(3) +
-							" " +
-							currencyA?.symbol +
-							" and " +
-							currencyAmountB?.toSignificant(3) +
-							" " +
-							currencyB?.symbol
-					);
-					setApprovalState({
-						status: ApprovalState.PENDING,
-						type: "remove-liquidity",
-					});
-					setCurrentTxHash(response?.hash);
+					addTransactions({
+						summary: t("removeLiquidity.remove") +
+								" " +
+								currencyAmountA?.toSignificant(3) +
+								" " +
+								currencyA?.symbol +
+								" and " +
+								currencyAmountB?.toSignificant(3) +
+								" " +
+								currencyB?.symbol,
+								hash: response.hash,
+								service: "poolsRemoveLiquidity",
+					})
 					setTxSignature(false);
 					closePendingTx();
 				})
