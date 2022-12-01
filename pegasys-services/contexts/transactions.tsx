@@ -12,7 +12,7 @@ import {
 	IFinishedTxs,
 	IPersistentFinishedTx,
 } from "../dto";
-import { useWallet } from "../hooks";
+import { useWallet, useToasty } from "../hooks";
 
 export const TransactionContext = createContext(
 	{} as ITransactionProviderValue
@@ -28,6 +28,7 @@ export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 	);
 
 	const { chainId, isConnected, address, provider } = useWallet();
+	const { toast } = useToasty();
 
 	const removePendingTransactions = (hash: string) => {
 		if (!chainId || !address) return;
@@ -90,6 +91,10 @@ export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 					})),
 				tx as IFinishedTx,
 			]);
+			toast({
+				title: tx.summary,
+				status: (tx as IFinishedTx).success ? "success" : "error",
+			});
 		} else {
 			setPendingTxs([
 				...newPersistTransactions
