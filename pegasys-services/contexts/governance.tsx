@@ -86,7 +86,7 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 	};
 
 	const onDelegate = async (delegatee?: string) => {
-		const { error } = await contractCall(
+		await contractCall(
 			() =>
 				GovernanceServices.delegate({
 					contract: psysContract,
@@ -95,16 +95,6 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 			"Delegate Votes",
 			"delegate-governance"
 		);
-
-		if (!error) {
-			if (delegatee === ZERO_ADDRESS) {
-				setDelegatedTo("");
-				setVotesLocked(true);
-			} else {
-				setVotesLocked(false);
-				setDelegatedTo(delegatee ?? "Self");
-			}
-		}
 	};
 
 	const vote = async (id: string, support?: boolean) => {
@@ -138,7 +128,7 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 	const governancePendingDelegatee = useMemo(() => {
 		if (!chainId) return [];
 
-		return [...pendingTxs.filter(tx => tx.service === "unstake-stake")];
+		return [...pendingTxs.filter(tx => tx.service === "delegate-governance")];
 	}, [pendingTxs, chainId]);
 
 	useEffect(() => {
@@ -154,7 +144,7 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 				walletAddress: address,
 			});
 
-			if (!currentDelegatee) {
+			if (!currentDelegatee || currentDelegatee === ZERO_ADDRESS) {
 				setVotesLocked(true);
 				setDelegatedTo("");
 				return;
