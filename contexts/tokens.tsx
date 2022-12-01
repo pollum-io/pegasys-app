@@ -4,7 +4,11 @@ import { useTokensListManage } from "hooks";
 import { getDefaultTokens } from "networks";
 import { getBalanceOfSingleCall, getProviderBalance } from "utils";
 import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
-import { useWallet, SUPPORTED_NETWORK_CHAINS } from "pegasys-services";
+import {
+	useWallet,
+	SUPPORTED_NETWORK_CHAINS,
+	PersistentFramework,
+} from "pegasys-services";
 import { ChainId } from "@pollum-io/pegasys-sdk";
 
 interface ITokensContext {
@@ -185,6 +189,12 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 	useEffect(() => {
 		getInitialDefaultTokensByRequest();
 	}, [currentNetworkChainId, isConnected, walletAddress]);
+
+	useEffect(() => {
+		if (initialDefaultTokens.length) {
+			PersistentFramework.add("currentStorageTokens", initialDefaultTokens);
+		}
+	}, [initialDefaultTokens]);
 
 	const tokensProviderValue = useMemo(
 		() => ({
