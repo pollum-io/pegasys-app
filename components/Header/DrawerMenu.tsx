@@ -11,6 +11,7 @@ import {
 import { usePicasso } from "hooks";
 import { MdArrowBack } from "react-icons/md";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 import { DrawerLinks } from "./DrawerLinks";
 
 interface IDrawer {
@@ -42,6 +43,7 @@ export const DrawerMenu: React.FC<IDrawer> = props => {
 	const btnRef: any = React.useRef();
 	const theme = usePicasso();
 	const { pathname } = useRouter();
+	const { t: translation } = useTranslation();
 
 	return (
 		<Drawer
@@ -69,7 +71,7 @@ export const DrawerMenu: React.FC<IDrawer> = props => {
 						pt="2"
 					>
 						<MdArrowBack size={25} />
-						<Text fontWeight="semibold">Back</Text>
+						<Text fontWeight="semibold">{translation("migratePage.back")}</Text>
 					</Flex>
 				</DrawerHeader>
 				<DrawerBody p="0" m="0">

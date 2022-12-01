@@ -241,8 +241,10 @@ export const Header: React.FC = () => {
 					pl={["0", "2", "0", "0"]}
 					pr={
 						address
-							? ["6rem", "1rem", "1.5rem", "1.5rem"]
-							: ["6rem", "0", "0", "0.3rem"]
+							? expert
+								? ["0", "1rem", "1.5rem", "1.5rem"]
+								: ["4rem", "1rem", "1.5rem", "1.5rem"]
+							: ["4rem", "0", "0", "0.3rem"]
 					}
 				>
 					<WalletButton />

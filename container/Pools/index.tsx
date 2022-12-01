@@ -627,7 +627,7 @@ export const PoolsContainer: NextPage = () => {
 										"row",
 									]}
 									zIndex="docked"
-									w="100%"
+									w="max-content"
 									mt={["4", "6", "2", "2"]}
 									gap={["7", "none", "none", "none"]}
 									alignItems={[
@@ -639,7 +639,7 @@ export const PoolsContainer: NextPage = () => {
 								>
 									<Flex
 										display={userHavePool && isConnected ? "flex" : "none"}
-										w="100%"
+										w={["xs", "100%", "100%", "100%"]}
 									>
 										<InputGroup alignItems="center">
 											<InputLeftElement
@@ -662,7 +662,7 @@ export const PoolsContainer: NextPage = () => {
 												}}
 												onChange={handleInput}
 												borderRadius="full"
-												w={["100%", "100%", "20rem", "20rem"]}
+												w={["100%", "20rem", "20rem", "20rem"]}
 												h="2.2rem"
 												py={["0.2rem", "0.2rem", "1", "1"]}
 												pl="10"
@@ -721,6 +721,7 @@ export const PoolsContainer: NextPage = () => {
 															color={theme.text.mono}
 															_hover={{ bgColor: theme.bg.neutralGray }}
 															onClick={() => setSortType("liquidity")}
+															borderRadius="md"
 														>
 															{translation("pool.liquidity")}
 														</MenuItem>
@@ -728,6 +729,7 @@ export const PoolsContainer: NextPage = () => {
 															color={theme.text.mono}
 															_hover={{ bgColor: theme.bg.neutralGray }}
 															onClick={() => setSortType("volume")}
+															borderRadius="md"
 														>
 															{translation("positionCard.volume")}
 														</MenuItem>
@@ -735,6 +737,7 @@ export const PoolsContainer: NextPage = () => {
 															color={theme.text.mono}
 															_hover={{ bgColor: theme.bg.neutralGray }}
 															onClick={() => setSortType("apr")}
+															borderRadius="md"
 														>
 															APR
 														</MenuItem>
@@ -742,6 +745,7 @@ export const PoolsContainer: NextPage = () => {
 															color={theme.text.mono}
 															_hover={{ bgColor: theme.bg.neutralGray }}
 															onClick={() => setSortType("your-pools")}
+															borderRadius="md"
 														>
 															{translation("pool.yourPools")}
 														</MenuItem>

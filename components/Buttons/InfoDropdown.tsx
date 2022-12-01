@@ -26,8 +26,9 @@ export const InfoDropdown: FunctionComponent = () => {
 			<Flex
 				flexDir="column"
 				py="4"
+				pt="2"
 				bgColor={state1 ? theme.bg.blackLightness : "transparent"}
-				w={["100vw", "100vw", "unset", "unset"]}
+				w={["100vw", "unset", "unset", "unset"]}
 			>
 				<Flex
 					align="center"
@@ -39,20 +40,20 @@ export const InfoDropdown: FunctionComponent = () => {
 				>
 					<Icon
 						position="absolute"
-						left={["6rem", "9rem", "6", "6"]}
+						left={["6rem", "6", "6", "6"]}
 						as={MdOutlineModeComment}
 					/>
-					<Text px={["7.5rem", "10.5rem", "12", "12"]}>Socials</Text>
+					<Text px={["7.5rem", "12", "12", "12"]}>Socials</Text>
 					{state1 ? (
 						<Icon
-							position={["absolute", "absolute", "relative", "relative"]}
-							right={["5rem", "9rem", "0.7rem", "0.7rem"]}
+							position={["absolute", "relative", "relative", "relative"]}
+							right={["5rem", "0.7rem", "0.7rem", "0.7rem"]}
 							as={IoIosArrowUp}
 						/>
 					) : (
 						<Icon
-							position={["absolute", "absolute", "relative", "relative"]}
-							right={["5rem", "9rem", "0.7rem", "0.7rem"]}
+							position={["absolute", "relative", "relative", "relative"]}
+							right={["5rem", "0.7rem", "0.7rem", "0.7rem"]}
 							as={IoIosArrowDown}
 						/>
 					)}
@@ -68,7 +69,7 @@ export const InfoDropdown: FunctionComponent = () => {
 								_active={{ bgColor: "transparent" }}
 							>
 								<Text
-									px={["7.5rem", "10.5rem", "12", "12"]}
+									px={["7.5rem", "12", "12", "12"]}
 									pb="1"
 									_hover={{ cursor: "pointer", color: theme.text.cyanPurple }}
 								>
@@ -82,7 +83,7 @@ export const InfoDropdown: FunctionComponent = () => {
 			<Flex
 				flexDir="column"
 				bgColor={state2 ? theme.bg.blackLightness : "transparent"}
-				w={["100vw", "100vw", "unset", "unset"]}
+				w={["100vw", "unset", "unset", "unset"]}
 			>
 				<Flex
 					align="center"
@@ -94,20 +95,20 @@ export const InfoDropdown: FunctionComponent = () => {
 				>
 					<Icon
 						position="absolute"
-						left={["6rem", "9rem", "6", "6"]}
+						left={["6rem", "6", "6", "6"]}
 						as={MdOutlineCallMade}
 					/>
-					<Text px={["7.5rem", "10.5rem", "12", "12"]}>Bridges</Text>
+					<Text px={["7.5rem", "12", "12", "12"]}>Bridges</Text>
 					{state2 ? (
 						<Icon
-							position={["absolute", "absolute", "relative", "relative"]}
-							right={["5rem", "9rem", "1rem", "1rem"]}
+							position={["absolute", "relative", "relative", "relative"]}
+							right={["5rem", "1rem", "1rem", "1rem"]}
 							as={IoIosArrowUp}
 						/>
 					) : (
 						<Icon
-							position={["absolute", "absolute", "relative", "relative"]}
-							right={["5rem", "9rem", "1rem", "1rem"]}
+							position={["absolute", "relative", "relative", "relative"]}
+							right={["5rem", "1rem", "1rem", "1rem"]}
 							as={IoIosArrowDown}
 						/>
 					)}
@@ -123,7 +124,7 @@ export const InfoDropdown: FunctionComponent = () => {
 								_active={{ bgColor: "transparent" }}
 							>
 								<Text
-									px={["7.5rem", "10.5rem", "12", "12"]}
+									px={["7.5rem", "12", "12", "12"]}
 									pb="1"
 									_hover={{ cursor: "pointer", color: theme.text.cyanPurple }}
 								>

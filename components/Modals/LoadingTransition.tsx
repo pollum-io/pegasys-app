@@ -108,7 +108,9 @@ export const LoadingTransition: React.FC<IModal> = props => {
 						<Text fontSize="2xl" fontWeight="semibold" textAlign="center">
 							{translation("transactionConfirmation.waitingConfirmation")}
 						</Text>
-						<Text className="loading" color={theme.text.mono} />
+						<Text
+							className={colorMode === "dark" ? "loading" : "loadingLight"}
+						/>
 					</Flex>
 					<Text textAlign="center">
 						{translation("transactionConfirmation.confirmTransaction")}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Button, Flex, Text, useMediaQuery } from "@chakra-ui/react";
 
 import { useGovernance } from "pegasys-services";
 import { usePicasso } from "hooks";
@@ -17,6 +17,7 @@ const UnlockVotingFooter: React.FC<IUnlockVotingFooter> = ({
 	const theme = usePicasso();
 	const { t: translation, i18n } = useTranslation();
 	const { language } = i18n;
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	const onDelegateVotes = async () => {
 		const isSelf =
@@ -34,7 +35,11 @@ const UnlockVotingFooter: React.FC<IUnlockVotingFooter> = ({
 						id="self"
 						fontWeight="semibold"
 						w="100%"
-						fontSize={language === "de" || language === "fr" ? "13px" : "16px"}
+						fontSize={
+							(language === "de" && isMobile) || (language === "fr" && isMobile)
+								? "13px"
+								: "16px"
+						}
 						py="0.8rem"
 						bgColor={theme.bg.blueNavyLightness}
 						color={theme.text.cyan}

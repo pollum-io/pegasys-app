@@ -103,7 +103,7 @@ export const FarmContainer: NextPage = () => {
 								href={`https://info.pegasys.finance/account/${address}`}
 								target="_blank"
 								rel="noreferrer"
-								_hover={{ cursor: "pointer", opacity: "0.9" }}
+								_hover={{ cursor: "pointer" }}
 								flexDirection="row"
 							>
 								<Flex gap="2.5" alignItems="center">
@@ -121,7 +121,7 @@ export const FarmContainer: NextPage = () => {
 					id="a"
 					alignItems={["flex-start", "flex-start", "baseline", "baseline"]}
 					my="8"
-					justifyContent="flex-start"
+					justifyContent="space-between"
 					w="100%"
 					flexDirection={["column", "column", "row", "row"]}
 					zIndex="docked"

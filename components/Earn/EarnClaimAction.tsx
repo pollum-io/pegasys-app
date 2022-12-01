@@ -53,9 +53,14 @@ const EarnClaimAction: React.FC<IEarnClaimActionProps> = ({ claim }) => {
 				gap="2"
 				borderRadius="xl"
 			>
-				<Flex flexDirection="row" alignItems="center">
+				<Flex
+					flexDirection="row"
+					alignItems="center"
+					w="80%"
+					justifyContent="center"
+				>
 					<Img src="icons/pegasys.png" w="6" h="6" />
-					<Text fontSize="2xl" fontWeight="semibold" pl="2">
+					<Text fontSize="2xl" fontWeight="semibold" pl="2" w="100%">
 						{selectedOpportunity.unclaimedAmount.toSignificant(10, {
 							groupSeparator: ",",
 						})}

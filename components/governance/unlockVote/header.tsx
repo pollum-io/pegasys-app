@@ -22,7 +22,7 @@ const UnlockVotingHeader: React.FC<IUnlockVotingHeader> = ({ onClose }) => {
 				_hover={{ cursor: "pointer" }}
 				position="absolute"
 				right="0"
-				top="0"
+				top="1"
 			>
 				<MdClose size={22} onClick={onClose} color={theme.text.mono} />
 			</Flex>

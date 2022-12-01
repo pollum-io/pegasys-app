@@ -935,8 +935,10 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										parseFloat(selectedToken[1]?.formattedBalance) ||
 								  parseFloat(tokenInputValue.inputFrom.value) >
 										parseFloat(selectedToken[0]?.formattedBalance)
-								? ["unset", "38rem", "39rem", "39rem"]
-								: ["unset", "35rem", "35.5rem", "35.5rem"]
+								? languageList.includes(language)
+									? ["unset", "38rem", "39rem", "39rem"]
+									: ["unset", "37rem", "38rem", "38rem"]
+								: ["unset", "35.5rem", "36rem", "36rem"]
 						}
 						w="100%"
 						borderRadius={["0", "30px", "30px", "30px"]}
