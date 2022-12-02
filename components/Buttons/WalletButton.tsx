@@ -92,7 +92,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 				</>
 			)}
 
-			{isConnected && !walletError && isPending && (
+			{isConnected && !walletError && !isPending && (
 				<>
 					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
 					<AddressButton
@@ -105,7 +105,7 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 					</Collapse>
 				</>
 			)}
-			{isConnected && !isPending && (
+			{isConnected && isPending && (
 				<>
 					<AddressInfoButton isOpen={isOpenAddress} onClose={onCloseAddress} />
 
