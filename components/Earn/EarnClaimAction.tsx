@@ -34,10 +34,7 @@ const EarnClaimAction: React.FC<IEarnClaimActionProps> = ({ claim }) => {
 	if (
 		!selectedOpportunity ||
 		buttonId !== "claim" ||
-		JSBI.lessThanOrEqual(
-			selectedOpportunity.unclaimedAmount.raw,
-			JSBI.BigInt(0)
-		)
+		JSBI.lessThanOrEqual(selectedOpportunity.stakedAmount.raw, JSBI.BigInt(0))
 	) {
 		return null;
 	}

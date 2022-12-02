@@ -7,11 +7,7 @@ import { EarnButton } from "../../Earn";
 
 import { IHeaderProps } from "./dto";
 
-const Header: React.FC<IHeaderProps> = ({
-	unclaimedAmount,
-	symbol,
-	onClick,
-}) => {
+const Header: React.FC<IHeaderProps> = ({ stakedAmount, symbol, onClick }) => {
 	const theme = usePicasso();
 	const { t } = useTranslation();
 
@@ -36,7 +32,7 @@ const Header: React.FC<IHeaderProps> = ({
 				width="max-content"
 				height="max-content"
 				onClick={onClick}
-				amount={unclaimedAmount}
+				amount={stakedAmount}
 				fontSize="xs"
 			>
 				{t("earnPages.claim")}

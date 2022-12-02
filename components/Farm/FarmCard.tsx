@@ -241,7 +241,7 @@ const FarmCard: FunctionComponent<{
 				mt="1rem"
 				height="2rem"
 				onClick={onClick}
-				amount={unclaimedAmount}
+				amount={stakedAmount}
 			>
 				{t("earnPages.claim")}
 			</EarnButton>
