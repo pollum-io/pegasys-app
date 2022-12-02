@@ -7,7 +7,7 @@ import { IWalletHookInfos } from "types";
 import { UseBestSwapMethod } from "./useBestSwapMethod";
 import { UseToastOptions } from "@chakra-ui/react";
 import { TransactionResponse } from "@ethersproject/providers";
-import { useTransaction } from "pegasys-services";
+import { IFinishedTx, IPendingTx, useTransaction } from "pegasys-services";
 
 export enum SwapCallbackState {
 	INVALID,
@@ -25,13 +25,12 @@ export function UseSwapCallback(
 	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
 	txType: string,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
-	onCloseTransaction: () => void
-) {
+	onCloseTransaction: () => void,
+	addTransactions: (tx: IPendingTx | IFinishedTx, pending?: boolean) => void,
+	) {
 	const { walletAddress, chainId: chain } = walletInfos;
 
 	const recipient = !recipientAddress ? walletAddress : recipientAddress;
-
-	const { addTransactions } = useTransaction();
 
 	const swapCalls = UseBestSwapMethod(
 		trade as Trade,

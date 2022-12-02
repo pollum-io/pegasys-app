@@ -109,7 +109,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	} = useModal();
 	const { setCurrentInputTokenName } = useSwap();
 	const { otherWallet } = useWallet();
-	const { pendingTxs, finishedTxs } = useTransaction();
+	const { pendingTxs, finishedTxs, addTransactions } = useTransaction();
 	const [isApproved, setIsApproved] = useState<boolean>(false);
 	const [currPendingTx, setCurrPendingTx] = useState<string>("");
 
@@ -312,7 +312,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			setCurrentInputTokenName,
 			txType,
 			toast,
-			onCloseTransaction
+			onCloseTransaction,
+			addTransactions
 		);
 
 	const { realizedLPFee } = computeTradePriceBreakdown(
@@ -394,6 +395,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		selectedToken,
 		tokenInputValue,
 		walletInfos,
+		addTransactions,
 		signer as Signer,
 		onCloseTransaction
 	);
@@ -442,6 +444,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		setCurrentInputTokenName,
 		setApproveTokenStatus,
 		onCloseTransaction,
+		addTransactions,
 		userSlippageTolerance
 	);
 
