@@ -17,9 +17,10 @@ interface IEarnButtonProps {
 	mt?: string;
 	ml?: string;
 	my?: string;
-	mb?: string;
+	mb?: string | string[];
 	fontSize?: string | number;
 	disabled?: boolean;
+	display?: string[];
 }
 
 const EarnButton: React.FC<IEarnButtonProps> = ({

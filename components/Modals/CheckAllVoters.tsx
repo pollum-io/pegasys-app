@@ -9,6 +9,7 @@ import {
 	ModalOverlay,
 	Text,
 	Link,
+	useColorMode,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { FunctionComponent, useMemo } from "react";
@@ -34,6 +35,7 @@ interface IModal {
 export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 	const { isOpen, onClose } = props;
 	const { t: translation } = useTranslation();
+	const { colorMode } = useColorMode();
 
 	const theme = usePicasso();
 	const { votersType, selectedProposals, currentVotes, vote } = useGovernance();
@@ -59,14 +61,30 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				borderRadius="30px"
-				my={["0", "40", "40", "40"]}
-				mb={["0", "0", "24rem", "24rem"]}
+				borderTopRadius="30px"
+				borderBottomRadius={["0", "30px", "30px", "30px"]}
+				my={["0", "8rem", "8rem", "8rem"]}
+				mb={["0", "unset", "unset", "unset"]}
 				h="max-content"
+				borderTop={
+					colorMode === "dark"
+						? ["1px solid transparent", "none", "none", "none"]
+						: ["none", "none", "none", "none"]
+				}
 				position={["absolute", "relative", "relative", "relative"]}
-				bottom={["0", "0", "0", "0"]}
+				bottom={["0", "unset", "unset", "unset"]}
 				w={["100vw", "22.375rem", "22.375rem", "22.375rem"]}
-				bgColor={theme.bg.blueNavyLight}
+				boxShadow={
+					colorMode === "dark"
+						? "0px 0px 0px 1px rgba(0, 0, 0, 0.1)"
+						: "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
+				}
+				filter={
+					colorMode === "dark"
+						? "drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.2)) drop-shadow(0px 15px 40px rgba(0, 0, 0, 0.4))"
+						: "none"
+				}
+				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(270.16deg, rgba(24,54,61, 0.8) 90.76%, rgba(24,54,61, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
 					borderTopRadius="30px"
@@ -99,7 +117,7 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 							width="100%"
 							justifyContent="space-between"
 							color={theme.text.cyanPurple}
-							fontSize="14px"
+							fontSize="0.875rem"
 							mb="1.5rem"
 						>
 							{(votersType === "favor" &&
@@ -111,9 +129,9 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 										{votersType === "favor"
 											? selectedProposals.supportVotes.length
 											: selectedProposals.notSupportVotes.length}{" "}
-										addresses
+										{translation("votePage.addresses")}
 									</Text>
-									<Text>Votes</Text>
+									<Text>{translation("votePage.votes")}</Text>
 								</>
 							) : (
 								<Text width="100%" align="center">
@@ -137,7 +155,11 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 								>
 									<Flex gap="2">
 										<Jazzicon diameter={18} seed={Number(vote.voter)} />
-										<Link isExternal href={getLink(vote.voter)} fontSize="14px">
+										<Link
+											isExternal
+											href={getLink(vote.voter)}
+											fontSize="0.875rem"
+										>
 											{shortAddress(vote.voter)}
 										</Link>
 									</Flex>
@@ -152,7 +174,7 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 								mb="3rem"
 								fontWeight="semibold"
 								w="100%"
-								fontSize="16px"
+								fontSize="1rem"
 								py="0.5rem"
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
@@ -164,7 +186,9 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 									vote(selectedProposals.id, votersType === "favor")
 								}
 							>
-								{votersType === "favor" ? "Vote in Favor" : "Vote Against"}
+								{votersType === "favor"
+									? translation("votePage.voteInFavor")
+									: translation("votePage.voteAgainst")}
 							</Button>
 						)}
 					</Flex>
@@ -178,7 +202,7 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 						display={["none", "flex", "flex", "flex"]}
 					>
 						<Text
-							fontSize="14px"
+							fontSize="0.875rem"
 							color={theme.text.cyanPurple}
 							_hover={{ cursor: "pointer" }}
 							fontWeight="semibold"

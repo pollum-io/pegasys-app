@@ -9,6 +9,7 @@ import {
 	ModalOverlay,
 	Text,
 	ModalBody,
+	useColorMode,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import React from "react";
@@ -50,6 +51,8 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 
 	const { t: translation, i18n } = useTranslation();
 
+	const { colorMode } = useColorMode();
+
 	const txName =
 		txType === "approve"
 			? "Approve"
@@ -69,14 +72,28 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				position={["absolute", "absolute", "relative", "relative"]}
-				m={["0", "0", "10", "10"]}
-				bottom={["0", "0", "unset", "unset"]}
-				borderRadius="3xl"
-				borderBottomRadius={["0", "0", "3xl", "3xl"]}
-				border={["none", "1px solid transparent"]}
-				borderTop="1px solid transparent"
-				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+				position={["absolute", "relative", "relative", "relative"]}
+				mt={["0", "6rem", "6rem", "6rem"]}
+				mb={["0", "unset", "unset", "unset"]}
+				bottom={["0", "unset", "unset", "unset"]}
+				borderRadius="30px"
+				borderBottomRadius={["0", "30px", "30px", "30px"]}
+				boxShadow={
+					colorMode === "dark"
+						? "0px 0px 0px 1px rgba(0, 0, 0, 0.1)"
+						: "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
+				}
+				filter={
+					colorMode === "dark"
+						? "drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.2)) drop-shadow(0px 15px 40px rgba(0, 0, 0, 0.4))"
+						: "none"
+				}
+				borderTop={
+					colorMode === "dark"
+						? ["1px solid transparent", "none", "none", "none"]
+						: ["none", "none", "none", "none"]
+				}
+				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(270.16deg, rgba(24,54,61, 0.8) 90.76%, rgba(24,54,61, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
 					display="flex"
@@ -136,15 +153,16 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 				</ModalBody>
 				<Flex
 					bgColor={theme.bg.blackLightness}
-					borderBottomRadius={["0", "0", "3xl", "3xl"]}
+					borderBottomRadius={["0", "30px", "30px", "30px"]}
 					flexDirection="column"
 					p="1.5rem"
-					pb={["3.75rem", "3.75rem", "1.5rem", "1.5rem"]}
+					pb={["3.75rem", "1.5rem", "1.5rem", "1.5rem"]}
+					w="100%"
 				>
 					<Flex
 						flexDirection="column"
 						gap="2"
-						fontSize={["14px", "16px", "16px", "16px"]}
+						fontSize={["0.875rem", "1rem", "1rem", "1rem"]}
 					>
 						<Flex flexDirection="row" justifyContent="space-between">
 							<Text>{translation("swapPage.price")}</Text>
@@ -196,12 +214,11 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 						<Button
 							w="100%"
 							mt="1.5rem"
-							py="6"
-							px="6"
+							py={["0.5rem", "6", "6", "6"]}
 							borderRadius="67px"
 							bgColor={theme.bg.blueNavyLightness}
 							color={theme.text.cyan}
-							fontSize="lg"
+							fontSize={["1rem", "lg", "lg", "lg"]}
 							onClick={() => {
 								if (!onTx) return;
 								openPendingTx();

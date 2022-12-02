@@ -53,8 +53,6 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 
 	const theme = usePicasso();
 
-	const { colorMode } = useColorMode();
-
 	const { current: currentList } =
 		currentTokenLists[listUrl] || currentTokenLists;
 
@@ -83,14 +81,14 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 					alignItems="center"
 				>
 					<Flex gap="4" alignItems="center">
-						<Img src={currentList?.logoURI} w="24px" h="24px" />
+						<Img src={currentList?.logoURI} w="1.5rem" h="1.5rem" />
 						<Flex flexDirection="column">
 							<Text fontSize="sm" fontWeight="semibold">
 								{currentList?.name}
 							</Text>
 							<Flex
 								display="inline-block"
-								maxW="160px"
+								maxW="10rem"
 								overflow="hidden"
 								textOverflow="ellipsis"
 								whiteSpace="nowrap"
@@ -131,7 +129,11 @@ const ShowListComponent: React.FC<IShowListComponent> = ({ listUrl }) => {
 							</Text>
 						</Flex>
 
-						<Flex w="100%" justifyContent="space-between">
+						<Flex
+							w="100%"
+							justifyContent="space-between"
+							gap={["3", "unset", "unset", "unset"]}
+						>
 							<Text
 								fontSize="xs"
 								transition="200ms ease-in-out"
@@ -175,6 +177,8 @@ export const ManageToken: React.FC<IModal> = props => {
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const [listUrlInput, setListUrlInput] = useState<string>("");
+
+	const { colorMode } = useColorMode();
 
 	const { onOpenConfirmList, isOpenConfirmList, onCloseConfirmList } =
 		useModal();
@@ -265,17 +269,21 @@ export const ManageToken: React.FC<IModal> = props => {
 			/>
 			<ModalOverlay />
 			<ModalContent
-				borderRadius="3xl"
-				bgColor={theme.bg.blueNavy}
+				borderRadius="30px"
+				borderTop={
+					colorMode === "dark"
+						? ["1px solid transparent", "none", "none", "none"]
+						: ["none", "none", "none", "none"]
+				}
+				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(270.16deg, rgba(24,54,61, 0.8) 90.76%, rgba(24,54,61, 0) 97.76%) border-box`}
 				px="1"
 				py="2"
 				position={["absolute", "absolute", "relative", "relative"]}
-				m={["0", "0", "10", "10"]}
-				bottom={["0", "0", "unset", "unset"]}
-				borderBottomRadius={["0", "0", "3xl", "3xl"]}
-				border={["none", "1px solid transparent"]}
-				borderTop="1px solid transparent"
+				mt={["0", "6rem", "6rem", "6rem"]}
+				bottom={["0", "unset", "unset", "unset"]}
+				borderBottomRadius={["0", "30px", "30px", "30px"]}
 				pb={["2rem", "2rem", "0.5rem", "0.5rem"]}
+				mb={["0", "unset", "unset", "unset"]}
 			>
 				<ModalHeader display="flex" alignItems="center" gap="3">
 					<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
@@ -298,8 +306,8 @@ export const ManageToken: React.FC<IModal> = props => {
 							h="max-content"
 							py="1"
 							px="6"
-							maxH="32px"
-							maxW="320px"
+							maxH="2rem"
+							maxW="20rem"
 							bgColor={theme.bg.blackAlpha}
 							_focus={{ outline: "none", borderColor: theme.border.focusGray }}
 							_hover={{}}

@@ -47,20 +47,20 @@ const EarnWithdrawAction: React.FC<IEarnWithdrawActionProps> = ({
 			</Text>
 			<EarnInput />
 			<EarnSlider />
-			<Flex mt="1.5rem" mb="1rem" gap="4">
+			<Flex mt="1.5rem" mb={["1rem", "0.5rem", "0.5rem", "0.5rem"]} gap="4">
 				<EarnButton
 					width="100%"
-					height={["2.5rem", "2.5rem", "3rem", "3rem"]}
-					py="3"
+					height="2.5rem"
 					px="1.5rem"
 					onClick={onClose}
 					fontSize={16}
+					display={["none", "flex", "flex", "flex"]}
 				>
 					{t("earnPages.cancel")}
 				</EarnButton>
 				<EarnButton
 					width="100%"
-					height={["2.5rem", "2.5rem", "3rem", "3rem"]}
+					height="2.5rem"
 					py="3"
 					px="1.5rem"
 					disabled={

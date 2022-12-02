@@ -19,7 +19,6 @@ import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
 import { PAIRS_CURRENT, PAIR_DATA, pegasysClient } from "apollo";
 import {
 	AddLiquidityModal,
-	ImportPoolModal,
 	LoadingTransition,
 	RemoveLiquidity,
 } from "components";
@@ -41,8 +40,6 @@ import {
 export const PoolsContainer: NextPage = () => {
 	const theme = usePicasso();
 	const {
-		isOpenImportPool,
-		onCloseImportPool,
 		isOpenRemoveLiquidity,
 		onCloseRemoveLiquidity,
 		isOpenAddLiquidity,
@@ -435,7 +432,7 @@ export const PoolsContainer: NextPage = () => {
 
 	const { language } = i18n;
 
-	const languages = ["de", "fr", "pt-br", "vn", "es"];
+	const languages = ["de", "tr", "fr", "pt-br", "vn", "es"];
 
 	const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
 		const inputValue = event.target.value;
@@ -471,7 +468,6 @@ export const PoolsContainer: NextPage = () => {
 				poolPercentShare={poolPercentShare}
 				userPoolBalance={userPoolBalance}
 				currPair={currPair}
-				setIsCreate={setIsCreate}
 				openPendingTx={onOpenTransaction}
 				closePendingTx={onCloseTransaction}
 			/>
@@ -491,10 +487,7 @@ export const PoolsContainer: NextPage = () => {
 				openPendingTx={onOpenTransaction}
 				closePendingTx={onCloseTransaction}
 			/>
-			<ImportPoolModal
-				isModalOpen={isOpenImportPool}
-				onModalClose={onCloseImportPool}
-			/>
+
 			<LoadingTransition
 				isOpen={isOpenTransaction}
 				onClose={onCloseTransaction}
@@ -507,7 +500,13 @@ export const PoolsContainer: NextPage = () => {
 							zIndex="docked"
 							position="relative"
 							borderRadius="xl"
-							h={["11rem", "unset", "unset", "11rem"]}
+							h={
+								!address
+									? ["max-content", "max-content", "unset", "unset"]
+									: languages.includes(language)
+									? ["max-content", "max-content", "unset", "unset"]
+									: "unset"
+							}
 							backgroundColor={theme.bg.alphaPurple}
 						>
 							<Img
@@ -518,45 +517,30 @@ export const PoolsContainer: NextPage = () => {
 								position="absolute"
 								zIndex="base"
 								w="100%"
-								h={
-									address
-										? ["92%", "85%", "85%", "85%"]
-										: languages.includes(language)
-										? ["85%", "85%", "85%", "85%"]
-										: ["85%", "85%", "85%", "85%"]
-								}
+								h={address ? ["90%", "85%", "85%", "85%"] : "100%"}
 							/>
-
 							<Flex
 								zIndex="docked"
 								flexDirection="column"
-								px={["1rem", "1rem", "1.625rem", "1.625rem"]}
-								py={["0.6rem", "0.7rem", "1rem", "1rem"]}
+								px={["1rem", "1.3rem", "1.625rem", "1.625rem"]}
+								py={["0.8rem", "1.1rem", "1.375rem", "1.375rem"]}
 								gap="3"
-								h={["9rem", "10rem", "10rem", "10rem"]}
+								h={
+									languages.includes(language)
+										? ["13rem", "11rem", "11rem", "11rem"]
+										: ["12rem", "10rem", "10rem", "10rem"]
+								}
 								color="white"
 							>
-								<Text fontWeight="bold" fontSize={["14px", "md", "md", "md"]}>
+								<Text fontWeight="bold" fontSize="md">
 									{translation("pool.liquidityProviderRewards")}
 								</Text>
 								<Text
 									color="white"
 									fontWeight="medium"
-									fontSize={
-										languages.includes(language)
-											? ["13px", "sm", "sm", "sm"]
-											: "sm"
-									}
+									fontSize="sm"
 									lineHeight="shorter"
-									w={
-										!isMobile
-											? language === "fr" || language === "de"
-												? ["80%", "80%", "64%", "64%"]
-												: ["100%", "70%", "60%", "60%"]
-											: languages.includes(language) || language === "tr"
-											? ["100%", "80%", "64%", "64%"]
-											: ["100%", "80%", "64%", "64%"]
-									}
+									w={["100%", "80%", "60%", "60%"]}
 								>
 									{translation("pool.liquidityProvidersEarn")}
 								</Text>
@@ -569,7 +553,7 @@ export const PoolsContainer: NextPage = () => {
 									bgColor={theme.bg.alphaPurple}
 									zIndex="0"
 									position="relative"
-									top={["5", "2", "2", "2"]}
+									top={["0.6rem", "0.2rem", "0.2rem", "0.2rem"]}
 									borderBottomRadius="xl"
 									py="0.531rem"
 									pt={["0.3rem", "unset", "unset", "unset"]}
@@ -622,7 +606,6 @@ export const PoolsContainer: NextPage = () => {
 									{translation("pool.poolsOverview")}
 								</Text>
 							</Flex>
-
 							<Collapse in={!isLoading}>
 								{!isLoading && (
 									<Flex
@@ -649,7 +632,7 @@ export const PoolsContainer: NextPage = () => {
 											"row",
 										]}
 										zIndex="docked"
-										w="100%"
+										w="max-content"
 										mt={["4", "6", "2", "2"]}
 										gap={["7", "none", "none", "none"]}
 										alignItems={[
@@ -661,7 +644,7 @@ export const PoolsContainer: NextPage = () => {
 									>
 										<Flex
 											display={userHavePool && isConnected ? "flex" : "none"}
-											w="100%"
+											w={["xs", "100%", "100%", "100%"]}
 										>
 											<InputGroup alignItems="center">
 												<InputLeftElement
@@ -684,7 +667,7 @@ export const PoolsContainer: NextPage = () => {
 													}}
 													onChange={handleInput}
 													borderRadius="full"
-													w={["100%", "100%", "20rem", "20rem"]}
+													w={["100%", "20rem", "20rem", "20rem"]}
 													h="2.2rem"
 													py={["0.2rem", "0.2rem", "1", "1"]}
 													pl="10"
@@ -737,12 +720,19 @@ export const PoolsContainer: NextPage = () => {
 															borderColor="transparent"
 															p="4"
 															fontSize="sm"
-															zIndex="2"
+															zIndex="9999"
 														>
 															<MenuItem
 																color={theme.text.mono}
 																_hover={{ bgColor: theme.bg.neutralGray }}
 																onClick={() => setSortType("liquidity")}
+																borderRadius="md"
+																_active={{}}
+																bgColor={
+																	sortType === "liquidity"
+																		? theme.bg.menuLinksGray
+																		: "transparent !important"
+																}
 															>
 																{translation("pool.liquidity")}
 															</MenuItem>
@@ -750,6 +740,13 @@ export const PoolsContainer: NextPage = () => {
 																color={theme.text.mono}
 																_hover={{ bgColor: theme.bg.neutralGray }}
 																onClick={() => setSortType("volume")}
+																borderRadius="md"
+																_active={{}}
+																bgColor={
+																	sortType === "volume"
+																		? theme.bg.menuLinksGray
+																		: "transparent !important"
+																}
 															>
 																{translation("positionCard.volume")}
 															</MenuItem>
@@ -757,6 +754,13 @@ export const PoolsContainer: NextPage = () => {
 																color={theme.text.mono}
 																_hover={{ bgColor: theme.bg.neutralGray }}
 																onClick={() => setSortType("apr")}
+																borderRadius="md"
+																_active={{}}
+																bgColor={
+																	sortType === "apr"
+																		? theme.bg.menuLinksGray
+																		: "transparent !important"
+																}
 															>
 																APR
 															</MenuItem>
@@ -764,6 +768,13 @@ export const PoolsContainer: NextPage = () => {
 																color={theme.text.mono}
 																_hover={{ bgColor: theme.bg.neutralGray }}
 																onClick={() => setSortType("your-pools")}
+																borderRadius="md"
+																_active={{}}
+																bgColor={
+																	sortType === "your-pools"
+																		? theme.bg.menuLinksGray
+																		: "transparent !important"
+																}
 															>
 																{translation("pool.yourPools")}
 															</MenuItem>
@@ -777,7 +788,6 @@ export const PoolsContainer: NextPage = () => {
 							</Collapse>
 						</Flex>
 					</SlideFade>
-
 					<Collapse in={!isConnected}>
 						{!isConnected && (
 							<Flex
@@ -798,7 +808,6 @@ export const PoolsContainer: NextPage = () => {
 							</Flex>
 						)}
 					</Collapse>
-
 					<Collapse
 						in={
 							isConnected &&
@@ -836,7 +845,6 @@ export const PoolsContainer: NextPage = () => {
 								</Flex>
 							)}
 					</Collapse>
-
 					<Collapse in={isConnected && notFound && !isLoading}>
 						{isConnected && notFound && !isLoading && (
 							<Flex
@@ -885,8 +893,8 @@ export const PoolsContainer: NextPage = () => {
 								>
 									<Flex
 										className="circleLoading"
-										width="60px !important"
-										height="60px !important"
+										width="3.75rem !important"
+										height="3.75rem !important"
 										id={
 											colorMode === "dark"
 												? "pendingTransactionsDark"

@@ -4,6 +4,7 @@ import { Collapse, Flex, Input, Text, useColorMode } from "@chakra-ui/react";
 
 import { usePicasso } from "hooks";
 import { BiTrashAlt } from "react-icons/bi";
+import { useTranslation } from "react-i18next";
 import { IUnlockVotingInput } from "./dto";
 
 const UnlockVotingInput: React.FC<IUnlockVotingInput> = ({
@@ -13,13 +14,16 @@ const UnlockVotingInput: React.FC<IUnlockVotingInput> = ({
 }) => {
 	const { votesLocked } = useGovernance();
 	const { colorMode } = useColorMode();
+	const { t: translation } = useTranslation();
 	const theme = usePicasso();
 
 	return (
 		<Collapse in={showInput}>
 			<Flex flexDirection="column" w="100%" mb="1">
 				<Text fontWeight="500">
-					{votesLocked ? "Add Delegate" : "Delegate"}
+					{votesLocked
+						? translation("searchModal.add") && translation("vote.delegate")
+						: translation("vote.delegate")}
 				</Text>
 			</Flex>
 			<Flex w="100%" h="2.875rem" gap="1">
@@ -34,7 +38,7 @@ const UnlockVotingInput: React.FC<IUnlockVotingInput> = ({
 						value={inputValue}
 						fontSize="1rem"
 						border="none"
-						placeholder="Wallet Address"
+						placeholder={translation("addressInputPanel.walletAddress")}
 						_placeholder={{
 							color: theme.text.lightGray,
 							fontWeight: "normal",

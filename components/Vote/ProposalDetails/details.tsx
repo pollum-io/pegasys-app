@@ -7,11 +7,13 @@ import {
 	useWallet,
 } from "pegasys-services";
 import { ChainId } from "@pollum-io/pegasys-sdk";
+import { useTranslation } from "react-i18next";
 
 const Detail: React.FC = () => {
 	const theme = usePicasso();
 	const { selectedProposals } = useGovernance();
 	const { chainId } = useWallet();
+	const { t: translation } = useTranslation();
 
 	const getLink = (addr: string) =>
 		`${
@@ -30,7 +32,7 @@ const Detail: React.FC = () => {
 			flexDirection="column"
 			color={theme.text.mono}
 		>
-			<Text fontWeight="bold">Details</Text>
+			<Text fontWeight="bold">{translation("votePage.details")}</Text>
 			<Flex w="100%" flexDirection={["column", "column", "row", "row"]}>
 				<Text>1:</Text>
 				<Text wordBreak="break-all" ml={["0", "0", "0.438rem", "0.438rem"]}>

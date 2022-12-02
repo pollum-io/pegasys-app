@@ -33,13 +33,15 @@ export const VoteContainer: NextPage = () => {
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const { colorMode } = useColorMode();
 
-	const { t: translation } = useTranslation();
+	const { t: translation, i18n } = useTranslation();
 
 	const {
 		onOpenUnlockVotesModal,
 		isOpenUnlockVotesModal,
 		onCloseUnlockVotesModal,
 	} = useModal();
+
+	const { language } = i18n;
 
 	return (
 		<Flex justifyContent="center" alignItems="center">
@@ -68,15 +70,19 @@ export const VoteContainer: NextPage = () => {
 								position="absolute"
 								zIndex="base"
 								w="100%"
-								h="85%"
+								h={!votesLocked ? "85%" : "100%"}
 							/>
 							<Flex
 								zIndex="docked"
 								flexDirection="column"
-								px={["1rem", "1.3rem", "1.6rem", "1.6rem"]}
-								py={["0.8rem", "1.375rem", "1.375rem", "2.1rem"]}
+								px={["1rem", "1.3rem", "1.625rem", "1.625rem"]}
+								py={["0.8rem", "1.1rem", "1.375rem", "1.375rem"]}
 								gap="2"
-								h={["9rem", "10rem", "10rem", "10rem"]}
+								h={
+									!votesLocked
+										? ["9rem", "10rem", "10rem", "10rem"]
+										: ["10rem", "10rem", "10rem", "10rem"]
+								}
 								color="white"
 							>
 								<Text fontWeight="bold" fontSize="md">
@@ -93,26 +99,41 @@ export const VoteContainer: NextPage = () => {
 									{translation("votePage.youCanVote")}
 								</Text>
 							</Flex>
-							<Flex
-								alignItems={["flex-start", "center", "center", "center"]}
-								justifyContent="space-between"
-								flexDirection={["column", "row", "row", "row"]}
-								bgColor={theme.bg.alphaPurple}
-								position="relative"
-								borderBottomRadius="xl"
-								h="15%"
-								py="0.531rem"
-								px="1rem"
-							>
-								{!votesLocked && (
+							{!votesLocked && (
+								<Flex
+									alignItems={["flex-start", "center", "center", "center"]}
+									justifyContent="space-between"
+									flexDirection={["column", "row", "row", "row"]}
+									bgColor={theme.bg.alphaPurple}
+									position="relative"
+									borderBottomRadius="xl"
+									top={["2rem", "3", "3", "3"]}
+									py="0.531rem"
+									px="1rem"
+								>
 									<>
-										<Text fontWeight="500" fontSize="16px" color="white">
-											Your Votes:{" "}
+										<Text
+											fontWeight="500"
+											fontSize={
+												language === "vn"
+													? ["1rem", "0.85rem", "1rem", "1rem"]
+													: "1rem"
+											}
+											color="white"
+										>
+											{translation("votePage.yourVotes")}:{" "}
 											{currentVotes ? currentVotes.toSignificant() : 0}
 										</Text>
-										<Flex gap="4" fontSize="14px">
+										<Flex
+											gap="4"
+											fontSize={
+												language === "vn"
+													? ["0.875rem", "0.75rem", "0.875rem", "0.875rem"]
+													: "0.875rem"
+											}
+										>
 											<Text color="white">
-												Delegated to:{" "}
+												{translation("votePage.delegatedTo")}{" "}
 												{delegatedTo.toLocaleLowerCase() === "self"
 													? delegatedTo
 													: shortAddress(delegatedTo)}
@@ -124,16 +145,17 @@ export const VoteContainer: NextPage = () => {
 												color={theme.text.cyan}
 												onClick={onOpenUnlockVotesModal}
 											>
-												Edit
+												{translation("votePage.edit")}
 											</Text>
 										</Flex>
 									</>
-								)}
-							</Flex>
+								</Flex>
+							)}
 						</Flex>
 						<Flex
 							alignItems="flex-start"
 							my={["1", "4", "8", "8"]}
+							mt={["3rem", "3rem", "3rem", "3rem"]}
 							justifyContent="flex-start"
 							w="100%"
 							flexDirection="column"
@@ -150,14 +172,13 @@ export const VoteContainer: NextPage = () => {
 								<Flex
 									flexDirection="row"
 									justifyContent="space-between"
-									alignItems="center"
+									alignItems="baseline"
 									w="100%"
-									bgColor=""
 									h="max-content"
 								>
 									<Flex>
 										<Text
-											fontSize={["20px", "20px", "2xl", "2xl"]}
+											fontSize={["1.25rem", "1.25rem", "2xl", "2xl"]}
 											fontWeight="semibold"
 											color={theme.text.mono}
 										>
@@ -165,7 +186,7 @@ export const VoteContainer: NextPage = () => {
 										</Text>
 									</Flex>
 									{!votesLocked ? (
-										<Flex gap="2.5rem" fontSize="14px">
+										<Flex gap="2.5rem" fontSize="0.875rem">
 											<Flex
 												gap="2"
 												alignItems="center"
@@ -194,7 +215,7 @@ export const VoteContainer: NextPage = () => {
 										PegasysContracts[chainId]?.GOVERNANCE_ADDRESS && (
 											<Flex w="max-content" h="max-content">
 												<Button
-													fontSize="14px"
+													fontSize="0.875rem"
 													fontWeight="semibold"
 													px={["1.7rem", "1.5rem", "1.5rem", "1.5rem"]}
 													size="sm"
@@ -207,7 +228,7 @@ export const VoteContainer: NextPage = () => {
 													onClick={onOpenUnlockVotesModal}
 													borderRadius="full"
 												>
-													Unlock Voting
+													{translation("votePage.unlockVoting")}
 												</Button>
 											</Flex>
 										)
@@ -215,14 +236,16 @@ export const VoteContainer: NextPage = () => {
 								</Flex>
 								{isConnected ? (
 									<Flex
-										fontSize="14px"
+										fontSize="0.875rem"
 										gap="2"
 										alignItems="center"
 										display={["flex", "flex", "none", "none"]}
 										_hover={{ cursor: "pointer" }}
 										pl="2"
 									>
-										<Text color={theme.text.mono}>Discuss at the Forum</Text>
+										<Text color={theme.text.mono}>
+											{translation("votePage.discussAtTheForum")}
+										</Text>
 										<MdOutlineCallMade size={18} color={theme.text.mono} />
 									</Flex>
 								) : (
@@ -254,7 +277,7 @@ export const VoteContainer: NextPage = () => {
 									>
 										{translation("votePage.proposalCommunityMembers")}
 									</Text>
-									<Flex mt="15px">
+									<Flex mt="0.9375rem">
 										<Text
 											fontSize={["sm", "sm", "md", "md"]}
 											fontWeight="normal"
@@ -280,7 +303,7 @@ export const VoteContainer: NextPage = () => {
 										textAlign="center"
 										color={theme.text.mono}
 									>
-										This feature is not available for this network!
+										{translation("earnPages.featNotAvailable")}
 									</Text>
 								</Flex>
 							) : dataLoading ? (
@@ -294,8 +317,8 @@ export const VoteContainer: NextPage = () => {
 								>
 									<Flex
 										className="circleLoading"
-										width="60px !important"
-										height="60px !important"
+										width="3.75rem !important"
+										height="3.75rem !important"
 										id={
 											colorMode === "dark"
 												? "pendingTransactionsDark"

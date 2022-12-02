@@ -35,17 +35,31 @@ export const LoadingTransition: React.FC<IModal> = props => {
 		>
 			<ModalOverlay />
 			<ModalContent
-				mt="10rem"
-				borderRadius="3xl"
-				bgColor={theme.bg.blueNavy}
+				mt={["unset", "10rem", "10rem", "10rem"]}
+				borderRadius="30px"
+				borderBottomRadius={["none", "30px", "30px", "30px"]}
 				pt="0"
-				pb="6"
+				pb={["5rem", "6", "6", "6"]}
 				px="6"
-				border="1px solid transparent"
+				bottom={["0", "unset", "unset", "unset"]}
+				m="0"
+				border={[
+					"none",
+					"1px solid transparent",
+					"1px solid transparent",
+					"1px solid transparent",
+				]}
+				borderTop="1px solid transparent"
 				background={
 					colorMode === "dark"
-						? `linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`
+						? `linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 50.76%, rgba(86, 190, 216, 0) 97.76%) border-box`
 						: undefined
+				}
+				position={["absolute", "relative", "relative", "relative"]}
+				boxShadow={
+					colorMode === "dark"
+						? "0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4)"
+						: "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
 				}
 			>
 				{onClose && (
@@ -72,17 +86,33 @@ export const LoadingTransition: React.FC<IModal> = props => {
 					flexDirection="column"
 					justifyContent="center"
 					alignItems="center"
-					gap="3"
+					gap="4"
 					color={theme.text.mono}
 				>
-					<Img src="icons/loading.gif" w="35%" h="35%" className="blob" />
-					<Flex flexDirection="row" alignItems="baseline" gap="1">
-						<Text fontSize="2xl" fontWeight="semibold">
+					<Img
+						src={
+							colorMode === "dark"
+								? "icons/loading.gif"
+								: "icons/lightLoading.gif"
+						}
+						w="7rem"
+						h="7rem"
+						className="blob"
+						filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
+					/>
+					<Flex
+						flexDirection={["column", "row", "row", "row"]}
+						alignItems={["center", "baseline", "baseline", "baseline"]}
+						gap="1"
+					>
+						<Text fontSize="2xl" fontWeight="semibold" textAlign="center">
 							{translation("transactionConfirmation.waitingConfirmation")}
 						</Text>
-						<Text className="loading" />
+						<Text
+							className={colorMode === "dark" ? "loading" : "loadingLight"}
+						/>
 					</Flex>
-					<Text>
+					<Text textAlign="center">
 						{translation("transactionConfirmation.confirmTransaction")}
 					</Text>
 				</Flex>

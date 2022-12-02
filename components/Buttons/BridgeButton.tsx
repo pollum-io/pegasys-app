@@ -52,12 +52,12 @@ export const BridgeButton: FunctionComponent<IButtonProps> = props => {
 					zIndex="2"
 					bgColor={theme.bg.blueNavy}
 					p="4"
-					w="10px"
+					w="0.625rem"
 					borderRadius="2xl"
 					position="fixed"
-					left="-25px"
-					top="-8px"
-					minWidth="140px"
+					left="-1.5625rem"
+					top="-0.5rem"
+					minWidth="8.75rem"
 					border="none"
 				>
 					<MenuItem

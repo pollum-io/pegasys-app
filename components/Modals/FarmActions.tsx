@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 
 import { useFarm, useEarn } from "pegasys-services";
 import React from "react";
-import { MdOutlineInfo } from "react-icons/md";
+import { MdArrowBack, MdOutlineInfo } from "react-icons/md";
 import {
 	EarnActionsHeader,
 	EarnDepositAction,
@@ -47,26 +47,41 @@ export const FarmActions: React.FC<IModal> = props => {
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				mt={["8rem", "8", "10rem", "10rem"]}
-				mb={["0", "0", "10rem", "10rem"]}
-				position={["fixed", "fixed", "relative", "relative"]}
+				mt={["0", "6rem", "6rem", "6rem"]}
+				mb={["0", "unset", "unset", "unset"]}
+				position={["absolute", "relative", "relative", "relative"]}
 				bottom="0"
-				maxWidth="max-content"
-				w={["100vw", "100vw", "max-content", "max-content"]}
-				h={["max-content", "100vh", "max-content", "max-content"]}
-				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
-				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
-				bgColor={theme.bg.blueNavyLight}
-				border={["none", "1px solid transparent"]}
+				w={["100vw", "32rem", "32rem", "32rem"]}
+				borderTopRadius={["30px", "30px", "30px", "30px"]}
+				borderBottomRadius={["0px", "30px", "30px", "30px"]}
+				boxShadow="0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04)"
+				borderTop={["1px solid transparent", "none", "none", "none"]}
 				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
 					backgroundColor={theme.bg.blueNavyLight}
-					borderTopRadius="3xl"
+					borderTopRadius="30px"
 					alignItems="baseline"
 					justifyContent="space-between"
-					pl={["4", "5", "20", "20"]}
+					pl={["4", "5", "5", "5"]}
 				>
+					<Flex
+						flex="1"
+						display={{
+							base: "flex",
+							sm: "none",
+							md: "none",
+							lg: "none",
+						}}
+						justifyContent="left"
+						gap="2"
+						onClick={onClose}
+						color={theme.text.callGray}
+						alignItems="center"
+					>
+						<MdArrowBack size={22} />
+						<Text>Farms</Text>
+					</Flex>
 					<EarnActionsHeader
 						onClose={onClose}
 						depositTitle={t("earnPages.deposit")}
@@ -76,7 +91,7 @@ export const FarmActions: React.FC<IModal> = props => {
 				</ModalHeader>
 				<ModalBody
 					mb="2"
-					borderBottomRadius={["0", "0", "3xl", "3xl"]}
+					borderBottomRadius={["0", "20px", "20px", "20px"]}
 					background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 				>
 					<EarnDepositAction
@@ -96,20 +111,24 @@ export const FarmActions: React.FC<IModal> = props => {
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
+							pb={["3rem", "1.5rem", "1.5rem", "1.5rem"]}
 							background={[
-								theme.bg.smoothGray,
-								theme.bg.smoothGray,
+								theme.bg.subModalMobile,
+								theme.bg.subModal,
 								theme.bg.subModal,
 								theme.bg.subModal,
 							]}
-							position={["relative", "relative", "absolute", "absolute"]}
+							position={["relative", "absolute", "absolute", "absolute"]}
 							w="100%"
-							bottom={["unset", "unset", "-9rem", "-9rem"]}
-							borderTopRadius={["0", "0", "3xl", "3xl"]}
-							borderBottomRadius={["0", "0", "3xl", "3xl"]}
+							top={
+								withdrawPercentage === 100
+									? ["0", "25rem", "25rem", "25rem"]
+									: ["0", "23rem", "23rem", "23rem"]
+							}
+							borderTopRadius={["0", "30px", "30px", "30px"]}
+							borderBottomRadius={["0", "30px", "30px", "30px"]}
 							alignItems="flex-start"
 							gap="2"
-							mt={withdrawPercentage === 100 ? "3rem" : "1rem"}
 							transition="500ms"
 						>
 							<Flex>
@@ -138,17 +157,18 @@ export const FarmActions: React.FC<IModal> = props => {
 						<Flex
 							flexDirection="row"
 							p="1.5rem"
+							pb={["3rem", "1.5rem", "1.5rem", "1.5rem"]}
 							background={[
-								theme.bg.smoothGray,
-								theme.bg.smoothGray,
+								theme.bg.subModalMobile,
+								theme.bg.subModal,
 								theme.bg.subModal,
 								theme.bg.subModal,
 							]}
-							position={["relative", "relative", "absolute", "absolute"]}
+							position={["relative", "absolute", "absolute", "absolute"]}
 							w="100%"
-							bottom={["unset", "unset", "-7rem", "-7rem"]}
-							borderTopRadius={["0", "0", "3xl", "3xl"]}
-							borderBottomRadius={["0", "0", "3xl", "3xl"]}
+							top={["unset", "19.5rem", "19.5rem", "19.5rem"]}
+							borderTopRadius={["0", "30px", "30px", "30px"]}
+							borderBottomRadius={["0", "30px", "30px", "30px"]}
 							alignItems="flex-start"
 							gap="2"
 						>

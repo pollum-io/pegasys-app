@@ -31,7 +31,7 @@ class MyDocument extends Document {
 						rel="stylesheet"
 					/>
 				</Head>
-				<body style={{ overflow: "hidden" }}>
+				<body>
 					<ColorModeScript initialColorMode={theme.config.initialColorMode} />
 					<Main />
 					<NextScript />

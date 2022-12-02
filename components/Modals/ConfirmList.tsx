@@ -8,6 +8,7 @@ import {
 	ModalHeader,
 	ModalOverlay,
 	Text,
+	useColorMode,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { MdOutlineClose } from "react-icons/md";
@@ -24,26 +25,31 @@ export const ConfirmList: React.FC<IModal> = props => {
 	const { isOpen, onClose, handleAddList } = props;
 	const theme = usePicasso();
 	const { t: translation } = useTranslation();
+	const { colorMode } = useColorMode();
 
 	return (
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				borderRadius="3xl"
-				bgColor="transparent"
-				m={["0", "0", "10", "10"]}
-				bottom={["0", "0", "unset", "unset"]}
-				position={["absolute", "absolute", "relative", "relative"]}
-				borderBottomRadius={["0", "0", "3xl", "3xl"]}
-				border={["none", "1px solid transparent"]}
-				borderTop="1px solid transparent"
+				borderRadius="30px"
+				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(270.16deg, rgba(24,54,61, 0.8) 90.76%, rgba(24,54,61, 0) 97.76%) border-box`}
+				mt={["0", "6rem", "6rem", "6rem"]}
+				mb={["0", "unset", "unset", "unset"]}
+				bottom={["0", "unset", "unset", "unset"]}
+				position={["absolute", "relative", "relative", "relative"]}
+				borderBottomRadius={["0", "30px", "30px", "30px"]}
+				borderTop={
+					colorMode === "dark"
+						? ["1px solid transparent", "none", "none", "none"]
+						: ["none", "none", "none", "none"]
+				}
 			>
 				<ModalHeader
 					display="flex"
 					alignItems="center"
 					justifyContent="space-between"
 					bgColor={theme.bg.blackAlpha}
-					borderTopRadius="3xl"
+					borderTopRadius="30px"
 				>
 					<Flex gap="3">
 						<Flex>
@@ -79,7 +85,7 @@ export const ConfirmList: React.FC<IModal> = props => {
 					alignItems="center"
 					justifyContent="space-between"
 					bgColor={theme.bg.blackAlpha}
-					borderBottomRadius={["0", "0", "3xl", "3xl"]}
+					borderBottomRadius={["0", "30px", "30px", "30px"]}
 				>
 					<Button
 						py="3"

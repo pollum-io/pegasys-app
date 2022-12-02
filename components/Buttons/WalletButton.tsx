@@ -71,8 +71,8 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						h="max-content"
 						py={["2", "2", "2", "2"]}
 						px={["4", "4", "4", "4"]}
-						position={["absolute", "relative"]}
-						bottom={["12", "8", "8", "8"]}
+						position={["unset", "relative"]}
+						bottom={["0", "8", "8", "8"]}
 						onClick={onOpenSelectWalletModal}
 						{...rest}
 					>
@@ -114,8 +114,8 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						zIndex="2"
 						py={["2", "2", "2", "2"]}
 						position="absolute"
-						right={["10rem", "10.5rem", "12rem", "12rem"]}
-						bottom="4.5rem"
+						right={["-2", "8.8rem", "12.5rem", "12.5rem"]}
+						bottom={["1.9rem", "4.5rem", "4.5rem", "4.5rem"]}
 						w="2.313rem"
 						h="1.25rem"
 						borderRadius="xl"
@@ -126,10 +126,11 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 						alignItems="center"
 						justifyContent="center"
 					>
-						<Text fontSize="14px" color="white">
+						<Text fontSize="0.875rem" color="white">
 							{pendingTxs.length ?? 0}
 						</Text>
 						<Flex
+							mb="0.04rem"
 							className="circleLoading"
 							id={
 								colorMode === "dark" ? "smallPendingDark" : "smallPendingLight"

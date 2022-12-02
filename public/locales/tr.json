@@ -53,7 +53,8 @@
 		"selectToken": "Bir token seçin",
 		"balance": "Bakiye: ",
 		"max": "Max",
-		"to": "Hangi tokene"
+		"to": "Hangi tokene",
+		"searchBy": "Belirteç adına göre arama"
 	},
 	"earn": {
 		"claimAccumulated": "Birikmiş {{ symbol }} ödüllerini talep et",
@@ -95,7 +96,8 @@
 		"withdrewStakingToken": "{{ symbol }} çekildi!",
 		"approve": "Onayla",
 		"poolWeight": "Havuz Ağırlığı",
-		"extraReward": "Ekstra Ödül"
+		"extraReward": "Ekstra Ödül",
+		"unstakeEntire": "Yatırdığınız paranın tamamını geri aldığınızda, ödülleriniz talep edilir ve yatırdığınız para size geri döner. Artık bu bahis havuzundan ödül kazanamazsınız."
 	},
 	"menu": {
 		"code": "Kod",
@@ -486,7 +488,8 @@
 		"youCanVote": "Her bir teklif için kendiniz oy kullanabilir ya da oylarınızı üçüncü bir tarafa devredebilirsiniz.",
 		"showCancelled": "Göster İptal Edildi",
 		"discussAtTheForum": "Forumda Tartışın",
-		"editVoteDelegation": "Oy Delegasyonunu Düzenle"
+		"editVoteDelegation": "Oy Delegasyonunu Düzenle",
+		"yourVotes": "Oylarınız"
 	},
 	"IDOPage": {
 		"pegasysIDOs": "Initial DEX Offering (IDO)",

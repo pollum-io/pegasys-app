@@ -65,15 +65,15 @@ const EarnInput: React.FC<IEarnInputProps> = ({ deposit }) => {
 					<InputRightAddon
 						border="1px solid"
 						borderColor={theme.border.darkBlueGray}
-						background={theme.bg.blackAlpha}
+						background={theme.bg.darkBlueGray}
 						borderRightRadius="full"
-						color={theme.text.cyan}
+						color={theme.text.cyanDarkGray}
 						fontSize="lg"
 						fontWeight="normal"
 						transition="100ms ease-in-out"
 						_hover={{
 							bgColor: theme.bg.blueLightPurple,
-							color: theme.text.cyan,
+
 							cursor: "pointer",
 						}}
 						onClick={() => {

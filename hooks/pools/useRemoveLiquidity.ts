@@ -39,7 +39,7 @@ export const UseRemoveLiquidity = (
 		r: string;
 		s: string;
 		deadline: number;
-	} | null>(null)
+	} | null>(null);
 	const [currPendingTx, setCurrPendingTx] = useState<string>("");
 	const { t } = useTranslation();
 	const { addTransactions, pendingTxs, finishedTxs } = useTransaction();
@@ -48,7 +48,6 @@ export const UseRemoveLiquidity = (
 	const { toast } = useToasty();
 	const [currencyA, currencyB] = [tradeTokens[0], tradeTokens[1]];
 	const chainRouter = PegasysContracts[chainId].ROUTER_ADDRESS;
-
 
 	const removeLiquidityPendingTxs = useMemo(() => {
 		if (!chainId) return [];
@@ -59,20 +58,18 @@ export const UseRemoveLiquidity = (
 	const isApproved = useMemo(() => {
 		if (removeLiquidityPendingTxs.length) {
 			setCurrPendingTx(
-				removeLiquidityPendingTxs[
-					removeLiquidityPendingTxs.length - 1
-				].hash
+				removeLiquidityPendingTxs[removeLiquidityPendingTxs.length - 1].hash
 			);
-			return(false);
+			return false;
 		} else if (currPendingTx) {
 			const currFullTx = finishedTxs.find(tx => tx.hash === currPendingTx);
 
 			if (currFullTx?.success) {
 				setCurrPendingTx("");
-				return(true);
+				return true;
 			} else {
 				setCurrPendingTx("");
-				return(false);
+				return false;
 			}
 		} else {
 			setCurrPendingTx("");
@@ -385,18 +382,19 @@ export const UseRemoveLiquidity = (
 			})
 				.then((response: TransactionResponse) => {
 					addTransactions({
-						summary: t("removeLiquidity.remove") +
-								" " +
-								currencyAmountA?.toSignificant(3) +
-								" " +
-								currencyA?.symbol +
-								" and " +
-								currencyAmountB?.toSignificant(3) +
-								" " +
-								currencyB?.symbol,
-								hash: response.hash,
-								service: "poolsRemoveLiquidity",
-					})
+						summary:
+							t("removeLiquidity.remove") +
+							" " +
+							currencyAmountA?.toSignificant(3) +
+							" " +
+							currencyA?.symbol +
+							" and " +
+							currencyAmountB?.toSignificant(3) +
+							" " +
+							currencyB?.symbol,
+						hash: response.hash,
+						service: "poolsRemoveLiquidity",
+					});
 					setTxSignature(false);
 					closePendingTx();
 				})

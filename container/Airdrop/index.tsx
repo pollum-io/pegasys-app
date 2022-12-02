@@ -156,9 +156,9 @@ export const AirdropContainer: NextPage = () => {
 					<Flex
 						zIndex="docked"
 						flexDirection="column"
-						px="1.625rem"
+						px={["1rem", "1.3rem", "1.625rem", "1.625rem"]}
+						py={["0.8rem", "1.1rem", "1.375rem", "1.375rem"]}
 						h="10rem"
-						py="1.375rem"
 						gap="3"
 					>
 						<Text fontWeight="bold" color="white" fontSize="md">

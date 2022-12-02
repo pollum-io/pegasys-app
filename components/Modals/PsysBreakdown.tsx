@@ -48,14 +48,25 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				borderTopRadius="3xl"
-				borderBottomRadius={["none", "none", "3xl", "3xl"]}
+				borderTopRadius="30px"
+				borderBottomRadius={["none", "30px", "30px", "30px"]}
 				bgColor="transparent"
-				my={["0", "0", "40", "40"]}
-				w={["100vw", "100vw", "21.125", "21.125rem"]}
+				mt={["0", "6rem", "6rem", "6rem"]}
+				mb={["0", "unset", "unset", "unset"]}
+				w={["100vw", "21.125rem", "21.125rem", "21.125rem"]}
 				h="md"
-				position={["absolute", "absolute", "unset", "unset"]}
-				bottom={["0", "0", "", ""]}
+				position={["absolute", "relative", "relative", "relative"]}
+				bottom={["0", "unset", "unset", "unset"]}
+				boxShadow={
+					colorMode === "dark"
+						? "0px 0px 0px 1px rgba(0, 0, 0, 0.1)"
+						: "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
+				}
+				filter={
+					colorMode === "dark"
+						? "drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.2)) drop-shadow(0px 15px 40px rgba(0, 0, 0, 0.4))"
+						: "none"
+				}
 			>
 				<Flex
 					w="100%"
@@ -64,7 +75,6 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 					flexDirection="column"
 					zIndex="docked"
 					position="relative"
-					bgColor="transparent"
 				>
 					<Img
 						src={theme.bg.psysReward}
@@ -74,6 +84,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 						h="100%"
 						right="0"
 						top="0"
+						borderTop="30px"
 					/>
 					<Flex
 						flexDirection="row"
@@ -103,8 +114,8 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 									? "icons/loading.gif"
 									: "icons/lightLoading.gif"
 							}
-							w="10"
-							h="10"
+							w="8"
+							h="8"
 							filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
 							className="blob"
 						/>
@@ -155,8 +166,8 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 				<ModalFooter
 					bgColor={theme.bg.blueNavyLight}
 					justifyContent="flex-start"
-					pb={["2rem", "2rem", "6", "6"]}
-					borderBottomRadius={["none", "none", "3xl", "2xl"]}
+					pb={["3rem", "6", "6", "6"]}
+					borderBottomRadius={["none", "30px", "30px", "30px"]}
 				>
 					<Button
 						w="100%"
@@ -172,7 +183,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 						}}
 						onClick={() => addTokenToWallet(psys as WrappedTokenInfo)}
 					>
-						Add PSYS to MetaMask
+						{translation("header.addMetamask")}
 					</Button>
 				</ModalFooter>
 			</ModalContent>

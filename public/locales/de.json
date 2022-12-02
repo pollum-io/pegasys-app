@@ -53,7 +53,8 @@
 		"selectToken": "Wähle einen Token",
 		"balance": "Kontostand: ",
 		"max": "MAX",
-		"to": "Für"
+		"to": "Für",
+		"searchBy": "Suche nach Token-Namen"
 	},
 	"earn": {
 		"claimAccumulated": "Ausstehende {{ symbol }}-Vergütung beanspruchen",
@@ -81,7 +82,7 @@
 		"transactionSubmitted": "Transaktion eingereicht",
 		"depositingLiquidity": "Füge Liquidität hinzu",
 		"depositingToken": "Depositing {{ symbol }}",
-		"depositedToken": "Deposited {{ symbol }}",
+		"depositedToken": "Deposited {{ token }}",
 		"availableToDeposit": "Zum Hinzufügen verfügbar ",
 		"weeklyRewards": "Wöchentliche Vergütung",
 		"missingLiquidityAmount": "Liquiditätsbetrag nicht angegeben",
@@ -95,7 +96,8 @@
 		"withdrewStakingToken": "{{ symbol }} abgebucht!",
 		"approve": "Bestätigen",
 		"poolWeight": "Beckengewicht",
-		"extraReward": "Zusätzliche Belohnung"
+		"extraReward": "Zusätzliche Belohnung",
+		"unstakeEntire": "Wenn Sie Ihre gesamten Einsätze zurücknehmen, werden Ihre Prämien eingefordert und Sie erhalten Ihre Einlage zurück. Sie erhalten dann keine Prämien mehr aus diesem Staked-Pool."
 	},
 	"menu": {
 		"code": "Code",
@@ -327,7 +329,7 @@
 		"pegasysLiquidityMining": "Pegasys Liquidity-Mining",
 		"pegasysLiquidityStaking": "Pegasys PSYS staking",
 		"depositPegasysLiquidity": "Zahle deine Pegasys Liquiditätsprovider-Token (PLP) ein, um PSYS, den Governance-Token des Pegasys-Protokolls zu erhalten.",
-		"depositPegasysStaking": "Deposit and stake your PSYS tokens to earn more tokens.",
+		"depositPegasysStaking": "Zahlen Sie Ihre PSYS-Tokens ein und setzen Sie sie, um mehr Tokens zu verdienen.",
 		"currentOpportunities": "Current opportunities",
 		"readMoreAboutPsys": "Erfahre mehr über PSYS",
 		"getInsuranceCoverage": "Versichern Sie sich auf InsurAce.io",
@@ -486,7 +488,8 @@
 		"youCanVote": "Sie können entweder selbst über jeden Vorschlag abstimmen oder Ihre Stimmabgabe an eine dritte Partei.",
 		"showCancelled": "Zeigen Abgesagt",
 		"discussAtTheForum": "Diskutieren Sie im Forum",
-		"editVoteDelegation": "Abstimmungsdelegation Bearbeiten"
+		"editVoteDelegation": "Abstimmungsdelegation Bearbeiten",
+		"yourVotes": "Ihre Stimmen"
 	},
 	"IDOPage": {
 		"pegasysIDOs": "Initial DEX Offering (IDO)",
@@ -605,13 +608,13 @@
 		"farmingTitle": "Pegasys Liquidity Mining",
 		"farmingDescription": "Hinterlegen Sie Ihre Pegasys Liquidity Provider PLP tokens, um PSYS, den Pegasys-Protokoll-Governance-Token, zu erhalten.",
 		"farmingLink": "Ihre gestockte Liquidität anzeigen",
-		"addLiquidity": "Hinzufügen {{ Pair }} Liquidität",
+		"addLiquidity": "Hinzufügen {{ pair }} Liquidität",
 		"unclaimed": "Unclaimed {{ token }}",
 		"weeklyRewards": "Wöchentliche Belohnungen",
 		"extraRewards": "Extra-Belohnung",
 		"availableToDeposit": "Verfügbar zur Einzahlung",
 		"cancel": "Abbrechen",
-		"deposited": "Hinterlegte {{ tokens }}",
+		"deposited": "Hinterlegte {{ token }}",
 		"featNotAvailable": "Diese Funktion ist für dieses Netz nicht verfügbar",
 		"walletConnect": "Bitte verbinden Sie Ihr Portemonnaie mit dem unten stehenden Button, um Ihre farms zu sehen.",
 		"anyAvailableOpportunities": "Keine verfügbaren Möglichkeiten",

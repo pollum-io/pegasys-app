@@ -53,7 +53,8 @@
 		"selectToken": "选择一个代币",
 		"balance": "资产: ",
 		"max": "最大值",
-		"to": "給"
+		"to": "給",
+		"searchBy": "按代币名称搜索"
 	},
 	"earn": {
 		"claimAccumulated": "领取累积的 {{ symbol }} 奖励",
@@ -95,7 +96,8 @@
 		"withdrewStakingToken": "提取 {{ symbol }}!",
 		"approve": "批准",
 		"poolWeight": "泳池重量",
-		"extraReward": "额外奖励"
+		"extraReward": "额外奖励",
+		"unstakeEntire": "当你解除你的全部存款的赌注时，你的奖励就会被认领，你的存款就会回到你的手中。你将不再从这个赌注池获得奖励。"
 	},
 	"menu": {
 		"code": "Code",
@@ -486,7 +488,8 @@
 		"youCanVote": "你可以自己对每个提案进行投票，也可以将你的投票委托给第三方。",
 		"showCancelled": "显示取消了",
 		"discussAtTheForum": "在论坛上讨论",
-		"editVoteDelegation": "编辑投票授权"
+		"editVoteDelegation": "编辑投票授权",
+		"yourVotes": "您的投票"
 	},
 	"IDOPage": {
 		"pegasysIDOs": "Initial DEX Offering (IDO)",

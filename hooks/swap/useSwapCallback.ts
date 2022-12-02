@@ -26,8 +26,8 @@ export function UseSwapCallback(
 	txType: string,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
 	onCloseTransaction: () => void,
-	addTransactions: (tx: IPendingTx | IFinishedTx, pending?: boolean) => void,
-	) {
+	addTransactions: (tx: IPendingTx | IFinishedTx, pending?: boolean) => void
+) {
 	const { walletAddress, chainId: chain } = walletInfos;
 
 	const recipient = !recipientAddress ? walletAddress : recipientAddress;
@@ -175,11 +175,11 @@ export function UseSwapCallback(
 							? withRecipient
 							: `${withRecipient} on ${tradeVersion.toUpperCase()}`;
 
-							addTransactions({
-								summary: withVersion,
-										hash: response.hash,
-										service: "swapCallback",
-							})
+					addTransactions({
+						summary: withVersion,
+						hash: response.hash,
+						service: "swapCallback",
+					});
 					setCurrentInputTokenName(`${inputSymbol}`);
 					onCloseTransaction();
 

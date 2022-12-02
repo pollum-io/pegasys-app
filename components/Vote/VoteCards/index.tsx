@@ -29,7 +29,7 @@ const VoteCards: React.FC<IVoteCardsProps> = props => {
 			mb="2"
 			alignItems="center"
 			flexDirection={["column", "column", "row", "row"]}
-			h={["100px", "100px", "58px", "58px"]}
+			h={["6.25rem", "6.25rem", "3.625rem", "3.625rem"]}
 			bgColor={theme.bg.blueNavyLight}
 			borderRadius="xl"
 			justifyContent="space-between"

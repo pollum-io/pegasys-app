@@ -80,11 +80,11 @@ export const WalletStatsCards: FunctionComponent = () => {
 								justifyContent="space-between"
 								w="100%"
 							>
-								<Text fontWeight="bold" fontSize="14px">
+								<Text fontWeight="bold" fontSize="0.875rem">
 									{cardsValue.asset}
 								</Text>
 								<Text
-									fontSize={["12px", "14px", "14px", "14px"]}
+									fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
 									display={["flex", "flex", "none", "none"]}
 								>
 									{cardsValue.price}
@@ -98,7 +98,9 @@ export const WalletStatsCards: FunctionComponent = () => {
 							w={["45%", "51%", "72%", "72%"]}
 						>
 							<Flex w="10rem" display={["none", "none", "flex", "flex"]}>
-								<Text fontSize={["12px", "14px", "14px", "14px"]}>
+								<Text
+									fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
+								>
 									{cardsValue.price}
 								</Text>
 							</Flex>
@@ -109,7 +111,9 @@ export const WalletStatsCards: FunctionComponent = () => {
 								h={["100%", "max-content", "max-content", "max-content"]}
 								mr="1.9rem"
 							>
-								<Text fontSize={["12px", "14px", "14px", "14px"]}>
+								<Text
+									fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
+								>
 									{cardsValue.balance}
 								</Text>
 							</Flex>

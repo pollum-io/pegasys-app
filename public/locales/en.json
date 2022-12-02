@@ -53,7 +53,8 @@
 		"selectToken": "Select a token",
 		"balance": "Balance: ",
 		"max": "MAX",
-		"to": "To"
+		"to": "To",
+		"searchBy": "Search by token name"
 	},
 	"earn": {
 		"claimAccumulated": "Claim accumulated {{ symbol }} rewards",
@@ -95,7 +96,8 @@
 		"withdrewStakingToken": "Withdrew {{ symbol }}!",
 		"approve": "Approve",
 		"poolWeight": "Pool Weight",
-		"extraReward": "Extra Reward"
+		"extraReward": "Extra Reward",
+		"unstakeEntire": "When you unstake your entire deposits, your rewards are claimed and your deposit returns to you. You will no longer earn rewards from this staking pool."
 	},
 	"menu": {
 		"code": "Code",
@@ -484,7 +486,8 @@
 		"youCanVote": "You can either vote on each proposal yourself or delegate your votes to a third party.",
 		"showCancelled": "Show Cancelled",
 		"discussAtTheForum": "Discuss at the Forum",
-		"editVoteDelegation": "Edit Vote Delegation"
+		"editVoteDelegation": "Edit Vote Delegation",
+		"yourVotes": "Your Votes"
 	},
 	"IDOPage": {
 		"pegasysIDOs": "Initial DEX Offering (IDO)",

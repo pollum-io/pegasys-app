@@ -13,7 +13,7 @@ export const ExpertMode: FunctionComponent = () => {
 			{expert && (
 				<Flex
 					position="fixed"
-					fontSize="12px"
+					fontSize="0.75rem"
 					zIndex="-99"
 					background={
 						colorMode === "dark"
@@ -54,14 +54,22 @@ export const ExpertMode: FunctionComponent = () => {
 				</Flex>
 			)}
 			{expert && (
-				<Flex display={["flex", "none", "none", "none"]} id="flex" w="7rem">
+				<Flex
+					display={["flex", "none", "none", "none"]}
+					id="flex"
+					w="7rem"
+					bgColor="red"
+				>
 					<Img
 						src={theme.icon.borderExpertMode}
 						position="absolute"
 						px="6rem"
-						bottom="3rem"
-						h="63%"
+						bottom="0"
 						zIndex="-99"
+						mr="5rem"
+						left="4.5rem"
+						h="100%"
+						w="100%"
 					/>
 				</Flex>
 			)}

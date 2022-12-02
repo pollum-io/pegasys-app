@@ -10,6 +10,7 @@ import {
 } from "pegasys-services";
 import { ChainId, JSBI } from "@pollum-io/pegasys-sdk";
 import { shortAddress } from "utils";
+import { useTranslation } from "react-i18next";
 import { ProposalDetailsPercentageBar } from "../../governance";
 
 const Vote: React.FC = () => {
@@ -18,6 +19,7 @@ const Vote: React.FC = () => {
 		useGovernance();
 	const { onOpenCheckAllVotersModal } = useModal();
 	const { chainId } = useWallet();
+	const { t: translation } = useTranslation();
 
 	const isOpenToVote = useMemo(() => {
 		if (selectedProposals?.endDate) return false;
@@ -57,7 +59,7 @@ const Vote: React.FC = () => {
 				mr={["4", "4", "4", "0"]}
 				fontWeight="semibold"
 				color={theme.text.mono}
-				fontSize={["16px", "16", "24px", "24px"]}
+				fontSize={["1rem", "1rem", "1.5rem", "1.5rem"]}
 				mb="0.6rem"
 			>
 				{selectedProposals.title}
@@ -70,8 +72,8 @@ const Vote: React.FC = () => {
 				alignItems="center"
 				mb="1.5rem"
 			>
-				<Text color={theme.text.mono} fontWeight="bold" fontSize="16px">
-					Proposer
+				<Text color={theme.text.mono} fontWeight="bold" fontSize="1rem">
+					{translation("votePage.proposer")}
 				</Text>
 
 				<Flex
@@ -84,7 +86,7 @@ const Vote: React.FC = () => {
 					<Link
 						isExternal
 						href={getLink(selectedProposals.proposer)}
-						fontSize="14px"
+						fontSize="0.875rem"
 					>
 						{shortAddress(selectedProposals.proposer)}
 					</Link>
@@ -92,7 +94,6 @@ const Vote: React.FC = () => {
 			</Flex>
 			<Flex
 				flexDirection={["column", "column", "row", "row"]}
-				bgColor="rgba(255, 255, 255, 0.04)"
 				w="100%"
 				h="max-content"
 				borderRadius="xl"
@@ -102,6 +103,7 @@ const Vote: React.FC = () => {
 				color={theme.text.mono}
 				flexWrap="wrap"
 				gap="6"
+				bgColor={theme.bg.whiteGray}
 			>
 				<Flex
 					justifyContent="space-between"
@@ -116,17 +118,17 @@ const Vote: React.FC = () => {
 						mt={["0", "0", "1.5", "1.5"]}
 					>
 						<Text
-							fontSize="12px"
+							fontSize="0.75rem"
 							_hover={{ cursor: "pointer", opacity: "0.9" }}
 							transition="100ms ease-in-out"
 							onClick={isFavor}
 							color="#718096"
 						>
-							Check all voters
+							{translation("votePage.checkAllVoters")}
 						</Text>
 						{isOpenToVote && (
 							<Button
-								fontSize="12px"
+								fontSize="0.75rem"
 								fontWeight="normal"
 								px="0.8rem"
 								h="1.5rem"
@@ -139,7 +141,7 @@ const Vote: React.FC = () => {
 								borderRadius="full"
 								onClick={() => vote(selectedProposals.id, true)}
 							>
-								Vote in Favor
+								{translation("votePage.voteInFavor")}
 							</Button>
 						)}
 					</Flex>
@@ -157,17 +159,17 @@ const Vote: React.FC = () => {
 						flexDirection="row-reverse"
 					>
 						<Text
-							fontSize="12px"
+							fontSize="0.75rem"
 							_hover={{ cursor: "pointer", opacity: "0.9" }}
 							transition="100ms ease-in-out"
 							onClick={isAgainst}
 							color="#718096"
 						>
-							Check all voters
+							{translation("votePage.checkAllVoters")}
 						</Text>
 						{isOpenToVote && (
 							<Button
-								fontSize="12px"
+								fontSize="0.75rem"
 								fontWeight="normal"
 								px="0.8rem"
 								h="1.5rem"
@@ -180,7 +182,7 @@ const Vote: React.FC = () => {
 								borderRadius="full"
 								onClick={() => vote(selectedProposals.id, false)}
 							>
-								Vote Against
+								{translation("votePage.voteAgainst")}
 							</Button>
 						)}
 					</Flex>

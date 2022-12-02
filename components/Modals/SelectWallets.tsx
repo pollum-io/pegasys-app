@@ -7,7 +7,7 @@ import {
 	Img,
 	useColorMode,
 } from "@chakra-ui/react";
-import { usePicasso, useWallet } from "hooks";
+import { usePicasso } from "hooks";
 import { WalletOptions } from "components/WalletOptions";
 import { MdOutlineClose } from "react-icons/md";
 import { useWallet as psUseWallet } from "pegasys-services";
@@ -29,16 +29,26 @@ export const SelectWallets: React.FC<IModal> = props => {
 		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				borderRadius="1.875rem"
-				my={["0", "0", "40", "40"]}
-				bgColor={theme.bg.blueNavy}
-				w={["100vw", "100vw", "sm", "sm"]}
+				mt={["0", "8rem", "10rem", "10rem"]}
+				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(270.16deg, rgba(24,54,61, 0.8) 90.76%, rgba(24,54,61, 0) 97.76%) border-box`}
+				w={["100vw", "sm", "sm", "sm"]}
+				borderTop={
+					colorMode === "dark"
+						? ["1px solid transparent", "none", "none", "none"]
+						: ["none", "none", "none", "none"]
+				}
 				h="max-content"
 				p="6"
-				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
-				borderBottomRadius={["0px", "0", "3xl", "3xl"]}
-				position={["absolute", "absolute", "unset", "unset"]}
-				bottom={["0", "0", "unset", "unset"]}
+				borderTopRadius="30px"
+				borderBottomRadius={["0px", "30px", "30px", "30px"]}
+				position={["absolute", "relative", "relative", "relative"]}
+				bottom={["0", "unset", "unset", "unset"]}
+				mb={["0", "unset", "unset", "unset"]}
+				boxShadow={
+					colorMode === "dark"
+						? "0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4)"
+						: "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
+				}
 			>
 				{!connecting && (
 					<Flex flexDirection="column" justifyContent="center">
@@ -57,7 +67,7 @@ export const SelectWallets: React.FC<IModal> = props => {
 						<Flex
 							flexDirection="column"
 							fontSize="sm"
-							pb={["3.75rem", "3.75rem", "0", "0"]}
+							pb={["3rem", "0", "0", "0"]}
 						>
 							<Text
 								textAlign="center"
@@ -100,7 +110,7 @@ export const SelectWallets: React.FC<IModal> = props => {
 						>
 							<Flex pt="0.4">
 								<Flex
-									mb="5px"
+									mb="0.3125rem"
 									className="circleLoading"
 									id={
 										colorMode === "dark"
@@ -118,11 +128,12 @@ export const SelectWallets: React.FC<IModal> = props => {
 								pt="2"
 								py="0"
 								bgColor="transparent"
-								h="48px"
+								h="3rem"
 								justifyContent="space-between"
-								w="290px"
+								w="18.125rem"
 								mx="0"
 								my="2"
+								mb={["2rem", "unset", "unset", "unset"]}
 								p="4"
 								border="1px solid"
 								borderRadius="full"

@@ -68,8 +68,8 @@ export const FarmContainer: NextPage = () => {
 						<Flex
 							zIndex="docked"
 							flexDirection="column"
-							px={["1rem", "1.625rem", "1.625rem", "1.625rem"]}
-							py={["0.8rem", "1.375rem", "1.375rem", "1.375rem"]}
+							px={["1rem", "1.325rem", "1.625rem", "1.625rem"]}
+							py={["0.8rem", "1.1rem", "1.375rem", "1.375rem"]}
 							gap="3"
 							h={["9rem", "10rem", "10rem", "10rem"]}
 							color="white"
@@ -81,7 +81,7 @@ export const FarmContainer: NextPage = () => {
 								fontWeight="medium"
 								fontSize="sm"
 								lineHeight="shorter"
-								w={["100%", "70%", "50%", "50%"]}
+								w={["100%", "65%", "50%", "50%"]}
 							>
 								{translation("earnPages.farmingDescription")}
 							</Text>
@@ -89,45 +89,41 @@ export const FarmContainer: NextPage = () => {
 						<Flex
 							zIndex="0"
 							position="relative"
-							top="2"
+							top={["1.5", "1", "1", "1"]}
 							alignItems="center"
 							justifyContent="center"
 							flexDirection="row"
 							bgColor={theme.bg.alphaPurple}
 							borderBottomRadius="xl"
 							py="0.531rem"
+							pt="0.2rem"
 							color="white"
 						>
-							{!!address && (
-								<Link
-									href={`https://info.pegasys.finance/account/${address}`}
-									target="_blank"
-									rel="noreferrer"
-									_hover={{ cursor: "pointer", opacity: "0.9" }}
-									flexDirection="row"
-								>
-									<Flex gap="2.5" alignItems="center">
-										<Text fontWeight="medium" fontSize="xs">
-											{translation("earnPages.farmingLink")}
-										</Text>
+							<Link
+								href={`https://info.pegasys.finance/account/${address}`}
+								target="_blank"
+								rel="noreferrer"
+								_hover={{ cursor: "pointer" }}
+								flexDirection="row"
+							>
+								<Flex gap="2.5" alignItems="center">
+									<Text fontWeight="medium" fontSize="xs">
+										{translation("earnPage.readMoreAboutPsys")}
+									</Text>
 
-										<MdOutlineCallMade size={20} />
-									</Flex>
-								</Link>
-							)}
+									<MdOutlineCallMade size={18} />
+								</Flex>
+							</Link>
 						</Flex>
 					</Flex>
 				</SlideFade>
 				<Flex
+					id="a"
 					alignItems={["flex-start", "flex-start", "baseline", "baseline"]}
 					my="8"
 					justifyContent="space-between"
 					w="100%"
-					flexDirection={
-						isConnected
-							? ["column", "column", "column", "column"]
-							: ["column", "column", "row", "row"]
-					}
+					flexDirection={["column", "column", "row", "row"]}
 					zIndex="docked"
 				>
 					<SlideFade in={Boolean(isMobile || !isMobile)} offsetY="-50px">
@@ -141,7 +137,7 @@ export const FarmContainer: NextPage = () => {
 							flexDirection={["column-reverse", "unset"]}
 						>
 							<Text
-								fontSize={["20px", "20px", "2xl", "2xl"]}
+								fontSize={["1.25rem", "1.25rem", "2xl", "2xl"]}
 								fontWeight="semibold"
 							>
 								{translation("earnPages.farms")}
@@ -168,7 +164,7 @@ export const FarmContainer: NextPage = () => {
 									iconColor={theme.icon.inputSearchIcon}
 									borderColor={theme.bg.blueNavyLightness}
 									placeholder={{
-										value: "Search by token name",
+										value: translation("currencyInputPanel.searchBy"),
 										color: theme.text.inputBluePurple,
 									}}
 								/>
@@ -183,6 +179,7 @@ export const FarmContainer: NextPage = () => {
 									]}
 									justifyContent="flex-start"
 									w="100%"
+									mb={["0.8rem", "0.8rem", "0", "0"]}
 								>
 									<Menu>
 										<Text fontSize="sm" pb="2" pr={["2", "2", "0", "0"]}>
@@ -219,11 +216,19 @@ export const FarmContainer: NextPage = () => {
 											borderColor="transparent"
 											p="4"
 											fontSize="sm"
+											zIndex="9999"
 										>
 											{Object.keys(sortData).map((key, i) => (
 												<MenuItem
 													onClick={() => setSort(key as keyof typeof sortData)}
 													key={i}
+													borderRadius="md"
+													_active={{}}
+													bgColor={
+														key === sort
+															? theme.bg.menuLinksGray
+															: "transparent !important"
+													}
 												>
 													{sortData[key as keyof typeof sortData]}
 												</MenuItem>
@@ -235,7 +240,6 @@ export const FarmContainer: NextPage = () => {
 						)}
 					</Collapse>
 				</Flex>
-
 				<Collapse in={dataLoading}>
 					{dataLoading && (
 						<Flex
@@ -248,8 +252,8 @@ export const FarmContainer: NextPage = () => {
 						>
 							<Flex
 								className="circleLoading"
-								width="60px !important"
-								height="60px !important"
+								width="3.75rem !important"
+								height="3.75rem !important"
 								id={
 									colorMode === "dark"
 										? "pendingTransactionsDark"
@@ -259,7 +263,6 @@ export const FarmContainer: NextPage = () => {
 						</Flex>
 					)}
 				</Collapse>
-
 				<Collapse in={!dataLoading && !isConnected}>
 					{!dataLoading && !isConnected && (
 						<Flex
@@ -280,7 +283,6 @@ export const FarmContainer: NextPage = () => {
 						</Flex>
 					)}
 				</Collapse>
-
 				<Collapse
 					in={
 						!dataLoading &&
@@ -309,7 +311,6 @@ export const FarmContainer: NextPage = () => {
 							</Flex>
 						)}
 				</Collapse>
-
 				<Collapse
 					in={
 						!dataLoading &&

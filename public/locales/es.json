@@ -54,7 +54,8 @@
 		"selectToken": "Selecciona un token",
 		"balance": "Balance: ",
 		"max": "MAX",
-		"to": "A"
+		"to": "A",
+		"searchBy": "Buscar por nombre de token"
 	},
 	"earn": {
 		"claimAccumulated": "Reclama las recompensas accumulatadas de {{ symbol }}",
@@ -95,7 +96,8 @@
 		"withdrawAndClaim": "Retirar y reclamar",
 		"withdrewStakingToken": "{{ symbol }} retirados!",
 		"approve": "Aprobar",
-		"poolWeight": "Peso de la piscina"
+		"poolWeight": "Peso de la piscina",
+		"unstakeEntire": "Cuando se retira la totalidad de los depósitos, se reclaman las recompensas y se devuelve el depósito. Ya no obtendrá recompensas de este staking pool."
 	},
 	"menu": {
 		"code": "Código",
@@ -486,7 +488,8 @@
 		"youCanVote": "Puede votar cada propuesta usted mismo o delegar sus votos en un tercero.",
 		"showCancelled": "Mostrar Canceladas",
 		"discussAtTheForum": "Discutir en el Foro",
-		"editVoteDelegation": "Editar la Delegación de Voto"
+		"editVoteDelegation": "Editar la Delegación de Voto",
+		"yourVotes": "Sus Votos"
 	},
 	"IDOPage": {
 		"pegasysIDOs": "Initial DEX Offering (IDO)",

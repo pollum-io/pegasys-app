@@ -8,6 +8,7 @@ import "styles/psysAnimation.css";
 import "styles/borderAnimation.css";
 import "styles/circleLoadingAnimation.css";
 import "styles/loadingDotsAnimation.css";
+import "styles/loadingDotsAnimationLight.css";
 import "styles/logoAnimation.css";
 import "helpers/translation";
 import "styles/scrollbarDarkmode.css";

@@ -63,12 +63,14 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 	return (
 		<Flex flexDirection="column">
 			<Flex gap="2">
-				<Flex>
-					<Img src={tokenALogo} w="6" h="6" />
-					{selectedOpportunity.tokenB && <Img src={tokenBLogo} w="6" h="6" />}
+				<Flex position="relative">
+					<Img src={tokenALogo} w="6" h="6" position="relative" />
+					{selectedOpportunity.tokenB && (
+						<Img src={tokenBLogo} w="6" h="6" position="absolute" ml="1.2rem" />
+					)}
 				</Flex>
 				<Flex>
-					<Text fontSize="lg" fontWeight="bold">
+					<Text fontSize="lg" fontWeight="bold" ml="1.2rem">
 						{selectedOpportunity.tokenA.symbol}
 						{selectedOpportunity.tokenB
 							? `:${selectedOpportunity.tokenB.symbol}`
@@ -103,7 +105,7 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				py="3"
 				px="1.5rem"
 				mt="1.5rem"
-				mb="1rem"
+				mb={["3rem", "0.5rem", "0.5rem", "0.5rem"]}
 				disabled={
 					!depositTypedValue ||
 					signatureLoading ||

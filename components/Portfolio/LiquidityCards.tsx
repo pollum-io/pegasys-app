@@ -70,7 +70,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 						h="2rem"
 						pt="1"
 						px="2"
-						fontSize="12px"
+						fontSize="0.75rem"
 						fontWeight="normal"
 						position="relative"
 						bottom="-0.65rem"
@@ -127,13 +127,18 @@ export const LiquidityCards: React.FunctionComponent = () => {
 									<Flex flexDirection={["column", "column", "row", "row"]}>
 										<Text
 											fontWeight="bold"
-											fontSize={["14px", "14px", "14px", "14px"]}
+											fontSize={[
+												"0.875rem",
+												"0.875rem",
+												"0.875rem",
+												"0.875rem",
+											]}
 										>
 											{cardsValue.firstAsset}/{cardsValue.secondAsset}
 										</Text>
 
 										<Text
-											fontSize={["14px", "14px", "0", "0"]}
+											fontSize={["0.875rem", "0.875rem", "0", "0"]}
 											display={["flex", "flex", "none", "none"]}
 										>
 											{translation("portfolioPage.value")} {cardsValue.value}
@@ -142,7 +147,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 								</Flex>
 								<Flex
 									flexDirection="column"
-									fontSize={["12px", "12px", "14px", "14px"]}
+									fontSize={["0.75rem", "0.75rem", "0.875rem", "0.875rem"]}
 									display={["flex", "flex", "none", "none"]}
 									pt="2"
 								>
@@ -152,15 +157,29 @@ export const LiquidityCards: React.FunctionComponent = () => {
 									>
 										<Text
 											fontWeight="500"
-											fontSize={["12px", "14px", "14px", "14px"]}
+											fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
 										>
 											Pooled Tokens
 										</Text>
 										<Flex flexDirection="row" gap="2">
-											<Text fontSize={["12px", "14px", "14px", "14px"]}>
+											<Text
+												fontSize={[
+													"0.75rem",
+													"0.875rem",
+													"0.875rem",
+													"0.875rem",
+												]}
+											>
 												{cardsValue.firstAsset}: {cardsValue.firstPooledTokens}
 											</Text>
-											<Text fontSize={["12px", "14px", "14px", "14px"]}>
+											<Text
+												fontSize={[
+													"0.75rem",
+													"0.875rem",
+													"0.875rem",
+													"0.875rem",
+												]}
+											>
 												{cardsValue.secondAsset}:{" "}
 												{cardsValue.secondPooledTokens}
 											</Text>
@@ -184,7 +203,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 							>
 								<Flex
 									flexDirection="column"
-									fontSize={["12px", "12px", "14px", "14px"]}
+									fontSize={["0.75rem", "0.75rem", "0.875rem", "0.875rem"]}
 									display={["none", "none", "flex", "flex"]}
 								>
 									<Flex
@@ -192,10 +211,14 @@ export const LiquidityCards: React.FunctionComponent = () => {
 										gap={["2", "3", "0", "0"]}
 										w={["", "18rem", "9rem", "9rem"]}
 									>
-										<Text fontSize={["12px", "12px", "14px", "14px"]}>
+										<Text
+											fontSize={["0.75rem", "0.75rem", "0.875rem", "0.875rem"]}
+										>
 											{cardsValue.firstAsset}: {cardsValue.firstPooledTokens}
 										</Text>
-										<Text fontSize={["12px", "12px", "14px", "14px"]}>
+										<Text
+											fontSize={["0.75rem", "0.75rem", "0.875rem", "0.875rem"]}
+										>
 											{cardsValue.secondAsset}: {cardsValue.secondPooledTokens}
 										</Text>
 									</Flex>
@@ -205,7 +228,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 									w="6rem"
 									display={["none", "none", "flex", "flex"]}
 								>
-									<Text fontSize="14px">{cardsValue.value}</Text>
+									<Text fontSize="0.875rem">{cardsValue.value}</Text>
 								</Flex>
 
 								<Flex
@@ -227,10 +250,10 @@ export const LiquidityCards: React.FunctionComponent = () => {
 										theme.text.mono,
 									]}
 								>
-									<Text fontSize="14px">{cardsValue.apr}</Text>
+									<Text fontSize="0.875rem">{cardsValue.apr}</Text>
 									<Text
 										display={["flex", "flex", "none", "none"]}
-										fontSize="14px"
+										fontSize="0.875rem"
 									>
 										APR
 									</Text>
@@ -246,13 +269,13 @@ export const LiquidityCards: React.FunctionComponent = () => {
 									<Text
 										order={[0, 1, 0, 0]}
 										display={["none", "flex", "none", "none"]}
-										fontSize="14px"
+										fontSize="0.875rem"
 									>
 										Pool Share
 									</Text>
 
 									<Text
-										fontSize={["12px", "14px", "14px", "14px"]}
+										fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
 										display={["none", "flex", "flex", "flex"]}
 									>
 										{cardsValue.poolShare}
@@ -300,7 +323,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 								borderRadius="67px"
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
-								fontSize="10px"
+								fontSize="0.625rem"
 								fontWeight="semibold"
 								_hover={{
 									bgColor: theme.bg.bluePurple,

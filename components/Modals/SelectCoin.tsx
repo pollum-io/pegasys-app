@@ -11,6 +11,8 @@ import {
 	ModalOverlay,
 	Text,
 	InputGroup,
+	useMediaQuery,
+	useColorMode,
 } from "@chakra-ui/react";
 import { useModal, usePicasso, useTokens } from "hooks";
 import React, {
@@ -25,6 +27,7 @@ import {
 	MdArrowDownward,
 	MdArrowUpward,
 	MdSearch,
+	MdOutlineClose,
 } from "react-icons/md";
 import { WrappedTokenInfo } from "types";
 import BigNumber from "bignumber.js";
@@ -53,6 +56,8 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 	const [arrowOrder, setArrowOrder] = useState(false);
 	const { t: translation } = useTranslation();
 	const { userTokensBalance } = useTokens();
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
+	const { colorMode } = useColorMode();
 
 	const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
 		const inputValue = event.target.value;
@@ -140,25 +145,42 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 			<ManageToken isOpen={isOpenManageToken} onClose={onCloseManageToken} />
 			<ModalOverlay />
 			<ModalContent
-				borderRadius="3xl"
-				bgColor={theme.bg.blueNavyLight}
-				bottom="0"
-				mt="10"
-				mb="0"
-				border={["none", "1px solid transparent"]}
-				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
-				borderBottomRadius={["0", "0", "3xl", "3xl"]}
-				position={["absolute", "absolute", "relative", "relative"]}
+				borderRadius="30px"
+				bottom={["0", "unset", "unset", "unset"]}
+				mt={["0", "6rem", "6rem", "6rem"]}
+				mb={["0", "unset", "unset", "unset"]}
+				borderTop={
+					colorMode === "dark"
+						? ["1px solid transparent", "none", "none", "none"]
+						: ["none", "none", "none", "none"]
+				}
+				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(270.16deg, rgba(24,54,61, 0.8) 90.76%, rgba(24,54,61, 0) 97.76%) border-box`}
+				borderTopRadius="30px"
+				borderBottomRadius={["0", "35px", "35px", "35px"]}
+				position={["absolute", "relative", "relative", "relative"]}
 				h="max-content"
 			>
-				<ModalHeader display="flex" alignItems="center" gap="3">
-					<Text fontSize="lg" fontWeight="semibold">
-						{translation("swapHooks.selectToken")}
-					</Text>
-					<TooltipComponent
-						label={translation("searchModal.findToken")}
-						icon={MdHelpOutline}
-					/>
+				<ModalHeader
+					display="flex"
+					alignItems="center"
+					justifyContent="space-between"
+				>
+					<Flex alignItems="center" gap="3">
+						<Text fontSize="lg" fontWeight="semibold">
+							{translation("swapHooks.selectToken")}
+						</Text>
+						<TooltipComponent
+							label={translation("searchModal.findToken")}
+							icon={MdHelpOutline}
+						/>
+					</Flex>
+					<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
+						<MdOutlineClose
+							size={22}
+							onClick={onClose}
+							color={theme.text.mono}
+						/>
+					</Flex>
 				</ModalHeader>
 
 				<ModalBody>
@@ -180,16 +202,16 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							}}
 							_hover={{}}
 						/>
-						<Flex
-							position="absolute"
-							pl="1rem"
-							pb="0.5"
-							bottom={["0.3rem", "0.3rem", "0.5rem", "0.5rem"]}
-						>
+						<Flex position="absolute" pl="1rem" pb="0.5" bottom="0.5rem">
 							<MdSearch color={theme.icon.inputSearchIcon} size={20} />
 						</Flex>
 					</InputGroup>
-					<Flex my="5" gap="2" justifyContent="space-between">
+					<Flex
+						my="5"
+						gap="2"
+						justifyContent="space-between"
+						alignItems="center"
+					>
 						<Text fontSize="md" color={theme.text.cyanPurple}>
 							{translation("searchModal.tokenName")}
 						</Text>
@@ -199,8 +221,8 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 							minW="none"
 							bg="transparent"
 							color={theme.text.cyanPurple}
-							w="6"
-							h="6"
+							w="5"
+							h="5"
 							onClick={() => orderList(filter)}
 							mr="4"
 						/>
@@ -213,14 +235,14 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					my="1"
 					pr="2"
 					pl="2"
-					maxHeight={["20rem", "20rem", "30rem", "30rem"]}
+					maxHeight="20rem"
 					overflow="auto"
 					css={{
 						"&::-webkit-scrollbar": {
-							width: "6px",
+							width: "0.375rem",
 						},
 						"&::-webkit-scrollbar-track": {
-							width: "6px",
+							width: "0.375rem",
 							scrollbarColor: " #0b172c",
 						},
 						"&::-webkit-scrollbar-thumb": {
@@ -294,39 +316,46 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					alignContent="center"
 					justifyContent="center"
 					flexDirection="column"
-					px="0"
-					py="0"
 					bgColor={[
-						theme.bg.blueNavy,
-						theme.bg.blueNavy,
+						theme.bg.blueNavyLight,
+						theme.bg.blackAlpha,
 						theme.bg.blackAlpha,
 						theme.bg.blackAlpha,
 					]}
 					alignItems="center"
-					borderBottomRadius={["0px", "0", "3xl", "3xl"]}
+					borderBottomRadius={["0px", "30px", "30px", "30px"]}
 				>
-					<Flex pt="8" py="5">
-						<Text
-							bg={[
-								theme.bg.blueNavyLightness,
-								theme.bg.blueNavyLightness,
-								"transparent",
-								"transparent",
-							]}
-							px={["4.688rem", "4.688rem", "0", "0"]}
-							py={["0.5rem", "0.5rem", "0", "0"]}
-							borderRadius="full"
-							color={theme.text.cyanPurple}
-							_hover={{ opacity: "0.9", cursor: "pointer" }}
-							_active={{}}
-							mb="0"
-							w="100%"
-							fontWeight="semibold"
-							onClick={onOpenManageToken}
-						>
-							{translation("searchModal.manageTokenLists")}
-						</Text>
-					</Flex>
+					{!isMobile ? (
+						<Flex pt="8" py="5">
+							<Text
+								color={theme.text.cyanPurple}
+								_hover={{ opacity: "0.9", cursor: "pointer" }}
+								w="100%"
+								fontWeight="semibold"
+								onClick={onOpenManageToken}
+							>
+								{translation("searchModal.manageTokenLists")}
+							</Text>
+						</Flex>
+					) : (
+						<Flex pt="2rem" pb="3rem" w="88%">
+							<Button
+								bg={theme.bg.blueNavyLightness}
+								px="4.688rem"
+								py="0.5rem"
+								borderRadius="full"
+								color={theme.text.cyan}
+								_hover={{ bgColor: theme.bg.bluePurple, cursor: "pointer" }}
+								_active={{}}
+								mb="0"
+								w="100%"
+								fontWeight="semibold"
+								onClick={onOpenManageToken}
+							>
+								{translation("searchModal.manageTokenLists")}
+							</Button>
+						</Flex>
+					)}
 				</Flex>
 			</ModalContent>
 		</Modal>

@@ -11,6 +11,8 @@ import {
 	Text,
 	Collapse,
 	toast,
+	useMediaQuery,
+	useColorMode,
 } from "@chakra-ui/react";
 import { useModal, usePicasso, useWallet, useAllCommonPairs } from "hooks";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -56,7 +58,6 @@ interface IModal {
 	isModalOpen: boolean;
 	onModalClose: () => void;
 	isCreate?: boolean;
-	setIsCreate?: React.Dispatch<React.SetStateAction<boolean>>;
 	haveValue?: boolean;
 	setSelectedToken: React.Dispatch<React.SetStateAction<WrappedTokenInfo[]>>;
 	selectedToken: WrappedTokenInfo[];
@@ -89,7 +90,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		currPair,
 		openPendingTx,
 		closePendingTx,
-		setIsCreate,
 	} = props;
 
 	const initialTokenInputValue = {
@@ -104,10 +104,11 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		lastInputTyped: undefined,
 	};
 
-	const { t: translation } = useTranslation();
+	const { t: translation, i18n } = useTranslation();
 	const theme = usePicasso();
 	const { isOpenCoin, onCloseCoin } = useModal();
-	const [buttonId, setButtonId] = useState<number>(0);
+	const [buttonId] = useState<number>(0);
+	const { colorMode } = useColorMode();
 	const [tokenInputValue, setTokenInputValue] = useState<ITokenInputValue>(
 		initialTokenInputValue
 	);
@@ -119,6 +120,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const [liquidityMintendValue, setLiquidityMintedValue] =
 		useState<TokenAmount>();
 	const [amounts, setAmounts] = useState<TokenAmount[]>([]);
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const [currPoolShare, setCurrPoolShare] = useState<string>("");
 	const [currPendingTx, setCurrPendingTx] = useState<string>("");
 	const [finishApproveTx, setFinishApproveTx] = useState<boolean>(false);
@@ -145,6 +147,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	}
 
 	const router = PegasysContracts[currentChainId].ROUTER_ADDRESS;
+
+	const { language } = i18n;
 
 	const walletInfo = useMemo(
 		() => ({
@@ -416,6 +420,8 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		getIsApproved();
 	}, [tokenInputValue, isModalOpen]);
 
+	const languageList = ["de", "fr", "es"];
+
 	const approve = async () => {
 		await PoolServices.approve({
 			approvalState: approveTokenStatus,
@@ -541,20 +547,24 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			/>
 			<ModalOverlay />
 			<ModalContent
-				mb={
-					tokenInputValue.inputTo.value &&
-					tokenInputValue.inputFrom.value &&
-					!invalidPair
-						? "25rem"
-						: "0"
+				top={["9.5rem", "2rem", "2rem", "2rem"]}
+				position={["absolute", "relative", "relative", "relative"]}
+				mb={["0", "25rem", "25rem", "25rem"]}
+				borderTopRadius="30px"
+				h="max-content"
+				borderBottomRadius={["0", "30px", "30px", "30px"]}
+				boxShadow={
+					colorMode === "light"
+						? "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
+						: "none"
 				}
-				top={["none", "none", "2rem", "2rem"]}
-				bottom={["0", "0", "0", "0"]}
-				position={["fixed", "fixed", "relative", "relative"]}
-				borderTopRadius={["3xl", "3xl", "3xl", "3xl"]}
-				h={["max-content", "100%", "max-content", "max-content"]}
-				borderBottomRadius={["0px", "3xl", "3xl", "3xl"]}
-				border={["none", "1px solid transparent"]}
+				border={[
+					"none",
+					"1px solid transparent",
+					"1px solid transparent",
+					"1px solid transparent",
+				]}
+				borderTop="1px solid transparent"
 				background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 			>
 				<ModalHeader
@@ -666,7 +676,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										color={theme.text.cyanPurple}
 										_hover={{ cursor: "pointer", opacity: "0.8" }}
 									>
-										{translation("currencyInputPanel.max")}
+										Max
 									</Text>
 								</Flex>
 
@@ -706,14 +716,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										>
 											{translation("swapHooks.insufficient")}{" "}
 											{selectedToken[0]?.symbol}{" "}
-											{translation("swapHooks.balance")}.
-										</Text>
-										<Text
-											fontSize="sm"
-											pt="2"
-											textAlign="center"
-											color={theme.text.red400}
-										>
+											{translation("swapHooks.balance")}.{" "}
 											{translation("swapHooks.validAmount")}.
 										</Text>
 									</Flex>
@@ -792,7 +795,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										color={theme.text.cyanPurple}
 										_hover={{ cursor: "pointer", opacity: "0.8" }}
 									>
-										{translation("currencyInputPanel.max")}
+										Max
 									</Text>
 								</Flex>
 
@@ -832,14 +835,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 										>
 											{translation("swapHooks.insufficient")}{" "}
 											{selectedToken[1]?.symbol}{" "}
-											{translation("swapHooks.balance")}.
-										</Text>
-										<Text
-											fontSize="sm"
-											pt="2"
-											textAlign="center"
-											color={theme.text.red400}
-										>
+											{translation("swapHooks.balance")}.{" "}
 											{translation("swapHooks.validAmount")}.
 										</Text>
 									</Flex>
@@ -980,24 +976,29 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					<Flex
 						flexDirection="column"
 						p="1.5rem"
+						pb={["3rem", "1.5rem", "1.5rem", "1.5rem"]}
 						transition="200ms"
-						background={theme.bg.subModal}
-						position={["relative", "relative", "absolute", "absolute"]}
+						background={isMobile ? theme.bg.subModalMobile : theme.bg.subModal}
+						position={["relative", "absolute", "absolute", "absolute"]}
 						top={
 							parseFloat(tokenInputValue.inputTo.value) >
 								parseFloat(selectedToken[1]?.formattedBalance) &&
 							parseFloat(tokenInputValue.inputFrom.value) >
 								parseFloat(selectedToken[0]?.formattedBalance)
-								? ["unset", "unset", "35rem", "39rem"]
+								? languageList.includes(language)
+									? ["unset", "42rem", "42rem", "42rem"]
+									: ["unset", "38.5rem", "39.5rem", "39.5rem"]
 								: parseFloat(tokenInputValue.inputTo.value) >
 										parseFloat(selectedToken[1]?.formattedBalance) ||
 								  parseFloat(tokenInputValue.inputFrom.value) >
 										parseFloat(selectedToken[0]?.formattedBalance)
-								? ["unset", "unset", "20rem", "37rem"]
-								: ["unset", "unset", "10rem", "35rem"]
+								? languageList.includes(language)
+									? ["unset", "38rem", "39rem", "39rem"]
+									: ["unset", "37rem", "38rem", "38rem"]
+								: ["unset", "35.5rem", "36rem", "36rem"]
 						}
 						w="100%"
-						borderRadius={["0", "0", "3xl", "3xl"]}
+						borderRadius={["0", "30px", "30px", "30px"]}
 						color={theme.text.mono}
 					>
 						<Text fontWeight="bold" fontSize="lg">
@@ -1078,11 +1079,12 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 					<Flex
 						flexDirection="row"
 						p="1.5rem"
-						bgColor={theme.bg.subModal}
-						position={["relative", "relative", "absolute", "absolute"]}
+						pb={["3rem", "1.5rem", "1.5rem", "1.5rem"]}
+						background={isMobile ? theme.bg.subModalMobile : theme.bg.subModal}
+						position={["relative", "absolute", "absolute", "absolute"]}
 						w="100%"
-						top={["unset", "unset", "27.3rem", "27.3rem"]}
-						borderRadius={["0", "0", "3xl", "3xl"]}
+						top={["unset", "27rem", "28rem", "28rem"]}
+						borderRadius={["0", "30px", "30px", "30px"]}
 						alignItems="flex-start"
 						gap="2"
 					>

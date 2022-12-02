@@ -11,12 +11,11 @@ import {
 	Switch,
 	PopoverArrow,
 	PopoverCloseButton,
-	useColorMode,
 } from "@chakra-ui/react";
 import React, { FunctionComponent, ReactNode, useState } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
 import { IoWarningOutline } from "react-icons/io5";
-import { usePicasso } from "hooks";
+import { useModal, usePicasso } from "hooks";
 import { mockedSlippageValues } from "helpers/mockedData";
 import { useTranslation } from "react-i18next";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
@@ -48,7 +47,6 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	const [deadlineInputValue, setDeadlineInputValue] = useState<string>("");
 
 	const theme = usePicasso();
-	const { colorMode } = useColorMode();
 	// const [expert, setExpert] = useState(false)
 	const {
 		userSlippageTolerance,
@@ -58,6 +56,9 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 		setExpert,
 		expert,
 	} = usePegasys();
+
+	const { isOpenSettingsButton, onCloseSettingsButton, onOpenSettingsButton } =
+		useModal();
 
 	const { isConnected } = useWallet();
 
@@ -140,7 +141,12 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	// END Transaction Deadline handlers - Validations //
 
 	return (
-		<Popover placement="right">
+		<Popover
+			placement="right"
+			isOpen={isOpenSettingsButton}
+			onClose={onCloseSettingsButton}
+			onOpen={onOpenSettingsButton}
+		>
 			<PopoverTrigger {...props}>
 				<IconButton
 					bgColor="transparent"
@@ -152,35 +158,33 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 					_expanded={{ color: theme.text.cyanPurple }}
 				/>
 			</PopoverTrigger>
-			<PopoverArrow />
 			<PopoverContent
 				borderRadius="12px"
+				borderBottomRadius={["none", "12px", "12px", "12px"]}
 				borderColor={theme.bg.blueNavy}
 				_focus={{
 					outline: "none",
 				}}
 				bgColor={theme.bg.blueNavy}
 				p="1rem 1.5rem 0.5rem"
-				w={["100vw", "100vw", "24.563rem", "24.563rem"]}
+				w={["100vw", "24.563rem", "24.563rem", "24.563rem"]}
 				h="max-content"
-				bottom={["0rem", "0rem", "3.8rem", "3.8rem"]}
-				right={["0", "0", "unset", "unset"]}
-				mx={["0", "0", "20", "56"]}
+				bottom={["0rem", "3.8rem", "3.8rem", "3.8rem"]}
+				mx={["0", "0", "56", "56"]}
+				right={["unset", "5%", "unset", "unset"]}
+				left={["0", "unset", "unset", "unset"]}
+				zIndex="9999"
 				position="fixed"
-				boxShadow={
-					colorMode === "dark"
-						? "0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
-						: "0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
-				}
+				boxShadow="0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
 			>
+				<PopoverArrow bg={theme.bg.blueNavyLight} />
 				<Flex
 					justifyContent="flex-end"
-					zIndex="99"
 					pr="0rem"
 					pt="0rem"
 					pb="2"
 					h="max-content"
-					display={["flex", "flex", "none", "none"]}
+					display={["flex", "none", "none", "none"]}
 				>
 					<PopoverCloseButton position="relative" size="md" />
 				</Flex>
@@ -264,7 +268,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 											role="img"
 											aria-label="warning"
 											position="absolute"
-											left="10px"
+											left="0.625rem"
 										>
 											<IoWarningOutline color="orange" />
 										</Text>
@@ -362,7 +366,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							</Text>
 						</Flex>
 						<Flex
-							alignItems={["center", "center", "center", "center"]}
+							alignItems="center"
 							flexDirection="row"
 							mt="4"
 							h="max-content"
@@ -382,7 +386,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 							>
 								<Text
 									fontSize={["sm", "md", "md", "md"]}
-									pr={["1", "1", "1", "1"]}
+									pr="1"
 									fontWeight="medium"
 									color={theme.text.mono}
 									w={
@@ -400,7 +404,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 									icon={MdHelpOutline}
 								/>
 							</Flex>
-							<Flex flexDirection="row">
+							<Flex flexDirection="row" mb={["1", "1", "-1", "-1"]}>
 								<Stack align="center" direction="row">
 									<Text color={theme.text.mono}>
 										{translation("toggle.off")}

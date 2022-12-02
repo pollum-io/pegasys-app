@@ -26,8 +26,8 @@ export const ToastyProvider: React.FC<IToastyProviderProps> = ({
 			toast({
 				...state,
 				id: state?.id,
-				duration: 500000000000,
-				position: state?.position ?? isMobile ? "top" : "top-right",
+				duration: 5000,
+				position: isMobile ? "top" : "top-right",
 				isClosable: true,
 				status: state?.status,
 				title: state?.title,

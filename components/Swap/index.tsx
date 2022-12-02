@@ -613,7 +613,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				md: "column",
 				lg: "row",
 			}}
-			mb={["6rem", "0"]}
+			mb={["6rem", "0", "0", "8rem"]}
 			px={["4", "0", "0", "0"]}
 			zIndex="1"
 		>
@@ -708,7 +708,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									{translation("swapPage.from")}
 								</Text>
 								<Text
-									fontSize={["14px", "14px", "16px", "16px"]}
+									fontSize={["0.875rem", "0.875rem", "1rem", "1rem"]}
 									fontWeight="400"
 									color={theme.text.gray500}
 								>
@@ -720,7 +720,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							<Flex alignItems="center" justifyContent="space-between">
 								<Flex w="100%" alignItems="center" mt="0.313rem">
 									<Flex
-										justifyContent=""
 										alignItems="center"
 										id="0"
 										borderRadius={12}
@@ -732,7 +731,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									>
 										<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
 										<Text
-											fontSize="xl"
+											fontSize={["1rem", "1rem", "xl", "xl"]}
 											fontWeight="500"
 											px="3"
 											color={theme.text.mono}
@@ -757,7 +756,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								</Flex>
 
 								<Input
-									fontSize="2xl"
+									fontSize={["1.125rem", "1.125rem", "1.375rem", "1.375rem"]}
 									maxW="160px"
 									display="inline-block"
 									overflow="hidden"
@@ -856,7 +855,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									{translation("currencyInputPanel.to")}
 								</Text>
 								<Text
-									fontSize={["14px", "14px", "16px", "16px"]}
+									fontSize={["0.875rem", "0.875rem", "1rem", "1rem"]}
 									fontWeight="400"
 									color={theme.text.gray500}
 								>
@@ -880,14 +879,18 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									}}
 								>
 									<Img src={selectedToken[1]?.logoURI} w="6" h="6" />
-									<Text fontSize="xl" fontWeight="500" px="3">
+									<Text
+										fontSize={["1rem", "1rem", "xl", "xl"]}
+										fontWeight="500"
+										px="3"
+									>
 										{selectedToken[1]?.symbol}
 									</Text>
 									<Icon as={IoIosArrowDown} />
 								</Flex>
 								<Input
-									fontSize="2xl"
-									maxW="160px"
+									fontSize={["1.125rem", "1.125rem", "1.375rem", "1.375rem"]}
+									maxW="10rem"
 									display="inline-block"
 									overflow="hidden"
 									whiteSpace="nowrap"
@@ -947,16 +950,31 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								</Text>
 								<Flex
 									flexDirection="row"
-									justifyContent="space-around"
+									justifyContent={[
+										"space-around",
+										"space-between",
+										"space-between",
+										"space-between",
+									]}
 									py="0.5rem"
 									borderRadius="2xl"
 									borderTop="1px solid"
 									borderColor={theme.text.cyanPurple}
 									bgColor={theme.bg.bluePink}
 									color={theme.text.mono}
+									px="3"
+									pr={["1.8rem", "2.8rem", "2.8rem", "2.8rem"]}
 								>
-									<Flex fontSize="sm" flexDirection="column" textAlign="center">
-										<Text fontWeight="semibold">
+									<Flex
+										fontSize="sm"
+										flexDirection="column"
+										textAlign="center"
+										alignItems="center"
+									>
+										<Text
+											fontWeight="semibold"
+											w={["8rem", "11rem", "11rem", "11rem"]}
+										>
 											{returnedTradeValue?.v2Trade
 												? returnedTradeValue?.v2Trade?.executionPrice?.toSignificant(
 														6
@@ -967,8 +985,16 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 											{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
 										</Text>
 									</Flex>
-									<Flex fontSize="sm" flexDirection="column" textAlign="center">
-										<Text fontWeight="semibold">
+									<Flex
+										fontSize="sm"
+										flexDirection="column"
+										textAlign="center"
+										alignItems="center"
+									>
+										<Text
+											fontWeight="semibold"
+											w={["4.2rem", "7rem", "7rem", "7rem"]}
+										>
 											{returnedTradeValue?.v2Trade
 												? returnedTradeValue?.v2Trade?.executionPrice
 														?.invert()
@@ -989,9 +1015,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							<Button
 								w="100%"
 								mt={isExpert ? "1.8rem" : "1.5rem"}
-								py="6"
+								py={["5", "6", "6", "6"]}
 								px="6"
-								borderRadius="67px"
+								borderRadius="4.1875rem"
 								onClick={
 									!isConnected
 										? () => {
@@ -1004,7 +1030,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								}
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
-								fontSize={["16px", "16px", "lg", "lg"]}
+								fontSize={["1rem", "1rem", "lg", "lg"]}
 								fontWeight="semibold"
 								disabled={
 									!isConnected
@@ -1031,7 +1057,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									mt="2rem"
 									py="6"
 									px="6"
-									borderRadius="67px"
+									borderRadius="4.1875rem"
 									onClick={
 										approveValidation && !alreadyApproved
 											? () => {
@@ -1070,7 +1096,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									mt="2rem"
 									py="6"
 									px="6"
-									borderRadius="67px"
+									borderRadius="4.1875rem"
 									onClick={() => {
 										if (!onWrap) return;
 										onWrap();
@@ -1109,19 +1135,26 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							!!tokenInputValue.inputFrom.value &&
 							!isWrap
 						}
+						style={{
+							width: "100%",
+						}}
 					>
 						<Flex
 							flexDirection="column"
 							p="1.5rem"
 							background={theme.bg.blueNavy}
-							w={["20rem", "28rem", "28rem", "28rem"]}
+							w={["100%", "28rem", "28rem", "28rem"]}
 							borderRadius="30px"
 							mt="7"
 							mb={["2", "2", "2", "10rem"]}
 							zIndex="1"
 						>
 							<Flex flexDirection="column">
-								<Flex flexDirection="row" justifyContent="space-between">
+								<Flex
+									flexDirection="row"
+									justifyContent="space-between"
+									alignItems="center"
+								>
 									<Flex alignItems="center">
 										<Text fontWeight="normal" mr="1" fontSize="sm">
 											{translation("swap.minimumReceived")}
@@ -1161,17 +1194,17 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									flexDirection="row"
 									justifyContent="space-between"
 									pt="0.75rem"
-									alignItems="baseline"
+									alignItems="center"
 								>
 									<Flex
 										w={["70%", "70%", "max-content", "max-content"]}
-										alignItems={["baseline", "baseline", "center", "center"]}
+										alignItems="center"
 									>
 										<Text
 											fontWeight="normal"
 											mr="1"
 											fontSize="sm"
-											w="max-content"
+											w={["60%", "max-content", "max-content", "max-content"]}
 										>
 											{translation("swap.liquidityProviderFee")}
 										</Text>
@@ -1232,10 +1265,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 
 			<Flex
 				h="max-content"
-				w={["18rem", "sm", "100%", "xl"]}
+				w={["90%", "md", "md", "xl"]}
 				ml={["0", "0", "0", "12"]}
-				mt={["8", "8", "8", "0"]}
-				mb={["24", "24", "24", "0"]}
+				mt={["16", "16", "16", "0"]}
+				mb={["35", "40", "40", "0"]}
 				flexDirection="column"
 				zIndex="1"
 				borderRadius={30}
@@ -1293,7 +1326,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							>
 								<SlideFade
 									in={tokensGraphCandleData?.length !== 0}
-									offsetY="20px"
+									offsetY="1.25rem"
 								>
 									<FilterButton
 										periodStateValue={tokensGraphCandlePeriod}
@@ -1307,7 +1340,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				<Flex
 					direction="column"
 					justifyContent="center"
-					maxW={isLoadingGraphCandles ? "475px" : ""}
+					maxW={isLoadingGraphCandles ? "29.6875rem" : ""}
 				>
 					{isLoadingGraphCandles ? (
 						<Flex
@@ -1344,7 +1377,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 					) : (
 						<SlideFade
 							in={!isLoadingGraphCandles || tokensGraphCandleData}
-							offsetY="20px"
+							offsetY="1.25rem"
 						>
 							<ChartComponent data={tokensGraphCandleData} />
 						</SlideFade>

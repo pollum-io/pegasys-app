@@ -53,7 +53,8 @@
 		"selectToken": "Chọn token",
 		"balance": "Số dư: ",
 		"max": "MAX",
-		"to": "Tới"
+		"to": "Tới",
+		"searchBy": "Tìm kiếm theo tên mã thông báo"
 	},
 	"earn": {
 		"claimAccumulated": "Yêu cầu phần thưởng {{symbol}} tích lũy được",
@@ -95,7 +96,8 @@
 		"withdrewStakingToken": "Đã rút!{{ symbol }}",
 		"approve": "Chấp nhận",
 		"poolWeight": "Khối lượng bể",
-		"extraReward": "Phần thưởng bổ sung"
+		"extraReward": "Phần thưởng bổ sung",
+		"unstakeEntire": "Khi bạn hủy đặt cược toàn bộ tiền gửi của mình, phần thưởng của bạn sẽ được yêu cầu và tiền gửi của bạn sẽ được trả lại cho bạn. Bạn sẽ không còn kiếm được phần thưởng từ nhóm đặt cược này nữa."
 	},
 	"menu": {
 		"code": "Mã",
@@ -486,7 +488,8 @@
 		"youCanVote": "Bạn có thể tự bỏ phiếu cho từng đề xuất hoặc ủy thác phiếu bầu của mình cho bên thứ ba.",
 		"showCancelled": "Trình diễn bị hủy bỏ",
 		"discussAtTheForum": "Thảo luận tại Diễn đàn",
-		"editVoteDelegation": "Chỉnh sửa Ủy quyền Bỏ phiếu"
+		"editVoteDelegation": "Chỉnh sửa Ủy quyền Bỏ phiếu",
+		"yourVotes": "phiếu bầu của bạn"
 	},
 	"IDOPage": {
 		"pegasysIDOs": "Initial DEX Offering (IDO)",
