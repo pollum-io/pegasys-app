@@ -715,13 +715,19 @@ export const PoolsContainer: NextPage = () => {
 														borderColor="transparent"
 														p="4"
 														fontSize="sm"
-														zIndex="2"
+														zIndex="9999"
 													>
 														<MenuItem
 															color={theme.text.mono}
 															_hover={{ bgColor: theme.bg.neutralGray }}
 															onClick={() => setSortType("liquidity")}
 															borderRadius="md"
+															_active={{}}
+															bgColor={
+																sortType === "liquidity"
+																	? theme.bg.menuLinksGray
+																	: "transparent !important"
+															}
 														>
 															{translation("pool.liquidity")}
 														</MenuItem>
@@ -730,6 +736,12 @@ export const PoolsContainer: NextPage = () => {
 															_hover={{ bgColor: theme.bg.neutralGray }}
 															onClick={() => setSortType("volume")}
 															borderRadius="md"
+															_active={{}}
+															bgColor={
+																sortType === "volume"
+																	? theme.bg.menuLinksGray
+																	: "transparent !important"
+															}
 														>
 															{translation("positionCard.volume")}
 														</MenuItem>
@@ -738,6 +750,12 @@ export const PoolsContainer: NextPage = () => {
 															_hover={{ bgColor: theme.bg.neutralGray }}
 															onClick={() => setSortType("apr")}
 															borderRadius="md"
+															_active={{}}
+															bgColor={
+																sortType === "apr"
+																	? theme.bg.menuLinksGray
+																	: "transparent !important"
+															}
 														>
 															APR
 														</MenuItem>
@@ -746,6 +764,12 @@ export const PoolsContainer: NextPage = () => {
 															_hover={{ bgColor: theme.bg.neutralGray }}
 															onClick={() => setSortType("your-pools")}
 															borderRadius="md"
+															_active={{}}
+															bgColor={
+																sortType === "your-pools"
+																	? theme.bg.menuLinksGray
+																	: "transparent !important"
+															}
 														>
 															{translation("pool.yourPools")}
 														</MenuItem>

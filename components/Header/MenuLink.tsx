@@ -13,7 +13,7 @@ import { FunctionComponent, ReactNode } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { FaParachuteBox } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
-import { usePicasso } from "hooks";
+import { useModal, usePicasso } from "hooks";
 import {
 	MdOutlineCallMade,
 	MdOutlineCheckBox,
@@ -29,6 +29,7 @@ interface IButtonProps extends ButtonProps {
 
 export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
+	const { isOpenMenuLinks, onCloseMenuLinks, onOpenMenuLinks } = useModal();
 
 	const infos = [
 		{
@@ -64,7 +65,11 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 	];
 
 	return (
-		<Popover>
+		<Popover
+			isOpen={isOpenMenuLinks}
+			onOpen={onOpenMenuLinks}
+			onClose={onCloseMenuLinks}
+		>
 			<PopoverTrigger {...props}>
 				<IconButton
 					color={theme.icon.nightGray}
@@ -95,7 +100,6 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 				<PopoverArrow bg={theme.bg.blueNavyLight} />
 				<Flex
 					justifyContent="flex-end"
-					zIndex="99"
 					pr="0.3rem"
 					pt="0.5rem"
 					display={{
@@ -110,7 +114,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 				<PopoverBody
 					display="flex"
 					flexDirection="column"
-					zIndex="99"
+					zIndex="9999"
 					px="0"
 					py={["0", "1", "1", "1"]}
 				>

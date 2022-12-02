@@ -2,6 +2,7 @@ import { Button, ButtonProps, Flex } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { FunctionComponent, ReactNode } from "react";
 import Jazzicon from "react-jazzicon";
+import { useTranslation } from "react-i18next";
 
 import { usePegasys, useWallet } from "pegasys-services";
 
@@ -16,6 +17,7 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 	const { children, ...rest } = props;
 	const { expert } = usePegasys();
 	const { walletError, address } = useWallet();
+	const { t: translation } = useTranslation();
 
 	return (
 		<Button
@@ -26,15 +28,14 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 			justifyContent="space-arround"
 			w="max-content"
 			h="max-content"
-			ml="4"
+			ml={expert ? ["6", "4", "4", "4"] : ["0", "4", "4", "4"]}
 			fontSize="md"
 			borderRadius={84}
 			fontWeight={500}
 			py={["2", "2", "2", "2"]}
-			px={["3", "4", "4", "4"]}
-			position={["absolute", "relative"]}
+			px={["4", "4", "4", "4"]}
+			position={["unset", "relative"]}
 			bottom={["12", "8", "8", "8"]}
-			right={expert ? ["40%", "0", "0", "0"] : ["27%", "0", "0", "0"]}
 			textTransform="uppercase"
 			overflow="hidden"
 			opacity="0.85"
@@ -45,7 +46,7 @@ export const AddressButton: FunctionComponent<IButtonProps> = props => {
 			{...rest}
 		>
 			{walletError ? (
-				"Wrong Network"
+				translation("walletModal.wrongNetwork")
 			) : (
 				<>
 					<Flex pr="2" textTransform="uppercase">

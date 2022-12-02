@@ -38,6 +38,8 @@ export const Header: React.FC = () => {
 		onOpenDrawerMenu,
 		isOpenDrawerMenu,
 		onCloseDrawerMenu,
+		isOpenMenuLinks,
+		isOpenSettingsButton,
 	} = useModal();
 	const [isMobile] = useMediaQuery("(max-width: 750px)");
 	const btnRef: any = React.useRef();
@@ -214,54 +216,70 @@ export const Header: React.FC = () => {
 					</Flex>
 				)}
 			</Flex>
-
 			<Flex
-				w={["90%", "30rem", "37rem", "37rem"]}
-				h="max-content"
-				backgroundColor={theme.bg.blackAlpha}
-				borderRadius="46px 46px 0px 0px"
-				border={theme.border.headerBorder}
-				boxShadow={theme.border.headerBorderShadow}
-				position="fixed"
-				bottom="0"
-				zIndex="999"
+				flexDirection="column"
+				justifyContent="center"
 				alignItems="center"
-				px={["0", "10"]}
-				pl={expert ? ["8", "6", "10", "10"] : ["7", "6", "10", "10"]}
-				pr={expert ? ["6", "6", "10", "10"] : ["6", "4", "10", "10"]}
-				py="2"
-				justifyContent={["space-around", "space-between"]}
+				bgColor="red"
 			>
-				<Flex w="25%" gap={["2", "4"]} pl={["0", "2", "0", "0"]}>
-					<TokenButton onClick={onOpenPsysBreakdown} />
-					<NetworkButton />
-				</Flex>
 				<Flex
-					flexDirection="column"
-					pl={["0", "2", "0", "0"]}
-					pr={
-						address
-							? expert
-								? ["0", "1rem", "1.5rem", "1.5rem"]
-								: ["4rem", "1rem", "1.5rem", "1.5rem"]
-							: ["4rem", "0", "0", "0.3rem"]
-					}
+					display={["flex", "none", "none", "none"]}
+					position="fixed"
+					justifyContent="center"
+					bottom="3.1rem"
+					zIndex={isOpenSettingsButton || isOpenMenuLinks ? "unset" : "501"}
 				>
 					<WalletButton />
 				</Flex>
-				<Flex alignContent={["flex-start", "unset", "unset", "unset"]}>
-					<Flex>
-						<IconButton
-							_hover={{
-								color: theme.text.cyanPurple,
-							}}
-							aria-label="Theme"
-							icon={<theme.icon.theme size="1.25rem" />}
-							onClick={() => toggleColorMode()}
-						/>
+				<Flex
+					w={["90%", "30rem", "37rem", "37rem"]}
+					h="max-content"
+					backgroundColor={theme.bg.blackAlpha}
+					borderRadius="46px 46px 0px 0px"
+					border={theme.border.headerBorder}
+					boxShadow={theme.border.headerBorderShadow}
+					position="fixed"
+					bottom="0"
+					zIndex="500"
+					alignItems="center"
+					px={["0", "10"]}
+					pl={expert ? ["8", "6", "10", "10"] : ["6", "6", "10", "10"]}
+					pr={expert ? ["6", "6", "10", "10"] : ["4", "4", "10", "10"]}
+					py="2"
+					justifyContent="space-between"
+				>
+					<Flex w="25%" gap={["2", "4"]} pl={["0", "2", "0", "0"]}>
+						<TokenButton onClick={onOpenPsysBreakdown} />
+						<NetworkButton />
 					</Flex>
-					<MenuLinks />
-					<SettingsButton />
+					<Flex
+						flexDirection="column"
+						pl={["0", "2", "0", "0"]}
+						pr={
+							address
+								? expert
+									? ["0", "1rem", "1.5rem", "1.5rem"]
+									: ["4rem", "1rem", "1.5rem", "1.5rem"]
+								: ["4rem", "0", "0", "0.3rem"]
+						}
+						display={["none", "flex", "flex", "flex"]}
+					>
+						<WalletButton />
+					</Flex>
+					<Flex alignContent={["flex-start", "unset", "unset", "unset"]}>
+						<Flex>
+							<IconButton
+								_hover={{
+									color: theme.text.cyanPurple,
+								}}
+								aria-label="Theme"
+								icon={<theme.icon.theme size="1.25rem" />}
+								onClick={() => toggleColorMode()}
+							/>
+						</Flex>
+						<MenuLinks />
+						<SettingsButton />
+					</Flex>
 				</Flex>
 			</Flex>
 		</Flex>

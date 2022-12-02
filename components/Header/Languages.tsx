@@ -18,6 +18,7 @@ export const Languages: FunctionComponent = () => {
 			mt="2"
 			gap="1"
 			pl={["0", "1.5rem", "1.5rem", "1.5rem"]}
+			mb={["1rem", "unset", "unset", "unset"]}
 		>
 			{availableLanguages.map((lang, index) => (
 				<Flex

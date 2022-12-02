@@ -15,7 +15,7 @@ import {
 import React, { FunctionComponent, ReactNode, useState } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
 import { IoWarningOutline } from "react-icons/io5";
-import { usePicasso } from "hooks";
+import { useModal, usePicasso } from "hooks";
 import { mockedSlippageValues } from "helpers/mockedData";
 import { useTranslation } from "react-i18next";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
@@ -56,6 +56,9 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 		setExpert,
 		expert,
 	} = usePegasys();
+
+	const { isOpenSettingsButton, onCloseSettingsButton, onOpenSettingsButton } =
+		useModal();
 
 	const { isConnected } = useWallet();
 
@@ -138,7 +141,12 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	// END Transaction Deadline handlers - Validations //
 
 	return (
-		<Popover placement="right">
+		<Popover
+			placement="right"
+			isOpen={isOpenSettingsButton}
+			onClose={onCloseSettingsButton}
+			onOpen={onOpenSettingsButton}
+		>
 			<PopoverTrigger {...props}>
 				<IconButton
 					bgColor="transparent"
@@ -165,13 +173,13 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 				mx={["0", "0", "56", "56"]}
 				right={["unset", "5%", "unset", "unset"]}
 				left={["0", "unset", "unset", "unset"]}
+				zIndex="9999"
 				position="fixed"
 				boxShadow="0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
 			>
 				<PopoverArrow bg={theme.bg.blueNavyLight} />
 				<Flex
 					justifyContent="flex-end"
-					zIndex="99"
 					pr="0rem"
 					pt="0rem"
 					pb="2"

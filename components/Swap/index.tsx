@@ -604,7 +604,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				md: "column",
 				lg: "row",
 			}}
-			mb={["6rem", "0"]}
+			mb={["6rem", "0", "0", "8rem"]}
 			px={["4", "0", "0", "0"]}
 			zIndex="1"
 		>
@@ -1258,8 +1258,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				h="max-content"
 				w={["90%", "md", "md", "xl"]}
 				ml={["0", "0", "0", "12"]}
-				mt={["8", "8", "8", "0"]}
-				mb={["24", "24", "24", "0"]}
+				mt={["16", "16", "16", "0"]}
+				mb={["35", "40", "40", "0"]}
 				flexDirection="column"
 				zIndex="1"
 				borderRadius={30}

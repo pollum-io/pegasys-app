@@ -216,12 +216,19 @@ export const FarmContainer: NextPage = () => {
 											borderColor="transparent"
 											p="4"
 											fontSize="sm"
+											zIndex="9999"
 										>
 											{Object.keys(sortData).map((key, i) => (
 												<MenuItem
 													onClick={() => setSort(key as keyof typeof sortData)}
 													key={i}
 													borderRadius="md"
+													_active={{}}
+													bgColor={
+														key === sort
+															? theme.bg.menuLinksGray
+															: "transparent !important"
+													}
 												>
 													{sortData[key as keyof typeof sortData]}
 												</MenuItem>

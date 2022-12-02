@@ -129,6 +129,10 @@ const usePicasso = () => {
 				"rgba(0, 0, 0, 0.06)",
 				"rgba(255, 255, 255, 0.06)"
 			),
+			menuLinksGray: useColorModeValue(
+				"rgba(0, 0, 0, 0.04)",
+				"rgba(255, 255, 255, 0.06)"
+			),
 			softBluePink: useColorModeValue("#D6BCFA", "#153D6F"),
 			alphaLightGray: useColorModeValue("rgb(0, 0, 0, 0.04)", "#081120"),
 			blueLightPurple: useColorModeValue("#665EE1", "#153D6F"),
