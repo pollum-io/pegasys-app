@@ -241,7 +241,8 @@ const FarmCard: FunctionComponent<{
 				mt="1rem"
 				height="2rem"
 				onClick={onClick}
-				amount={unclaimedAmount}
+				amount={stakedAmount}
+				disabled={JSBI.greaterThanOrEqual(BIG_INT_ZERO, unclaimedAmount.raw)}
 			>
 				{t("earnPages.claim")}
 			</EarnButton>
