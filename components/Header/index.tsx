@@ -237,6 +237,7 @@ export const Header: React.FC = () => {
 						<NavButton
 							href="https://info.pegasys.finance/"
 							color={theme.icon.whiteGray}
+							customTarget
 							display={{
 								base: "none",
 								sm: "none",

@@ -7,11 +7,12 @@ interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
 	href: string;
 	active?: boolean;
+	customTarget?: boolean;
 }
 
 export const NavButton: FunctionComponent<IButtonProps> = props => {
 	const { push } = useRouter();
-	const { href, children, display, active } = props;
+	const { href, children, display, active, customTarget } = props;
 	const theme = usePicasso();
 
 	return (
@@ -30,7 +31,7 @@ export const NavButton: FunctionComponent<IButtonProps> = props => {
 			px={[3.5, 6, 6, 6]}
 			py="2"
 			display={display}
-			onClick={() => push(href)}
+			onClick={() => (!customTarget ? push(href) : window.open(href, "_blank"))}
 		>
 			{children}
 		</Button>
