@@ -496,6 +496,18 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	}, [approveAddLiquidityPendingTxs, chainId]);
 
 	useEffect(() => {
+		const currentApproveAddLiquidityPendingTx = PersistentFramework.get(
+			"currentApproveAddLiquidityPendingTxs"
+		);
+
+		if (currentApproveAddLiquidityPendingTx) {
+			setCurrPendingTx(
+				(currentApproveAddLiquidityPendingTx as { hash: string }).hash
+			);
+		}
+	}, []);
+
+	useEffect(() => {
 		setTokenInputValue(initialTokenInputValue);
 		setApproveTokenStatus(ApprovalState.UNKNOWN);
 	}, [isModalOpen]);

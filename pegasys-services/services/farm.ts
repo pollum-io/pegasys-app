@@ -467,7 +467,7 @@ class FarmServices {
 						}).then(value => {
 							values.poolRewardRate = value;
 						}),
-						this.getTotalStake({ stakeToken }).then(value => {
+						this.getTotalStake({ stakeToken, chainId }).then(value => {
 							values.totalStake = value;
 						}),
 						this.getStake({
