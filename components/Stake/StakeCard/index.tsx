@@ -40,7 +40,7 @@ const StakeCard: React.FC<IStakeCardsProps> = props => {
 		>
 			<Header
 				symbol={stakeInfo.stakeToken.symbol ?? ""}
-				unclaimedAmount={stakeInfo.unclaimedAmount}
+				stakedAmount={stakeInfo.stakedAmount}
 				onClick={onClick}
 			/>
 			<Body

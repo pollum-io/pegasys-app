@@ -21,7 +21,7 @@ export interface IButtonsProps {
 }
 
 export interface IHeaderProps {
-	unclaimedAmount: TokenAmount;
+	stakedAmount: TokenAmount;
 	symbol: string;
 	onClick: (id: string) => void;
 }

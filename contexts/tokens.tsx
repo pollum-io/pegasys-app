@@ -1,13 +1,13 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
 import { ITokenInfoBalance, WrappedTokenInfo } from "types";
-import { ApprovalState, useTokensListManage } from "hooks";
+import { useTokensListManage } from "hooks";
 import { getDefaultTokens } from "networks";
 import { getBalanceOfSingleCall, getProviderBalance } from "utils";
 import { TokenInfo } from "@pollum-io/syscoin-tokenlist-sdk";
 import {
 	useWallet,
-	useTransaction,
 	SUPPORTED_NETWORK_CHAINS,
+	PersistentFramework,
 } from "pegasys-services";
 import { ChainId } from "@pollum-io/pegasys-sdk";
 
@@ -34,8 +34,6 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		chainId: currentNetworkChainId,
 		provider,
 	} = useWallet();
-
-	const { approvalState } = useTransaction();
 
 	const { currentCacheListTokensToDisplay, tokenListManageState } =
 		useTokensListManage();
@@ -182,7 +180,6 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 	}, [
 		currentNetworkChainId,
 		walletAddress,
-		approvalState.status,
 		isConnected,
 		currentCacheListTokensToDisplay,
 		initialDefaultTokens,
@@ -192,6 +189,12 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 	useEffect(() => {
 		getInitialDefaultTokensByRequest();
 	}, [currentNetworkChainId, isConnected, walletAddress]);
+
+	useEffect(() => {
+		if (initialDefaultTokens.length) {
+			PersistentFramework.add("currentStorageTokens", initialDefaultTokens);
+		}
+	}, [initialDefaultTokens]);
 
 	const tokensProviderValue = useMemo(
 		() => ({

@@ -1,21 +1,19 @@
-import React from "react";
 import { ChainId, JSBI, TokenAmount } from "@pollum-io/pegasys-sdk";
 import AirdropInfo from "helpers/airdrop.json";
 import {
+	IFinishedTx,
+	IPendingTx,
 	PegasysContracts,
 	PegasysTokens,
-	ApprovalState,
-	IApprovalState,
 } from "pegasys-services";
 import AIRDROP_ABI from "utils/abis/airdropAbi.json";
 import {
-	addTransaction,
 	calculateGasMargin,
 	createContractUsingAbi,
 	singleCallWithoutParams,
 } from "utils";
 import { Signer, ethers } from "ethers";
-import { ITransactionResponse, ITx, IWalletHookInfos } from "types";
+import { ITransactionResponse } from "types";
 
 export const userHasAvailableClaim = async (
 	address: string,
@@ -83,11 +81,7 @@ export const useClaimCallback = (
 		| ethers.providers.JsonRpcProvider
 		| Signer
 		| undefined,
-	walletInfos: IWalletHookInfos,
-	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
-	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
-	setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
-	transactions: ITx
+	addTransactions: (tx: IPendingTx | IFinishedTx, pending?: boolean) => void
 ) => {
 	// eslint-disable-next-line
 	// @ts-ignore
@@ -117,18 +111,11 @@ export const useClaimCallback = (
 						gasLimit: calculateGasMargin(estimatedGasLimit),
 					})
 					.then((response: ITransactionResponse) => {
-						addTransaction(
-							response,
-							walletInfos,
-							setTransactions,
-							transactions,
-							{
-								summary: `Claimed PSYS`,
-								claim: { recipient: address },
-							}
-						);
-						setApprovalState({ status: ApprovalState.PENDING, type: "claim" });
-						setCurrentTxHash(response?.hash);
+						addTransactions({
+							summary: `Claimed PSYS`,
+							service: "airdropClaim",
+							hash: response.hash,
+						});
 					})
 					.catch((err: any) => {
 						console.log(err);

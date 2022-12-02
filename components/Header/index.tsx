@@ -7,7 +7,7 @@ import {
 	useColorMode,
 	useMediaQuery,
 } from "@chakra-ui/react";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
 import { useModal, usePicasso, useTokens, usePairs as getPairs } from "hooks";
@@ -16,8 +16,15 @@ import { HiOutlineMenu } from "react-icons/hi";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
 import { useRouter } from "next/router";
 import { getTotalSupply, formattedNum } from "utils";
-import { useEarn, useWallet, usePegasys } from "pegasys-services";
-import { ChainId, Token } from "@pollum-io/pegasys-sdk";
+import {
+	useWallet,
+	usePegasys,
+	StakeServices,
+	ContractFramework,
+	RoutesFramework,
+	PegasysTokens,
+} from "pegasys-services";
+import { ChainId, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
@@ -44,9 +51,9 @@ export const Header: React.FC = () => {
 	const [isMobile] = useMediaQuery("(max-width: 750px)");
 	const btnRef: any = React.useRef();
 	const { expert } = usePegasys();
-	const { address, chainId, provider, signer } = useWallet();
+	const { address, chainId, provider, signer, isConnected } = useWallet();
 	const { userTokensBalance } = useTokens();
-	const { earnOpportunities } = useEarn();
+	const [unclaimed, setUnclaimed] = useState<TokenAmount>();
 	const [psysInfo, setPsysInfo] = useState({
 		balance: "0",
 		unclaimed: "0",
@@ -81,48 +88,75 @@ export const Header: React.FC = () => {
 			url: "/stake",
 		},
 	];
+	const stakeContract = useMemo(
+		() =>
+			ContractFramework.StakeContract({
+				chainId,
+			}),
+		[chainId]
+	);
 
-	useMemo(async () => {
-		if (PSYS?.formattedBalance !== "0") {
+	useEffect(() => {
+		const getPsys = async () => {
+			if (address && chainId && RoutesFramework.getStakeAddress(chainId)) {
+				const tokens = PegasysTokens[chainId];
+
+				const psys = tokens.PSYS;
+
+				const unclaimedValue = await StakeServices.getUnclaimed({
+					stakeContract,
+					chainId,
+					walletAddress: address,
+					rewardToken: psys,
+				});
+
+				setUnclaimed(unclaimedValue);
+			}
+		};
+
+		getPsys();
+	}, [chainId, isConnected, address, stakeContract]);
+
+	useEffect(() => {
+		const getPsysInfo = async () => {
+			if (PSYS?.formattedBalance !== "0") {
+				setPsysInfo(prevState => ({
+					...prevState,
+					balance: PSYS?.formattedBalance as string,
+				}));
+			}
+
+			const totalSupply =
+				PSYS &&
+				signer &&
+				provider &&
+				(await getTotalSupply(PSYS as Token, signer as Signer, provider));
+
+			const pairs = await getPairs(
+				[[PSYS, SYS]] as [Token, Token][],
+				walletInfos
+			);
+
+			const pair = pairs?.[0]?.[1];
+
+			if (unclaimed?.toSignificant(6) && unclaimed?.toSignificant(6) !== "0") {
+				setPsysInfo(prevState => ({
+					...prevState,
+					unclaimed: unclaimed?.toSignificant(6) as string,
+				}));
+			}
+
 			setPsysInfo(prevState => ({
 				...prevState,
-				balance: PSYS?.formattedBalance as string,
-			}));
-		}
-
-		const totalSupply =
-			PSYS &&
-			signer &&
-			provider &&
-			(await getTotalSupply(PSYS as Token, signer as Signer, provider));
-
-		const pairs = await getPairs(
-			[[PSYS, SYS]] as [Token, Token][],
-			walletInfos
-		);
-
-		const pair = pairs?.[0]?.[1];
-
-		if (
-			earnOpportunities[0]?.unclaimedAmount.toSignificant(6) &&
-			earnOpportunities[0]?.unclaimedAmount.toSignificant(6) !== "0"
-		) {
-			setPsysInfo(prevState => ({
-				...prevState,
-				unclaimed: earnOpportunities[0]?.unclaimedAmount.toSignificant(
-					6
+				totalSupply: formattedNum(
+					Number(totalSupply?.toSignificant(6))
 				) as string,
+				price: pair?.priceOf(pair.token1).toSignificant(6) as string,
 			}));
-		}
+		};
 
-		setPsysInfo(prevState => ({
-			...prevState,
-			totalSupply: formattedNum(
-				Number(totalSupply?.toSignificant(6))
-			) as string,
-			price: pair?.priceOf(pair.token1).toSignificant(6) as string,
-		}));
-	}, [userTokensBalance, earnOpportunities]);
+		getPsysInfo();
+	}, [userTokensBalance, unclaimed]);
 
 	return (
 		<Flex

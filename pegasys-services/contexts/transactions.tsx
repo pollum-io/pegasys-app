@@ -1,23 +1,16 @@
 import { ChainId } from "@pollum-io/pegasys-sdk";
-import React, {
-	createContext,
-	useCallback,
-	useEffect,
-	useMemo,
-	useState,
-} from "react";
+import React, { createContext, useEffect, useMemo, useState } from "react";
 
-import { useTranslation } from "react-i18next";
-import { PersistentFramework, TransactionFramework } from "../frameworks";
+import { PersistentFramework } from "../frameworks";
 import {
 	ITransactionProviderValue,
 	ITransactionProviderProps,
-	ITx,
-	ISubmittedAproval,
-	IApprovalState,
-	ApprovalState,
-	IPersistTxs,
-	ITransactionResponse,
+	IPendingTxs,
+	IPendingTx,
+	IPersistentPendingTx,
+	IFinishedTx,
+	IFinishedTxs,
+	IPersistentFinishedTx,
 } from "../dto";
 import { useWallet, useToasty } from "../hooks";
 
@@ -28,218 +21,201 @@ export const TransactionContext = createContext(
 export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 	children,
 }) => {
-	const [transactions, setTransactions] = useState<ITx>({
-		57: {},
-		5700: {},
-		2814: {},
-	});
-	const [approvalState, setApprovalState] = useState<IApprovalState>({
-		status: ApprovalState.UNKNOWN,
-		type: "",
-	});
-	const [approvalSubmitted, setApprovalSubmitted] = useState<ISubmittedAproval>(
-		{ status: false, tokens: [], currentTokenToApprove: "" }
+	const [pendingTxs, setPendingTxs] = useState<IPendingTxs>([]);
+	const [finishedTxs, setFinishedTxs] = useState<IFinishedTxs>([]);
+	const [currentTimer, setCurrentTimer] = useState<NodeJS.Timer>(
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		setInterval(() => {}, 0)
 	);
-	const [currentTxHash, setCurrentTxHash] = useState<string>("");
-	const [currentInputTokenName, setCurrentInputTokenName] =
-		useState<string>("");
-	const [pendingTxLength, setPendingTxLength] = useState<number>(0);
-	const [currentSummary, setCurrentSummary] = useState<string>("");
+
 	const { chainId, isConnected, address, provider } = useWallet();
 	const { toast } = useToasty();
-	const { t: translation } = useTranslation();
 
-	const addTransaction = (response: ITransactionResponse) => {
-		if (!address || !chainId) return;
+	const removePendingTransactions = (hash: string) => {
+		if (!chainId || !address) return;
 
-		const { hash } = response;
+		const persistentKey = "pegasysPendingTransactions";
 
-		if (!hash) {
-			throw Error("No transaction hash found.");
+		const persistTxs = PersistentFramework.get(persistentKey);
+
+		if (!persistTxs) {
+			return;
 		}
 
-		setTransactions({
-			...transactions,
-			[response.chainId]: {
-				...transactions[chainId],
-				[hash]: response,
-			},
-		});
+		const newTransactions = (persistTxs as IPersistentPendingTx[]).filter(
+			tx => tx.hash !== hash
+		);
+
+		PersistentFramework.add(persistentKey, newTransactions);
+
+		setPendingTxs(
+			newTransactions
+				.filter(tx => tx.walletAddress === address && tx.chainId === chainId)
+				.map(tx => ({
+					hash: tx.hash,
+					service: tx.service,
+					summary: tx.summary,
+				}))
+		);
 	};
 
-	const getPendingTxs = useCallback(
-		() => TransactionFramework.getPendingTxs(address, chainId),
-		[chainId, address]
-	);
+	const addTransactions = (
+		tx: IPendingTx | IFinishedTx,
+		finished?: boolean
+	) => {
+		if (!address || !chainId) return;
+
+		let newPersistTransactions: any[] = [];
+
+		const persistentKey = finished
+			? "pegasysFinishedTransactions"
+			: "pegasysPendingTransactions";
+
+		const persistTxs = PersistentFramework.get(persistentKey);
+
+		if (persistTxs) {
+			newPersistTransactions = persistTxs as any[];
+		}
+
+		if (newPersistTransactions.find(persistTx => persistTx.hash === tx.hash))
+			return;
+
+		if (finished) {
+			removePendingTransactions(tx.hash);
+			setFinishedTxs([
+				...newPersistTransactions
+					.filter(tx => tx.walletAddress === address && tx.chainId === chainId)
+					.map(tx => ({
+						hash: tx.hash,
+						success: tx.success,
+						summary: tx.summary,
+					})),
+				tx as IFinishedTx,
+			]);
+			toast({
+				title: tx.summary,
+				status: (tx as IFinishedTx).success ? "success" : "error",
+			});
+		} else {
+			setPendingTxs([
+				...newPersistTransactions
+					.filter(tx => tx.walletAddress === address && tx.chainId === chainId)
+					.map(tx => ({
+						hash: tx.hash,
+						service: tx.service,
+						summary: tx.summary,
+					})),
+				tx as IPendingTx,
+			]);
+		}
+
+		newPersistTransactions.push({
+			...tx,
+			walletAddress: address,
+			chainId,
+		});
+
+		PersistentFramework.add(persistentKey, newPersistTransactions);
+	};
+
+	const clearAll = () => {
+		PersistentFramework.remove("pegasysFinishedTransactions");
+		PersistentFramework.remove("pegasysPendingTransactions");
+		setFinishedTxs([]);
+		setPendingTxs([]);
+	};
 
 	const timeValue = useMemo(
 		() => (chainId === ChainId.ROLLUX ? 3000 : 10000),
 		[chainId]
 	);
 
-	useMemo(() => {
-		if (approvalState.status === ApprovalState.PENDING && isConnected) {
+	useEffect(() => {
+		clearInterval(currentTimer);
+
+		if (chainId && isConnected && pendingTxs.length) {
 			const timer = setInterval(async () => {
-				const getTx = await getPendingTxs();
+				await Promise.all(
+					pendingTxs.map(async currTx => {
+						const tx = await provider?.getTransaction(currTx.hash);
 
-				const storageSummary = PersistentFramework.get("currentSummary") as
-					| { currentSummary: string }
-					| undefined;
-
-				setPendingTxLength(Number(getTx?.result?.length));
-
-				const tx = await provider?.getTransaction(currentTxHash);
-
-				if (tx) {
-					const txs = PersistentFramework.get("txs");
-
-					PersistentFramework.add("txs", {
-						...(txs ?? {}),
-						[tx.hash]: {
-							...tx,
-							summary: storageSummary?.currentSummary ?? currentSummary,
-							chainId,
-							txType: approvalState.type,
-							finished: false,
-						},
-					});
-
-					if (
-						tx.from.toLowerCase() === address.toLowerCase() &&
-						tx.confirmations !== 0
-					) {
-						addTransaction({
-							...tx,
-							chainId: tx.chainId,
-							summary: storageSummary?.currentSummary ?? currentSummary,
-							txType: approvalState.type,
-							finished: true,
-							hash: currentTxHash,
-						});
-
-						setPendingTxLength(Number(getTx?.result?.length));
-						setApprovalState({
-							status: ApprovalState.APPROVED,
-							type: approvalState.type,
-						});
-
-						PersistentFramework.add("txs", {
-							...(PersistentFramework.get("txs") ?? {}),
-							[tx.hash]: {
-								...tx,
-								summary: storageSummary?.currentSummary ?? currentSummary,
-								finished: true,
-							},
-						});
-
-						if (approvalState.type === "approve-swap") {
-							setApprovalSubmitted(prevState => ({
-								...prevState,
-								tokens: prevState.tokens.filter(
-									token => token !== `${currentInputTokenName}`
-								),
-							}));
+						if (!tx) {
+							console.log("remove 1");
+							removePendingTransactions(currTx.hash);
+							return;
 						}
-						clearInterval(timer);
-					}
-				}
+
+						if (
+							tx.from.toLowerCase() === address.toLowerCase() &&
+							tx.confirmations !== 0
+						) {
+							// removePendingTransactions(currTx.hash);
+
+							addTransactions(
+								{
+									summary: currTx.summary,
+									hash: currTx.hash,
+									success: tx.confirmations === 1,
+								},
+								true
+							);
+						}
+					})
+				);
 			}, timeValue);
+
+			setCurrentTimer(timer);
 		}
-	}, [approvalState, currentTxHash]);
+	}, [pendingTxs]);
 
 	useEffect(() => {
-		if (approvalState.status === ApprovalState.APPROVED) {
-			toast({
-				title: translation("toasts.transactionComp"),
-				status: "success",
-			});
-		}
+		if (chainId && address) {
+			const persistPendingTxs = PersistentFramework.get(
+				"pegasysPendingTransactions"
+			);
 
-		if (
-			approvalState.type === "approve-swap" &&
-			approvalState.status === ApprovalState.APPROVED &&
-			approvalSubmitted.tokens.length === 0
-		) {
-			setApprovalSubmitted(prevState => ({
-				...prevState,
-				status: false,
-			}));
-		}
-	}, [approvalState]);
+			if (persistPendingTxs) {
+				const walletTxs = (persistPendingTxs as IPersistentPendingTx[]).filter(
+					tx => tx.walletAddress === address && tx.chainId === chainId
+				);
 
-	useEffect(() => {
-		const persistTxs = PersistentFramework.get("txs") as
-			| IPersistTxs
-			| undefined;
+				setPendingTxs(
+					walletTxs.map(tx => ({
+						hash: tx.hash,
+						summary: tx.summary,
+						service: tx.service,
+					}))
+				);
+			}
 
-		if (persistTxs && isConnected) {
-			Object.values(persistTxs).map(tx => {
-				if (tx.finished === false) {
-					addTransaction(tx);
-					setApprovalState({
-						status: ApprovalState.PENDING,
-						type: `${tx.txType}`,
-					});
-					setCurrentTxHash(tx.hash);
-					return null;
-				}
-				addTransaction(tx);
-				return null;
-			});
-		}
-	}, [isConnected]);
+			const persistFinishedTxs = PersistentFramework.get(
+				"pegasysFinishedTransactions"
+			);
 
-	useEffect(() => {
-		if (currentTxHash) {
-			PersistentFramework.add("currentTxHash", { currentTxHash });
-		}
-		if (currentSummary) {
-			PersistentFramework.add("currentSummary", { currentSummary });
-			setPendingTxLength(1);
-		}
-	}, [currentTxHash, currentSummary]);
+			if (persistFinishedTxs) {
+				const walletTxs = (
+					persistFinishedTxs as IPersistentFinishedTx[]
+				).filter(tx => tx.walletAddress === address && tx.chainId === chainId);
 
-	useEffect(() => {
-		if (approvalSubmitted && approvalState.status !== ApprovalState.UNKNOWN) {
-			PersistentFramework.add("approvalSubmitted", approvalSubmitted);
+				setFinishedTxs(
+					walletTxs.map(tx => ({
+						hash: tx.hash,
+						summary: tx.summary,
+						success: tx.success,
+					}))
+				);
+			}
 		}
-	}, [approvalSubmitted]);
+	}, [chainId, address]);
 
 	const providerValue = useMemo(
 		() => ({
-			transactions,
-			setTransactions,
-			approvalState,
-			setApprovalState,
-			approvalSubmitted,
-			setApprovalSubmitted,
-			currentTxHash,
-			setCurrentTxHash,
-			currentInputTokenName,
-			setCurrentInputTokenName,
-			pendingTxLength,
-			setPendingTxLength,
-			currentSummary,
-			setCurrentSummary,
-			addTransaction,
+			addTransactions,
+			pendingTxs,
+			finishedTxs,
+			clearAll,
 		}),
-		[
-			transactions,
-			setTransactions,
-			approvalState,
-			setApprovalState,
-			approvalSubmitted,
-			setApprovalSubmitted,
-			currentTxHash,
-			setCurrentTxHash,
-			currentInputTokenName,
-			setCurrentInputTokenName,
-			pendingTxLength,
-			setPendingTxLength,
-			currentSummary,
-			setCurrentSummary,
-			addTransaction,
-		]
+		[addTransactions, pendingTxs, finishedTxs, clearAll]
 	);
 
 	return (

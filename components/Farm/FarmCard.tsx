@@ -1,8 +1,14 @@
 import { Flex, Img, Text } from "@chakra-ui/react";
 import { FunctionComponent, useMemo } from "react";
 import { useModal, usePicasso, useTokens } from "hooks";
-import { IFarmInfo, useEarn, TButtonId, BIG_INT_ZERO } from "pegasys-services";
-import { JSBI, Pair } from "@pollum-io/pegasys-sdk";
+import {
+	IFarmInfo,
+	useEarn,
+	TButtonId,
+	BIG_INT_ZERO,
+	useWallet,
+} from "pegasys-services";
+import { ChainId, JSBI, Pair } from "@pollum-io/pegasys-sdk";
 import { formattedNum } from "utils/convert/numberFormat";
 import { useTranslation } from "react-i18next";
 import { WrappedTokenInfo } from "types";
@@ -34,6 +40,7 @@ const FarmCard: FunctionComponent<{
 	const { userTokensBalance } = useTokens();
 	const { setSelectedOpportunity, setButtonId } = useEarn();
 	const { onOpenFarmActions, onOpenAddLiquidity } = useModal();
+	const { chainId } = useWallet();
 
 	const { t } = useTranslation();
 
@@ -84,6 +91,8 @@ const FarmCard: FunctionComponent<{
 
 		return extraTokenWrapped?.logoURI ?? "";
 	}, [userTokensBalance, extraRewardToken]);
+
+	const isMainNet = useMemo(() => chainId === ChainId.NEVM, [chainId]);
 
 	return (
 		<Flex
@@ -150,21 +159,32 @@ const FarmCard: FunctionComponent<{
 					</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
-					<Text fontWeight="semibold">{t("earnPages.swapFeeApr")}</Text>
-					<Text>{swapFeeApr}%</Text>
+					<Text color={isMainNet ? undefined : "grey"} fontWeight="semibold">
+						{t("earnPages.swapFeeApr")}
+					</Text>
+					<Text color={isMainNet ? undefined : "grey"}>
+						{isMainNet ? `${swapFeeApr}%` : "-"}
+					</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
-					<Text fontWeight="semibold">
+					<Text color={isMainNet ? undefined : "grey"} fontWeight="semibold">
 						{extraRewardToken ? "Super " : ""}Farm APR
 					</Text>
-					<Text>{farmApr}%</Text>
+					<Text color={isMainNet ? undefined : "grey"}>
+						{isMainNet ? `${farmApr}%` : "-"}
+					</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
-					<Text fontWeight="semibold">{t("earnPages.totalApr")}</Text>
-					<Text>{combinedApr}%</Text>
+					<Text color={isMainNet ? undefined : "grey"} fontWeight="semibold">
+						{t("earnPages.totalApr")}
+					</Text>
+					<Text color={isMainNet ? undefined : "grey"}>
+						{isMainNet ? `${combinedApr}%` : "-"}
+					</Text>
 				</Flex>
 			</Flex>
-			{(JSBI.greaterThan(rewardRatePerWeek.raw, BIG_INT_ZERO) ||
+			{(JSBI.greaterThan(stakedAmount.raw, BIG_INT_ZERO) ||
+				JSBI.greaterThan(unstakedAmount.raw, BIG_INT_ZERO) ||
 				JSBI.greaterThan(unclaimedAmount.raw, BIG_INT_ZERO)) && (
 				<Flex
 					flexDirection="column"
@@ -236,7 +256,7 @@ const FarmCard: FunctionComponent<{
 				mt="1rem"
 				height="2rem"
 				onClick={onClick}
-				amount={unclaimedAmount}
+				amount={stakedAmount}
 			>
 				{t("earnPages.claim")}
 			</EarnButton>

@@ -8,7 +8,7 @@ import {
 	IWalletHookInfos,
 	ITx,
 } from "types";
-import { ApprovalState, IApprovalState } from "pegasys-services";
+import { IFinishedTx, IPendingTx } from "pegasys-services";
 import WETH_ABI from "utils/abis/weth.json";
 
 export enum WrapType {
@@ -21,11 +21,7 @@ export function UseWrapCallback(
 	tradeTokens: WrappedTokenInfo[],
 	inputValues: ISwapTokenInputValue,
 	walletInfos: IWalletHookInfos,
-	setTransaction: React.Dispatch<React.SetStateAction<ITx>>,
-	transactions: ITx,
-	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
-	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
-	setCurrentSummary: React.Dispatch<React.SetStateAction<string>>,
+	addTransactions: (tx: IPendingTx | IFinishedTx, pending?: boolean) => void,
 	signer: Signer,
 	onCloseTransaction: () => void
 ): {
@@ -67,24 +63,11 @@ export function UseWrapCallback(
 								const txReceipt = await wethContract.deposit({
 									value: `0x${inputAmount.raw.toString(16)}`,
 								});
-								addTransaction(
-									txReceipt,
-									walletInfos,
-									setTransaction,
-									transactions,
-									{
-										summary: `Wrap ${inputAmount.toSignificant(6)} SYS to WSYS`,
-										finished: false,
-									}
-								);
-								setApprovalState({
-									status: ApprovalState.PENDING,
-									type: "wrap",
+								addTransactions({
+									summary: `Wrap ${inputAmount.toSignificant(6)} SYS to WSYS`,
+									hash: txReceipt.hash,
+									service: "swapWethContractDeposit",
 								});
-								setCurrentTxHash(`${txReceipt?.hash}`);
-								setCurrentSummary(
-									`Wrap ${inputAmount.toSignificant(6)} SYS to WSYS`
-								);
 								onCloseTransaction();
 							} catch (error) {
 								onCloseTransaction();
@@ -105,26 +88,31 @@ export function UseWrapCallback(
 								const txReceipt = await wethContract.withdraw(
 									`0x${inputAmount.raw.toString(16)}`
 								);
-								addTransaction(
-									txReceipt,
-									walletInfos,
-									setTransaction,
-									transactions,
-									{
-										summary: `Unwrap ${inputAmount.toSignificant(
-											6
-										)} WSYS to SYS`,
-										finished: false,
-									}
-								);
-								setCurrentSummary(
-									`Unwrap ${inputAmount.toSignificant(6)} WSYS to SYS`
-								);
-								setApprovalState({
-									status: ApprovalState.PENDING,
-									type: "wrap",
+								addTransactions({
+									summary: `Unwrap ${inputAmount.toSignificant(6)} WSYS to SYS`,
+									hash: txReceipt.hash,
+									service: "swapWethContractWithdraw",
 								});
-								setCurrentTxHash(`${txReceipt?.hash}`);
+								// addTransaction(
+								// 	txReceipt,
+								// 	walletInfos,
+								// 	setTransaction,
+								// 	transactions,
+								// 	{
+								// 		summary: `Unwrap ${inputAmount.toSignificant(
+								// 			6
+								// 		)} WSYS to SYS`,
+								// 		finished: false,
+								// 	}
+								// );
+								// setCurrentSummary(
+								// 	`Unwrap ${inputAmount.toSignificant(6)} WSYS to SYS`
+								// );
+								// setApprovalState({
+								// 	status: ApprovalState.PENDING,
+								// 	type: "wrap",
+								// });
+								// setCurrentTxHash(`${txReceipt?.hash}`);
 								onCloseTransaction();
 							} catch (error) {
 								onCloseTransaction();

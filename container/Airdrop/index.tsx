@@ -22,20 +22,14 @@ import { MdOutlineCallMade } from "react-icons/md";
 import { BorderAnimation } from "components/Airdrop/BorderAnimation";
 import { ChainId, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
-import { useWallet, ApprovalState, useTransaction } from "pegasys-services";
+import { useWallet, useTransaction } from "pegasys-services";
 import { useTranslation } from "react-i18next";
 
 export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
-	const {
-		setCurrentTxHash,
-		setApprovalState,
-		approvalState,
-		setTransactions,
-		transactions,
-	} = useTransaction();
+	const { pendingTxs, finishedTxs, addTransactions } = useTransaction();
 
 	const {
 		chainId: currentNetworkChainId,
@@ -51,6 +45,8 @@ export const AirdropContainer: NextPage = () => {
 	const [isAvailable, setIsAvailable] = useState<boolean>(true);
 	const [isClaim, setIsClaim] = useState<boolean>(false);
 	const [isClaimed, setIsClaimed] = useState<boolean>(false);
+	const [isClaiming, setIsClaiming] = useState<boolean>(false);
+	const [currPendingTx, setCurrPendingTx] = useState<string>("");
 	const [availableClaimAmount, setAvailableClaimAmount] =
 		useState<TokenAmount>();
 
@@ -60,55 +56,69 @@ export const AirdropContainer: NextPage = () => {
 
 	const { colorMode } = useColorMode();
 
-	const isClaiming =
-		approvalState.status === ApprovalState.PENDING &&
-		approvalState.type === "claim";
-
-	const walletInfos = {
-		walletAddress,
-		provider,
-		chainId,
-	};
-
 	const { claimCallback } = useClaimCallback(
 		walletAddress,
 		chainId,
 		signer as Signer,
-		walletInfos,
-		setApprovalState,
-		setCurrentTxHash,
-		setTransactions,
-		transactions
+		addTransactions
 	);
 
-	useMemo(async () => {
-		if (!isConnected || !walletAddress) return null;
+	useEffect(() => {
+		const onClaim = async () => {
+			if (!isConnected || !walletAddress) return null;
 
-		const canClaim = await userHasAvailableClaim(
-			walletAddress,
-			chainId,
-			provider
-		);
-		setIsClaim(canClaim);
+			const canClaim = await userHasAvailableClaim(
+				walletAddress,
+				chainId,
+				provider
+			);
+			setIsClaim(canClaim);
 
-		if (!canClaim) return setIsAvailable(false);
-		const claimAmount = await userUnclaimedAmount(
-			walletAddress,
-			chainId,
-			provider
-		);
-		setAvailableClaimAmount(claimAmount);
+			if (!canClaim) return setIsAvailable(false);
+			const claimAmount = await userUnclaimedAmount(
+				walletAddress,
+				chainId,
+				provider
+			);
+			setAvailableClaimAmount(claimAmount);
 
-		return null;
+			return null;
+		};
+
+		onClaim();
 	}, [isConnected, isClaiming]);
 
+	const airdropClaimPendingTxs = useMemo(() => {
+		if (!chainId) return [];
+
+		return pendingTxs.filter(tx => tx.service === "airdropClaim");
+	}, [pendingTxs, chainId]);
+
 	useEffect(() => {
-		if (
-			approvalState.status === ApprovalState.APPROVED &&
-			approvalState.type === "claim"
-		)
-			setIsClaimed(true);
-	}, [isClaiming]);
+		if (chainId) {
+			if (airdropClaimPendingTxs.length) {
+				setCurrPendingTx(
+					airdropClaimPendingTxs[airdropClaimPendingTxs.length - 1].hash
+				);
+				setIsClaiming(true);
+			} else if (currPendingTx) {
+				const currFullTx = finishedTxs.find(tx => tx.hash === currPendingTx);
+
+				if (currFullTx?.success) {
+					setIsClaimed(true);
+					setCurrPendingTx("");
+				} else {
+					setCurrPendingTx("");
+					setIsClaimed(false);
+					setIsClaiming(false);
+				}
+			} else {
+				setCurrPendingTx("");
+				setIsClaimed(false);
+				setIsClaiming(false);
+			}
+		}
+	}, [airdropClaimPendingTxs, chainId]);
 
 	return (
 		<Flex alignItems="flex-start" justifyContent="center" mb="6.2rem">

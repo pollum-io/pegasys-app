@@ -1,5 +1,5 @@
 import { Button, Flex, Img, Text } from "@chakra-ui/react";
-import { FunctionComponent, SetStateAction, useMemo, useState } from "react";
+import { FunctionComponent, SetStateAction, useEffect, useState } from "react";
 import { useModal, usePicasso, useWallet, useTokens } from "hooks";
 import {
 	getBalanceOfBNSingleCall,
@@ -88,73 +88,77 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		setSelectedToken([wrapTokenA, wrapTokenB]);
 	};
 
-	useMemo(async () => {
-		const pairBalance = await getBalanceOfBNSingleCall(
-			pair?.liquidityToken.address as string,
-			address,
-			signer ?? null
-		);
+	useEffect(() => {
+		const load = async () => {
+			const pairBalance = await getBalanceOfBNSingleCall(
+				pair?.liquidityToken.address as string,
+				address,
+				signer ?? null
+			);
 
-		const value = JSBI.BigInt(pairBalance?.toString());
+			const value = JSBI.BigInt(pairBalance?.toString());
 
-		const pairBalanceAmount = new TokenAmount(
-			pair?.liquidityToken as Token,
-			value
-		);
+			const pairBalanceAmount = new TokenAmount(
+				pair?.liquidityToken as Token,
+				value
+			);
 
-		const fetchSysPrice = await pegasysClient.query({
-			query: SYS_PRICE(),
-			fetchPolicy: "cache-first",
-		});
+			const fetchSysPrice = await pegasysClient.query({
+				query: SYS_PRICE(),
+				fetchPolicy: "cache-first",
+			});
 
-		const sysPrice = fetchSysPrice?.data?.bundles[0]?.sysPrice;
-		const totalSupply = await getTotalSupply(
-			pair?.liquidityToken as Token,
-			signer as Signer,
-			provider
-		);
+			const sysPrice = fetchSysPrice?.data?.bundles[0]?.sysPrice;
+			const totalSupply = await getTotalSupply(
+				pair?.liquidityToken as Token,
+				signer as Signer,
+				provider
+			);
 
-		const poolTokenPercentage =
-			pairBalanceAmount &&
-			totalSupply &&
-			JSBI.greaterThanOrEqual(totalSupply.raw, pairBalanceAmount.raw)
-				? new Percent(pairBalanceAmount.raw, totalSupply.raw)
-				: undefined;
+			const poolTokenPercentage =
+				pairBalanceAmount &&
+				totalSupply &&
+				JSBI.greaterThanOrEqual(totalSupply.raw, pairBalanceAmount.raw)
+					? new Percent(pairBalanceAmount.raw, totalSupply.raw)
+					: undefined;
 
-		const [token0Deposited, token1Deposited] =
-			!!pair &&
-			!!totalSupply &&
-			!!pairBalanceAmount &&
-			// this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
-			JSBI.greaterThanOrEqual(totalSupply.raw, pairBalanceAmount.raw)
-				? [
-						pair.getLiquidityValue(
-							pair.token0,
-							totalSupply,
-							pairBalanceAmount,
-							false
-						),
-						pair.getLiquidityValue(
-							pair.token1,
-							totalSupply,
-							pairBalanceAmount,
-							false
-						),
-				  ]
-				: [undefined, undefined];
+			const [token0Deposited, token1Deposited] =
+				!!pair &&
+				!!totalSupply &&
+				!!pairBalanceAmount &&
+				// this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
+				JSBI.greaterThanOrEqual(totalSupply.raw, pairBalanceAmount.raw)
+					? [
+							pair.getLiquidityValue(
+								pair.token0,
+								totalSupply,
+								pairBalanceAmount,
+								false
+							),
+							pair.getLiquidityValue(
+								pair.token1,
+								totalSupply,
+								pairBalanceAmount,
+								false
+							),
+					  ]
+					: [undefined, undefined];
 
-		const amount = `${removeScientificNotation(
-			+pairBalanceAmount.toSignificant(5)
-		)}`;
+			const amount = `${removeScientificNotation(
+				+pairBalanceAmount.toSignificant(5)
+			)}`;
 
-		setPoolPercentShare(
-			Number(poolTokenPercentage?.toSignificant(6)).toFixed(2)
-		);
-		setDepositedTokens({ token0: token0Deposited, token1: token1Deposited });
-		setPercentShare(Number(poolTokenPercentage?.toSignificant(6)));
-		setPoolBalance(amount);
-		setUserPoolBalance(amount);
-		setSysPrice(+sysPrice);
+			setPoolPercentShare(
+				Number(poolTokenPercentage?.toSignificant(6)).toFixed(2)
+			);
+			setDepositedTokens({ token0: token0Deposited, token1: token1Deposited });
+			setPercentShare(Number(poolTokenPercentage?.toSignificant(6)));
+			setPoolBalance(amount);
+			setUserPoolBalance(amount);
+			setSysPrice(+sysPrice);
+		};
+
+		load();
 	}, [pair, trigger]);
 
 	const reserveUSD =

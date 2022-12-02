@@ -3,10 +3,9 @@ import { JSBI, Token } from "@pollum-io/pegasys-sdk";
 
 import { getTokenPairs } from "utils";
 import { WrappedTokenInfo } from "types";
-import { ApprovalState, useTokens } from "hooks";
+import { useTokens } from "hooks";
 
 import { useTranslation } from "react-i18next";
-import { PegasysContracts } from "../constants";
 import { ContractFramework, RoutesFramework } from "../frameworks";
 import { FarmServices } from "../services";
 import { useWallet, useEarn, useTransaction, useToasty } from "../hooks";
@@ -27,7 +26,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	const { userTokensBalance } = useTokens();
 	const { chainId, address, provider } = useWallet();
 	const { t: translation } = useTranslation();
-	const { approvalState } = useTransaction();
+	const { pendingTxs } = useTransaction();
 	const { toast } = useToasty();
 	const {
 		signature,
@@ -191,7 +190,7 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 	const getAvailablePair = async () => {
 		try {
 			setDataLoading(true);
-			if (chainId && address && PegasysContracts[chainId].MINICHEF_ADDRESS) {
+			if (chainId && address && RoutesFramework.getMinichefAddress(chainId)) {
 				const pairsTokens = getTokenPairs(chainId, userTokensBalance);
 
 				const stakeInfos = await FarmServices.getFarmOpportunities({
@@ -220,20 +219,34 @@ const Provider: React.FC<IFarmProviderProps> = ({ children }) => {
 		}
 	};
 
-	useEffect(() => {
-		if (
-			approvalState.status === ApprovalState.APPROVED &&
-			(approvalState.type === "deposit-farm" ||
-				approvalState.type === "claim-farm" ||
-				approvalState.type === "withdraw-farm")
-		) {
-			getAvailablePair();
-		}
-	}, [approvalState]);
+	const farmPendingClaim = useMemo(() => {
+		if (!chainId) return [];
+
+		return [...pendingTxs.filter(tx => tx.service === "claim-farm")];
+	}, [pendingTxs, chainId]);
+
+	const farmPendingDeposit = useMemo(() => {
+		if (!chainId) return [];
+
+		return [...pendingTxs.filter(tx => tx.service === "deposit-farm")];
+	}, [pendingTxs, chainId]);
+
+	const farmPendingWithdraw = useMemo(() => {
+		if (!chainId) return [];
+
+		return [...pendingTxs.filter(tx => tx.service === "withdraw-farm")];
+	}, [pendingTxs, chainId]);
 
 	useEffect(() => {
 		getAvailablePair();
-	}, [userTokensBalance, chainId, address]);
+	}, [
+		userTokensBalance,
+		chainId,
+		address,
+		farmPendingClaim.length,
+		farmPendingDeposit.length,
+		farmPendingWithdraw.length,
+	]);
 
 	useEffect(() => {
 		let pairsToRender: IFarmInfo[] = [];

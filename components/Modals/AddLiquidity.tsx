@@ -10,6 +10,7 @@ import {
 	ModalOverlay,
 	Text,
 	Collapse,
+	toast,
 	useMediaQuery,
 	useColorMode,
 } from "@chakra-ui/react";
@@ -32,9 +33,10 @@ import {
 	ONE_BIPS,
 	ApprovalState,
 	useTransaction,
+	useToasty,
+	PersistentFramework,
 } from "pegasys-services";
 import {
-	addTransaction,
 	getTokenAllowance,
 	getTotalSupply,
 	tryParseAmount,
@@ -120,17 +122,13 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const [amounts, setAmounts] = useState<TokenAmount[]>([]);
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const [currPoolShare, setCurrPoolShare] = useState<string>("");
+	const [currPendingTx, setCurrPendingTx] = useState<string>("");
+	const [finishApproveTx, setFinishApproveTx] = useState<boolean>(false);
 	const { setCurrentLpAddress } = useWallet();
-	const {
-		setTransactions,
-		transactions,
-		setApprovalState,
-		approvalState,
-		setCurrentTxHash,
-		setCurrentSummary,
-	} = useTransaction();
+	const { pendingTxs, finishedTxs, addTransactions } = useTransaction();
 	const { address, chainId, isConnected, signer, provider } = psUseWallet();
 	const { userSlippageTolerance, userTransactionDeadlineValue } = usePegasys();
+	const { toast } = useToasty();
 
 	let currentChainId: ChainId;
 
@@ -166,17 +164,19 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			selectedToken[1]?.symbol === "WSYS") ||
 		(selectedToken[0]?.symbol === "WSYS" && selectedToken[1]?.symbol === "SYS");
 
-	const isPending = approvalState.status === ApprovalState.PENDING;
+	const isPending = useMemo(() => {
+		if (pendingTxs.length) {
+			return true;
+		}
+
+		return false;
+	}, [chainId, pendingTxs]);
 
 	const inputValidation =
 		parseFloat(tokenInputValue.inputTo.value) >
 			parseFloat(selectedToken[1]?.formattedBalance) ||
 		parseFloat(tokenInputValue.inputFrom.value) >
 			parseFloat(selectedToken[0]?.formattedBalance);
-
-	const isApproved =
-		approvalState.type === "approve" &&
-		approvalState.status === ApprovalState.APPROVED;
 
 	const emptyInput =
 		!tokenInputValue.inputFrom.value || !tokenInputValue.inputTo.value;
@@ -260,146 +260,164 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		[maxAmounts]
 	);
 
-	useMemo(async () => {
-		const {
-			inputTo: { value: inputToValue },
-			inputFrom: { value: inputFromValue },
-			currentInputTyped,
-		} = tokenInputValue;
+	useEffect(() => {
+		const onInputChange = async () => {
+			const {
+				inputTo: { value: inputToValue },
+				inputFrom: { value: inputFromValue },
+				currentInputTyped,
+			} = tokenInputValue;
 
-		if (currentInputTyped === "inputFrom" && currPair) {
-			const parseInputValue = tryParseAmount(inputFromValue, selectedToken[0]);
-			const wrappedAmountValue = wrappedCurrencyAmount(
-				parseInputValue,
-				currentChainId
-			);
-			const quoteValue =
-				wrappedAmountValue &&
-				currPair?.priceOf(currPair?.token0)?.quote(wrappedAmountValue);
+			if (currentInputTyped === "inputFrom" && currPair) {
+				const parseInputValue = tryParseAmount(
+					inputFromValue,
+					selectedToken[0]
+				);
+				const wrappedAmountValue = wrappedCurrencyAmount(
+					parseInputValue,
+					currentChainId
+				);
+				const quoteValue =
+					wrappedAmountValue &&
+					currPair?.priceOf(currPair?.token0)?.quote(wrappedAmountValue);
 
-			tokenInputValue.inputTo.value =
-				inputFromValue && quoteValue ? quoteValue?.toSignificant(6) : "";
-		}
-
-		if (currentInputTyped === "inputTo" && currPair) {
-			const parseInputValue = tryParseAmount(inputToValue, selectedToken[1]);
-			const wrappedAmountValue = wrappedCurrencyAmount(
-				parseInputValue,
-				currentChainId
-			);
-			const quoteValue =
-				wrappedAmountValue &&
-				currPair?.priceOf(currPair?.token1)?.quote(wrappedAmountValue);
-
-			tokenInputValue.inputFrom.value =
-				inputToValue && quoteValue ? quoteValue?.toSignificant(6) : "";
-		}
-	}, [tokenInputValue]);
-
-	useMemo(async () => {
-		const totalSupply =
-			currPair &&
-			(await getTotalSupply(
-				currPair?.liquidityToken,
-				signer as Signer,
-				provider
-			));
-		const currencyAmountA = tryParseAmount(
-			tokenInputValue.inputFrom.value,
-			selectedToken[0]
-		);
-		const currencyAmountB = tryParseAmount(
-			tokenInputValue.inputTo.value,
-			selectedToken[1]
-		);
-
-		const [tokenAmountA, tokenAmountB] = [
-			wrappedCurrencyAmount(currencyAmountA, currentChainId),
-			wrappedCurrencyAmount(currencyAmountB, currentChainId),
-		];
-
-		const liquidityMinted =
-			currPair &&
-			tokenAmountA &&
-			tokenAmountB &&
-			currPair.getLiquidityMinted(
-				totalSupply as TokenAmount,
-				tokenAmountA,
-				tokenAmountB
-			);
-
-		setLiquidityMintedValue(liquidityMinted);
-
-		const poolPercentageShare =
-			liquidityMinted &&
-			totalSupply &&
-			new Percent(liquidityMinted?.raw, totalSupply?.add(liquidityMinted).raw);
-
-		setCurrPoolShare(
-			poolPercentageShare?.lessThan(ONE_BIPS)
-				? "<0.01%"
-				: `${poolPercentageShare?.toFixed(2)}%` ?? "0%"
-		);
-	}, [tokenInputValue]);
-
-	useMemo(async () => {
-		if (
-			isERC20 &&
-			tokenInputValue.inputFrom.value &&
-			tokenInputValue.inputTo.value
-		) {
-			const valueA = JSBI.BigInt(
-				parseUnits(tokenInputValue.inputFrom.value, selectedToken[0].decimals)
-			);
-			const amountAtoApprove =
-				selectedToken[0] && new TokenAmount(selectedToken[0], valueA);
-
-			const allowanceA =
-				selectedToken[0] &&
-				(await getTokenAllowance(
-					selectedToken[0],
-					address,
-					`${router}`,
-					signer as Signer
-				));
-
-			const valueB = JSBI.BigInt(
-				parseUnits(tokenInputValue.inputTo.value, selectedToken[1].decimals)
-			);
-			const amountBtoApprove =
-				selectedToken[1] && new TokenAmount(selectedToken[1], valueB);
-
-			const allowanceB =
-				selectedToken[1] &&
-				(await getTokenAllowance(
-					selectedToken[1],
-					address,
-					`${router}`,
-					signer as Signer
-				));
-
-			const isApproved =
-				!allowanceA?.lessThan(amountAtoApprove) &&
-				!allowanceB?.lessThan(amountBtoApprove);
-
-			if (isApproved) {
-				setApproveTokenStatus(ApprovalState.APPROVED);
-				return;
+				tokenInputValue.inputTo.value =
+					inputFromValue && quoteValue ? quoteValue?.toSignificant(6) : "";
 			}
-			setApproveTokenStatus(ApprovalState.NOT_APPROVED);
 
-			const tokenToApprove = selectedToken.find(
-				token => token.symbol !== "SYS" && token.symbol !== "PSYS"
+			if (currentInputTyped === "inputTo" && currPair) {
+				const parseInputValue = tryParseAmount(inputToValue, selectedToken[1]);
+				const wrappedAmountValue = wrappedCurrencyAmount(
+					parseInputValue,
+					currentChainId
+				);
+				const quoteValue =
+					wrappedAmountValue &&
+					currPair?.priceOf(currPair?.token1)?.quote(wrappedAmountValue);
+
+				tokenInputValue.inputFrom.value =
+					inputToValue && quoteValue ? quoteValue?.toSignificant(6) : "";
+			}
+		};
+
+		onInputChange();
+	}, [tokenInputValue]);
+
+	useEffect(() => {
+		const onInputChange = async () => {
+			const totalSupply =
+				currPair &&
+				(await getTotalSupply(
+					currPair?.liquidityToken,
+					signer as Signer,
+					provider
+				));
+			const currencyAmountA = tryParseAmount(
+				tokenInputValue.inputFrom.value,
+				selectedToken[0]
+			);
+			const currencyAmountB = tryParseAmount(
+				tokenInputValue.inputTo.value,
+				selectedToken[1]
 			);
 
-			const amountToApprove = [amountAtoApprove, amountBtoApprove].find(
-				amount => amount.token.symbol === tokenToApprove?.symbol
-			);
+			const [tokenAmountA, tokenAmountB] = [
+				wrappedCurrencyAmount(currencyAmountA, currentChainId),
+				wrappedCurrencyAmount(currencyAmountB, currentChainId),
+			];
 
-			setTokenToApp(tokenToApprove);
-			setAmountToApp(amountToApprove);
-			setAmounts([amountAtoApprove, amountBtoApprove]);
-		}
+			const liquidityMinted =
+				currPair &&
+				tokenAmountA &&
+				tokenAmountB &&
+				currPair.getLiquidityMinted(
+					totalSupply as TokenAmount,
+					tokenAmountA,
+					tokenAmountB
+				);
+
+			setLiquidityMintedValue(liquidityMinted);
+
+			const poolPercentageShare =
+				liquidityMinted &&
+				totalSupply &&
+				new Percent(
+					liquidityMinted?.raw,
+					totalSupply?.add(liquidityMinted).raw
+				);
+
+			setCurrPoolShare(
+				poolPercentageShare?.lessThan(ONE_BIPS)
+					? "<0.01%"
+					: `${poolPercentageShare?.toFixed(2)}%` ?? "0%"
+			);
+		};
+
+		onInputChange();
+	}, [tokenInputValue]);
+
+	useEffect(() => {
+		const getIsApproved = async () => {
+			if (
+				isERC20 &&
+				tokenInputValue.inputFrom.value &&
+				tokenInputValue.inputTo.value
+			) {
+				const valueA = JSBI.BigInt(
+					parseUnits(tokenInputValue.inputFrom.value, selectedToken[0].decimals)
+				);
+				const amountAtoApprove =
+					selectedToken[0] && new TokenAmount(selectedToken[0], valueA);
+
+				const allowanceA =
+					selectedToken[0] &&
+					(await getTokenAllowance(
+						selectedToken[0],
+						address,
+						`${router}`,
+						signer as Signer
+					));
+
+				const valueB = JSBI.BigInt(
+					parseUnits(tokenInputValue.inputTo.value, selectedToken[1].decimals)
+				);
+				const amountBtoApprove =
+					selectedToken[1] && new TokenAmount(selectedToken[1], valueB);
+
+				const allowanceB =
+					selectedToken[1] &&
+					(await getTokenAllowance(
+						selectedToken[1],
+						address,
+						`${router}`,
+						signer as Signer
+					));
+
+				const isApproved =
+					!allowanceA?.lessThan(amountAtoApprove) &&
+					!allowanceB?.lessThan(amountBtoApprove);
+
+				if (isApproved) {
+					setApproveTokenStatus(ApprovalState.APPROVED);
+					return;
+				}
+				setApproveTokenStatus(ApprovalState.NOT_APPROVED);
+
+				const tokenToApprove = selectedToken.find(
+					token => token.symbol !== "SYS" && token.symbol !== "PSYS"
+				);
+
+				const amountToApprove = [amountAtoApprove, amountBtoApprove].find(
+					amount => amount.token.symbol === tokenToApprove?.symbol
+				);
+
+				setTokenToApp(tokenToApprove);
+				setAmountToApp(amountToApprove);
+				setAmounts([amountAtoApprove, amountBtoApprove]);
+			}
+		};
+
+		getIsApproved();
 	}, [tokenInputValue, isModalOpen]);
 
 	const languageList = ["de", "fr", "es"];
@@ -411,20 +429,12 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		})
 			.then(res => {
 				if (res?.spender) {
-					setApprovalState({ type: "approve", status: ApprovalState.PENDING });
 					setApproveTokenStatus(ApprovalState.APPROVED);
-					setCurrentTxHash(res?.hash);
-					addTransaction(
-						res?.response,
-						walletInfo,
-						setTransactions,
-						transactions,
-						{
-							summary: `Approve ${tokenToApp?.symbol}`,
-							finished: false,
-						}
-					);
-					setCurrentSummary(`Approve ${tokenToApp?.symbol}`);
+					addTransactions({
+						hash: res.hash,
+						summary: `Approve ${tokenToApp?.symbol}`,
+						service: "poolsApproveAddLiquidity",
+					});
 					closePendingTx();
 				}
 			})
@@ -452,31 +462,80 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			pair,
 		})
 			.then(res => {
-				console.log({ res });
-				setCurrentTxHash(res?.hash);
-				setApprovalState({
-					type: "add-liquidity",
-					status: ApprovalState.PENDING,
-				});
-				addTransaction(res, walletInfo, setTransactions, transactions, {
+				addTransactions({
+					hash: res.hash,
 					summary: `Add ${tokenInputValue.inputFrom.value} ${selectedToken[0]?.symbol} and ${tokenInputValue.inputTo.value} ${selectedToken[1]?.symbol}`,
-					finished: false,
+					service: "poolsAddLiquidity",
 				});
-				closePendingTx();
-				setCurrentSummary(
-					`Add ${tokenInputValue.inputFrom.value} ${selectedToken[0]?.symbol} and ${tokenInputValue.inputTo.value} ${selectedToken[1]?.symbol}`
-				);
 			})
 			.catch(err => {
+				toast({
+					id: "toast1",
+					position: "top-right",
+					status: "error",
+					title: "error while adding liquidity",
+				});
 				console.log(err);
-				closePendingTx();
 			});
 	};
+
+	const approveAddLiquidityPendingTxs = useMemo(() => {
+		if (!chainId) return [];
+
+		return pendingTxs.filter(tx => tx.service === "poolsApproveAddLiquidity");
+	}, [pendingTxs, chainId]);
+
+	useEffect(() => {
+		if (chainId) {
+			if (approveAddLiquidityPendingTxs.length) {
+				setCurrPendingTx(
+					approveAddLiquidityPendingTxs[
+						approveAddLiquidityPendingTxs.length - 1
+					].hash
+				);
+				PersistentFramework.add("currentApproveAddLiquidityPendingTxs", {
+					hash: approveAddLiquidityPendingTxs[
+						approveAddLiquidityPendingTxs.length - 1
+					].hash,
+				});
+				setFinishApproveTx(false);
+			} else if (currPendingTx) {
+				const currFullTx = finishedTxs.find(tx => tx.hash === currPendingTx);
+
+				if (currFullTx?.success) {
+					setFinishApproveTx(true);
+					setCurrPendingTx("");
+					PersistentFramework.remove("currentApproveAddLiquidityPendingTxs");
+				} else {
+					setCurrPendingTx("");
+					PersistentFramework.remove("currentApproveAddLiquidityPendingTxs");
+					setFinishApproveTx(false);
+				}
+			} else {
+				setCurrPendingTx("");
+				PersistentFramework.remove("currentApproveAddLiquidityPendingTxs");
+				setFinishApproveTx(false);
+			}
+		}
+	}, [approveAddLiquidityPendingTxs, chainId]);
+
+	useEffect(() => {
+		const currentApproveAddLiquidityPendingTx = PersistentFramework.get(
+			"currentApproveAddLiquidityPendingTxs"
+		);
+
+		if (currentApproveAddLiquidityPendingTx) {
+			setCurrPendingTx(
+				(currentApproveAddLiquidityPendingTx as { hash: string }).hash
+			);
+		}
+	}, []);
 
 	useEffect(() => {
 		setTokenInputValue(initialTokenInputValue);
 		setApproveTokenStatus(ApprovalState.UNKNOWN);
 	}, [isModalOpen]);
+
 	return (
 		<Modal blockScrollOnMount isOpen={isModalOpen} onClose={onModalClose}>
 			<SelectCoinModal
@@ -875,9 +934,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								py={["4", "4", "6", "6"]}
 								px="6"
 								borderRadius="67px"
-								disabled={
-									invalidPair || emptyInput || isPending || inputValidation
-								}
+								disabled={invalidPair || emptyInput || inputValidation}
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
 								fontSize="lg"
@@ -889,7 +946,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 								}
 								onClick={
 									approveTokenStatus === ApprovalState.NOT_APPROVED &&
-									!isApproved
+									!finishApproveTx
 										? () => {
 												approve();
 												openPendingTx();
@@ -906,7 +963,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 									: invalidPair
 									? "Invalid Pair"
 									: approveTokenStatus === ApprovalState.NOT_APPROVED &&
-									  !isApproved
+									  !finishApproveTx
 									? `${translation("earn.approve")} ${tokenToApp?.symbol}`
 									: translation("positionCard.add")}
 							</Button>

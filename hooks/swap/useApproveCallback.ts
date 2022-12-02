@@ -1,13 +1,8 @@
 import { MaxUint256 } from "@ethersproject/constants";
 import { Trade, ChainId, TokenAmount, Token } from "@pollum-io/pegasys-sdk";
 import { UseToastOptions } from "@chakra-ui/react";
+import { IFinishedTx, IPendingTx, PegasysContracts } from "pegasys-services";
 import {
-	PegasysContracts,
-	IApprovalState,
-	ISubmittedAproval,
-} from "pegasys-services";
-import {
-	addTransaction,
 	calculateGasMargin,
 	computeSlippageAdjustedAmounts,
 	getContract,
@@ -16,7 +11,6 @@ import {
 import {
 	IWalletHookInfos,
 	ISwapTokenInputValue,
-	ITx,
 	ITransactionResponse,
 } from "types";
 import { Signer } from "ethers";
@@ -42,17 +36,12 @@ interface IError {
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
 export function useApproveCallback(
 	userInput: ISwapTokenInputValue,
-	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
 	walletInfos: IWalletHookInfos,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
-	setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
-	transactions: ITx,
-	setApprovalSubmitted: React.Dispatch<React.SetStateAction<ISubmittedAproval>>,
-	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
-	setCurrentSummary: React.Dispatch<React.SetStateAction<string>>,
 	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
 	setApproveTokenStatus: React.Dispatch<React.SetStateAction<ApprovalState>>,
 	onCloseTransaction: () => void,
+	addTransactions: (tx: IPendingTx | IFinishedTx, pending?: boolean) => void,
 	amountToApprove?: { [field in Field]?: TokenAmount },
 	spender?: string,
 	signer?: Signer
@@ -124,23 +113,11 @@ export function useApproveCallback(
 				}
 			)
 			.then((response: ITransactionResponse) => {
-				addTransaction(response, walletInfos, setTransactions, transactions, {
+				addTransactions({
+					hash: response.hash,
 					summary: `Approve ${currentAmountToApprove?.currency?.symbol}`,
-					approval: { tokenAddress: token?.address, spender },
-					finished: false,
+					service: "useApproveCallback",
 				});
-				setCurrentSummary(
-					`Approve ${currentAmountToApprove?.currency?.symbol}`
-				);
-				setApprovalState({ status: ApprovalState.PENDING, type: "approve" });
-				setApprovalSubmitted(prevState => ({
-					status: true,
-					tokens: [
-						...prevState.tokens,
-						`${currentAmountToApprove?.currency?.symbol}`,
-					],
-				}));
-				setCurrentTxHash(`${response?.hash}`);
 				setCurrentInputTokenName(`${currentAmountToApprove?.currency?.symbol}`);
 				onCloseTransaction();
 			})
@@ -166,16 +143,11 @@ export function useApproveCallbackFromTrade(
 	walletInfos: IWalletHookInfos,
 	signer: Signer,
 	userInput: ISwapTokenInputValue,
-	setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
-	setTransactions: React.Dispatch<React.SetStateAction<ITx>>,
-	transactions: ITx,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
-	setApprovalSubmitted: React.Dispatch<React.SetStateAction<ISubmittedAproval>>,
-	setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
-	setCurrentSummary: React.Dispatch<React.SetStateAction<string>>,
 	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
 	setApproveTokenStatus: React.Dispatch<React.SetStateAction<ApprovalState>>,
 	onCloseTransaction: () => void,
+	addTransactions: (tx: IPendingTx | IFinishedTx, pending?: boolean) => void,
 	allowedSlippage = 0
 ) {
 	const { chainId } = walletInfos;
@@ -186,17 +158,12 @@ export function useApproveCallbackFromTrade(
 
 	return useApproveCallback(
 		userInput,
-		setApprovalState,
 		walletInfos,
 		toast,
-		setTransactions,
-		transactions,
-		setApprovalSubmitted,
-		setCurrentTxHash,
-		setCurrentSummary,
 		setCurrentInputTokenName,
 		setApproveTokenStatus,
 		onCloseTransaction,
+		addTransactions,
 		amountToApprove,
 		PegasysContracts[chainId ?? ChainId.NEVM].ROUTER_ADDRESS,
 		signer

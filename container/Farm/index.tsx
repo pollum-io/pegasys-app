@@ -24,7 +24,7 @@ import {
 	useFarm,
 	useWallet as psUseWallet,
 	useEarn,
-	PegasysContracts,
+	RoutesFramework,
 } from "pegasys-services";
 import { FarmActions } from "components/Modals/FarmActions";
 
@@ -144,7 +144,7 @@ export const FarmContainer: NextPage = () => {
 							</Text>
 						</Flex>
 					</SlideFade>
-					<Collapse in={!dataLoading}>
+					<Collapse in={Boolean(!dataLoading && address)}>
 						{address && !dataLoading && (
 							<Flex
 								flexDirection={[
@@ -287,12 +287,12 @@ export const FarmContainer: NextPage = () => {
 					in={
 						!dataLoading &&
 						isConnected &&
-						(!chainId || !PegasysContracts[chainId].MINICHEF_ADDRESS)
+						(!chainId || !RoutesFramework.getMinichefAddress(chainId))
 					}
 				>
 					{!dataLoading &&
 						isConnected &&
-						(!chainId || !PegasysContracts[chainId].MINICHEF_ADDRESS) && (
+						(!chainId || !RoutesFramework.getMinichefAddress(chainId)) && (
 							<Flex
 								w="100%"
 								mt={["3rem", "3rem", "4rem", "4rem"]}
@@ -315,12 +315,12 @@ export const FarmContainer: NextPage = () => {
 					in={
 						!dataLoading &&
 						isConnected &&
-						!(!chainId || !PegasysContracts[chainId].MINICHEF_ADDRESS)
+						!(!chainId || !RoutesFramework.getMinichefAddress(chainId))
 					}
 				>
 					{!dataLoading &&
 						isConnected &&
-						!(!chainId || !PegasysContracts[chainId].MINICHEF_ADDRESS) && (
+						!(!chainId || !RoutesFramework.getMinichefAddress(chainId)) && (
 							<FarmGrid />
 						)}
 				</Collapse>

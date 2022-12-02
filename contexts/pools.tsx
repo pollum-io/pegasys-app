@@ -69,90 +69,98 @@ export const PoolsProvider: React.FC<{ children: React.ReactNode }> = ({
 		setCurrenciesArr(stringArr);
 	}, [pairs]);
 
-	useMemo(async () => {
-		const poolsBalances = await Promise.all(
-			pairs.map(async pair => {
-				const pairBalance = await getBalanceOfBNSingleCall(
-					pair?.liquidityToken.address as string,
-					address,
-					provider ?? null
-				);
+	useEffect(() => {
+		const getPoolsBalances = async () => {
+			const poolsBalances = await Promise.all(
+				pairs.map(async pair => {
+					const pairBalance = await getBalanceOfBNSingleCall(
+						pair?.liquidityToken.address as string,
+						address,
+						provider ?? null
+					);
 
-				const value = JSBI.BigInt(pairBalance?.toString());
-				const pairBalanceAmount = new TokenAmount(
-					pair?.liquidityToken as Token,
-					value
-				);
+					const value = JSBI.BigInt(pairBalance?.toString());
+					const pairBalanceAmount = new TokenAmount(
+						pair?.liquidityToken as Token,
+						value
+					);
 
-				const amount = `${removeScientificNotation(
-					pairBalanceAmount.toSignificant(5)
-				)}`;
+					const amount = `${removeScientificNotation(
+						pairBalanceAmount.toSignificant(5)
+					)}`;
 
-				return { pair, amount };
-			})
-		);
-		const formattedPoolsBalances = poolsBalances.reduce(
-			(acc, curr) => ({
-				...acc,
-				[`${unwrappedToken(curr.pair.token0).symbol}-${
-					unwrappedToken(curr.pair.token1).symbol
-				}`]: curr.amount,
-			}),
-			{}
-		);
+					return { pair, amount };
+				})
+			);
+			const formattedPoolsBalances = poolsBalances.reduce(
+				(acc, curr) => ({
+					...acc,
+					[`${unwrappedToken(curr.pair.token0).symbol}-${
+						unwrappedToken(curr.pair.token1).symbol
+					}`]: curr.amount,
+				}),
+				{}
+			);
 
-		setPoolBalance(formattedPoolsBalances);
+			setPoolBalance(formattedPoolsBalances);
+		};
+
+		getPoolsBalances();
 	}, [pairs]);
 
-	useMemo(async () => {
-		const fetchSysPrice = await pegasysClient.query({
-			query: SYS_PRICE(),
-			fetchPolicy: "cache-first",
-		});
+	useEffect(() => {
+		const fetchPoolsInfo = async () => {
+			const fetchSysPrice = await pegasysClient.query({
+				query: SYS_PRICE(),
+				fetchPolicy: "cache-first",
+			});
 
-		const sysPrice = fetchSysPrice?.data?.bundles[0]?.sysPrice;
+			const sysPrice = fetchSysPrice?.data?.bundles[0]?.sysPrice;
 
-		currenciesArr.map(currencyPair => {
-			if (pairInfo?.oneDay?.[currencyPair]) {
-				const currentDayVolume =
-					parseFloat(`${pairInfo?.general?.[currencyPair]?.volumeUSD}`) -
-					parseFloat(`${pairInfo?.oneDay?.[currencyPair]?.volumeUSD}`);
-				setPoolsApr(prevState => {
-					const value = parseFloat(
-						(
-							(Number(currentDayVolume) * 0.003 * 365 * 100) /
-							(Number(pairInfo?.general?.[currencyPair]?.trackedReserveSYS) *
-								sysPrice)
-						).toString()
-					);
-					return {
+			currenciesArr.map(currencyPair => {
+				if (pairInfo?.oneDay?.[currencyPair]) {
+					const currentDayVolume =
+						parseFloat(`${pairInfo?.general?.[currencyPair]?.volumeUSD}`) -
+						parseFloat(`${pairInfo?.oneDay?.[currencyPair]?.volumeUSD}`);
+					setPoolsApr(prevState => {
+						const value = parseFloat(
+							(
+								(Number(currentDayVolume) * 0.003 * 365 * 100) /
+								(Number(pairInfo?.general?.[currencyPair]?.trackedReserveSYS) *
+									sysPrice)
+							).toString()
+						);
+						return {
+							...prevState,
+							[currencyPair]: value,
+						};
+					});
+					setPoolsWithLiquidity(prevState => ({
 						...prevState,
-						[currencyPair]: value,
-					};
-				});
-				setPoolsWithLiquidity(prevState => ({
-					...prevState,
-					[currencyPair]: +poolBalance[currencyPair],
-				}));
-				setPoolsLiquidity(prevState => ({
-					...prevState,
-					[currencyPair]:
-						Number(pairInfo.general?.[currencyPair]?.trackedReserveSYS) *
-						sysPrice,
-				}));
-				setPoolsVolume(prevState => ({
-					...prevState,
-					[currencyPair]:
-						Number(pairInfo.general?.[currencyPair]?.volumeUSD) -
-						Number(pairInfo.oneDay?.[currencyPair]?.volumeUSD),
-				}));
-			}
-			if (!Number.isNaN(+poolBalance[currencyPair])) {
-				setIsLoading(false);
-			}
-			// eslint-disable-next-line
-			return;
-		});
+						[currencyPair]: +poolBalance[currencyPair],
+					}));
+					setPoolsLiquidity(prevState => ({
+						...prevState,
+						[currencyPair]:
+							Number(pairInfo.general?.[currencyPair]?.trackedReserveSYS) *
+							sysPrice,
+					}));
+					setPoolsVolume(prevState => ({
+						...prevState,
+						[currencyPair]:
+							Number(pairInfo.general?.[currencyPair]?.volumeUSD) -
+							Number(pairInfo.oneDay?.[currencyPair]?.volumeUSD),
+					}));
+				}
+				if (!Number.isNaN(+poolBalance[currencyPair])) {
+					setIsLoading(false);
+				}
+				// eslint-disable-next-line
+				return;
+			});
+		};
+
+		fetchPoolsInfo();
 	}, [poolBalance]);
 
 	useEffect(() => {

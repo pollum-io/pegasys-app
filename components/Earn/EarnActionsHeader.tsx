@@ -53,10 +53,7 @@ const EarnActionsHeader: React.FC<IEarnActionsHeaderProps> = ({
 				>
 					{withdrawTitle}
 				</EarnHeaderButton>
-				<EarnHeaderButton
-					id="claim"
-					amount={selectedOpportunity.unclaimedAmount}
-				>
+				<EarnHeaderButton id="claim" amount={selectedOpportunity.stakedAmount}>
 					{claimTitle}
 				</EarnHeaderButton>
 			</Flex>
