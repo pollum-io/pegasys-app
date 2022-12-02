@@ -7,7 +7,7 @@ import {
 	useColorMode,
 	useMediaQuery,
 } from "@chakra-ui/react";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
 import { useModal, usePicasso, useTokens, usePairs as getPairs } from "hooks";
@@ -21,6 +21,8 @@ import {
 	usePegasys,
 	StakeServices,
 	ContractFramework,
+	RoutesFramework,
+	PegasysTokens,
 } from "pegasys-services";
 import { ChainId, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
@@ -87,22 +89,31 @@ export const Header: React.FC = () => {
 	const stakeContract = useMemo(
 		() =>
 			ContractFramework.StakeContract({
-				chainId: chainId ?? ChainId.NEVM,
+				chainId,
 			}),
 		[chainId]
 	);
 
-	useMemo(async () => {
-		if (address) {
-			const unclaimedValue = await StakeServices.getStakeOpportunities({
-				stakeContract,
-				chainId: chainId ?? ChainId.NEVM,
-				walletAddress: address,
-			});
+	useEffect(() => {
+		const getPsys = async () => {
+			if (address && chainId && RoutesFramework.getStakeAddress(chainId)) {
+				const tokens = PegasysTokens[chainId];
 
-			setUnclaimed(unclaimedValue[0]?.unclaimedAmount);
-		}
-	}, [chainId, isConnected]);
+				const psys = tokens.PSYS;
+
+				const unclaimedValue = await StakeServices.getUnclaimed({
+					stakeContract,
+					chainId,
+					walletAddress: address,
+					rewardToken: psys,
+				});
+
+				setUnclaimed(unclaimedValue);
+			}
+		};
+
+		getPsys();
+	}, [chainId, isConnected, address, stakeContract]);
 
 	useMemo(async () => {
 		if (PSYS?.formattedBalance !== "0") {

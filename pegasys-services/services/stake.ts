@@ -98,7 +98,7 @@ class StakeServices {
 		);
 	}
 
-	private static async getUnclaimed({
+	static async getUnclaimed({
 		chainId,
 		stakeContract,
 		rewardToken,

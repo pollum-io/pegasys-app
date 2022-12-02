@@ -16,7 +16,7 @@ class ContractFramework {
 		const providerOrSigner = props.provider ?? Wallet.getSignerOrProvider();
 
 		const contract = new ethers.Contract(
-			props.address,
+			props.address ?? "",
 			props.abi,
 			providerOrSigner
 		);
