@@ -62,25 +62,29 @@ export const AirdropContainer: NextPage = () => {
 		signer as Signer
 	);
 
-	useMemo(async () => {
-		if (!isConnected || !walletAddress) return null;
+	useEffect(() => {
+		const onClaim = async () => {
+			if (!isConnected || !walletAddress) return null;
 
-		const canClaim = await userHasAvailableClaim(
-			walletAddress,
-			chainId,
-			provider
-		);
-		setIsClaim(canClaim);
+			const canClaim = await userHasAvailableClaim(
+				walletAddress,
+				chainId,
+				provider
+			);
+			setIsClaim(canClaim);
 
-		if (!canClaim) return setIsAvailable(false);
-		const claimAmount = await userUnclaimedAmount(
-			walletAddress,
-			chainId,
-			provider
-		);
-		setAvailableClaimAmount(claimAmount);
+			if (!canClaim) return setIsAvailable(false);
+			const claimAmount = await userUnclaimedAmount(
+				walletAddress,
+				chainId,
+				provider
+			);
+			setAvailableClaimAmount(claimAmount);
 
-		return null;
+			return null;
+		};
+
+		onClaim();
 	}, [isConnected, isClaiming]);
 
 	const airdropClaimPendingTxs = useMemo(() => {

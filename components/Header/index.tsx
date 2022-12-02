@@ -115,41 +115,45 @@ export const Header: React.FC = () => {
 		getPsys();
 	}, [chainId, isConnected, address, stakeContract]);
 
-	useMemo(async () => {
-		if (PSYS?.formattedBalance !== "0") {
+	useEffect(() => {
+		const getPsysInfo = async () => {
+			if (PSYS?.formattedBalance !== "0") {
+				setPsysInfo(prevState => ({
+					...prevState,
+					balance: PSYS?.formattedBalance as string,
+				}));
+			}
+
+			const totalSupply =
+				PSYS &&
+				signer &&
+				provider &&
+				(await getTotalSupply(PSYS as Token, signer as Signer, provider));
+
+			const pairs = await getPairs(
+				[[PSYS, SYS]] as [Token, Token][],
+				walletInfos
+			);
+
+			const pair = pairs?.[0]?.[1];
+
+			if (unclaimed?.toSignificant(6) && unclaimed?.toSignificant(6) !== "0") {
+				setPsysInfo(prevState => ({
+					...prevState,
+					unclaimed: unclaimed?.toSignificant(6) as string,
+				}));
+			}
+
 			setPsysInfo(prevState => ({
 				...prevState,
-				balance: PSYS?.formattedBalance as string,
+				totalSupply: formattedNum(
+					Number(totalSupply?.toSignificant(6))
+				) as string,
+				price: pair?.priceOf(pair.token1).toSignificant(6) as string,
 			}));
-		}
+		};
 
-		const totalSupply =
-			PSYS &&
-			signer &&
-			provider &&
-			(await getTotalSupply(PSYS as Token, signer as Signer, provider));
-
-		const pairs = await getPairs(
-			[[PSYS, SYS]] as [Token, Token][],
-			walletInfos
-		);
-
-		const pair = pairs?.[0]?.[1];
-
-		if (unclaimed?.toSignificant(6) && unclaimed?.toSignificant(6) !== "0") {
-			setPsysInfo(prevState => ({
-				...prevState,
-				unclaimed: unclaimed?.toSignificant(6) as string,
-			}));
-		}
-
-		setPsysInfo(prevState => ({
-			...prevState,
-			totalSupply: formattedNum(
-				Number(totalSupply?.toSignificant(6))
-			) as string,
-			price: pair?.priceOf(pair.token1).toSignificant(6) as string,
-		}));
+		getPsysInfo();
 	}, [userTokensBalance, unclaimed]);
 
 	return (
