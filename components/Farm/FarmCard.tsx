@@ -198,14 +198,14 @@ const FarmCard: FunctionComponent<{
 					<Flex justifyContent="space-between" py="1.5" fontSize="sm">
 						<Text fontWeight="semibold">{t("earnPages.yourRate")}</Text>
 						<Text>
-							{rewardRatePerWeek.toSignificant()} {rewardToken.symbol}/
+							{rewardRatePerWeek.toFixed(3)} {rewardToken.symbol}/
 							{t("earnPages.week")}
 						</Text>
 					</Flex>
 					<Flex justifyContent="space-between" py="1.5" fontSize="sm">
 						<Text fontWeight="semibold">{t("earnPages.yourUnclaimed")}</Text>
 						<Text>
-							{unclaimedAmount.toSignificant()} {rewardToken.symbol}
+							{unclaimedAmount.toFixed(3)} {rewardToken.symbol}
 						</Text>
 					</Flex>
 				</Flex>
