@@ -1346,10 +1346,9 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						<Flex
 							flexDirection="column"
 							justifyContent="center"
-							align="center"
+							alignItems="center"
 							gap="3"
 							mt={["0rem", "9rem", "9rem", "9rem"]}
-							ml="8"
 							color={theme.text.mono}
 						>
 							<Img src="icons/loading.gif" className="blob" w="25%" h="25%" />
@@ -1376,7 +1375,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 						</Flex>
 					) : (
 						<SlideFade
-							in={!isLoadingGraphCandles || tokensGraphCandleData}
+							in={Boolean(!isLoadingGraphCandles || tokensGraphCandleData)}
 							offsetY="1.25rem"
 						>
 							<ChartComponent data={tokensGraphCandleData} />

@@ -206,7 +206,7 @@ const FarmCard: FunctionComponent<{
 						</Text>
 
 						<Text w="45%" textAlign="end">
-							{rewardRatePerWeek.toFixed(8)} {rewardToken.symbol}/
+							{rewardRatePerWeek.toFixed(3)} {rewardToken.symbol}/
 							{t("earnPages.week")}
 						</Text>
 					</Flex>
@@ -220,7 +220,7 @@ const FarmCard: FunctionComponent<{
 							{t("earnPages.yourUnclaimed")}
 						</Text>
 						<Text w="45%" textAlign="end">
-							{unclaimedAmount.toSignificant()} {rewardToken.symbol}
+							{unclaimedAmount.toFixed(3)} {rewardToken.symbol}
 						</Text>
 					</Flex>
 				</Flex>
