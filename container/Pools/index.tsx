@@ -26,7 +26,7 @@ import {
 import { PoolCards } from "components/Pools/PoolCards";
 import { usePicasso, useModal, useTokens, usePairs, usePools } from "hooks";
 import { NextPage } from "next";
-import { ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
 import { WrappedTokenInfo, IDeposited } from "types";
 import { useTranslation } from "react-i18next";
@@ -123,242 +123,246 @@ export const PoolsContainer: NextPage = () => {
 	const isValid = userTokensBalance.every(
 		token => token.chainId === currentChainId
 	);
-	useMemo(async () => {
-		setSearchTokens([]);
-		setPairs([]);
-		setIsLoading(true);
-		if (userTokensBalance.length === 0 || !isValid) return;
+	useEffect(() => {
+		const pairsInfo = async () => {
+			setSearchTokens([]);
+			setPairs([]);
+			setIsLoading(true);
+			if (userTokensBalance.length === 0 || !isValid) return;
 
-		const tokens = getTokenPairs(
-			validatedCurrentChain ? currentChainId : ChainId.NEVM,
-			userTokensBalance
-		);
-
-		if (
-			tokens.every(
-				token =>
-					token[0]?.chainId === currentChainId &&
-					token[1]?.chainId === currentChainId
-			) &&
-			currentNetworkChainId === currentChainId
-		) {
-			setAllTokens(tokens);
-		}
-
-		const walletInfos = {
-			chainId: validatedCurrentChain ? currentChainId : ChainId.NEVM,
-			provider,
-			walletAddress: address,
-		};
-
-		const [{ number: oneDay }, { number: twoDays }] =
-			await getBlocksFromTimestamps();
-
-		const tokensWithLiquidity = allTokens.map(tokens => ({
-			liquidityToken: toV2LiquidityToken(
-				tokens as [WrappedTokenInfo, Token],
-				currentChainId
-			),
-			tokens: tokens as [WrappedTokenInfo, Token],
-		}));
-
-		const fetchPairs = await pegasysClient.query({
-			query: PAIRS_CURRENT,
-			fetchPolicy: "cache-first",
-		});
-
-		const fetchPairsAddresses = await Promise.all([fetchPairs]);
-
-		const pairAddresses = fetchPairsAddresses[0]?.data?.pairs;
-
-		const oneDayPairInfos = await Promise.all(
-			pairAddresses.map(async (token: { id: string }) => {
-				const volume = await pegasysClient.query({
-					query: PAIR_DATA(token.id, Number(oneDay)),
-					fetchPolicy: "network-only",
-				});
-
-				return volume.data.pairs[0];
-			})
-		);
-
-		const formattedOneDayPairsInfo = oneDayPairInfos.reduce(
-			(acc, curr) => ({
-				...acc,
-				[`${curr.token0.symbol}-${curr.token1.symbol}`]: curr,
-			}),
-			{}
-		);
-		const twoDaysPairInfos = await Promise.all(
-			pairAddresses.map(async (token: { id: string }) => {
-				const volume = await pegasysClient.query({
-					query: PAIR_DATA(token.id, twoDays),
-					fetchPolicy: "network-only",
-				});
-
-				return volume.data.pairs[0];
-			})
-		);
-
-		const formattedTwoDaysPairsInfo = twoDaysPairInfos.reduce(
-			(acc, curr) => ({
-				...acc,
-				[`${curr.token0.symbol}-${curr.token1.symbol}`]: curr,
-			}),
-			{}
-		);
-
-		const generalPairInfos = await Promise.all(
-			pairAddresses.map(async (token: { id: string }) => {
-				const volume = await pegasysClient.query({
-					query: PAIR_DATA(token.id),
-					fetchPolicy: "network-only",
-				});
-
-				return volume.data.pairs[0];
-			})
-		);
-
-		const formattedGeneralPairsInfo = generalPairInfos.reduce(
-			(acc, curr) => ({
-				...acc,
-				[`${curr.token0.symbol}-${curr.token1.symbol}`]: curr,
-			}),
-			{}
-		);
-
-		const oneDayCommonPairs = allTokens
-			.map(
-				currency =>
-					formattedOneDayPairsInfo[
-						`${
-							currency[0]?.symbol === "WETH"
-								? "ETH"
-								: currency[0]?.symbol === "SYS"
-								? "WSYS"
-								: currency[0]?.symbol
-						}-${currency[1]?.symbol === "WETH" ? "ETH" : currency[1]?.symbol}`
-					]
-			)
-			.filter(item => item !== undefined);
-
-		const twoDaysCommonPairs = allTokens
-			.map(
-				currency =>
-					formattedTwoDaysPairsInfo[
-						`${
-							currency[0]?.symbol === "WETH"
-								? "ETH"
-								: currency[0]?.symbol === "SYS"
-								? "WSYS"
-								: currency[0]?.symbol
-						}-${currency[1]?.symbol === "WETH" ? "ETH" : currency[1]?.symbol}`
-					]
-			)
-			.filter(item => item !== undefined);
-
-		const generalDaysCommonPairs = allTokens
-			.map(
-				currency =>
-					formattedGeneralPairsInfo[
-						`${
-							currency[0]?.symbol === "WETH"
-								? "ETH"
-								: currency[0]?.symbol === "SYS"
-								? "WSYS"
-								: currency[0]?.symbol
-						}-${currency[1]?.symbol === "WETH" ? "ETH" : currency[1]?.symbol}`
-					]
-			)
-			.filter(item => item !== undefined);
-
-		const formattedOneDayCommonPairs = oneDayCommonPairs.reduce(
-			(acc, curr) => ({
-				...acc,
-				[`${
-					curr?.token0?.symbol === "WSYS"
-						? "SYS"
-						: curr?.token0?.symbol === "ETH"
-						? "WETH"
-						: curr?.token0?.symbol
-				}-${
-					curr?.token1?.symbol === "WSYS"
-						? "SYS"
-						: curr?.token1?.symbol === "ETH"
-						? "WETH"
-						: curr?.token1?.symbol
-				}`]: curr,
-			}),
-			{}
-		);
-
-		const formattedTwoDaysCommonPairs = twoDaysCommonPairs.reduce(
-			(acc, curr) => ({
-				...acc,
-				[`${
-					curr?.token0?.symbol === "WSYS"
-						? "SYS"
-						: curr?.token0?.symbol === "ETH"
-						? "WETH"
-						: curr?.token0?.symbol
-				}-${
-					curr?.token1?.symbol === "WSYS"
-						? "SYS"
-						: curr?.token1?.symbol === "ETH"
-						? "WETH"
-						: curr?.token1?.symbol
-				}`]: curr,
-			}),
-			{}
-		);
-
-		const formattedGeneralCommonPairs = generalDaysCommonPairs.reduce(
-			(acc, curr) => ({
-				...acc,
-				[`${
-					curr?.token0?.symbol === "WSYS"
-						? "SYS"
-						: curr?.token0?.symbol === "ETH"
-						? "WETH"
-						: curr?.token0?.symbol
-				}-${
-					curr?.token1?.symbol === "WSYS"
-						? "SYS"
-						: curr?.token1?.symbol === "ETH"
-						? "WETH"
-						: curr?.token1?.symbol
-				}`]: curr,
-			}),
-			{}
-		);
-
-		// eslint-disable-next-line
-		const v2Tokens = await usePairs(
-			tokensWithLiquidity.map(({ tokens }) => tokens),
-			walletInfos
-		);
-
-		const allV2PairsWithLiquidity = v2Tokens
-			.map(([, pair]) => pair)
-			.filter((v2Pair): v2Pair is Pair => Boolean(v2Pair));
-
-		const allUniqueV2PairsWithLiquidity = allV2PairsWithLiquidity
-			.map(pair => pair)
-			.filter(
-				(item, index) =>
-					allV2PairsWithLiquidity
-						.map(pair => pair.liquidityToken.address)
-						.indexOf(item.liquidityToken.address) === index
+			const tokens = getTokenPairs(
+				validatedCurrentChain ? currentChainId : ChainId.NEVM,
+				userTokensBalance
 			);
 
-		setLpPairs(allUniqueV2PairsWithLiquidity);
-		setSearchTokens(allUniqueV2PairsWithLiquidity);
-		setPairInfo({
-			oneDay: formattedOneDayCommonPairs,
-			twoDays: formattedTwoDaysCommonPairs,
-			general: formattedGeneralCommonPairs,
-		});
-		setPairs(allUniqueV2PairsWithLiquidity);
+			if (
+				tokens.every(
+					token =>
+						token[0]?.chainId === currentChainId &&
+						token[1]?.chainId === currentChainId
+				) &&
+				currentNetworkChainId === currentChainId
+			) {
+				setAllTokens(tokens);
+			}
+
+			const walletInfos = {
+				chainId: validatedCurrentChain ? currentChainId : ChainId.NEVM,
+				provider,
+				walletAddress: address,
+			};
+
+			const [{ number: oneDay }, { number: twoDays }] =
+				await getBlocksFromTimestamps();
+
+			const tokensWithLiquidity = allTokens.map(tokens => ({
+				liquidityToken: toV2LiquidityToken(
+					tokens as [WrappedTokenInfo, Token],
+					currentChainId
+				),
+				tokens: tokens as [WrappedTokenInfo, Token],
+			}));
+
+			const fetchPairs = await pegasysClient.query({
+				query: PAIRS_CURRENT,
+				fetchPolicy: "cache-first",
+			});
+
+			const fetchPairsAddresses = await Promise.all([fetchPairs]);
+
+			const pairAddresses = fetchPairsAddresses[0]?.data?.pairs;
+
+			const oneDayPairInfos = await Promise.all(
+				pairAddresses.map(async (token: { id: string }) => {
+					const volume = await pegasysClient.query({
+						query: PAIR_DATA(token.id, Number(oneDay)),
+						fetchPolicy: "network-only",
+					});
+
+					return volume.data.pairs[0];
+				})
+			);
+
+			const formattedOneDayPairsInfo = oneDayPairInfos.reduce(
+				(acc, curr) => ({
+					...acc,
+					[`${curr.token0.symbol}-${curr.token1.symbol}`]: curr,
+				}),
+				{}
+			);
+			const twoDaysPairInfos = await Promise.all(
+				pairAddresses.map(async (token: { id: string }) => {
+					const volume = await pegasysClient.query({
+						query: PAIR_DATA(token.id, twoDays),
+						fetchPolicy: "network-only",
+					});
+
+					return volume.data.pairs[0];
+				})
+			);
+
+			const formattedTwoDaysPairsInfo = twoDaysPairInfos.reduce(
+				(acc, curr) => ({
+					...acc,
+					[`${curr.token0.symbol}-${curr.token1.symbol}`]: curr,
+				}),
+				{}
+			);
+
+			const generalPairInfos = await Promise.all(
+				pairAddresses.map(async (token: { id: string }) => {
+					const volume = await pegasysClient.query({
+						query: PAIR_DATA(token.id),
+						fetchPolicy: "network-only",
+					});
+
+					return volume.data.pairs[0];
+				})
+			);
+
+			const formattedGeneralPairsInfo = generalPairInfos.reduce(
+				(acc, curr) => ({
+					...acc,
+					[`${curr.token0.symbol}-${curr.token1.symbol}`]: curr,
+				}),
+				{}
+			);
+
+			const oneDayCommonPairs = allTokens
+				.map(
+					currency =>
+						formattedOneDayPairsInfo[
+							`${
+								currency[0]?.symbol === "WETH"
+									? "ETH"
+									: currency[0]?.symbol === "SYS"
+									? "WSYS"
+									: currency[0]?.symbol
+							}-${currency[1]?.symbol === "WETH" ? "ETH" : currency[1]?.symbol}`
+						]
+				)
+				.filter(item => item !== undefined);
+
+			const twoDaysCommonPairs = allTokens
+				.map(
+					currency =>
+						formattedTwoDaysPairsInfo[
+							`${
+								currency[0]?.symbol === "WETH"
+									? "ETH"
+									: currency[0]?.symbol === "SYS"
+									? "WSYS"
+									: currency[0]?.symbol
+							}-${currency[1]?.symbol === "WETH" ? "ETH" : currency[1]?.symbol}`
+						]
+				)
+				.filter(item => item !== undefined);
+
+			const generalDaysCommonPairs = allTokens
+				.map(
+					currency =>
+						formattedGeneralPairsInfo[
+							`${
+								currency[0]?.symbol === "WETH"
+									? "ETH"
+									: currency[0]?.symbol === "SYS"
+									? "WSYS"
+									: currency[0]?.symbol
+							}-${currency[1]?.symbol === "WETH" ? "ETH" : currency[1]?.symbol}`
+						]
+				)
+				.filter(item => item !== undefined);
+
+			const formattedOneDayCommonPairs = oneDayCommonPairs.reduce(
+				(acc, curr) => ({
+					...acc,
+					[`${
+						curr?.token0?.symbol === "WSYS"
+							? "SYS"
+							: curr?.token0?.symbol === "ETH"
+							? "WETH"
+							: curr?.token0?.symbol
+					}-${
+						curr?.token1?.symbol === "WSYS"
+							? "SYS"
+							: curr?.token1?.symbol === "ETH"
+							? "WETH"
+							: curr?.token1?.symbol
+					}`]: curr,
+				}),
+				{}
+			);
+
+			const formattedTwoDaysCommonPairs = twoDaysCommonPairs.reduce(
+				(acc, curr) => ({
+					...acc,
+					[`${
+						curr?.token0?.symbol === "WSYS"
+							? "SYS"
+							: curr?.token0?.symbol === "ETH"
+							? "WETH"
+							: curr?.token0?.symbol
+					}-${
+						curr?.token1?.symbol === "WSYS"
+							? "SYS"
+							: curr?.token1?.symbol === "ETH"
+							? "WETH"
+							: curr?.token1?.symbol
+					}`]: curr,
+				}),
+				{}
+			);
+
+			const formattedGeneralCommonPairs = generalDaysCommonPairs.reduce(
+				(acc, curr) => ({
+					...acc,
+					[`${
+						curr?.token0?.symbol === "WSYS"
+							? "SYS"
+							: curr?.token0?.symbol === "ETH"
+							? "WETH"
+							: curr?.token0?.symbol
+					}-${
+						curr?.token1?.symbol === "WSYS"
+							? "SYS"
+							: curr?.token1?.symbol === "ETH"
+							? "WETH"
+							: curr?.token1?.symbol
+					}`]: curr,
+				}),
+				{}
+			);
+
+			// eslint-disable-next-line
+			const v2Tokens = await usePairs(
+				tokensWithLiquidity.map(({ tokens }) => tokens),
+				walletInfos
+			);
+
+			const allV2PairsWithLiquidity = v2Tokens
+				.map(([, pair]) => pair)
+				.filter((v2Pair): v2Pair is Pair => Boolean(v2Pair));
+
+			const allUniqueV2PairsWithLiquidity = allV2PairsWithLiquidity
+				.map(pair => pair)
+				.filter(
+					(item, index) =>
+						allV2PairsWithLiquidity
+							.map(pair => pair.liquidityToken.address)
+							.indexOf(item.liquidityToken.address) === index
+				);
+
+			setLpPairs(allUniqueV2PairsWithLiquidity);
+			setSearchTokens(allUniqueV2PairsWithLiquidity);
+			setPairInfo({
+				oneDay: formattedOneDayCommonPairs,
+				twoDays: formattedTwoDaysCommonPairs,
+				general: formattedGeneralCommonPairs,
+			});
+			setPairs(allUniqueV2PairsWithLiquidity);
+		};
+
+		pairsInfo();
 	}, [userTokensBalance, isValid, currentNetworkChainId, address]);
 
 	useMemo(() => {
