@@ -16,7 +16,7 @@ class RoutesFramework {
 	}
 
 	static getStakeAddress(chainId?: ChainId | null) {
-		return PegasysContracts[ChainId.NEVM]?.STAKE_ADDRESS;
+		return PegasysContracts[chainId ?? ChainId.NEVM]?.STAKE_ADDRESS;
 	}
 
 	static getPsysAddress(chainId?: ChainId | null) {
