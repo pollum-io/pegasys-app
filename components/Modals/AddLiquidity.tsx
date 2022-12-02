@@ -256,146 +256,164 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 		[maxAmounts]
 	);
 
-	useMemo(async () => {
-		const {
-			inputTo: { value: inputToValue },
-			inputFrom: { value: inputFromValue },
-			currentInputTyped,
-		} = tokenInputValue;
+	useEffect(() => {
+		const onInputChange = async () => {
+			const {
+				inputTo: { value: inputToValue },
+				inputFrom: { value: inputFromValue },
+				currentInputTyped,
+			} = tokenInputValue;
 
-		if (currentInputTyped === "inputFrom" && currPair) {
-			const parseInputValue = tryParseAmount(inputFromValue, selectedToken[0]);
-			const wrappedAmountValue = wrappedCurrencyAmount(
-				parseInputValue,
-				currentChainId
-			);
-			const quoteValue =
-				wrappedAmountValue &&
-				currPair?.priceOf(currPair?.token0)?.quote(wrappedAmountValue);
+			if (currentInputTyped === "inputFrom" && currPair) {
+				const parseInputValue = tryParseAmount(
+					inputFromValue,
+					selectedToken[0]
+				);
+				const wrappedAmountValue = wrappedCurrencyAmount(
+					parseInputValue,
+					currentChainId
+				);
+				const quoteValue =
+					wrappedAmountValue &&
+					currPair?.priceOf(currPair?.token0)?.quote(wrappedAmountValue);
 
-			tokenInputValue.inputTo.value =
-				inputFromValue && quoteValue ? quoteValue?.toSignificant(6) : "";
-		}
-
-		if (currentInputTyped === "inputTo" && currPair) {
-			const parseInputValue = tryParseAmount(inputToValue, selectedToken[1]);
-			const wrappedAmountValue = wrappedCurrencyAmount(
-				parseInputValue,
-				currentChainId
-			);
-			const quoteValue =
-				wrappedAmountValue &&
-				currPair?.priceOf(currPair?.token1)?.quote(wrappedAmountValue);
-
-			tokenInputValue.inputFrom.value =
-				inputToValue && quoteValue ? quoteValue?.toSignificant(6) : "";
-		}
-	}, [tokenInputValue]);
-
-	useMemo(async () => {
-		const totalSupply =
-			currPair &&
-			(await getTotalSupply(
-				currPair?.liquidityToken,
-				signer as Signer,
-				provider
-			));
-		const currencyAmountA = tryParseAmount(
-			tokenInputValue.inputFrom.value,
-			selectedToken[0]
-		);
-		const currencyAmountB = tryParseAmount(
-			tokenInputValue.inputTo.value,
-			selectedToken[1]
-		);
-
-		const [tokenAmountA, tokenAmountB] = [
-			wrappedCurrencyAmount(currencyAmountA, currentChainId),
-			wrappedCurrencyAmount(currencyAmountB, currentChainId),
-		];
-
-		const liquidityMinted =
-			currPair &&
-			tokenAmountA &&
-			tokenAmountB &&
-			currPair.getLiquidityMinted(
-				totalSupply as TokenAmount,
-				tokenAmountA,
-				tokenAmountB
-			);
-
-		setLiquidityMintedValue(liquidityMinted);
-
-		const poolPercentageShare =
-			liquidityMinted &&
-			totalSupply &&
-			new Percent(liquidityMinted?.raw, totalSupply?.add(liquidityMinted).raw);
-
-		setCurrPoolShare(
-			poolPercentageShare?.lessThan(ONE_BIPS)
-				? "<0.01%"
-				: `${poolPercentageShare?.toFixed(2)}%` ?? "0%"
-		);
-	}, [tokenInputValue]);
-
-	useMemo(async () => {
-		if (
-			isERC20 &&
-			tokenInputValue.inputFrom.value &&
-			tokenInputValue.inputTo.value
-		) {
-			const valueA = JSBI.BigInt(
-				parseUnits(tokenInputValue.inputFrom.value, selectedToken[0].decimals)
-			);
-			const amountAtoApprove =
-				selectedToken[0] && new TokenAmount(selectedToken[0], valueA);
-
-			const allowanceA =
-				selectedToken[0] &&
-				(await getTokenAllowance(
-					selectedToken[0],
-					address,
-					`${router}`,
-					signer as Signer
-				));
-
-			const valueB = JSBI.BigInt(
-				parseUnits(tokenInputValue.inputTo.value, selectedToken[1].decimals)
-			);
-			const amountBtoApprove =
-				selectedToken[1] && new TokenAmount(selectedToken[1], valueB);
-
-			const allowanceB =
-				selectedToken[1] &&
-				(await getTokenAllowance(
-					selectedToken[1],
-					address,
-					`${router}`,
-					signer as Signer
-				));
-
-			const isApproved =
-				!allowanceA?.lessThan(amountAtoApprove) &&
-				!allowanceB?.lessThan(amountBtoApprove);
-
-			if (isApproved) {
-				setApproveTokenStatus(ApprovalState.APPROVED);
-				return;
+				tokenInputValue.inputTo.value =
+					inputFromValue && quoteValue ? quoteValue?.toSignificant(6) : "";
 			}
-			setApproveTokenStatus(ApprovalState.NOT_APPROVED);
 
-			const tokenToApprove = selectedToken.find(
-				token => token.symbol !== "SYS" && token.symbol !== "PSYS"
+			if (currentInputTyped === "inputTo" && currPair) {
+				const parseInputValue = tryParseAmount(inputToValue, selectedToken[1]);
+				const wrappedAmountValue = wrappedCurrencyAmount(
+					parseInputValue,
+					currentChainId
+				);
+				const quoteValue =
+					wrappedAmountValue &&
+					currPair?.priceOf(currPair?.token1)?.quote(wrappedAmountValue);
+
+				tokenInputValue.inputFrom.value =
+					inputToValue && quoteValue ? quoteValue?.toSignificant(6) : "";
+			}
+		};
+
+		onInputChange();
+	}, [tokenInputValue]);
+
+	useEffect(() => {
+		const onInputChange = async () => {
+			const totalSupply =
+				currPair &&
+				(await getTotalSupply(
+					currPair?.liquidityToken,
+					signer as Signer,
+					provider
+				));
+			const currencyAmountA = tryParseAmount(
+				tokenInputValue.inputFrom.value,
+				selectedToken[0]
+			);
+			const currencyAmountB = tryParseAmount(
+				tokenInputValue.inputTo.value,
+				selectedToken[1]
 			);
 
-			const amountToApprove = [amountAtoApprove, amountBtoApprove].find(
-				amount => amount.token.symbol === tokenToApprove?.symbol
-			);
+			const [tokenAmountA, tokenAmountB] = [
+				wrappedCurrencyAmount(currencyAmountA, currentChainId),
+				wrappedCurrencyAmount(currencyAmountB, currentChainId),
+			];
 
-			setTokenToApp(tokenToApprove);
-			setAmountToApp(amountToApprove);
-			setAmounts([amountAtoApprove, amountBtoApprove]);
-		}
+			const liquidityMinted =
+				currPair &&
+				tokenAmountA &&
+				tokenAmountB &&
+				currPair.getLiquidityMinted(
+					totalSupply as TokenAmount,
+					tokenAmountA,
+					tokenAmountB
+				);
+
+			setLiquidityMintedValue(liquidityMinted);
+
+			const poolPercentageShare =
+				liquidityMinted &&
+				totalSupply &&
+				new Percent(
+					liquidityMinted?.raw,
+					totalSupply?.add(liquidityMinted).raw
+				);
+
+			setCurrPoolShare(
+				poolPercentageShare?.lessThan(ONE_BIPS)
+					? "<0.01%"
+					: `${poolPercentageShare?.toFixed(2)}%` ?? "0%"
+			);
+		};
+
+		onInputChange();
+	}, [tokenInputValue]);
+
+	useEffect(() => {
+		const getIsApproved = async () => {
+			if (
+				isERC20 &&
+				tokenInputValue.inputFrom.value &&
+				tokenInputValue.inputTo.value
+			) {
+				const valueA = JSBI.BigInt(
+					parseUnits(tokenInputValue.inputFrom.value, selectedToken[0].decimals)
+				);
+				const amountAtoApprove =
+					selectedToken[0] && new TokenAmount(selectedToken[0], valueA);
+
+				const allowanceA =
+					selectedToken[0] &&
+					(await getTokenAllowance(
+						selectedToken[0],
+						address,
+						`${router}`,
+						signer as Signer
+					));
+
+				const valueB = JSBI.BigInt(
+					parseUnits(tokenInputValue.inputTo.value, selectedToken[1].decimals)
+				);
+				const amountBtoApprove =
+					selectedToken[1] && new TokenAmount(selectedToken[1], valueB);
+
+				const allowanceB =
+					selectedToken[1] &&
+					(await getTokenAllowance(
+						selectedToken[1],
+						address,
+						`${router}`,
+						signer as Signer
+					));
+
+				const isApproved =
+					!allowanceA?.lessThan(amountAtoApprove) &&
+					!allowanceB?.lessThan(amountBtoApprove);
+
+				if (isApproved) {
+					setApproveTokenStatus(ApprovalState.APPROVED);
+					return;
+				}
+				setApproveTokenStatus(ApprovalState.NOT_APPROVED);
+
+				const tokenToApprove = selectedToken.find(
+					token => token.symbol !== "SYS" && token.symbol !== "PSYS"
+				);
+
+				const amountToApprove = [amountAtoApprove, amountBtoApprove].find(
+					amount => amount.token.symbol === tokenToApprove?.symbol
+				);
+
+				setTokenToApp(tokenToApprove);
+				setAmountToApp(amountToApprove);
+				setAmounts([amountAtoApprove, amountBtoApprove]);
+			}
+		};
+
+		getIsApproved();
 	}, [tokenInputValue, isModalOpen]);
 
 	const approve = async () => {
