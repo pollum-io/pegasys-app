@@ -24,6 +24,7 @@ export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 	const [pendingTxs, setPendingTxs] = useState<IPendingTxs>([]);
 	const [finishedTxs, setFinishedTxs] = useState<IFinishedTxs>([]);
 	const [currentTimer, setCurrentTimer] = useState<NodeJS.Timer>(
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		setInterval(() => {}, 0)
 	);
 

@@ -29,7 +29,7 @@ export const AirdropContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
-	const { pendingTxs, finishedTxs } = useTransaction();
+	const { pendingTxs, finishedTxs, addTransactions } = useTransaction();
 
 	const {
 		chainId: currentNetworkChainId,
@@ -59,7 +59,8 @@ export const AirdropContainer: NextPage = () => {
 	const { claimCallback } = useClaimCallback(
 		walletAddress,
 		chainId,
-		signer as Signer
+		signer as Signer,
+		addTransactions
 	);
 
 	useEffect(() => {

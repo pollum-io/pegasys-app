@@ -8,11 +8,7 @@ import {
 	IWalletHookInfos,
 	ITx,
 } from "types";
-import {
-	ApprovalState,
-	// IApprovalState,
-	useTransaction,
-} from "pegasys-services";
+import { IFinishedTx, IPendingTx } from "pegasys-services";
 import WETH_ABI from "utils/abis/weth.json";
 
 export enum WrapType {
@@ -25,11 +21,7 @@ export function UseWrapCallback(
 	tradeTokens: WrappedTokenInfo[],
 	inputValues: ISwapTokenInputValue,
 	walletInfos: IWalletHookInfos,
-	// setTransaction: React.Dispatch<React.SetStateAction<ITx>>,
-	// transactions: ITx,
-	// setApprovalState: React.Dispatch<React.SetStateAction<IApprovalState>>,
-	// setCurrentTxHash: React.Dispatch<React.SetStateAction<string>>,
-	// setCurrentSummary: React.Dispatch<React.SetStateAction<string>>,
+	addTransactions: (tx: IPendingTx | IFinishedTx, pending?: boolean) => void,
 	signer: Signer,
 	onCloseTransaction: () => void
 ): {
@@ -37,7 +29,6 @@ export function UseWrapCallback(
 	execute?: undefined | (() => Promise<void>);
 	inputError?: string;
 } {
-	const { addTransactions } = useTransaction();
 	const { chainId } = walletInfos;
 	const { typedValue } = inputValues;
 	const wethContract =

@@ -1,7 +1,7 @@
 import { MaxUint256 } from "@ethersproject/constants";
 import { Trade, ChainId, TokenAmount, Token } from "@pollum-io/pegasys-sdk";
 import { UseToastOptions } from "@chakra-ui/react";
-import { PegasysContracts, useTransaction } from "pegasys-services";
+import { IFinishedTx, IPendingTx, PegasysContracts } from "pegasys-services";
 import {
 	calculateGasMargin,
 	computeSlippageAdjustedAmounts,
@@ -41,12 +41,11 @@ export function useApproveCallback(
 	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
 	setApproveTokenStatus: React.Dispatch<React.SetStateAction<ApprovalState>>,
 	onCloseTransaction: () => void,
+	addTransactions: (tx: IPendingTx | IFinishedTx, pending?: boolean) => void,
 	amountToApprove?: { [field in Field]?: TokenAmount },
 	spender?: string,
 	signer?: Signer
 ) {
-	const { addTransactions } = useTransaction();
-
 	const token = (
 		userInput.lastInputTyped === 0
 			? amountToApprove?.INPUT?.token
@@ -148,6 +147,7 @@ export function useApproveCallbackFromTrade(
 	setCurrentInputTokenName: React.Dispatch<React.SetStateAction<string>>,
 	setApproveTokenStatus: React.Dispatch<React.SetStateAction<ApprovalState>>,
 	onCloseTransaction: () => void,
+	addTransactions: (tx: IPendingTx | IFinishedTx, pending?: boolean) => void,
 	allowedSlippage = 0
 ) {
 	const { chainId } = walletInfos;
@@ -163,6 +163,7 @@ export function useApproveCallbackFromTrade(
 		setCurrentInputTokenName,
 		setApproveTokenStatus,
 		onCloseTransaction,
+		addTransactions,
 		amountToApprove,
 		PegasysContracts[chainId ?? ChainId.NEVM].ROUTER_ADDRESS,
 		signer

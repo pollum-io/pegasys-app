@@ -1,10 +1,10 @@
-import React from "react";
 import { ChainId, JSBI, TokenAmount } from "@pollum-io/pegasys-sdk";
 import AirdropInfo from "helpers/airdrop.json";
 import {
+	IFinishedTx,
+	IPendingTx,
 	PegasysContracts,
 	PegasysTokens,
-	useTransaction,
 } from "pegasys-services";
 import AIRDROP_ABI from "utils/abis/airdropAbi.json";
 import {
@@ -80,10 +80,9 @@ export const useClaimCallback = (
 		| ethers.providers.Web3Provider
 		| ethers.providers.JsonRpcProvider
 		| Signer
-		| undefined
+		| undefined,
+	addTransactions: (tx: IPendingTx | IFinishedTx, pending?: boolean) => void
 ) => {
-	const { addTransactions } = useTransaction();
-
 	// eslint-disable-next-line
 	// @ts-ignore
 	const userClaimData = AirdropInfo.claims[address || ""];
