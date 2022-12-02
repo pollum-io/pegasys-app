@@ -92,6 +92,8 @@ const FarmCard: FunctionComponent<{
 		return extraTokenWrapped?.logoURI ?? "";
 	}, [userTokensBalance, extraRewardToken]);
 
+	const isMainNet = useMemo(() => chainId === ChainId.NEVM, [chainId]);
+
 	return (
 		<Flex
 			w="xs"
@@ -156,24 +158,30 @@ const FarmCard: FunctionComponent<{
 						{stakedInUsd <= 0 ? "-" : formattedNum(stakedInUsd, true)}
 					</Text>
 				</Flex>
-				{chainId === ChainId.NEVM && (
-					<>
-						<Flex justifyContent="space-between" pb="3" fontSize="sm">
-							<Text fontWeight="semibold">{t("earnPages.swapFeeApr")}</Text>
-							<Text>{swapFeeApr}%</Text>
-						</Flex>
-						<Flex justifyContent="space-between" pb="3" fontSize="sm">
-							<Text fontWeight="semibold">
-								{extraRewardToken ? "Super " : ""}Farm APR
-							</Text>
-							<Text>{farmApr}%</Text>
-						</Flex>
-						<Flex justifyContent="space-between" pb="3" fontSize="sm">
-							<Text fontWeight="semibold">{t("earnPages.totalApr")}</Text>
-							<Text>{combinedApr}%</Text>
-						</Flex>
-					</>
-				)}
+				<Flex justifyContent="space-between" pb="3" fontSize="sm">
+					<Text color={isMainNet ? undefined : "grey"} fontWeight="semibold">
+						{t("earnPages.swapFeeApr")}
+					</Text>
+					<Text color={isMainNet ? undefined : "grey"}>
+						{isMainNet ? `${swapFeeApr}%` : "-"}
+					</Text>
+				</Flex>
+				<Flex justifyContent="space-between" pb="3" fontSize="sm">
+					<Text color={isMainNet ? undefined : "grey"} fontWeight="semibold">
+						{extraRewardToken ? "Super " : ""}Farm APR
+					</Text>
+					<Text color={isMainNet ? undefined : "grey"}>
+						{isMainNet ? `${farmApr}%` : "-"}
+					</Text>
+				</Flex>
+				<Flex justifyContent="space-between" pb="3" fontSize="sm">
+					<Text color={isMainNet ? undefined : "grey"} fontWeight="semibold">
+						{t("earnPages.totalApr")}
+					</Text>
+					<Text color={isMainNet ? undefined : "grey"}>
+						{isMainNet ? `${combinedApr}%` : "-"}
+					</Text>
+				</Flex>
 			</Flex>
 			{(JSBI.greaterThan(stakedAmount.raw, BIG_INT_ZERO) ||
 				JSBI.greaterThan(unstakedAmount.raw, BIG_INT_ZERO) ||
