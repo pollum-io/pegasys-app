@@ -2,11 +2,13 @@ import { Button, Flex, Img } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { useWallet } from "pegasys-services";
 import React from "react";
+import { useTranslation } from "react-i18next";
+import { getExtensionLink } from "utils";
 
 interface IWalletProps {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	onClick?: any;
-	header: React.ReactNode;
+	header: string;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	icon: any;
 	id: string;
@@ -14,11 +16,17 @@ interface IWalletProps {
 
 export const Wallets = ({ id, header, icon, onClick }: IWalletProps) => {
 	const theme = usePicasso();
-	const { connecting, setConnecting } = useWallet();
+	const { t: translation } = useTranslation();
+	const { connecting, setConnecting, provider } = useWallet();
+	const label = provider ? header : `${translation("menu.install")} ${header}`;
 
 	return (
 		<Button
-			onClick={() => onClick(setConnecting(!connecting))}
+			onClick={() =>
+				provider
+					? onClick(setConnecting(!connecting))
+					: window.open(getExtensionLink())
+			}
 			color={theme.text.mono}
 			_hover={{
 				bgColor: theme.bg.button.connectToWallet,
@@ -42,7 +50,7 @@ export const Wallets = ({ id, header, icon, onClick }: IWalletProps) => {
 			id={id}
 			fontFamily="inter"
 		>
-			<Flex>{header}</Flex>
+			<Flex>{label}</Flex>
 			<Img src={icon} w="6" />
 		</Button>
 	);

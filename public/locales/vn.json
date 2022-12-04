@@ -106,7 +106,8 @@
 		"telegram": "Telegram",
 		"tutorials": "Hướng dẫn",
 		"idos": "IDOs",
-		"about": "Thông tin về chúng tôi"
+		"about": "Thông tin về chúng tôi",
+		"install": "Cài đặt"
 	},
 	"modalView": {
 		"confirmTransaction": "Xác nhận giao dịch này trong ví của bạn",
