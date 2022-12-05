@@ -106,7 +106,8 @@
 		"telegram": "Telegram",
 		"tutorials": "Tutoriels",
 		"idos": "IDOs",
-		"about": "À propos"
+		"about": "À propos",
+		"install": "Installer"
 	},
 	"modalView": {
 		"confirmTransaction": "Confirmez cette transaction dans votre portefeuille",

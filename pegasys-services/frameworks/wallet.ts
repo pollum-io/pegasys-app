@@ -24,6 +24,10 @@ class WalletFramework {
 		// eslint-disable-next-line
 		const { ethereum } = window as any;
 
+		// eslint-disable-next-line
+		// @ts-ignore
+		if (!ethereum) return null;
+
 		let provider: TProvider = new ethers.providers.Web3Provider(
 			ethereum,
 			"any"

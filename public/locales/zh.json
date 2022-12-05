@@ -106,7 +106,8 @@
 		"telegram": "Telegram",
 		"tutorials": "Tutorials",
 		"idos": "IDOs",
-		"about": "关于我们"
+		"about": "关于我们",
+		"install": "安装"
 	},
 	"modalView": {
 		"confirmTransaction": "在您的钱包中确认此交易",

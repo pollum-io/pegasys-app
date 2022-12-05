@@ -69,19 +69,21 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 	useEffect(() => {
 		const p = provider ?? WalletFramework.getProvider();
 
-		p.on("network", (newNetwork, oldNetwork) => {
-			if (oldNetwork) {
-				setChainId(newNetwork.chainId ?? ChainId.NEVM);
-				// window.location.reload();
-			}
-		});
+		if (p) {
+			p.on("network", (newNetwork, oldNetwork) => {
+				if (oldNetwork) {
+					setChainId(newNetwork.chainId ?? ChainId.NEVM);
+					// window.location.reload();
+				}
+			});
 
-		// eslint-disable-next-line
-		const { ethereum } = window as any;
+			// eslint-disable-next-line
+			const { ethereum } = window as any;
 
-		ethereum.on("accountsChanged", () => {
-			connect();
-		});
+			ethereum.on("accountsChanged", () => {
+				connect();
+			});
+		}
 	}, [provider]);
 
 	useEffect(() => {
@@ -89,31 +91,33 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 
 		setProvider(p);
 
-		const checkConnection = async () => {
-			const c = await WalletFramework.getChain(p);
+		if (p) {
+			const checkConnection = async () => {
+				const c = await WalletFramework.getChain(p);
 
-			setChainId(c ?? ChainId.NEVM);
+				setChainId(c ?? ChainId.NEVM);
 
-			const value = PersistentFramework.get("wallet") as { [k: string]: any };
+				const value = PersistentFramework.get("wallet") as { [k: string]: any };
 
-			if (value?.isConnected) {
-				const connection = await WalletFramework.getConnectionInfo();
+				if (value?.isConnected) {
+					const connection = await WalletFramework.getConnectionInfo();
 
-				if (connection.address && connection.chainId) {
-					setAddress(connection.address);
-					setChainId(connection.chainId);
-					setIsConnected(true);
-					setSigner(connection.signer);
-					setProvider(connection.provider);
+					if (connection.address && connection.chainId) {
+						setAddress(connection.address);
+						setChainId(connection.chainId);
+						setIsConnected(true);
+						setSigner(connection.signer);
+						setProvider(connection.provider);
+					} else {
+						disconnect();
+					}
 				} else {
 					disconnect();
 				}
-			} else {
-				disconnect();
-			}
-		};
+			};
 
-		checkConnection();
+			checkConnection();
+		}
 	}, []);
 
 	const providerValue = useMemo(

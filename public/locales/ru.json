@@ -105,7 +105,8 @@
 		"telegram": "Телеграм",
 		"tutorials": "Учебные пособия",
 		"idos": "IDO",
-		"about": "О"
+		"about": "О",
+		"install": "Установите"
 	},
 	"modalView": {
 		"confirmTransaction": "Подтвердите транзакцию в своём кошельке",

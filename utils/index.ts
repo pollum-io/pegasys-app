@@ -7,6 +7,7 @@ export * from "./validations";
 export * from "./convert";
 export * from "./calculate";
 export * from "./connector";
+export * from "./getExtensionLink";
 
 export * from "./ColorHandler";
 export * from "./getLibrary";
