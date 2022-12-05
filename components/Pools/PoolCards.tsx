@@ -57,7 +57,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	const [percentShare, setPercentShare] = useState<number>(0);
 	const [sysPrice, setSysPrice] = useState<number>(0);
 	const [trigger, setTrigger] = useState<boolean>(false);
-	const { t: translation } = useTranslation();
+	const { t: translation, i18n } = useTranslation();
 	const { address, chainId, signer, provider } = psUseWallet();
 
 	const currencyA = unwrappedToken(pair?.token0 as Token);
@@ -221,6 +221,8 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 		? ""
 		: "none";
 
+	const { language } = i18n;
+
 	return (
 		<Flex
 			flexDirection="column"
@@ -312,7 +314,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					borderRadius="67px"
 					bgColor={theme.bg.blueNavyLightness}
 					color={theme.text.cyan}
-					fontSize="sm"
+					fontSize={language === "pt-br" ? "12.5px" : "sm"}
 					py={["0.2rem", "0.2rem", "1", "1"]}
 					h="2.2rem"
 					fontWeight="semibold"
