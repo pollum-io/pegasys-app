@@ -314,7 +314,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					borderRadius="67px"
 					bgColor={theme.bg.blueNavyLightness}
 					color={theme.text.cyan}
-					fontSize={language === "pt-br" ? "12.5px" : "sm"}
+					fontSize={language === "pt-br" ? "0.7813rem" : "sm"}
 					py={["0.2rem", "0.2rem", "1", "1"]}
 					h="2.2rem"
 					fontWeight="semibold"
