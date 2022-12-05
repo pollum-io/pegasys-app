@@ -1,29 +1,29 @@
-import { Button, ButtonProps } from '@chakra-ui/react';
-import { usePicasso } from 'hooks';
-import { FunctionComponent, ReactNode } from 'react';
+import { Text } from "@chakra-ui/react";
+import { FunctionComponent, ReactNode } from "react";
 
-interface IButtonProps extends ButtonProps {
+interface IButtonProps {
 	children?: ReactNode;
+	onClick?: () => void;
 }
 
 export const TokenButton: FunctionComponent<IButtonProps> = props => {
 	const { children, ...rest } = props;
-	const theme = usePicasso();
-	const token = 'PSYS';
+	const token = "PSYS";
+
 	return (
-		<Button
-			color="white"
-			bgColor={theme.bg.button.secondary}
-			opacity="0.90"
-			_hover={{ opacity: 1 }}
-			_active={{}}
-			w="max-content"
+		<Text
 			h="max-content"
-			py="2"
-			px="4"
+			bgClip="text"
+			fontWeight="normal"
+			fontSize="md"
+			transition="0.1s"
+			_hover={{ cursor: "pointer", fontWeight: "700" }}
+			_active={{}}
+			className="textAnimation"
 			{...rest}
 		>
+			{children}
 			{token}
-		</Button>
+		</Text>
 	);
 };

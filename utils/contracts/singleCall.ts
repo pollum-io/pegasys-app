@@ -1,0 +1,28 @@
+import { Contract } from "ethers";
+
+// type MethodParams = string | number | BigNumber;
+
+export const singleCall = async (
+	contract: Contract,
+	methodName: string,
+	parameters?: string
+) => {
+	try {
+		const contractCall = await contract[methodName](parameters);
+		return contractCall;
+	} catch (error) {
+		return "0";
+	}
+};
+
+export const singleCallWithoutParams = async (
+	contract: Contract,
+	methodName: string
+) => {
+	try {
+		const contractCall = await contract[methodName];
+		return contractCall;
+	} catch (error) {
+		return "0";
+	}
+};

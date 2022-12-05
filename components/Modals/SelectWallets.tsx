@@ -1,0 +1,155 @@
+import {
+	Flex,
+	Modal,
+	ModalContent,
+	ModalOverlay,
+	Text,
+	Img,
+	useColorMode,
+} from "@chakra-ui/react";
+import { usePicasso } from "hooks";
+import { WalletOptions } from "components/WalletOptions";
+import { MdOutlineClose } from "react-icons/md";
+import { useWallet as psUseWallet } from "pegasys-services";
+import { useTranslation } from "react-i18next";
+
+interface IModal {
+	isOpen: boolean;
+	onClose: () => void;
+}
+
+export const SelectWallets: React.FC<IModal> = props => {
+	const { isOpen, onClose } = props;
+	const theme = usePicasso();
+	const { colorMode } = useColorMode();
+	const { connectorSelected, connecting } = psUseWallet();
+	const { t: translation } = useTranslation();
+
+	return (
+		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+			<ModalOverlay />
+			<ModalContent
+				mt={["0", "8rem", "10rem", "10rem"]}
+				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(270.16deg, rgba(24,54,61, 0.8) 90.76%, rgba(24,54,61, 0) 97.76%) border-box`}
+				w={["100vw", "sm", "sm", "sm"]}
+				borderTop={
+					colorMode === "dark"
+						? ["1px solid transparent", "none", "none", "none"]
+						: ["none", "none", "none", "none"]
+				}
+				h="max-content"
+				p="6"
+				borderTopRadius="30px"
+				borderBottomRadius={["0px", "30px", "30px", "30px"]}
+				position={["absolute", "relative", "relative", "relative"]}
+				bottom={["0", "unset", "unset", "unset"]}
+				mb={["0", "unset", "unset", "unset"]}
+				boxShadow={
+					colorMode === "dark"
+						? "0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 5px 10px rgba(0, 0, 0, 0.2), 0px 15px 40px rgba(0, 0, 0, 0.4)"
+						: "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
+				}
+			>
+				{!connecting && (
+					<Flex flexDirection="column" justifyContent="center">
+						<Flex justifyContent="space-between" align="center" pb="5">
+							<Text fontSize={["lg", "lg", "xl", "xl"]} fontWeight="semibold">
+								{translation("walletModal.connectToWallet")}
+							</Text>
+							<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>
+								<MdOutlineClose size={23} color={theme.icon.whiteDarkGray} />
+							</Flex>
+						</Flex>
+						<Flex flexDirection="column" pb="5">
+							<WalletOptions />
+						</Flex>
+
+						<Flex
+							flexDirection="column"
+							fontSize="sm"
+							pb={["3rem", "0", "0", "0"]}
+						>
+							<Text
+								textAlign="center"
+								fontWeight="normal"
+								color={theme.text.mono}
+							>
+								{translation("walletModal.newToSyscoin")}
+							</Text>
+							<Text
+								textColor={theme.text.cyanPurple}
+								fontWeight="semibold"
+								textAlign="center"
+								_hover={{ cursor: "pointer", opacity: "0.9" }}
+							>
+								{translation("walletModal.learnMoreWallet")}
+							</Text>
+						</Flex>
+					</Flex>
+				)}
+				{connecting && connectorSelected && (
+					<Flex
+						flexDirection="column"
+						justifyContent="center"
+						color={theme.text.mono}
+					>
+						<Flex justifyContent="flex-end" gap="3" align="center" pb="5">
+							<Flex _hover={{ cursor: "pointer" }}>
+								<MdOutlineClose
+									size={23}
+									onClick={onClose}
+									color={theme.icon.whiteDarkGray}
+								/>
+							</Flex>
+						</Flex>
+						<Flex
+							justifyContent="center"
+							flexDirection="row"
+							pl="2"
+							pb="1.5rem"
+						>
+							<Flex pt="0.4">
+								<Flex
+									mb="0.3125rem"
+									className="circleLoading"
+									id={
+										colorMode === "dark"
+											? "walletLoadingDark"
+											: "walletLoadingLight"
+									}
+								/>
+							</Flex>
+							<Text pb="2" pl="3" fontSize="18px" fontWeight="600">
+								{translation("walletModal.initializing")}
+							</Text>
+						</Flex>
+						<Flex justifyContent="center" align="center">
+							<Flex
+								pt="2"
+								py="0"
+								bgColor="transparent"
+								h="3rem"
+								justifyContent="space-between"
+								w="18.125rem"
+								mx="0"
+								my="2"
+								mb={["2rem", "unset", "unset", "unset"]}
+								p="4"
+								border="1px solid"
+								borderRadius="full"
+								fontSize="md"
+								borderColor={theme.border.smoothGray}
+								fontWeight={500}
+								fontFamily="inter"
+								alignItems="center"
+							>
+								<Text>{connectorSelected.name}</Text>
+								<Img w="6" h="6" src={`icons/${connectorSelected.iconName}`} />
+							</Flex>
+						</Flex>
+					</Flex>
+				)}
+			</ModalContent>
+		</Modal>
+	);
+};

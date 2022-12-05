@@ -1,29 +1,39 @@
-import { Button, ButtonProps } from '@chakra-ui/react';
-import { usePicasso } from 'hooks';
-import { FunctionComponent, ReactNode } from 'react';
+import { Text } from "@chakra-ui/react";
+import { FunctionComponent, ReactNode } from "react";
+import { usePicasso } from "hooks";
+import { useWallet } from "pegasys-services";
 
-interface IButtonProps extends ButtonProps {
+interface IButtonProps {
 	children?: ReactNode;
 }
 
 export const NetworkButton: FunctionComponent<IButtonProps> = props => {
-	const { children, ...rest } = props;
+	const { children } = props;
+	const { chainId, isConnected } = useWallet();
 	const theme = usePicasso();
-	const connectedNetwork = 'NEVM';
+	const networksLabel: { [k: number]: string } = {
+		57: "NEVM",
+		5700: "TANENBAUM",
+		2814: "ROLLUX",
+	};
+
 	return (
-		<Button
-			color="white"
-			bgColor={theme.bg.button.primary}
-			opacity="0.9"
-			_hover={{ opacity: 1 }}
-			_active={{}}
-			w="max-content"
+		<Text
 			h="max-content"
-			py="2"
-			px="4"
-			{...rest}
+			bg={theme.icon.nightGray}
+			bgClip="text"
+			fontWeight="normal"
+			fontSize="md"
+			transition="0.2s"
+			_hover={{}}
+			_active={{}}
 		>
-			{connectedNetwork}
-		</Button>
+			{children}
+			{isConnected
+				? networksLabel[chainId as number]
+					? networksLabel[chainId as number]
+					: "-"
+				: "NEVM"}
+		</Text>
 	);
 };

@@ -1,12 +1,12 @@
 // e.g. src/Chakra.js
 // a) import `ChakraProvider` component as well as the storageManagers
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from "react";
 import {
 	ChakraProvider,
 	cookieStorageManager,
 	localStorageManager,
-} from '@chakra-ui/react';
-import { theme } from 'styles';
+} from "@chakra-ui/react";
+import { theme } from "styles";
 
 // TODO Documentation
 const ColorHandler = ({
@@ -17,7 +17,7 @@ const ColorHandler = ({
 	children: ReactNode;
 }) => {
 	const colorModeManager =
-		typeof cookies === 'string'
+		typeof cookies === "string"
 			? cookieStorageManager(cookies)
 			: localStorageManager;
 
