@@ -249,12 +249,7 @@ export const Header: React.FC = () => {
 					</Flex>
 				)}
 			</Flex>
-			<Flex
-				flexDirection="column"
-				justifyContent="center"
-				alignItems="center"
-				bgColor="red"
-			>
+			<Flex flexDirection="column" justifyContent="center" alignItems="center">
 				<Flex
 					display={["flex", "none", "none", "none"]}
 					position="fixed"
