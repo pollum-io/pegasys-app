@@ -456,6 +456,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 					<Flex
 						flexDirection="column"
 						p="1.5rem"
+						pb={["3rem", "1.5rem", "1.5rem", "1.5rem"]}
 						background={isMobile ? theme.bg.subModalMobile : theme.bg.subModal}
 						position={["relative", "absolute", "absolute", "absolute"]}
 						top={["0", "36.6rem", "37rem", "37rem"]}
@@ -473,9 +474,17 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 							justifyContent="space-between"
 							py="1.563rem"
 						>
-							<Flex fontSize="lg" fontWeight="bold" align="center">
-								<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
-								<Img src={selectedToken[1]?.logoURI} w="6" h="6" />
+							<Flex fontSize="lg" fontWeight="bold" align="center" gap="5">
+								<Flex position="relative">
+									<Img src={selectedToken[0]?.logoURI} w="6" h="6" />
+									<Img
+										src={selectedToken[1]?.logoURI}
+										w="6"
+										h="6"
+										position="absolute"
+										left="1.2rem"
+									/>
+								</Flex>
 								<Text pl="2">{`${selectedToken[0]?.symbol}/${selectedToken[1]?.symbol}`}</Text>
 							</Flex>
 							<Text fontSize="lg" fontWeight="bold">

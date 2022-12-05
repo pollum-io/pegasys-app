@@ -186,8 +186,6 @@ export const Header: React.FC = () => {
 						mt={["1.5", "1", "0", "0"]}
 						position="absolute"
 						left="0"
-						bgColor={colorMode === "light" ? "white" : "transparent"}
-						borderRadius="full"
 					/>
 				</Link>
 				{isMobile ? (

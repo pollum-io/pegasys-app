@@ -13,13 +13,28 @@ import "styles/logoAnimation.css";
 import "helpers/translation";
 import "styles/scrollbarDarkmode.css";
 import "styles/scrollbarLightmode.css";
+import { ColorModeScript, ConfigColorMode } from "@chakra-ui/react";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
 	const [isSSR, setIsSSR] = useState(true);
+	const [currentThemeToUse, setCurrentThemeToUse] =
+		useState<ConfigColorMode>("dark");
 
 	useEffect(() => {
 		setIsSSR(false);
 	}, []);
+
+	useEffect(() => {
+		if (!isSSR) {
+			const currentTheme = localStorage.getItem("chakra-ui-color-mode");
+
+			if (currentTheme) {
+				setCurrentThemeToUse(String(currentTheme) as ConfigColorMode);
+			} else {
+				setCurrentThemeToUse("dark");
+			}
+		}
+	}, [isSSR]);
 
 	if (isSSR) return null;
 
@@ -56,6 +71,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 				<meta property="twitter:image" content="/meta.png" />
 			</Head>
 			<ColorHandler cookies={pageProps.cookies}>
+				<ColorModeScript initialColorMode={currentThemeToUse} />
 				<Component {...pageProps} />
 			</ColorHandler>
 		</>
