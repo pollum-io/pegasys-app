@@ -456,7 +456,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 					<Flex
 						flexDirection="column"
 						p="1.5rem"
-						pb={["3rem", "unset", "unset", "unset"]}
+						pb={["3rem", "1.5rem", "1.5rem", "1.5rem"]}
 						background={isMobile ? theme.bg.subModalMobile : theme.bg.subModal}
 						position={["relative", "absolute", "absolute", "absolute"]}
 						top={["0", "36.6rem", "37rem", "37rem"]}
