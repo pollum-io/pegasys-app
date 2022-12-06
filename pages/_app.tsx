@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import type { AppProps } from "next/app";
-import { ColorHandler } from "utils";
+import { ColorHandler, getLibrary } from "utils";
 import "../styles/backgroundStars.css";
 import "styles/style.css";
 import "styles/psysAnimation.css";
@@ -14,11 +14,22 @@ import "helpers/translation";
 import "styles/scrollbarDarkmode.css";
 import "styles/scrollbarLightmode.css";
 import { ColorModeScript, ConfigColorMode } from "@chakra-ui/react";
+import {
+	WalletProvider,
+	TokensProvider,
+	TokensListManageProvider,
+	ModalsProvider,
+} from "contexts";
+import { Web3ReactProvider } from "@web3-react/core";
+import { PegasysProvider } from "pegasys-services";
+import { usePicasso } from "hooks";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
 	const [isSSR, setIsSSR] = useState(true);
 	const [currentThemeToUse, setCurrentThemeToUse] =
 		useState<ConfigColorMode>("dark");
+
+	const theme = usePicasso();
 
 	useEffect(() => {
 		setIsSSR(false);
@@ -70,10 +81,27 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 				/>
 				<meta property="twitter:image" content="/meta.png" />
 			</Head>
-			<ColorHandler cookies={pageProps.cookies}>
-				<ColorModeScript initialColorMode={currentThemeToUse} />
-				<Component {...pageProps} />
-			</ColorHandler>
+			<PegasysProvider
+				toasty={{
+					bg: theme.bg.blackAlpha,
+					text: theme.text.mono,
+				}}
+			>
+				<Web3ReactProvider getLibrary={getLibrary}>
+					<WalletProvider>
+						<TokensListManageProvider>
+							<TokensProvider>
+								<ModalsProvider>
+									<ColorHandler cookies={pageProps.cookies}>
+										<ColorModeScript initialColorMode={currentThemeToUse} />
+										<Component {...pageProps} />
+									</ColorHandler>
+								</ModalsProvider>
+							</TokensProvider>
+						</TokensListManageProvider>
+					</WalletProvider>
+				</Web3ReactProvider>
+			</PegasysProvider>
 		</>
 	);
 };
