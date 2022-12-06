@@ -14,7 +14,7 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 	children,
 	heightValue,
 	widthValue,
-	alignItemsValue = "center",
+	alignItemsValue,
 }) => {
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
@@ -27,7 +27,7 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 				minHeight: heightValue,
 				width: widthValue,
 			}}
-			alignItems={alignItemsValue}
+			alignItems="center"
 		>
 			<Flex
 				width="100%"
