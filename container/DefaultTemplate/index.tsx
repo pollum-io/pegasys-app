@@ -1,45 +1,23 @@
 import { Flex, useColorMode } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
-import { Web3ReactProvider } from "@web3-react/core";
 import { Header } from "components";
-import {
-	WalletProvider,
-	TokensProvider,
-	TokensListManageProvider,
-	ModalsProvider,
-} from "contexts";
 import { usePicasso } from "hooks";
-import { getLibrary } from "utils";
-import { PegasysProvider } from "pegasys-services";
 
 interface BaseLayoutProps {
 	children?: ReactNode;
 	heightValue?: string;
 	widthValue?: string;
-	alignItemsValue?: string;
 }
 
 export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 	children,
 	heightValue,
 	widthValue,
-	alignItemsValue,
 }) => {
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
 
 	return (
-		// <PegasysProvider
-		// 	toasty={{
-		// 		bg: theme.bg.blackAlpha,
-		// 		text: theme.text.mono,
-		// 	}}
-		// >
-		// 	<Web3ReactProvider getLibrary={getLibrary}>
-		// 		<WalletProvider>
-		// 			<TokensListManageProvider>
-		// 				<TokensProvider>
-		// 					<ModalsProvider>
 		<Flex
 			bgColor={theme.bg.primary}
 			flexDirection="column"
@@ -99,11 +77,5 @@ export const DefaultTemplate: FunctionComponent<BaseLayoutProps> = ({
 			/>
 			{children}
 		</Flex>
-		// 					</ModalsProvider>
-		// 				</TokensProvider>
-		// 			</TokensListManageProvider>
-		// 		</WalletProvider>
-		// 	</Web3ReactProvider>
-		// </PegasysProvider>
 	);
 };

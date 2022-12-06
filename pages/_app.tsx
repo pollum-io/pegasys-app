@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import type { AppProps } from "next/app";
-import { ColorHandler, getLibrary } from "utils";
+import { ColorHandler } from "utils";
 import "../styles/backgroundStars.css";
 import "styles/style.css";
 import "styles/psysAnimation.css";
@@ -15,12 +15,10 @@ import "styles/scrollbarDarkmode.css";
 import "styles/scrollbarLightmode.css";
 import { ColorModeScript, ConfigColorMode } from "@chakra-ui/react";
 import {
-	WalletProvider,
 	TokensProvider,
 	TokensListManageProvider,
 	ModalsProvider,
 } from "contexts";
-import { Web3ReactProvider } from "@web3-react/core";
 import { PegasysProvider } from "pegasys-services";
 import { usePicasso } from "hooks";
 
@@ -87,20 +85,16 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 					text: theme.text.mono,
 				}}
 			>
-				<Web3ReactProvider getLibrary={getLibrary}>
-					<WalletProvider>
-						<TokensListManageProvider>
-							<TokensProvider>
-								<ModalsProvider>
-									<ColorHandler cookies={pageProps.cookies}>
-										<ColorModeScript initialColorMode={currentThemeToUse} />
-										<Component {...pageProps} />
-									</ColorHandler>
-								</ModalsProvider>
-							</TokensProvider>
-						</TokensListManageProvider>
-					</WalletProvider>
-				</Web3ReactProvider>
+				<TokensListManageProvider>
+					<TokensProvider>
+						<ModalsProvider>
+							<ColorHandler cookies={pageProps.cookies}>
+								<ColorModeScript initialColorMode={currentThemeToUse} />
+								<Component {...pageProps} />
+							</ColorHandler>
+						</ModalsProvider>
+					</TokensProvider>
+				</TokensListManageProvider>
 			</PegasysProvider>
 		</>
 	);
