@@ -640,7 +640,8 @@
 		"errorFarm": "Error en la búsqueda de oportunidades en las farms",
 		"errorStake": "Error en la búsqueda de oportunidades de stake",
 		"transactionComp": "Transacción completada con éxito",
-		"connectingError": "Error al conectar la cartera"
+		"connectingError": "Error al conectar la cartera",
+		"swapFailed": "El cambio ha fallado"
 	},
 	"portfolioPage": {
 		"walletStats": "Estadísticas de la Cartera",

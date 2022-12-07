@@ -10,7 +10,6 @@ import {
 	ModalOverlay,
 	Text,
 	Collapse,
-	toast,
 	useMediaQuery,
 	useColorMode,
 } from "@chakra-ui/react";
@@ -547,7 +546,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			/>
 			<ModalOverlay />
 			<ModalContent
-				top={["9.5rem", "2rem", "2rem", "2rem"]}
 				position={["absolute", "relative", "relative", "relative"]}
 				mb={["0", "25rem", "25rem", "25rem"]}
 				borderTopRadius="30px"

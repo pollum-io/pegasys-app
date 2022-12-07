@@ -28,11 +28,11 @@ export const SelectSyscoin: FunctionComponent<IModal> = props => {
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
+				mt={["unset", "6rem", "6rem", "6rem"]}
 				borderTopRadius="30px"
 				borderBottomRadius={["none", "30px", "30px", "30px"]}
-				mt={["0", "8rem", "8rem", "8rem"]}
 				p="1.5rem"
-				mb={["0", "unset", "unset", "unset"]}
+				mb={["0", "5rem", "5rem", "5rem"]}
 				bottom={["0", "unset", "unset", "unset"]}
 				position={["absolute", "relative", "relative", "relative"]}
 				borderTop={

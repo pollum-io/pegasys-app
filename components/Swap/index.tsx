@@ -40,11 +40,7 @@ import React, {
 } from "react";
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
-import {
-	LoadingTransition,
-	SelectCoinModal,
-	SelectWallets,
-} from "components/Modals";
+import { LoadingTransition, SelectCoinModal } from "components/Modals";
 import { ChainId, CurrencyAmount, JSBI, Trade } from "@pollum-io/pegasys-sdk";
 import {
 	ISwapTokenInputValue,
@@ -92,10 +88,6 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 	const { userTokensBalance } = useTokens();
 
 	const {
-		isOpenWallet,
-		onCloseWallet,
-		isOpenSelectWalletModal,
-		onCloseSelectWalletModal,
 		onOpenCoin,
 		isOpenCoin,
 		onCloseCoin,
@@ -313,7 +305,8 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			txType,
 			toast,
 			onCloseTransaction,
-			addTransactions
+			addTransactions,
+			translation
 		);
 
 	const { realizedLPFee } = computeTradePriceBreakdown(

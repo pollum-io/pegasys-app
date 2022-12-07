@@ -639,7 +639,8 @@
 		"errorFarm": "Ошибка при получении данных о возможностях farms",
 		"errorStake": "Ошибка при получении данных о возможностях stake",
 		"transactionComp": "Транзакция успешно завершена",
-		"connectingError": "Ошибка при подключении кошелька"
+		"connectingError": "Ошибка при подключении кошелька",
+		"swapFailed": "Обмен не удался"
 	},
 	"portfolioPage": {
 		"walletStats": "Статистика Kошелька",

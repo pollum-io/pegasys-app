@@ -38,7 +38,7 @@ const ToastyCard: React.FC<IToastyCardProps> = ({
 		<Flex
 			h="max-content"
 			w={["18.75rem", "22.25rem", "22.25rem", "22.25rem", "22.25rem"]}
-			mt="3.125rem"
+			mt="2.125rem"
 			mr={["unset", "1.5rem", "2.5rem", "2.5rem"]}
 			py="0.7rem"
 			px="0.5rem"

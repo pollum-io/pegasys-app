@@ -47,22 +47,37 @@ const TransactionRow: React.FC<{
 			: "https://explorer.testnet.rollux.com/tx";
 
 	return (
-		<Flex alignItems="center" justifyContent="flex-start" w="100%">
+		<Flex
+			alignItems={["", "center", "center", "center"]}
+			justifyContent="flex-start"
+		>
 			{pending && (
-				<Flex
-					className="circleLoading"
-					id={
-						colorMode === "dark"
-							? "pendingTransactionsDark"
-							: "pendingTransactionsLight"
-					}
-				/>
+				<Flex>
+					<Flex
+						className="circleLoading"
+						id={
+							colorMode === "dark"
+								? "pendingTransactionsDark"
+								: "pendingTransactionsLight2"
+						}
+						mt={["0.15rem", "0", "0", "0"]}
+					/>
+				</Flex>
+			)}
+			{!pending && (
+				<Flex mt={["0.18rem", "0", "0", "0"]}>
+					{success ? (
+						<AiOutlineCheckCircle color="#25855A" />
+					) : (
+						<AiOutlineCloseCircle color="#E53E3E" />
+					)}
+				</Flex>
 			)}
 			<Flex
 				justifyContent="space-between"
 				w="100%"
 				alignItems="center"
-				pl={pending ? "2" : "0"}
+				pl={pending ? "0.5rem" : "2"}
 			>
 				<Link
 					fontSize="sm"
@@ -81,15 +96,6 @@ const TransactionRow: React.FC<{
 						position="relative"
 					/>
 				</Link>
-				{!pending && (
-					<Flex>
-						{success ? (
-							<AiOutlineCheckCircle color="#25855A" />
-						) : (
-							<AiOutlineCloseCircle color="#E53E3E" />
-						)}
-					</Flex>
-				)}
 			</Flex>
 		</Flex>
 	);
@@ -120,12 +126,11 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				mt={["0", "6rem", "6rem", "6rem"]}
 				h="max-content"
 				position={["absolute", "relative", "relative", "relative"]}
 				borderRadius={["30px", "35px", "35px", "35px"]}
 				bottom={["0", "unset", "unset", "unset"]}
-				mb={["0", "unset", "unset", "unset"]}
+				mb={["0", "5rem", "5rem", "5rem"]}
 				boxShadow={
 					colorMode === "dark"
 						? "0px 0px 0px 1px rgba(0, 0, 0, 0.1)"
@@ -174,6 +179,7 @@ export const AddressInfoButton: FunctionComponent<IModal> = props => {
 							justifyContent="space-between"
 							flexDirection="row"
 							align="center"
+							gap="2"
 						>
 							<Flex>
 								<Text

@@ -69,13 +69,12 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 	const { language } = i18n;
 
 	return (
-		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
 				position={["absolute", "relative", "relative", "relative"]}
-				mt={["0", "6rem", "6rem", "6rem"]}
-				mb={["0", "unset", "unset", "unset"]}
 				bottom={["0", "unset", "unset", "unset"]}
+				mb={["0", "4rem", "4rem", "4rem"]}
 				borderRadius="30px"
 				borderBottomRadius={["0", "30px", "30px", "30px"]}
 				boxShadow={

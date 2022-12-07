@@ -186,11 +186,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	}, [receiveSys]);
 
 	return (
-		<Modal
-			blockScrollOnMount={false}
-			isOpen={isModalOpen}
-			onClose={onModalClose}
-		>
+		<Modal blockScrollOnMount isOpen={isModalOpen} onClose={onModalClose}>
 			<SelectCoinModal
 				isOpen={isOpenCoin}
 				onClose={onCloseCoin}

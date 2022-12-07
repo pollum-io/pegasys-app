@@ -261,7 +261,7 @@ export const ManageToken: React.FC<IModal> = props => {
 	}, [errorMessage]);
 
 	return (
-		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ConfirmList
 				isOpen={isOpenConfirmList}
 				onClose={onCloseConfirmList}
@@ -279,11 +279,10 @@ export const ManageToken: React.FC<IModal> = props => {
 				px="1"
 				py="2"
 				position={["absolute", "absolute", "relative", "relative"]}
-				mt={["0", "6rem", "6rem", "6rem"]}
 				bottom={["0", "unset", "unset", "unset"]}
 				borderBottomRadius={["0", "30px", "30px", "30px"]}
 				pb={["2rem", "2rem", "0.5rem", "0.5rem"]}
-				mb={["0", "unset", "unset", "unset"]}
+				mb={["0", "5rem", "5rem", "5rem"]}
 			>
 				<ModalHeader display="flex" alignItems="center" gap="3">
 					<Flex _hover={{ cursor: "pointer" }} onClick={onClose}>

@@ -25,7 +25,7 @@ export const LoadingTransition: React.FC<IModal> = props => {
 
 	return (
 		<Modal
-			blockScrollOnMount={false}
+			blockScrollOnMount
 			isOpen={isOpen}
 			onClose={() => {
 				if (onClose) {
@@ -35,7 +35,7 @@ export const LoadingTransition: React.FC<IModal> = props => {
 		>
 			<ModalOverlay />
 			<ModalContent
-				mt={["unset", "10rem", "10rem", "10rem"]}
+				mt={["unset", "6rem", "6rem", "6rem"]}
 				borderRadius="30px"
 				borderBottomRadius={["none", "30px", "30px", "30px"]}
 				pt="0"

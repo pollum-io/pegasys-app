@@ -31,7 +31,11 @@ const EarnHeaderButton: React.FC<IEarnHeaderButtonProps> = ({
 			bgColor={buttonId === id ? theme.bg.babyBluePurple : "transparent"}
 			color={buttonId === id ? theme.text.darkBluePurple : theme.text.lightGray}
 			fontWeight="semibold"
-			_hover={{ opacity: "0.9" }}
+			_hover={
+				JSBI.lessThanOrEqual(amount.raw, JSBI.BigInt(0))
+					? { opacity: "0.3" }
+					: { opacity: "0.9" }
+			}
 			disabled={JSBI.lessThanOrEqual(amount.raw, JSBI.BigInt(0))}
 		/>
 	);

@@ -492,7 +492,11 @@ export const PoolsContainer: NextPage = () => {
 				isOpen={isOpenTransaction}
 				onClose={onCloseTransaction}
 			/>
-			<Flex alignItems="flex-start" justifyContent="center" mb="6.2rem">
+			<Flex
+				alignItems="flex-start"
+				justifyContent="center"
+				mb={isLoading ? "6.2rem" : "10rem"}
+			>
 				<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
 					<SlideFade in={Boolean(isMobile || !isMobile)} offsetY="-30px">
 						<Flex

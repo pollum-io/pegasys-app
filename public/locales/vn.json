@@ -640,7 +640,8 @@
 		"errorFarm": "Lỗi khi tìm nạp cơ hội farms",
 		"errorStake": "Lỗi khi tìm nạp cơ hội stake",
 		"transactionComp": "Giao dịch hoàn tất thành công",
-		"connectingError": "Lỗi khi kết nối ví"
+		"connectingError": "Lỗi khi kết nối ví",
+		"swapFailed": "Hoán đổi không thành công"
 	},
 	"portfolioPage": {
 		"walletStats": "Số liệu thống kê về ví",

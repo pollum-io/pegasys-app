@@ -640,7 +640,8 @@
 		"errorFarm": "Fehler beim Abrufen von Farms Opportunities",
 		"errorStake": "Fehler beim Abrufen von Stake-Möglichkeiten",
 		"transactionComp": "Transaktion erfolgreich abgeschlossen",
-		"connectingError": "Fehler beim Verbinden der Wallet"
+		"connectingError": "Fehler beim Verbinden der Wallet",
+		"swapFailed": "Swap ist gescheitert"
 	},
 	"portfolioPage": {
 		"walletStats": "Statistik der Brieftasche",
