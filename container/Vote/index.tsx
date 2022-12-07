@@ -18,12 +18,12 @@ import { shortAddress } from "utils";
 
 export const VoteContainer: NextPage = () => {
 	const theme = usePicasso();
-	const { isConnected, chainId } = useWallet();
+	const { chainId } = useWallet();
 	const {
 		selectedProposals,
 		showCancelled,
 		setShowCancelled,
-		votesLocked,
+		// votesLocked,
 		delegatedTo,
 		proposals,
 		loading,
@@ -40,6 +40,9 @@ export const VoteContainer: NextPage = () => {
 		isOpenUnlockVotesModal,
 		onCloseUnlockVotesModal,
 	} = useModal();
+
+	const isConnected = false;
+	const votesLocked = true;
 
 	const { language } = i18n;
 

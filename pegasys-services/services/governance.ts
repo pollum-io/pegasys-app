@@ -87,8 +87,6 @@ class GovernanceServices {
 	static async getProposals({
 		governanceContract,
 	}: IGovernaceServicesGetProposal): Promise<IFormattedProposal[]> {
-		return [];
-
 		const quorumCount = await this.getQuorumCount({
 			contract: governanceContract,
 		});
