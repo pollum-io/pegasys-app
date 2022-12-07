@@ -5,6 +5,7 @@ import { formattedNum } from "utils/convert/numberFormat";
 import { BIG_INT_ONE, formatBigNumbers } from "pegasys-services";
 import { useTranslation } from "react-i18next";
 import { JSBI } from "@pollum-io/pegasys-sdk";
+import { verifyZerosInBalanceAndFormat } from "utils";
 import { IBodyProps } from "./dto";
 import CardItem from "./CardItem";
 
@@ -42,7 +43,7 @@ const Body: React.FC<IBodyProps> = ({
 					text={t("earnPages.totalStaked")}
 					usdValue={`${formattedNum(totalStakedInUsd, true)} USD`}
 					value={`${formatBigNumbers(
-						Number(totalStakedAmount.toSignificant())
+						parseFloat(totalStakedAmount.toExact())
 					)} ${symbol}`}
 					opacity={JSBI.lessThanOrEqual(totalStakedAmount.raw, BIG_INT_ONE)}
 				/>
@@ -51,9 +52,9 @@ const Body: React.FC<IBodyProps> = ({
 					usdValue={`${formattedNum(rewardRatePerWeekInUsd, true)} USD/${t(
 						"earnPages.week"
 					)}`}
-					value={`${rewardRatePerWeek.toSignificant()} ${symbol}/${t(
-						"earnPages.week"
-					)}`}
+					value={`${verifyZerosInBalanceAndFormat(
+						parseFloat(rewardRatePerWeek.toExact())
+					)} ${symbol}/${t("earnPages.week")}`}
 					opacity={JSBI.lessThanOrEqual(rewardRatePerWeek.raw, BIG_INT_ONE)}
 				/>
 			</Flex>
@@ -66,13 +67,17 @@ const Body: React.FC<IBodyProps> = ({
 				<CardItem
 					text={t("earnPages.yourStake")}
 					usdValue={`${formattedNum(stakedInUsd, true)} USD`}
-					value={`${stakedAmount.toSignificant()} ${symbol}`}
+					value={`${verifyZerosInBalanceAndFormat(
+						parseFloat(stakedAmount.toExact())
+					)} ${symbol}`}
 					opacity={JSBI.lessThanOrEqual(stakedAmount.raw, BIG_INT_ONE)}
 				/>
 				<CardItem
 					text={t("earnPages.yourUnclaimed")}
 					usdValue={`${formattedNum(unclaimedInUsd, true)} USD`}
-					value={`${unclaimedAmount.toSignificant()} ${symbol}`}
+					value={`${verifyZerosInBalanceAndFormat(
+						parseFloat(unclaimedAmount.toExact())
+					)} ${symbol}`}
 					opacity={JSBI.lessThanOrEqual(unclaimedAmount.raw, BIG_INT_ONE)}
 				/>
 			</Flex>
