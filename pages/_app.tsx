@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { AppProps } from "next/app";
 import { ColorHandler } from "utils";
 import "../styles/backgroundStars.css";
@@ -21,20 +21,48 @@ import {
 } from "contexts";
 import { PegasysProvider } from "pegasys-services";
 import { usePicasso } from "hooks";
+import { NextComponentType, NextPageContext } from "next";
+
+type ProviderWrapperComponentProps = {
+	Component: NextComponentType<NextPageContext, any>;
+	pageProps: any;
+};
+
+const ProviderWrapperComponent = ({
+	Component,
+	pageProps,
+}: ProviderWrapperComponentProps) => {
+	const theme = usePicasso();
+
+	return (
+		<PegasysProvider
+			toasty={{
+				bg: theme.bg.blackAlpha,
+				text: theme.text.mono,
+			}}
+		>
+			<TokensListManageProvider>
+				<TokensProvider>
+					<ModalsProvider>
+						<Component {...pageProps} />
+					</ModalsProvider>
+				</TokensProvider>
+			</TokensListManageProvider>
+		</PegasysProvider>
+	);
+};
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-	const [isSSR, setIsSSR] = useState(true);
 	const [currentThemeToUse, setCurrentThemeToUse] =
 		useState<ConfigColorMode>("dark");
-
-	const theme = usePicasso();
+	const [isSSR, setIsSSR] = useState(true);
 
 	useEffect(() => {
 		setIsSSR(false);
 	}, []);
 
 	useEffect(() => {
-		if (!isSSR) {
+		if (isSSR) {
 			const currentTheme = localStorage.getItem("chakra-ui-color-mode");
 
 			if (currentTheme) {
@@ -79,23 +107,10 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 				/>
 				<meta property="twitter:image" content="/meta.png" />
 			</Head>
-			<PegasysProvider
-				toasty={{
-					bg: theme.bg.blackAlpha,
-					text: theme.text.mono,
-				}}
-			>
-				<TokensListManageProvider>
-					<TokensProvider>
-						<ModalsProvider>
-							<ColorHandler cookies={pageProps.cookies}>
-								<ColorModeScript initialColorMode={currentThemeToUse} />
-								<Component {...pageProps} />
-							</ColorHandler>
-						</ModalsProvider>
-					</TokensProvider>
-				</TokensListManageProvider>
-			</PegasysProvider>
+			<ColorHandler cookies={pageProps.cookies}>
+				<ColorModeScript initialColorMode={currentThemeToUse} />
+				<ProviderWrapperComponent Component={Component} pageProps={pageProps} />
+			</ColorHandler>
 		</>
 	);
 };
