@@ -309,7 +309,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			translation
 		);
 
-	const { realizedLPFee } = computeTradePriceBreakdown(
+	const { realizedLPFee, priceImpactWithoutFee } = computeTradePriceBreakdown(
 		returnedTradeValue?.v2Trade as Trade
 	);
 
@@ -1179,9 +1179,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 											icon={MdHelpOutline}
 										/>
 									</Flex>
-									<FormattedPriceImpat
-										priceImpact={returnedTradeValue?.v2Trade?.priceImpact}
-									/>
+									<FormattedPriceImpat priceImpact={priceImpactWithoutFee} />
 								</Flex>
 								<Flex
 									flexDirection="row"
