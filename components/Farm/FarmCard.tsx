@@ -201,11 +201,9 @@ const FarmCard: FunctionComponent<{
 						fontSize="sm"
 						alignItems="center"
 					>
-						<Text fontWeight="semibold" w="50%">
-							{t("earnPages.yourRate")}
-						</Text>
+						<Text fontWeight="semibold">{t("earnPages.yourRate")}</Text>
 
-						<Text w="45%" textAlign="end">
+						<Text textAlign="end">
 							{rewardRatePerWeek.toFixed(3)} {rewardToken.symbol}/
 							{t("earnPages.week")}
 						</Text>
@@ -216,10 +214,8 @@ const FarmCard: FunctionComponent<{
 						fontSize="sm"
 						alignItems="center"
 					>
-						<Text fontWeight="semibold" w="50%">
-							{t("earnPages.yourUnclaimed")}
-						</Text>
-						<Text w="45%" textAlign="end">
+						<Text fontWeight="semibold">{t("earnPages.yourUnclaimed")}</Text>
+						<Text textAlign="end">
 							{unclaimedAmount.toFixed(3)} {rewardToken.symbol}
 						</Text>
 					</Flex>

@@ -26,7 +26,6 @@ export const VoteContainer: NextPage = () => {
 		// votesLocked,
 		delegatedTo,
 		proposals,
-		loading,
 		dataLoading,
 		currentVotes,
 	} = useGovernance();
@@ -39,6 +38,8 @@ export const VoteContainer: NextPage = () => {
 		onOpenUnlockVotesModal,
 		isOpenUnlockVotesModal,
 		onCloseUnlockVotesModal,
+		isOpenTransaction,
+		onCloseTransaction,
 	} = useModal();
 
 	const isConnected = false;
@@ -52,7 +53,10 @@ export const VoteContainer: NextPage = () => {
 				isOpen={isOpenUnlockVotesModal}
 				onClose={onCloseUnlockVotesModal}
 			/>
-			<LoadingTransition isOpen={loading} />
+			<LoadingTransition
+				isOpen={isOpenTransaction}
+				onClose={onCloseTransaction}
+			/>
 			<Flex alignItems="flex-start" justifyContent="center" mb="6.2rem">
 				{!selectedProposals ? (
 					<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>

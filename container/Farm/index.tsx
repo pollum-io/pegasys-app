@@ -30,11 +30,16 @@ import { FarmActions } from "components/Modals/FarmActions";
 
 export const FarmContainer: NextPage = () => {
 	const { setSearch, sort, setSort } = useFarm();
-	const { loading, signatureLoading, dataLoading } = useEarn();
+	const { dataLoading } = useEarn();
 	const { isConnected, address, chainId } = psUseWallet();
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
-	const { isOpenFarmActions, onCloseFarmActions } = useModal();
+	const {
+		isOpenFarmActions,
+		onCloseFarmActions,
+		isOpenTransaction,
+		onCloseTransaction,
+	} = useModal();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const { t: translation } = useTranslation();
 
@@ -45,8 +50,17 @@ export const FarmContainer: NextPage = () => {
 	};
 
 	return (
-		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
-			<LoadingTransition isOpen={loading || signatureLoading} />
+		<Flex
+			w="100%"
+			h="100%"
+			alignItems="flex-start"
+			justifyContent="center"
+			mb={dataLoading ? "10rem" : "1rem"}
+		>
+			<LoadingTransition
+				isOpen={isOpenTransaction}
+				onClose={onCloseTransaction}
+			/>
 			<FarmActions isOpen={isOpenFarmActions} onClose={onCloseFarmActions} />
 			<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
 				<SlideFade in={Boolean(isMobile || !isMobile)} offsetY="-30px">

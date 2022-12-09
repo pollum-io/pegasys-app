@@ -50,14 +50,9 @@ const EarnClaimAction: React.FC<IEarnClaimActionProps> = ({ claim }) => {
 				gap="2"
 				borderRadius="xl"
 			>
-				<Flex
-					flexDirection="row"
-					alignItems="center"
-					w="80%"
-					justifyContent="center"
-				>
+				<Flex flexDirection="row" alignItems="center" justifyContent="flex-end">
 					<Img src="icons/pegasys.png" w="6" h="6" />
-					<Text fontSize="2xl" fontWeight="semibold" pl="2" w="100%">
+					<Text fontSize="2xl" fontWeight="semibold" pl="2">
 						{selectedOpportunity.unclaimedAmount.toSignificant(10, {
 							groupSeparator: ",",
 						})}
@@ -94,7 +89,7 @@ const EarnClaimAction: React.FC<IEarnClaimActionProps> = ({ claim }) => {
 						<Flex flexDirection="row">
 							<Text>
 								{t("earnPages.unclaimed", {
-									token: selectedOpportunity.extraRewardToken.symbol,
+									token: selectedOpportunity.extraRewardToken?.symbol,
 								})}
 							</Text>
 						</Flex>

@@ -42,8 +42,7 @@ export const UnlockVotesModal: FunctionComponent<IModal> = props => {
 			<ModalContent
 				borderTopRadius="30px"
 				borderBottomRadius={["0", "30px", "30px", "30px"]}
-				mt={["0", "6rem", "6rem", "6rem"]}
-				mb={["0", "unset", "unset", "unset"]}
+				mb={["0", "5rem", "5rem", "5rem"]}
 				borderTop={
 					colorMode === "dark"
 						? ["1px solid transparent", "none", "none", "none"]

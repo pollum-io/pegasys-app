@@ -47,8 +47,16 @@ export const FarmActions: React.FC<IModal> = props => {
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				mt={["0", "6rem", "6rem", "6rem"]}
-				mb={["0", "unset", "unset", "unset"]}
+				h="max-content"
+				mb={
+					buttonId === "deposit"
+						? ["0", "5rem", "5rem", "5rem"]
+						: buttonId === "claim"
+						? ["0", "10rem", "10rem", "10rem"]
+						: withdrawPercentage === 100
+						? ["0", "18rem", "18rem", "18rem"]
+						: ["0", "14rem", "14rem", "14rem"]
+				}
 				position={["absolute", "relative", "relative", "relative"]}
 				bottom="0"
 				w={["100vw", "32rem", "32rem", "32rem"]}
@@ -123,7 +131,7 @@ export const FarmActions: React.FC<IModal> = props => {
 							top={
 								withdrawPercentage === 100
 									? ["0", "25rem", "25rem", "25rem"]
-									: ["0", "23rem", "23rem", "23rem"]
+									: ["0", "22.8rem", "22.8rem", "22.8rem"]
 							}
 							borderTopRadius={["0", "30px", "30px", "30px"]}
 							borderBottomRadius={["0", "30px", "30px", "30px"]}
@@ -166,7 +174,12 @@ export const FarmActions: React.FC<IModal> = props => {
 							]}
 							position={["relative", "absolute", "absolute", "absolute"]}
 							w="100%"
-							top={["unset", "19.5rem", "19.5rem", "19.5rem"]}
+							top={
+								selectedOpportunity.extraRewardToken &&
+								selectedOpportunity.extraUnclaimed
+									? ["unset", "26rem", "26rem", "26rem"]
+									: ["unset", "19.5rem", "19.5rem", "19.5rem"]
+							}
 							borderTopRadius={["0", "30px", "30px", "30px"]}
 							borderBottomRadius={["0", "30px", "30px", "30px"]}
 							alignItems="flex-start"

@@ -30,15 +30,20 @@
 		rgba(0, 0, 0, 0.08);
 }
 #pendingTransactionsDark {
-	width: 0.9375rem;
-	height: 0.9375rem;
+	width: 1rem;
+	height: 1rem;
 	border-color: #00d9ef rgba(255, 255, 255, 0.24) rgba(255, 255, 255, 0.24)
 		rgba(255, 255, 255, 0.24);
 }
 #pendingTransactionsLight {
-	width: 0.9375rem;
-	height: 0.9375rem;
+	width: 1rem;
+	height: 1rem;
 	border-color: #665ee1 #ffffff #ffffff #ffffff;
+}
+#pendingTransactionsLight2 {
+	width: 1rem;
+	height: 1rem;
+	border-color: #665ee1 #bfbfbf #bfbfbf #bfbfbf;
 }
 .circleLoading:nth-child(1) {
 	animation-delay: -0.45s;

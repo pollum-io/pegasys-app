@@ -640,7 +640,8 @@
 		"errorFarm": "Çiftlik fırsatları getirilirken hata farms",
 		"errorStake": "Çiftlik fırsatları getirilirken hata stake",
 		"transactionComp": "İşlem başarıyla tamamlandı",
-		"connectingError": "Cüzdan bağlanırken hata oluştu"
+		"connectingError": "Cüzdan bağlanırken hata oluştu",
+		"swapFailed": "Takas başarısız oldu"
 	},
 	"portfolioPage": {
 		"walletStats": "Cüzdan İstatistikleri",

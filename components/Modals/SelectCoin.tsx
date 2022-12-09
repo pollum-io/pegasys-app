@@ -147,8 +147,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 			<ModalContent
 				borderRadius="30px"
 				bottom={["0", "unset", "unset", "unset"]}
-				mt={["0", "6rem", "6rem", "6rem"]}
-				mb={["0", "unset", "unset", "unset"]}
+				mb={["0", "5rem", "5rem", "5rem"]}
 				borderTop={
 					colorMode === "dark"
 						? ["1px solid transparent", "none", "none", "none"]

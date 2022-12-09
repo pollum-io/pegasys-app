@@ -63,8 +63,7 @@ export const CheckAllVotersModal: FunctionComponent<IModal> = props => {
 			<ModalContent
 				borderTopRadius="30px"
 				borderBottomRadius={["0", "30px", "30px", "30px"]}
-				my={["0", "8rem", "8rem", "8rem"]}
-				mb={["0", "unset", "unset", "unset"]}
+				mb={["0", "5rem", "5rem", "5rem"]}
 				h="max-content"
 				borderTop={
 					colorMode === "dark"

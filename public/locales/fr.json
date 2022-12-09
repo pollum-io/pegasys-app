@@ -640,7 +640,8 @@
 		"errorFarm": "Erreur lors de la récupération des opportunités d'exploitation",
 		"errorStake": "Erreur lors de la récupération des opportunités de participation",
 		"transactionComp": "Transaction terminée avec succès",
-		"connectingError": "Erreur lors de la connexion du porte-monnaie"
+		"connectingError": "Erreur lors de la connexion du porte-monnaie",
+		"swapFailed": "L'échange a échoué"
 	},
 	"portfolioPage": {
 		"walletStats": "Statistiques sur les Portefeuilles",

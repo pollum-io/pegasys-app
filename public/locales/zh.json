@@ -640,7 +640,8 @@
 		"errorFarm": "获取农场机会时出错",
 		"errorStake": "获取股权机会时出错",
 		"transactionComp": "交易成功完成",
-		"connectingError": "连接钱包时出错"
+		"connectingError": "连接钱包时出错",
+		"swapFailed": "互换失败"
 	},
 	"portfolioPage": {
 		"walletStats": "钱包统计",

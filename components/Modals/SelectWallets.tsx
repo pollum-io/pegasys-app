@@ -26,10 +26,10 @@ export const SelectWallets: React.FC<IModal> = props => {
 	const { t: translation } = useTranslation();
 
 	return (
-		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				mt={["0", "8rem", "10rem", "10rem"]}
+				mt={["0", "8rem", "8rem", "8rem"]}
 				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(270.16deg, rgba(24,54,61, 0.8) 90.76%, rgba(24,54,61, 0) 97.76%) border-box`}
 				w={["100vw", "sm", "sm", "sm"]}
 				borderTop={
