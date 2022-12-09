@@ -183,9 +183,7 @@ const FarmCard: FunctionComponent<{
 					</Text>
 				</Flex>
 			</Flex>
-			{(JSBI.greaterThan(stakedAmount.raw, BIG_INT_ZERO) ||
-				JSBI.greaterThan(unstakedAmount.raw, BIG_INT_ZERO) ||
-				JSBI.greaterThan(unclaimedAmount.raw, BIG_INT_ZERO)) && (
+			{JSBI.greaterThan(stakedAmount.raw, BIG_INT_ZERO) && (
 				<Flex
 					flexDirection="column"
 					backgroundColor={theme.bg.neutralGray}
