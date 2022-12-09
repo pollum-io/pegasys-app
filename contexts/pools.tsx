@@ -38,6 +38,8 @@ interface IPools {
 	setPairInfo: React.Dispatch<React.SetStateAction<ICommonPairs | undefined>>;
 	setSortType: React.Dispatch<React.SetStateAction<string>>;
 	sortType: string;
+	setCurrentLpAddress: React.Dispatch<React.SetStateAction<string>>;
+	currentLpAddress: string;
 }
 
 export const PoolsContext = createContext({} as IPools);
@@ -56,6 +58,7 @@ export const PoolsProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [sortType, setSortType] = useState<string>("apr");
 	// eslint-disable-next-line
 	const [poolBalance, setPoolBalance] = useState<any>();
+	const [currentLpAddress, setCurrentLpAddress] = useState<string>("");
 	const { address, provider } = useWallet();
 
 	useMemo(() => {
@@ -188,6 +191,8 @@ export const PoolsProvider: React.FC<{ children: React.ReactNode }> = ({
 			setPairInfo,
 			sortType,
 			setSortType,
+			currentLpAddress,
+			setCurrentLpAddress,
 		}),
 		[
 			poolsApr,
@@ -206,6 +211,8 @@ export const PoolsProvider: React.FC<{ children: React.ReactNode }> = ({
 			setPairInfo,
 			sortType,
 			setSortType,
+			currentLpAddress,
+			setCurrentLpAddress,
 		]
 	);
 
