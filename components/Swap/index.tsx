@@ -41,7 +41,13 @@ import React, {
 import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { LoadingTransition, SelectCoinModal } from "components/Modals";
-import { ChainId, CurrencyAmount, JSBI, Trade } from "@pollum-io/pegasys-sdk";
+import {
+	ChainId,
+	CurrencyAmount,
+	JSBI,
+	Percent,
+	Trade,
+} from "@pollum-io/pegasys-sdk";
 import {
 	ISwapTokenInputValue,
 	IWalletHookInfos,
@@ -637,6 +643,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				minimumReceived={minimumReceived}
 				liquidityFee={realizedLPFee}
 				openPendingTx={onOpenTransaction}
+				priceImpactValue={priceImpactWithoutFee as Percent}
 			/>
 			<LoadingTransition
 				isOpen={isOpenTransaction}
