@@ -8,6 +8,7 @@ import {
 	useWallet,
 	SUPPORTED_NETWORK_CHAINS,
 	PersistentFramework,
+	useTransaction,
 } from "pegasys-services";
 import { ChainId } from "@pollum-io/pegasys-sdk";
 
@@ -34,6 +35,8 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		chainId: currentNetworkChainId,
 		provider,
 	} = useWallet();
+
+	const { finishedTxs } = useTransaction();
 
 	const { currentCacheListTokensToDisplay, tokenListManageState } =
 		useTokensListManage();
@@ -184,6 +187,7 @@ export const TokensProvider: React.FC<{ children: React.ReactNode }> = ({
 		currentCacheListTokensToDisplay,
 		initialDefaultTokens,
 		tokenListManageState.selectedListUrl,
+		finishedTxs.length,
 	]);
 
 	useEffect(() => {
