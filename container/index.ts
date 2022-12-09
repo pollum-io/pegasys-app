@@ -6,3 +6,4 @@ export * from "./Pools";
 export * from "./Portfolio";
 export * from "./Stake";
 export * from "./Vote";
+export { default as AppWrapper } from "./AppWrapper";

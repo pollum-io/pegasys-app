@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { AppProps } from "next/app";
 import { ColorHandler } from "utils";
 import "../styles/backgroundStars.css";
@@ -13,48 +13,11 @@ import "styles/logoAnimation.css";
 import "helpers/translation";
 import "styles/scrollbarDarkmode.css";
 import "styles/scrollbarLightmode.css";
-import { ColorModeScript, ConfigColorMode } from "@chakra-ui/react";
-import {
-	TokensProvider,
-	TokensListManageProvider,
-	ModalsProvider,
-} from "contexts";
-import { PegasysProvider } from "pegasys-services";
-import { usePicasso } from "hooks";
-import { NextComponentType, NextPageContext } from "next";
-
-type ProviderWrapperComponentProps = {
-	Component: NextComponentType<NextPageContext, any>;
-	pageProps: any;
-};
-
-const ProviderWrapperComponent = ({
-	Component,
-	pageProps,
-}: ProviderWrapperComponentProps) => {
-	const theme = usePicasso();
-
-	return (
-		<PegasysProvider
-			toasty={{
-				bg: theme.bg.blackAlpha,
-				text: theme.text.mono,
-			}}
-		>
-			<TokensListManageProvider>
-				<TokensProvider>
-					<ModalsProvider>
-						<Component {...pageProps} />
-					</ModalsProvider>
-				</TokensProvider>
-			</TokensListManageProvider>
-		</PegasysProvider>
-	);
-};
+import { ConfigColorMode } from "@chakra-ui/react";
+import { AppWrapper } from "../container";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-	const [currentThemeToUse, setCurrentThemeToUse] =
-		useState<ConfigColorMode>("dark");
+	const [currentThemeToUse, setCurrentThemeToUse] = useState<ConfigColorMode>();
 	const [isSSR, setIsSSR] = useState(true);
 
 	useEffect(() => {
@@ -107,9 +70,13 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 				/>
 				<meta property="twitter:image" content="/meta.png" />
 			</Head>
-			<ColorHandler cookies={pageProps.cookies}>
-				<ColorModeScript initialColorMode={currentThemeToUse} />
-				<ProviderWrapperComponent Component={Component} pageProps={pageProps} />
+			<ColorHandler
+				currentThemeToUse={currentThemeToUse}
+				cookies={pageProps.cookies}
+			>
+				<AppWrapper>
+					<Component {...pageProps} />
+				</AppWrapper>
 			</ColorHandler>
 		</>
 	);
