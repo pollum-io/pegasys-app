@@ -23,6 +23,7 @@ import {
 } from "react-icons/md";
 import { RiGithubLine } from "react-icons/ri";
 import { InfoDropdown } from "components/Buttons";
+import Link from "next/link";
 import { InfoLinks } from "./InfoLinks";
 
 interface IButtonProps extends ButtonProps {
@@ -38,7 +39,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 	const infos = [
 		{
 			name: "Charts",
-			link: "/",
+			link: "https://info.pegasys.finance/home",
 			icon: <MdOutlineCallMade />,
 		},
 		{
@@ -58,12 +59,12 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 		},
 		{
 			name: "Docs",
-			link: "https://pegasys.finance/",
+			link: "https://docs.pegasys.finance/",
 			icon: <MdOutlineContentCopy />,
 		},
 		{
 			name: "Github",
-			link: "https://pegasys.finance/",
+			link: "https://github.com/orgs/Pollum-io/teams/pegasys",
 			icon: <RiGithubLine />,
 		},
 	];
@@ -153,13 +154,17 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 					>
 						{infos.map((links, index) => (
 							<Flex
+								key={links.name + Number(index)}
 								alignItems="center"
 								flexDirection="row"
 								pb="1"
-								key={links.name + Number(index)}
 								_hover={{ color: theme.text.cyanPurple }}
 							>
-								<InfoLinks isVote={links.name === "Vote"} href={links.link}>
+								<InfoLinks
+									isInternal={links.name === "Airdrop" || links.name === "Vote"}
+									isVote={links.name === "Vote"}
+									href={links.link}
+								>
 									<Flex pr={["0.55rem", "0.5rem", "0.5rem", "0.5rem"]}>
 										{links.icon}
 									</Flex>
