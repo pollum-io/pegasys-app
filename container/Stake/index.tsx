@@ -29,14 +29,27 @@ export const StakeContainer: NextPage = () => {
 	const { colorMode } = useColorMode();
 	const { isConnected, address, chainId } = psUseWallet();
 	const { showInUsd, setShowInUsd } = useStake();
-	const { earnOpportunities, loading, signatureLoading, dataLoading } =
-		useEarn();
-	const { isOpenStakeActions, onCloseStakeActions } = useModal();
+	const { earnOpportunities, dataLoading } = useEarn();
+	const {
+		isOpenStakeActions,
+		onCloseStakeActions,
+		isOpenTransaction,
+		onCloseTransaction,
+	} = useModal();
 	const { t: translation } = useTranslation();
 
 	return (
-		<Flex w="100%" h="100%" alignItems="flex-start" justifyContent="center">
-			<LoadingTransition isOpen={loading || signatureLoading} />
+		<Flex
+			w="100%"
+			h="100%"
+			alignItems="flex-start"
+			justifyContent="center"
+			mb="6rem"
+		>
+			<LoadingTransition
+				isOpen={isOpenTransaction}
+				onClose={onCloseTransaction}
+			/>
 			<StakeActions isOpen={isOpenStakeActions} onClose={onCloseStakeActions} />
 			<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
 				<SlideFade in={Boolean(isMobile || !isMobile)} offsetY="-30px">

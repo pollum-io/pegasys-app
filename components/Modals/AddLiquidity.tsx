@@ -10,11 +10,10 @@ import {
 	ModalOverlay,
 	Text,
 	Collapse,
-	toast,
 	useMediaQuery,
 	useColorMode,
 } from "@chakra-ui/react";
-import { useModal, usePicasso, useWallet, useAllCommonPairs } from "hooks";
+import { useModal, usePicasso, useAllCommonPairs, usePools } from "hooks";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
 	MdHelpOutline,
@@ -124,7 +123,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 	const [currPoolShare, setCurrPoolShare] = useState<string>("");
 	const [currPendingTx, setCurrPendingTx] = useState<string>("");
 	const [finishApproveTx, setFinishApproveTx] = useState<boolean>(false);
-	const { setCurrentLpAddress } = useWallet();
+	const { setCurrentLpAddress } = usePools();
 	const { pendingTxs, finishedTxs, addTransactions } = useTransaction();
 	const { address, chainId, isConnected, signer, provider } = psUseWallet();
 	const { userSlippageTolerance, userTransactionDeadlineValue } = usePegasys();
@@ -547,7 +546,6 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 			/>
 			<ModalOverlay />
 			<ModalContent
-				top={["9.5rem", "2rem", "2rem", "2rem"]}
 				position={["absolute", "relative", "relative", "relative"]}
 				mb={["0", "25rem", "25rem", "25rem"]}
 				borderTopRadius="30px"

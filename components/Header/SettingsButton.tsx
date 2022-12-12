@@ -11,6 +11,8 @@ import {
 	Switch,
 	PopoverArrow,
 	PopoverCloseButton,
+	useColorMode,
+	useMediaQuery,
 } from "@chakra-ui/react";
 import React, { FunctionComponent, ReactNode, useState } from "react";
 import { MdSettings, MdHelpOutline } from "react-icons/md";
@@ -47,6 +49,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	const [deadlineInputValue, setDeadlineInputValue] = useState<string>("");
 
 	const theme = usePicasso();
+	const { colorMode } = useColorMode();
 	// const [expert, setExpert] = useState(false)
 	const {
 		userSlippageTolerance,
@@ -65,6 +68,8 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 	const { t: translation, i18n } = useTranslation();
 
 	const { language } = i18n;
+
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	// Transaction Slippage handlers - Validations //
 	const parseCustomTransactionSlippageValue = (slippageValue: string) => {
@@ -159,13 +164,12 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 				/>
 			</PopoverTrigger>
 			<PopoverContent
-				borderRadius="12px"
+				borderTopRadius={["30px", "12px", "12px", "12px"]}
 				borderBottomRadius={["none", "12px", "12px", "12px"]}
-				borderColor={theme.bg.blueNavy}
+				borderColor={theme.bg.blueNavyLight}
 				_focus={{
 					outline: "none",
 				}}
-				bgColor={theme.bg.blueNavy}
 				p="1rem 1.5rem 0.5rem"
 				w={["100vw", "24.563rem", "24.563rem", "24.563rem"]}
 				h="max-content"
@@ -173,9 +177,24 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 				mx={["0", "0", "56", "56"]}
 				right={["unset", "5%", "unset", "unset"]}
 				left={["0", "unset", "unset", "unset"]}
+				border="none"
+				borderTop={
+					colorMode === "dark"
+						? ["1px solid transparent", "none", "none", "none"]
+						: ["none", "none", "none", "none"]
+				}
+				background={
+					colorMode === "dark"
+						? `linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(270.16deg, rgba(24,54,61, 0.8) 90.76%, rgba(24,54,61, 0) 97.76%) border-box`
+						: theme.bg.blueNavyLight
+				}
 				zIndex="9999"
 				position="fixed"
-				boxShadow="0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
+				boxShadow={
+					isMobile
+						? "2px 4px 6px 2px rgba(0, 0, 0, 0.1), 2px 2px 4px 2px rgba(0, 0, 0, 0.06)"
+						: "2px 4px 6px -1px rgba(0, 0, 0, 0.1), 2px 2px 4px -1px rgba(0, 0, 0, 0.06)"
+				}
 			>
 				<PopoverArrow bg={theme.bg.blueNavyLight} />
 				<Flex

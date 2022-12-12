@@ -8,6 +8,8 @@ import {
 	PopoverCloseButton,
 	PopoverContent,
 	PopoverTrigger,
+	useColorMode,
+	useMediaQuery,
 } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
 import { BsThreeDots } from "react-icons/bs";
@@ -21,6 +23,7 @@ import {
 } from "react-icons/md";
 import { RiGithubLine } from "react-icons/ri";
 import { InfoDropdown } from "components/Buttons";
+import Link from "next/link";
 import { InfoLinks } from "./InfoLinks";
 
 interface IButtonProps extends ButtonProps {
@@ -30,11 +33,13 @@ interface IButtonProps extends ButtonProps {
 export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 	const theme = usePicasso();
 	const { isOpenMenuLinks, onCloseMenuLinks, onOpenMenuLinks } = useModal();
+	const { colorMode } = useColorMode();
+	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	const infos = [
 		{
 			name: "Charts",
-			link: "/",
+			link: "https://info.pegasys.finance/home",
 			icon: <MdOutlineCallMade />,
 		},
 		{
@@ -54,12 +59,12 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 		},
 		{
 			name: "Docs",
-			link: "https://pegasys.finance/",
+			link: "https://docs.pegasys.finance/",
 			icon: <MdOutlineContentCopy />,
 		},
 		{
 			name: "Github",
-			link: "https://pegasys.finance/",
+			link: "https://github.com/orgs/Pollum-io/teams/pegasys",
 			icon: <RiGithubLine />,
 		},
 	];
@@ -69,14 +74,16 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 			isOpen={isOpenMenuLinks}
 			onOpen={onOpenMenuLinks}
 			onClose={onCloseMenuLinks}
+			arrowSize={15}
+			arrowShadowColor="transparent"
 		>
 			<PopoverTrigger {...props}>
 				<IconButton
+					bgColor="transparent"
 					color={theme.icon.nightGray}
 					aria-label="Popover"
 					icon={<BsThreeDots size="20px" />}
 					transition="0.4s"
-					bg="transparent"
 					_hover={{
 						color: theme.text.cyanPurple,
 					}}
@@ -88,16 +95,36 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 					outline: "none",
 				}}
 				w={["100vw", "max-content", "max-content", "max-content"]}
-				bgColor={theme.bg.blueNavyLight}
 				borderBottomRadius={["none", "xl", "xl", "xl"]}
-				borderTopRadius={["2xl", "xl", "xl", "xl"]}
+				borderTopRadius={["30px", "xl", "xl", "xl"]}
 				pt="2"
+				pb={["3.5rem", "0", "0", "0"]}
 				mr={["0", "4", "0", "0"]}
-				border={["none", "1px solid transparent"]}
-				top={["3.5rem", "0", "0", "0"]}
+				mb={["0", "0.3rem", "0.3rem", "0.3rem"]}
+				border="none"
+				borderTop={
+					colorMode === "dark"
+						? ["1px solid transparent", "none", "none", "none"]
+						: ["none", "none", "none", "none"]
+				}
+				background={
+					colorMode === "dark"
+						? `linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(270.16deg, rgba(24,54,61, 0.8) 90.76%, rgba(24,54,61, 0) 97.76%) border-box`
+						: theme.bg.blueNavyLight
+				}
+				boxShadow={
+					isMobile
+						? "2px 4px 6px 2px rgba(0, 0, 0, 0.1), 2px 2px 4px 2px rgba(0, 0, 0, 0.06)"
+						: "2px 4px 6px -1px rgba(0, 0, 0, 0.1), 2px 2px 4px -1px rgba(0, 0, 0, 0.06)"
+				}
+				top={["5.5rem", "0", "0", "0"]}
 				position="relative"
 			>
-				<PopoverArrow bg={theme.bg.blueNavyLight} />
+				<PopoverArrow
+					bg={theme.bg.blueNavyLight}
+					display={["none", "flex", "flex", "flex"]}
+					ml={["0", "0.47rem", "0", "0"]}
+				/>
 				<Flex
 					justifyContent="flex-end"
 					pr="0.3rem"
@@ -114,7 +141,6 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 				<PopoverBody
 					display="flex"
 					flexDirection="column"
-					zIndex="9999"
 					px="0"
 					py={["0", "1", "1", "1"]}
 				>
@@ -123,21 +149,25 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 					</Flex>
 					<Flex
 						flexDirection="column"
-						pl={["24", "4", "4", "4"]}
+						pl={["5.49rem", "4", "4", "4"]}
 						pr={["24", "4", "4", "4"]}
 					>
 						{infos.map((links, index) => (
 							<Flex
+								key={links.name + Number(index)}
 								alignItems="center"
 								flexDirection="row"
 								pb="1"
-								key={links.name + Number(index)}
 								_hover={{ color: theme.text.cyanPurple }}
 							>
-								<Flex pl={["0", "0.5rem", "0.5rem", "0.5rem"]}>
-									{links.icon}
-								</Flex>
-								<InfoLinks isVote={links.name === "Vote"} href={links.link}>
+								<InfoLinks
+									isInternal={links.name === "Airdrop" || links.name === "Vote"}
+									isVote={links.name === "Vote"}
+									href={links.link}
+								>
+									<Flex pr={["0.55rem", "0.5rem", "0.5rem", "0.5rem"]}>
+										{links.icon}
+									</Flex>
 									{links.name}
 								</InfoLinks>
 							</Flex>

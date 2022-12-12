@@ -254,7 +254,7 @@ export const Header: React.FC = () => {
 					display={["flex", "none", "none", "none"]}
 					position="fixed"
 					justifyContent="center"
-					bottom="3.1rem"
+					bottom="3rem"
 					zIndex={isOpenSettingsButton || isOpenMenuLinks ? "unset" : "501"}
 				>
 					<WalletButton />

@@ -1,6 +1,6 @@
 import { Button, Flex, Img, Text } from "@chakra-ui/react";
 import { FunctionComponent, SetStateAction, useEffect, useState } from "react";
-import { useModal, usePicasso, useWallet, useTokens } from "hooks";
+import { useModal, usePicasso, useTokens, usePools } from "hooks";
 import {
 	getBalanceOfBNSingleCall,
 	getTotalSupply,
@@ -51,7 +51,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 	} = props;
 	const theme = usePicasso();
 	const { onOpenRemoveLiquidity, onOpenAddLiquidity } = useModal();
-	const { setCurrentLpAddress } = useWallet();
+	const { setCurrentLpAddress } = usePools();
 	const { userTokensBalance } = useTokens();
 	const [poolBalance, setPoolBalance] = useState<string>("");
 	const [percentShare, setPercentShare] = useState<number>(0);

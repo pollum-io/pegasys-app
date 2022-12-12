@@ -8,6 +8,8 @@ import { UseBestSwapMethod } from "./useBestSwapMethod";
 import { UseToastOptions } from "@chakra-ui/react";
 import { TransactionResponse } from "@ethersproject/providers";
 import { IFinishedTx, IPendingTx, useTransaction } from "pegasys-services";
+import { useTranslation } from "react-i18next";
+import { TFunction } from "i18next";
 
 export enum SwapCallbackState {
 	INVALID,
@@ -26,7 +28,8 @@ export function UseSwapCallback(
 	txType: string,
 	toast: React.Dispatch<React.SetStateAction<UseToastOptions>>,
 	onCloseTransaction: () => void,
-	addTransactions: (tx: IPendingTx | IFinishedTx, pending?: boolean) => void
+	addTransactions: (tx: IPendingTx | IFinishedTx, pending?: boolean) => void,
+	translation: any
 ) {
 	const { walletAddress, chainId: chain } = walletInfos;
 
@@ -201,8 +204,7 @@ export function UseSwapCallback(
 						console.error(`Swap failed`, error, methodName, args, value);
 						toast({
 							status: "error",
-							title: "Swap failed.",
-							description: `Swap has failed`,
+							title: translation("toasts.swapFailed"),
 						});
 						throw new Error(`Swap failed: ${error.message}`);
 					}

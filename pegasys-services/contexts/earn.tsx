@@ -1,11 +1,10 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
-import { ChainId, JSBI } from "@pollum-io/pegasys-sdk";
+import { JSBI } from "@pollum-io/pegasys-sdk";
 
-import { tryParseAmount, addTransaction } from "utils";
+import { tryParseAmount } from "utils";
 import { useModal } from "hooks";
 import { useTranslation } from "react-i18next";
 import {
-	ApprovalState,
 	IEarnProviderProps,
 	IEarnProviderValue,
 	IEarnInfo,
@@ -40,11 +39,13 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 
 	const { t: translation } = useTranslation();
 
+	const { addTransactions } = useTransaction();
 	const {
-		addTransactions,
-		// setTransactions, transactions, setCurrentTxHash, setApprovalState
-	} = useTransaction();
-	const { onCloseStakeActions, onCloseFarmActions } = useModal();
+		onCloseStakeActions,
+		onCloseFarmActions,
+		onOpenTransaction,
+		onCloseTransaction,
+	} = useModal();
 
 	const { chainId, address, provider } = psUseWallet();
 	const { userTransactionDeadlineValue } = usePegasys();
@@ -120,12 +121,9 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 	) => {
 		try {
 			setLoading(true);
-
-			// const walletInfo = {
-			// 	walletAddress: address,
-			// 	chainId: ChainId.NEVM,
-			// 	provider,
-			// };
+			onCloseStakeActions();
+			onCloseFarmActions();
+			onOpenTransaction();
 
 			const res = await promise();
 
@@ -145,8 +143,10 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 				status: "error",
 				title: translation("toasts.errorOn") && ` ${summary}`,
 			});
+			onCloseTransaction();
 		} finally {
 			setLoading(false);
+			onCloseTransaction();
 			reset();
 			onCloseFarmActions();
 			onCloseStakeActions();

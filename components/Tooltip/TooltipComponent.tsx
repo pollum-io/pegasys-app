@@ -1,4 +1,10 @@
-import { Flex, Icon, PlacementWithLogical, Tooltip } from "@chakra-ui/react";
+import {
+	Flex,
+	Icon,
+	PlacementWithLogical,
+	Tooltip,
+	useMediaQuery,
+} from "@chakra-ui/react";
 import React, { FunctionComponent, useState } from "react";
 import { IconType } from "react-icons/lib";
 import { usePicasso } from "hooks";
@@ -13,6 +19,7 @@ interface ITooltipComponent {
 }
 
 export const TooltipComponent: FunctionComponent<ITooltipComponent> = props => {
+	const [isMobile] = useMediaQuery("(max-width: 750px)");
 	const {
 		label,
 		icon,
@@ -27,7 +34,6 @@ export const TooltipComponent: FunctionComponent<ITooltipComponent> = props => {
 
 	return (
 		<Tooltip
-			defaultIsOpen={defaultIsOpen}
 			isOpen={isLabelOpen}
 			borderRadius="0.25rem"
 			filter="drop-shadow(0px 1px 3px rgba(0, 0, 0, 0.1)) drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.06))"
@@ -35,7 +41,7 @@ export const TooltipComponent: FunctionComponent<ITooltipComponent> = props => {
 			bgColor={theme.bg.blueNavyLight}
 			hasArrow={hasArrow}
 			label={label}
-			placement={placement}
+			placement={isMobile ? "auto" : placement}
 			alignItems="center"
 			py="1"
 			px="2"

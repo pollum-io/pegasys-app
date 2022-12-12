@@ -201,9 +201,7 @@ const FarmCard: FunctionComponent<{
 						fontSize="sm"
 						alignItems="center"
 					>
-						<Text fontWeight="semibold" w="50%">
-							{t("earnPages.yourRate")}
-						</Text>
+						<Text fontWeight="semibold">{t("earnPages.yourRate")}</Text>
 
 						<Text w="45%" textAlign="end">
 							{verifyZerosInBalanceAndFormat(

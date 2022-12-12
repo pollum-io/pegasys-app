@@ -28,13 +28,12 @@ export const ConfirmList: React.FC<IModal> = props => {
 	const { colorMode } = useColorMode();
 
 	return (
-		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
 				borderRadius="30px"
 				background={`linear-gradient(${theme.bg.blueNavyLight}, ${theme.bg.blueNavyLight}) padding-box, linear-gradient(270.16deg, rgba(24,54,61, 0.8) 90.76%, rgba(24,54,61, 0) 97.76%) border-box`}
-				mt={["0", "6rem", "6rem", "6rem"]}
-				mb={["0", "unset", "unset", "unset"]}
+				mb={["0", "5rem", "5rem", "5rem"]}
 				bottom={["0", "unset", "unset", "unset"]}
 				position={["absolute", "relative", "relative", "relative"]}
 				borderBottomRadius={["0", "30px", "30px", "30px"]}
@@ -45,6 +44,7 @@ export const ConfirmList: React.FC<IModal> = props => {
 				}
 			>
 				<ModalHeader
+					pt="1.3rem"
 					display="flex"
 					alignItems="center"
 					justifyContent="space-between"

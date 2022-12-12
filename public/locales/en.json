@@ -638,7 +638,8 @@
 		"errorFarm": "Error while fetching farms opportunities",
 		"errorStake": "Error while fetching stake opportunities",
 		"transactionComp": "Transaction completed successfully",
-		"connectingError": "Error while connecting the wallet"
+		"connectingError": "Error while connecting the wallet",
+		"swapFailed": "Swap has failed"
 	},
 	"portfolioPage": {
 		"walletStats": "Wallet Stats",

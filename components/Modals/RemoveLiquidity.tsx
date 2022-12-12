@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
-import { useModal, usePicasso, useTokens, useWallet } from "hooks";
+import { useModal, usePicasso, usePools, useTokens } from "hooks";
 import { UseRemoveLiquidity } from "hooks/pools/useRemoveLiquidity";
 import React, { useState, useEffect, useMemo } from "react";
 import { MdHelpOutline, MdArrowBack } from "react-icons/md";
@@ -71,7 +71,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	const { t: translation } = useTranslation();
 
 	const { userTokensBalance } = useTokens();
-	const { currentLpAddress } = useWallet();
+	const { currentLpAddress } = usePools();
 	const { colorMode } = useColorMode();
 
 	const { userSlippageTolerance, userTransactionDeadlineValue } = usePegasys();
@@ -186,11 +186,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 	}, [receiveSys]);
 
 	return (
-		<Modal
-			blockScrollOnMount={false}
-			isOpen={isModalOpen}
-			onClose={onModalClose}
-		>
+		<Modal blockScrollOnMount isOpen={isModalOpen} onClose={onModalClose}>
 			<SelectCoinModal
 				isOpen={isOpenCoin}
 				onClose={onCloseCoin}

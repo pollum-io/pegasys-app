@@ -48,8 +48,15 @@ export const StakeActions: React.FC<IModal> = props => {
 		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
-				mt={["0", "6rem", "6rem", "6rem"]}
-				mb={["0", "unset", "unset", "unset"]}
+				mb={
+					buttonId === "deposit"
+						? ["0", "5rem", "5rem", "5rem"]
+						: buttonId === "claim"
+						? ["0", "10rem", "10rem", "10rem"]
+						: withdrawPercentage === 100
+						? ["0", "18rem", "18rem", "18rem"]
+						: ["0", "14rem", "14rem", "14rem"]
+				}
 				position={["absolute", "relative", "relative", "relative"]}
 				bottom="0"
 				w={["100vw", "32rem", "32rem", "32rem"]}
@@ -112,8 +119,8 @@ export const StakeActions: React.FC<IModal> = props => {
 							w="100%"
 							top={
 								withdrawPercentage === 100
-									? ["unset", "25rem", "25rem", "25rem"]
-									: ["unset", "23rem", "23rem", "23rem"]
+									? ["unset", "24.5rem", "24.5rem", "24.5rem"]
+									: ["unset", "22.5rem", "22.5rem", "22.5rem"]
 							}
 							borderRadius={["0", "30px", "30px", "30px"]}
 							alignItems="flex-start"
@@ -151,7 +158,7 @@ export const StakeActions: React.FC<IModal> = props => {
 							}
 							position={["relative", "absolute", "absolute", "absolute"]}
 							w="100%"
-							top={["unset", "19.5rem", "19.5rem", "19.5rem"]}
+							top={["unset", "18.8rem", "18.8rem", "18.8rem"]}
 							borderRadius={["0", "30px", "30px", "30px"]}
 							alignItems="flex-start"
 							gap="2"

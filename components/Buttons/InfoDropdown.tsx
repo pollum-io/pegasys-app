@@ -26,6 +26,7 @@ export const InfoDropdown: FunctionComponent = () => {
 			<Flex
 				flexDir="column"
 				py="4"
+				pb="2"
 				pt="2"
 				bgColor={state1 ? theme.bg.blackLightness : "transparent"}
 				w={["100vw", "unset", "unset", "unset"]}
@@ -84,6 +85,8 @@ export const InfoDropdown: FunctionComponent = () => {
 				flexDir="column"
 				bgColor={state2 ? theme.bg.blackLightness : "transparent"}
 				w={["100vw", "unset", "unset", "unset"]}
+				py="2"
+				pb="0"
 			>
 				<Flex
 					align="center"

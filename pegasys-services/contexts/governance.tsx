@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useMemo, useState } from "react";
 
 import { TokenAmount } from "@pollum-io/pegasys-sdk";
+import { useModal } from "hooks";
 import { ZERO_ADDRESS } from "../constants";
 import { GovernanceServices } from "../services";
 import { useWallet, useTransaction, useToasty } from "../hooks";
@@ -29,6 +30,8 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 	const { chainId, address } = useWallet();
 	const { addTransactions, pendingTxs } = useTransaction();
 	const { toast } = useToasty();
+	const { onOpenTransaction, onCloseTransaction, onCloseUnlockVotesModal } =
+		useModal();
 
 	const governanceContract = useMemo(() => {
 		const contract = ContractFramework.GovernanceContract({
@@ -58,6 +61,8 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 
 		try {
 			setLoading(true);
+			onOpenTransaction();
+			onCloseUnlockVotesModal();
 
 			const res = await promise();
 
@@ -77,9 +82,11 @@ export const GovernanceProvider: React.FC<IGovernanceProviderProps> = ({
 				status: "error",
 				title: `Error on ${summary}`,
 			});
+			onCloseTransaction();
 
 			error = true;
 		} finally {
+			onCloseTransaction();
 			setLoading(false);
 		}
 		return { error };

@@ -15,7 +15,7 @@ import { usePicasso } from "hooks";
 import React from "react";
 import { MdArrowDownward, MdOutlineClose } from "react-icons/md";
 import { WrappedTokenInfo, ISwapTokenInputValue } from "types";
-import { CurrencyAmount, Trade } from "@pollum-io/pegasys-sdk";
+import { CurrencyAmount, Percent, Trade } from "@pollum-io/pegasys-sdk";
 import { FormattedPriceImpat } from "components/Swap/FormattedPriceImpact";
 import { useTranslation } from "react-i18next";
 
@@ -31,6 +31,7 @@ interface IModal {
 	minimumReceived: string | 0 | null | undefined;
 	liquidityFee?: CurrencyAmount;
 	openPendingTx: () => void;
+	priceImpactValue: Percent;
 }
 
 export const ConfirmSwap: React.FC<IModal> = props => {
@@ -46,6 +47,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 		liquidityFee,
 		minimumReceived,
 		openPendingTx,
+		priceImpactValue,
 	} = props;
 	const theme = usePicasso();
 
@@ -69,13 +71,12 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 	const { language } = i18n;
 
 	return (
-		<Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+		<Modal blockScrollOnMount isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent
 				position={["absolute", "relative", "relative", "relative"]}
-				mt={["0", "6rem", "6rem", "6rem"]}
-				mb={["0", "unset", "unset", "unset"]}
 				bottom={["0", "unset", "unset", "unset"]}
+				mb={["0", "4rem", "4rem", "4rem"]}
 				borderRadius="30px"
 				borderBottomRadius={["0", "30px", "30px", "30px"]}
 				boxShadow={
@@ -184,7 +185,7 @@ export const ConfirmSwap: React.FC<IModal> = props => {
 							<Text>{translation("swap.priceImpact")}</Text>
 							<Text fontWeight="medium">
 								{trade ? (
-									<FormattedPriceImpat priceImpact={trade?.priceImpact} />
+									<FormattedPriceImpat priceImpact={priceImpactValue} />
 								) : (
 									"-"
 								)}

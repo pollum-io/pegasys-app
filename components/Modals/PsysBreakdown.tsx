@@ -51,8 +51,7 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 				borderTopRadius="30px"
 				borderBottomRadius={["none", "30px", "30px", "30px"]}
 				bgColor="transparent"
-				mt={["0", "6rem", "6rem", "6rem"]}
-				mb={["0", "unset", "unset", "unset"]}
+				mb={["0", "4rem", "4rem", "4rem"]}
 				w={["100vw", "21.125rem", "21.125rem", "21.125rem"]}
 				h="md"
 				position={["absolute", "relative", "relative", "relative"]}
