@@ -2,17 +2,25 @@ import { LinkProps, Button } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
 import { usePicasso } from "hooks";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 interface ILinkProps extends LinkProps {
 	children?: ReactNode;
 	isVote?: boolean;
+	isInternal: boolean;
 }
 
 export const InfoLinks: FunctionComponent<ILinkProps> = props => {
 	const theme = usePicasso();
 	const { push } = useRouter();
 
-	const { children, isVote, pb, href } = props;
+	const { children, isVote, pb, href, isInternal } = props;
+
+	const handleClick = () => {
+		if (!isInternal) return window.open(href);
+
+		return window.open(href, "_self");
+	};
 
 	return (
 		<Button
@@ -25,7 +33,7 @@ export const InfoLinks: FunctionComponent<ILinkProps> = props => {
 			background="transparent"
 			h="max-content"
 			pb={pb}
-			onClick={() => push(href as string)}
+			onClick={() => handleClick()}
 		>
 			{children}
 		</Button>
