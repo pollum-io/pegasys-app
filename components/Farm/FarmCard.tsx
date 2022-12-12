@@ -12,6 +12,7 @@ import { ChainId, JSBI, Pair } from "@pollum-io/pegasys-sdk";
 import { formattedNum } from "utils/convert/numberFormat";
 import { useTranslation } from "react-i18next";
 import { WrappedTokenInfo } from "types";
+import { verifyZerosInBalanceAndFormat } from "utils";
 import { EarnButton } from "../Earn";
 
 const FarmCard: FunctionComponent<{
@@ -183,7 +184,8 @@ const FarmCard: FunctionComponent<{
 					</Text>
 				</Flex>
 			</Flex>
-			{JSBI.greaterThan(stakedAmount.raw, BIG_INT_ZERO) && (
+			{(JSBI.greaterThan(stakedAmount.raw, BIG_INT_ZERO) ||
+				JSBI.greaterThan(unclaimedAmount.raw, BIG_INT_ZERO)) && (
 				<Flex
 					flexDirection="column"
 					backgroundColor={theme.bg.neutralGray}
@@ -201,9 +203,11 @@ const FarmCard: FunctionComponent<{
 					>
 						<Text fontWeight="semibold">{t("earnPages.yourRate")}</Text>
 
-						<Text textAlign="end">
-							{rewardRatePerWeek.toFixed(3)} {rewardToken.symbol}/
-							{t("earnPages.week")}
+						<Text w="45%" textAlign="end">
+							{verifyZerosInBalanceAndFormat(
+								parseFloat(rewardRatePerWeek.toExact())
+							)}{" "}
+							{rewardToken.symbol}/{t("earnPages.week")}
 						</Text>
 					</Flex>
 					<Flex
@@ -212,9 +216,14 @@ const FarmCard: FunctionComponent<{
 						fontSize="sm"
 						alignItems="center"
 					>
-						<Text fontWeight="semibold">{t("earnPages.yourUnclaimed")}</Text>
-						<Text textAlign="end">
-							{unclaimedAmount.toFixed(3)} {rewardToken.symbol}
+						<Text fontWeight="semibold" w="50%">
+							{t("earnPages.yourUnclaimed")}
+						</Text>
+						<Text w="45%" textAlign="end">
+							{verifyZerosInBalanceAndFormat(
+								parseFloat(unclaimedAmount.toExact())
+							)}{" "}
+							{rewardToken.symbol}
 						</Text>
 					</Flex>
 				</Flex>
