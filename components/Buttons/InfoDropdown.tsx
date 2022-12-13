@@ -48,13 +48,13 @@ export const InfoDropdown: FunctionComponent = () => {
 					{state1 ? (
 						<Icon
 							position={["absolute", "relative", "relative", "relative"]}
-							right={["5rem", "0.7rem", "0.7rem", "0.7rem"]}
+							right={["5rem", "1.05rem", "1.05rem", "1.05rem"]}
 							as={IoIosArrowUp}
 						/>
 					) : (
 						<Icon
 							position={["absolute", "relative", "relative", "relative"]}
-							right={["5rem", "0.7rem", "0.7rem", "0.7rem"]}
+							right={["5rem", "1.05rem", "1.05rem", "1.05rem"]}
 							as={IoIosArrowDown}
 						/>
 					)}
@@ -105,13 +105,13 @@ export const InfoDropdown: FunctionComponent = () => {
 					{state2 ? (
 						<Icon
 							position={["absolute", "relative", "relative", "relative"]}
-							right={["5rem", "1rem", "1rem", "1rem"]}
+							right={["5rem", "1.3rem", "1.3rem", "1.3rem"]}
 							as={IoIosArrowUp}
 						/>
 					) : (
 						<Icon
 							position={["absolute", "relative", "relative", "relative"]}
-							right={["5rem", "1rem", "1rem", "1rem"]}
+							right={["5rem", "1.3rem", "1.3rem", "1.3rem"]}
 							as={IoIosArrowDown}
 						/>
 					)}

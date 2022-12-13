@@ -15,6 +15,7 @@ import { FunctionComponent, ReactNode } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { FaParachuteBox } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
+import { GiDinosaurRex } from "react-icons/gi";
 import { useModal, usePicasso } from "hooks";
 import {
 	MdOutlineCallMade,
@@ -23,7 +24,6 @@ import {
 } from "react-icons/md";
 import { RiGithubLine } from "react-icons/ri";
 import { InfoDropdown } from "components/Buttons";
-import Link from "next/link";
 import { InfoLinks } from "./InfoLinks";
 
 interface IButtonProps extends ButtonProps {
@@ -38,14 +38,9 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 
 	const infos = [
 		{
-			name: "Charts",
-			link: "https://info.pegasys.finance/home",
-			icon: <MdOutlineCallMade />,
-		},
-		{
-			name: "About",
-			link: "https://pegasys.finance/",
-			icon: <AiOutlineInfoCircle />,
+			name: "Airdrop",
+			link: "/airdrop",
+			icon: <FaParachuteBox />,
 		},
 		{
 			name: "Vote",
@@ -53,9 +48,17 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 			icon: <MdOutlineCheckBox />,
 		},
 		{
-			name: "Airdrop",
-			link: "/airdrop",
-			icon: <FaParachuteBox />,
+			name: "Charts",
+			link: "https://info.pegasys.finance/home",
+			icon: <MdOutlineCallMade />,
+		},
+	];
+
+	const infos2 = [
+		{
+			name: "Github",
+			link: "https://github.com/Pollum-io/pegasys-protocol",
+			icon: <RiGithubLine />,
 		},
 		{
 			name: "Docs",
@@ -63,9 +66,14 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 			icon: <MdOutlineContentCopy />,
 		},
 		{
-			name: "Github",
-			link: "https://github.com/orgs/Pollum-io/teams/pegasys",
-			icon: <RiGithubLine />,
+			name: "Terms",
+			link: "https://pegasys.finance/terms-of-service",
+			icon: <GiDinosaurRex />,
+		},
+		{
+			name: "About",
+			link: "https://pegasys.finance/",
+			icon: <AiOutlineInfoCircle />,
 		},
 	];
 
@@ -144,6 +152,32 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 					px="0"
 					py={["0", "1", "1", "1"]}
 				>
+					<Flex
+						flexDirection="column"
+						pl={["5.49rem", "4", "4", "4"]}
+						pr={["24", "4", "4", "4"]}
+					>
+						{infos.map((links, index) => (
+							<Flex
+								key={links.name + Number(index)}
+								alignItems="center"
+								flexDirection="row"
+								pb="1"
+								_hover={{ color: theme.text.cyanPurple }}
+							>
+								<InfoLinks
+									isInternal={links.name === "Airdrop" || links.name === "Vote"}
+									isVote={links.name === "Vote"}
+									href={links.link}
+								>
+									<Flex pr={["0.55rem", "0.5rem", "0.5rem", "0.5rem"]}>
+										{links.icon}
+									</Flex>
+									{links.name}
+								</InfoLinks>
+							</Flex>
+						))}
+					</Flex>
 					<Flex flexDirection="column">
 						<InfoDropdown />
 					</Flex>
@@ -152,7 +186,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 						pl={["5.49rem", "4", "4", "4"]}
 						pr={["24", "4", "4", "4"]}
 					>
-						{infos.map((links, index) => (
+						{infos2.map((links, index) => (
 							<Flex
 								key={links.name + Number(index)}
 								alignItems="center"

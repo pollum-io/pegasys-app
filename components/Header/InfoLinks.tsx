@@ -1,8 +1,6 @@
 import { LinkProps, Button } from "@chakra-ui/react";
 import { FunctionComponent, ReactNode } from "react";
 import { usePicasso } from "hooks";
-import { useRouter } from "next/router";
-import Link from "next/link";
 
 interface ILinkProps extends LinkProps {
 	children?: ReactNode;
@@ -12,7 +10,6 @@ interface ILinkProps extends LinkProps {
 
 export const InfoLinks: FunctionComponent<ILinkProps> = props => {
 	const theme = usePicasso();
-	const { push } = useRouter();
 
 	const { children, isVote, pb, href, isInternal } = props;
 
@@ -28,7 +25,7 @@ export const InfoLinks: FunctionComponent<ILinkProps> = props => {
 			fontWeight="normal"
 			color={theme.text.mono}
 			px={["2", "2", "2", "2"]}
-			py={["3", "3", "2", "2"]}
+			py={["3", "2", "2", "2"]}
 			_hover={{ color: theme.text.cyanPurple }}
 			background="transparent"
 			h="max-content"
