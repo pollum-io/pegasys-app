@@ -15,9 +15,9 @@ import { FunctionComponent, ReactNode } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { FaParachuteBox } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
-import { GiDinosaurRex } from "react-icons/gi";
 import { useModal, usePicasso } from "hooks";
 import {
+	MdOutlineAssignment,
 	MdOutlineCallMade,
 	MdOutlineCheckBox,
 	MdOutlineContentCopy,
@@ -68,7 +68,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 		{
 			name: "Terms",
 			link: "https://pegasys.finance/terms-of-service",
-			icon: <GiDinosaurRex />,
+			icon: <MdOutlineAssignment />,
 		},
 		{
 			name: "About",
