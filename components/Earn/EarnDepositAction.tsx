@@ -87,13 +87,13 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				<EarnInput deposit />
 				<Text fontWeight="normal">
 					{t("earnPages.weeklyRewards")}:{" "}
-					{selectedOpportunity.totalRewardRatePerWeek.toSignificant()}{" "}
+					{selectedOpportunity.rewardRatePerWeek.toSignificant()}{" "}
 					{selectedOpportunity.rewardToken.symbol} / {t("earnPages.week")}
 				</Text>
 				{selectedOpportunity.extraRewardToken && (
 					<Text fontWeight="normal">
 						{t("earnPages.extraRewards")}:{" "}
-						{selectedOpportunity.extraTotalRewardRatePerWeek?.toSignificant()}{" "}
+						{selectedOpportunity.extraRewardRatePerWeek?.toSignificant()}{" "}
 						{selectedOpportunity.extraRewardToken.symbol} /{" "}
 						{t("earnPages.week")}
 					</Text>
