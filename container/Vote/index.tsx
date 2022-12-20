@@ -173,71 +173,76 @@ export const VoteContainer: NextPage = () => {
 								zIndex="docked"
 								alignItems="flex-start"
 							>
-								<Flex
-									flexDirection="row"
-									justifyContent="space-between"
-									alignItems="baseline"
-									w="100%"
-									h="max-content"
-								>
-									<Flex>
-										<Text
-											fontSize={["1.25rem", "1.25rem", "2xl", "2xl"]}
-											fontWeight="semibold"
-											color={theme.text.mono}
-										>
-											{translation("votePage.proposals")}
-										</Text>
-									</Flex>
-									{!votesLocked ? (
-										<Flex gap="2.5rem" fontSize="0.875rem">
-											<Flex
-												gap="2"
-												alignItems="center"
-												display={["none", "none", "flex", "flex"]}
-												_hover={{ cursor: "pointer", opacity: "0.9" }}
+								{!!proposals.length && (
+									<Flex
+										flexDirection="row"
+										justifyContent="space-between"
+										alignItems="baseline"
+										w="100%"
+										h="max-content"
+									>
+										<Flex>
+											<Text
+												fontSize={["1.25rem", "1.25rem", "2xl", "2xl"]}
+												fontWeight="semibold"
+												color={theme.text.mono}
 											>
-												<Text color={theme.text.mono}>
-													{translation("votePage.discussAtTheForum")}
-												</Text>
-												<MdOutlineCallMade size={18} color={theme.text.mono} />
-											</Flex>
-											<Flex flexDirection="row" gap="2" alignItems="center">
-												<Text color={theme.text.mono}>
-													{translation("votePage.showCancelled")}
-												</Text>
-												<Switch
-													isChecked={showCancelled}
-													size="md"
-													onChange={() => setShowCancelled(!showCancelled)}
-												/>
-											</Flex>
+												{translation("votePage.proposals")}
+											</Text>
 										</Flex>
-									) : (
-										isConnected &&
-										chainId &&
-										PegasysContracts[chainId]?.GOVERNANCE_ADDRESS && (
-											<Flex w="max-content" h="max-content">
-												<Button
-													fontSize="0.875rem"
-													fontWeight="semibold"
-													px={["1.7rem", "1.5rem", "1.5rem", "1.5rem"]}
-													size="sm"
-													py="0.8rem"
-													bgColor={theme.bg.blueNavyLightness}
-													color={theme.text.cyan}
-													_hover={{
-														bgColor: theme.bg.bluePurple,
-													}}
-													onClick={onOpenUnlockVotesModal}
-													borderRadius="full"
+										{!votesLocked ? (
+											<Flex gap="2.5rem" fontSize="0.875rem">
+												<Flex
+													gap="2"
+													alignItems="center"
+													display={["none", "none", "flex", "flex"]}
+													_hover={{ cursor: "pointer", opacity: "0.9" }}
 												>
-													{translation("votePage.unlockVoting")}
-												</Button>
+													<Text color={theme.text.mono}>
+														{translation("votePage.discussAtTheForum")}
+													</Text>
+													<MdOutlineCallMade
+														size={18}
+														color={theme.text.mono}
+													/>
+												</Flex>
+												<Flex flexDirection="row" gap="2" alignItems="center">
+													<Text color={theme.text.mono}>
+														{translation("votePage.showCancelled")}
+													</Text>
+													<Switch
+														isChecked={showCancelled}
+														size="md"
+														onChange={() => setShowCancelled(!showCancelled)}
+													/>
+												</Flex>
 											</Flex>
-										)
-									)}
-								</Flex>
+										) : (
+											isConnected &&
+											chainId &&
+											PegasysContracts[chainId]?.GOVERNANCE_ADDRESS && (
+												<Flex w="max-content" h="max-content">
+													<Button
+														fontSize="0.875rem"
+														fontWeight="semibold"
+														px={["1.7rem", "1.5rem", "1.5rem", "1.5rem"]}
+														size="sm"
+														py="0.8rem"
+														bgColor={theme.bg.blueNavyLightness}
+														color={theme.text.cyan}
+														_hover={{
+															bgColor: theme.bg.bluePurple,
+														}}
+														onClick={onOpenUnlockVotesModal}
+														borderRadius="full"
+													>
+														{translation("votePage.unlockVoting")}
+													</Button>
+												</Flex>
+											)
+										)}
+									</Flex>
+								)}
 								{isConnected ? (
 									<Flex
 										fontSize="0.875rem"
@@ -257,7 +262,7 @@ export const VoteContainer: NextPage = () => {
 								)}
 							</Flex>
 
-							{!isConnected ? (
+							{!isConnected || !proposals.length ? (
 								<Flex
 									w="100%"
 									mt={["3rem", "3rem", "4rem", "4rem"]}
