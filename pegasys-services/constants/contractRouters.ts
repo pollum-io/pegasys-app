@@ -17,7 +17,7 @@ export const PegasysContracts: IContractDTO = {
 			"0xE038E38B48F4123e1408865450E37edC78b736ED"
 		),
 		GOVERNANCE_ADDRESS: ethers.utils.getAddress(
-			"0xdDEde980c52cEe5AeFcb8d5fD655f698fa2AEFeb"
+			"0x633Bdeb5D4b5f93933833A692e230a7d48fC2d77"
 		),
 	},
 	[ChainId.TANENBAUM]: {

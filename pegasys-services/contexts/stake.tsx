@@ -1,8 +1,6 @@
 import React, { useEffect, createContext, useMemo, useState } from "react";
 
-import { ApprovalState } from "hooks";
 import { useTranslation } from "react-i18next";
-import { PegasysContracts } from "../constants";
 import { ContractFramework, RoutesFramework } from "../frameworks";
 import { StakeServices } from "../services";
 import { useWallet, useEarn, useTransaction, useToasty } from "../hooks";

@@ -94,16 +94,22 @@ class GovernanceServices {
 			contract: governanceContract,
 		});
 
-		const governanceQuery = await governanceClient.query({
-			query: GET_PROPOSALS,
-			variables: {
-				proposalCount,
-			},
-			fetchPolicy: "network-only",
-		});
+		let proposals: IProposal[] = [];
+
+		if (proposalCount) {
+			const governanceQuery = await governanceClient.query({
+				query: GET_PROPOSALS,
+				variables: {
+					proposalCount,
+				},
+				fetchPolicy: "network-only",
+			});
+
+			proposals = governanceQuery.data.proposals as IProposal[];
+		}
 
 		const response: IFormattedProposal[] = await Promise.all(
-			((governanceQuery.data.proposals as IProposal[]) ?? []).map(
+			proposals.map(
 				async ({
 					description,
 					id,

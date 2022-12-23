@@ -32,7 +32,7 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 	const [signature, setSignature] = useState<TSignature>(null);
 	const [signatureLoading, setSignatureLoading] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
-	const [dataLoading, setDataLoading] = useState<boolean>(false);
+	const [dataLoading, setDataLoading] = useState<boolean>(true);
 	const [buttonId, setButtonId] = useState<TButtonId>(null);
 	const [selectedOpportunity, setSelectedOpportunity] =
 		useState<IEarnInfo | null>(null);

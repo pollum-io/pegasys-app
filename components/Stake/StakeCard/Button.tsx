@@ -38,6 +38,7 @@ const Buttons: React.FC<IButtonsProps> = ({
 			mb="6"
 			height="2.2rem"
 			w={["85%", "85%", "60%", "60%"]}
+			justifyContent="space-around"
 		>
 			{getStakeToken ? (
 				<EarnButton {...btnProps} onClick={() => router.push("/farms")} solid>
