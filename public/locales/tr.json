@@ -641,7 +641,8 @@
 		"errorStake": "Çiftlik fırsatları getirilirken hata stake",
 		"transactionComp": "İşlem başarıyla tamamlandı",
 		"connectingError": "Cüzdan bağlanırken hata oluştu",
-		"swapFailed": "Takas başarısız oldu"
+		"swapFailed": "Takas başarısız oldu",
+		"viewOnExplorer": "Explorer'da görüntüle"
 	},
 	"portfolioPage": {
 		"walletStats": "Cüzdan İstatistikleri",

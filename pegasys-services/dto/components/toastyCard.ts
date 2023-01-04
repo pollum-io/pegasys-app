@@ -1,8 +1,8 @@
-import { UseToastOptions } from "@chakra-ui/react";
+import { IToastOptions } from "../contexts";
 
 export interface IToastyCardProps {
 	bg: string;
 	text: string;
-	state: UseToastOptions;
+	state: IToastOptions;
 	onClose: () => void;
 }

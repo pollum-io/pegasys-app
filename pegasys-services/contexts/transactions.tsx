@@ -95,6 +95,8 @@ export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 			toast({
 				title: tx.summary,
 				status: (tx as IFinishedTx).success ? "success" : "error",
+				txHash: tx.hash,
+				chainId,
 			});
 		} else {
 			setPendingTxs([

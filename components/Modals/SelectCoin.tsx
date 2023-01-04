@@ -157,7 +157,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				borderTopRadius="30px"
 				borderBottomRadius={["0", "35px", "35px", "35px"]}
 				position={["absolute", "relative", "relative", "relative"]}
-				h="max-content"
+				h="max"
 			>
 				<ModalHeader
 					display="flex"
@@ -182,7 +182,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					</Flex>
 				</ModalHeader>
 
-				<ModalBody>
+				<ModalBody flex="0">
 					<InputGroup>
 						<Input
 							borderRadius="full"

@@ -3,7 +3,7 @@ import { Flex, Img, Text } from "@chakra-ui/react";
 import { JSBI } from "@pollum-io/pegasys-sdk";
 import { useTranslation } from "react-i18next";
 
-import { useTokens } from "hooks";
+import { usePicasso, useTokens } from "hooks";
 import { BIG_INT_ZERO, useEarn } from "pegasys-services";
 import EarnButton from "./EarnButton";
 import EarnInput from "./EarnInput";
@@ -29,6 +29,7 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 		depositPercentage,
 		depositValue,
 	} = useEarn();
+	const theme = usePicasso();
 	const { userTokensBalance } = useTokens();
 	const { t } = useTranslation();
 
@@ -85,7 +86,14 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 					{selectedOpportunity.stakeToken.symbol}
 				</Text>
 				<EarnInput deposit />
-				<Text fontWeight="normal">
+				<Text
+					fontWeight="normal"
+					color={
+						!selectedOpportunity.extraRewardRatePerWeek
+							? theme.text.lightnessGray
+							: "inherit"
+					}
+				>
 					{t("earnPages.weeklyRewards")}:{" "}
 					{selectedOpportunity.rewardRatePerWeek.toSignificant()}{" "}
 					{selectedOpportunity.rewardToken.symbol} / {t("earnPages.week")}

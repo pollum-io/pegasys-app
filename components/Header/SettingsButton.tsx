@@ -417,9 +417,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 									{translation("settings.toggleExpertMode")}
 								</Text>
 								<TooltipComponent
-									label={translation(
-										"transactionSettings.transactionRevertDeadlineHelper"
-									)}
+									label={translation("settings.expertModeHelper")}
 									icon={MdHelpOutline}
 								/>
 							</Flex>
