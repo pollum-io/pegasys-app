@@ -230,11 +230,11 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				<Flex
 					flexDirection="column"
 					w="95%"
-					h="10%"
+					h="30rem"
 					my="1"
 					pr="2"
 					pl="2"
-					maxHeight="20rem"
+					maxHeight="30rem"
 					overflow="auto"
 					css={{
 						"&::-webkit-scrollbar": {
