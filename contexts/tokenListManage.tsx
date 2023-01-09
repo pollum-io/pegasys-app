@@ -34,7 +34,9 @@ export const TokensListManageProvider: React.FC<{
 	children: React.ReactNode;
 }> = ({ children }) => {
 	const [tokenListManageState, setTokenListManageState] = useState<ListsState>(
-		INITIAL_TOKEN_LIST_STATE
+		PersistentFramework.get("currentTokenListState")
+			? (PersistentFramework.get("currentTokenListState") as ListsState)
+			: (INITIAL_TOKEN_LIST_STATE as ListsState)
 	);
 
 	const [currentCacheListTokensToDisplay, setCurrentCacheListTokensToDisplay] =
@@ -239,6 +241,14 @@ export const TokensListManageProvider: React.FC<{
 		useTokenList(UseSelectedListUrl());
 
 	// HANDLE FUNCTIONS TO FILL AND MANAGE TOKEN LIST MANAGE STATE AT ALL AND ALSO WEAK MAP LISTS //
+
+	useEffect(() => {
+		PersistentFramework.add("currentTokenListState", tokenListManageState);
+	}, [
+		tokenListManageState,
+		tokenListManageState.byUrl,
+		tokenListManageState.selectedListUrl,
+	]);
 
 	useEffect(() => {
 		if (
