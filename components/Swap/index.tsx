@@ -569,7 +569,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			return <SwapExpertMode />;
 		}
 		return <Flex />;
-	}, [expert]);
+	}, [expert, isConnected]);
 
 	useEffect(() => {
 		if (chainId) {

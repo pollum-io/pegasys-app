@@ -1,6 +1,7 @@
-import React, { createContext, useMemo, useState } from "react";
+import React, { createContext, useEffect, useMemo, useState } from "react";
 import { BigNumber } from "ethers";
 
+import { PersistentFramework } from "pegasys-services/frameworks";
 import {
 	DEFAULT_DEADLINE_FROM_NOW,
 	INITIAL_ALLOWED_SLIPPAGE,
@@ -20,10 +21,28 @@ const Provider: React.FC<{ children: children }> = ({ children }) => {
 	const [userTransactionDeadlineValue, setUserTransactionDeadlineValue] =
 		useState<BigNumber | number>(DEFAULT_DEADLINE_FROM_NOW);
 
+	const handleCacheExportMode = () => {
+		PersistentFramework.add("expertMode", {
+			isActivate: !expert,
+		});
+	};
+
+	useEffect(() => {
+		const value = PersistentFramework.get("expertMode") as { [k: string]: any };
+		if (value?.isActivate) {
+			setExpert(true);
+			PersistentFramework.add("expertMode", { isActivate: true });
+		} else {
+			setExpert(false);
+			PersistentFramework.add("expertMode", { isActivate: false });
+		}
+	}, []);
+
 	const providerValue = useMemo(
 		() => ({
 			expert,
 			setExpert,
+			handleCacheExportMode,
 			userTransactionDeadlineValue,
 			setUserTransactionDeadlineValue,
 			userSlippageTolerance,
@@ -32,6 +51,7 @@ const Provider: React.FC<{ children: children }> = ({ children }) => {
 		[
 			expert,
 			setExpert,
+			handleCacheExportMode,
 			userTransactionDeadlineValue,
 			setUserTransactionDeadlineValue,
 			userSlippageTolerance,
