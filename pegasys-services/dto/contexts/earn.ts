@@ -1,4 +1,9 @@
-import { JSBI, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
+import {
+	CurrencyAmount,
+	JSBI,
+	Token,
+	TokenAmount,
+} from "@pollum-io/pegasys-sdk";
 import { BigNumber } from "ethers";
 import { TContract } from "../framework";
 import { children, setType } from "../react";
@@ -53,7 +58,9 @@ export interface IEarnProviderValue {
 	) => Promise<void>;
 	getTypedValue: (
 		isDeposit?: boolean
-	) => { percentage: number; value: JSBI } | undefined;
+	) =>
+		| { percentage: number; value: JSBI; tokenAmount?: CurrencyAmount }
+		| undefined;
 	earnOpportunities: IEarnInfo[];
 	setEarnOpportunities: setType<IEarnInfo[]>;
 	selectedOpportunity: IEarnInfo | null;
@@ -65,7 +72,11 @@ export interface IEarnProviderValue {
 	loading: boolean;
 	setLoading: setType<boolean>;
 	onContractCall: (
-		promise: () => Promise<{ hash: string; response: any } | undefined>,
+		promise: () => Promise<
+			| { hash: string; response: any }
+			| Array<{ hash: string; response: any }>
+			| undefined
+		>,
 		summary: string,
 		type: string
 	) => Promise<void>;

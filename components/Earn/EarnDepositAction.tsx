@@ -14,7 +14,7 @@ import EarnInput from "./EarnInput";
 
 interface IEarnDepositActionProps {
 	deposit: () => Promise<void>;
-	sign: () => Promise<void>;
+	sign?: () => Promise<void>;
 	buttonTitle: string;
 }
 
@@ -147,13 +147,13 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 					!JSBI.greaterThan(depositValue, BIG_INT_ZERO) ||
 					loading
 				}
-				onClick={signature ? deposit : sign}
+				onClick={!sign || signature ? deposit : sign}
 				fontSize={16}
 				solid
 			>
 				{signatureLoading
 					? t("earnPages.loading")
-					: signature
+					: !sign || signature
 					? buttonTitle
 					: t("earnPages.sign")}
 			</EarnButton>

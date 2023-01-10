@@ -4,13 +4,15 @@ import { useTranslation } from "react-i18next";
 import { ContractFramework, RoutesFramework } from "../frameworks";
 import { StakeServices } from "../services";
 import { useWallet, useEarn, useTransaction, useToasty } from "../hooks";
-import { IStakeProviderProps, IStakeProviderValue } from "../dto";
+import { IEarnInfo, IStakeProviderProps, IStakeProviderValue } from "../dto";
 import { EarnProvider } from "./earn";
 
 export const StakeContext = createContext({} as IStakeProviderValue);
 
 const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
-	const [showInUsd, setShowInUsd] = useState<boolean>(false);
+	const [stakeV1Opportunities, setStakeV1Opportunities] = useState<IEarnInfo[]>(
+		[]
+	);
 	const { chainId, address } = useWallet();
 	const { pendingTxs } = useTransaction();
 	const { toast } = useToasty();
@@ -20,7 +22,6 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 		onSign,
 		getTypedValue,
 		selectedOpportunity,
-		setEarnOpportunities,
 		withdrawPercentage,
 		onContractCall,
 		setDataLoading,
@@ -119,9 +120,9 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 					walletAddress: address,
 				});
 
-				setEarnOpportunities(stakeInfos);
+				setStakeV1Opportunities(stakeInfos);
 			} else {
-				setEarnOpportunities([]);
+				setStakeV1Opportunities([]);
 			}
 		} catch (e) {
 			toast({
@@ -169,10 +170,9 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 			sign,
 			stake,
 			unstake,
-			showInUsd,
-			setShowInUsd,
+			stakeV1Opportunities,
 		}),
-		[sign, claim, stake, unstake, showInUsd, setShowInUsd]
+		[sign, claim, stake, unstake, stakeV1Opportunities]
 	);
 
 	return (
@@ -183,7 +183,7 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 };
 
 export const StakeProvider: React.FC<IStakeProviderProps> = props => (
-	<EarnProvider>
-		<Provider {...props} />
-	</EarnProvider>
+	// <EarnProvider>
+	<Provider {...props} />
+	// </EarnProvider>
 );

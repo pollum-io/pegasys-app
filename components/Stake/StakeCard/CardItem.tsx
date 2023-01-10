@@ -1,7 +1,7 @@
 import { Flex, Text } from "@chakra-ui/react";
 
 import { usePicasso } from "hooks";
-import { useStake } from "pegasys-services";
+import { useStakeV2 } from "pegasys-services";
 
 import { ICardItemProps } from "./dto";
 
@@ -12,7 +12,7 @@ const CardItem: React.FC<ICardItemProps> = ({
 	opacity,
 }) => {
 	const theme = usePicasso();
-	const { showInUsd } = useStake();
+	const { showInUsd } = useStakeV2();
 
 	return (
 		<Flex

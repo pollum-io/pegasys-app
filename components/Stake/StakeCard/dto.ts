@@ -10,6 +10,7 @@ export interface ICardItemProps {
 
 export interface IStakeCardsProps {
 	stakeInfo?: IStakeInfo;
+	v1?: boolean;
 }
 
 export interface IButtonsProps {

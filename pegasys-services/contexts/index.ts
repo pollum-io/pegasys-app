@@ -3,6 +3,7 @@ export * from "./wallet";
 export * from "./pegasys";
 export * from "./farm";
 export * from "./stake";
+export * from "./stakeV2";
 export * from "./earn";
 export * from "./transactions";
 export * from "./governance";

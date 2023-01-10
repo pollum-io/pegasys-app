@@ -11,8 +11,11 @@ import Buttons from "./Button";
 import { IStakeCardsProps } from "./dto";
 
 const StakeCard: React.FC<IStakeCardsProps> = props => {
-	const { stakeInfo } = props;
-	const { onOpenStakeActions } = useModal();
+	const { stakeInfo, v1 } = props;
+
+	console.log("stakeinfo: ", stakeInfo?.stakedAmount.toExact());
+
+	const { onOpenStakeActions, onOpenStakeV2Actions } = useModal();
 
 	const { colorMode } = useColorMode();
 	const { setSelectedOpportunity, setButtonId } = useEarn();
@@ -20,7 +23,15 @@ const StakeCard: React.FC<IStakeCardsProps> = props => {
 	const onClick = (id: string) => {
 		setButtonId(id as TButtonId);
 		setSelectedOpportunity((stakeInfo as IEarnInfo | undefined) ?? null);
-		onOpenStakeActions();
+
+		if (v1) {
+			console.log("v1");
+
+			onOpenStakeActions();
+		} else {
+			console.log("v2");
+			onOpenStakeV2Actions();
+		}
 	};
 
 	if (!stakeInfo) {

@@ -10,7 +10,7 @@ import {
 	useMediaQuery,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import { useEarn, useStake } from "pegasys-services";
+import { useEarn, useStakeV2 } from "pegasys-services";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { MdArrowBack, MdOutlineInfo } from "react-icons/md";
@@ -26,10 +26,10 @@ interface IModal {
 	onClose: () => void;
 }
 
-export const StakeActions: React.FC<IModal> = props => {
+export const StakeV2Actions: React.FC<IModal> = props => {
 	const { isOpen, onClose: close } = props;
 	const theme = usePicasso();
-	const { claim, stake, unstake, sign } = useStake();
+	const { claim, stake, unstake, sign } = useStakeV2();
 	const { selectedOpportunity, buttonId, reset, withdrawPercentage } =
 		useEarn();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
@@ -98,14 +98,7 @@ export const StakeActions: React.FC<IModal> = props => {
 					/>
 				</ModalHeader>
 				<ModalBody>
-					<EarnDepositAction
-						sign={async () => {
-							console.log("entrou");
-							await sign();
-						}}
-						buttonTitle="Stake"
-						deposit={stake}
-					/>
+					<EarnDepositAction buttonTitle="Stake" deposit={stake} />
 					<EarnWithdrawAction
 						onClose={onClose}
 						buttonTitle={t("earnPages.unstake")}
