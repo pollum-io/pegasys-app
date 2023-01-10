@@ -14,6 +14,7 @@ import {
 	useColorMode,
 	Collapse,
 	SlideFade,
+	Link,
 } from "@chakra-ui/react";
 import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
 import { PAIRS_CURRENT, PAIR_DATA, pegasysClient } from "apollo";
@@ -562,21 +563,25 @@ export const PoolsContainer: NextPage = () => {
 									py="0.531rem"
 									pt={["0.3rem", "unset", "unset", "unset"]}
 									gap="2.5"
-									cursor="pointer"
-									onClick={() =>
-										window.open(
-											`https://info.pegasys.finance/account/${address}`
-										)
-									}
 								>
-									<Text
-										fontWeight="medium"
-										fontSize={language === "vn" && isMobile ? "11px" : "xs"}
-										color="white"
+									<Link
+										href={`https://info.pegasys.finance/account/${address}`}
+										target="_blank"
+										rel="noreferrer"
+										_hover={{ cursor: "pointer" }}
+										flexDirection="row"
 									>
-										{translation("pool.viewStakedLiquidity")}
-									</Text>
-									<MdOutlineCallMade size={18} color="white" />
+										<Flex gap="2.5" alignItems="center">
+											<Text
+												fontWeight="medium"
+												fontSize={language === "vn" && isMobile ? "11px" : "xs"}
+												color="white"
+											>
+												{translation("pool.viewStakedLiquidity")}
+											</Text>
+											<MdOutlineCallMade size={18} color="white" />
+										</Flex>
+									</Link>
 								</Flex>
 							)}
 						</Flex>

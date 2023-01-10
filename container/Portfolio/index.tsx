@@ -413,7 +413,7 @@ export const PortfolioContainer: NextPage = () => {
 									flexDirection="row"
 									alignItems="center"
 									justifyContent="space-between"
-									w={["0", "0", "87%", "90%"]}
+									w={["0", "0", "87%", "88%"]}
 									fontSize="0.875rem"
 								>
 									<Flex
@@ -449,7 +449,8 @@ export const PortfolioContainer: NextPage = () => {
 							background={`linear-gradient(${theme.bg.blueGray}, ${theme.bg.blueGray}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
 							borderTopRadius="3xl"
 							w="100%"
-							border="1px solid transparent"
+							border="none"
+							borderTop="1px solid transparent"
 							mt={["4rem", "4rem", "7rem", "7rem"]}
 							flexDirection="column"
 							h="100%"
