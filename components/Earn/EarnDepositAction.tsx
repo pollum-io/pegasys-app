@@ -1,10 +1,14 @@
 import React, { useMemo } from "react";
 import { Flex, Img, Text } from "@chakra-ui/react";
-import { JSBI } from "@pollum-io/pegasys-sdk";
+import { JSBI, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { useTranslation } from "react-i18next";
 
 import { usePicasso, useTokens } from "hooks";
-import { BIG_INT_ZERO, useEarn } from "pegasys-services";
+import {
+	BIG_INT_ONE_WEEK_IN_SECONDS,
+	BIG_INT_ZERO,
+	useEarn,
+} from "pegasys-services";
 import EarnButton from "./EarnButton";
 import EarnInput from "./EarnInput";
 
@@ -53,6 +57,29 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 		return tokenBWrapped?.logoURI ?? "";
 	}, [userTokensBalance, selectedOpportunity?.tokenB]);
 
+	const weeklyReward = useMemo(() => {
+		if (!selectedOpportunity) return undefined;
+
+		if (JSBI.lessThanOrEqual(depositValue, BIG_INT_ZERO))
+			return selectedOpportunity.rewardRatePerWeek;
+
+		const liveWeeklyRate = JSBI.divide(
+			JSBI.multiply(
+				JSBI.multiply(
+					selectedOpportunity.rewardRate.raw,
+					JSBI.add(selectedOpportunity.stakedAmount.raw, depositValue)
+				),
+				BIG_INT_ONE_WEEK_IN_SECONDS
+			),
+			selectedOpportunity.totalStakedAmount.raw
+		);
+
+		return new TokenAmount(
+			selectedOpportunity.rewardRatePerWeek.token,
+			liveWeeklyRate
+		);
+	}, [depositValue, selectedOpportunity]);
+
 	if (
 		!selectedOpportunity ||
 		buttonId !== "deposit" ||
@@ -89,13 +116,12 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				<Text
 					fontWeight="normal"
 					color={
-						!selectedOpportunity.extraRewardRatePerWeek
+						JSBI.greaterThan(weeklyReward?.raw ?? BIG_INT_ZERO, BIG_INT_ZERO)
 							? theme.text.lightnessGray
 							: "inherit"
 					}
 				>
-					{t("earnPages.weeklyRewards")}:{" "}
-					{selectedOpportunity.rewardRatePerWeek.toSignificant()}{" "}
+					{t("earnPages.weeklyRewards")}: {weeklyReward?.toSignificant()}{" "}
 					{selectedOpportunity.rewardToken.symbol} / {t("earnPages.week")}
 				</Text>
 				{selectedOpportunity.extraRewardToken && (
