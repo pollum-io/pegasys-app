@@ -75,6 +75,9 @@ export const WalletProvider: React.FC<IWalletProviderProps> = ({
 					setChainId(newNetwork.chainId ?? ChainId.NEVM);
 					// window.location.reload();
 				}
+				if (SUPPORTED_NETWORK_CHAINS.includes(newNetwork.chainId)) {
+					setWalletError(false);
+				}
 			});
 
 			// eslint-disable-next-line
