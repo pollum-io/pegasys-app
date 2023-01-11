@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Flex, Img, Text } from "@chakra-ui/react";
+import { Collapse, Flex, Img, Text } from "@chakra-ui/react";
 import { JSBI, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { useTranslation } from "react-i18next";
 
@@ -113,18 +113,28 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 					{selectedOpportunity.stakeToken.symbol}
 				</Text>
 				<EarnInput deposit />
-				<Text
-					fontWeight="normal"
-					transition="0.7s"
-					color={
-						JSBI.greaterThan(weeklyReward?.raw ?? BIG_INT_ZERO, BIG_INT_ZERO)
-							? "inherit"
-							: theme.text.lightnessGray
+				<Collapse
+					in={
+						!depositTypedValue ||
+						signatureLoading ||
+						depositPercentage > 100 ||
+						!JSBI.greaterThan(depositValue, BIG_INT_ZERO) ||
+						loading
 					}
 				>
-					{t("earnPages.weeklyRewards")}: {weeklyReward?.toSignificant()}{" "}
-					{selectedOpportunity.rewardToken.symbol} / {t("earnPages.week")}
-				</Text>
+					<Text
+						fontWeight="normal"
+						transition="0.7s"
+						color={
+							JSBI.greaterThan(weeklyReward?.raw ?? BIG_INT_ZERO, BIG_INT_ZERO)
+								? "inherit"
+								: theme.text.lightnessGray
+						}
+					>
+						{t("earnPages.weeklyRewards")}: {weeklyReward?.toSignificant()}{" "}
+						{selectedOpportunity.rewardToken.symbol} / {t("earnPages.week")}
+					</Text>
+				</Collapse>
 				{selectedOpportunity.extraRewardToken && (
 					<Text fontWeight="normal">
 						{t("earnPages.extraRewards")}:{" "}

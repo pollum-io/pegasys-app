@@ -220,7 +220,7 @@ const FarmCard: FunctionComponent<{
 						<Text fontWeight="semibold" w="50%">
 							{t("earnPages.yourUnclaimed")}
 						</Text>
-						<Text w="45%" textAlign="end">
+						<Text textAlign="end">
 							{verifyZerosInBalanceAndFormat(
 								parseFloat(unclaimedAmount.toExact())
 							)}{" "}
