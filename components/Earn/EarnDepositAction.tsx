@@ -115,10 +115,11 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				<EarnInput deposit />
 				<Text
 					fontWeight="normal"
+					transition="0.7s"
 					color={
 						JSBI.greaterThan(weeklyReward?.raw ?? BIG_INT_ZERO, BIG_INT_ZERO)
-							? theme.text.lightnessGray
-							: "inherit"
+							? "inherit"
+							: theme.text.lightnessGray
 					}
 				>
 					{t("earnPages.weeklyRewards")}: {weeklyReward?.toSignificant()}{" "}
