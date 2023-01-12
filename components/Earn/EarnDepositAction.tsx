@@ -87,7 +87,6 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 	) {
 		return null;
 	}
-
 	return (
 		<Flex flexDirection="column">
 			<Flex gap="2">
@@ -114,22 +113,12 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				</Text>
 				<EarnInput deposit />
 				<Collapse
-					in={
-						!depositTypedValue ||
-						signatureLoading ||
-						depositPercentage > 100 ||
-						!JSBI.greaterThan(depositValue, BIG_INT_ZERO) ||
-						loading
-					}
+					in={!!depositTypedValue || weeklyReward?.toSignificant() !== "0"}
 				>
 					<Text
 						fontWeight="normal"
 						transition="0.7s"
-						color={
-							JSBI.greaterThan(weeklyReward?.raw ?? BIG_INT_ZERO, BIG_INT_ZERO)
-								? "inherit"
-								: theme.text.lightnessGray
-						}
+						color={depositTypedValue ? "inherit" : theme.text.lightnessGray}
 					>
 						{t("earnPages.weeklyRewards")}: {weeklyReward?.toSignificant()}{" "}
 						{selectedOpportunity.rewardToken.symbol} / {t("earnPages.week")}
