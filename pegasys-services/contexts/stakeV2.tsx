@@ -1,7 +1,12 @@
 import React, { useEffect, createContext, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { ContractFramework, RoutesFramework } from "../frameworks";
+import { TokenAmount } from "@pollum-io/pegasys-sdk";
+import {
+	ContractFramework,
+	PersistentFramework,
+	RoutesFramework,
+} from "../frameworks";
 import { StakeV2Services } from "../services";
 import { useWallet, useEarn, useTransaction, useToasty } from "../hooks";
 import {
@@ -10,6 +15,7 @@ import {
 	IStakeV2ProviderValue,
 } from "../dto";
 import { EarnProvider } from "./earn";
+import { StakeProvider } from "./stake";
 
 export const StakeV2Context = createContext({} as IStakeV2ProviderValue);
 
@@ -18,8 +24,10 @@ const Provider: React.FC<IStakeV2ProviderProps> = ({ children }) => {
 		[]
 	);
 	const [showInUsd, setShowInUsd] = useState<boolean>(false);
+	const [approveHash, setApproveHash] = useState<string>("");
+	const [approved, setApproved] = useState<boolean>(false);
 	const { chainId, address } = useWallet();
-	const { pendingTxs } = useTransaction();
+	const { pendingTxs, finishedTxs } = useTransaction();
 	const { toast } = useToasty();
 	const { t: translation } = useTranslation();
 	const {
@@ -29,7 +37,6 @@ const Provider: React.FC<IStakeV2ProviderProps> = ({ children }) => {
 		withdrawPercentage,
 		onContractCall,
 		setDataLoading,
-		onSign,
 	} = useEarn();
 
 	const stakeContract = useMemo(
@@ -132,18 +139,28 @@ const Provider: React.FC<IStakeV2ProviderProps> = ({ children }) => {
 		}
 	};
 
-	// const sign = async () => {
-	// 	if (selectedOpportunity) {
-	// 		const contract = ContractFramework.PSYSContract({ chainId });
+	const approve = async () => {
+		if (approved) return;
 
-	// 		await onSign(
-	// 			contract,
-	// 			"Pegasys",
-	// 			RoutesFramework.getStakeV2Address(chainId),
-	// 			RoutesFramework.getPsysAddress(chainId)
-	// 		);
-	// 	}
-	// };
+		const typedValue = getTypedValue(true);
+
+		if (!selectedOpportunity || !typedValue?.tokenAmount) return;
+
+		await onContractCall(
+			async () => {
+				const res = await StakeV2Services.approve({
+					amountToApprove: typedValue.tokenAmount as TokenAmount,
+					chainId,
+				});
+
+				setApproveHash(res?.hash ?? "");
+
+				return res;
+			},
+			`Approve stake tokens`,
+			"stakeV2-approve"
+		);
+	};
 
 	const stakePendingClaim = useMemo(() => {
 		if (!chainId) return [];
@@ -163,6 +180,12 @@ const Provider: React.FC<IStakeV2ProviderProps> = ({ children }) => {
 		return [...pendingTxs.filter(tx => tx.service === "stakeV2-unstake")];
 	}, [pendingTxs, chainId]);
 
+	const stakeFinishedApprove = useMemo(() => {
+		if (!chainId) return [];
+
+		return [...finishedTxs.filter(tx => tx.service === "stakeV2-approve")];
+	}, [finishedTxs, chainId]);
+
 	useEffect(() => {
 		getStakes();
 	}, [
@@ -173,17 +196,49 @@ const Provider: React.FC<IStakeV2ProviderProps> = ({ children }) => {
 		stakePendingWithdraw.length,
 	]);
 
+	useEffect(() => {
+		const persist = PersistentFramework.get("stakeV2Approve") as {
+			[k: string]: boolean;
+		};
+
+		if (persist && persist.approved) setApproved(persist.approved);
+	}, []);
+
+	useEffect(() => {
+		const tx = stakeFinishedApprove.find(
+			approveTx => approveTx.hash === approveHash
+		);
+
+		if (tx?.success) {
+			setApproved(true);
+			PersistentFramework.add("stakeV2Approve", { approved: true });
+		} else {
+			setApproved(false);
+			PersistentFramework.add("stakeV2Approve", { approved: false });
+		}
+	}, [stakeFinishedApprove]);
+
 	const providerValue = useMemo(
 		() => ({
 			claim,
-			// sign,
 			stake,
 			unstake,
 			showInUsd,
 			setShowInUsd,
 			stakeV2Opportunities,
+			approve,
+			isApproved: approved,
 		}),
-		[claim, stake, unstake, showInUsd, setShowInUsd, stakeV2Opportunities]
+		[
+			claim,
+			stake,
+			unstake,
+			showInUsd,
+			setShowInUsd,
+			stakeV2Opportunities,
+			approve,
+			approved,
+		]
 	);
 
 	return (
@@ -194,7 +249,9 @@ const Provider: React.FC<IStakeV2ProviderProps> = ({ children }) => {
 };
 
 export const StakeV2Provider: React.FC<IStakeV2ProviderProps> = props => (
-	// <EarnProvider>
-	<Provider {...props} />
-	// </EarnProvider>
+	<EarnProvider>
+		<StakeProvider>
+			<Provider {...props} />
+		</StakeProvider>
+	</EarnProvider>
 );

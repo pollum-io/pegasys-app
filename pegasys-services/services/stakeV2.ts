@@ -7,6 +7,8 @@ import {
 	feeCollectorDayData,
 } from "apollo";
 
+import { MaxUint256 } from "@ethersproject/constants";
+import { ITransactionResponse } from "types";
 import { ContractFramework } from "../frameworks";
 import { BIG_INT_ZERO, PegasysTokens, PegasysContracts } from "../constants";
 import {
@@ -17,6 +19,7 @@ import {
 	IStakeV2Info,
 	IStakeV2ServicesGetUnstake,
 	IStakeV2ServicesGetUnclaimed,
+	IStakeV2ServicesApprove,
 } from "../dto";
 
 class StakeV2Services {
@@ -269,6 +272,49 @@ class StakeV2Services {
 		});
 
 		return res;
+	}
+
+	static async approve(props: IStakeV2ServicesApprove) {
+		const { amountToApprove, chainId } = props;
+
+		const spender =
+			PegasysContracts[(chainId as ChainId) ?? ChainId.NEVM].STAKE_V2_ADDRESS;
+
+		const token =
+			amountToApprove instanceof TokenAmount
+				? amountToApprove.token
+				: undefined;
+
+		if (!token) return undefined;
+
+		const contract = ContractFramework.TokenContract({
+			address: token.address,
+		});
+
+		let useExact = false;
+
+		await contract.estimateGas.approve(spender, MaxUint256).catch(() => {
+			// general fallback for tokens who restrict approval amounts
+			useExact = true;
+			return contract.estimateGas.approve(
+				spender,
+				amountToApprove.raw.toString()
+			);
+		});
+
+		const res = await ContractFramework.call({
+			methodName: "approve",
+			contract,
+			args: [spender, useExact ? amountToApprove.raw.toString() : MaxUint256],
+		});
+
+		const txHash = `${res?.hash}`;
+
+		return {
+			spender,
+			hash: txHash,
+			response: res,
+		};
 	}
 }
 

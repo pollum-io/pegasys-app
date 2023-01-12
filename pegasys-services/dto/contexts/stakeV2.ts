@@ -12,5 +12,6 @@ export interface IStakeV2ProviderValue {
 	showInUsd: boolean;
 	setShowInUsd: setType<boolean>;
 	stakeV2Opportunities: IEarnInfo[];
-	// sign: () => Promise<void>;
+	isApproved: boolean;
+	approve: () => Promise<void>;
 }

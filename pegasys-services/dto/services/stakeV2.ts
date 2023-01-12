@@ -15,29 +15,6 @@ export interface IStakeV2ServicesGetUnstake {
 	provider?: TProvider | TSigner;
 }
 
-// export interface IStakeServicesGetApr {
-// 	chainId?: ChainId;
-// 	totalRewardRatePerSecond: TokenAmount;
-// 	isPeriodFinished: boolean;
-// 	totalStaked: TokenAmount;
-// 	provider?: TProvider | TSigner;
-// }
-
-// export interface IStakeServicesGetTotalStakedAmount {
-// 	chainId?: ChainId;
-// 	stakeContract?: TContract;
-// 	stakeToken: Token;
-// 	provider?: TProvider | TSigner;
-// }
-
-// export interface IStakeServicesGetStakedAmount {
-// 	chainId?: ChainId;
-// 	stakeContract?: TContract;
-// 	stakeToken: Token;
-// 	provider?: TProvider | TSigner;
-// 	walletAddress: string;
-// }
-
 export interface IStakeV2ServicesGetUnclaimed {
 	chainId?: ChainId;
 	stakeContract?: TContract;
@@ -45,30 +22,6 @@ export interface IStakeV2ServicesGetUnclaimed {
 	provider?: TProvider | TSigner;
 	walletAddress: string;
 }
-
-// export interface IStakeServicesGetPeriodFinish {
-// 	chainId?: ChainId;
-// 	stakeContract?: TContract;
-// 	provider?: TProvider | TSigner;
-// }
-
-// export interface IStakeServicesGetStakeReward {
-// 	chainId?: ChainId;
-// 	stakeContract?: TContract;
-// 	provider?: TProvider | TSigner;
-// 	rewardToken: Token;
-// 	isPeriodFinished?: boolean;
-// 	totalStaked: TokenAmount;
-// 	staked: TokenAmount;
-// }
-
-// export interface IStakeServicesGetDollarValues {
-// 	chainId?: ChainId | null;
-// 	totalStaked: TokenAmount;
-// 	staked: TokenAmount;
-// 	rewardRatePerWeek: TokenAmount;
-// 	unclaimedAmount: TokenAmount;
-// }
 
 export interface IStakeV2ServicesGetStakeOpportunities {
 	chainId?: ChainId;
@@ -95,4 +48,9 @@ export interface IStakeV2ServicesStake {
 	provider?: TProvider | TSigner;
 	stakeContract?: TContract;
 	amount: string;
+}
+
+export interface IStakeV2ServicesApprove {
+	amountToApprove: TokenAmount;
+	chainId?: ChainId | null;
 }

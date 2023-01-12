@@ -15,6 +15,8 @@ import EarnInput from "./EarnInput";
 interface IEarnDepositActionProps {
 	deposit: () => Promise<void>;
 	sign?: () => Promise<void>;
+	approve?: () => Promise<void>;
+	isApproved?: boolean;
 	buttonTitle: string;
 }
 
@@ -22,6 +24,8 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 	deposit,
 	sign,
 	buttonTitle,
+	approve,
+	isApproved,
 }) => {
 	const {
 		selectedOpportunity,
@@ -147,15 +151,23 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 					!JSBI.greaterThan(depositValue, BIG_INT_ZERO) ||
 					loading
 				}
-				onClick={!sign || signature ? deposit : sign}
+				onClick={
+					(sign && signature) || (isApproved && approve)
+						? deposit
+						: !sign
+						? approve || (() => ({}))
+						: sign
+				}
 				fontSize={16}
 				solid
 			>
 				{signatureLoading
 					? t("earnPages.loading")
-					: !sign || signature
-					? buttonTitle
-					: t("earnPages.sign")}
+					: sign && !signature
+					? t("earnPages.sign")
+					: approve && !isApproved
+					? t("earn.approve")
+					: buttonTitle}
 			</EarnButton>
 		</Flex>
 	);

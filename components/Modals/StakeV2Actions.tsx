@@ -29,7 +29,7 @@ interface IModal {
 export const StakeV2Actions: React.FC<IModal> = props => {
 	const { isOpen, onClose: close } = props;
 	const theme = usePicasso();
-	const { claim, stake, unstake, sign } = useStakeV2();
+	const { claim, stake, unstake, approve, isApproved } = useStakeV2();
 	const { selectedOpportunity, buttonId, reset, withdrawPercentage } =
 		useEarn();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
@@ -98,7 +98,12 @@ export const StakeV2Actions: React.FC<IModal> = props => {
 					/>
 				</ModalHeader>
 				<ModalBody>
-					<EarnDepositAction buttonTitle="Stake" deposit={stake} />
+					<EarnDepositAction
+						approve={approve}
+						isApproved={isApproved}
+						buttonTitle="Stake"
+						deposit={stake}
+					/>
 					<EarnWithdrawAction
 						onClose={onClose}
 						buttonTitle={t("earnPages.unstake")}
