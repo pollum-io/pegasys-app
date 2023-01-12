@@ -211,8 +211,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 		return pendingTxs.filter(tx => tx.service === "useApproveCallback");
 	}, [pendingTxs, chainId]);
 
-	const approveValidation =
-		(isERC20 && currPendingTx) || (isERC20 && approvePendingTxs.length);
+	const approveValidation = isERC20 || (isERC20 && approvePendingTxs.length);
 
 	const isPending = !!approvePendingTxs.length;
 
@@ -569,7 +568,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 			return <SwapExpertMode />;
 		}
 		return <Flex />;
-	}, [expert]);
+	}, [expert, isConnected]);
 
 	useEffect(() => {
 		if (chainId) {
@@ -693,7 +692,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								(tokenInputValue.currentInputTyped === "inputTo" &&
 									parseFloat(tokenInputValue.inputFrom.value) >
 										parseFloat(selectedToken[0]?.balance as string)) ||
-								(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap)
+								(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap) ||
+								(isConnected &&
+									!expert &&
+									Boolean(Number(priceImpactWithoutFee?.toFixed(2)) >= 15))
 									? theme.text.red400
 									: "#ff000000"
 							}
@@ -840,7 +842,10 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							px="1.25rem"
 							border="1px solid"
 							borderColor={
-								isConnected && verifyIfHaveInsufficientLiquidity && !isWrap
+								(isConnected && verifyIfHaveInsufficientLiquidity && !isWrap) ||
+								(isConnected &&
+									!expert &&
+									Boolean(Number(priceImpactWithoutFee?.toFixed(2)) >= 15))
 									? theme.text.red400
 									: "#ff000000"
 							}
@@ -921,6 +926,23 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									fontWeight="semibold"
 								>
 									{translation("swapPage.insufficientLiquidity")}
+								</Text>
+							</Collapse>
+							<Collapse
+								in={
+									isConnected &&
+									Boolean(Number(priceImpactWithoutFee?.toFixed(2)) >= 15) &&
+									!expert
+								}
+							>
+								<Text
+									fontSize="sm"
+									pt="2"
+									textAlign="center"
+									color={theme.text.red400}
+									fontWeight="semibold"
+								>
+									{translation("swapPage.priceImpactHigh")}
 								</Text>
 							</Collapse>
 						</Flex>
@@ -1023,6 +1045,13 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 										? () => {
 												onOpenSelectWalletModal();
 										  }
+										: expert
+										? () => {
+												// eslint-disable-next-line
+												// @ts-ignore
+												swapCall?.callback();
+												setTxType("swap");
+										  }
 										: () => {
 												onOpenConfirmSwap();
 												setTxType("swap");
@@ -1035,7 +1064,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								disabled={
 									!isConnected
 										? false
-										: !canSubmit || Boolean(returnedTradeValue?.inputErrors)
+										: !canSubmit ||
+										  Boolean(returnedTradeValue?.inputErrors) ||
+										  (Boolean(
+												Number(priceImpactWithoutFee?.toFixed(2)) >= 15
+										  ) &&
+												!expert)
 								}
 								_hover={
 									canSubmit || !isConnected
@@ -1059,21 +1093,32 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 									px="6"
 									borderRadius="4.1875rem"
 									onClick={
-										approveValidation && !alreadyApproved
-											? () => {
-													onOpenConfirmSwap();
-													setTxType("approve");
-											  }
-											: () => {
-													onOpenConfirmSwap();
-													setTxType("approve-swap");
-											  }
+										!expert
+											? approveValidation && !alreadyApproved
+												? () => {
+														onOpenConfirmSwap();
+														setTxType("approve");
+												  }
+												: () => {
+														onOpenConfirmSwap();
+														setTxType("approve-swap");
+												  }
+											: approveValidation && !alreadyApproved
+											? () => approve()
+											: // eslint-disable-next-line
+											  // @ts-ignore
+											  () => swapCall?.callback()
 									}
 									bgColor={theme.bg.blueNavyLightness}
 									color={theme.text.cyan}
 									fontSize="lg"
 									fontWeight="semibold"
-									disabled={!canSubmit || isPending}
+									disabled={
+										!canSubmit ||
+										isPending ||
+										(Boolean(Number(priceImpactWithoutFee?.toFixed(2)) >= 15) &&
+											!expert)
+									}
 									_hover={{
 										opacity: 0.9,
 									}}

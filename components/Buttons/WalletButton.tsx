@@ -143,6 +143,9 @@ export const WalletButton: FunctionComponent<ButtonProps> = props => {
 					>
 						{shortAddress(address)}
 					</AddressButton>
+					<Collapse in={expert}>
+						<ExpertMode />
+					</Collapse>
 				</>
 			)}
 		</>
