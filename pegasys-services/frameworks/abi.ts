@@ -4,8 +4,8 @@ import PAIR_ABI from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-co
 import ROUTER_ABI from "@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json";
 import PSYS_ABI from "@pollum-io/pegasys-protocol/artifacts/contracts/PegasysToken.sol/PegasysToken.json";
 import REWARDERVIAMULTIPLIER_ABI from "@pollum-io/pegasys-protocol/artifacts/contracts/earn/RewarderViaMultiplier.sol/RewarderViaMultiplier.json";
+import STAKING_REWARDS_V2_ABI from "@pollum-io/pegasys-protocol/artifacts/contracts/earn/PegasysStaking.sol/PegasysStaking.json";
 
-import STAKING_REWARDS_V2_ABI from "../abis/pegasyStaking.json";
 import GOVERNANCE_ABI from "../abis/governance.json";
 import ERC20_ABI from "../abis/erc20.json";
 
@@ -23,7 +23,7 @@ class AbiFramework {
 	}
 
 	static getStakeV2ABi() {
-		return STAKING_REWARDS_V2_ABI;
+		return STAKING_REWARDS_V2_ABI.abi;
 	}
 
 	static getPsysABi() {

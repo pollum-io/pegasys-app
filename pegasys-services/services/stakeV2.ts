@@ -8,7 +8,6 @@ import {
 } from "apollo";
 
 import { MaxUint256 } from "@ethersproject/constants";
-import { ITransactionResponse } from "types";
 import { ContractFramework } from "../frameworks";
 import { BIG_INT_ZERO, PegasysTokens, PegasysContracts } from "../constants";
 import {
@@ -163,8 +162,6 @@ class StakeV2Services {
 					0
 				);
 
-				console.log("sumDepositFeePSYS: ", sumDepositFeePSYS);
-
 				const feeCollectorQuery = await feeCollectorClient.query({
 					query: feeCollectorDayData,
 					variables: {
@@ -183,13 +180,9 @@ class StakeV2Services {
 					0
 				);
 
-				console.log("sumTokenRemitted: ", sumTokenRemitted);
-
 				const apr = Math.floor(
 					((sumTokenRemitted + sumDepositFeePSYS) * 1200) / Number(psysStaked)
 				);
-
-				console.log("apr: ", apr);
 
 				stakeOpportunities.push({
 					rewardToken,

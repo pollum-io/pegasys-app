@@ -5,7 +5,6 @@ import { ContractFramework, RoutesFramework } from "../frameworks";
 import { StakeServices } from "../services";
 import { useWallet, useEarn, useTransaction, useToasty } from "../hooks";
 import { IEarnInfo, IStakeProviderProps, IStakeProviderValue } from "../dto";
-import { EarnProvider } from "./earn";
 
 export const StakeContext = createContext({} as IStakeProviderValue);
 
@@ -183,7 +182,5 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 };
 
 export const StakeProvider: React.FC<IStakeProviderProps> = props => (
-	// <EarnProvider>
 	<Provider {...props} />
-	// </EarnProvider>
 );
