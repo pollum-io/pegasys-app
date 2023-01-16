@@ -480,10 +480,10 @@ export const PortfolioContainer: NextPage = () => {
 										pr={["0", "0", "0", "0.1rem"]}
 									>
 										<Text>Pool Tokens</Text>
-										<Text pl={["", "", "2.7rem", "2.7rem"]}>
+										<Text pl={["", "", "2.7rem", "3rem"]}>
 											{translation("portfolioPage.value")}
 										</Text>
-										<Text pl={["", "", "3rem", "2.4rem"]}>APR</Text>
+										<Text pl={["", "", "3rem", "2.9rem"]}>APR</Text>
 										<Text pr={["", "", "1.5rem", "2.65rem"]}>Pool Share</Text>
 									</Flex>
 								</Flex>
