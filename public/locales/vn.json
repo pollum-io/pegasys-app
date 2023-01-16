@@ -666,6 +666,9 @@
 		"walletBalance": "Số dư trên Wallet",
 		"liquidityPositions": "Vị trí thanh khoản",
 		"balance": "Tiền dự",
-		"assets": "Tài sản"
+		"assets": "Tài sản",
+		"noPositions": "Không tìm thấy vị trí nào.",
+		"noLiquidity": "Không có thanh khoản đặt cọc.",
+		"noTransactions": "Không tìm thấy giao dịch gần đây."
 	}
 }

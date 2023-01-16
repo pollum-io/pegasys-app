@@ -10,19 +10,34 @@ import {
 	useColorMode,
 } from "@chakra-ui/react";
 import { MdSearch } from "react-icons/md";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { WalletStatsCards } from "components/Portfolio/WalletStatsCards";
 import { LiquidityCards } from "components/Portfolio/LiquidityCards";
 import { TransactionCards } from "components/Portfolio/TransactionCards";
 import { useWallet } from "pegasys-services";
 import { useTranslation } from "react-i18next";
+import {
+	liquidityCardsMockedData,
+	transactionCardsMockedData,
+	walletStatsCardsMockedData,
+} from "helpers/mockedData";
 
 export const PortfolioContainer: NextPage = () => {
 	const theme = usePicasso();
+	const toWallet = useRef(null);
+	const toLiquidity = useRef(null);
+	const toTransactions = useRef(null);
 	const [buttonId, setButtonId] = useState<string>("all");
 	const { colorMode } = useColorMode();
 	const { isConnected } = useWallet();
 	const { t: translation } = useTranslation();
+
+	const scrollToSection = (elementRef: any) => {
+		window.scrollTo({
+			top: elementRef.current.offsetTop,
+			behavior: "smooth",
+		});
+	};
 
 	return (
 		<Flex justifyContent="center" alignItems="center" w="100%">
@@ -44,16 +59,19 @@ export const PortfolioContainer: NextPage = () => {
 					<Flex w="max-content" gap="6" fontSize="18px">
 						<Text
 							_hover={{ color: theme.text.whiteGrayHover, cursor: "pointer" }}
+							onClick={() => scrollToSection(toWallet)}
 						>
 							{translation("portfolioPage.wallet")}
 						</Text>
 						<Text
 							_hover={{ color: theme.text.whiteGrayHover, cursor: "pointer" }}
+							onClick={() => scrollToSection(toLiquidity)}
 						>
 							{translation("portfolioPage.liquidity")}
 						</Text>
 						<Text
 							_hover={{ color: theme.text.whiteGrayHover, cursor: "pointer" }}
+							onClick={() => scrollToSection(toTransactions)}
 						>
 							{translation("portfolioPage.transactions")}
 						</Text>
@@ -81,6 +99,7 @@ export const PortfolioContainer: NextPage = () => {
 								: "none"
 						}
 						background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+						ref={toWallet}
 					>
 						<Flex
 							alignItems={["flex-start", "flex-start", "center", "center"]}
@@ -229,7 +248,11 @@ export const PortfolioContainer: NextPage = () => {
 							px={["1.5rem", "2rem", "2.5rem", "8rem"]}
 							color={theme.text.mono}
 							mt="3rem"
-							display={["none", "none", "flex", "flex"]}
+							display={
+								walletStatsCardsMockedData.length === 0
+									? "none"
+									: ["none", "none", "flex", "flex"]
+							}
 							fontSize="0.875rem"
 						>
 							<Flex alignItems="center" w="100%" pl={["4", "4", "6", "6"]}>
@@ -263,7 +286,27 @@ export const PortfolioContainer: NextPage = () => {
 							</Flex>
 						</Flex>
 						<Flex flexDirection="column" mt="1rem">
-							<WalletStatsCards />
+							{walletStatsCardsMockedData.length === 0 ? (
+								<Flex
+									w="100%"
+									my={["3rem", "3rem", "8rem", "8rem"]}
+									flexDirection="column"
+									alignItems="center"
+									justifyContent="center"
+									px={["1rem", "4rem", "5rem", "8rem"]}
+									textAlign="center"
+								>
+									<Text
+										fontSize={["sm", "sm", "md", "md"]}
+										fontWeight="normal"
+										textAlign="center"
+									>
+										{translation("portfolioPage.noPositions")}
+									</Text>
+								</Flex>
+							) : (
+								<WalletStatsCards />
+							)}
 						</Flex>
 
 						<Flex
@@ -288,6 +331,7 @@ export const PortfolioContainer: NextPage = () => {
 										: "none"
 								}
 								background={`linear-gradient(${theme.bg.blackAlpha}, ${theme.bg.blackAlpha}) padding-box, linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%) border-box`}
+								ref={toLiquidity}
 							>
 								<Flex
 									alignItems={["flex-start", "flex-start", "center", "center"]}
@@ -400,7 +444,11 @@ export const PortfolioContainer: NextPage = () => {
 							justifyContent="center"
 							px={["1rem", "2rem", "2.5rem", "8rem"]}
 							color={theme.text.mono}
-							display={["none", "none", "flex", "flex"]}
+							display={
+								liquidityCardsMockedData.length === 0
+									? "none"
+									: ["none", "none", "flex", "flex"]
+							}
 							mt="2.7rem"
 						>
 							<Flex
@@ -442,7 +490,27 @@ export const PortfolioContainer: NextPage = () => {
 							</Flex>
 						</Flex>
 						<Flex flexDirection="column" mt="1rem" gap={["0", "2", "2", "2"]}>
-							<LiquidityCards />
+							{liquidityCardsMockedData.length === 0 ? (
+								<Flex
+									w="100%"
+									my={["3rem", "3rem", "8rem", "8rem"]}
+									flexDirection="column"
+									alignItems="center"
+									justifyContent="center"
+									px={["1rem", "4rem", "5rem", "8rem"]}
+									textAlign="center"
+								>
+									<Text
+										fontSize={["sm", "sm", "md", "md"]}
+										fontWeight="normal"
+										textAlign="center"
+									>
+										{translation("portfolioPage.noLiquidity")}
+									</Text>
+								</Flex>
+							) : (
+								<LiquidityCards />
+							)}
 						</Flex>
 
 						<Flex
@@ -454,6 +522,7 @@ export const PortfolioContainer: NextPage = () => {
 							mt={["4rem", "4rem", "7rem", "7rem"]}
 							flexDirection="column"
 							h="100%"
+							ref={toTransactions}
 						>
 							<Flex
 								flexDirection="column"
@@ -623,7 +692,11 @@ export const PortfolioContainer: NextPage = () => {
 								px={["1.5rem", "2rem", "2.5rem", "8rem"]}
 								color={theme.text.mono}
 								mt="3rem"
-								display={["none", "none", "flex", "flex"]}
+								display={
+									transactionCardsMockedData.length === 0
+										? "none"
+										: ["none", "none", "flex", "flex"]
+								}
 							>
 								<Flex
 									alignItems="center"
@@ -671,7 +744,27 @@ export const PortfolioContainer: NextPage = () => {
 								mt={["2rem", "2rem", "1rem", "1rem"]}
 								mb="20rem"
 							>
-								<TransactionCards />
+								{transactionCardsMockedData.length === 0 ? (
+									<Flex
+										w="100%"
+										my={["3rem", "3rem", "8rem", "8rem"]}
+										flexDirection="column"
+										alignItems="center"
+										justifyContent="center"
+										px={["1rem", "4rem", "5rem", "8rem"]}
+										textAlign="center"
+									>
+										<Text
+											fontSize={["sm", "sm", "md", "md"]}
+											fontWeight="normal"
+											textAlign="center"
+										>
+											{translation("portfolioPage.noTransactions")}
+										</Text>
+									</Flex>
+								) : (
+									<TransactionCards />
+								)}
 							</Flex>
 						</Flex>
 					</Flex>

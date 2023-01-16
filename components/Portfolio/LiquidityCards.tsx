@@ -21,9 +21,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 
 	const quantityPerPage = 5;
 
-	const { t: translation, i18n } = useTranslation();
-
-	const { language } = i18n;
+	const { t: translation } = useTranslation();
 
 	const quantityOfPages = Math.ceil(
 		liquidityCardsMockedData.length / quantityPerPage

@@ -666,6 +666,9 @@
 		"walletBalance": "Solde du Portefeuille",
 		"liquidityPositions": "Positions de Liquidité",
 		"balance": "Balance",
-		"assets": "Actifs"
+		"assets": "Actifs",
+		"noPositions": "Aucun Poste Trouvé.",
+		"noLiquidity": "Liquidité Sans Piquet.",
+		"noTransactions": "Aucune Transaction Técente Trouvée."
 	}
 }
