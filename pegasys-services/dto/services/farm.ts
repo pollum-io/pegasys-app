@@ -76,6 +76,12 @@ export interface IFarmServicesGetFarmOpportunities {
 		| null;
 }
 
+export interface IFarmServicesGetFarmUnclaimed {
+	walletAddress: string;
+	chainId?: ChainId | null;
+	farmContract?: TContract;
+}
+
 export interface IFarmServicesWithdraw {
 	poolId: number;
 	amount: string;

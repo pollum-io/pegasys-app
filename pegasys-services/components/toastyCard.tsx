@@ -1,10 +1,13 @@
-import React, { useMemo } from "react";
-import { Flex, Text, useColorMode, useMediaQuery } from "@chakra-ui/react";
+import React, { useMemo, useEffect } from "react";
+import { Flex, Text, useColorMode, Link } from "@chakra-ui/react";
 import { IoIosInformationCircle } from "react-icons/io";
 import { AiFillExclamationCircle } from "react-icons/ai";
 import { RiCheckboxCircleFill } from "react-icons/ri";
 import { IconType } from "react-icons";
 import { MdOutlineClose } from "react-icons/md";
+import { usePicasso } from "hooks";
+import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 import { IToastyCardProps } from "../dto";
 
 const cards: { [k: string]: [string, IconType, number] } = {
@@ -32,12 +35,31 @@ const ToastyCard: React.FC<IToastyCardProps> = ({
 		};
 	}, [state.status]);
 
+	const theme = usePicasso();
+	const { t: translation } = useTranslation();
+
+	let currentExplorerURL: string;
+
+	switch (state.chainId) {
+		case 57:
+			currentExplorerURL = `https://explorer.syscoin.org/tx/${state.txHash}`;
+			break;
+		case 5700:
+			currentExplorerURL = `https://tanenbaum.io/tx/${state.txHash}`;
+			break;
+		case 2814:
+			currentExplorerURL = `https://explorer.testnet.rollux.com/tx/${state.txHash}`;
+			break;
+		default:
+			currentExplorerURL = `https://explorer.syscoin.org/tx/${state.txHash}`;
+	}
+
 	const { colorMode } = useColorMode();
 
 	return (
 		<Flex
 			h="max-content"
-			w={["18.75rem", "22.25rem", "22.25rem", "22.25rem", "22.25rem"]}
+			w={["18.75rem", "22.25rem", "22.25rem", "22.25rem", "22.30rem"]}
 			mt="2.125rem"
 			mr={["unset", "1.5rem", "2.5rem", "2.5rem"]}
 			py="0.7rem"
@@ -52,6 +74,7 @@ const ToastyCard: React.FC<IToastyCardProps> = ({
 					? "0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)"
 					: "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
 			}
+			flexDir="column"
 		>
 			<Flex
 				color={text}
@@ -69,7 +92,8 @@ const ToastyCard: React.FC<IToastyCardProps> = ({
 					py="0"
 					position="relative"
 					alignItems="flex-top"
-					w="16rem"
+					w="100%"
+					pr="2"
 				>
 					<Text font-weight="bold"> {`${state?.title}`}</Text>
 					<Text fontSize="1rem" font-weight="normal">
@@ -87,6 +111,19 @@ const ToastyCard: React.FC<IToastyCardProps> = ({
 					<MdOutlineClose size={16} color={text} />
 				</Flex>
 			</Flex>
+			{state.txHash && (
+				<Flex px="9" pt="1">
+					<Link
+						color={theme.text.cyanPurple}
+						href={currentExplorerURL}
+						fontSize="sm"
+						fontWeight={500}
+						isExternal
+					>
+						{translation("toasts.viewOnExplorer")}
+					</Link>
+				</Flex>
+			)}
 		</Flex>
 	);
 };

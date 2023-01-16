@@ -640,7 +640,8 @@
 		"errorStake": "Ошибка при получении данных о возможностях stake",
 		"transactionComp": "Транзакция успешно завершена",
 		"connectingError": "Ошибка при подключении кошелька",
-		"swapFailed": "Обмен не удался"
+		"swapFailed": "Обмен не удался",
+		"viewOnExplorer": "Посмотреть в проводнике"
 	},
 	"portfolioPage": {
 		"walletStats": "Статистика Kошелька",

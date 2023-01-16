@@ -641,7 +641,8 @@
 		"errorStake": "Lỗi khi tìm nạp cơ hội stake",
 		"transactionComp": "Giao dịch hoàn tất thành công",
 		"connectingError": "Lỗi khi kết nối ví",
-		"swapFailed": "Hoán đổi không thành công"
+		"swapFailed": "Hoán đổi không thành công",
+		"viewOnExplorer": "Xem trên explorer"
 	},
 	"portfolioPage": {
 		"walletStats": "Số liệu thống kê về ví",

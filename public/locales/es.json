@@ -641,7 +641,8 @@
 		"errorStake": "Error en la búsqueda de oportunidades de stake",
 		"transactionComp": "Transacción completada con éxito",
 		"connectingError": "Error al conectar la cartera",
-		"swapFailed": "El cambio ha fallado"
+		"swapFailed": "El cambio ha fallado",
+		"viewOnExplorer": "View on explorer"
 	},
 	"portfolioPage": {
 		"walletStats": "Estadísticas de la Cartera",
