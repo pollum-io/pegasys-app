@@ -157,7 +157,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				borderTopRadius="30px"
 				borderBottomRadius={["0", "35px", "35px", "35px"]}
 				position={["absolute", "relative", "relative", "relative"]}
-				h="max-content"
+				h="max"
 			>
 				<ModalHeader
 					display="flex"
@@ -182,7 +182,7 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 					</Flex>
 				</ModalHeader>
 
-				<ModalBody>
+				<ModalBody flex="0">
 					<InputGroup>
 						<Input
 							borderRadius="full"
@@ -230,11 +230,11 @@ export const SelectCoinModal: React.FC<IModal> = props => {
 				<Flex
 					flexDirection="column"
 					w="95%"
-					h="10%"
+					h="30rem"
 					my="1"
 					pr="2"
 					pl="2"
-					maxHeight="20rem"
+					maxHeight="30rem"
 					overflow="auto"
 					css={{
 						"&::-webkit-scrollbar": {

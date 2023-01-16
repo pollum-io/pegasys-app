@@ -1,10 +1,14 @@
 import React, { useMemo } from "react";
-import { Flex, Img, Text } from "@chakra-ui/react";
-import { JSBI } from "@pollum-io/pegasys-sdk";
+import { Collapse, Flex, Img, Text } from "@chakra-ui/react";
+import { JSBI, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { useTranslation } from "react-i18next";
 
-import { useTokens } from "hooks";
-import { BIG_INT_ZERO, useEarn } from "pegasys-services";
+import { usePicasso, useTokens } from "hooks";
+import {
+	BIG_INT_ONE_WEEK_IN_SECONDS,
+	BIG_INT_ZERO,
+	useEarn,
+} from "pegasys-services";
 import EarnButton from "./EarnButton";
 import EarnInput from "./EarnInput";
 
@@ -29,6 +33,7 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 		depositPercentage,
 		depositValue,
 	} = useEarn();
+	const theme = usePicasso();
 	const { userTokensBalance } = useTokens();
 	const { t } = useTranslation();
 
@@ -52,6 +57,29 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 		return tokenBWrapped?.logoURI ?? "";
 	}, [userTokensBalance, selectedOpportunity?.tokenB]);
 
+	const weeklyReward = useMemo(() => {
+		if (!selectedOpportunity) return undefined;
+
+		if (JSBI.lessThanOrEqual(depositValue, BIG_INT_ZERO))
+			return selectedOpportunity.rewardRatePerWeek;
+
+		const liveWeeklyRate = JSBI.divide(
+			JSBI.multiply(
+				JSBI.multiply(
+					selectedOpportunity.rewardRate.raw,
+					JSBI.add(selectedOpportunity.stakedAmount.raw, depositValue)
+				),
+				BIG_INT_ONE_WEEK_IN_SECONDS
+			),
+			selectedOpportunity.totalStakedAmount.raw
+		);
+
+		return new TokenAmount(
+			selectedOpportunity.rewardRatePerWeek.token,
+			liveWeeklyRate
+		);
+	}, [depositValue, selectedOpportunity]);
+
 	if (
 		!selectedOpportunity ||
 		buttonId !== "deposit" ||
@@ -59,7 +87,6 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 	) {
 		return null;
 	}
-
 	return (
 		<Flex flexDirection="column">
 			<Flex gap="2">
@@ -85,11 +112,18 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 					{selectedOpportunity.stakeToken.symbol}
 				</Text>
 				<EarnInput deposit />
-				<Text fontWeight="normal">
-					{t("earnPages.weeklyRewards")}:{" "}
-					{selectedOpportunity.rewardRatePerWeek.toSignificant()}{" "}
-					{selectedOpportunity.rewardToken.symbol} / {t("earnPages.week")}
-				</Text>
+				<Collapse
+					in={!!depositTypedValue || weeklyReward?.toSignificant() !== "0"}
+				>
+					<Text
+						fontWeight="normal"
+						transition="0.7s"
+						color={depositTypedValue ? "inherit" : theme.text.lightnessGray}
+					>
+						{t("earnPages.weeklyRewards")}: {weeklyReward?.toSignificant()}{" "}
+						{selectedOpportunity.rewardToken.symbol} / {t("earnPages.week")}
+					</Text>
+				</Collapse>
 				{selectedOpportunity.extraRewardToken && (
 					<Text fontWeight="normal">
 						{t("earnPages.extraRewards")}:{" "}

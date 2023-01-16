@@ -579,6 +579,7 @@ class FarmServices {
 						combinedApr,
 						poolId,
 						pair,
+						rewardRate: values.poolRewardRate,
 					});
 				}
 			})
