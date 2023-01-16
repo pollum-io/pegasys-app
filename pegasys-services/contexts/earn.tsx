@@ -42,6 +42,7 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 	const { addTransactions } = useTransaction();
 	const {
 		onCloseStakeActions,
+		onCloseStakeV2Actions,
 		onCloseFarmActions,
 		onOpenTransaction,
 		onCloseTransaction,
@@ -138,6 +139,7 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 		try {
 			setLoading(true);
 			onCloseStakeActions();
+			onCloseStakeV2Actions();
 			onCloseFarmActions();
 			onOpenTransaction();
 
