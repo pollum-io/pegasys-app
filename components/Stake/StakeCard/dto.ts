@@ -38,4 +38,5 @@ export interface IBodyProps {
 	stakedAmount: TokenAmount;
 	unclaimedInUsd: number;
 	unclaimedAmount: TokenAmount;
+	v1?: boolean;
 }

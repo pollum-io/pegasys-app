@@ -60,6 +60,7 @@ const StakeCard: React.FC<IStakeCardsProps> = props => {
 				stakedAmount={stakeInfo.stakedAmount}
 				unclaimedInUsd={stakeInfo.unclaimedInUsd}
 				unclaimedAmount={stakeInfo.unclaimedAmount}
+				v1={v1}
 			/>
 			<Buttons
 				unstakedAmount={stakeInfo.unstakedAmount}

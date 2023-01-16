@@ -20,6 +20,7 @@ const Body: React.FC<IBodyProps> = ({
 	stakedAmount,
 	unclaimedInUsd,
 	unclaimedAmount,
+	v1,
 }) => {
 	const { t } = useTranslation();
 
@@ -47,16 +48,18 @@ const Body: React.FC<IBodyProps> = ({
 					)} ${symbol}`}
 					opacity={JSBI.lessThanOrEqual(totalStakedAmount.raw, BIG_INT_ONE)}
 				/>
-				<CardItem
-					text={t("earnPages.yourRate")}
-					usdValue={`${formattedNum(rewardRatePerWeekInUsd, true)} USD/${t(
-						"earnPages.week"
-					)}`}
-					value={`${verifyZerosInBalanceAndFormat(
-						parseFloat(rewardRatePerWeek.toExact())
-					)} ${symbol}/${t("earnPages.week")}`}
-					opacity={JSBI.lessThanOrEqual(rewardRatePerWeek.raw, BIG_INT_ONE)}
-				/>
+				{v1 && (
+					<CardItem
+						text={t("earnPages.yourRate")}
+						usdValue={`${formattedNum(rewardRatePerWeekInUsd, true)} USD/${t(
+							"earnPages.week"
+						)}`}
+						value={`${verifyZerosInBalanceAndFormat(
+							parseFloat(rewardRatePerWeek.toExact())
+						)} ${symbol}/${t("earnPages.week")}`}
+						opacity={JSBI.lessThanOrEqual(rewardRatePerWeek.raw, BIG_INT_ONE)}
+					/>
+				)}
 			</Flex>
 			<Flex
 				alignItems={["flex-start", "flex-start", "center", "center"]}
