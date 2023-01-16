@@ -1,5 +1,5 @@
 import React, { useEffect, createContext, useState, useMemo } from "react";
-import { CurrencyAmount, JSBI } from "@pollum-io/pegasys-sdk";
+import { JSBI } from "@pollum-io/pegasys-sdk";
 
 import { tryParseAmount } from "utils";
 import { useModal } from "hooks";
@@ -47,7 +47,7 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 		onCloseTransaction,
 	} = useModal();
 
-	const { chainId, address, provider } = psUseWallet();
+	const { chainId, address } = psUseWallet();
 	const { userTransactionDeadlineValue } = usePegasys();
 	const { toast } = useToasty();
 
@@ -132,8 +132,8 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 			| Array<{ hash: string; response: any }>
 			| undefined
 		>,
-		summary: string,
-		service: string
+		summary: string | string[],
+		service: string | string[]
 	) => {
 		try {
 			setLoading(true);
@@ -144,9 +144,19 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 			const res = await promise();
 
 			if (Array.isArray(res)) {
-				res.forEach(r => addPendingTransaction(r, summary, service));
+				res.forEach((r, index) =>
+					addPendingTransaction(
+						r,
+						Array.isArray(summary) ? summary[index] : summary,
+						Array.isArray(service) ? service[index] : service
+					)
+				);
 			} else {
-				addPendingTransaction(res, summary, service);
+				addPendingTransaction(
+					res,
+					Array.isArray(summary) ? summary[0] : summary,
+					Array.isArray(service) ? service[0] : service
+				);
 			}
 		} catch (e) {
 			toast({
@@ -261,6 +271,7 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 			withdrawValue: withdrawValues.typed,
 			dataLoading,
 			setDataLoading,
+			setSignatureLoading,
 		}),
 		[
 			withdrawTypedValue,
@@ -285,6 +296,7 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 			depositValues,
 			dataLoading,
 			setDataLoading,
+			setSignatureLoading,
 		]
 	);
 

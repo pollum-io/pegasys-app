@@ -1,42 +1,30 @@
 import React, { useEffect, createContext, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { TokenAmount } from "@pollum-io/pegasys-sdk";
-import {
-	ContractFramework,
-	PersistentFramework,
-	RoutesFramework,
-} from "../frameworks";
+import { ContractFramework, RoutesFramework } from "../frameworks";
 import { StakeV2Services } from "../services";
 import { useWallet, useEarn, useTransaction, useToasty } from "../hooks";
-import {
-	IEarnInfo,
-	IStakeV2ProviderProps,
-	IStakeV2ProviderValue,
-} from "../dto";
+import { IStakeV2ProviderProps, IStakeV2ProviderValue } from "../dto";
 import { EarnProvider } from "./earn";
 import { StakeProvider } from "./stake";
 
 export const StakeV2Context = createContext({} as IStakeV2ProviderValue);
 
 const Provider: React.FC<IStakeV2ProviderProps> = ({ children }) => {
-	const [stakeV2Opportunities, setStakeV2Opportunities] = useState<IEarnInfo[]>(
-		[]
-	);
 	const [showInUsd, setShowInUsd] = useState<boolean>(false);
-	const [approveHash, setApproveHash] = useState<string>("");
-	const [approved, setApproved] = useState<boolean>(false);
 	const { chainId, address } = useWallet();
-	const { pendingTxs, finishedTxs } = useTransaction();
+	const { finishedTxs } = useTransaction();
 	const { toast } = useToasty();
 	const { t: translation } = useTranslation();
 	const {
 		getTypedValue,
 		selectedOpportunity,
-		// setEarnOpportunities,
+		setEarnOpportunities,
 		withdrawPercentage,
 		onContractCall,
 		setDataLoading,
+		onSign,
+		signature,
 	} = useEarn();
 
 	const stakeContract = useMemo(
@@ -72,8 +60,11 @@ const Provider: React.FC<IStakeV2ProviderProps> = ({ children }) => {
 
 					return claimRes ? [unstakeRes, claimRes] : unstakeRes;
 				},
-				`Withdraw ${typedValue.tokenAmount?.toFixed(5) ?? ""} PSYS tokens`,
-				"stakeV2-unstake"
+				[
+					`Withdraw ${typedValue.tokenAmount?.toFixed(5) ?? ""} PSYS tokens`,
+					"Claim accumulated PSYS rewards",
+				],
+				["stakeV2-unstake", "stakeV2-claim"]
 			);
 		}
 	};
@@ -95,20 +86,21 @@ const Provider: React.FC<IStakeV2ProviderProps> = ({ children }) => {
 	const stake = async () => {
 		const typedValue = getTypedValue(true);
 
-		if (selectedOpportunity && typedValue) {
-			await onContractCall(
-				async () => {
-					const res = await StakeV2Services.stake({
-						stakeContract,
-						amount: typedValue.value.toString(16),
-					});
+		if (!selectedOpportunity || !typedValue || !signature) return;
 
-					return res;
-				},
-				`Stake ${typedValue.tokenAmount?.toFixed(5)} PSYS tokens`,
-				"stakeV2-stake"
-			);
-		}
+		await onContractCall(
+			async () => {
+				const res = await StakeV2Services.stake({
+					stakeContract,
+					amount: typedValue.value.toString(16),
+					signatureData: signature,
+				});
+
+				return res;
+			},
+			`Stake ${typedValue.tokenAmount?.toFixed(5)} PSYS tokens`,
+			"stakeV2-stake"
+		);
 	};
 
 	const getStakes = async () => {
@@ -121,11 +113,9 @@ const Provider: React.FC<IStakeV2ProviderProps> = ({ children }) => {
 					walletAddress: address,
 				});
 
-				// setEarnOpportunities(stakeInfos);
-				setStakeV2Opportunities(stakeInfos);
+				setEarnOpportunities(stakeInfos);
 			} else {
-				// setEarnOpportunities([]);
-				setStakeV2Opportunities([]);
+				setEarnOpportunities([]);
 			}
 		} catch (e) {
 			toast({
@@ -139,51 +129,35 @@ const Provider: React.FC<IStakeV2ProviderProps> = ({ children }) => {
 		}
 	};
 
-	const approve = async () => {
-		if (approved) return;
+	const sign = async () => {
+		if (!selectedOpportunity) return;
 
-		const typedValue = getTypedValue(true);
+		const contract = ContractFramework.PSYSContract({ chainId });
 
-		if (!selectedOpportunity || !typedValue?.tokenAmount) return;
-
-		await onContractCall(
-			async () => {
-				const res = await StakeV2Services.approve({
-					amountToApprove: typedValue.tokenAmount as TokenAmount,
-					chainId,
-				});
-
-				setApproveHash(res?.hash ?? "");
-
-				return res;
-			},
-			`Approve stake tokens`,
-			"stakeV2-approve"
+		await onSign(
+			contract,
+			"Pegasys",
+			RoutesFramework.getStakeV2Address(chainId),
+			RoutesFramework.getPsysAddress(chainId)
 		);
 	};
 
-	const stakePendingClaim = useMemo(() => {
+	const stakeFinishedClaim = useMemo(() => {
 		if (!chainId) return [];
 
-		return [...pendingTxs.filter(tx => tx.service === "stakeV2-claim")];
-	}, [pendingTxs, chainId]);
+		return [...finishedTxs.filter(tx => tx.service === "stakeV2-claim")];
+	}, [finishedTxs, chainId]);
 
-	const stakePendingDeposit = useMemo(() => {
+	const stakeFinishedDeposit = useMemo(() => {
 		if (!chainId) return [];
 
-		return [...pendingTxs.filter(tx => tx.service === "stakeV2-stake")];
-	}, [pendingTxs, chainId]);
+		return [...finishedTxs.filter(tx => tx.service === "stakeV2-stake")];
+	}, [finishedTxs, chainId]);
 
-	const stakePendingWithdraw = useMemo(() => {
+	const stakeFinishedWithdraw = useMemo(() => {
 		if (!chainId) return [];
 
-		return [...pendingTxs.filter(tx => tx.service === "stakeV2-unstake")];
-	}, [pendingTxs, chainId]);
-
-	const stakeFinishedApprove = useMemo(() => {
-		if (!chainId) return [];
-
-		return [...finishedTxs.filter(tx => tx.service === "stakeV2-approve")];
+		return [...finishedTxs.filter(tx => tx.service === "stakeV2-unstake")];
 	}, [finishedTxs, chainId]);
 
 	useEffect(() => {
@@ -191,32 +165,10 @@ const Provider: React.FC<IStakeV2ProviderProps> = ({ children }) => {
 	}, [
 		address,
 		chainId,
-		stakePendingClaim.length,
-		stakePendingDeposit.length,
-		stakePendingWithdraw.length,
+		stakeFinishedClaim.length,
+		stakeFinishedDeposit.length,
+		stakeFinishedWithdraw.length,
 	]);
-
-	useEffect(() => {
-		const persist = PersistentFramework.get("stakeV2Approve") as {
-			[k: string]: boolean;
-		};
-
-		if (persist && persist.approved) setApproved(persist.approved);
-	}, []);
-
-	useEffect(() => {
-		const tx = stakeFinishedApprove.find(
-			approveTx => approveTx.hash === approveHash
-		);
-
-		if (tx?.success) {
-			setApproved(true);
-			PersistentFramework.add("stakeV2Approve", { approved: true });
-		} else {
-			setApproved(false);
-			PersistentFramework.add("stakeV2Approve", { approved: false });
-		}
-	}, [stakeFinishedApprove]);
 
 	const providerValue = useMemo(
 		() => ({
@@ -225,20 +177,9 @@ const Provider: React.FC<IStakeV2ProviderProps> = ({ children }) => {
 			unstake,
 			showInUsd,
 			setShowInUsd,
-			stakeV2Opportunities,
-			approve,
-			isApproved: approved,
+			sign,
 		}),
-		[
-			claim,
-			stake,
-			unstake,
-			showInUsd,
-			setShowInUsd,
-			stakeV2Opportunities,
-			approve,
-			approved,
-		]
+		[claim, stake, unstake, showInUsd, setShowInUsd, sign]
 	);
 
 	return (

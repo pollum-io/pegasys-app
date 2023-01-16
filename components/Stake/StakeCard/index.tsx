@@ -13,8 +13,6 @@ import { IStakeCardsProps } from "./dto";
 const StakeCard: React.FC<IStakeCardsProps> = props => {
 	const { stakeInfo, v1 } = props;
 
-	console.log("stakeinfo: ", stakeInfo?.stakedAmount.toExact());
-
 	const { onOpenStakeActions, onOpenStakeV2Actions } = useModal();
 
 	const { colorMode } = useColorMode();
@@ -25,11 +23,8 @@ const StakeCard: React.FC<IStakeCardsProps> = props => {
 		setSelectedOpportunity((stakeInfo as IEarnInfo | undefined) ?? null);
 
 		if (v1) {
-			console.log("v1");
-
 			onOpenStakeActions();
 		} else {
-			console.log("v2");
 			onOpenStakeV2Actions();
 		}
 	};

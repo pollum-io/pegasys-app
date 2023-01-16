@@ -29,7 +29,7 @@ interface IModal {
 export const StakeActions: React.FC<IModal> = props => {
 	const { isOpen, onClose: close } = props;
 	const theme = usePicasso();
-	const { claim, stake, unstake, sign } = useStake();
+	const { claim, stake, unstake, sign, signature } = useStake();
 	const { selectedOpportunity, buttonId, reset, withdrawPercentage } =
 		useEarn();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
@@ -100,11 +100,11 @@ export const StakeActions: React.FC<IModal> = props => {
 				<ModalBody>
 					<EarnDepositAction
 						sign={async () => {
-							console.log("entrou");
 							await sign();
 						}}
 						buttonTitle="Stake"
 						deposit={stake}
+						signature={signature}
 					/>
 					<EarnWithdrawAction
 						onClose={onClose}

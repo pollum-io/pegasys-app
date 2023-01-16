@@ -30,12 +30,9 @@ export const StakeContainer: NextPage = () => {
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const { colorMode } = useColorMode();
 	const { isConnected, address, chainId } = psUseWallet();
-	const { showInUsd, setShowInUsd, stakeV2Opportunities } = useStakeV2();
+	const { showInUsd, setShowInUsd } = useStakeV2();
 	const { stakeV1Opportunities } = useStake();
-	const {
-		//  earnOpportunities,
-		dataLoading,
-	} = useEarn();
+	const { earnOpportunities, dataLoading } = useEarn();
 	const {
 		isOpenStakeActions,
 		onCloseStakeActions,
@@ -282,14 +279,14 @@ export const StakeContainer: NextPage = () => {
 						!dataLoading &&
 							isConnected &&
 							!(!chainId || !RoutesFramework.getStakeAddress(chainId)) &&
-							!stakeV2Opportunities.length &&
+							!earnOpportunities.length &&
 							!stakeV1Opportunities.length
 					)}
 				>
 					{!dataLoading &&
 						isConnected &&
 						!(!chainId || !RoutesFramework.getStakeAddress(chainId)) &&
-						!stakeV2Opportunities.length &&
+						!earnOpportunities.length &&
 						!stakeV1Opportunities.length && (
 							<Flex
 								w="100%"
@@ -314,13 +311,13 @@ export const StakeContainer: NextPage = () => {
 						!dataLoading &&
 							isConnected &&
 							!(!chainId || !RoutesFramework.getStakeAddress(chainId)) &&
-							(stakeV2Opportunities.length || stakeV1Opportunities.length)
+							(earnOpportunities.length || stakeV1Opportunities.length)
 					)}
 				>
 					{!dataLoading &&
 						isConnected &&
 						!(!chainId || !RoutesFramework.getStakeAddress(chainId)) &&
-						(stakeV2Opportunities.length || stakeV1Opportunities.length) && (
+						(earnOpportunities.length || stakeV1Opportunities.length) && (
 							<Flex
 								flexDirection="column"
 								gap="8"
@@ -334,7 +331,7 @@ export const StakeContainer: NextPage = () => {
 										stakeInfo={stakeInfo as IStakeInfo}
 									/>
 								))}
-								{stakeV2Opportunities.map((stakeInfo: IEarnInfo, index) => (
+								{earnOpportunities.map((stakeInfo: IEarnInfo, index) => (
 									<StakeCard key={index} stakeInfo={stakeInfo as IStakeInfo} />
 								))}
 							</Flex>

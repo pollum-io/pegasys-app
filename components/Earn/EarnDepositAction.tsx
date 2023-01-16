@@ -8,28 +8,27 @@ import {
 	BIG_INT_ONE_WEEK_IN_SECONDS,
 	BIG_INT_ZERO,
 	useEarn,
+	TSignature,
 } from "pegasys-services";
 import EarnButton from "./EarnButton";
 import EarnInput from "./EarnInput";
 
 interface IEarnDepositActionProps {
 	deposit: () => Promise<void>;
-	sign?: () => Promise<void>;
-	approve?: () => Promise<void>;
-	isApproved?: boolean;
+	sign: () => Promise<void>;
 	buttonTitle: string;
+	signature: TSignature;
 }
 
 const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 	deposit,
 	sign,
 	buttonTitle,
-	approve,
-	isApproved,
+	signature,
 }) => {
 	const {
 		selectedOpportunity,
-		signature,
+		// signature,
 		depositTypedValue,
 		buttonId,
 		signatureLoading,
@@ -151,22 +150,14 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 					!JSBI.greaterThan(depositValue, BIG_INT_ZERO) ||
 					loading
 				}
-				onClick={
-					(sign && signature) || (isApproved && approve)
-						? deposit
-						: !sign
-						? approve || (() => ({}))
-						: sign
-				}
+				onClick={signature ? deposit : sign}
 				fontSize={16}
 				solid
 			>
 				{signatureLoading
 					? t("earnPages.loading")
-					: sign && !signature
+					: !signature
 					? t("earnPages.sign")
-					: approve && !isApproved
-					? t("earn.approve")
 					: buttonTitle}
 			</EarnButton>
 		</Flex>

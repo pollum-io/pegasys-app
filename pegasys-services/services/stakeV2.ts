@@ -7,9 +7,8 @@ import {
 	feeCollectorDayData,
 } from "apollo";
 
-import { MaxUint256 } from "@ethersproject/constants";
 import { ContractFramework } from "../frameworks";
-import { BIG_INT_ZERO, PegasysTokens, PegasysContracts } from "../constants";
+import { BIG_INT_ZERO, PegasysTokens } from "../constants";
 import {
 	IStakeV2ServicesClaim,
 	IStakeV2ServicesStake,
@@ -18,7 +17,6 @@ import {
 	IStakeV2Info,
 	IStakeV2ServicesGetUnstake,
 	IStakeV2ServicesGetUnclaimed,
-	IStakeV2ServicesApprove,
 } from "../dto";
 
 class StakeV2Services {
@@ -195,7 +193,7 @@ class StakeV2Services {
 					rewardRatePerWeek: new TokenAmount(rewardToken, BIG_INT_ZERO),
 					totalRewardRatePerWeek: new TokenAmount(rewardToken, BIG_INT_ZERO),
 					totalStakedInUsd: Number(psysStakedUSD),
-					stakedInUsd: users.length ? users[0].psysStakedUSD : 0,
+					stakedInUsd: users.length ? Number(users[0].psysStakedUSD) : 0,
 					apr: JSBI.BigInt(apr),
 					rewardRatePerWeekInUsd: 0,
 					unclaimedInUsd: 0,
@@ -239,15 +237,22 @@ class StakeV2Services {
 		chainId,
 		provider,
 		stakeContract,
+		signatureData,
 	}: IStakeV2ServicesStake) {
 		let txHash = "";
 		const contract =
 			stakeContract ?? ContractFramework.StakeV2Contract({ chainId, provider });
 
 		const res = await ContractFramework.call({
-			methodName: "deposit",
+			methodName: "depositWithPermit",
 			contract,
-			args: [`0x${amount}`],
+			args: [
+				`0x${amount}`,
+				signatureData.deadline.toNumber(),
+				signatureData.v,
+				signatureData.r,
+				signatureData.s,
+			],
 		});
 
 		txHash = `${res?.hash}`;
@@ -258,55 +263,26 @@ class StakeV2Services {
 		};
 	}
 
-	static async claim(props: IStakeV2ServicesClaim) {
-		const res = await this.stake({
-			...props,
-			amount: BIG_INT_ZERO.toString(16),
-		});
-
-		return res;
-	}
-
-	static async approve(props: IStakeV2ServicesApprove) {
-		const { amountToApprove, chainId } = props;
-
-		const spender =
-			PegasysContracts[(chainId as ChainId) ?? ChainId.NEVM].STAKE_V2_ADDRESS;
-
-		const token =
-			amountToApprove instanceof TokenAmount
-				? amountToApprove.token
-				: undefined;
-
-		if (!token) return undefined;
-
-		const contract = ContractFramework.TokenContract({
-			address: token.address,
-		});
-
-		let useExact = false;
-
-		await contract.estimateGas.approve(spender, MaxUint256).catch(() => {
-			// general fallback for tokens who restrict approval amounts
-			useExact = true;
-			return contract.estimateGas.approve(
-				spender,
-				amountToApprove.raw.toString()
-			);
-		});
+	static async claim({
+		chainId,
+		provider,
+		stakeContract,
+	}: IStakeV2ServicesClaim) {
+		let txHash = "";
+		const contract =
+			stakeContract ?? ContractFramework.StakeV2Contract({ chainId, provider });
 
 		const res = await ContractFramework.call({
-			methodName: "approve",
+			methodName: "deposit",
 			contract,
-			args: [spender, useExact ? amountToApprove.raw.toString() : MaxUint256],
+			args: [`0x${BIG_INT_ZERO.toString(16)}`],
 		});
 
-		const txHash = `${res?.hash}`;
+		txHash = `${res?.hash}`;
 
 		return {
-			spender,
 			hash: txHash,
-			response: res,
+			response: res ?? null,
 		};
 	}
 }

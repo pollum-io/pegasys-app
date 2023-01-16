@@ -69,6 +69,7 @@ export interface IEarnProviderValue {
 	depositPercentage: number;
 	reset: () => void;
 	signatureLoading: boolean;
+	setSignatureLoading: setType<boolean>;
 	loading: boolean;
 	setLoading: setType<boolean>;
 	onContractCall: (
@@ -77,8 +78,8 @@ export interface IEarnProviderValue {
 			| Array<{ hash: string; response: any }>
 			| undefined
 		>,
-		summary: string,
-		type: string
+		summary: string | string[],
+		type: string | string[]
 	) => Promise<void>;
 	depositValue: JSBI;
 	withdrawValue: JSBI;

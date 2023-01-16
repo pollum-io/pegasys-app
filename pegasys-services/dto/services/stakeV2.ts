@@ -48,6 +48,12 @@ export interface IStakeV2ServicesStake {
 	provider?: TProvider | TSigner;
 	stakeContract?: TContract;
 	amount: string;
+	signatureData: {
+		v: number;
+		r: string;
+		s: string;
+		deadline: BigNumber;
+	};
 }
 
 export interface IStakeV2ServicesApprove {

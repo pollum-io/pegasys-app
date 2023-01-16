@@ -1,5 +1,5 @@
 import { children } from "../react";
-import { IEarnInfo } from "./earn";
+import { IEarnInfo, TSignature } from "./earn";
 
 export interface IStakeProviderProps {
 	children: children;
@@ -11,4 +11,5 @@ export interface IStakeProviderValue {
 	stake: () => Promise<void>;
 	unstake: () => Promise<void>;
 	stakeV1Opportunities: IEarnInfo[];
+	signature: TSignature;
 }
