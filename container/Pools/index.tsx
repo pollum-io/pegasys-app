@@ -574,7 +574,9 @@ export const PoolsContainer: NextPage = () => {
 										<Flex gap="2.5" alignItems="center">
 											<Text
 												fontWeight="medium"
-												fontSize={language === "vn" && isMobile ? "11px" : "xs"}
+												fontSize={
+													language === "vn" && isMobile ? "0.6875rem" : "xs"
+												}
 												color="white"
 											>
 												{translation("pool.viewStakedLiquidity")}
