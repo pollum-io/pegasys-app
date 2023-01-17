@@ -667,6 +667,9 @@
 		"walletBalance": "Cüzdan Bakiyesi",
 		"liquidityPositions": "Likidite Pozisyonları",
 		"balance": "Denge",
-		"assets": "Varlıklar"
+		"assets": "Varlıklar",
+		"noPositions": "Pozisyon Bulunamadı.",
+		"noLiquidity": "Bahisli Likidite Yok.",
+		"noTransactions": "Son İşlem Bulunamadı."
 	}
 }

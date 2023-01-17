@@ -667,6 +667,9 @@
 		"walletBalance": "Portemonnaie-Saldo",
 		"liquidityPositions": "Liquiditäts Positionen",
 		"balance": "Bilanz",
-		"assets": "Aktiva"
+		"assets": "Aktiva",
+		"noPositions": "Keine Positionen gefunden.",
+		"noLiquidity": "Keine abgesicherte Liquidität.",
+		"noTransactions": "Keine aktuellen Transaktionen gefunden."
 	}
 }

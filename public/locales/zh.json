@@ -667,6 +667,9 @@
 		"walletBalance": "钱包余额",
 		"liquidityPositions": "流动性头寸",
 		"balance": "平衡",
-		"assets": "资产"
+		"assets": "资产",
+		"noPositions": "没有找到职位。",
+		"noLiquidity": "无抵押的流动性。",
+		"noTransactions": "没有发现最近的交易。"
 	}
 }

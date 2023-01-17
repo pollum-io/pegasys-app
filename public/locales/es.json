@@ -667,6 +667,9 @@
 		"walletBalance": "Saldo de la Cartera",
 		"liquidityPositions": "Posiciones de Liquidez",
 		"balance": "Saldo",
-		"assets": "Activos"
+		"assets": "Activos",
+		"noPositions": "No se han encontrado puestos.",
+		"noLiquidity": "Sin liquidez apostada.",
+		"noTransactions": "No se encontraron transacciones recientes."
 	}
 }

@@ -666,6 +666,9 @@
 		"walletBalance": "Баланс Kошелька",
 		"liquidityPositions": "Liquiditätspositionen",
 		"balance": "Баланс",
-		"assets": "Активы"
+		"assets": "Активы",
+		"noPositions": "Позиции не найдены.",
+		"noLiquidity": "Ликвидность без ставок.",
+		"noTransactions": "Последние сделки не найдены."
 	}
 }
