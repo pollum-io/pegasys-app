@@ -641,7 +641,8 @@
 		"errorStake": "Fehler beim Abrufen von Stake-Möglichkeiten",
 		"transactionComp": "Transaktion erfolgreich abgeschlossen",
 		"connectingError": "Fehler beim Verbinden der Wallet",
-		"swapFailed": "Swap ist gescheitert"
+		"swapFailed": "Swap ist gescheitert",
+		"viewExplorer": "Im Explorer anzeigen"
 	},
 	"portfolioPage": {
 		"walletStats": "Statistik der Brieftasche",
@@ -666,6 +667,9 @@
 		"walletBalance": "Portemonnaie-Saldo",
 		"liquidityPositions": "Liquiditäts Positionen",
 		"balance": "Bilanz",
-		"assets": "Aktiva"
+		"assets": "Aktiva",
+		"noPositions": "Keine Positionen gefunden.",
+		"noLiquidity": "Keine abgesicherte Liquidität.",
+		"noTransactions": "Keine aktuellen Transaktionen gefunden."
 	}
 }

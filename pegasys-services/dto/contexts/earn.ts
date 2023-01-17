@@ -24,6 +24,7 @@ export interface IEarnInfo {
 	extraRewardRatePerWeek?: TokenAmount;
 	extraTotalRewardRatePerWeek?: TokenAmount;
 	extraUnclaimed?: TokenAmount;
+	rewardRate: TokenAmount;
 }
 
 export type TButtonId = "withdraw" | "claim" | "deposit" | null;

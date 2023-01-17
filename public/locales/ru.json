@@ -640,7 +640,8 @@
 		"errorStake": "Ошибка при получении данных о возможностях stake",
 		"transactionComp": "Транзакция успешно завершена",
 		"connectingError": "Ошибка при подключении кошелька",
-		"swapFailed": "Обмен не удался"
+		"swapFailed": "Обмен не удался",
+		"viewOnExplorer": "Посмотреть в проводнике"
 	},
 	"portfolioPage": {
 		"walletStats": "Статистика Kошелька",
@@ -665,6 +666,9 @@
 		"walletBalance": "Баланс Kошелька",
 		"liquidityPositions": "Liquiditätspositionen",
 		"balance": "Баланс",
-		"assets": "Активы"
+		"assets": "Активы",
+		"noPositions": "Позиции не найдены.",
+		"noLiquidity": "Ликвидность без ставок.",
+		"noTransactions": "Последние сделки не найдены."
 	}
 }

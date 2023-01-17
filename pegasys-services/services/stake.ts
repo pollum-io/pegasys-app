@@ -407,6 +407,7 @@ class StakeServices {
 					apr,
 					rewardRatePerWeekInUsd: rewardRateInUsd,
 					unclaimedInUsd,
+					rewardRate: totalRewardRatePerSecond,
 				});
 			})
 		);

@@ -15,6 +15,7 @@ import {
 	IFarmServicesDeposit,
 	IFarmServicesGetExtraReward,
 	IFarmServicesGetFarmOpportunities,
+	IFarmServicesGetFarmUnclaimed,
 	IFarmServicesGetPoolRewardRate,
 	IFarmServicesGetStake,
 	IFarmServicesGetTotalStake,
@@ -407,6 +408,42 @@ class FarmServices {
 		};
 	}
 
+	static async getFarmUnclaimed({
+		chainId,
+		farmContract,
+		walletAddress,
+	}: IFarmServicesGetFarmUnclaimed) {
+		const stakeTokens = await LpTokenServices.getLpTokens({
+			chainId,
+			farmContract,
+		});
+
+		const poolMap = await LpTokenServices.getPoolMap({
+			tokenAddresses: stakeTokens,
+			farmContract,
+			chainId,
+		});
+
+		const rewardToken = PegasysTokens[chainId ?? ChainId.NEVM].PSYS;
+
+		let totalFarmUnclaimed = BIG_INT_ONE;
+
+		await Promise.all(
+			Object.values(poolMap).map(async poolId => {
+				const unclaimed = await this.getUnclaimed({
+					rewardToken,
+					poolId,
+					walletAddress,
+					farmContract,
+				});
+
+				totalFarmUnclaimed = JSBI.add(totalFarmUnclaimed, unclaimed.raw);
+			})
+		);
+
+		return new TokenAmount(rewardToken, totalFarmUnclaimed);
+	}
+
 	static async getFarmOpportunities({
 		tokenPairs,
 		walletAddress,
@@ -579,6 +616,7 @@ class FarmServices {
 						combinedApr,
 						poolId,
 						pair,
+						rewardRate: values.poolRewardRate,
 					});
 				}
 			})
