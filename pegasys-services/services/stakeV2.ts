@@ -5,6 +5,8 @@ import {
 	GET_STAKE_DATA,
 	stakeClient,
 	feeCollectorDayData,
+	pegasysClient,
+	PAIR_DATA,
 } from "apollo";
 
 import { ContractFramework } from "../frameworks";
@@ -18,6 +20,7 @@ import {
 	IStakeV2ServicesGetUnstake,
 	IStakeV2ServicesGetUnclaimed,
 } from "../dto";
+import PairServices from "./pair";
 
 class StakeV2Services {
 	private static async getUnstake({
@@ -113,18 +116,20 @@ class StakeV2Services {
 
 				if (!stakeQuery.data) return;
 
-				const {
-					psysStaked,
-					psysStakedUSD,
-					psysHarvested,
-					psysHarvestedUSD,
-					depositFeePSYS,
-					depositFeeUSD,
-					updatedAt,
-					users,
-				} = stakeQuery.data.pegasysStaking;
+				const { psysStaked, psysStakedUSD, users } =
+					stakeQuery.data.pegasysStaking;
+
+				const { depositFeePSYS, depositFeeUSD } =
+					stakeQuery.data.pegasysStakingDayDatas[0];
 
 				const decimalsMultiplier = 10 ** stakeToken.decimals;
+
+				const depositFeeAmount = new TokenAmount(
+					stakeToken,
+					depositFeePSYS
+						? JSBI.BigInt(Number(depositFeePSYS) * decimalsMultiplier)
+						: BIG_INT_ZERO
+				);
 
 				const totalStakedAmount = new TokenAmount(
 					stakeToken,
@@ -148,7 +153,11 @@ class StakeV2Services {
 				const stakedAmount = new TokenAmount(
 					stakeToken,
 					users.length && users[0].psysStaked
-						? JSBI.BigInt(Number(users[0].psysStaked) * decimalsMultiplier)
+						? JSBI.BigInt(
+								(Number(users[0].psysStaked) < 0.00000001
+									? 0
+									: Number(users[0].psysStaked)) * decimalsMultiplier
+						  )
 						: BIG_INT_ZERO
 				);
 
@@ -182,6 +191,20 @@ class StakeV2Services {
 					((sumTokenRemitted + sumDepositFeePSYS) * 1200) / Number(psysStaked)
 				);
 
+				const tokens = PegasysTokens[chainId ?? ChainId.NEVM];
+
+				const psys = tokens.PSYS;
+				const usdc = tokens.USDC;
+
+				const pairAddr = await PairServices.getPairAddress([psys, usdc]);
+
+				const res = await pegasysClient.query({
+					query: PAIR_DATA(pairAddr.toLocaleLowerCase()),
+					fetchPolicy: "network-only",
+				});
+
+				const price = Number(res?.data.pairs[0]?.token0Price ?? "0");
+
 				stakeOpportunities.push({
 					rewardToken,
 					stakeToken,
@@ -195,8 +218,9 @@ class StakeV2Services {
 					totalStakedInUsd: Number(psysStakedUSD),
 					stakedInUsd: users.length ? Number(users[0].psysStakedUSD) : 0,
 					apr: JSBI.BigInt(apr),
-					rewardRatePerWeekInUsd: 0,
-					unclaimedInUsd: 0,
+					unclaimedInUsd: Number(unclaimedAmount.toSignificant()) * price,
+					depositFeeAmount,
+					depositFeeInUsd: Number(depositFeeUSD),
 				});
 			})
 		);

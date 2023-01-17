@@ -21,6 +21,7 @@ import {
 	IStakeInfo,
 	IEarnInfo,
 	RoutesFramework,
+	IStakeV2Info,
 } from "pegasys-services";
 import { StakeActions } from "components/Modals/StakeActions";
 import { StakeV2Actions } from "components/Modals/StakeV2Actions";
@@ -332,7 +333,10 @@ export const StakeContainer: NextPage = () => {
 									/>
 								))}
 								{earnOpportunities.map((stakeInfo: IEarnInfo, index) => (
-									<StakeCard key={index} stakeInfo={stakeInfo as IStakeInfo} />
+									<StakeCard
+										key={index}
+										stakeInfo={stakeInfo as IStakeV2Info}
+									/>
 								))}
 							</Flex>
 						)}

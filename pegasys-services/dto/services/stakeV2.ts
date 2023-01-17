@@ -5,8 +5,9 @@ import { TContract, TProvider, TSigner } from "../framework";
 
 export interface IStakeV2Info extends IEarnInfo {
 	apr: JSBI;
-	rewardRatePerWeekInUsd: number;
 	unclaimedInUsd: number;
+	depositFeeAmount: TokenAmount;
+	depositFeeInUsd: number;
 }
 
 export interface IStakeV2ServicesGetUnstake {

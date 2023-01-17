@@ -54,13 +54,20 @@ const StakeCard: React.FC<IStakeCardsProps> = props => {
 				apr={stakeInfo.apr.toString()}
 				totalStakedInUsd={stakeInfo.totalStakedInUsd}
 				totalStakedAmount={stakeInfo.totalStakedAmount}
+				// eslint-disable-next-line
+				// @ts-ignore
 				rewardRatePerWeekInUsd={stakeInfo.rewardRatePerWeekInUsd}
 				rewardRatePerWeek={stakeInfo.rewardRatePerWeek}
 				stakedInUsd={stakeInfo.stakedInUsd}
 				stakedAmount={stakeInfo.stakedAmount}
 				unclaimedInUsd={stakeInfo.unclaimedInUsd}
 				unclaimedAmount={stakeInfo.unclaimedAmount}
-				v1={v1}
+				// eslint-disable-next-line
+				// @ts-ignore
+				depositFeeAmount={stakeInfo.depositFeeAmount}
+				// eslint-disable-next-line
+				// @ts-ignore
+				depositFeeInUsd={stakeInfo.depositFeeInUsd}
 			/>
 			<Buttons
 				unstakedAmount={stakeInfo.unstakedAmount}

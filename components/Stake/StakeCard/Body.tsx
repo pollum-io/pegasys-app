@@ -20,7 +20,8 @@ const Body: React.FC<IBodyProps> = ({
 	stakedAmount,
 	unclaimedInUsd,
 	unclaimedAmount,
-	v1,
+	depositFeeAmount,
+	depositFeeInUsd,
 }) => {
 	const { t } = useTranslation();
 
@@ -48,7 +49,7 @@ const Body: React.FC<IBodyProps> = ({
 					)} ${symbol}`}
 					opacity={JSBI.lessThanOrEqual(totalStakedAmount.raw, BIG_INT_ONE)}
 				/>
-				{v1 && (
+				{rewardRatePerWeek && typeof rewardRatePerWeekInUsd === "number" && (
 					<CardItem
 						text={t("earnPages.yourRate")}
 						usdValue={`${formattedNum(rewardRatePerWeekInUsd, true)} USD/${t(
@@ -58,6 +59,16 @@ const Body: React.FC<IBodyProps> = ({
 							parseFloat(rewardRatePerWeek.toExact())
 						)} ${symbol}/${t("earnPages.week")}`}
 						opacity={JSBI.lessThanOrEqual(rewardRatePerWeek.raw, BIG_INT_ONE)}
+					/>
+				)}
+				{depositFeeAmount && (
+					<CardItem
+						text="Deposit Fee"
+						usdValue={`${formattedNum(depositFeeInUsd ?? 0, true)} USD`}
+						value={`${verifyZerosInBalanceAndFormat(
+							parseFloat(depositFeeAmount.toExact())
+						)} ${symbol}`}
+						opacity={JSBI.lessThanOrEqual(depositFeeAmount.raw, BIG_INT_ONE)}
 					/>
 				)}
 			</Flex>
