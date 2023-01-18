@@ -64,10 +64,7 @@ const StakeCard: React.FC<IStakeCardsProps> = props => {
 				unclaimedAmount={stakeInfo.unclaimedAmount}
 				// eslint-disable-next-line
 				// @ts-ignore
-				depositFeeAmount={stakeInfo.depositFeeAmount}
-				// eslint-disable-next-line
-				// @ts-ignore
-				depositFeeInUsd={stakeInfo.depositFeeInUsd}
+				depositFee={stakeInfo.depositFee}
 			/>
 			<Buttons
 				unstakedAmount={stakeInfo.unstakedAmount}

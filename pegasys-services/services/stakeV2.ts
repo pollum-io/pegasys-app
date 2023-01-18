@@ -116,20 +116,10 @@ class StakeV2Services {
 
 				if (!stakeQuery.data) return;
 
-				const { psysStaked, psysStakedUSD, users } =
+				const { psysStaked, psysStakedUSD, users, depositFee } =
 					stakeQuery.data.pegasysStaking;
 
-				const { depositFeePSYS, depositFeeUSD } =
-					stakeQuery.data.pegasysStakingDayDatas[0];
-
 				const decimalsMultiplier = 10 ** stakeToken.decimals;
-
-				const depositFeeAmount = new TokenAmount(
-					stakeToken,
-					depositFeePSYS
-						? JSBI.BigInt(Number(depositFeePSYS) * decimalsMultiplier)
-						: BIG_INT_ZERO
-				);
 
 				const totalStakedAmount = new TokenAmount(
 					stakeToken,
@@ -219,8 +209,7 @@ class StakeV2Services {
 					stakedInUsd: users.length ? Number(users[0].psysStakedUSD) : 0,
 					apr: JSBI.BigInt(apr),
 					unclaimedInUsd: Number(unclaimedAmount.toSignificant()) * price,
-					depositFeeAmount,
-					depositFeeInUsd: Number(depositFeeUSD),
+					depositFee: Number(depositFee) * 100,
 				});
 			})
 		);

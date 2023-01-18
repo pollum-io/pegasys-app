@@ -152,16 +152,14 @@ export const GET_STAKE_DATA = gql`
 		pegasysStaking(id: $id) {
 			psysStaked
 			psysStakedUSD
+			depositFee
 			users(where: { id: $walletAddress }) {
 				psysStaked
 				psysStakedUSD
-				psysHarvested
-				psysHarvestedUSD
 			}
 		}
 		pegasysStakingDayDatas(where: { date_gte: $date }) {
 			depositFeePSYS
-			depositFeeUSD
 		}
 	}
 `;

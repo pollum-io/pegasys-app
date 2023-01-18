@@ -20,8 +20,7 @@ const Body: React.FC<IBodyProps> = ({
 	stakedAmount,
 	unclaimedInUsd,
 	unclaimedAmount,
-	depositFeeAmount,
-	depositFeeInUsd,
+	depositFee,
 }) => {
 	const { t } = useTranslation();
 
@@ -61,15 +60,8 @@ const Body: React.FC<IBodyProps> = ({
 						opacity={JSBI.lessThanOrEqual(rewardRatePerWeek.raw, BIG_INT_ONE)}
 					/>
 				)}
-				{depositFeeAmount && (
-					<CardItem
-						text="Deposit Fee"
-						usdValue={`${formattedNum(depositFeeInUsd ?? 0, true)} USD`}
-						value={`${verifyZerosInBalanceAndFormat(
-							parseFloat(depositFeeAmount.toExact())
-						)} ${symbol}`}
-						opacity={JSBI.lessThanOrEqual(depositFeeAmount.raw, BIG_INT_ONE)}
-					/>
+				{typeof depositFee === "number" && (
+					<CardItem text="Deposit Fee" value={`${depositFee}%`} />
 				)}
 			</Flex>
 			<Flex

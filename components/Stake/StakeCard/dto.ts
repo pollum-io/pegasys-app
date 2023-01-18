@@ -38,6 +38,5 @@ export interface IBodyProps {
 	stakedAmount: TokenAmount;
 	unclaimedInUsd: number;
 	unclaimedAmount: TokenAmount;
-	depositFeeAmount?: TokenAmount;
-	depositFeeInUsd?: number;
+	depositFee?: number;
 }
