@@ -48,6 +48,7 @@ const PairFields = `
     createdAtTimestamp
   }
 `;
+
 export const PAIR_DATA = (pairAddress: string, block?: number) => {
 	const queryString = `
     ${PairFields}
@@ -143,6 +144,81 @@ export const GET_PROPOSALS = gql`
 					id
 				}
 			}
+		}
+	}
+`;
+
+export const GET_TRANSACTIONS = gql`
+	query transactionsQuery($wallet: ID!) {
+		mints(orderBy: timestamp, orderDirection: desc, where: { to: $wallet }) {
+			id
+			transaction {
+				id
+				timestamp
+			}
+			pair {
+				id
+				token0 {
+					id
+					symbol
+				}
+				token1 {
+					id
+					symbol
+				}
+			}
+			to
+			liquidity
+			amount0
+			amount1
+			amountUSD
+		}
+		burns(
+			orderBy: timestamp
+			orderDirection: desc
+			where: { sender: $wallet }
+		) {
+			id
+			transaction {
+				id
+				timestamp
+			}
+			pair {
+				id
+				token0 {
+					symbol
+				}
+				token1 {
+					symbol
+				}
+			}
+			sender
+			to
+			liquidity
+			amount0
+			amount1
+			amountUSD
+		}
+		swaps(orderBy: timestamp, orderDirection: desc, where: { to: $wallet }) {
+			id
+			transaction {
+				id
+				timestamp
+			}
+			pair {
+				token0 {
+					symbol
+				}
+				token1 {
+					symbol
+				}
+			}
+			amount0In
+			amount0Out
+			amount1In
+			amount1Out
+			amountUSD
+			to
 		}
 	}
 `;

@@ -1,23 +1,8 @@
-import {
-	ILiquidityCardsMockedData,
-	ITransactionCardsMockedData,
-	IWalletStatsCardsMockedData,
-} from "types";
-
 export const handlePaginate = (
-	arrayValue:
-		| ILiquidityCardsMockedData[]
-		| IWalletStatsCardsMockedData[]
-		| ITransactionCardsMockedData[],
+	arrayValue: any,
 	pageSize: number,
 	currentPage: number,
-	setCardsSliced: React.Dispatch<
-		React.SetStateAction<
-			| ILiquidityCardsMockedData[]
-			| IWalletStatsCardsMockedData[]
-			| ITransactionCardsMockedData[]
-		>
-	>
+	setCardsSliced: React.Dispatch<React.SetStateAction<any>>
 ) => {
 	const sliced = arrayValue?.slice(
 		(currentPage - 1) * pageSize,

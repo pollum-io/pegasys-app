@@ -1,51 +1,73 @@
 import { Flex, useColorMode, Text } from "@chakra-ui/react";
-import { FunctionComponent, useMemo, useState } from "react";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { usePicasso } from "hooks";
 import { usePaginator } from "chakra-paginator";
-import {
-	ILiquidityCardsMockedData,
-	ITransactionCardsMockedData,
-	IWalletStatsCardsMockedData,
-} from "types";
-import { transactionCardsMockedData } from "helpers/mockedData";
+import { usePortfolio } from "hooks/usePortfolio";
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
+import moment from "moment";
+import { ITransactions } from "pegasys-services/dto/contexts/portfolio";
 import { handlePaginate } from "./HandlePaginate";
 import { PaginationComponent } from "./Pagination";
 
-export const TransactionCards: FunctionComponent = () => {
+interface ITransactionCard {
+	buttonOption: string;
+}
+
+export const TransactionCards: FunctionComponent<ITransactionCard> = props => {
+	const { buttonOption } = props;
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
+	const {
+		swapsTransactions,
+		burnsTransactions,
+		mintsTransactions,
+		allTransactions,
+	} = usePortfolio();
+	const { t: translation } = useTranslation();
+
+	const showTransactions = useMemo(() => {
+		if (buttonOption === "all") return allTransactions;
+		if (buttonOption === "swaps") return swapsTransactions;
+		if (buttonOption === "removes") return burnsTransactions;
+		return mintsTransactions;
+	}, [buttonOption, swapsTransactions, burnsTransactions, mintsTransactions]);
 
 	const quantityPerPage = 5;
 
-	const quantityOfPages = Math.ceil(
-		transactionCardsMockedData.length / quantityPerPage
-	);
+	const quantityOfPages = Math.ceil(showTransactions.length / quantityPerPage);
 
-	const [cardsSliced, setCardsSliced] = useState<ITransactionCardsMockedData[]>(
-		[]
-	);
+	const [cardsSliced, setCardsSliced] = useState<ITransactions[]>([]);
 
 	const { currentPage, setCurrentPage } = usePaginator({
 		initialState: { currentPage: 1 },
 	});
 
+	const date = (timestamp: number) => {
+		const newData = moment.unix(timestamp).fromNow();
+		return newData;
+	};
+
 	useMemo(() => {
 		handlePaginate(
-			transactionCardsMockedData,
+			showTransactions,
 			quantityPerPage,
 			currentPage,
-			setCardsSliced as React.Dispatch<
-				React.SetStateAction<
-					| ILiquidityCardsMockedData[]
-					| IWalletStatsCardsMockedData[]
-					| ITransactionCardsMockedData[]
-				>
-			>
+			setCardsSliced as any
 		);
-	}, [currentPage, transactionCardsMockedData]);
+	}, [
+		currentPage,
+		showTransactions,
+		swapsTransactions,
+		burnsTransactions,
+		mintsTransactions,
+	]);
+
+	useEffect(() => {
+		setCurrentPage(1);
+	}, [showTransactions]);
 
 	return (
-		// eslint-disable-next-line
 		<>
 			{cardsSliced?.map(cardsValue => (
 				<Flex
@@ -91,11 +113,23 @@ export const TransactionCards: FunctionComponent = () => {
 										fontSize="0.875rem"
 										color={theme.text.cyanPurple}
 									>
-										{cardsValue.type}
+										{translation(
+											`portfolioPage.${
+												cardsValue.type === "swap"
+													? "transactionNameSwaps"
+													: cardsValue.type === "add"
+													? "transactionNameMint"
+													: "transactionNameBurn"
+											}`,
+											{
+												symbol1: cardsValue.symbol0,
+												symbol2: cardsValue.symbol1,
+											}
+										)}
 									</Text>
 									<Flex display={["flex", "flex", "none", "none"]}>
 										<Text fontSize="0.875rem" fontStyle="italic">
-											{cardsValue.time}
+											{date(cardsValue.time)}
 										</Text>
 									</Flex>
 								</Flex>
@@ -104,20 +138,14 @@ export const TransactionCards: FunctionComponent = () => {
 								flexDirection={["column", "row", "row", "row"]}
 								alignItems={["flex-end", "flex-start", "center", "center"]}
 								w={["32%", "55%", "72%", "100%"]}
-								justifyContent="space-between"
+								justifyContent={[
+									"flex-end",
+									"flex-end",
+									"space-between",
+									"space-between",
+								]}
 								h="100%"
 							>
-								<Flex
-									flexDirection="column"
-									display={["none", "flex", "none", "none"]}
-								>
-									<Flex w="8rem">
-										<Text fontSize="0.875rem">{cardsValue.totalAmount}</Text>
-									</Flex>
-									<Flex w="8rem">
-										<Text fontSize="0.875rem">{cardsValue.tokenAmount}</Text>
-									</Flex>
-								</Flex>
 								<Flex
 									w="5rem"
 									justifyContent={[
@@ -132,7 +160,7 @@ export const TransactionCards: FunctionComponent = () => {
 										order={[0, 1, 0, 0]}
 										flexWrap="wrap"
 									>
-										{cardsValue.totalValue}
+										${cardsValue.totalValue.toFixed(4)}
 									</Text>
 								</Flex>
 								<Flex w="8rem" display={["none", "none", "flex", "flex"]}>
@@ -140,18 +168,18 @@ export const TransactionCards: FunctionComponent = () => {
 										order={[1, 0, 0, 0]}
 										fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
 									>
-										{cardsValue.totalAmount}
+										{cardsValue.tokenAmount0}
 									</Text>
 								</Flex>
 								<Flex w="8rem" display={["none", "none", "flex", "flex"]}>
 									<Text
 										fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
 									>
-										{cardsValue.tokenAmount}
+										{cardsValue.tokenAmount1}
 									</Text>
 								</Flex>
 								<Flex w="6rem" display={["none", "none", "flex", "flex"]}>
-									<Text fontSize="14">{cardsValue.time}</Text>
+									<Text fontSize="14">{date(cardsValue.time)}</Text>
 								</Flex>
 							</Flex>
 						</Flex>

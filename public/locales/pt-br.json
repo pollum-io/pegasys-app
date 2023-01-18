@@ -670,6 +670,9 @@
 		"assets": "Ativos",
 		"noPositions": "Nenhuma Posição Encontrada.",
 		"noLiquidity": "Sem Liquidez em Stake.",
-		"noTransactions": "Nenhuma Transação Recente Encontrada."
+		"noTransactions": "Nenhuma Transação Recente Encontrada.",
+		"transactionNameMint": "Adicionado {{ symbol1 }} e {{ symbol2 }}",
+		"transactionNameBurn": "Removido {{ symbol1 }} e {{ symbol2 }}",
+		"transactionNameSwaps": "Swap {{ symbol1 }} por {{ symbol2 }}"
 	}
 }

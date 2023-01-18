@@ -727,7 +727,7 @@ export const PortfolioContainer: NextPage = () => {
 												<Text>{translation("portfolioPage.totalValue")}</Text>
 											</Flex>
 											<Flex w="8rem" mr={["0.5rem", "0", "0", "0"]}>
-												<Text>{translation("portfolioPage.totalAmount")}</Text>
+												<Text>{translation("portfolioPage.tokenAmount")}</Text>
 											</Flex>
 											<Flex w="8rem">
 												<Text>{translation("portfolioPage.tokenAmount")}</Text>
@@ -763,7 +763,7 @@ export const PortfolioContainer: NextPage = () => {
 										</Text>
 									</Flex>
 								) : (
-									<TransactionCards />
+									<TransactionCards buttonOption={buttonId} />
 								)}
 							</Flex>
 						</Flex>

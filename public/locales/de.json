@@ -670,6 +670,9 @@
 		"assets": "Aktiva",
 		"noPositions": "Keine Positionen gefunden.",
 		"noLiquidity": "Keine abgesicherte Liquidität.",
-		"noTransactions": "Keine aktuellen Transaktionen gefunden."
+		"noTransactions": "Keine aktuellen Transaktionen gefunden.",
+		"transactionNameMint": "Hinzugefügt {{ symbol1 }} und {{ symbol2 }}",
+		"transactionNameBurn": "Entfernt {{ symbol1 }} und {{ symbol2 }}",
+		"transactionNameSwaps": "Swap {{ symbol1 }} für {{ symbol2 }}"
 	}
 }
