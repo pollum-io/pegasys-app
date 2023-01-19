@@ -670,6 +670,9 @@
 		"assets": "Actifs",
 		"noPositions": "Aucun Poste Trouvé.",
 		"noLiquidity": "Liquidité Sans Piquet.",
-		"noTransactions": "Aucune Transaction Técente Trouvée."
+		"noTransactions": "Aucune Transaction Técente Trouvée.",
+		"transactionNameMint": "Ajouté {{ symbol1 }} et {{ symbol2 }}",
+		"transactionNameBurn": "Supprimé {{ symbol1 }} et {{ symbol2 }}",
+		"transactionNameSwaps": "Échanger {{ symbol1 }} pour {{ symbol2 }}"
 	}
 }
