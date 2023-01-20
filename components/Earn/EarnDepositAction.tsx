@@ -116,7 +116,14 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				</Text>
 				<EarnInput deposit />
 				<Collapse
-					in={!!depositTypedValue || weeklyReward?.toSignificant() !== "0"}
+					in={
+						(JSBI.greaterThan(
+							selectedOpportunity.rewardRatePerWeek.raw,
+							BIG_INT_ZERO
+						) &&
+							!!depositTypedValue) ||
+						weeklyReward?.toSignificant() !== "0"
+					}
 				>
 					<Text
 						fontWeight="normal"

@@ -39,7 +39,15 @@ const Body: React.FC<IBodyProps> = ({
 				rowGap="1rem"
 				width="85%"
 			>
-				<CardItem text="APR" value={`${apr}%`} />
+				<CardItem
+					tooltip={
+						typeof depositFee === "number"
+							? "The APR metric shows an annualized return that is forecasted, based on the revenue collected over the previous thirty days."
+							: undefined
+					}
+					text="APR"
+					value={`${apr}%`}
+				/>
 				<CardItem
 					text={t("earnPages.totalStaked")}
 					usdValue={`${formattedNum(totalStakedInUsd, true)} USD`}
@@ -61,7 +69,11 @@ const Body: React.FC<IBodyProps> = ({
 					/>
 				)}
 				{typeof depositFee === "number" && (
-					<CardItem text="Deposit Fee" value={`${depositFee}%`} />
+					<CardItem
+						tooltip="Deposit fee is deducted when you deposit your PSYS tokens. The deposit fee may be modified at any time."
+						text="Deposit Fee"
+						value={`${depositFee}%`}
+					/>
 				)}
 			</Flex>
 			<Flex

@@ -6,6 +6,7 @@ export interface ICardItemProps {
 	value: string;
 	usdValue?: string;
 	opacity?: boolean;
+	tooltip?: string;
 }
 
 export interface IStakeCardsProps {

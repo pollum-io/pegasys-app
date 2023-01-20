@@ -113,6 +113,7 @@ export const StakeV2Actions: React.FC<IModal> = props => {
 						onClose={onClose}
 						buttonTitle={t("earnPages.unstake")}
 						withdraw={unstake}
+						stake
 					/>
 					<EarnClaimAction claim={claim} />
 				</ModalBody>

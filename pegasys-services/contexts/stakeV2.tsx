@@ -20,7 +20,6 @@ const Provider: React.FC<IStakeV2ProviderProps> = ({ children }) => {
 		getTypedValue,
 		selectedOpportunity,
 		setEarnOpportunities,
-		withdrawPercentage,
 		onContractCall,
 		setDataLoading,
 		onSign,
@@ -40,31 +39,15 @@ const Provider: React.FC<IStakeV2ProviderProps> = ({ children }) => {
 		if (selectedOpportunity && typedValue) {
 			await onContractCall(
 				async () => {
-					let claimRes:
-						| {
-								hash: string;
-								response: any;
-						  }
-						| undefined;
-
 					const unstakeRes = await StakeV2Services.unstake({
 						stakeContract,
 						amount: typedValue.value.toString(16),
 					});
 
-					if (withdrawPercentage === 100) {
-						claimRes = await StakeV2Services.claim({
-							stakeContract,
-						});
-					}
-
-					return claimRes ? [unstakeRes, claimRes] : unstakeRes;
+					return unstakeRes;
 				},
-				[
-					`Withdraw ${typedValue.tokenAmount?.toFixed(5) ?? ""} PSYS tokens`,
-					"Claim accumulated PSYS rewards",
-				],
-				["stakeV2-unstake", "stakeV2-claim"]
+				`Withdraw ${typedValue.tokenAmount?.toFixed(5) ?? ""} PSYS tokens`,
+				"stakeV2-unstake"
 			);
 		}
 	};
