@@ -26,7 +26,7 @@ export const verifyZerosInBalanceAndFormat = (balance: number): string => {
 	const firstNumber = fullValue.toString().charAt(0);
 
 	const secondValueSplitted =
-		fullValue > 0 && fullValue.toString().split(".")[1].charAt(0);
+		fullValue > 0 && fullValue.toString().split(".")[1]?.charAt(0);
 
 	const valuesValidations = [
 		Number(firstNumber) === 0 &&

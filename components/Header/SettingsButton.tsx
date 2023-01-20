@@ -50,7 +50,6 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
-	// const [expert, setExpert] = useState(false)
 	const {
 		userSlippageTolerance,
 		setUserSlippageTolerance,
@@ -58,6 +57,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 		setUserTransactionDeadlineValue,
 		setExpert,
 		expert,
+		handleCacheExportMode,
 	} = usePegasys();
 
 	const { isOpenSettingsButton, onCloseSettingsButton, onOpenSettingsButton } =
@@ -417,9 +417,7 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 									{translation("settings.toggleExpertMode")}
 								</Text>
 								<TooltipComponent
-									label={translation(
-										"transactionSettings.transactionRevertDeadlineHelper"
-									)}
+									label={translation("settings.expertModeHelper")}
 									icon={MdHelpOutline}
 								/>
 							</Flex>
@@ -431,7 +429,11 @@ export const SettingsButton: FunctionComponent<IButtonProps> = props => {
 									<Switch
 										disabled={!isConnected}
 										size="md"
-										onChange={() => setExpert(!expert)}
+										onChange={() => {
+											setExpert(!expert);
+											handleCacheExportMode();
+										}}
+										isChecked={!!expert}
 									/>
 									<Text color={theme.text.mono}>
 										{translation("toggle.on")}

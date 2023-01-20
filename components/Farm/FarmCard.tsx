@@ -200,14 +200,15 @@ const FarmCard: FunctionComponent<{
 						py="1.5"
 						fontSize="sm"
 						alignItems="center"
+						w="100%"
 					>
-						<Text fontWeight="semibold">{t("earnPages.yourRate")}</Text>
+						<Text fontWeight="semibold">{t("earnPages.yourRate")} </Text>
 
-						<Text w="45%" textAlign="end">
+						<Text textAlign="end">
 							{verifyZerosInBalanceAndFormat(
 								parseFloat(rewardRatePerWeek.toExact())
-							)}{" "}
-							{rewardToken.symbol}/{t("earnPages.week")}
+							)}
+							{rewardToken.symbol} / {t("earnPages.week")}
 						</Text>
 					</Flex>
 					<Flex
@@ -219,7 +220,7 @@ const FarmCard: FunctionComponent<{
 						<Text fontWeight="semibold" w="50%">
 							{t("earnPages.yourUnclaimed")}
 						</Text>
-						<Text w="45%" textAlign="end">
+						<Text textAlign="end">
 							{verifyZerosInBalanceAndFormat(
 								parseFloat(unclaimedAmount.toExact())
 							)}{" "}

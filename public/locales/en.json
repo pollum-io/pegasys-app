@@ -639,7 +639,8 @@
 		"errorStake": "Error while fetching stake opportunities",
 		"transactionComp": "Transaction completed successfully",
 		"connectingError": "Error while connecting the wallet",
-		"swapFailed": "Swap has failed"
+		"swapFailed": "Swap has failed",
+		"viewOnExplorer": "View on explorer"
 	},
 	"portfolioPage": {
 		"walletStats": "Wallet Stats",
@@ -664,6 +665,9 @@
 		"walletBalance": "Wallet Balance",
 		"liquidityPositions": "Liquidity Positions",
 		"balance": "Balance",
-		"assets": "Assets"
+		"assets": "Assets",
+		"noPositions": "No Positions Found.",
+		"noLiquidity": "No Staked Liquidity.",
+		"noTransactions": "No Recent Transactions Found."
 	}
 }

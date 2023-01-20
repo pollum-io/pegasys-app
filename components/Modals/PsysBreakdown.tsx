@@ -118,42 +118,50 @@ export const PsysBreakdown: FunctionComponent<IModal> = props => {
 							filter="drop-shadow(0px 4px 7px rgba(0, 217, 239, 0.25))"
 							className="blob"
 						/>
-						<Text
-							fontSize="2xl"
-							fontWeight="semibold"
-							ml="2"
-							color={theme.text.mono}
-						>
-							{!isConnected ? "-" : psysBalance} PSYS
-						</Text>
+						{isConnected && (
+							<Text
+								fontSize="2xl"
+								fontWeight="semibold"
+								ml="2"
+								color={theme.text.mono}
+								textAlign="center"
+							>
+								{!isConnected ? "-" : psysBalance} PSYS
+							</Text>
+						)}
 					</Flex>
 					<Flex flexDirection="column" gap="4" mt="8" color={theme.text.mono}>
 						<Flex
 							alignItems="center"
 							justifyContent="space-between"
 							flexDirection="row"
+							color={!isConnected ? theme.text.lightnessGray : "inherit"}
 						>
 							<Text fontSize="sm" fontWeight="semibold">
 								{translation("header.unclaimed")}
 							</Text>
 							<Text fontSize="sm">
-								{!isConnected ? "-" : psysUnclaimed} PSYS
+								{!isConnected ? "-" : `${psysUnclaimed} PSYS`}
 							</Text>
 						</Flex>
 						<Flex
 							alignItems="center"
 							justifyContent="space-between"
 							flexDirection="row"
+							color={!isConnected ? theme.text.lightnessGray : "inherit"}
 						>
 							<Text fontSize="sm" fontWeight="semibold">
 								{translation("header.psysPrice")}
 							</Text>
-							<Text fontSize="sm">{!isConnected ? "-" : psysPriceSys} SYS</Text>
+							<Text fontSize="sm">
+								{!isConnected ? "-" : `${psysPriceSys} SYS`}
+							</Text>
 						</Flex>
 						<Flex
 							alignItems="center"
 							justifyContent="space-between"
 							flexDirection="row"
+							color={!isConnected ? theme.text.lightnessGray : "inherit"}
 						>
 							<Text fontSize="sm" fontWeight="semibold">
 								{translation("header.totalSupply")}
