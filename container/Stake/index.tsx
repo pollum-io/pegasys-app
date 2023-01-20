@@ -325,17 +325,17 @@ export const StakeContainer: NextPage = () => {
 								mb="24"
 								alignItems={["center", "center", "center", "center"]}
 							>
+								{earnOpportunities.map((stakeInfo: IEarnInfo, index) => (
+									<StakeCard
+										key={index}
+										stakeInfo={stakeInfo as IStakeV2Info}
+									/>
+								))}
 								{stakeV1Opportunities.map((stakeInfo: IEarnInfo, index) => (
 									<StakeCard
 										v1
 										key={index}
 										stakeInfo={stakeInfo as IStakeInfo}
-									/>
-								))}
-								{earnOpportunities.map((stakeInfo: IEarnInfo, index) => (
-									<StakeCard
-										key={index}
-										stakeInfo={stakeInfo as IStakeV2Info}
 									/>
 								))}
 							</Flex>
