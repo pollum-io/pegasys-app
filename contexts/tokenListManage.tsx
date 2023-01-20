@@ -243,14 +243,6 @@ export const TokensListManageProvider: React.FC<{
 	// HANDLE FUNCTIONS TO FILL AND MANAGE TOKEN LIST MANAGE STATE AT ALL AND ALSO WEAK MAP LISTS //
 
 	useEffect(() => {
-		PersistentFramework.add("currentTokenListState", tokenListManageState);
-	}, [
-		tokenListManageState,
-		tokenListManageState.byUrl,
-		tokenListManageState.selectedListUrl,
-	]);
-
-	useEffect(() => {
 		if (
 			Object.keys(tokenListManageState?.byUrl).length === 0 ||
 			tokenListManageState.selectedListUrl?.length === 0
@@ -343,21 +335,29 @@ export const TokensListManageProvider: React.FC<{
 	}, [listToAdd, listToRemove]);
 
 	useEffect(() => {
-		if (currentCacheListTokensToDisplay.length > 0) {
-			PersistentFramework.add(
-				"currentStorageTokens",
-				currentCacheListTokensToDisplay
-			);
-		}
-	}, [currentCacheListTokensToDisplay]);
+		PersistentFramework.add("currentTokenListState", tokenListManageState);
+	}, [
+		tokenListManageState,
+		tokenListManageState.byUrl,
+		tokenListManageState.selectedListUrl,
+	]);
 
-	useEffect(() => {
-		const getStorageValue = PersistentFramework.get("currentStorageTokens");
+	// useEffect(() => {
+	// 	if (currentCacheListTokensToDisplay.length > 0) {
+	// 		PersistentFramework.add(
+	// 			"currentStorageTokens",
+	// 			currentCacheListTokensToDisplay
+	// 		);
+	// 	}
+	// }, [currentCacheListTokensToDisplay]);
 
-		if (getStorageValue) {
-			setCurrentCacheListTokensToDisplay(getStorageValue as WrappedTokenInfo[]);
-		}
-	}, []);
+	// useEffect(() => {
+	// 	const getStorageValue = PersistentFramework.get("currentStorageTokens");
+
+	// 	if (getStorageValue) {
+	// 		setCurrentCacheListTokensToDisplay(getStorageValue as WrappedTokenInfo[]);
+	// 	}
+	// }, []);
 
 	const tokensListManageProviderValue = useMemo(
 		() => ({
