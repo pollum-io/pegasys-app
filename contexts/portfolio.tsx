@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-expressions */
+import { useTokens } from "hooks";
 import { useWallet } from "pegasys-services";
 import {
 	IContextTransactions,
@@ -13,6 +14,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const { address } = useWallet();
+	const { userTokensBalance } = useTokens();
 
 	const [swapsTransactions, setSwapsTransactions] = useState<ITransactions[]>(
 		[]
@@ -23,6 +25,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [mintsTransactions, setMintsTransactions] = useState<ITransactions[]>(
 		[]
 	);
+	const [walletBalance, setWalletBalance] = useState<Array<any>>([]);
 
 	const getTransactions = async () => {
 		const transactions = await PortfolioServices.getTransactions(address);
@@ -32,9 +35,19 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 		setMintsTransactions(transactions.mints);
 	};
 
+	const getWalletBalance = async () => {
+		const balances = await PortfolioServices.getWalletBalance(
+			userTokensBalance
+		);
+
+		setWalletBalance(balances.walletBalances);
+	};
+
 	useEffect(() => {
 		if (address) getTransactions();
-	}, [address]);
+		if (userTokensBalance) getWalletBalance();
+		console.log("walletBalance", walletBalance);
+	}, [address, userTokensBalance]);
 
 	const allTransactions = useMemo(() => {
 		const transactions = [
@@ -51,14 +64,31 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 		});
 	}, [swapsTransactions, burnsTransactions, mintsTransactions]);
 
+	const getTotalValueSwapped = useMemo(() => {
+		const total = swapsTransactions.reduce(
+			(acc, cur) => acc + cur.totalValue,
+			0
+		);
+		return total;
+	}, [swapsTransactions]);
+
 	const portfolioProviderValue = useMemo(
 		() => ({
 			swapsTransactions,
 			burnsTransactions,
 			mintsTransactions,
 			allTransactions,
+			getTotalValueSwapped,
+			walletBalance,
 		}),
-		[swapsTransactions, burnsTransactions, mintsTransactions, allTransactions]
+		[
+			swapsTransactions,
+			burnsTransactions,
+			mintsTransactions,
+			allTransactions,
+			getTotalValueSwapped,
+			walletBalance,
+		]
 	);
 
 	return (

@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { usePicasso } from "hooks";
+import { usePicasso, useTokens } from "hooks";
 import {
 	Button,
 	Flex,
@@ -21,6 +21,7 @@ import {
 	transactionCardsMockedData,
 	walletStatsCardsMockedData,
 } from "helpers/mockedData";
+import { usePortfolio } from "hooks/usePortfolio";
 
 export const PortfolioContainer: NextPage = () => {
 	const theme = usePicasso();
@@ -31,7 +32,10 @@ export const PortfolioContainer: NextPage = () => {
 	const { colorMode } = useColorMode();
 	const { isConnected } = useWallet();
 	const { t: translation } = useTranslation();
-
+	const { allTransactions, getTotalValueSwapped } = usePortfolio();
+	const { userTokensBalance } = useTokens();
+	const fee = 0.003;
+	const totalFeePaid = getTotalValueSwapped * fee;
 	const scrollToSection = (elementRef: any) => {
 		window.scrollTo({
 			top: elementRef.current.offsetTop,
@@ -147,7 +151,7 @@ export const PortfolioContainer: NextPage = () => {
 										order={[1, 1, 0, 0]}
 										w="11rem"
 									>
-										{isConnected ? "$1.21" : "-"}
+										{isConnected ? `$${getTotalValueSwapped.toFixed(2)}` : "-"}
 									</Text>
 									<Text
 										fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
@@ -180,7 +184,7 @@ export const PortfolioContainer: NextPage = () => {
 										order={[1, 1, 0, 0]}
 										w={["11rem", "11rem", "9rem", "11rem"]}
 									>
-										{isConnected ? "$1450,00" : "-"}
+										{isConnected ? `$${totalFeePaid.toFixed(4)}` : "-"}
 									</Text>
 									<Text
 										fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
@@ -213,7 +217,7 @@ export const PortfolioContainer: NextPage = () => {
 										order={[1, 1, 0, 0]}
 										w={["11rem", "11rem", "8rem", "8rem"]}
 									>
-										{isConnected ? "12" : "-"}
+										{isConnected ? allTransactions.length : "-"}
 									</Text>
 									<Text
 										fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
@@ -286,7 +290,7 @@ export const PortfolioContainer: NextPage = () => {
 							</Flex>
 						</Flex>
 						<Flex flexDirection="column" mt="1rem">
-							{walletStatsCardsMockedData.length === 0 ? (
+							{userTokensBalance.length === 0 ? (
 								<Flex
 									w="100%"
 									my={["3rem", "3rem", "8rem", "8rem"]}

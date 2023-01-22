@@ -1,55 +1,65 @@
 import { Flex, useColorMode, Text, Image } from "@chakra-ui/react";
 import { FunctionComponent, useMemo, useState } from "react";
-import { usePicasso } from "hooks";
+import { usePicasso, useTokens } from "hooks";
 import {
 	ILiquidityCardsMockedData,
 	ITransactionCardsMockedData,
 	IWalletStatsCardsMockedData,
+	WrappedTokenInfo,
 } from "types";
 import { walletStatsCardsMockedData } from "helpers/mockedData";
 import { usePaginator } from "chakra-paginator";
+import { usePortfolio } from "hooks/usePortfolio";
 import { handlePaginate } from "./HandlePaginate";
 import { PaginationComponent } from "./Pagination";
 
 export const WalletStatsCards: FunctionComponent = () => {
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
-
+	const { userTokensBalance } = useTokens();
+	const { walletBalance } = usePortfolio();
+	const [defaultTokens, setDefaultTokens] = useState<WrappedTokenInfo[]>([]);
 	const quantityPerPage = 2;
+	const quantityOfPages = Math.ceil(walletBalance.length / quantityPerPage);
 
-	const quantityOfPages = Math.ceil(
-		walletStatsCardsMockedData.length / quantityPerPage
-	);
-
-	const [cardsSliced, setCardsSliced] = useState<IWalletStatsCardsMockedData[]>(
-		[]
-	);
+	const [cardsSliced, setCardsSliced] = useState<any[]>([]);
 
 	const { currentPage, setCurrentPage } = usePaginator({
 		initialState: { currentPage: 1 },
 	});
 
 	useMemo(() => {
+		const orderedTokens = walletBalance
+			.map((tokens: any, index: number) => {
+				const obj = walletBalance[walletBalance.length - index - 1];
+
+				return obj;
+			})
+			.sort(
+				(valueA: { balance: string }, valueB: { balance: string }) =>
+					Number(valueB.balance) - Number(valueA.balance)
+			);
+		console.log("dentro do memmo", orderedTokens);
+		setDefaultTokens(orderedTokens);
+	}, [walletBalance]);
+
+	useMemo(() => {
 		handlePaginate(
-			walletStatsCardsMockedData,
+			defaultTokens,
 			quantityPerPage,
 			currentPage,
-			setCardsSliced as React.Dispatch<
-				React.SetStateAction<
-					| ILiquidityCardsMockedData[]
-					| IWalletStatsCardsMockedData[]
-					| ITransactionCardsMockedData[]
-				>
-			>
+			setCardsSliced as React.Dispatch<React.SetStateAction<[]>>
 		);
-	}, [currentPage, walletStatsCardsMockedData]);
+	}, [currentPage, defaultTokens]);
+
+	console.log("cardsSliced", cardsSliced);
 
 	return (
 		// eslint-disable-next-line
 		<>
 			{cardsSliced?.map(cardsValue => (
 				<Flex
-					key={cardsValue.id}
+					key={cardsValue?.id}
 					justifyContent="center"
 					w="100%"
 					px={["1.5rem", "2rem", "2.5rem", "8rem"]}
@@ -73,7 +83,12 @@ export const WalletStatsCards: FunctionComponent = () => {
 							alignItems="center"
 							w={["55%", "45%", "24%", "24%"]}
 						>
-							<Image src={cardsValue.icon} h="9" w="9" alt={cardsValue.asset} />
+							<Image
+								src={cardsValue?.tokenImage}
+								h="9"
+								w="9"
+								alt={cardsValue?.tokenImage}
+							/>
 							<Flex
 								flexDirection={["column", "column", "row", "row"]}
 								alignItems={["flex-start", "flex-start", "center", "center"]}
@@ -81,13 +96,13 @@ export const WalletStatsCards: FunctionComponent = () => {
 								w="100%"
 							>
 								<Text fontWeight="bold" fontSize="0.875rem">
-									{cardsValue.asset}
+									{cardsValue?.symbol}
 								</Text>
 								<Text
 									fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
 									display={["flex", "flex", "none", "none"]}
 								>
-									{cardsValue.price}
+									{cardsValue?.priceUSD}
 								</Text>
 							</Flex>
 						</Flex>
@@ -101,7 +116,7 @@ export const WalletStatsCards: FunctionComponent = () => {
 								<Text
 									fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
 								>
-									{cardsValue.price}
+									${cardsValue?.priceUSD.toFixed(2)}
 								</Text>
 							</Flex>
 
@@ -114,7 +129,7 @@ export const WalletStatsCards: FunctionComponent = () => {
 								<Text
 									fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
 								>
-									{cardsValue.balance}
+									{Number(cardsValue?.balance).toFixed(10)}
 								</Text>
 							</Flex>
 							<Flex w="6rem">
@@ -122,7 +137,7 @@ export const WalletStatsCards: FunctionComponent = () => {
 									fontSize="14"
 									fontWeight={["bold", "normal", "normal", "normal"]}
 								>
-									{cardsValue.value}
+									{Number(cardsValue?.value).toFixed(2)}
 								</Text>
 							</Flex>
 						</Flex>

@@ -222,3 +222,24 @@ export const GET_TRANSACTIONS = gql`
 		}
 	}
 `;
+
+export const WALLET_BALANCE_TOKEN = gql`
+	query tokenDayDatas($tokenAddr: String!) {
+		tokenDayDatas(
+			first: 1000
+			orderBy: date
+			orderDirection: asc
+			where: { token: $tokenAddr }
+		) {
+			id
+			date
+			priceUSD
+			totalLiquidityToken
+			totalLiquidityUSD
+			totalLiquiditySYS
+			dailyVolumeSYS
+			dailyVolumeToken
+			dailyVolumeUSD
+		}
+	}
+`;
