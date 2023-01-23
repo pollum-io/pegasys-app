@@ -253,9 +253,9 @@ export const PortfolioContainer: NextPage = () => {
 							color={theme.text.mono}
 							mt="3rem"
 							display={
-								walletStatsCardsMockedData.length === 0
+								userTokensBalance.length === 0
 									? "none"
-									: ["none", "none", "flex", "flex"]
+									: ["flex", "flex", "flex", "flex"]
 							}
 							fontSize="0.875rem"
 						>

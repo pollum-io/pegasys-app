@@ -100,7 +100,7 @@ export const WalletStatsCards: FunctionComponent = () => {
 											fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
 											display={["flex", "flex", "none", "none"]}
 										>
-											{cardsValue.priceUSD}
+											${cardsValue.priceUSD.toFixed(2)}
 										</Text>
 									</Flex>
 								</Flex>
@@ -137,7 +137,7 @@ export const WalletStatsCards: FunctionComponent = () => {
 											fontSize="14"
 											fontWeight={["bold", "normal", "normal", "normal"]}
 										>
-											{verifyZerosInBalanceAndFormat(Number(cardsValue.value))}
+											${verifyZerosInBalanceAndFormat(Number(cardsValue.value))}
 											{/* {ethers.utils.parseUnits(
 											cardsValue.value,
 											cardsValue.decimals
