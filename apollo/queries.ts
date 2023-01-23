@@ -228,7 +228,7 @@ export const WALLET_BALANCE_TOKEN = gql`
 		tokenDayDatas(
 			first: 1000
 			orderBy: date
-			orderDirection: asc
+			orderDirection: desc
 			where: { token: $tokenAddr }
 		) {
 			id

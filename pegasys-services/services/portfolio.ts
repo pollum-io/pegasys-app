@@ -105,21 +105,22 @@ class PortfolioServices {
 					fetchPolicy: "cache-first",
 					variables: { tokenAddr: item.address.toLowerCase() },
 				});
-				const { priceUSD } = fetchWalletBalance.data.tokenDayDatas[0] ?? {
+
+				const { priceUSD } = fetchWalletBalance?.data?.tokenDayDatas[0] ?? {
 					priceUSD: 0,
 				};
-				console.log("priceUSD", [priceUSD]);
 
 				return {
 					tokenImage: item.tokenInfo.logoURI,
 					symbol: item.symbol,
 					priceUSD: Number(priceUSD),
 					balance: Number(item.tokenInfo.formattedBalance),
+					decimals: item.tokenInfo.decimals,
 					value: Number(priceUSD) * Number(item.tokenInfo.formattedBalance),
 				};
 			})
 		);
-		console.log("aaaaa", walletBalances);
+
 		return { walletBalances };
 	}
 }

@@ -46,7 +46,6 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 	useEffect(() => {
 		if (address) getTransactions();
 		if (userTokensBalance) getWalletBalance();
-		console.log("walletBalance", walletBalance);
 	}, [address, userTokensBalance]);
 
 	const allTransactions = useMemo(() => {
