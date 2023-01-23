@@ -34,7 +34,9 @@ export const TokensListManageProvider: React.FC<{
 	children: React.ReactNode;
 }> = ({ children }) => {
 	const [tokenListManageState, setTokenListManageState] = useState<ListsState>(
-		INITIAL_TOKEN_LIST_STATE
+		PersistentFramework.get("currentTokenListState")
+			? (PersistentFramework.get("currentTokenListState") as ListsState)
+			: (INITIAL_TOKEN_LIST_STATE as ListsState)
 	);
 
 	const [currentCacheListTokensToDisplay, setCurrentCacheListTokensToDisplay] =
@@ -333,21 +335,29 @@ export const TokensListManageProvider: React.FC<{
 	}, [listToAdd, listToRemove]);
 
 	useEffect(() => {
-		if (currentCacheListTokensToDisplay.length > 0) {
-			PersistentFramework.add(
-				"currentStorageTokens",
-				currentCacheListTokensToDisplay
-			);
-		}
-	}, [currentCacheListTokensToDisplay]);
+		PersistentFramework.add("currentTokenListState", tokenListManageState);
+	}, [
+		tokenListManageState,
+		tokenListManageState.byUrl,
+		tokenListManageState.selectedListUrl,
+	]);
 
-	useEffect(() => {
-		const getStorageValue = PersistentFramework.get("currentStorageTokens");
+	// useEffect(() => {
+	// 	if (currentCacheListTokensToDisplay.length > 0) {
+	// 		PersistentFramework.add(
+	// 			"currentStorageTokens",
+	// 			currentCacheListTokensToDisplay
+	// 		);
+	// 	}
+	// }, [currentCacheListTokensToDisplay]);
 
-		if (getStorageValue) {
-			setCurrentCacheListTokensToDisplay(getStorageValue as WrappedTokenInfo[]);
-		}
-	}, []);
+	// useEffect(() => {
+	// 	const getStorageValue = PersistentFramework.get("currentStorageTokens");
+
+	// 	if (getStorageValue) {
+	// 		setCurrentCacheListTokensToDisplay(getStorageValue as WrappedTokenInfo[]);
+	// 	}
+	// }, []);
 
 	const tokensListManageProviderValue = useMemo(
 		() => ({
