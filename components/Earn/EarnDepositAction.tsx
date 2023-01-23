@@ -18,6 +18,7 @@ interface IEarnDepositActionProps {
 	sign: () => Promise<void>;
 	buttonTitle: string;
 	signature: TSignature;
+	isPeriodFinished?: boolean;
 }
 
 const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
@@ -25,6 +26,7 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 	sign,
 	buttonTitle,
 	signature,
+	isPeriodFinished,
 }) => {
 	const {
 		selectedOpportunity,
@@ -151,6 +153,7 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				mt="1.5rem"
 				mb={["3rem", "0.5rem", "0.5rem", "0.5rem"]}
 				disabled={
+					isPeriodFinished ||
 					!depositTypedValue ||
 					signatureLoading ||
 					depositPercentage > 100 ||

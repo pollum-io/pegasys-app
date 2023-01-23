@@ -105,6 +105,9 @@ export const StakeActions: React.FC<IModal> = props => {
 						buttonTitle="Stake"
 						deposit={stake}
 						signature={signature}
+						// eslint-disable-next-line
+						// @ts-ignore
+						isPeriodFinished={selectedOpportunity.isPeriodFinished}
 					/>
 					<EarnWithdrawAction
 						onClose={onClose}

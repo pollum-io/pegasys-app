@@ -20,6 +20,7 @@ export interface IButtonsProps {
 	unclaimedAmount: TokenAmount;
 	symbol: string;
 	onClick: (id: string) => void;
+	isPeriodFinish?: boolean;
 }
 
 export interface IHeaderProps {
@@ -40,4 +41,5 @@ export interface IBodyProps {
 	unclaimedInUsd: number;
 	unclaimedAmount: TokenAmount;
 	depositFee?: number;
+	isPeriodFinish?: boolean;
 }

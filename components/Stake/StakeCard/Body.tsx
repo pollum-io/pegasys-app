@@ -21,6 +21,7 @@ const Body: React.FC<IBodyProps> = ({
 	unclaimedInUsd,
 	unclaimedAmount,
 	depositFee,
+	isPeriodFinish,
 }) => {
 	const { t } = useTranslation();
 
@@ -46,7 +47,7 @@ const Body: React.FC<IBodyProps> = ({
 							: undefined
 					}
 					text="APR"
-					value={`${apr}%`}
+					value={`${isPeriodFinish ? 0 : apr}%`}
 				/>
 				<CardItem
 					text={t("earnPages.totalStaked")}

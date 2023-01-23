@@ -388,7 +388,7 @@ class StakeServices {
 					periodFinish: values.periodFinishMs
 						? new Date(values.periodFinishMs)
 						: undefined,
-					isPeriodFinished: !!values.periodFinishMs,
+					isPeriodFinished,
 					apr,
 					rewardRatePerWeekInUsd: rewardRateInUsd,
 					unclaimedInUsd,

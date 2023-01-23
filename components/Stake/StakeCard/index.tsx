@@ -65,6 +65,9 @@ const StakeCard: React.FC<IStakeCardsProps> = props => {
 				// eslint-disable-next-line
 				// @ts-ignore
 				depositFee={stakeInfo.depositFee}
+				// eslint-disable-next-line
+				// @ts-ignore
+				isPeriodFinish={stakeInfo.isPeriodFinished}
 			/>
 			<Buttons
 				unstakedAmount={stakeInfo.unstakedAmount}
@@ -72,6 +75,9 @@ const StakeCard: React.FC<IStakeCardsProps> = props => {
 				unclaimedAmount={stakeInfo.unclaimedAmount}
 				symbol={stakeInfo.stakeToken.symbol ?? ""}
 				onClick={onClick}
+				// eslint-disable-next-line
+				// @ts-ignore
+				isPeriodFinish={stakeInfo.isPeriodFinished}
 			/>
 		</Card>
 	);

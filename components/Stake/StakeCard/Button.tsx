@@ -14,6 +14,7 @@ const Buttons: React.FC<IButtonsProps> = ({
 	unclaimedAmount,
 	symbol,
 	onClick,
+	isPeriodFinish,
 }) => {
 	const router = useRouter();
 	const { t } = useTranslation();
@@ -70,6 +71,7 @@ const Buttons: React.FC<IButtonsProps> = ({
 						amount={unstakedAmount}
 						solid
 						width={["50%", "50%", "50%", ""]}
+						disabled={isPeriodFinish}
 					>
 						{t("earnPages.stake")}
 					</EarnButton>
