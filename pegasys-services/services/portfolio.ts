@@ -1,8 +1,16 @@
 import { TokenAmount } from "@pollum-io/pegasys-sdk";
-import { pegasysClient, GET_TRANSACTIONS } from "apollo";
+import { pegasysClient, GET_TRANSACTIONS, WALLET_BALANCE_TOKEN } from "apollo";
 import { IReturnTransactions } from "pegasys-services/dto/contexts/portfolio";
 
-// TODO TYPES
+interface IWalletBalance {
+	priceUSD: any;
+	balance: any;
+	value: any;
+}
+
+export interface IReturnWallet {
+	walletBalances: IWalletBalance[];
+}
 
 class PortfolioServices {
 	static async getTransactions(
@@ -87,6 +95,33 @@ class PortfolioServices {
 				};
 			}),
 		};
+	}
+
+	static async getWalletBalance(tokenList: Array<any>): Promise<IReturnWallet> {
+		const walletBalances = await Promise.all(
+			tokenList.map(async item => {
+				const fetchWalletBalance = await pegasysClient.query({
+					query: WALLET_BALANCE_TOKEN,
+					fetchPolicy: "cache-first",
+					variables: { tokenAddr: item.address.toLowerCase() },
+				});
+
+				const { priceUSD } = fetchWalletBalance?.data?.tokenDayDatas[0] ?? {
+					priceUSD: 0,
+				};
+
+				return {
+					tokenImage: item.tokenInfo.logoURI,
+					symbol: item.symbol,
+					priceUSD: Number(priceUSD),
+					balance: Number(item.tokenInfo.formattedBalance),
+					decimals: item.tokenInfo.decimals,
+					value: Number(priceUSD) * Number(item.tokenInfo.formattedBalance),
+				};
+			})
+		);
+
+		return { walletBalances };
 	}
 }
 

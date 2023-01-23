@@ -40,13 +40,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 			liquidityCardsMockedData,
 			quantityPerPage,
 			currentPage,
-			setCardsSliced as React.Dispatch<
-				React.SetStateAction<
-					| ILiquidityCardsMockedData[]
-					| IWalletStatsCardsMockedData[]
-					| ITransactionCardsMockedData[]
-				>
-			>
+			setCardsSliced as React.Dispatch<React.SetStateAction<any>>
 		);
 	}, [currentPage, liquidityCardsMockedData]);
 

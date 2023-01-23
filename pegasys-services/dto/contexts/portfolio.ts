@@ -20,4 +20,6 @@ export interface IContextTransactions {
 	burnsTransactions: ITransactions[];
 	mintsTransactions: ITransactions[];
 	allTransactions: ITransactions[];
+	getTotalValueSwapped: number;
+	walletBalance: any;
 }
