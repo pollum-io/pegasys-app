@@ -210,6 +210,7 @@ class StakeV2Services {
 					apr: JSBI.BigInt(apr),
 					unclaimedInUsd: Number(unclaimedAmount.toSignificant()) * price,
 					depositFee: Number(depositFee) * 100,
+					rewardRate: new TokenAmount(rewardToken, BIG_INT_ZERO),
 				});
 			})
 		);
