@@ -1,5 +1,11 @@
 import { TokenAmount } from "@pollum-io/pegasys-sdk";
-import { pegasysClient, GET_TRANSACTIONS, WALLET_BALANCE_TOKEN } from "apollo";
+import {
+	pegasysClient,
+	GET_TRANSACTIONS,
+	WALLET_BALANCE_TOKEN,
+	USER_HISTORY,
+	USER_POSITIONS,
+} from "apollo";
 import { IReturnTransactions } from "pegasys-services/dto/contexts/portfolio";
 
 interface IWalletBalance {
@@ -122,6 +128,54 @@ class PortfolioServices {
 		);
 
 		return { walletBalances };
+	}
+
+	static async getUserPosition(userAddress: any, pair: any): Promise<any> {
+		const snapshots = [];
+		let skip = 0;
+		let finished = false;
+		while (!finished) {
+			// eslint-disable-next-line no-await-in-loop
+			const fetchUserPosition = await pegasysClient.query({
+				query: USER_HISTORY,
+				fetchPolicy: "no-cache",
+				variables: { user: userAddress, skip },
+			});
+
+			if (fetchUserPosition.data.liquidityPositionSnapshots.length < 1000) {
+				finished = true;
+			} else {
+				skip += 1000;
+			}
+
+			snapshots.push(
+				...fetchUserPosition.data.liquidityPositionSnapshots.filter(
+					(currentSnapshot: any) => currentSnapshot.pair.id === pair.id
+				)
+			);
+		}
+
+		const position = snapshots[snapshots.length - 1];
+
+		return position;
+	}
+
+	static async getBanana(userAddress: any): Promise<any> {
+		const fetchGetBanana = await pegasysClient.query({
+			query: USER_POSITIONS,
+			fetchPolicy: "no-cache",
+			variables: { user: userAddress },
+		});
+
+		if (!fetchGetBanana.data) return [];
+
+		Promise.all(
+			fetchGetBanana.data.liquidityPositions.map(async (value: any) => {
+				PortfolioServices.getUserPosition(userAddress);
+			})
+		);
+
+		return fetchGetBanana;
 	}
 }
 
