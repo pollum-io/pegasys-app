@@ -1,15 +1,13 @@
 import { Flex, useColorMode, Text, Image, Button } from "@chakra-ui/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePicasso, useModal } from "hooks";
 import { liquidityCardsMockedData } from "helpers/mockedData";
 import { usePaginator } from "chakra-paginator";
 import { useTranslation } from "react-i18next";
-import {
-	ILiquidityCardsMockedData,
-	ITransactionCardsMockedData,
-	IWalletStatsCardsMockedData,
-} from "types";
+import { ILiquidityCardsMockedData } from "types";
 // import { AddLiquidityModal, RemoveLiquidity } from "components";
+import { JSBI, Percent, TokenAmount } from "@pollum-io/pegasys-sdk";
+import { getTotalSupply } from "utils";
 import { PaginationComponent } from "./Pagination";
 import { handlePaginate } from "./HandlePaginate";
 
@@ -19,7 +17,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 	const [isCreate, setIsCreate] = useState(false);
 	const { onOpenAddLiquidity, onOpenRemoveLiquidity } = useModal();
 
-	const quantityPerPage = 5;
+	const quantityPerPage = 2;
 
 	const { t: translation } = useTranslation();
 
