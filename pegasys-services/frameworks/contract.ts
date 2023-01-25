@@ -89,6 +89,14 @@ class ContractFramework {
 		});
 	}
 
+	static StakeV2Contract({ chainId, provider }: IGetSpecificContract) {
+		return this.getContract({
+			abi: AbiFramework.getStakeV2ABi(),
+			address: RoutesFramework.getStakeV2Address(chainId),
+			provider,
+		});
+	}
+
 	static PairContract(props: IGetDefinedContract) {
 		return this.getContract({
 			abi: AbiFramework.getPairABi(),

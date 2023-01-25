@@ -29,3 +29,17 @@ export const governanceClient = new ApolloClient({
 	}),
 	cache: new InMemoryCache(),
 });
+
+export const stakeClient = new ApolloClient({
+	link: new HttpLink({
+		uri: "https://graph.pegasys.finance/subgraphs/name/pollum-io/pegasys-staking",
+	}),
+	cache: new InMemoryCache(),
+});
+
+export const feeCollectorClient = new ApolloClient({
+	link: new HttpLink({
+		uri: "https://graph.pegasys.finance/subgraphs/name/pollum-io/fee-collector",
+	}),
+	cache: new InMemoryCache(),
+});

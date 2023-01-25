@@ -8,6 +8,7 @@ import {
 	BIG_INT_ONE_WEEK_IN_SECONDS,
 	BIG_INT_ZERO,
 	useEarn,
+	TSignature,
 } from "pegasys-services";
 import EarnButton from "./EarnButton";
 import EarnInput from "./EarnInput";
@@ -16,16 +17,20 @@ interface IEarnDepositActionProps {
 	deposit: () => Promise<void>;
 	sign: () => Promise<void>;
 	buttonTitle: string;
+	signature: TSignature;
+	isPeriodFinished?: boolean;
 }
 
 const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 	deposit,
 	sign,
 	buttonTitle,
+	signature,
+	isPeriodFinished,
 }) => {
 	const {
 		selectedOpportunity,
-		signature,
+		// signature,
 		depositTypedValue,
 		buttonId,
 		signatureLoading,
@@ -113,7 +118,14 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				</Text>
 				<EarnInput deposit />
 				<Collapse
-					in={!!depositTypedValue || weeklyReward?.toSignificant() !== "0"}
+					in={
+						(JSBI.greaterThan(
+							selectedOpportunity.rewardRatePerWeek.raw,
+							BIG_INT_ZERO
+						) &&
+							!!depositTypedValue) ||
+						weeklyReward?.toSignificant() !== "0"
+					}
 				>
 					<Text
 						fontWeight="normal"
@@ -141,6 +153,7 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 				mt="1.5rem"
 				mb={["3rem", "0.5rem", "0.5rem", "0.5rem"]}
 				disabled={
+					isPeriodFinished ||
 					!depositTypedValue ||
 					signatureLoading ||
 					depositPercentage > 100 ||
@@ -153,9 +166,9 @@ const EarnDepositAction: React.FC<IEarnDepositActionProps> = ({
 			>
 				{signatureLoading
 					? t("earnPages.loading")
-					: signature
-					? buttonTitle
-					: t("earnPages.sign")}
+					: !signature
+					? t("earnPages.sign")
+					: buttonTitle}
 			</EarnButton>
 		</Flex>
 	);

@@ -1,4 +1,5 @@
-import { children, setType } from "../react";
+import { children } from "../react";
+import { IEarnInfo, TSignature } from "./earn";
 
 export interface IStakeProviderProps {
 	children: children;
@@ -9,6 +10,6 @@ export interface IStakeProviderValue {
 	sign: () => Promise<void>;
 	stake: () => Promise<void>;
 	unstake: () => Promise<void>;
-	showInUsd: boolean;
-	setShowInUsd: setType<boolean>;
+	stakeV1Opportunities: IEarnInfo[];
+	signature: TSignature;
 }

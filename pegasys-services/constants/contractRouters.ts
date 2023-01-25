@@ -19,6 +19,9 @@ export const PegasysContracts: IContractDTO = {
 		GOVERNANCE_ADDRESS: ethers.utils.getAddress(
 			"0x633Bdeb5D4b5f93933833A692e230a7d48fC2d77"
 		),
+		STAKE_V2_ADDRESS: ethers.utils.getAddress(
+			"0x1e6dc4cb2f98817a0e3d850bba7aefa3cfcde55f"
+		),
 	},
 	[ChainId.TANENBAUM]: {
 		ROUTER_ADDRESS: ethers.utils.getAddress(

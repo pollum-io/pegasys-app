@@ -1,15 +1,17 @@
 import { TokenAmount } from "@pollum-io/pegasys-sdk";
-import { IStakeInfo } from "pegasys-services";
+import { IStakeInfo, IStakeV2Info } from "pegasys-services";
 
 export interface ICardItemProps {
 	text: string;
 	value: string;
 	usdValue?: string;
 	opacity?: boolean;
+	tooltip?: string;
 }
 
 export interface IStakeCardsProps {
-	stakeInfo?: IStakeInfo;
+	stakeInfo?: IStakeInfo | IStakeV2Info;
+	v1?: boolean;
 }
 
 export interface IButtonsProps {
@@ -18,6 +20,7 @@ export interface IButtonsProps {
 	unclaimedAmount: TokenAmount;
 	symbol: string;
 	onClick: (id: string) => void;
+	isPeriodFinish?: boolean;
 }
 
 export interface IHeaderProps {
@@ -31,10 +34,12 @@ export interface IBodyProps {
 	apr: string;
 	totalStakedInUsd: number;
 	totalStakedAmount: TokenAmount;
-	rewardRatePerWeekInUsd: number;
-	rewardRatePerWeek: TokenAmount;
+	rewardRatePerWeekInUsd?: number;
+	rewardRatePerWeek?: TokenAmount;
 	stakedInUsd: number;
 	stakedAmount: TokenAmount;
 	unclaimedInUsd: number;
 	unclaimedAmount: TokenAmount;
+	depositFee?: number;
+	isPeriodFinish?: boolean;
 }

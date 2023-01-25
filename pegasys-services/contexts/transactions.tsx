@@ -89,6 +89,7 @@ export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 						hash: tx.hash,
 						success: tx.success,
 						summary: tx.summary,
+						service: tx.service,
 					})),
 				tx as IFinishedTx,
 			]);
@@ -142,7 +143,6 @@ export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 						const tx = await provider?.getTransaction(currTx.hash);
 
 						if (!tx) {
-							console.log("remove 1");
 							removePendingTransactions(currTx.hash);
 							return;
 						}
@@ -158,6 +158,7 @@ export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 									summary: currTx.summary,
 									hash: currTx.hash,
 									success: tx.confirmations === 1,
+									service: currTx.service,
 								},
 								true
 							);
@@ -204,6 +205,7 @@ export const TransactionProvider: React.FC<ITransactionProviderProps> = ({
 						hash: tx.hash,
 						summary: tx.summary,
 						success: tx.success,
+						service: tx.service,
 					}))
 				);
 			}
