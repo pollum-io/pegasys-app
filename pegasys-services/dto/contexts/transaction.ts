@@ -29,6 +29,7 @@ export interface IFinishedTx {
 	summary: string;
 	hash: string;
 	success: boolean;
+	service: string;
 }
 
 export interface IPersistentFinishedTx extends IFinishedTx {

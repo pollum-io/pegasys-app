@@ -10,6 +10,7 @@ export interface IPegasysProviderProps {
 export interface IPegasysProviderValue {
 	expert: boolean;
 	setExpert: setType<boolean>;
+	handleCacheExportMode: () => void;
 	userTransactionDeadlineValue: BigNumber | number;
 	setUserTransactionDeadlineValue: setType<BigNumber | number>;
 	userSlippageTolerance: number;

@@ -11,8 +11,9 @@ import Buttons from "./Button";
 import { IStakeCardsProps } from "./dto";
 
 const StakeCard: React.FC<IStakeCardsProps> = props => {
-	const { stakeInfo } = props;
-	const { onOpenStakeActions } = useModal();
+	const { stakeInfo, v1 } = props;
+
+	const { onOpenStakeActions, onOpenStakeV2Actions } = useModal();
 
 	const { colorMode } = useColorMode();
 	const { setSelectedOpportunity, setButtonId } = useEarn();
@@ -20,7 +21,12 @@ const StakeCard: React.FC<IStakeCardsProps> = props => {
 	const onClick = (id: string) => {
 		setButtonId(id as TButtonId);
 		setSelectedOpportunity((stakeInfo as IEarnInfo | undefined) ?? null);
-		onOpenStakeActions();
+
+		if (v1) {
+			onOpenStakeActions();
+		} else {
+			onOpenStakeV2Actions();
+		}
 	};
 
 	if (!stakeInfo) {
@@ -48,12 +54,20 @@ const StakeCard: React.FC<IStakeCardsProps> = props => {
 				apr={stakeInfo.apr.toString()}
 				totalStakedInUsd={stakeInfo.totalStakedInUsd}
 				totalStakedAmount={stakeInfo.totalStakedAmount}
+				// eslint-disable-next-line
+				// @ts-ignore
 				rewardRatePerWeekInUsd={stakeInfo.rewardRatePerWeekInUsd}
 				rewardRatePerWeek={stakeInfo.rewardRatePerWeek}
 				stakedInUsd={stakeInfo.stakedInUsd}
 				stakedAmount={stakeInfo.stakedAmount}
 				unclaimedInUsd={stakeInfo.unclaimedInUsd}
 				unclaimedAmount={stakeInfo.unclaimedAmount}
+				// eslint-disable-next-line
+				// @ts-ignore
+				depositFee={stakeInfo.depositFee}
+				// eslint-disable-next-line
+				// @ts-ignore
+				isPeriodFinish={stakeInfo.isPeriodFinished}
 			/>
 			<Buttons
 				unstakedAmount={stakeInfo.unstakedAmount}
@@ -61,6 +75,9 @@ const StakeCard: React.FC<IStakeCardsProps> = props => {
 				unclaimedAmount={stakeInfo.unclaimedAmount}
 				symbol={stakeInfo.stakeToken.symbol ?? ""}
 				onClick={onClick}
+				// eslint-disable-next-line
+				// @ts-ignore
+				isPeriodFinish={stakeInfo.isPeriodFinished}
 			/>
 		</Card>
 	);

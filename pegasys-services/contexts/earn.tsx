@@ -42,12 +42,13 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 	const { addTransactions } = useTransaction();
 	const {
 		onCloseStakeActions,
+		onCloseStakeV2Actions,
 		onCloseFarmActions,
 		onOpenTransaction,
 		onCloseTransaction,
 	} = useModal();
 
-	const { chainId, address, provider } = psUseWallet();
+	const { chainId, address } = psUseWallet();
 	const { userTransactionDeadlineValue } = usePegasys();
 	const { toast } = useToasty();
 
@@ -57,84 +58,107 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 	};
 
 	const getTypedValue = (isDeposit?: boolean) => {
-		if (selectedOpportunity) {
-			const parsedInput = tryParseAmount(
-				isDeposit ? depositTypedValue : withdrawTypedValue,
-				selectedOpportunity.stakeToken
-			);
+		if (!selectedOpportunity) return undefined;
 
-			const parsedAmount =
-				parsedInput &&
-				JSBI.lessThanOrEqual(
-					parsedInput.raw,
-					isDeposit
-						? selectedOpportunity.unstakedAmount.raw
-						: selectedOpportunity.stakedAmount.raw
-				)
-					? parsedInput.raw
-					: JSBI.BigInt(0);
+		const parsedInput = tryParseAmount(
+			isDeposit ? depositTypedValue : withdrawTypedValue,
+			selectedOpportunity.stakeToken
+		);
 
-			const percentage = JSBI.toNumber(
-				(isDeposit &&
-					JSBI.greaterThan(
-						parsedAmount,
-						selectedOpportunity.unstakedAmount.raw
-					)) ||
-					(!isDeposit &&
+		const parsedAmount =
+			parsedInput &&
+			JSBI.lessThanOrEqual(
+				parsedInput.raw,
+				isDeposit
+					? selectedOpportunity.unstakedAmount.raw
+					: selectedOpportunity.stakedAmount.raw
+			)
+				? parsedInput.raw
+				: JSBI.BigInt(0);
+
+		const percentage = JSBI.toNumber(
+			(isDeposit &&
+				JSBI.greaterThan(
+					parsedAmount,
+					selectedOpportunity.unstakedAmount.raw
+				)) ||
+				(!isDeposit &&
+					JSBI.greaterThan(parsedAmount, selectedOpportunity.stakedAmount.raw))
+				? JSBI.BigInt(101)
+				: (isDeposit &&
 						JSBI.greaterThan(
-							parsedAmount,
-							selectedOpportunity.stakedAmount.raw
+							selectedOpportunity.unstakedAmount.raw,
+							BIG_INT_ZERO
+						)) ||
+				  (!isDeposit &&
+						JSBI.greaterThan(
+							selectedOpportunity.stakedAmount.raw,
+							BIG_INT_ZERO
 						))
-					? JSBI.BigInt(101)
-					: (isDeposit &&
-							JSBI.greaterThan(
-								selectedOpportunity.unstakedAmount.raw,
-								BIG_INT_ZERO
-							)) ||
-					  (!isDeposit &&
-							JSBI.greaterThan(
-								selectedOpportunity.stakedAmount.raw,
-								BIG_INT_ZERO
-							))
-					? JSBI.divide(
-							JSBI.multiply(parsedAmount, JSBI.BigInt(100)),
-							isDeposit
-								? selectedOpportunity.unstakedAmount.raw
-								: selectedOpportunity.stakedAmount.raw
-					  )
-					: BIG_INT_ZERO
-			);
+				? JSBI.divide(
+						JSBI.multiply(parsedAmount, JSBI.BigInt(100)),
+						isDeposit
+							? selectedOpportunity.unstakedAmount.raw
+							: selectedOpportunity.stakedAmount.raw
+				  )
+				: BIG_INT_ZERO
+		);
 
-			return {
-				percentage,
-				value: parsedAmount,
-			};
+		return {
+			percentage,
+			value: parsedAmount,
+			tokenAmount: parsedInput,
+		};
+	};
+
+	const addPendingTransaction = (
+		res: { hash: string; response: any } | undefined,
+		summary: string,
+		service: string
+	) => {
+		if (res) {
+			const { hash } = res;
+
+			addTransactions({
+				summary,
+				hash,
+				service,
+			});
 		}
-
-		return undefined;
 	};
 
 	const onContractCall = async (
-		promise: () => Promise<{ hash: string; response: any } | undefined>,
-		summary: string,
-		service: string
+		promise: () => Promise<
+			| { hash: string; response: any }
+			| Array<{ hash: string; response: any }>
+			| undefined
+		>,
+		summary: string | string[],
+		service: string | string[]
 	) => {
 		try {
 			setLoading(true);
 			onCloseStakeActions();
+			onCloseStakeV2Actions();
 			onCloseFarmActions();
 			onOpenTransaction();
 
 			const res = await promise();
 
-			if (res) {
-				const { hash } = res;
-
-				addTransactions({
-					summary,
-					hash,
-					service,
-				});
+			if (Array.isArray(res)) {
+				res.forEach((r, index) =>
+					addPendingTransaction(
+						r,
+						Array.isArray(summary) ? summary[index] : summary,
+						Array.isArray(service) ? service[index] : service
+					)
+				);
+			} else {
+				addPendingTransaction(
+					res,
+					Array.isArray(summary) ? summary[0] : summary,
+					Array.isArray(service) ? service[0] : service
+				);
 			}
 		} catch (e) {
 			toast({
@@ -249,6 +273,7 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 			withdrawValue: withdrawValues.typed,
 			dataLoading,
 			setDataLoading,
+			setSignatureLoading,
 		}),
 		[
 			withdrawTypedValue,
@@ -273,6 +298,7 @@ export const EarnProvider: React.FC<IEarnProviderProps> = ({ children }) => {
 			depositValues,
 			dataLoading,
 			setDataLoading,
+			setSignatureLoading,
 		]
 	);
 

@@ -1,29 +1,47 @@
 import React, { useEffect, createContext, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { ContractFramework, RoutesFramework } from "../frameworks";
+import {
+	ContractFramework,
+	RoutesFramework,
+	WalletFramework,
+} from "../frameworks";
 import { StakeServices } from "../services";
-import { useWallet, useEarn, useTransaction, useToasty } from "../hooks";
-import { IStakeProviderProps, IStakeProviderValue } from "../dto";
-import { EarnProvider } from "./earn";
+import {
+	useWallet,
+	useEarn,
+	useTransaction,
+	useToasty,
+	usePegasys,
+} from "../hooks";
+import {
+	IEarnInfo,
+	IStakeProviderProps,
+	IStakeProviderValue,
+	TContract,
+	TSignature,
+} from "../dto";
 
 export const StakeContext = createContext({} as IStakeProviderValue);
 
 const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
-	const [showInUsd, setShowInUsd] = useState<boolean>(false);
+	const [stakeV1Opportunities, setStakeV1Opportunities] = useState<IEarnInfo[]>(
+		[]
+	);
+	const [signature, setSignature] = useState<TSignature>(null);
 	const { chainId, address } = useWallet();
 	const { pendingTxs } = useTransaction();
 	const { toast } = useToasty();
 	const { t: translation } = useTranslation();
+	const { userTransactionDeadlineValue } = usePegasys();
 	const {
-		signature,
-		onSign,
 		getTypedValue,
 		selectedOpportunity,
-		setEarnOpportunities,
 		withdrawPercentage,
 		onContractCall,
 		setDataLoading,
+		setSignatureLoading,
+		depositTypedValue,
 	} = useEarn();
 
 	const stakeContract = useMemo(
@@ -33,6 +51,36 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 			}),
 		[chainId]
 	);
+
+	const onSign = async (
+		contract: TContract,
+		name: string,
+		spender: string,
+		verifyingContract: string
+	) => {
+		try {
+			setSignatureLoading(true);
+
+			if (selectedOpportunity) {
+				const typedValue = getTypedValue(true);
+
+				const s = await WalletFramework.getSignature({
+					address,
+					chainId,
+					userDeadline: userTransactionDeadlineValue,
+					contract,
+					name,
+					spender,
+					verifyingContract,
+					value: typedValue?.value.toString() ?? "",
+				});
+
+				setSignature(s);
+			}
+		} finally {
+			setSignatureLoading(false);
+		}
+	};
 
 	const unstake = async () => {
 		await onContractCall(
@@ -119,9 +167,9 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 					walletAddress: address,
 				});
 
-				setEarnOpportunities(stakeInfos);
+				setStakeV1Opportunities(stakeInfos);
 			} else {
-				setEarnOpportunities([]);
+				setStakeV1Opportunities([]);
 			}
 		} catch (e) {
 			toast({
@@ -163,16 +211,20 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 		stakePendingWithdraw.length,
 	]);
 
+	useEffect(() => {
+		setSignature(null);
+	}, [depositTypedValue]);
+
 	const providerValue = useMemo(
 		() => ({
 			claim,
 			sign,
 			stake,
 			unstake,
-			showInUsd,
-			setShowInUsd,
+			stakeV1Opportunities,
+			signature,
 		}),
-		[sign, claim, stake, unstake, showInUsd, setShowInUsd]
+		[sign, claim, stake, unstake, stakeV1Opportunities, signature]
 	);
 
 	return (
@@ -183,7 +235,5 @@ const Provider: React.FC<IStakeProviderProps> = ({ children }) => {
 };
 
 export const StakeProvider: React.FC<IStakeProviderProps> = props => (
-	<EarnProvider>
-		<Provider {...props} />
-	</EarnProvider>
+	<Provider {...props} />
 );

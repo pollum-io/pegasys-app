@@ -1,4 +1,9 @@
-import { JSBI, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
+import {
+	CurrencyAmount,
+	JSBI,
+	Token,
+	TokenAmount,
+} from "@pollum-io/pegasys-sdk";
 import { BigNumber } from "ethers";
 import { TContract } from "../framework";
 import { children, setType } from "../react";
@@ -24,6 +29,7 @@ export interface IEarnInfo {
 	extraRewardRatePerWeek?: TokenAmount;
 	extraTotalRewardRatePerWeek?: TokenAmount;
 	extraUnclaimed?: TokenAmount;
+	rewardRate: TokenAmount;
 }
 
 export type TButtonId = "withdraw" | "claim" | "deposit" | null;
@@ -52,7 +58,9 @@ export interface IEarnProviderValue {
 	) => Promise<void>;
 	getTypedValue: (
 		isDeposit?: boolean
-	) => { percentage: number; value: JSBI } | undefined;
+	) =>
+		| { percentage: number; value: JSBI; tokenAmount?: CurrencyAmount }
+		| undefined;
 	earnOpportunities: IEarnInfo[];
 	setEarnOpportunities: setType<IEarnInfo[]>;
 	selectedOpportunity: IEarnInfo | null;
@@ -61,12 +69,17 @@ export interface IEarnProviderValue {
 	depositPercentage: number;
 	reset: () => void;
 	signatureLoading: boolean;
+	setSignatureLoading: setType<boolean>;
 	loading: boolean;
 	setLoading: setType<boolean>;
 	onContractCall: (
-		promise: () => Promise<{ hash: string; response: any } | undefined>,
-		summary: string,
-		type: string
+		promise: () => Promise<
+			| { hash: string; response: any }
+			| Array<{ hash: string; response: any }>
+			| undefined
+		>,
+		summary: string | string[],
+		type: string | string[]
 	) => Promise<void>;
 	depositValue: JSBI;
 	withdrawValue: JSBI;

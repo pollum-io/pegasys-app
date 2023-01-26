@@ -641,7 +641,8 @@
 		"errorStake": "Erreur lors de la récupération des opportunités de participation",
 		"transactionComp": "Transaction terminée avec succès",
 		"connectingError": "Erreur lors de la connexion du porte-monnaie",
-		"swapFailed": "L'échange a échoué"
+		"swapFailed": "L'échange a échoué",
+		"viewOnExplorer": "Voir sur l'explorateur"
 	},
 	"portfolioPage": {
 		"walletStats": "Statistiques sur les Portefeuilles",
@@ -666,6 +667,9 @@
 		"walletBalance": "Solde du Portefeuille",
 		"liquidityPositions": "Positions de Liquidité",
 		"balance": "Balance",
-		"assets": "Actifs"
+		"assets": "Actifs",
+		"noPositions": "Aucun Poste Trouvé.",
+		"noLiquidity": "Liquidité Sans Piquet.",
+		"noTransactions": "Aucune Transaction Técente Trouvée."
 	}
 }

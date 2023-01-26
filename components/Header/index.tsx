@@ -20,11 +20,12 @@ import {
 	useWallet,
 	usePegasys,
 	StakeServices,
+	FarmServices,
 	ContractFramework,
 	RoutesFramework,
 	PegasysTokens,
 } from "pegasys-services";
-import { ChainId, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
+import { ChainId, JSBI, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
@@ -96,6 +97,14 @@ export const Header: React.FC = () => {
 		[chainId]
 	);
 
+	const farmContract = useMemo(
+		() =>
+			ContractFramework.FarmContract({
+				chainId,
+			}),
+		[chainId]
+	);
+
 	useEffect(() => {
 		const getPsys = async () => {
 			if (address && chainId && RoutesFramework.getStakeAddress(chainId)) {
@@ -103,14 +112,25 @@ export const Header: React.FC = () => {
 
 				const psys = tokens.PSYS;
 
-				const unclaimedValue = await StakeServices.getUnclaimed({
+				const unclaimedStakeValue = await StakeServices.getUnclaimed({
 					stakeContract,
 					chainId,
 					walletAddress: address,
 					rewardToken: psys,
 				});
 
-				setUnclaimed(unclaimedValue);
+				const unclaimedFarmValue = await FarmServices.getFarmUnclaimed({
+					chainId,
+					farmContract,
+					walletAddress: address,
+				});
+
+				setUnclaimed(
+					new TokenAmount(
+						psys,
+						JSBI.add(unclaimedStakeValue.raw, unclaimedFarmValue.raw)
+					)
+				);
 			}
 		};
 
@@ -282,12 +302,12 @@ export const Header: React.FC = () => {
 					</Flex>
 					<Flex
 						flexDirection="column"
-						pl={["0", "2", "0", "0"]}
+						pl={["0", "1", "0", "0"]}
 						pr={
 							address
 								? expert
 									? ["0", "1rem", "1.5rem", "1.5rem"]
-									: ["4rem", "1rem", "1.5rem", "1.5rem"]
+									: ["4rem", "1rem", "2rem", "2rem"]
 								: ["4rem", "0", "0", "0.3rem"]
 						}
 						display={["none", "flex", "flex", "flex"]}

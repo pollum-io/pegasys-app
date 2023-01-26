@@ -38,7 +38,7 @@ export const ExpertMode: FunctionComponent = () => {
 					borderBottomRadius={["2xl", "2xl", "2xl", "2xl"]}
 					borderBottomLeftRadius={["unset", "2xl", "2xl", "2xl"]}
 					borderTopRadius={["2xl", "unset", "unset", "none"]}
-					w={["max-content", "10.4rem", "10.4rem", "10.4rem"]}
+					w={["max-content", "10.2rem", "10.2rem", "10.2rem"]}
 					h={["2.2rem", "max-content", "max-content", "max-content"]}
 					px={["4", "2.5rem", "2.5rem", "2.5rem"]}
 					pt={["0", "0.9rem", "0.9rem", "0.9rem"]}
@@ -62,7 +62,7 @@ export const ExpertMode: FunctionComponent = () => {
 						bottom="0"
 						zIndex="-99"
 						mr="5rem"
-						left="4.5rem"
+						left="4.4rem"
 						h="100%"
 						w="100%"
 					/>

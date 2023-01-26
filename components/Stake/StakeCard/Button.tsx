@@ -14,6 +14,7 @@ const Buttons: React.FC<IButtonsProps> = ({
 	unclaimedAmount,
 	symbol,
 	onClick,
+	isPeriodFinish,
 }) => {
 	const router = useRouter();
 	const { t } = useTranslation();
@@ -41,7 +42,7 @@ const Buttons: React.FC<IButtonsProps> = ({
 			justifyContent="space-around"
 		>
 			{getStakeToken ? (
-				<EarnButton {...btnProps} onClick={() => router.push("/farms")} solid>
+				<EarnButton {...btnProps} onClick={() => router.push("/")} solid>
 					{`${t("earnPages.get")} ${symbol}`}
 				</EarnButton>
 			) : (
@@ -51,7 +52,7 @@ const Buttons: React.FC<IButtonsProps> = ({
 						id="withdraw"
 						onClick={onClick}
 						amount={stakedAmount}
-						width={["100%", "100%", "100%", ""]}
+						width={["50%", "50%", "50%", ""]}
 					>
 						{t("earnPages.unstake")}
 					</EarnButton>
@@ -61,7 +62,8 @@ const Buttons: React.FC<IButtonsProps> = ({
 						onClick={onClick}
 						amount={unstakedAmount}
 						solid
-						width={["100%", "100%", "100%", ""]}
+						width={["50%", "50%", "50%", ""]}
+						disabled={isPeriodFinish}
 					>
 						{t("earnPages.stake")}
 					</EarnButton>

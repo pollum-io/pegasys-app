@@ -30,8 +30,13 @@ export const FarmActions: React.FC<IModal> = props => {
 	const { isOpen, onClose: close } = props;
 	const theme = usePicasso();
 	const { claim, withdraw, deposit, sign } = useFarm();
-	const { buttonId, selectedOpportunity, withdrawPercentage, reset } =
-		useEarn();
+	const {
+		buttonId,
+		selectedOpportunity,
+		withdrawPercentage,
+		reset,
+		signature,
+	} = useEarn();
 	const { t } = useTranslation();
 
 	if (!selectedOpportunity) {
@@ -106,6 +111,7 @@ export const FarmActions: React.FC<IModal> = props => {
 						sign={sign}
 						buttonTitle={t("earnPages.deposit")}
 						deposit={deposit}
+						signature={signature}
 					/>
 					<EarnWithdrawAction
 						onClose={onClose}

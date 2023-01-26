@@ -68,7 +68,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 						borderTopRadius="12px"
 						w="max-content"
 						h="2rem"
-						pt="1"
+						pt="0.15rem"
 						px="2"
 						fontSize="0.75rem"
 						fontWeight="normal"
@@ -124,7 +124,10 @@ export const LiquidityCards: React.FunctionComponent = () => {
 											left="1.8rem"
 										/>
 									</Flex>
-									<Flex flexDirection={["column", "column", "row", "row"]}>
+									<Flex
+										flexDirection={["column", "column", "row", "row"]}
+										ml={["1.7rem", "1.7rem", "0", "0"]}
+									>
 										<Text
 											fontWeight="bold"
 											fontSize={[
@@ -288,14 +291,14 @@ export const LiquidityCards: React.FunctionComponent = () => {
 							mt={["0.5rem", "0.5rem", "0", "0"]}
 							justifyContent={["center", "center", "flex-start", "normal"]}
 							flexDirection={["row", "row", "column", "column"]}
-							alignItems={["center", "center", "flex-start", "flex-start"]}
-							w={["100%", "100%", "15%", "10%"]}
-							pl={["0", "6", "2", "2"]}
-							pr={["3", "5", "0", "0"]}
+							alignItems={["center", "center", "center", "flex-end"]}
+							w={["100%", "100%", "15%", "12%"]}
+							pl={["0", "6", "0", "0"]}
+							pr={["3", "5", "3", "2%"]}
 						>
 							<Button
 								justifyContent="center"
-								w={["50%", "50%", "85%", "80%"]}
+								w={["50%", "50%", "85%", "5.6rem"]}
 								h="max-content"
 								py={["1", "1.5", "1", "1"]}
 								px="10%"
@@ -304,7 +307,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 								bgColor="transparent"
 								borderColor={theme.text.cyanPurple}
 								color={theme.text.whitePurple}
-								fontSize="10px"
+								fontSize="0.75rem"
 								fontWeight="semibold"
 								_hover={{
 									borderColor: theme.text.cyanLightPurple,
@@ -315,7 +318,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 								{translation("removeLiquidity.remove")}
 							</Button>
 							<Button
-								w={["50%", "50%", "85%", "80%"]}
+								w={["50%", "50%", "85%", "5.6rem"]}
 								h="max-content"
 								py={["1", "1.5", "1", "1"]}
 								px="20%"
@@ -323,7 +326,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 								borderRadius="67px"
 								bgColor={theme.bg.blueNavyLightness}
 								color={theme.text.cyan}
-								fontSize="0.625rem"
+								fontSize="0.75rem"
 								fontWeight="semibold"
 								_hover={{
 									bgColor: theme.bg.bluePurple,
@@ -333,7 +336,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 									onOpenAddLiquidity();
 								}}
 							>
-								{translation("positionCard.add")}
+								{translation("vote.add")}
 							</Button>
 						</Flex>
 					</Flex>
