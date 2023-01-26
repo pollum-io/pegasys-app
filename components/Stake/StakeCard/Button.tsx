@@ -52,7 +52,7 @@ const Buttons: React.FC<IButtonsProps> = ({
 						id="withdraw"
 						onClick={onClick}
 						amount={stakedAmount}
-						width={["100%", "100%", "100%", ""]}
+						width={["50%", "50%", "50%", ""]}
 					>
 						{t("earnPages.unstake")}
 					</EarnButton>
