@@ -19,14 +19,6 @@ const Buttons: React.FC<IButtonsProps> = ({
 	const router = useRouter();
 	const { t } = useTranslation();
 
-	// const buttons: Array<[TokenAmount, string, string]> = useMemo(
-	// 	() => [
-	// 		[stakedAmount, t("earnPages.unstake"), "withdraw"],
-	// 		[unstakedAmount, t("earnPages.stake"), "deposit"],
-	// 	],
-	// 	[stakedAmount, unstakedAmount]
-	// );
-
 	const getStakeToken: boolean = useMemo(
 		() =>
 			JSBI.greaterThanOrEqual(BIG_INT_ZERO, stakedAmount.raw) &&
@@ -60,7 +52,7 @@ const Buttons: React.FC<IButtonsProps> = ({
 						id="withdraw"
 						onClick={onClick}
 						amount={stakedAmount}
-						width={["50%", "50%", "50%", ""]}
+						width={["100%", "100%", "100%", ""]}
 					>
 						{t("earnPages.unstake")}
 					</EarnButton>

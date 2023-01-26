@@ -33,7 +33,6 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 			}
 
 			// overwrite injected when needed
-			// if (option.connector === injected) {
 			// don't show injected if there's no injected provider
 			if (!(window.web3 || window.ethereum)) {
 				if (option.name === "MetaMask") {
@@ -42,7 +41,6 @@ export const WalletOptions: FunctionComponent<ButtonProps> = () => {
 							id={`connect-${key}`}
 							key={key}
 							header="Install Metamask"
-							// href="https://metamask.io/"
 							icon="/icons/metamask.png"
 						/>
 					);
