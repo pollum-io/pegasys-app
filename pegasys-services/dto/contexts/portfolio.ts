@@ -1,5 +1,5 @@
 export interface ITransactions {
-	id: number;
+	// id: number;
 	symbol0: string;
 	symbol1: string;
 	totalValue: number;

@@ -19,6 +19,31 @@ export interface IReturnWallet {
 }
 
 class PortfolioServices {
+	private static parseTransaction(transactions: any[], type: string) {
+		return transactions.map((tx: any) => {
+			const symbol0 = tx.pair.token0.symbol;
+			const symbol1 = tx.pair.token1.symbol;
+			const totalValue = Number(tx.amountUSD);
+			const tokenAmount0 = `${Number(tx.amount0).toFixed(5)} ${
+				tx.pair.token0.symbol
+			}`;
+			const tokenAmount1 = `${Number(tx.amount1).toFixed(5)} ${
+				tx.pair.token1.symbol
+			}`;
+			const time = Number(tx.transaction.timestamp);
+
+			return {
+				symbol0,
+				symbol1,
+				totalValue,
+				tokenAmount0,
+				tokenAmount1,
+				time,
+				type,
+			};
+		});
+	}
+
 	static async getTransactions(
 		walletAddress: string
 	): Promise<IReturnTransactions> {
@@ -33,73 +58,9 @@ class PortfolioServices {
 		const { mints, burns, swaps } = fetchTransactions.data;
 
 		return {
-			mints: mints.map((mintValues: any) => {
-				const type = "add";
-				const symbol0 = mintValues.pair.token0.symbol;
-				const symbol1 = mintValues.pair.token1.symbol;
-				const totalValue = Number(mintValues.amountUSD);
-				const tokenAmount0 = `${Number(mintValues.amount0).toFixed(5)} ${
-					mintValues.pair.token0.symbol
-				}`;
-				const tokenAmount1 = `${Number(mintValues.amount1).toFixed(5)} ${
-					mintValues.pair.token1.symbol
-				}`;
-				const time = Number(mintValues.transaction.timestamp);
-
-				return {
-					symbol0,
-					symbol1,
-					totalValue,
-					tokenAmount0,
-					tokenAmount1,
-					time,
-					type,
-				};
-			}),
-
-			burns: burns.map((burnsValues: any) => {
-				const type = "remove";
-				const symbol0 = burnsValues.pair.token0.symbol;
-				const symbol1 = burnsValues.pair.token1.symbol;
-				const totalValue = Number(burnsValues.amountUSD);
-				const tokenAmount0 = `${burnsValues.amount0} ${burnsValues.pair.token0.symbol}`;
-				const tokenAmount1 = `${burnsValues.amount1} ${burnsValues.pair.token1.symbol}`;
-				const time = Number(burnsValues.transaction.timestamp);
-
-				return {
-					symbol0,
-					symbol1,
-					totalValue,
-					tokenAmount0,
-					tokenAmount1,
-					time,
-					type,
-				};
-			}),
-
-			swaps: swaps.map((swapsValues: any) => {
-				const type = "swap";
-				const symbol0 = swapsValues.pair.token0.symbol;
-				const symbol1 = swapsValues.pair.token1.symbol;
-				const totalValue = Number(swapsValues.amountUSD);
-				const tokenAmount0 = `${Number(swapsValues.amount0In).toFixed(5)} ${
-					swapsValues.pair.token0.symbol
-				}`;
-				const tokenAmount1 = `${Number(swapsValues.amount1Out).toFixed(5)} ${
-					swapsValues.pair.token1.symbol
-				}`;
-				const time = Number(swapsValues.transaction.timestamp);
-
-				return {
-					symbol0,
-					symbol1,
-					totalValue,
-					tokenAmount0,
-					tokenAmount1,
-					time,
-					type,
-				};
-			}),
+			mints: this.parseTransaction(mints, "add"),
+			burns: this.parseTransaction(burns, "remove"),
+			swaps: this.parseTransaction(swaps, "swap"),
 		};
 	}
 
@@ -130,10 +91,11 @@ class PortfolioServices {
 		return { walletBalances };
 	}
 
-	static async getUserPosition(userAddress: any, pair: any): Promise<any> {
-		const snapshots = [];
+	static async getUserLiquidityPositions(userAddress: string) {
+		const snapshots: { [k: string]: Array<any> } = {};
 		let skip = 0;
 		let finished = false;
+
 		while (!finished) {
 			// eslint-disable-next-line no-await-in-loop
 			const fetchUserPosition = await pegasysClient.query({
@@ -142,40 +104,44 @@ class PortfolioServices {
 				variables: { user: userAddress, skip },
 			});
 
-			if (fetchUserPosition.data.liquidityPositionSnapshots.length < 1000) {
-				finished = true;
-			} else {
-				skip += 1000;
-			}
+			fetchUserPosition.data.liquidityPositionSnapshots.forEach((snap: any) => {
+				if (snapshots[snap.pair.id]) snapshots[snap.pair.id].push(snap);
+				else snapshots[snap.pair.id] = [snap];
+			});
 
-			snapshots.push(
-				...fetchUserPosition.data.liquidityPositionSnapshots.filter(
-					(currentSnapshot: any) => currentSnapshot.pair.id === pair.id
-				)
-			);
+			if (fetchUserPosition.data.liquidityPositionSnapshots.length < 1000)
+				finished = true;
+			else skip += 1000;
 		}
 
-		const position = snapshots[snapshots.length - 1];
+		const positions = Object.keys(snapshots).map(pairSnapshots => {
+			const position =
+				snapshots[pairSnapshots][snapshots[pairSnapshots].length - 1];
 
-		return position;
-	}
+			const poolShare =
+				position.liquidityTokenBalance / position.pair.totalSupply;
 
-	static async getBanana(userAddress: any): Promise<any> {
-		const fetchGetBanana = await pegasysClient.query({
-			query: USER_POSITIONS,
-			fetchPolicy: "no-cache",
-			variables: { user: userAddress },
+			const valueUSD = poolShare * position.reserveUSD;
+			const reserve0 = poolShare * parseFloat(position.reserve0);
+			const reserve1 = poolShare * parseFloat(position.reserve1);
+
+			return {
+				valueUSD,
+				reserve0,
+				reserve1,
+				symbol0: position.pair.token0.symbol,
+				symbol1: position.pair.token1.symbol,
+				poolShare,
+			};
 		});
 
-		if (!fetchGetBanana.data) return [];
+		const liquidity = positions.reduce((acc, curr) => acc + curr.valueUSD, 0);
 
-		Promise.all(
-			fetchGetBanana.data.liquidityPositions.map(async (value: any) => {
-				PortfolioServices.getUserPosition(userAddress);
-			})
-		);
-
-		return fetchGetBanana;
+		return {
+			liquidity,
+			fees: liquidity * 0.0025,
+			positions,
+		};
 	}
 }
 

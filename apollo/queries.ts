@@ -245,11 +245,11 @@ export const WALLET_BALANCE_TOKEN = gql`
 `;
 
 export const USER_HISTORY = gql`
-	query snapshots($user: Bytes!, $skip: Int!) {
+	query snapshots($user: Bytes!, $skip: Int!, $pair: ID!) {
 		liquidityPositionSnapshots(
 			first: 1000
 			skip: $skip
-			where: { user: $user }
+			where: { user: $user, pair: $pair }
 		) {
 			timestamp
 			reserveUSD
@@ -257,18 +257,21 @@ export const USER_HISTORY = gql`
 			liquidityTokenTotalSupply
 			reserve0
 			reserve1
-			token0PriceUSD
-			token1PriceUSD
+			#token0PriceUSD
+			#token1PriceUSD
 			pair {
 				id
-				reserve0
-				reserve1
-				reserveUSD
+				#reserve0
+				#reserve1
+				#reserveUSD
+				totalSupply
 				token0 {
 					id
+					symbol
 				}
 				token1 {
 					id
+					symbol
 				}
 			}
 		}
