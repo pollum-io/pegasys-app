@@ -15,6 +15,19 @@ export interface IReturnTransactions {
 	swaps: ITransactions[];
 }
 
+export interface ILiquidity {
+	liquidity: number;
+	fees: number;
+	positions: Array<{
+		valueUSD: number;
+		reserve0: number;
+		reserve1: number;
+		symbol0: any;
+		symbol1: any;
+		poolShare: number;
+	}>;
+}
+
 export interface IContextTransactions {
 	swapsTransactions: ITransactions[];
 	burnsTransactions: ITransactions[];
@@ -22,4 +35,5 @@ export interface IContextTransactions {
 	allTransactions: ITransactions[];
 	getTotalValueSwapped: number;
 	walletBalance: any;
+	liquidityPosition: ILiquidity;
 }

@@ -101,8 +101,12 @@ class PortfolioServices {
 			const fetchUserPosition = await pegasysClient.query({
 				query: USER_HISTORY,
 				fetchPolicy: "no-cache",
-				variables: { user: userAddress, skip },
+				variables: { user: userAddress.toLowerCase(), skip },
 			});
+			console.log(
+				fetchUserPosition.data.liquidityPositionSnapshots,
+				"fetchUserPosition.data.liquidityPositionSnapshots"
+			);
 
 			fetchUserPosition.data.liquidityPositionSnapshots.forEach((snap: any) => {
 				if (snapshots[snap.pair.id]) snapshots[snap.pair.id].push(snap);
@@ -136,7 +140,6 @@ class PortfolioServices {
 		});
 
 		const liquidity = positions.reduce((acc, curr) => acc + curr.valueUSD, 0);
-
 		return {
 			liquidity,
 			fees: liquidity * 0.0025,

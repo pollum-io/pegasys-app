@@ -245,11 +245,11 @@ export const WALLET_BALANCE_TOKEN = gql`
 `;
 
 export const USER_HISTORY = gql`
-	query snapshots($user: Bytes!, $skip: Int!, $pair: ID!) {
+	query snapshots($user: Bytes!, $skip: Int!) {
 		liquidityPositionSnapshots(
 			first: 1000
 			skip: $skip
-			where: { user: $user, pair: $pair }
+			where: { user: $user }
 		) {
 			timestamp
 			reserveUSD

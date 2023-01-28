@@ -3,6 +3,7 @@ import { useTokens } from "hooks";
 import { useWallet } from "pegasys-services";
 import {
 	IContextTransactions,
+	ILiquidity,
 	ITransactions,
 } from "pegasys-services/dto/contexts/portfolio";
 import PortfolioServices from "pegasys-services/services/portfolio";
@@ -26,14 +27,11 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 		[]
 	);
 	const [walletBalance, setWalletBalance] = useState<Array<any>>([]);
-
-	const getTransactions = async () => {
-		const transactions = await PortfolioServices.getTransactions(address);
-
-		setSwapsTransactions(transactions.swaps);
-		setBurnsTransactions(transactions.burns);
-		setMintsTransactions(transactions.mints);
-	};
+	const [liquidityPosition, setLiquidityPosition] = useState<ILiquidity>({
+		fees: 0,
+		liquidity: 0,
+		positions: [],
+	});
 
 	const getWalletBalance = async () => {
 		const balances = await PortfolioServices.getWalletBalance(
@@ -43,8 +41,30 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 		setWalletBalance(balances.walletBalances);
 	};
 
+	const getLiquidityPositions = async () => {
+		const positions = await PortfolioServices.getUserLiquidityPositions(
+			address
+		);
+		console.log(positions, "positions");
+
+		setLiquidityPosition(positions);
+		console.log(liquidityPosition, "liquidityPosition");
+	};
+
+	const getTransactions = async () => {
+		const transactions = await PortfolioServices.getTransactions(address);
+
+		setSwapsTransactions(transactions.swaps);
+		setBurnsTransactions(transactions.burns);
+		setMintsTransactions(transactions.mints);
+	};
+
 	useEffect(() => {
-		if (address) getTransactions();
+		if (address) {
+			getTransactions();
+			getLiquidityPositions();
+		}
+
 		if (userTokensBalance) getWalletBalance();
 	}, [address, userTokensBalance]);
 
@@ -79,6 +99,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 			allTransactions,
 			getTotalValueSwapped,
 			walletBalance,
+			liquidityPosition,
 		}),
 		[
 			swapsTransactions,
@@ -87,6 +108,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 			allTransactions,
 			getTotalValueSwapped,
 			walletBalance,
+			liquidityPosition,
 		]
 	);
 

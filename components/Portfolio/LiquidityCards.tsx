@@ -4,10 +4,8 @@ import { usePicasso, useModal } from "hooks";
 import { liquidityCardsMockedData } from "helpers/mockedData";
 import { usePaginator } from "chakra-paginator";
 import { useTranslation } from "react-i18next";
-import { ILiquidityCardsMockedData } from "types";
 // import { AddLiquidityModal, RemoveLiquidity } from "components";
-import { JSBI, Percent, TokenAmount } from "@pollum-io/pegasys-sdk";
-import { getTotalSupply } from "utils";
+import { usePortfolio } from "hooks/usePortfolio";
 import { PaginationComponent } from "./Pagination";
 import { handlePaginate } from "./HandlePaginate";
 
@@ -16,18 +14,16 @@ export const LiquidityCards: React.FunctionComponent = () => {
 	const { colorMode } = useColorMode();
 	const [isCreate, setIsCreate] = useState(false);
 	const { onOpenAddLiquidity, onOpenRemoveLiquidity } = useModal();
-
+	const { liquidityPosition } = usePortfolio();
 	const quantityPerPage = 2;
-
+	console.log(liquidityPosition, "aaaaaa");
 	const { t: translation } = useTranslation();
 
 	const quantityOfPages = Math.ceil(
-		liquidityCardsMockedData.length / quantityPerPage
+		liquidityPosition.positions.length / quantityPerPage
 	);
 
-	const [cardsSliced, setCardsSliced] = useState<ILiquidityCardsMockedData[]>(
-		[]
-	);
+	const [cardsSliced, setCardsSliced] = useState<any[]>([]);
 
 	const { currentPage, setCurrentPage } = usePaginator({
 		initialState: { currentPage: 1 },
@@ -35,7 +31,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 
 	useMemo(() => {
 		handlePaginate(
-			liquidityCardsMockedData,
+			liquidityPosition.positions,
 			quantityPerPage,
 			currentPage,
 			setCardsSliced as React.Dispatch<React.SetStateAction<any>>
@@ -107,9 +103,9 @@ export const LiquidityCards: React.FunctionComponent = () => {
 									gap={["3", "3", "9", "9"]}
 								>
 									<Flex position="relative">
-										<Image src={cardsValue.firstIcon} h="9" w="9" />
+										<Image src={cardsValue.symbol0} h="9" w="9" />
 										<Image
-											src={cardsValue.secondIcon}
+											src={cardsValue.symbol1}
 											h="9"
 											w="9"
 											position="absolute"
@@ -129,7 +125,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 												"0.875rem",
 											]}
 										>
-											{cardsValue.firstAsset}/{cardsValue.secondAsset}
+											{cardsValue.reserve0}/{cardsValue.reserve1}
 										</Text>
 
 										<Text
@@ -165,7 +161,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 													"0.875rem",
 												]}
 											>
-												{cardsValue.firstAsset}: {cardsValue.firstPooledTokens}
+												{cardsValue.symbol0}: {cardsValue.reserve0}
 											</Text>
 											<Text
 												fontSize={[
@@ -175,8 +171,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 													"0.875rem",
 												]}
 											>
-												{cardsValue.secondAsset}:{" "}
-												{cardsValue.secondPooledTokens}
+												{cardsValue.symbol1}: {cardsValue.reserve1}
 											</Text>
 										</Flex>
 									</Flex>
@@ -209,12 +204,12 @@ export const LiquidityCards: React.FunctionComponent = () => {
 										<Text
 											fontSize={["0.75rem", "0.75rem", "0.875rem", "0.875rem"]}
 										>
-											{cardsValue.firstAsset}: {cardsValue.firstPooledTokens}
+											{cardsValue.symbol0}: {cardsValue.reserve0}
 										</Text>
 										<Text
 											fontSize={["0.75rem", "0.75rem", "0.875rem", "0.875rem"]}
 										>
-											{cardsValue.secondAsset}: {cardsValue.secondPooledTokens}
+											{cardsValue.symbol1}: {cardsValue.reserve1}
 										</Text>
 									</Flex>
 								</Flex>
@@ -223,7 +218,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 									w="6rem"
 									display={["none", "none", "flex", "flex"]}
 								>
-									<Text fontSize="0.875rem">{cardsValue.value}</Text>
+									<Text fontSize="0.875rem">{cardsValue.valueUSD}</Text>
 								</Flex>
 
 								<Flex
@@ -245,7 +240,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 										theme.text.mono,
 									]}
 								>
-									<Text fontSize="0.875rem">{cardsValue.apr}</Text>
+									<Text fontSize="0.875rem">{cardsValue.poolShare}</Text>
 									<Text
 										display={["flex", "flex", "none", "none"]}
 										fontSize="0.875rem"
