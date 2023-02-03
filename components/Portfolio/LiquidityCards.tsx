@@ -1,11 +1,17 @@
 import { Flex, useColorMode, Text, Image, Button } from "@chakra-ui/react";
-import { useEffect, useMemo, useState } from "react";
-import { usePicasso, useModal } from "hooks";
-import { liquidityCardsMockedData } from "helpers/mockedData";
+import { useMemo, useState } from "react";
+import { usePicasso, useModal, useTokens } from "hooks";
 import { usePaginator } from "chakra-paginator";
 import { useTranslation } from "react-i18next";
-// import { AddLiquidityModal, RemoveLiquidity } from "components";
+import {
+	AddLiquidityModal,
+	LoadingTransition,
+	RemoveLiquidity,
+} from "components/Modals";
 import { usePortfolio } from "hooks/usePortfolio";
+import { Pair } from "@pollum-io/pegasys-sdk";
+import { verifyZerosInBalanceAndFormat } from "utils";
+import { IDeposited, WrappedTokenInfo } from "types";
 import { PaginationComponent } from "./Pagination";
 import { handlePaginate } from "./HandlePaginate";
 
@@ -13,7 +19,26 @@ export const LiquidityCards: React.FunctionComponent = () => {
 	const theme = usePicasso();
 	const { colorMode } = useColorMode();
 	const [isCreate, setIsCreate] = useState(false);
-	const { onOpenAddLiquidity, onOpenRemoveLiquidity } = useModal();
+	const [haveValue] = useState(false);
+	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
+	const [lpPairs, setLpPairs] = useState<Pair[]>([]);
+	const [currPair, setCurrPair] = useState<Pair>();
+	const [sliderValue, setSliderValue] = useState<number>(0);
+	const [depositedTokens, setDepositedTokens] = useState<IDeposited>();
+	const [poolPercentShare, setPoolPercentShare] = useState<string>("");
+	const [userPoolBalance, setUserPoolBalance] = useState<string>("");
+	const { userTokensBalance } = useTokens();
+	const {
+		onOpenAddLiquidity,
+		onOpenRemoveLiquidity,
+		isOpenAddLiquidity,
+		onCloseAddLiquidity,
+		isOpenRemoveLiquidity,
+		onCloseRemoveLiquidity,
+		onOpenTransaction,
+		onCloseTransaction,
+		isOpenTransaction,
+	} = useModal();
 	const { liquidityPosition } = usePortfolio();
 	const quantityPerPage = 2;
 	console.log(liquidityPosition, "aaaaaa");
@@ -29,6 +54,13 @@ export const LiquidityCards: React.FunctionComponent = () => {
 		initialState: { currentPage: 1 },
 	});
 
+	const poolShareVerify = (value: any) => {
+		if (value < 0.01) {
+			return "< 0.01%";
+		}
+		return `${value.toFixed(2)}%`;
+	};
+
 	useMemo(() => {
 		handlePaginate(
 			liquidityPosition.positions,
@@ -36,7 +68,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 			currentPage,
 			setCardsSliced as React.Dispatch<React.SetStateAction<any>>
 		);
-	}, [currentPage, liquidityCardsMockedData]);
+	}, [currentPage, liquidityPosition.positions]);
 
 	return (
 		// eslint-disable-next-line
@@ -50,6 +82,40 @@ export const LiquidityCards: React.FunctionComponent = () => {
 					px={["1.5rem", "2rem", "2.5rem", "8rem"]}
 					h="max-content"
 				>
+					<AddLiquidityModal
+						isModalOpen={isOpenAddLiquidity}
+						onModalClose={onCloseAddLiquidity}
+						isCreate={isCreate}
+						haveValue={haveValue}
+						setSelectedToken={setSelectedToken}
+						selectedToken={selectedToken}
+						depositedTokens={depositedTokens}
+						poolPercentShare={poolPercentShare}
+						userPoolBalance={userPoolBalance}
+						currPair={currPair}
+						openPendingTx={onOpenTransaction}
+						closePendingTx={onCloseTransaction}
+					/>
+					<RemoveLiquidity
+						isModalOpen={isOpenRemoveLiquidity}
+						onModalClose={onCloseRemoveLiquidity}
+						isCreate={isCreate}
+						setSelectedToken={setSelectedToken}
+						selectedToken={selectedToken}
+						currPair={currPair}
+						setSliderValue={setSliderValue}
+						sliderValue={sliderValue}
+						depositedTokens={depositedTokens}
+						poolPercentShare={poolPercentShare}
+						userPoolBalance={userPoolBalance}
+						allTokens={userTokensBalance}
+						openPendingTx={onOpenTransaction}
+						closePendingTx={onCloseTransaction}
+					/>
+					<LoadingTransition
+						isOpen={isOpenTransaction}
+						onClose={onCloseTransaction}
+					/>
 					<Flex
 						display={["flex", "none", "none", "none"]}
 						bgColor={theme.bg.poolShare}
@@ -103,9 +169,15 @@ export const LiquidityCards: React.FunctionComponent = () => {
 									gap={["3", "3", "9", "9"]}
 								>
 									<Flex position="relative">
-										<Image src={cardsValue.symbol0} h="9" w="9" />
 										<Image
-											src={cardsValue.symbol1}
+											alt={`https://raw.githubusercontent.com/Pollum-io/pegasys-tokenlists/master/logos/${cardsValue.addressToken0}/logo.png`}
+											src={`https://raw.githubusercontent.com/Pollum-io/pegasys-tokenlists/master/logos/${cardsValue.addressToken0}/logo.png`}
+											h="9"
+											w="9"
+										/>
+										<Image
+											alt={`https://raw.githubusercontent.com/Pollum-io/pegasys-tokenlists/master/logos/${cardsValue.addressToken1}/logo.png`}
+											src={`https://raw.githubusercontent.com/Pollum-io/pegasys-tokenlists/master/logos/${cardsValue.addressToken1}/logo.png`}
 											h="9"
 											w="9"
 											position="absolute"
@@ -125,7 +197,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 												"0.875rem",
 											]}
 										>
-											{cardsValue.reserve0}/{cardsValue.reserve1}
+											{cardsValue.symbol0}/{cardsValue.symbol1}
 										</Text>
 
 										<Text
@@ -161,7 +233,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 													"0.875rem",
 												]}
 											>
-												{cardsValue.symbol0}: {cardsValue.reserve0}
+												{cardsValue.symbol0}: {cardsValue.reserve0.toFixed(4)}
 											</Text>
 											<Text
 												fontSize={[
@@ -171,7 +243,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 													"0.875rem",
 												]}
 											>
-												{cardsValue.symbol1}: {cardsValue.reserve1}
+												{cardsValue.symbol1}: {cardsValue.reserve1.toFixed(4)}
 											</Text>
 										</Flex>
 									</Flex>
@@ -204,12 +276,12 @@ export const LiquidityCards: React.FunctionComponent = () => {
 										<Text
 											fontSize={["0.75rem", "0.75rem", "0.875rem", "0.875rem"]}
 										>
-											{cardsValue.symbol0}: {cardsValue.reserve0}
+											{cardsValue.symbol0}: {cardsValue.reserve0.toFixed(4)}
 										</Text>
 										<Text
 											fontSize={["0.75rem", "0.75rem", "0.875rem", "0.875rem"]}
 										>
-											{cardsValue.symbol1}: {cardsValue.reserve1}
+											{cardsValue.symbol1}: {cardsValue.reserve1.toFixed(4)}
 										</Text>
 									</Flex>
 								</Flex>
@@ -218,7 +290,9 @@ export const LiquidityCards: React.FunctionComponent = () => {
 									w="6rem"
 									display={["none", "none", "flex", "flex"]}
 								>
-									<Text fontSize="0.875rem">{cardsValue.valueUSD}</Text>
+									<Text fontSize="0.875rem">
+										${cardsValue.valueUSD.toFixed(2)}
+									</Text>
 								</Flex>
 
 								<Flex
@@ -240,7 +314,12 @@ export const LiquidityCards: React.FunctionComponent = () => {
 										theme.text.mono,
 									]}
 								>
-									<Text fontSize="0.875rem">{cardsValue.poolShare}</Text>
+									<Text fontSize="0.875rem">
+										{verifyZerosInBalanceAndFormat(
+											Number(cardsValue.poolShare.toFixed(0))
+										)}
+										%
+									</Text>
 									<Text
 										display={["flex", "flex", "none", "none"]}
 										fontSize="0.875rem"
@@ -268,7 +347,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 										fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
 										display={["none", "flex", "flex", "flex"]}
 									>
-										{cardsValue.poolShare}
+										{poolShareVerify(cardsValue.poolShare)}
 									</Text>
 								</Flex>
 							</Flex>

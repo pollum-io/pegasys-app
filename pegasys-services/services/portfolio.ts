@@ -1,3 +1,4 @@
+import { getAddress } from "@ethersproject/address";
 import { TokenAmount } from "@pollum-io/pegasys-sdk";
 import {
 	pegasysClient,
@@ -134,7 +135,9 @@ class PortfolioServices {
 				reserve0,
 				reserve1,
 				symbol0: position.pair.token0.symbol,
+				addressToken0: getAddress(position.pair.token0.id),
 				symbol1: position.pair.token1.symbol,
+				addressToken1: getAddress(position.pair.token1.id),
 				poolShare,
 			};
 		});
