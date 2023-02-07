@@ -1,5 +1,5 @@
 import { getAddress } from "@ethersproject/address";
-import { TokenAmount } from "@pollum-io/pegasys-sdk";
+import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
 import {
 	pegasysClient,
 	GET_TRANSACTIONS,
@@ -7,7 +7,11 @@ import {
 	USER_HISTORY,
 	USER_POSITIONS,
 } from "apollo";
+import { getTokenPairs, toV2LiquidityToken } from "utils";
 import { IReturnTransactions } from "pegasys-services/dto/contexts/portfolio";
+import { WrappedTokenInfo } from "types";
+import { TProvider } from "pegasys-services/dto";
+import { usePairs as getPairs } from "hooks";
 
 interface IWalletBalance {
 	priceUSD: any;
@@ -90,6 +94,58 @@ class PortfolioServices {
 		);
 
 		return { walletBalances };
+	}
+
+	static async getAllUserTokenPairs(
+		walletInfos: {
+			chainId: ChainId;
+			provider: TProvider | null;
+			walletAddress: string;
+		},
+		userTokensBalance: WrappedTokenInfo[]
+	) {
+		const { chainId } = walletInfos;
+		// eslint-disable-next-line
+		let allTokens = [] as any;
+
+		const tokens = getTokenPairs(chainId, userTokensBalance);
+
+		if (
+			tokens.every(
+				token => token[0]?.chainId === chainId && token[1]?.chainId === chainId
+			)
+		) {
+			allTokens = tokens;
+		}
+
+		const tokensWithLiquidity = allTokens.map((tokens: any) => ({
+			liquidityToken: toV2LiquidityToken(
+				tokens as [WrappedTokenInfo, Token],
+				chainId
+			),
+			tokens: tokens as [WrappedTokenInfo, Token],
+		}));
+
+		// eslint-disable-next-line
+		const v2Tokens = await getPairs(
+			tokensWithLiquidity.map(({ tokens }: { tokens: any }) => tokens),
+			walletInfos
+		);
+
+		const allV2PairsWithLiquidity = v2Tokens
+			.map(([, pair]) => pair)
+			.filter((v2Pair): v2Pair is Pair => Boolean(v2Pair));
+
+		const allUniqueV2PairsWithLiquidity = allV2PairsWithLiquidity
+			.map(pair => pair)
+			.filter(
+				(item, index) =>
+					allV2PairsWithLiquidity
+						.map(pair => pair.liquidityToken.address)
+						.indexOf(item.liquidityToken.address) === index
+			);
+
+		return allUniqueV2PairsWithLiquidity;
 	}
 
 	static async getUserLiquidityPositions(userAddress: string) {

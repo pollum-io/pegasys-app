@@ -1,5 +1,5 @@
 import { Flex, useColorMode, Text, Image, Button } from "@chakra-ui/react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { usePicasso, useModal, useTokens } from "hooks";
 import { usePaginator } from "chakra-paginator";
 import { useTranslation } from "react-i18next";
@@ -39,7 +39,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 		onCloseTransaction,
 		isOpenTransaction,
 	} = useModal();
-	const { liquidityPosition } = usePortfolio();
+	const { liquidityPosition, pairs } = usePortfolio();
 	const quantityPerPage = 2;
 	console.log(liquidityPosition, "aaaaaa");
 	const { t: translation } = useTranslation();
@@ -399,6 +399,27 @@ export const LiquidityCards: React.FunctionComponent = () => {
 								}}
 								onClick={() => {
 									setIsCreate(false);
+									setSelectedToken([
+										userTokensBalance.find(token => {
+											if (cardsValue.symbol0 === "ETH") {
+												return token?.symbol === "WETH";
+											}
+											return token?.symbol === cardsValue.symbol0;
+										}) as WrappedTokenInfo,
+										userTokensBalance.find(token => {
+											if (cardsValue.symbol1 === "ETH") {
+												return token?.symbol === "WETH";
+											}
+											return token?.symbol === cardsValue.symbol1;
+										}) as WrappedTokenInfo,
+									]);
+									setCurrPair(
+										pairs.find(
+											pair =>
+												pair.token0.symbol === cardsValue.symbol0 &&
+												pair.token1.symbol === cardsValue.symbol1
+										)
+									);
 									onOpenAddLiquidity();
 								}}
 							>

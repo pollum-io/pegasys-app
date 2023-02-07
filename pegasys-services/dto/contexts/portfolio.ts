@@ -1,3 +1,5 @@
+import { Pair } from "@pollum-io/pegasys-sdk";
+
 export interface ITransactions {
 	// id: number;
 	symbol0: string;
@@ -32,6 +34,7 @@ export interface IContextTransactions {
 	swapsTransactions: ITransactions[];
 	burnsTransactions: ITransactions[];
 	mintsTransactions: ITransactions[];
+	pairs: Pair[];
 	allTransactions: ITransactions[];
 	getTotalValueSwapped: number;
 	walletBalance: any;

@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-expressions */
+import { Pair } from "@pollum-io/pegasys-sdk";
 import { useTokens } from "hooks";
 import { useWallet } from "pegasys-services";
 import {
@@ -14,8 +15,10 @@ export const PortfolioContext = createContext({} as IContextTransactions);
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
-	const { address } = useWallet();
+	const { address, chainId, provider } = useWallet();
 	const { userTokensBalance } = useTokens();
+
+	const [pairs, setPairs] = useState<Pair[]>([]);
 
 	const [swapsTransactions, setSwapsTransactions] = useState<ITransactions[]>(
 		[]
@@ -41,6 +44,14 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 		setWalletBalance(balances.walletBalances);
 	};
 
+	const getPairs = async () => {
+		const currentPairs = await PortfolioServices.getAllUserTokenPairs(
+			{ chainId: chainId as any, provider, walletAddress: address },
+			userTokensBalance
+		);
+		if (currentPairs) setPairs(currentPairs);
+	};
+
 	const getLiquidityPositions = async () => {
 		const positions = await PortfolioServices.getUserLiquidityPositions(
 			address
@@ -63,6 +74,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 		if (address) {
 			getTransactions();
 			getLiquidityPositions();
+			getPairs();
 		}
 
 		if (userTokensBalance) getWalletBalance();
@@ -99,10 +111,12 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 			allTransactions,
 			getTotalValueSwapped,
 			walletBalance,
+			pairs,
 			liquidityPosition,
 		}),
 		[
 			swapsTransactions,
+			pairs,
 			burnsTransactions,
 			mintsTransactions,
 			allTransactions,
