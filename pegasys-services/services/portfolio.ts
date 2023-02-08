@@ -1,3 +1,5 @@
+/* eslint-disable */
+// @ts-nocheck
 import { getAddress } from "@ethersproject/address";
 import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
 import {
