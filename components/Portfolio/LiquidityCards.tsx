@@ -21,12 +21,12 @@ export const LiquidityCards: React.FunctionComponent = () => {
 	const [isCreate, setIsCreate] = useState(false);
 	const [haveValue] = useState(false);
 	const [selectedToken, setSelectedToken] = useState<WrappedTokenInfo[]>([]);
-	const [lpPairs, setLpPairs] = useState<Pair[]>([]);
 	const [currPair, setCurrPair] = useState<Pair>();
 	const [sliderValue, setSliderValue] = useState<number>(0);
 	const [depositedTokens, setDepositedTokens] = useState<IDeposited>();
 	const [poolPercentShare, setPoolPercentShare] = useState<string>("");
 	const [userPoolBalance, setUserPoolBalance] = useState<string>("");
+	const [currentLpAddress, setCurrentLpAddress] = useState<string>("");
 	const { userTokensBalance } = useTokens();
 	const {
 		onOpenAddLiquidity,
@@ -39,7 +39,8 @@ export const LiquidityCards: React.FunctionComponent = () => {
 		onCloseTransaction,
 		isOpenTransaction,
 	} = useModal();
-	const { liquidityPosition, pairs } = usePortfolio();
+	const { liquidityPosition, pairs, getPoolPercentShare, getDepositedTokens } =
+		usePortfolio();
 	const quantityPerPage = 2;
 	console.log(liquidityPosition, "aaaaaa");
 	const { t: translation } = useTranslation();
@@ -70,9 +71,63 @@ export const LiquidityCards: React.FunctionComponent = () => {
 		);
 	}, [currentPage, liquidityPosition.positions]);
 
+	useEffect(() => {
+		const getInfos = async () => {
+			if (currPair) {
+				const poolShare = await getPoolPercentShare(currPair);
+				const [token0Deposited, token1Deposited] = await getDepositedTokens(
+					currPair
+				);
+
+				setPoolPercentShare(poolShare);
+				setDepositedTokens({
+					token0: token0Deposited,
+					token1: token1Deposited,
+				});
+				setCurrentLpAddress(currPair.liquidityToken.address);
+			}
+		};
+		getInfos();
+	}, [currPair]);
+
 	return (
 		// eslint-disable-next-line
 		<>
+			<AddLiquidityModal
+				isModalOpen={isOpenAddLiquidity}
+				onModalClose={onCloseAddLiquidity}
+				isCreate={isCreate}
+				haveValue={haveValue}
+				setSelectedToken={setSelectedToken}
+				selectedToken={selectedToken}
+				depositedTokens={depositedTokens}
+				poolPercentShare={poolPercentShare}
+				userPoolBalance={userPoolBalance}
+				currPair={currPair}
+				openPendingTx={onOpenTransaction}
+				closePendingTx={onCloseTransaction}
+			/>
+			<RemoveLiquidity
+				isModalOpen={isOpenRemoveLiquidity}
+				onModalClose={onCloseRemoveLiquidity}
+				isCreate={isCreate}
+				setSelectedToken={setSelectedToken}
+				selectedToken={selectedToken}
+				currPair={currPair}
+				setSliderValue={setSliderValue}
+				sliderValue={sliderValue}
+				depositedTokens={depositedTokens}
+				poolPercentShare={poolPercentShare}
+				userPoolBalance={userPoolBalance}
+				allTokens={userTokensBalance}
+				openPendingTx={onOpenTransaction}
+				closePendingTx={onCloseTransaction}
+				lpAddress={`${currentLpAddress}`}
+			/>
+			<LoadingTransition
+				isOpen={isOpenTransaction}
+				onClose={onCloseTransaction}
+			/>
 			{cardsSliced?.map(cardsValue => (
 				<Flex
 					key={cardsValue.id}
@@ -82,40 +137,6 @@ export const LiquidityCards: React.FunctionComponent = () => {
 					px={["1.5rem", "2rem", "2.5rem", "8rem"]}
 					h="max-content"
 				>
-					<AddLiquidityModal
-						isModalOpen={isOpenAddLiquidity}
-						onModalClose={onCloseAddLiquidity}
-						isCreate={isCreate}
-						haveValue={haveValue}
-						setSelectedToken={setSelectedToken}
-						selectedToken={selectedToken}
-						depositedTokens={depositedTokens}
-						poolPercentShare={poolPercentShare}
-						userPoolBalance={userPoolBalance}
-						currPair={currPair}
-						openPendingTx={onOpenTransaction}
-						closePendingTx={onCloseTransaction}
-					/>
-					<RemoveLiquidity
-						isModalOpen={isOpenRemoveLiquidity}
-						onModalClose={onCloseRemoveLiquidity}
-						isCreate={isCreate}
-						setSelectedToken={setSelectedToken}
-						selectedToken={selectedToken}
-						currPair={currPair}
-						setSliderValue={setSliderValue}
-						sliderValue={sliderValue}
-						depositedTokens={depositedTokens}
-						poolPercentShare={poolPercentShare}
-						userPoolBalance={userPoolBalance}
-						allTokens={userTokensBalance}
-						openPendingTx={onOpenTransaction}
-						closePendingTx={onCloseTransaction}
-					/>
-					<LoadingTransition
-						isOpen={isOpenTransaction}
-						onClose={onCloseTransaction}
-					/>
 					<Flex
 						display={["flex", "none", "none", "none"]}
 						bgColor={theme.bg.poolShare}
@@ -379,7 +400,30 @@ export const LiquidityCards: React.FunctionComponent = () => {
 									borderColor: theme.text.cyanLightPurple,
 									color: theme.text.cyanLightPurple,
 								}}
-								onClick={onOpenRemoveLiquidity}
+								onClick={() => {
+									setSelectedToken([
+										userTokensBalance.find(token => {
+											if (cardsValue.symbol0 === "ETH") {
+												return token?.symbol === "WETH";
+											}
+											return token?.symbol === cardsValue.symbol0;
+										}) as WrappedTokenInfo,
+										userTokensBalance.find(token => {
+											if (cardsValue.symbol1 === "ETH") {
+												return token?.symbol === "WETH";
+											}
+											return token?.symbol === cardsValue.symbol1;
+										}) as WrappedTokenInfo,
+									]);
+									setCurrPair(
+										pairs.find(
+											pair =>
+												pair.token0.symbol === cardsValue.symbol0 &&
+												pair.token1.symbol === cardsValue.symbol1
+										)
+									);
+									onOpenRemoveLiquidity();
+								}}
 							>
 								{translation("removeLiquidity.remove")}
 							</Button>

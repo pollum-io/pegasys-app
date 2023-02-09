@@ -15,7 +15,7 @@ export const PortfolioContext = createContext({} as IContextTransactions);
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
-	const { address, chainId, provider } = useWallet();
+	const { address, chainId, provider, signer } = useWallet();
 	const { userTokensBalance } = useTokens();
 
 	const [pairs, setPairs] = useState<Pair[]>([]);
@@ -50,6 +50,27 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 			userTokensBalance
 		);
 		if (currentPairs) setPairs(currentPairs);
+	};
+
+	const getPoolPercentShare = async (pair: Pair) => {
+		const poolShare = await PortfolioServices.getPoolPercentShare(pair, {
+			provider,
+			signer,
+			walletAddress: address,
+		});
+
+		return poolShare;
+	};
+
+	const getDepositedTokens = async (pair: Pair) => {
+		const [token0Deposited, token1Deposited] =
+			await PortfolioServices.getDepositedTokens(pair, {
+				provider,
+				signer,
+				walletAddress: address,
+			});
+
+		return [token0Deposited, token1Deposited];
 	};
 
 	const getLiquidityPositions = async () => {
@@ -110,6 +131,8 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 			mintsTransactions,
 			allTransactions,
 			getTotalValueSwapped,
+			getPoolPercentShare,
+			getDepositedTokens,
 			walletBalance,
 			pairs,
 			liquidityPosition,
@@ -121,6 +144,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 			mintsTransactions,
 			allTransactions,
 			getTotalValueSwapped,
+			getPoolPercentShare,
 			walletBalance,
 			liquidityPosition,
 		]

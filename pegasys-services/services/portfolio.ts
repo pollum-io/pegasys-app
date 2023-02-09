@@ -1,7 +1,14 @@
 /* eslint-disable */
 // @ts-nocheck
 import { getAddress } from "@ethersproject/address";
-import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
+import {
+	ChainId,
+	Pair,
+	Token,
+	JSBI,
+	Percent,
+	TokenAmount,
+} from "@pollum-io/pegasys-sdk";
 import {
 	pegasysClient,
 	GET_TRANSACTIONS,
@@ -9,10 +16,15 @@ import {
 	USER_HISTORY,
 	USER_POSITIONS,
 } from "apollo";
-import { getTokenPairs, toV2LiquidityToken } from "utils";
+import {
+	getTokenPairs,
+	toV2LiquidityToken,
+	getBalanceOfBNSingleCall,
+	getTotalSupply,
+} from "utils";
 import { IReturnTransactions } from "pegasys-services/dto/contexts/portfolio";
 import { WrappedTokenInfo } from "types";
-import { TProvider } from "pegasys-services/dto";
+import { TProvider, TSigner } from "pegasys-services/dto";
 import { usePairs as getPairs } from "hooks";
 
 interface IWalletBalance {
@@ -96,6 +108,98 @@ class PortfolioServices {
 		);
 
 		return { walletBalances };
+	}
+
+	static async getDepositedTokens(
+		pair: Pair,
+		walletInfos: {
+			provider: TProvider | null;
+			signer: TSigner | null;
+			walletAddress: string;
+		}
+	) {
+		const { signer, walletAddress: address, provider } = walletInfos;
+
+		const pairBalance = await getBalanceOfBNSingleCall(
+			pair?.liquidityToken.address as string,
+			address,
+			signer ?? null
+		);
+
+		const value = JSBI.BigInt(pairBalance?.toString());
+
+		const pairBalanceAmount = new TokenAmount(
+			pair?.liquidityToken as Token,
+			value
+		);
+
+		const totalSupply = await getTotalSupply(
+			pair?.liquidityToken as Token,
+			signer as Signer,
+			provider
+		);
+
+		const [token0Deposited, token1Deposited] =
+			!!pair &&
+			!!totalSupply &&
+			!!pairBalanceAmount &&
+			// this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
+			JSBI.greaterThanOrEqual(totalSupply.raw, pairBalanceAmount.raw)
+				? [
+						pair.getLiquidityValue(
+							pair.token0,
+							totalSupply,
+							pairBalanceAmount,
+							false
+						),
+						pair.getLiquidityValue(
+							pair.token1,
+							totalSupply,
+							pairBalanceAmount,
+							false
+						),
+				  ]
+				: [undefined, undefined];
+
+			return [token0Deposited, token1Deposited];
+	}
+
+	static async getPoolPercentShare(
+		pair: Pair,
+		walletInfos: {
+			provider: TProvider | null;
+			signer: TSigner | null;
+			walletAddress: string;
+		}
+	) {
+		const { signer, walletAddress: address, provider } = walletInfos;
+		const pairBalance = await getBalanceOfBNSingleCall(
+			pair?.liquidityToken.address as string,
+			address,
+			signer ?? null
+		);
+
+		const value = JSBI.BigInt(pairBalance?.toString());
+
+		const pairBalanceAmount = new TokenAmount(
+			pair?.liquidityToken as Token,
+			value
+		);
+
+		const totalSupply = await getTotalSupply(
+			pair?.liquidityToken as Token,
+			signer as Signer,
+			provider
+		);
+
+		const poolTokenPercentage =
+			pairBalanceAmount &&
+			totalSupply &&
+			JSBI.greaterThanOrEqual(totalSupply.raw, pairBalanceAmount.raw)
+				? new Percent(pairBalanceAmount.raw, totalSupply.raw)
+				: undefined;
+
+		return Number(poolTokenPercentage?.toSignificant(6)).toFixed(2);
 	}
 
 	static async getAllUserTokenPairs(
