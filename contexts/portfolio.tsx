@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-expressions */
+import { Pair } from "@pollum-io/pegasys-sdk";
 import { useTokens } from "hooks";
 import { useWallet } from "pegasys-services";
 import {
@@ -14,8 +15,10 @@ export const PortfolioContext = createContext({} as IContextTransactions);
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
-	const { address } = useWallet();
+	const { address, chainId, provider, signer } = useWallet();
 	const { userTokensBalance } = useTokens();
+
+	const [pairs, setPairs] = useState<Pair[]>([]);
 
 	const [swapsTransactions, setSwapsTransactions] = useState<ITransactions[]>(
 		[]
@@ -41,6 +44,35 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 		setWalletBalance(balances.walletBalances);
 	};
 
+	const getPairs = async () => {
+		const currentPairs = await PortfolioServices.getAllUserTokenPairs(
+			{ chainId: chainId as any, provider, walletAddress: address },
+			userTokensBalance
+		);
+		if (currentPairs) setPairs(currentPairs);
+	};
+
+	const getPoolPercentShare = async (pair: Pair) => {
+		const poolShare = await PortfolioServices.getPoolPercentShare(pair, {
+			provider,
+			signer,
+			walletAddress: address,
+		});
+
+		return poolShare;
+	};
+
+	const getDepositedTokens = async (pair: Pair) => {
+		const [token0Deposited, token1Deposited] =
+			await PortfolioServices.getDepositedTokens(pair, {
+				provider,
+				signer,
+				walletAddress: address,
+			});
+
+		return [token0Deposited, token1Deposited];
+	};
+
 	const getLiquidityPositions = async () => {
 		const positions = await PortfolioServices.getUserLiquidityPositions(
 			address
@@ -60,6 +92,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 		if (address) {
 			getTransactions();
 			getLiquidityPositions();
+			getPairs();
 		}
 
 		if (userTokensBalance) getWalletBalance();
@@ -95,15 +128,20 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 			mintsTransactions,
 			allTransactions,
 			getTotalValueSwapped,
+			getPoolPercentShare,
+			getDepositedTokens,
 			walletBalance,
+			pairs,
 			liquidityPosition,
 		}),
 		[
 			swapsTransactions,
+			pairs,
 			burnsTransactions,
 			mintsTransactions,
 			allTransactions,
 			getTotalValueSwapped,
+			getPoolPercentShare,
 			walletBalance,
 			liquidityPosition,
 		]

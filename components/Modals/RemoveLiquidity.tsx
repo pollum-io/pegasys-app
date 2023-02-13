@@ -44,6 +44,7 @@ interface IModal {
 	allTokens: WrappedTokenInfo[];
 	openPendingTx: () => void;
 	closePendingTx: () => void;
+	lpAddress?: string;
 }
 
 export interface IAmounts {
@@ -67,6 +68,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 		allTokens,
 		openPendingTx,
 		closePendingTx,
+		lpAddress,
 	} = props;
 	const { t: translation } = useTranslation();
 
@@ -125,7 +127,7 @@ export const RemoveLiquidity: React.FC<IModal> = props => {
 		sliderValue === 100;
 
 	const { onAttemptToApprove, onRemove, onSlide } = UseRemoveLiquidity(
-		currentLpAddress,
+		currentLpAddress || `${lpAddress}`,
 		sliderValue,
 		walletInfos,
 		signer as Signer,

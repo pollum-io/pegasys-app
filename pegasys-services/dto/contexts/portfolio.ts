@@ -1,5 +1,7 @@
+import { Pair, TokenAmount } from "@pollum-io/pegasys-sdk";
+
 export interface ITransactions {
-	// id: number;
+	id: number;
 	symbol0: string;
 	symbol1: string;
 	totalValue: number;
@@ -32,6 +34,9 @@ export interface IContextTransactions {
 	swapsTransactions: ITransactions[];
 	burnsTransactions: ITransactions[];
 	mintsTransactions: ITransactions[];
+	getPoolPercentShare: (pair: Pair) => Promise<string>;
+	getDepositedTokens: (pair: Pair) => Promise<(TokenAmount | undefined)[]>;
+	pairs: Pair[];
 	allTransactions: ITransactions[];
 	getTotalValueSwapped: number;
 	walletBalance: any;
