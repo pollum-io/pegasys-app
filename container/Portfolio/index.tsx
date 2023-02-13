@@ -653,7 +653,7 @@ export const PortfolioContainer: NextPage = () => {
 										</Flex>
 									</Flex>
 
-									<InputGroup
+									{/* <InputGroup
 										alignItems="center"
 										w={["100%", "100%", "30rem", "25rem"]}
 									>
@@ -692,7 +692,7 @@ export const PortfolioContainer: NextPage = () => {
 											}}
 											_hover={{}}
 										/>
-									</InputGroup>
+									</InputGroup> */}
 								</Flex>
 							</Flex>
 							<Flex

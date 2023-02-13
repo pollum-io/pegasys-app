@@ -7,7 +7,9 @@ import {
 	USER_HISTORY,
 	USER_POSITIONS,
 } from "apollo";
+import { ethers } from "ethers";
 import { IReturnTransactions } from "pegasys-services/dto/contexts/portfolio";
+import { verifyZerosInBalanceAndFormat } from "utils";
 
 interface IWalletBalance {
 	priceUSD: any;
@@ -125,11 +127,9 @@ class PortfolioServices {
 
 			const poolShare =
 				position.liquidityTokenBalance / position.pair.totalSupply;
-
 			const valueUSD = poolShare * position.reserveUSD;
 			const reserve0 = poolShare * parseFloat(position.reserve0);
 			const reserve1 = poolShare * parseFloat(position.reserve1);
-
 			return {
 				valueUSD,
 				reserve0,
@@ -138,7 +138,7 @@ class PortfolioServices {
 				addressToken0: getAddress(position.pair.token0.id),
 				symbol1: position.pair.token1.symbol,
 				addressToken1: getAddress(position.pair.token1.id),
-				poolShare,
+				poolShare: verifyZerosInBalanceAndFormat(poolShare, 2),
 			};
 		});
 

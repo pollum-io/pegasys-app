@@ -24,7 +24,7 @@ export interface ILiquidity {
 		reserve1: number;
 		symbol0: any;
 		symbol1: any;
-		poolShare: number;
+		poolShare: any;
 	}>;
 }
 

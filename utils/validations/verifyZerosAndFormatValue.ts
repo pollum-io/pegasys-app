@@ -16,9 +16,11 @@ const truncateNumberWithoutRound = (
 };
 
 // Get all type of balances BigInt or not, truncate using the correct validation and return value to be set in state
-export const verifyZerosInBalanceAndFormat = (balance: number): string => {
+export const verifyZerosInBalanceAndFormat = (
+	balance: number,
+	decimals = 4
+): string => {
 	const fullValue = removeScientificNotation(balance);
-
 	const quantityOfZerosAfterDot = -Math.floor(
 		Math.log10(fullValue as number) + 1
 	);
@@ -34,7 +36,8 @@ export const verifyZerosInBalanceAndFormat = (balance: number): string => {
 			Number(secondValueSplitted) === 0,
 	];
 
-	const defaultPrecisionValidated = secondValueSplitted === false ? 0 : 4;
+	const defaultPrecisionValidated =
+		secondValueSplitted === false ? 0 : decimals;
 
 	const fractionValidation = valuesValidations.every(
 		validation => validation === true

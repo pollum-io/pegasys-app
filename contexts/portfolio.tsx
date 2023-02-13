@@ -45,10 +45,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 		const positions = await PortfolioServices.getUserLiquidityPositions(
 			address
 		);
-		console.log(positions, "positions");
-
 		setLiquidityPosition(positions);
-		console.log(liquidityPosition, "liquidityPosition");
 	};
 
 	const getTransactions = async () => {

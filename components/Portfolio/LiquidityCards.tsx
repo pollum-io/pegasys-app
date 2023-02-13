@@ -9,7 +9,7 @@ import {
 	RemoveLiquidity,
 } from "components/Modals";
 import { usePortfolio } from "hooks/usePortfolio";
-import { Pair } from "@pollum-io/pegasys-sdk";
+import { Pair, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { verifyZerosInBalanceAndFormat } from "utils";
 import { IDeposited, WrappedTokenInfo } from "types";
 import { PaginationComponent } from "./Pagination";
@@ -41,7 +41,6 @@ export const LiquidityCards: React.FunctionComponent = () => {
 	} = useModal();
 	const { liquidityPosition } = usePortfolio();
 	const quantityPerPage = 2;
-	console.log(liquidityPosition, "aaaaaa");
 	const { t: translation } = useTranslation();
 
 	const quantityOfPages = Math.ceil(
@@ -58,7 +57,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 		if (value < 0.01) {
 			return "< 0.01%";
 		}
-		return `${value.toFixed(2)}%`;
+		return `${value}%`;
 	};
 
 	useMemo(() => {
@@ -69,7 +68,6 @@ export const LiquidityCards: React.FunctionComponent = () => {
 			setCardsSliced as React.Dispatch<React.SetStateAction<any>>
 		);
 	}, [currentPage, liquidityPosition.positions]);
-
 	return (
 		// eslint-disable-next-line
 		<>
@@ -85,13 +83,14 @@ export const LiquidityCards: React.FunctionComponent = () => {
 					<AddLiquidityModal
 						isModalOpen={isOpenAddLiquidity}
 						onModalClose={onCloseAddLiquidity}
-						isCreate={isCreate}
-						haveValue={haveValue}
 						setSelectedToken={setSelectedToken}
 						selectedToken={selectedToken}
-						depositedTokens={depositedTokens}
-						poolPercentShare={poolPercentShare}
-						userPoolBalance={userPoolBalance}
+						depositedTokens={{
+							token0: cardsValue?.reserve0,
+							token1: cardsValue?.reserve1,
+						}}
+						poolPercentShare="0.00"
+						userPoolBalance="0"
 						currPair={currPair}
 						openPendingTx={onOpenTransaction}
 						closePendingTx={onCloseTransaction}
@@ -129,7 +128,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 						position="relative"
 						bottom="-0.65rem"
 					>
-						Pool Share {cardsValue.poolShare}
+						Pool Share {poolShareVerify(cardsValue.poolShare)}
 					</Flex>
 
 					<Flex
@@ -314,12 +313,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 										theme.text.mono,
 									]}
 								>
-									<Text fontSize="0.875rem">
-										{verifyZerosInBalanceAndFormat(
-											Number(cardsValue.poolShare.toFixed(0))
-										)}
-										%
-									</Text>
+									<Text fontSize="0.875rem">0%</Text>
 									<Text
 										display={["flex", "flex", "none", "none"]}
 										fontSize="0.875rem"

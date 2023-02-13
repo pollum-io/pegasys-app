@@ -268,10 +268,12 @@ export const USER_HISTORY = gql`
 				token0 {
 					id
 					symbol
+					decimals
 				}
 				token1 {
 					id
 					symbol
+					decimals
 				}
 			}
 		}
