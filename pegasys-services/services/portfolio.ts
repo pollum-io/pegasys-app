@@ -43,13 +43,24 @@ export interface IReturnWallet {
 class PortfolioServices {
 	private static parseTransaction(transactions: any[], type: string) {
 		return transactions.map((tx: any) => {
+			const amount0 = tx.amount0
+				? tx.amount0
+				: tx.amount0In === "0"
+				? tx.amount0Out
+				: tx.amount0In;
+			const amount1 = tx.amount1
+				? tx.amount1
+				: tx.amount1In === "0"
+				? tx.amount1Out
+				: tx.amount1In;
+
 			const symbol0 = tx.pair.token0.symbol;
 			const symbol1 = tx.pair.token1.symbol;
 			const totalValue = Number(tx.amountUSD);
-			const tokenAmount0 = `${Number(tx.amount0).toFixed(5)} ${
+			const tokenAmount0 = `${Number(amount0).toFixed(5)} ${
 				tx.pair.token0.symbol
 			}`;
-			const tokenAmount1 = `${Number(tx.amount1).toFixed(5)} ${
+			const tokenAmount1 = `${Number(amount1).toFixed(5)} ${
 				tx.pair.token1.symbol
 			}`;
 			const time = Number(tx.transaction.timestamp);
