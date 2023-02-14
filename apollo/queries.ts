@@ -219,6 +219,20 @@ export const GET_TRANSACTIONS = gql`
 			amount1Out
 			amountUSD
 			to
+			`;
+export const GET_STAKE_DATA = gql`
+	query stakeQuery($id: ID!, $walletAddress: ID!, $date: Int!) {
+		pegasysStaking(id: $id) {
+			psysStaked
+			psysStakedUSD
+			depositFee
+			users(where: { id: $walletAddress }) {
+				psysStaked
+				psysStakedUSD
+			}
+		}
+		pegasysStakingDayDatas(where: { date_gte: $date }) {
+			depositFeePSYS
 		}
 	}
 `;
@@ -309,6 +323,11 @@ export const USER_MINTS_BUNRS_PER_PAIR = gql`
 					id
 				}
 			}
+			`;
+export const feeCollectorDayData = gql`
+	query dayDataQuery($date: Int!) {
+		dayDatas(where: { date_gte: $date }) {
+			tokenRemitted
 		}
 	}
 `;

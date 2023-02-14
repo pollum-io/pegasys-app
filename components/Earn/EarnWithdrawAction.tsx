@@ -12,12 +12,14 @@ interface IEarnWithdrawActionProps {
 	withdraw: () => Promise<void>;
 	buttonTitle: string;
 	onClose: () => void;
+	stake?: boolean;
 }
 
 const EarnWithdrawAction: React.FC<IEarnWithdrawActionProps> = ({
 	withdraw,
 	buttonTitle,
 	onClose,
+	stake,
 }) => {
 	const {
 		selectedOpportunity,
@@ -74,7 +76,7 @@ const EarnWithdrawAction: React.FC<IEarnWithdrawActionProps> = ({
 					fontSize={16}
 				>
 					{`${buttonTitle}
-					${withdrawPercentage === 100 ? t("earnPages.andClaim") : ""}`}
+					${stake || withdrawPercentage === 100 ? t("earnPages.andClaim") : ""}`}
 				</EarnButton>
 			</Flex>
 		</Flex>

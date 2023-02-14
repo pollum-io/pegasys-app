@@ -3113,10 +3113,17 @@
     tiny-warning "^1.0.3"
     tsdx "^0.14.1"
 
-"@pollum-io/pegasys-protocol@0.0.15", "@pollum-io/pegasys-protocol@^0.0.15":
+"@pollum-io/pegasys-protocol@0.0.15":
   version "0.0.15"
   resolved "https://registry.yarnpkg.com/@pollum-io/pegasys-protocol/-/pegasys-protocol-0.0.15.tgz#166d2f489bca261a41d67b05fb8dc0b28398f9ea"
   integrity sha512-GZZOq+4xiSOxbjHm8rRwc6Lx8NEmgX1nn2Q1v1ZcxBUKt1SRC06O/SiLiCC5tJD1vR/6W1NdgRna/0yBv6zXyA==
+  dependencies:
+    web3 "^1.7.3"
+
+"@pollum-io/pegasys-protocol@^0.0.17":
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/@pollum-io/pegasys-protocol/-/pegasys-protocol-0.0.17.tgz#742d6ff49e7e5e7b4c68cb300c52d521f4980f70"
+  integrity sha512-JxSe2i5b4gkCdNVvtFpQjIhQbyNKLL55umppYXhfa8xAsQN9sXsiWYI2GQ/L9WXJ+yhEZ0xOESkvYkVn/flsPw==
   dependencies:
     web3 "^1.7.3"
 

@@ -15,26 +15,32 @@ import { MdOutlineCallMade } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import {
 	useWallet as psUseWallet,
+	useStakeV2,
 	useStake,
 	useEarn,
 	IStakeInfo,
 	IEarnInfo,
 	RoutesFramework,
+	IStakeV2Info,
 } from "pegasys-services";
 import { StakeActions } from "components/Modals/StakeActions";
+import { StakeV2Actions } from "components/Modals/StakeV2Actions";
 
 export const StakeContainer: NextPage = () => {
 	const theme = usePicasso();
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 	const { colorMode } = useColorMode();
 	const { isConnected, address, chainId } = psUseWallet();
-	const { showInUsd, setShowInUsd } = useStake();
+	const { showInUsd, setShowInUsd } = useStakeV2();
+	const { stakeV1Opportunities } = useStake();
 	const { earnOpportunities, dataLoading } = useEarn();
 	const {
 		isOpenStakeActions,
 		onCloseStakeActions,
 		isOpenTransaction,
 		onCloseTransaction,
+		isOpenStakeV2Actions,
+		onCloseStakeV2Actions,
 	} = useModal();
 	const { t: translation } = useTranslation();
 
@@ -51,6 +57,10 @@ export const StakeContainer: NextPage = () => {
 				onClose={onCloseTransaction}
 			/>
 			<StakeActions isOpen={isOpenStakeActions} onClose={onCloseStakeActions} />
+			<StakeV2Actions
+				isOpen={isOpenStakeV2Actions}
+				onClose={onCloseStakeV2Actions}
+			/>
 			<Flex flexDirection="column" w={["xs", "md", "2xl", "2xl"]}>
 				<SlideFade in={Boolean(isMobile || !isMobile)} offsetY="-30px">
 					<Flex
@@ -270,13 +280,15 @@ export const StakeContainer: NextPage = () => {
 						!dataLoading &&
 							isConnected &&
 							!(!chainId || !RoutesFramework.getStakeAddress(chainId)) &&
-							!earnOpportunities.length
+							!earnOpportunities.length &&
+							!stakeV1Opportunities.length
 					)}
 				>
 					{!dataLoading &&
 						isConnected &&
 						!(!chainId || !RoutesFramework.getStakeAddress(chainId)) &&
-						!earnOpportunities.length && (
+						!earnOpportunities.length &&
+						!stakeV1Opportunities.length && (
 							<Flex
 								w="100%"
 								mt={["3rem", "3rem", "4rem", "4rem"]}
@@ -300,13 +312,13 @@ export const StakeContainer: NextPage = () => {
 						!dataLoading &&
 							isConnected &&
 							!(!chainId || !RoutesFramework.getStakeAddress(chainId)) &&
-							earnOpportunities.length
+							(earnOpportunities.length || stakeV1Opportunities.length)
 					)}
 				>
 					{!dataLoading &&
 						isConnected &&
 						!(!chainId || !RoutesFramework.getStakeAddress(chainId)) &&
-						earnOpportunities.length && (
+						(earnOpportunities.length || stakeV1Opportunities.length) && (
 							<Flex
 								flexDirection="column"
 								gap="8"
@@ -314,7 +326,17 @@ export const StakeContainer: NextPage = () => {
 								alignItems={["center", "center", "center", "center"]}
 							>
 								{earnOpportunities.map((stakeInfo: IEarnInfo, index) => (
-									<StakeCard key={index} stakeInfo={stakeInfo as IStakeInfo} />
+									<StakeCard
+										key={index}
+										stakeInfo={stakeInfo as IStakeV2Info}
+									/>
+								))}
+								{stakeV1Opportunities.map((stakeInfo: IEarnInfo, index) => (
+									<StakeCard
+										v1
+										key={index}
+										stakeInfo={stakeInfo as IStakeInfo}
+									/>
 								))}
 							</Flex>
 						)}

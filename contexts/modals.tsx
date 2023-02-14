@@ -85,6 +85,12 @@ export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({
 	} = useDisclosure();
 
 	const {
+		isOpen: isOpenStakeV2Actions,
+		onOpen: onOpenStakeV2Actions,
+		onClose: onCloseStakeV2Actions,
+	} = useDisclosure();
+
+	const {
 		isOpen: isOpenPsysBreakdown,
 		onOpen: onOpenPsysBreakdown,
 		onClose: onClosePsysBreakdown,
@@ -179,6 +185,9 @@ export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({
 			isOpenStakeActions,
 			onOpenStakeActions,
 			onCloseStakeActions,
+			isOpenStakeV2Actions,
+			onOpenStakeV2Actions,
+			onCloseStakeV2Actions,
 			onOpenDrawerMenu,
 			isOpenDrawerMenu,
 			onCloseDrawerMenu,
@@ -244,6 +253,9 @@ export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({
 			isOpenStakeActions,
 			onOpenStakeActions,
 			onCloseStakeActions,
+			isOpenStakeV2Actions,
+			onOpenStakeV2Actions,
+			onCloseStakeV2Actions,
 			onOpenDrawerMenu,
 			isOpenDrawerMenu,
 			onCloseDrawerMenu,
