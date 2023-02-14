@@ -37,6 +37,11 @@ export interface IContextTransactions {
 	getPoolPercentShare: (pair: Pair) => Promise<string>;
 	getDepositedTokens: (pair: Pair) => Promise<(TokenAmount | undefined)[]>;
 	pairs: Pair[];
+	pairsData: {
+		allDays: any;
+		oneDay: any;
+		sysPrice: number;
+	};
 	allTransactions: ITransactions[];
 	getTotalValueSwapped: number;
 	walletBalance: any;

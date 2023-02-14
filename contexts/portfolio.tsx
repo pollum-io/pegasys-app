@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import { Pair } from "@pollum-io/pegasys-sdk";
+import { ChainId, Pair } from "@pollum-io/pegasys-sdk";
 import { useTokens } from "hooks";
 import { useWallet } from "pegasys-services";
 import {
@@ -35,6 +35,15 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 		liquidity: 0,
 		positions: [],
 	});
+	const [pairsData, setPairsData] = useState<{
+		allDays: any;
+		oneDay: any;
+		sysPrice: number;
+	}>({
+		allDays: null,
+		oneDay: null,
+		sysPrice: 0,
+	});
 
 	const getWalletBalance = async () => {
 		const balances = await PortfolioServices.getWalletBalance(
@@ -46,7 +55,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const getPairs = async () => {
 		const currentPairs = await PortfolioServices.getAllUserTokenPairs(
-			{ chainId: chainId as any, provider, walletAddress: address },
+			{ chainId: chainId as ChainId, provider, walletAddress: address },
 			userTokensBalance
 		);
 		if (currentPairs) setPairs(currentPairs);
@@ -60,6 +69,13 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 		});
 
 		return poolShare;
+	};
+	const getPairsData = async () => {
+		const { allDays, oneDay, sysPrice } = await PortfolioServices.getPairsData(
+			{ chainId: chainId as ChainId, provider, walletAddress: address },
+			userTokensBalance
+		);
+		if (allDays && oneDay) setPairsData({ allDays, oneDay, sysPrice });
 	};
 
 	const getDepositedTokens = async (pair: Pair) => {
@@ -93,6 +109,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 			getTransactions();
 			getLiquidityPositions();
 			getPairs();
+			getPairsData();
 		}
 
 		if (userTokensBalance) getWalletBalance();
@@ -130,6 +147,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 			getTotalValueSwapped,
 			getPoolPercentShare,
 			getDepositedTokens,
+			pairsData,
 			walletBalance,
 			pairs,
 			liquidityPosition,
@@ -141,6 +159,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 			mintsTransactions,
 			allTransactions,
 			getTotalValueSwapped,
+			pairsData,
 			getPoolPercentShare,
 			walletBalance,
 			liquidityPosition,

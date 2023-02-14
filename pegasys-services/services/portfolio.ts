@@ -14,21 +14,22 @@ import {
 	GET_TRANSACTIONS,
 	WALLET_BALANCE_TOKEN,
 	USER_HISTORY,
-	USER_POSITIONS,
+	PAIRS_CURRENT,
+	PAIR_DATA,
+	SYS_PRICE,
 } from "apollo";
 import {
 	getTokenPairs,
 	toV2LiquidityToken,
 	getBalanceOfBNSingleCall,
 	getTotalSupply,
+	verifyZerosInBalanceAndFormat,
+	getBlocksFromTimestamps,
 } from "utils";
-import { ethers } from "ethers";
 import { IReturnTransactions } from "pegasys-services/dto/contexts/portfolio";
 import { WrappedTokenInfo } from "types";
 import { TProvider, TSigner } from "pegasys-services/dto";
 import { usePairs as getPairs } from "hooks";
-import { verifyZerosInBalanceAndFormat } from "utils";
-
 interface IWalletBalance {
 	priceUSD: any;
 	balance: any;
@@ -202,6 +203,158 @@ class PortfolioServices {
 				: undefined;
 
 		return Number(poolTokenPercentage?.toSignificant(6)).toFixed(2);
+	}
+
+	static async getPairsData(
+		walletInfos: {
+			chainId: ChainId;
+			provider: TProvider | null;
+			walletAddress: string;
+		},
+		userTokensBalance: WrappedTokenInfo[]
+	) {
+		const { chainId } = walletInfos;
+		// eslint-disable-next-line
+		let allTokens = [] as any;
+
+		const tokens = getTokenPairs(chainId, userTokensBalance);
+
+		if (
+			tokens.every(
+				token => token[0]?.chainId === chainId && token[1]?.chainId === chainId
+			)
+		) {
+			allTokens = tokens;
+		}
+
+		const [{ number: oneDay }] = await getBlocksFromTimestamps();
+
+		const fetchPairs = await pegasysClient.query({
+			query: PAIRS_CURRENT,
+			fetchPolicy: "cache-first",
+		});
+
+		const fetchPairsAddresses = await Promise.all([fetchPairs]);
+
+		const pairAddresses = fetchPairsAddresses[0]?.data?.pairs;
+
+		const oneDayPairInfos = await Promise.all(
+			pairAddresses.map(async (token: { id: string }) => {
+				const volume = await pegasysClient.query({
+					query: PAIR_DATA(token.id, Number(oneDay)),
+					fetchPolicy: "network-only",
+				});
+
+				return volume.data.pairs[0];
+			})
+		);
+		const formattedOneDayPairsInfo = oneDayPairInfos.reduce(
+			(acc, curr) => ({
+				...acc,
+				[`${curr.token0.symbol}-${curr.token1.symbol}`]: curr,
+			}),
+			{}
+		);
+		const oneDayCommonPairs = allTokens
+			.map(
+				currency =>
+					formattedOneDayPairsInfo[
+						`${
+							currency[0]?.symbol === "WETH"
+								? "ETH"
+								: currency[0]?.symbol === "SYS"
+								? "WSYS"
+								: currency[0]?.symbol
+						}-${currency[1]?.symbol === "WETH" ? "ETH" : currency[1]?.symbol}`
+					]
+			)
+			.filter(item => item !== undefined);
+
+		const formattedOneDayCommonPairs = oneDayCommonPairs.reduce(
+			(acc, curr) => ({
+				...acc,
+				[`${
+					curr?.token0?.symbol === "WSYS"
+						? "SYS"
+						: curr?.token0?.symbol === "ETH"
+						? "WETH"
+						: curr?.token0?.symbol
+				}-${
+					curr?.token1?.symbol === "WSYS"
+						? "SYS"
+						: curr?.token1?.symbol === "ETH"
+						? "WETH"
+						: curr?.token1?.symbol
+				}`]: curr,
+			}),
+			{}
+		);
+
+		const generalPairInfos = await Promise.all(
+			pairAddresses.map(async (token: { id: string }) => {
+				const volume = await pegasysClient.query({
+					query: PAIR_DATA(token.id),
+					fetchPolicy: "network-only",
+				});
+
+				return volume.data.pairs[0];
+			})
+		);
+
+		const formattedGeneralPairsInfo = generalPairInfos.reduce(
+			(acc, curr) => ({
+				...acc,
+				[`${curr.token0.symbol}-${curr.token1.symbol}`]: curr,
+			}),
+			{}
+		);
+		const generalDaysCommonPairs = allTokens
+			.map(
+				currency =>
+					formattedGeneralPairsInfo[
+						`${
+							currency[0]?.symbol === "WETH"
+								? "ETH"
+								: currency[0]?.symbol === "SYS"
+								? "WSYS"
+								: currency[0]?.symbol
+						}-${currency[1]?.symbol === "WETH" ? "ETH" : currency[1]?.symbol}`
+					]
+			)
+			.filter(item => item !== undefined);
+
+		const formattedGeneralCommonPairs = generalDaysCommonPairs.reduce(
+			(acc, curr) => ({
+				...acc,
+				[`${
+					curr?.token0?.symbol === "WSYS"
+						? "SYS"
+						: curr?.token0?.symbol === "ETH"
+						? "WETH"
+						: curr?.token0?.symbol
+				}-${
+					curr?.token1?.symbol === "WSYS"
+						? "SYS"
+						: curr?.token1?.symbol === "ETH"
+						? "WETH"
+						: curr?.token1?.symbol
+				}`]: curr,
+			}),
+			{}
+		);
+
+		const fetchSysPrice = await pegasysClient.query({
+			query: SYS_PRICE(),
+			fetchPolicy: "cache-first",
+		});
+
+		const sysPrice = fetchSysPrice?.data?.bundles[0]?.sysPrice;
+
+		return {
+			oneDay: formattedOneDayCommonPairs,
+			allDays: formattedGeneralCommonPairs,
+			sysPrice: +sysPrice,
+		};
 	}
 
 	static async getAllUserTokenPairs(
