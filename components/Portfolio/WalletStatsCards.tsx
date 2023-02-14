@@ -138,10 +138,6 @@ export const WalletStatsCards: FunctionComponent = () => {
 											fontWeight={["bold", "normal", "normal", "normal"]}
 										>
 											${verifyZerosInBalanceAndFormat(Number(cardsValue.value))}
-											{/* {ethers.utils.parseUnits(
-											cardsValue.value,
-											cardsValue.decimals
-										)} */}
 										</Text>
 									</Flex>
 								</Flex>

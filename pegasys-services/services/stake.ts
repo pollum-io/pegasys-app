@@ -1,6 +1,6 @@
 import { ChainId, JSBI, TokenAmount, WSYS } from "@pollum-io/pegasys-sdk";
 
-import { PAIR_DATA, pegasysClient, SYS_PRICE } from "apollo";
+import { PAIR_DATA, pegasysClient } from "apollo";
 import { ContractFramework } from "../frameworks";
 import {
 	BIG_INT_ONE_WEEK_IN_SECONDS,
@@ -242,17 +242,6 @@ class StakeServices {
 		};
 	}
 
-	private static async getPsysUsdPrice() {
-		const fetchSysPrice = await pegasysClient.query({
-			query: SYS_PRICE(),
-			fetchPolicy: "cache-first",
-		});
-
-		const sysPrice = fetchSysPrice?.data?.bundles[0]?.sysPrice;
-
-		return Number(sysPrice);
-	}
-
 	static async getDollarValues({
 		chainId,
 		totalStaked,
@@ -264,10 +253,6 @@ class StakeServices {
 
 		const psys = tokens.PSYS;
 		const usdc = tokens.USDC;
-
-		const [[usdcPsysPairState, usdcPsysPair]] = await PairServices.getPairs([
-			[usdc, psys],
-		]);
 
 		const pairAddr = await PairServices.getPairAddress([psys, usdc]);
 
@@ -403,7 +388,7 @@ class StakeServices {
 					periodFinish: values.periodFinishMs
 						? new Date(values.periodFinishMs)
 						: undefined,
-					isPeriodFinished: !!values.periodFinishMs,
+					isPeriodFinished,
 					apr,
 					rewardRatePerWeekInUsd: rewardRateInUsd,
 					unclaimedInUsd,

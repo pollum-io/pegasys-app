@@ -1,4 +1,5 @@
 import { DefaultTemplate, PortfolioContainer } from "container";
+import { PoolsProvider } from "contexts";
 import { PortfolioProvider } from "contexts/portfolio";
 import type { NextPage } from "next";
 
@@ -8,9 +9,11 @@ const Portfolio: NextPage = () => (
 		heightValue="100vh"
 		alignItemsValue="center"
 	>
-		<PortfolioProvider>
-			<PortfolioContainer />
-		</PortfolioProvider>
+		<PoolsProvider>
+			<PortfolioProvider>
+				<PortfolioContainer />
+			</PortfolioProvider>
+		</PoolsProvider>
 	</DefaultTemplate>
 );
 

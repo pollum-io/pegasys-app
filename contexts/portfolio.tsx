@@ -1,8 +1,10 @@
 /* eslint-disable no-unused-expressions */
+import { ChainId, Pair } from "@pollum-io/pegasys-sdk";
 import { useTokens } from "hooks";
 import { useWallet } from "pegasys-services";
 import {
 	IContextTransactions,
+	ILiquidity,
 	ITransactions,
 } from "pegasys-services/dto/contexts/portfolio";
 import PortfolioServices from "pegasys-services/services/portfolio";
@@ -13,8 +15,10 @@ export const PortfolioContext = createContext({} as IContextTransactions);
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
-	const { address } = useWallet();
+	const { address, chainId, provider, signer } = useWallet();
 	const { userTokensBalance } = useTokens();
+
+	const [pairs, setPairs] = useState<Pair[]>([]);
 
 	const [swapsTransactions, setSwapsTransactions] = useState<ITransactions[]>(
 		[]
@@ -26,14 +30,20 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 		[]
 	);
 	const [walletBalance, setWalletBalance] = useState<Array<any>>([]);
-
-	const getTransactions = async () => {
-		const transactions = await PortfolioServices.getTransactions(address);
-
-		setSwapsTransactions(transactions.swaps);
-		setBurnsTransactions(transactions.burns);
-		setMintsTransactions(transactions.mints);
-	};
+	const [liquidityPosition, setLiquidityPosition] = useState<ILiquidity>({
+		fees: 0,
+		liquidity: 0,
+		positions: [],
+	});
+	const [pairsData, setPairsData] = useState<{
+		allDays: any;
+		oneDay: any;
+		sysPrice: number;
+	}>({
+		allDays: null,
+		oneDay: null,
+		sysPrice: 0,
+	});
 
 	const getWalletBalance = async () => {
 		const balances = await PortfolioServices.getWalletBalance(
@@ -43,8 +53,65 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 		setWalletBalance(balances.walletBalances);
 	};
 
+	const getPairs = async () => {
+		const currentPairs = await PortfolioServices.getAllUserTokenPairs(
+			{ chainId: chainId as ChainId, provider, walletAddress: address },
+			userTokensBalance
+		);
+		if (currentPairs) setPairs(currentPairs);
+	};
+
+	const getPoolPercentShare = async (pair: Pair) => {
+		const poolShare = await PortfolioServices.getPoolPercentShare(pair, {
+			provider,
+			signer,
+			walletAddress: address,
+		});
+
+		return poolShare;
+	};
+	const getPairsData = async () => {
+		const { allDays, oneDay, sysPrice } = await PortfolioServices.getPairsData(
+			{ chainId: chainId as ChainId, provider, walletAddress: address },
+			userTokensBalance
+		);
+		if (allDays && oneDay) setPairsData({ allDays, oneDay, sysPrice });
+	};
+
+	const getDepositedTokens = async (pair: Pair) => {
+		const [token0Deposited, token1Deposited] =
+			await PortfolioServices.getDepositedTokens(pair, {
+				provider,
+				signer,
+				walletAddress: address,
+			});
+
+		return [token0Deposited, token1Deposited];
+	};
+
+	const getLiquidityPositions = async () => {
+		const positions = await PortfolioServices.getUserLiquidityPositions(
+			address
+		);
+		setLiquidityPosition(positions);
+	};
+
+	const getTransactions = async () => {
+		const transactions = await PortfolioServices.getTransactions(address);
+
+		setSwapsTransactions(transactions.swaps);
+		setBurnsTransactions(transactions.burns);
+		setMintsTransactions(transactions.mints);
+	};
+
 	useEffect(() => {
-		if (address) getTransactions();
+		if (address) {
+			getTransactions();
+			getLiquidityPositions();
+			getPairs();
+			getPairsData();
+		}
+
 		if (userTokensBalance) getWalletBalance();
 	}, [address, userTokensBalance]);
 
@@ -78,15 +145,24 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
 			mintsTransactions,
 			allTransactions,
 			getTotalValueSwapped,
+			getPoolPercentShare,
+			getDepositedTokens,
+			pairsData,
 			walletBalance,
+			pairs,
+			liquidityPosition,
 		}),
 		[
 			swapsTransactions,
+			pairs,
 			burnsTransactions,
 			mintsTransactions,
 			allTransactions,
 			getTotalValueSwapped,
+			pairsData,
+			getPoolPercentShare,
 			walletBalance,
+			liquidityPosition,
 		]
 	);
 

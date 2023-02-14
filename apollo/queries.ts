@@ -222,6 +222,22 @@ export const GET_TRANSACTIONS = gql`
 		}
 	}
 `;
+export const GET_STAKE_DATA = gql`
+	query stakeQuery($id: ID!, $walletAddress: ID!, $date: Int!) {
+		pegasysStaking(id: $id) {
+			psysStaked
+			psysStakedUSD
+			depositFee
+			users(where: { id: $walletAddress }) {
+				psysStaked
+				psysStakedUSD
+			}
+		}
+		pegasysStakingDayDatas(where: { date_gte: $date }) {
+			depositFeePSYS
+		}
+	}
+`;
 
 export const WALLET_BALANCE_TOKEN = gql`
 	query tokenDayDatas($tokenAddr: String!) {
@@ -240,6 +256,82 @@ export const WALLET_BALANCE_TOKEN = gql`
 			dailyVolumeSYS
 			dailyVolumeToken
 			dailyVolumeUSD
+		}
+	}
+`;
+
+export const USER_HISTORY = gql`
+	query snapshots($user: Bytes!, $skip: Int!) {
+		liquidityPositionSnapshots(
+			first: 1000
+			skip: $skip
+			where: { user: $user }
+		) {
+			timestamp
+			reserveUSD
+			liquidityTokenBalance
+			liquidityTokenTotalSupply
+			reserve0
+			reserve1
+			#token0PriceUSD
+			#token1PriceUSD
+			pair {
+				id
+				#reserve0
+				#reserve1
+				#reserveUSD
+				totalSupply
+				token0 {
+					id
+					symbol
+					decimals
+				}
+				token1 {
+					id
+					symbol
+					decimals
+				}
+			}
+		}
+	}
+`;
+
+export const USER_MINTS_BUNRS_PER_PAIR = gql`
+	query events($user: Bytes!, $pair: Bytes!) {
+		mints(where: { to: $user, pair: $pair }) {
+			amountUSD
+			amount0
+			amount1
+			timestamp
+			pair {
+				token0 {
+					id
+				}
+				token1 {
+					id
+				}
+			}
+		}
+		burns(where: { sender: $user, pair: $pair }) {
+			amountUSD
+			amount0
+			amount1
+			timestamp
+			pair {
+				token0 {
+					id
+				}
+				token1 {
+					id
+				}
+			}
+		}
+	}
+`;
+export const feeCollectorDayData = gql`
+	query dayDataQuery($date: Int!) {
+		dayDatas(where: { date_gte: $date }) {
+			tokenRemitted
 		}
 	}
 `;

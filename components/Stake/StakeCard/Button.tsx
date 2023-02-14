@@ -14,17 +14,10 @@ const Buttons: React.FC<IButtonsProps> = ({
 	unclaimedAmount,
 	symbol,
 	onClick,
+	isPeriodFinish,
 }) => {
 	const router = useRouter();
 	const { t } = useTranslation();
-
-	// const buttons: Array<[TokenAmount, string, string]> = useMemo(
-	// 	() => [
-	// 		[stakedAmount, t("earnPages.unstake"), "withdraw"],
-	// 		[unstakedAmount, t("earnPages.stake"), "deposit"],
-	// 	],
-	// 	[stakedAmount, unstakedAmount]
-	// );
 
 	const getStakeToken: boolean = useMemo(
 		() =>
@@ -49,7 +42,7 @@ const Buttons: React.FC<IButtonsProps> = ({
 			justifyContent="space-around"
 		>
 			{getStakeToken ? (
-				<EarnButton {...btnProps} onClick={() => router.push("/farms")} solid>
+				<EarnButton {...btnProps} onClick={() => router.push("/")} solid>
 					{`${t("earnPages.get")} ${symbol}`}
 				</EarnButton>
 			) : (
@@ -70,6 +63,7 @@ const Buttons: React.FC<IButtonsProps> = ({
 						amount={unstakedAmount}
 						solid
 						width={["50%", "50%", "50%", ""]}
+						disabled={isPeriodFinish}
 					>
 						{t("earnPages.stake")}
 					</EarnButton>

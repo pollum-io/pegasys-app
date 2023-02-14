@@ -32,7 +32,8 @@ export const PortfolioContainer: NextPage = () => {
 	const { colorMode } = useColorMode();
 	const { isConnected } = useWallet();
 	const { t: translation } = useTranslation();
-	const { allTransactions, getTotalValueSwapped } = usePortfolio();
+	const { allTransactions, getTotalValueSwapped, liquidityPosition } =
+		usePortfolio();
 	const { userTokensBalance } = useTokens();
 	const fee = 0.003;
 	const totalFeePaid = getTotalValueSwapped * fee;
@@ -388,7 +389,9 @@ export const PortfolioContainer: NextPage = () => {
 												order={[1, 1, 0, 0]}
 												w="11rem"
 											>
-												{isConnected ? "$0.03" : "-"}
+												{isConnected
+													? `$${liquidityPosition.liquidity.toFixed(1)}`
+													: "-"}
 											</Text>
 											<Text
 												fontSize={[
@@ -422,7 +425,9 @@ export const PortfolioContainer: NextPage = () => {
 												color="#38A169"
 												w="10.7rem"
 											>
-												{isConnected ? "$0.0036" : "-"}
+												{isConnected
+													? `$${liquidityPosition.fees.toFixed(4)}`
+													: "-"}
 											</Text>
 
 											<Text
@@ -648,7 +653,7 @@ export const PortfolioContainer: NextPage = () => {
 										</Flex>
 									</Flex>
 
-									<InputGroup
+									{/* <InputGroup
 										alignItems="center"
 										w={["100%", "100%", "30rem", "25rem"]}
 									>
@@ -687,7 +692,7 @@ export const PortfolioContainer: NextPage = () => {
 											}}
 											_hover={{}}
 										/>
-									</InputGroup>
+									</InputGroup> */}
 								</Flex>
 							</Flex>
 							<Flex

@@ -20,6 +20,8 @@ const Body: React.FC<IBodyProps> = ({
 	stakedAmount,
 	unclaimedInUsd,
 	unclaimedAmount,
+	depositFee,
+	isPeriodFinish,
 }) => {
 	const { t } = useTranslation();
 
@@ -38,7 +40,15 @@ const Body: React.FC<IBodyProps> = ({
 				rowGap="1rem"
 				width="85%"
 			>
-				<CardItem text="APR" value={`${apr}%`} />
+				<CardItem
+					tooltip={
+						typeof depositFee === "number"
+							? "The APR metric shows an annualized return that is forecasted, based on the revenue collected over the previous thirty days."
+							: undefined
+					}
+					text="APR"
+					value={`${isPeriodFinish ? 0 : apr}%`}
+				/>
 				<CardItem
 					text={t("earnPages.totalStaked")}
 					usdValue={`${formattedNum(totalStakedInUsd, true)} USD`}
@@ -47,16 +57,25 @@ const Body: React.FC<IBodyProps> = ({
 					)} ${symbol}`}
 					opacity={JSBI.lessThanOrEqual(totalStakedAmount.raw, BIG_INT_ONE)}
 				/>
-				<CardItem
-					text={t("earnPages.yourRate")}
-					usdValue={`${formattedNum(rewardRatePerWeekInUsd, true)} USD/${t(
-						"earnPages.week"
-					)}`}
-					value={`${verifyZerosInBalanceAndFormat(
-						parseFloat(rewardRatePerWeek.toExact())
-					)} ${symbol}/${t("earnPages.week")}`}
-					opacity={JSBI.lessThanOrEqual(rewardRatePerWeek.raw, BIG_INT_ONE)}
-				/>
+				{rewardRatePerWeek && typeof rewardRatePerWeekInUsd === "number" && (
+					<CardItem
+						text={t("earnPages.yourRate")}
+						usdValue={`${formattedNum(rewardRatePerWeekInUsd, true)} USD/${t(
+							"earnPages.week"
+						)}`}
+						value={`${verifyZerosInBalanceAndFormat(
+							parseFloat(rewardRatePerWeek.toExact())
+						)} ${symbol}/${t("earnPages.week")}`}
+						opacity={JSBI.lessThanOrEqual(rewardRatePerWeek.raw, BIG_INT_ONE)}
+					/>
+				)}
+				{typeof depositFee === "number" && (
+					<CardItem
+						tooltip="Deposit fee is deducted when you deposit your PSYS tokens. The deposit fee may be modified at any time."
+						text="Deposit Fee"
+						value={`${depositFee}%`}
+					/>
+				)}
 			</Flex>
 			<Flex
 				alignItems={["flex-start", "flex-start", "center", "center"]}
