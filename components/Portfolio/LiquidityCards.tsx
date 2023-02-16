@@ -46,7 +46,7 @@ export const LiquidityCards: React.FunctionComponent = () => {
 		getDepositedTokens,
 		pairsData,
 	} = usePortfolio();
-	const quantityPerPage = 2;
+	const quantityPerPage = 10;
 	const { t: translation } = useTranslation();
 
 	const quantityOfPages = Math.ceil(

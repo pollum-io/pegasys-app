@@ -13,7 +13,7 @@ export const WalletStatsCards: FunctionComponent = () => {
 	const { colorMode } = useColorMode();
 	const { walletBalance } = usePortfolio();
 	const [defaultTokens, setDefaultTokens] = useState<WrappedTokenInfo[]>([]);
-	const quantityPerPage = 2;
+	const quantityPerPage = 10;
 	const quantityOfPages = Math.ceil(walletBalance.length / quantityPerPage);
 
 	const [cardsSliced, setCardsSliced] = useState<any[]>([]);

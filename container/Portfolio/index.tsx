@@ -294,7 +294,7 @@ export const PortfolioContainer: NextPage = () => {
 							{userTokensBalance.length === 0 ? (
 								<Flex
 									w="100%"
-									my={["3rem", "3rem", "8rem", "8rem"]}
+									my={["3rem", "3rem", "4rem", "4rem"]}
 									flexDirection="column"
 									alignItems="center"
 									justifyContent="center"
@@ -472,6 +472,7 @@ export const PortfolioContainer: NextPage = () => {
 									justifyContent="space-between"
 									w={["0", "0", "87%", "88%"]}
 									fontSize="0.875rem"
+									display={liquidityPosition.positions.length ? "flex" : "none"}
 								>
 									<Flex
 										flexDirection="row"
@@ -499,10 +500,10 @@ export const PortfolioContainer: NextPage = () => {
 							</Flex>
 						</Flex>
 						<Flex flexDirection="column" mt="1rem" gap={["0", "2", "2", "2"]}>
-							{liquidityCardsMockedData.length === 0 ? (
+							{liquidityPosition.positions.length === 0 ? (
 								<Flex
 									w="100%"
-									my={["3rem", "3rem", "8rem", "8rem"]}
+									my={["3rem", "3rem", "4rem", "4rem"]}
 									flexDirection="column"
 									alignItems="center"
 									justifyContent="center"
@@ -702,7 +703,7 @@ export const PortfolioContainer: NextPage = () => {
 								color={theme.text.mono}
 								mt="3rem"
 								display={
-									transactionCardsMockedData.length === 0
+									allTransactions.length === 0
 										? "none"
 										: ["none", "none", "flex", "flex"]
 								}
@@ -753,10 +754,10 @@ export const PortfolioContainer: NextPage = () => {
 								mt={["2rem", "2rem", "1rem", "1rem"]}
 								mb="20rem"
 							>
-								{transactionCardsMockedData.length === 0 ? (
+								{allTransactions.length === 0 ? (
 									<Flex
 										w="100%"
-										my={["3rem", "3rem", "8rem", "8rem"]}
+										my={["3rem", "3rem", "4rem", "4rem"]}
 										flexDirection="column"
 										alignItems="center"
 										justifyContent="center"
