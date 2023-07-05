@@ -61,6 +61,19 @@ export const PAIR_DATA = (pairAddress: string, block?: number) => {
 	return gql(queryString);
 };
 
+export const PAIR_DATAS = (pairAddresses: string[], block?: number) => {
+	const queryString = `
+    ${PairFields}
+    query pairs {
+      pairs(${
+				block ? `block: {number: ${block}}` : ``
+			} where: { id_in: ${JSON.stringify(pairAddresses)} }) {
+        ...PairFields
+      }
+    }`;
+	return gql(queryString);
+};
+
 export const SYS_PRICE = () => {
 	const queryString = ` query bundles {
       bundles(where: { id: 1 }) {

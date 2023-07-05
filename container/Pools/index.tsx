@@ -17,7 +17,7 @@ import {
 	Link,
 } from "@chakra-ui/react";
 import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
-import { PAIRS_CURRENT, PAIR_DATA, pegasysClient } from "apollo";
+import { PAIRS_CURRENT, PAIR_DATAS, pegasysClient } from "apollo";
 import {
 	AddLiquidityModal,
 	LoadingTransition,
@@ -170,58 +170,47 @@ export const PoolsContainer: NextPage = () => {
 
 			const pairAddresses = fetchPairsAddresses[0]?.data?.pairs;
 
-			const oneDayPairInfos = await Promise.all(
-				pairAddresses.map(async (token: { id: string }) => {
-					const volume = await pegasysClient.query({
-						query: PAIR_DATA(token.id, Number(oneDay)),
-						fetchPolicy: "network-only",
-					});
+			const oneDayPairInfos = await pegasysClient.query({
+				query: PAIR_DATAS(
+					pairAddresses.map(token => token.id),
+					Number(oneDay)
+				),
+				fetchPolicy: "network-only",
+			});
 
-					return volume.data.pairs[0];
-				})
-			);
+			const twoDaysPairInfos = await pegasysClient.query({
+				query: PAIR_DATAS(
+					pairAddresses.map(token => token.id),
+					twoDays
+				),
+				fetchPolicy: "network-only",
+			});
 
-			const formattedOneDayPairsInfo = oneDayPairInfos.reduce(
-				(acc, curr) => ({
+			const generalPairInfos = await pegasysClient.query({
+				query: PAIR_DATAS(pairAddresses.map(token => token.id)),
+				fetchPolicy: "network-only",
+			});
+
+			const formattedOneDayPairsInfo = oneDayPairInfos.data.pairs.reduce(
+				(acc, pair) => ({
 					...acc,
-					[`${curr.token0.symbol}-${curr.token1.symbol}`]: curr,
-				}),
-				{}
-			);
-			const twoDaysPairInfos = await Promise.all(
-				pairAddresses.map(async (token: { id: string }) => {
-					const volume = await pegasysClient.query({
-						query: PAIR_DATA(token.id, twoDays),
-						fetchPolicy: "network-only",
-					});
-
-					return volume.data.pairs[0];
-				})
-			);
-
-			const formattedTwoDaysPairsInfo = twoDaysPairInfos.reduce(
-				(acc, curr) => ({
-					...acc,
-					[`${curr.token0.symbol}-${curr.token1.symbol}`]: curr,
+					[`${pair.token0.symbol}-${pair.token1.symbol}`]: pair,
 				}),
 				{}
 			);
 
-			const generalPairInfos = await Promise.all(
-				pairAddresses.map(async (token: { id: string }) => {
-					const volume = await pegasysClient.query({
-						query: PAIR_DATA(token.id),
-						fetchPolicy: "network-only",
-					});
-
-					return volume.data.pairs[0];
-				})
+			const formattedTwoDaysPairsInfo = twoDaysPairInfos.data.pairs.reduce(
+				(acc, pair) => ({
+					...acc,
+					[`${pair.token0.symbol}-${pair.token1.symbol}`]: pair,
+				}),
+				{}
 			);
 
-			const formattedGeneralPairsInfo = generalPairInfos.reduce(
-				(acc, curr) => ({
+			const formattedGeneralPairsInfo = generalPairInfos.data.pairs.reduce(
+				(acc, pair) => ({
 					...acc,
-					[`${curr.token0.symbol}-${curr.token1.symbol}`]: curr,
+					[`${pair.token0.symbol}-${pair.token1.symbol}`]: pair,
 				}),
 				{}
 			);
