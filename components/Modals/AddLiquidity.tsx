@@ -450,7 +450,7 @@ export const AddLiquidityModal: React.FC<IModal> = props => {
 
 		const pair = pairs[0];
 
-		setCurrentLpAddress(pair.liquidityToken.address);
+		// setCurrentLpAddress(pair.liquidityToken.address);
 
 		await PoolServices.addLiquidity({
 			tokens: selectedToken as [WrappedTokenInfo, WrappedTokenInfo],
