@@ -133,16 +133,17 @@ export const PoolsContainer: NextPage = () => {
 				userTokensBalance
 			);
 
-			if (
-				tokens.every(
-					token =>
-						token[0]?.chainId === currentChainId &&
-						token[1]?.chainId === currentChainId
-				) &&
-				currentNetworkChainId === currentChainId
-			) {
-				setAllTokens(tokens);
-			}
+			// if (
+			// 	tokens.every(
+			// 		token =>
+			// 			token[0]?.chainId === currentChainId &&
+			// 			token[1]?.chainId === currentChainId
+			// 	) &&
+			// 	currentNetworkChainId === currentChainId
+			// ) {
+			// 	setAllTokens(tokens);
+			// 	console.log("setAllTokens", allTokens, tokens);
+			// }
 
 			const walletInfos = {
 				chainId: validatedCurrentChain ? currentChainId : ChainId.NEVM,
@@ -153,14 +154,14 @@ export const PoolsContainer: NextPage = () => {
 			const [{ number: oneDay }, { number: twoDays }] =
 				await getBlocksFromTimestamps();
 
-			const tokensWithLiquidity = allTokens.map(tokens => ({
+			const tokensWithLiquidity = tokens.map(tokens => ({
 				liquidityToken: toV2LiquidityToken(
 					tokens as [WrappedTokenInfo, Token],
 					currentChainId
 				),
 				tokens: tokens as [WrappedTokenInfo, Token],
 			}));
-
+			console.log("tokensWithLiquidity", tokensWithLiquidity);
 			const fetchPairs = await pegasysClient.query({
 				query: PAIRS_CURRENT,
 				fetchPolicy: "cache-first",
@@ -172,7 +173,7 @@ export const PoolsContainer: NextPage = () => {
 
 			const oneDayPairInfos = await pegasysClient.query({
 				query: PAIR_DATAS(
-					pairAddresses.map(token => token.id),
+					pairAddresses.map((token: { id: any }) => token.id),
 					Number(oneDay)
 				),
 				fetchPolicy: "network-only",
@@ -180,19 +181,22 @@ export const PoolsContainer: NextPage = () => {
 
 			const twoDaysPairInfos = await pegasysClient.query({
 				query: PAIR_DATAS(
-					pairAddresses.map(token => token.id),
+					pairAddresses.map((token: { id: any }) => token.id),
 					twoDays
 				),
 				fetchPolicy: "network-only",
 			});
 
 			const generalPairInfos = await pegasysClient.query({
-				query: PAIR_DATAS(pairAddresses.map(token => token.id)),
+				query: PAIR_DATAS(pairAddresses.map((token: { id: any }) => token.id)),
 				fetchPolicy: "network-only",
 			});
 
 			const formattedOneDayPairsInfo = oneDayPairInfos.data.pairs.reduce(
-				(acc, pair) => ({
+				(
+					acc: any,
+					pair: { token0: { symbol: any }; token1: { symbol: any } }
+				) => ({
 					...acc,
 					[`${pair.token0.symbol}-${pair.token1.symbol}`]: pair,
 				}),
@@ -200,7 +204,10 @@ export const PoolsContainer: NextPage = () => {
 			);
 
 			const formattedTwoDaysPairsInfo = twoDaysPairInfos.data.pairs.reduce(
-				(acc, pair) => ({
+				(
+					acc: any,
+					pair: { token0: { symbol: any }; token1: { symbol: any } }
+				) => ({
 					...acc,
 					[`${pair.token0.symbol}-${pair.token1.symbol}`]: pair,
 				}),
@@ -208,14 +215,17 @@ export const PoolsContainer: NextPage = () => {
 			);
 
 			const formattedGeneralPairsInfo = generalPairInfos.data.pairs.reduce(
-				(acc, pair) => ({
+				(
+					acc: any,
+					pair: { token0: { symbol: any }; token1: { symbol: any } }
+				) => ({
 					...acc,
 					[`${pair.token0.symbol}-${pair.token1.symbol}`]: pair,
 				}),
 				{}
 			);
 
-			const oneDayCommonPairs = allTokens
+			const oneDayCommonPairs = tokens
 				.map(
 					currency =>
 						formattedOneDayPairsInfo[
@@ -230,7 +240,7 @@ export const PoolsContainer: NextPage = () => {
 				)
 				.filter(item => item !== undefined);
 
-			const twoDaysCommonPairs = allTokens
+			const twoDaysCommonPairs = tokens
 				.map(
 					currency =>
 						formattedTwoDaysPairsInfo[
@@ -245,7 +255,7 @@ export const PoolsContainer: NextPage = () => {
 				)
 				.filter(item => item !== undefined);
 
-			const generalDaysCommonPairs = allTokens
+			const generalDaysCommonPairs = tokens
 				.map(
 					currency =>
 						formattedGeneralPairsInfo[
@@ -325,7 +335,7 @@ export const PoolsContainer: NextPage = () => {
 				tokensWithLiquidity.map(({ tokens }) => tokens),
 				walletInfos
 			);
-
+			console.log("v2Tokens", v2Tokens);
 			const allV2PairsWithLiquidity = v2Tokens
 				.map(([, pair]) => pair)
 				.filter((v2Pair): v2Pair is Pair => Boolean(v2Pair));
@@ -347,6 +357,7 @@ export const PoolsContainer: NextPage = () => {
 				general: formattedGeneralCommonPairs,
 			});
 			setPairs(allUniqueV2PairsWithLiquidity);
+			console.log("executed", allUniqueV2PairsWithLiquidity);
 		};
 
 		pairsInfo();
