@@ -142,7 +142,6 @@ export const PoolsContainer: NextPage = () => {
 			// 	currentNetworkChainId === currentChainId
 			// ) {
 			// 	setAllTokens(tokens);
-			// 	console.log("setAllTokens", allTokens, tokens);
 			// }
 
 			const walletInfos = {
@@ -161,7 +160,6 @@ export const PoolsContainer: NextPage = () => {
 				),
 				tokens: tokens as [WrappedTokenInfo, Token],
 			}));
-			console.log("tokensWithLiquidity", tokensWithLiquidity);
 			const fetchPairs = await pegasysClient.query({
 				query: PAIRS_CURRENT,
 				fetchPolicy: "cache-first",
@@ -335,7 +333,7 @@ export const PoolsContainer: NextPage = () => {
 				tokensWithLiquidity.map(({ tokens }) => tokens),
 				walletInfos
 			);
-			console.log("v2Tokens", v2Tokens);
+
 			const allV2PairsWithLiquidity = v2Tokens
 				.map(([, pair]) => pair)
 				.filter((v2Pair): v2Pair is Pair => Boolean(v2Pair));
@@ -357,7 +355,6 @@ export const PoolsContainer: NextPage = () => {
 				general: formattedGeneralCommonPairs,
 			});
 			setPairs(allUniqueV2PairsWithLiquidity);
-			console.log("executed", allUniqueV2PairsWithLiquidity);
 		};
 
 		pairsInfo();
