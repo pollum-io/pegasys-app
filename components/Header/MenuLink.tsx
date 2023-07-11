@@ -47,11 +47,6 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 			link: "/vote",
 			icon: <MdOutlineCheckBox />,
 		},
-		{
-			name: "Charts",
-			link: "https://info.pegasys.finance/home",
-			icon: <MdOutlineCallMade />,
-		},
 	];
 
 	const infos2 = [
@@ -130,8 +125,8 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 			>
 				<PopoverArrow
 					bg={theme.bg.blueNavyLight}
-					display={["none", "flex", "flex", "flex"]}
-					ml={["0", "0.47rem", "0", "0"]}
+					display={["none", "flex", "flex", "flex", "Flex"]}
+					ml={["0", "0.47rem", "0", "0", "0"]}
 				/>
 				<Flex
 					justifyContent="flex-end"
@@ -150,8 +145,11 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 					display="flex"
 					flexDirection="column"
 					px="0"
-					py={["0", "1", "1", "1"]}
+					py={["0", "1", "1", "1", "1"]}
 				>
+					<Flex flexDirection="column">
+						<InfoDropdown />
+					</Flex>
 					<Flex
 						flexDirection="column"
 						pl={["5.49rem", "4", "4", "4"]}
@@ -177,9 +175,6 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 								</InfoLinks>
 							</Flex>
 						))}
-					</Flex>
-					<Flex flexDirection="column">
-						<InfoDropdown />
 					</Flex>
 					<Flex
 						flexDirection="column"
