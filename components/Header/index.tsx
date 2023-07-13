@@ -237,7 +237,7 @@ export const Header: React.FC = () => {
 					</Flex>
 				) : (
 					<Flex
-						gap={["0", "1", "1", "1"]}
+						gap={["0", "1", "1", "1", "1"]}
 						bgColor={theme.bg.blackAlphaTransparent}
 						opacity="0.95"
 						borderRadius="20"
@@ -263,7 +263,21 @@ export const Header: React.FC = () => {
 								lg: "flex",
 							}}
 						>
-							Charts
+							Charts V1
+							<Icon as={MdOutlineCallMade} w="5" h="5" ml="2" />
+						</NavButton>
+						<NavButton
+							href="https://app.pegasys.fi/"
+							color={theme.icon.whiteGray}
+							customTarget
+							display={{
+								base: "none",
+								sm: "none",
+								md: "flex",
+								lg: "flex",
+							}}
+						>
+							V3
 							<Icon as={MdOutlineCallMade} w="5" h="5" ml="2" />
 						</NavButton>
 					</Flex>

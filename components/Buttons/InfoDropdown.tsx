@@ -12,7 +12,7 @@ const socialInfos: ISocialInfoData[] = [
 ];
 
 const bridgeInfos: ISocialInfoData[] = [
-	{ id: 1, name: "Multichain", href: "https://app.multichain.org/#/router" },
+	{ id: 1, name: "Rollux", href: "https://bridge.rollux.com/" },
 	{ id: 2, name: "Syscoin", href: "https://bridge.syscoin.org/" },
 ];
 
@@ -25,8 +25,65 @@ export const InfoDropdown: FunctionComponent = () => {
 		<Flex flexDir="column" pt="0" pb="2">
 			<Flex
 				flexDir="column"
-				py="4"
+				bgColor={state2 ? theme.bg.blackLightness : "transparent"}
+				w={["100vw", "unset", "unset", "unset"]}
+				py="2"
 				pb="2"
+			>
+				<Flex
+					align="center"
+					gap="2"
+					pb="1"
+					onClick={() => setState2(!state2)}
+					_hover={{ cursor: "pointer", color: theme.text.cyanPurple }}
+					color={state2 ? theme.text.cyanPurple : theme.text.mono}
+				>
+					<Icon
+						position="absolute"
+						left={["6rem", "6", "6", "6"]}
+						as={MdOutlineCallMade}
+					/>
+					<Text px={["7.5rem", "12", "12", "12"]}>Bridges</Text>
+					{state2 ? (
+						<Icon
+							position={["absolute", "relative", "relative", "relative"]}
+							right={["5rem", "1.3rem", "1.3rem", "1.3rem"]}
+							as={IoIosArrowUp}
+						/>
+					) : (
+						<Icon
+							position={["absolute", "relative", "relative", "relative"]}
+							right={["5rem", "1.3rem", "1.3rem", "1.3rem"]}
+							as={IoIosArrowDown}
+						/>
+					)}
+				</Flex>
+				<Collapse in={state2}>
+					<Flex flexDir="column" py="2">
+						{bridgeInfos.map((bridge: ISocialInfoData) => (
+							<Link
+								key={bridge.id}
+								href={bridge.href}
+								target="_blank"
+								_hover={{ textDecoration: "none", bgColor: "transparent" }}
+								_active={{ bgColor: "transparent" }}
+							>
+								<Text
+									px={["7.5rem", "12", "12", "12"]}
+									pb="1"
+									_hover={{ cursor: "pointer", color: theme.text.cyanPurple }}
+								>
+									{bridge.name}
+								</Text>
+							</Link>
+						))}
+					</Flex>
+				</Collapse>
+			</Flex>
+			<Flex
+				flexDir="column"
+				py="4"
+				pb="0"
 				pt="2"
 				bgColor={state1 ? theme.bg.blackLightness : "transparent"}
 				w={["100vw", "unset", "unset", "unset"]}
@@ -75,63 +132,6 @@ export const InfoDropdown: FunctionComponent = () => {
 									_hover={{ cursor: "pointer", color: theme.text.cyanPurple }}
 								>
 									{social.name}
-								</Text>
-							</Link>
-						))}
-					</Flex>
-				</Collapse>
-			</Flex>
-			<Flex
-				flexDir="column"
-				bgColor={state2 ? theme.bg.blackLightness : "transparent"}
-				w={["100vw", "unset", "unset", "unset"]}
-				py="2"
-				pb="0"
-			>
-				<Flex
-					align="center"
-					gap="2"
-					pb="1"
-					onClick={() => setState2(!state2)}
-					_hover={{ cursor: "pointer", color: theme.text.cyanPurple }}
-					color={state2 ? theme.text.cyanPurple : theme.text.mono}
-				>
-					<Icon
-						position="absolute"
-						left={["6rem", "6", "6", "6"]}
-						as={MdOutlineCallMade}
-					/>
-					<Text px={["7.5rem", "12", "12", "12"]}>Bridges</Text>
-					{state2 ? (
-						<Icon
-							position={["absolute", "relative", "relative", "relative"]}
-							right={["5rem", "1.3rem", "1.3rem", "1.3rem"]}
-							as={IoIosArrowUp}
-						/>
-					) : (
-						<Icon
-							position={["absolute", "relative", "relative", "relative"]}
-							right={["5rem", "1.3rem", "1.3rem", "1.3rem"]}
-							as={IoIosArrowDown}
-						/>
-					)}
-				</Flex>
-				<Collapse in={state2}>
-					<Flex flexDir="column" py="2">
-						{bridgeInfos.map((bridge: ISocialInfoData) => (
-							<Link
-								key={bridge.id}
-								href={bridge.link}
-								target="_blank"
-								_hover={{ textDecoration: "none", bgColor: "transparent" }}
-								_active={{ bgColor: "transparent" }}
-							>
-								<Text
-									px={["7.5rem", "12", "12", "12"]}
-									pb="1"
-									_hover={{ cursor: "pointer", color: theme.text.cyanPurple }}
-								>
-									{bridge.name}
 								</Text>
 							</Link>
 						))}
