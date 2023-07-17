@@ -7,11 +7,12 @@ interface IButtonProps extends ButtonProps {
 	children?: ReactNode;
 	href: string;
 	active?: boolean;
+	customTarget?: boolean;
 }
 
 export const DrawerLinks: FunctionComponent<IButtonProps> = props => {
 	const { push } = useRouter();
-	const { href, children, active } = props;
+	const { href, children, active, customTarget = false } = props;
 	const theme = usePicasso();
 
 	return (
@@ -21,9 +22,7 @@ export const DrawerLinks: FunctionComponent<IButtonProps> = props => {
 			borderLeftRadius="full"
 			w="100%"
 			transition="0.4s"
-			onClick={() => {
-				push(href);
-			}}
+			onClick={() => (!customTarget ? push(href) : window.open(href, "_blank"))}
 			_hover={{}}
 			_active={{ background: "transparent" }}
 			justifyContent="flex-start"
