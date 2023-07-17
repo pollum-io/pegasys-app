@@ -6,10 +6,11 @@ import {
 	DrawerHeader,
 	DrawerOverlay,
 	Flex,
+	Icon,
 	Text,
 } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
-import { MdArrowBack } from "react-icons/md";
+import { MdArrowBack, MdOutlineCallMade } from "react-icons/md";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { DrawerLinks } from "./DrawerLinks";
@@ -91,6 +92,20 @@ export const DrawerMenu: React.FC<IDrawer> = props => {
 								{item.name}
 							</DrawerLinks>
 						))}
+						<DrawerLinks
+							href="https://app.pegasys.fi/"
+							color={theme.icon.whiteGray}
+							customTarget
+							display={{
+								base: "none",
+								sm: "none",
+								md: "flex",
+								lg: "flex",
+							}}
+						>
+							V3
+							<Icon as={MdOutlineCallMade} w="5" h="5" ml="2" />
+						</DrawerLinks>
 					</Flex>
 				</DrawerBody>
 			</DrawerContent>

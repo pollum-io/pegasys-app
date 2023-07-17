@@ -18,7 +18,6 @@ import { AiOutlineInfoCircle } from "react-icons/ai";
 import { useModal, usePicasso } from "hooks";
 import {
 	MdOutlineAssignment,
-	MdOutlineCallMade,
 	MdOutlineCheckBox,
 	MdOutlineContentCopy,
 } from "react-icons/md";
@@ -97,18 +96,24 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 				_focus={{
 					outline: "none",
 				}}
-				w={["100vw", "max-content", "max-content", "max-content"]}
-				borderBottomRadius={["none", "xl", "xl", "xl"]}
-				borderTopRadius={["30px", "xl", "xl", "xl"]}
+				w={[
+					"100vw",
+					"max-content",
+					"max-content",
+					"max-content",
+					"max-content",
+				]}
+				borderBottomRadius={["none", "xl", "xl", "xl", "xl"]}
+				borderTopRadius={["30px", "xl", "xl", "xl", "xl"]}
 				pt="2"
-				pb={["3.5rem", "0", "0", "0"]}
-				mr={["0", "4", "0", "0"]}
-				mb={["0", "0.3rem", "0.3rem", "0.3rem"]}
+				pb={["3.5rem", "0", "0", "0", "0"]}
+				mr={["0", "4", "0", "0", "0"]}
+				mb={["0", "0.3rem", "0.3rem", "0.3rem", "0.3rem"]}
 				border="none"
 				borderTop={
 					colorMode === "dark"
-						? ["1px solid transparent", "none", "none", "none"]
-						: ["none", "none", "none", "none"]
+						? ["1px solid transparent", "none", "none", "none", "none"]
+						: ["none", "none", "none", "none", "none"]
 				}
 				background={
 					colorMode === "dark"
@@ -120,7 +125,7 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 						? "2px 4px 6px 2px rgba(0, 0, 0, 0.1), 2px 2px 4px 2px rgba(0, 0, 0, 0.06)"
 						: "2px 4px 6px -1px rgba(0, 0, 0, 0.1), 2px 2px 4px -1px rgba(0, 0, 0, 0.06)"
 				}
-				top={["5.5rem", "0", "0", "0"]}
+				top={["5.5rem", "0", "0", "0", "0"]}
 				position="relative"
 			>
 				<PopoverArrow
