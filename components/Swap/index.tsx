@@ -1004,7 +1004,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 												: "-"}
 										</Text>
 										<Text fontWeight="normal">
-											{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
+											{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
 										</Text>
 									</Flex>
 									<Flex
@@ -1024,7 +1024,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 												: "-"}
 										</Text>
 										<Text fontWeight="normal">
-											{selectedToken[1]?.symbol} per {selectedToken[0]?.symbol}
+											{selectedToken[0]?.symbol} per {selectedToken[1]?.symbol}
 										</Text>
 									</Flex>
 								</Flex>
