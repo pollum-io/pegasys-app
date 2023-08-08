@@ -17,7 +17,7 @@ export const PegasysContracts: IContractDTO = {
 			"0xE038E38B48F4123e1408865450E37edC78b736ED"
 		),
 		GOVERNANCE_ADDRESS: ethers.utils.getAddress(
-			"0x2FDc48d0EA5d5fBE5514B0bdD6E9be1cb2524450"
+			"0x6002064A6bFBf3E7852E0CD4B836467E5A3dEF4a"
 		),
 		STAKE_V2_ADDRESS: ethers.utils.getAddress(
 			"0x1e6dc4cb2f98817a0e3d850bba7aefa3cfcde55f"
