@@ -141,12 +141,13 @@ class GovernanceServices {
 					const { forVotes, againstVotes } = await this.getProposalVotes({
 						proposalIndex: Number(id),
 					});
-
+					let [name, types] = ["", ""];
 					const signature = signatures[0];
-
-					const [name, types] = signature
-						.substr(0, signature.length - 1)
-						.split("(");
+					if (signature.length !== 0) {
+						[name, types] = signature
+							.substr(0, signature.length - 1)
+							.split("(");
+					}
 
 					const calldata = calldatas[0];
 
