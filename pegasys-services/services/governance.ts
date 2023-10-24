@@ -164,7 +164,16 @@ class GovernanceServices {
 						: undefined;
 					const startDate = new Date(initialBlock.timestamp * 1000);
 
-					const descriptionParts = description?.split("\\n");
+					let descriptionParts = description?.split("\\n");
+					let newTitle = descriptionParts[0] ?? "Untitled";
+
+					// This just fixes frontend formating on for the second gov proposal
+					if (id === "2") {
+						descriptionParts = description?.split(
+							"**PSYS Liquidity Incentives breakdown**"
+						);
+						newTitle = "PSYS Liquidity Incentives breakdown";
+					}
 
 					status =
 						endDate &&
@@ -195,7 +204,7 @@ class GovernanceServices {
 
 					return {
 						id,
-						title: descriptionParts[0] ?? "Untitled",
+						title: newTitle,
 						description: descriptionParts.splice(1) ?? ["No description."],
 						proposer: proposer.id,
 						status,
