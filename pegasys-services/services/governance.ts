@@ -166,13 +166,17 @@ class GovernanceServices {
 
 					let descriptionParts = description?.split("\\n");
 					let newTitle = descriptionParts[0] ?? "Untitled";
-
 					// This just fixes frontend formating on for the second gov proposal
 					if (id === "2") {
 						descriptionParts = description?.split(
 							"**PSYS Liquidity Incentives breakdown**"
 						);
 						newTitle = "PSYS Liquidity Incentives breakdown";
+					} else if (id === "3") {
+						descriptionParts = description?.split(
+							"Update on Liquidity Pool Incentives - Pegasys Farms"
+						);
+						newTitle = "Update on Liquidity Pool Incentives - Pegasys Farms";
 					}
 
 					status =
