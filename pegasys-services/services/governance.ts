@@ -177,6 +177,10 @@ class GovernanceServices {
 							"Update on Liquidity Pool Incentives - Pegasys Farms"
 						);
 						newTitle = "Update on Liquidity Pool Incentives - Pegasys Farms";
+					} else if (id === "4") {
+						descriptionParts = description?.split("**Proposal Summary**:");
+						newTitle =
+							"Update on Liquidity Pool Incentives - Pegasys Incentives";
 					}
 
 					status =
