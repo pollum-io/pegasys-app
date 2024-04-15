@@ -171,17 +171,13 @@ const FarmCard: FunctionComponent<{
 					<Text color={isMainNet ? undefined : "grey"} fontWeight="semibold">
 						{extraRewardToken ? "Super " : ""}Farm APR
 					</Text>
-					<Text color={isMainNet ? undefined : "grey"}>
-						{ "-"}
-					</Text>
+					<Text color={isMainNet ? undefined : "grey"}>-</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
 					<Text color={isMainNet ? undefined : "grey"} fontWeight="semibold">
 						{t("earnPages.totalApr")}
 					</Text>
-					<Text color={isMainNet ? undefined : "grey"}>
-						{"-"}
-					</Text>
+					<Text color={isMainNet ? undefined : "grey"}>-</Text>
 				</Flex>
 			</Flex>
 			{(JSBI.greaterThan(stakedAmount.raw, BIG_INT_ZERO) ||
