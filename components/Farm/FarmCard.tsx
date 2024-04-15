@@ -172,7 +172,7 @@ const FarmCard: FunctionComponent<{
 						{extraRewardToken ? "Super " : ""}Farm APR
 					</Text>
 					<Text color={isMainNet ? undefined : "grey"}>
-						{isMainNet ? `${farmApr}%` : "-"}
+						{ "-"}
 					</Text>
 				</Flex>
 				<Flex justifyContent="space-between" pb="3" fontSize="sm">
@@ -180,7 +180,7 @@ const FarmCard: FunctionComponent<{
 						{t("earnPages.totalApr")}
 					</Text>
 					<Text color={isMainNet ? undefined : "grey"}>
-						{isMainNet ? `${combinedApr}%` : "-"}
+						{"-"}
 					</Text>
 				</Flex>
 			</Flex>
