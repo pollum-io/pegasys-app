@@ -38,14 +38,14 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 
 	const infos = [
 		{
-			name: "Charts V1",
-			link: "https://info.pegasys.finance/",
-			icon: <MdOutlineCallMade />,
-		},
-		{
 			name: "Airdrop",
 			link: "/airdrop",
 			icon: <FaParachuteBox />,
+		},
+		{
+			name: "Charts V1",
+			link: "https://info.pegasys.finance/",
+			icon: <MdOutlineCallMade />,
 		},
 		{
 			name: "Vote",
@@ -56,14 +56,14 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 
 	const infos2 = [
 		{
-			name: "Github",
-			link: "https://github.com/Pollum-io/pegasys-protocol",
-			icon: <RiGithubLine />,
-		},
-		{
 			name: "Docs",
 			link: "https://docs.pegasys.finance/",
 			icon: <MdOutlineContentCopy />,
+		},
+		{
+			name: "Github",
+			link: "https://github.com/Pollum-io/pegasys-protocol",
+			icon: <RiGithubLine />,
 		},
 		{
 			name: "Terms",
