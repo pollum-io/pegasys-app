@@ -11,18 +11,19 @@ import {
 	useColorMode,
 	useMediaQuery,
 } from "@chakra-ui/react";
+import { InfoDropdown } from "components/Buttons";
+import { useModal, usePicasso } from "hooks";
 import { FunctionComponent, ReactNode } from "react";
+import { AiOutlineInfoCircle } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
 import { FaParachuteBox } from "react-icons/fa";
-import { AiOutlineInfoCircle } from "react-icons/ai";
-import { useModal, usePicasso } from "hooks";
 import {
 	MdOutlineAssignment,
+	MdOutlineCallMade,
 	MdOutlineCheckBox,
 	MdOutlineContentCopy,
 } from "react-icons/md";
 import { RiGithubLine } from "react-icons/ri";
-import { InfoDropdown } from "components/Buttons";
 import { InfoLinks } from "./InfoLinks";
 
 interface IButtonProps extends ButtonProps {
@@ -36,6 +37,11 @@ export const MenuLinks: FunctionComponent<IButtonProps> = props => {
 	const [isMobile] = useMediaQuery("(max-width: 480px)");
 
 	const infos = [
+		{
+			name: "Charts V1",
+			link: "https://info.pegasys.finance/",
+			icon: <MdOutlineCallMade />,
+		},
 		{
 			name: "Airdrop",
 			link: "/airdrop",

@@ -1,12 +1,4 @@
 import { Button, Flex, Img, Text } from "@chakra-ui/react";
-import { FunctionComponent, SetStateAction, useEffect, useState } from "react";
-import { useModal, usePicasso, useTokens, usePools } from "hooks";
-import {
-	getBalanceOfBNSingleCall,
-	getTotalSupply,
-	removeScientificNotation,
-	unwrappedToken,
-} from "utils";
 import {
 	JSBI,
 	Pair,
@@ -14,12 +6,20 @@ import {
 	Token,
 	TokenAmount,
 } from "@pollum-io/pegasys-sdk";
-import { useTranslation } from "react-i18next";
-import { WrappedTokenInfo, IDeposited, ICommonPairs } from "types";
+import { SYS_PRICE, pegasysClient } from "apollo";
 import { Signer } from "ethers";
-import { formattedNum, formattedPercent } from "utils/convert/numberFormat";
-import { pegasysClient, SYS_PRICE } from "apollo";
+import { useModal, usePicasso, usePools, useTokens } from "hooks";
 import { useWallet as psUseWallet } from "pegasys-services";
+import { FunctionComponent, SetStateAction, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { ICommonPairs, IDeposited, WrappedTokenInfo } from "types";
+import {
+	getBalanceOfBNSingleCall,
+	getTotalSupply,
+	removeScientificNotation,
+	unwrappedToken,
+} from "utils";
+import { formattedNum, formattedPercent } from "utils/convert/numberFormat";
 
 interface IPoolCards {
 	setIsCreate: React.Dispatch<SetStateAction<boolean>>;
@@ -328,6 +328,7 @@ export const PoolCards: FunctionComponent<IPoolCards> = props => {
 					_hover={{
 						bgColor: theme.bg.bluePurple,
 					}}
+					disabled
 				>
 					{translation("positionCard.add")}
 				</Button>

@@ -1,13 +1,13 @@
-import React from "react";
 import { useColorMode } from "@chakra-ui/react";
+import React from "react";
 
-import { useModal } from "hooks";
 import { Card } from "components";
+import { useModal } from "hooks";
 import { IEarnInfo, TButtonId, useEarn } from "pegasys-services";
 
-import Header from "./Header";
 import Body from "./Body";
 import Buttons from "./Button";
+import Header from "./Header";
 import { IStakeCardsProps } from "./dto";
 
 const StakeCard: React.FC<IStakeCardsProps> = props => {
@@ -51,7 +51,7 @@ const StakeCard: React.FC<IStakeCardsProps> = props => {
 			/>
 			<Body
 				symbol={stakeInfo.stakeToken.symbol ?? ""}
-				apr={stakeInfo.apr.toString()}
+				apr="0"
 				totalStakedInUsd={stakeInfo.totalStakedInUsd}
 				totalStakedAmount={stakeInfo.totalStakedAmount}
 				// eslint-disable-next-line
@@ -77,7 +77,7 @@ const StakeCard: React.FC<IStakeCardsProps> = props => {
 				onClick={onClick}
 				// eslint-disable-next-line
 				// @ts-ignore
-				isPeriodFinish={stakeInfo.isPeriodFinished}
+				isPeriodFinish
 			/>
 		</Card>
 	);

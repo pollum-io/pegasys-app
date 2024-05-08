@@ -6,41 +6,10 @@ import {
 	Icon,
 	Img,
 	Input,
+	SlideFade,
 	Text,
 	useColorMode,
-	SlideFade,
 } from "@chakra-ui/react";
-import {
-	useToasty,
-	useWallet as psUseWallet,
-	usePegasys,
-	ONE_DAY_IN_SECONDS,
-	SUPPORTED_NETWORK_CHAINS,
-	useTransaction,
-	useSwap,
-} from "pegasys-services";
-import {
-	useModal,
-	usePicasso,
-	useTokens,
-	useWallet,
-	UseDerivedSwapInfo,
-	useApproveCallbackFromTrade,
-	UseSwapCallback,
-	ApprovalState,
-	UseWrapCallback,
-	UseTokensPairSorted,
-} from "hooks";
-import React, {
-	FunctionComponent,
-	useEffect,
-	useState,
-	useMemo,
-	useCallback,
-} from "react";
-import { MdWifiProtectedSetup, MdHelpOutline } from "react-icons/md";
-import { IoIosArrowDown } from "react-icons/io";
-import { LoadingTransition, SelectCoinModal } from "components/Modals";
 import {
 	ChainId,
 	CurrencyAmount,
@@ -48,33 +17,64 @@ import {
 	Percent,
 	Trade,
 } from "@pollum-io/pegasys-sdk";
+import { LoadingTransition, SelectCoinModal } from "components/Modals";
+import { Signer } from "ethers";
 import {
+	ApprovalState,
+	UseDerivedSwapInfo,
+	UseSwapCallback,
+	UseTokensPairSorted,
+	UseWrapCallback,
+	useApproveCallbackFromTrade,
+	useModal,
+	usePicasso,
+	useTokens,
+	useWallet,
+} from "hooks";
+import dynamic from "next/dynamic";
+import {
+	ONE_DAY_IN_SECONDS,
+	SUPPORTED_NETWORK_CHAINS,
+	useWallet as psUseWallet,
+	usePegasys,
+	useSwap,
+	useToasty,
+	useTransaction,
+} from "pegasys-services";
+import React, {
+	FunctionComponent,
+	useCallback,
+	useEffect,
+	useMemo,
+	useState,
+} from "react";
+import { useTranslation } from "react-i18next";
+import { IoIosArrowDown } from "react-icons/io";
+import { MdHelpOutline, MdWifiProtectedSetup } from "react-icons/md";
+import { getTokensGraphCandle } from "services/index";
+import {
+	IChartComponentData,
+	IChartComponentPeriod,
+	IInputValues,
+	IReturnedTradeValues,
 	ISwapTokenInputValue,
 	IWalletHookInfos,
 	WrappedTokenInfo,
-	IInputValues,
-	IReturnedTradeValues,
-	IChartComponentPeriod,
-	IChartComponentData,
 } from "types";
-import dynamic from "next/dynamic";
-import { useTranslation } from "react-i18next";
-import { Signer } from "ethers";
 import {
-	computeTradePriceBreakdown,
 	Field,
+	computeTradePriceBreakdown,
 	maxAmountSpend,
 	verifyZerosInBalanceAndFormat,
 } from "utils";
-import { getTokensGraphCandle } from "services/index";
 
 import { ConfirmSwap } from "components/Modals/ConfirmSwap";
 import { TooltipComponent } from "components/Tooltip/TooltipComponent";
+import { FilterButton } from "./FilterButton";
+import { FormattedPriceImpat } from "./FormattedPriceImpact";
 import { OtherWallet } from "./OtherWallet";
 import { SwapExpertMode } from "./SwapExpertMode";
 import { TradeRouteComponent } from "./TradeRouteComponent";
-import { FilterButton } from "./FilterButton";
-import { FormattedPriceImpat } from "./FormattedPriceImpact";
 
 const ChartComponent = dynamic(() => import("./ChartComponent"), {
 	ssr: false,

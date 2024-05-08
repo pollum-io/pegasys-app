@@ -1,32 +1,32 @@
 import {
 	Button,
+	Collapse,
 	Flex,
+	Icon,
 	Img,
-	Text,
+	Link,
 	Menu,
+	MenuButton,
 	MenuItem,
 	MenuList,
-	MenuButton,
-	Icon,
-	useMediaQuery,
-	useColorMode,
-	Link,
 	SlideFade,
-	Collapse,
+	Text,
+	useColorMode,
+	useMediaQuery,
 } from "@chakra-ui/react";
+import { FarmGrid, LoadingTransition, SearchInput } from "components";
+import { useModal, usePicasso } from "hooks";
 import { NextPage } from "next";
-import { MdOutlineCallMade, MdExpandMore } from "react-icons/md";
-import { LoadingTransition, SearchInput, FarmGrid } from "components";
-import { usePicasso, useModal } from "hooks";
 import { useTranslation } from "react-i18next";
+import { MdExpandMore, MdOutlineCallMade } from "react-icons/md";
 
+import { FarmActions } from "components/Modals/FarmActions";
 import {
-	useFarm,
+	RoutesFramework,
 	useWallet as psUseWallet,
 	useEarn,
-	RoutesFramework,
+	useFarm,
 } from "pegasys-services";
-import { FarmActions } from "components/Modals/FarmActions";
 
 export const FarmContainer: NextPage = () => {
 	const { setSearch, sort, setSort } = useFarm();

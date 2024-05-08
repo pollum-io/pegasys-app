@@ -1,18 +1,18 @@
 import { Flex, Img, Text } from "@chakra-ui/react";
-import { FunctionComponent, useMemo } from "react";
+import { ChainId, JSBI, Pair } from "@pollum-io/pegasys-sdk";
 import { useModal, usePicasso, useTokens } from "hooks";
 import {
-	IFarmInfo,
-	useEarn,
-	TButtonId,
 	BIG_INT_ZERO,
+	IFarmInfo,
+	TButtonId,
+	useEarn,
 	useWallet,
 } from "pegasys-services";
-import { ChainId, JSBI, Pair } from "@pollum-io/pegasys-sdk";
-import { formattedNum } from "utils/convert/numberFormat";
+import { FunctionComponent, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { WrappedTokenInfo } from "types";
 import { verifyZerosInBalanceAndFormat } from "utils";
+import { formattedNum } from "utils/convert/numberFormat";
 import { EarnButton } from "../Earn";
 
 const FarmCard: FunctionComponent<{
@@ -273,6 +273,7 @@ const FarmCard: FunctionComponent<{
 							setSelectedToken([wrapTokenA, wrapTokenB] as WrappedTokenInfo[]);
 							setCurrPair(pair);
 						}}
+						disabled
 					>
 						{t("earnPages.addLiquidity", {
 							pair: `${tokenA.symbol}-${tokenB?.symbol}`,

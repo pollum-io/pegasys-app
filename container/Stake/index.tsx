@@ -1,30 +1,30 @@
 import {
 	Button,
+	Collapse,
 	Flex,
 	Img,
-	Text,
-	useMediaQuery,
-	useColorMode,
 	SlideFade,
-	Collapse,
+	Text,
+	useColorMode,
+	useMediaQuery,
 } from "@chakra-ui/react";
-import { StakeCard, LoadingTransition } from "components";
-import { useModal, usePicasso } from "hooks";
-import { NextPage } from "next";
-import { MdOutlineCallMade } from "react-icons/md";
-import { useTranslation } from "react-i18next";
-import {
-	useWallet as psUseWallet,
-	useStakeV2,
-	useStake,
-	useEarn,
-	IStakeInfo,
-	IEarnInfo,
-	RoutesFramework,
-	IStakeV2Info,
-} from "pegasys-services";
+import { LoadingTransition, StakeCard } from "components";
 import { StakeActions } from "components/Modals/StakeActions";
 import { StakeV2Actions } from "components/Modals/StakeV2Actions";
+import { useModal, usePicasso } from "hooks";
+import { NextPage } from "next";
+import {
+	IEarnInfo,
+	IStakeInfo,
+	IStakeV2Info,
+	RoutesFramework,
+	useWallet as psUseWallet,
+	useEarn,
+	useStake,
+	useStakeV2,
+} from "pegasys-services";
+import { useTranslation } from "react-i18next";
+import { MdOutlineCallMade } from "react-icons/md";
 
 export const StakeContainer: NextPage = () => {
 	const theme = usePicasso();
