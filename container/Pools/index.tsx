@@ -1,20 +1,20 @@
 import {
 	Button,
+	Collapse,
 	Flex,
 	Img,
 	Input,
 	InputGroup,
+	InputLeftElement,
+	Link,
 	Menu,
 	MenuButton,
 	MenuItem,
 	MenuList,
-	Text,
-	InputLeftElement,
-	useMediaQuery,
-	useColorMode,
-	Collapse,
 	SlideFade,
-	Link,
+	Text,
+	useColorMode,
+	useMediaQuery,
 } from "@chakra-ui/react";
 import { ChainId, Pair, Token } from "@pollum-io/pegasys-sdk";
 import { PAIRS_CURRENT, PAIR_DATAS, pegasysClient } from "apollo";
@@ -24,18 +24,18 @@ import {
 	RemoveLiquidity,
 } from "components";
 import { PoolCards } from "components/Pools/PoolCards";
-import { usePicasso, useModal, useTokens, usePairs, usePools } from "hooks";
+import { useModal, usePairs, usePicasso, usePools, useTokens } from "hooks";
 import { NextPage } from "next";
+import { SUPPORTED_NETWORK_CHAINS, useWallet } from "pegasys-services";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
-import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
-import { WrappedTokenInfo, IDeposited } from "types";
 import { useTranslation } from "react-i18next";
-import { useWallet, SUPPORTED_NETWORK_CHAINS } from "pegasys-services";
+import { MdExpandMore, MdOutlineCallMade, MdSearch } from "react-icons/md";
+import { IDeposited, WrappedTokenInfo } from "types";
 import {
+	getBlocksFromTimestamps,
 	getTokenPairs,
 	toV2LiquidityToken,
 	unwrappedToken,
-	getBlocksFromTimestamps,
 } from "utils";
 
 export const PoolsContainer: NextPage = () => {

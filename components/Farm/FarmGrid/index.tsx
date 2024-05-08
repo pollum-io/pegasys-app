@@ -1,18 +1,18 @@
-import React, { useMemo, useState } from "react";
 import { Flex, Text } from "@chakra-ui/react";
+import { useMemo, useState } from "react";
 
+import { Pair, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
+import { AddLiquidityModal } from "components/Modals";
+import { useModal } from "hooks";
 import {
 	IFarmInfo,
 	PegasysContracts,
+	useEarn,
 	useFarm,
 	useWallet,
-	useEarn,
 } from "pegasys-services";
-import { AddLiquidityModal } from "components/Modals";
-import { useModal } from "hooks";
-import { Pair, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
-import { WrappedTokenInfo } from "types";
 import { useTranslation } from "react-i18next";
+import { WrappedTokenInfo } from "types";
 import FarmCard from "../FarmCard";
 
 const FarmGrid = () => {

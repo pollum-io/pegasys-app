@@ -7,33 +7,33 @@ import {
 	useColorMode,
 	useMediaQuery,
 } from "@chakra-ui/react";
-import React, { useEffect, useMemo, useState } from "react";
+import { ChainId, JSBI, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { WalletButton } from "components";
 import { IconButton } from "components/Buttons";
-import { useModal, usePicasso, useTokens, usePairs as getPairs } from "hooks";
-import { MdOutlineCallMade } from "react-icons/md";
-import { HiOutlineMenu } from "react-icons/hi";
 import { PsysBreakdown } from "components/Modals/PsysBreakdown";
-import { useRouter } from "next/router";
-import { getTotalSupply, formattedNum } from "utils";
-import {
-	useWallet,
-	usePegasys,
-	StakeServices,
-	FarmServices,
-	ContractFramework,
-	RoutesFramework,
-	PegasysTokens,
-} from "pegasys-services";
-import { ChainId, JSBI, Token, TokenAmount } from "@pollum-io/pegasys-sdk";
 import { Signer } from "ethers";
+import { usePairs as getPairs, useModal, usePicasso, useTokens } from "hooks";
+import { useRouter } from "next/router";
+import {
+	ContractFramework,
+	FarmServices,
+	PegasysTokens,
+	RoutesFramework,
+	StakeServices,
+	usePegasys,
+	useWallet,
+} from "pegasys-services";
+import React, { useEffect, useMemo, useState } from "react";
+import { HiOutlineMenu } from "react-icons/hi";
+import { MdOutlineCallMade } from "react-icons/md";
+import { formattedNum, getTotalSupply } from "utils";
+import { DrawerMenu } from "./DrawerMenu";
+import { MenuLinks } from "./MenuLink";
 import { NavButton } from "./NavButton";
 import { NetworkButton } from "./NetworkButton";
-import { TokenButton } from "./TokenButton";
-import { MenuLinks } from "./MenuLink";
-import { SettingsButton } from "./SettingsButton";
 import { Painter } from "./Painter";
-import { DrawerMenu } from "./DrawerMenu";
+import { SettingsButton } from "./SettingsButton";
+import { TokenButton } from "./TokenButton";
 
 export const Header: React.FC = () => {
 	const { toggleColorMode, colorMode } = useColorMode();
@@ -252,7 +252,7 @@ export const Header: React.FC = () => {
 								{item.name}
 							</NavButton>
 						))}
-						<NavButton
+						{/* <NavButton
 							href="https://info.pegasys.finance/"
 							color={theme.icon.whiteGray}
 							customTarget
@@ -265,10 +265,10 @@ export const Header: React.FC = () => {
 						>
 							Charts V1
 							<Icon as={MdOutlineCallMade} w="5" h="5" ml="2" />
-						</NavButton>
+						</NavButton> */}
 						<NavButton
 							href="https://app.pegasys.fi/"
-							color={theme.icon.whiteGray}
+							color={theme.text.cyan}
 							customTarget
 							display={{
 								base: "none",
@@ -278,7 +278,13 @@ export const Header: React.FC = () => {
 							}}
 						>
 							V3
-							<Icon as={MdOutlineCallMade} w="5" h="5" ml="2" />
+							<Icon
+								as={MdOutlineCallMade}
+								w="5"
+								h="5"
+								ml="2"
+								color={theme.text.cyan}
+							/>
 						</NavButton>
 					</Flex>
 				)}

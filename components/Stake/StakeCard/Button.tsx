@@ -1,7 +1,7 @@
-import React, { useMemo } from "react";
-import { useRouter } from "next/router";
 import { Flex } from "@chakra-ui/react";
 import { JSBI } from "@pollum-io/pegasys-sdk";
+import { useRouter } from "next/router";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { BIG_INT_ZERO } from "pegasys-services";
@@ -65,7 +65,7 @@ const Buttons: React.FC<IButtonsProps> = ({
 						width={["50%", "50%", "50%", ""]}
 						disabled={isPeriodFinish}
 					>
-						{t("earnPages.stake")}
+						Stake Period Finish
 					</EarnButton>
 				</>
 			)}
