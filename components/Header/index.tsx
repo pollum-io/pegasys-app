@@ -277,35 +277,15 @@ export const Header: React.FC = () => {
 								lg: "flex",
 							}}
 						>
-							V3
-							<Icon
-								as={MdOutlineCallMade}
-								w="5"
-								h="5"
-								ml="2"
-								color={theme.text.cyan}
-							/>
-						</NavButton>
-						<NavButton
-							href="#"
-							color={theme.text.cyan}
-							customTarget
-							display={{
-								base: "none",
-								sm: "none",
-								md: "flex",
-								lg: "flex",
-							}}
-							active
-						>
+							Go to V3
 							<Img
 								w={["5", "5", "5", "5"]}
 								h={["5", "5", "5", "5"]}
-								src={theme.icon.sysCoinLogo}
-								mr={["2", "2", "2", "2"]}
+								src={theme.icon.rolluxLogo}
+								ml={["2", "2", "2", "2"]}
 								left="0"
 							/>
-							NEVM
+							<Icon as={MdOutlineCallMade} w="5" h="5" ml="2" />
 						</NavButton>
 					</Flex>
 				)}
@@ -337,8 +317,21 @@ export const Header: React.FC = () => {
 					py="2"
 					justifyContent="space-between"
 				>
-					<Flex w="25%" gap={["2", "4"]} pl={["0", "2", "0", "0"]}>
-						<TokenButton onClick={onOpenPsysBreakdown} />
+					<Flex
+						w="25%"
+						gap={["2", "2"]}
+						style={{
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "center",
+						}}
+					>
+						<Img
+							w={["5", "5", "5", "5"]}
+							h={["5", "5", "5", "5"]}
+							src={theme.icon.sysCoinLogo}
+							left="0"
+						/>
 						<NetworkButton />
 					</Flex>
 					<Flex

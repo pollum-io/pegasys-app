@@ -93,7 +93,7 @@ export const DrawerMenu: React.FC<IDrawer> = props => {
 								{item.name}
 							</DrawerLinks>
 						))}
-						<DrawerLinks
+						{/* <DrawerLinks
 							href="https://app.pegasys.fi/"
 							color={theme.icon.whiteGray}
 							customTarget
@@ -106,7 +106,7 @@ export const DrawerMenu: React.FC<IDrawer> = props => {
 						>
 							V3
 							<Icon as={MdOutlineCallMade} w="5" h="5" ml="2" />
-						</DrawerLinks>
+						</DrawerLinks> */}
 						<DrawerLinks
 							href="#"
 							color={theme.icon.whiteGray}
@@ -118,14 +118,15 @@ export const DrawerMenu: React.FC<IDrawer> = props => {
 								lg: "flex",
 							}}
 						>
+							Go to V3
 							<Img
 								w={["5", "5", "5", "5"]}
 								h={["5", "5", "5", "5"]}
-								src={theme.icon.sysCoinLogo}
-								mr={["2", "2", "2", "2"]}
+								src={theme.icon.rolluxLogo}
+								ml={["2", "2", "2", "2"]}
 								left="0"
 							/>
-							NEVM
+							<Icon as={MdOutlineCallMade} w="5" h="5" ml="2" />
 						</DrawerLinks>
 					</Flex>
 				</DrawerBody>
