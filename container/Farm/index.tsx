@@ -83,7 +83,7 @@ export const FarmContainer: NextPage = () => {
 							// bg={theme.bg.blueGray}
 						>
 							<Text fontWeight="bold" fontSize="md">
-								Migration your funds to V3
+								Migrate your funds to Rollux
 							</Text>
 							<Text
 								fontWeight="medium"
@@ -91,11 +91,15 @@ export const FarmContainer: NextPage = () => {
 								lineHeight="shorter"
 								w={["100%"]}
 							>
-								We are migrating our DeFi protocol from version v1 to v3 to
-								offer significant improvements, including enhanced security, new
-								features, and an optimized user experience. Please remove your
-								funds from v1 and migrate to v3. Contact our team on Discord for
-								assistance!
+								We are excited to announce the upgrade of our DeFi protocol from
+								v1 on Syscoin to v3 on Rollux! This upgrade brings significant
+								enhancements, including robust security measures, a suite of new
+								features, an optimized user experience, and a brand-new
+								incentives program. To take full advantage of these improvements
+								and participate in the new incentives program, please migrate
+								your funds from v1 to v3. For any assistance with the migration
+								process, our team is available to help you on Discord. Join us
+								and make the most of the upgraded platform!
 							</Text>
 						</Flex>
 						<Flex
