@@ -112,7 +112,7 @@ export const FarmContainer: NextPage = () => {
 							color="white"
 						>
 							<Link
-								href={`https://info.pegasys.finance/account/${address}`}
+								href="https://app.pegasys.fi/#/swap"
 								target="_blank"
 								rel="noreferrer"
 								_hover={{ cursor: "pointer" }}
@@ -128,7 +128,7 @@ export const FarmContainer: NextPage = () => {
 							</Link>
 						</Flex>
 					</Flex>
-					<Flex
+					{/* <Flex
 						flexDirection="column"
 						zIndex="docked"
 						position="relative"
@@ -194,7 +194,7 @@ export const FarmContainer: NextPage = () => {
 								</Flex>
 							</Link>
 						</Flex>
-					</Flex>
+					</Flex> */}
 				</SlideFade>
 				<Flex
 					id="a"

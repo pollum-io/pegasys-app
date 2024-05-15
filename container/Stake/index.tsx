@@ -111,7 +111,7 @@ export const StakeContainer: NextPage = () => {
 							color="white"
 						>
 							<Link
-								href={`https://info.pegasys.finance/account/${address}`}
+								href="https://app.pegasys.fi/#/swap"
 								target="_blank"
 								rel="noreferrer"
 								_hover={{ cursor: "pointer" }}
@@ -127,7 +127,7 @@ export const StakeContainer: NextPage = () => {
 							</Link>
 						</Flex>
 					</Flex>
-					<Flex
+					{/* <Flex
 						flexDirection="column"
 						zIndex="docked"
 						position="relative"
@@ -186,7 +186,7 @@ export const StakeContainer: NextPage = () => {
 							</Text>
 							<MdOutlineCallMade size={18} />
 						</Flex>
-					</Flex>
+					</Flex> */}
 				</SlideFade>
 				<Flex
 					alignItems="center"
