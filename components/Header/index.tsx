@@ -296,13 +296,13 @@ export const Header: React.FC = () => {
 								md: "flex",
 								lg: "flex",
 							}}
-							active={true}
+							active
 						>
 							<Img
 								w={["5", "5", "5", "5"]}
 								h={["5", "5", "5", "5"]}
 								src={theme.icon.sysCoinLogo}
-								mr={"2"}
+								mr={["2", "2", "2", "2"]}
 								left="0"
 							/>
 							NEVM
