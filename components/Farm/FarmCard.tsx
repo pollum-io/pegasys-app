@@ -275,9 +275,7 @@ const FarmCard: FunctionComponent<{
 						}}
 						disabled
 					>
-						{t("earnPages.addLiquidity", {
-							pair: `${tokenA.symbol}-${tokenB?.symbol}`,
-						})}
+						Farm period is over
 					</EarnButton>
 				)}
 		</Flex>

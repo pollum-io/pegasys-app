@@ -70,7 +70,7 @@ const Buttons: React.FC<IButtonsProps> = ({
 						width={["50%", "50%", "50%", ""]}
 						disabled={isPeriodFinish}
 					>
-						Stake Period Finish
+						Stake period is over
 					</EarnButton>
 				</>
 			)}
