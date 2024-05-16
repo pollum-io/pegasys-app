@@ -42,7 +42,12 @@ const Buttons: React.FC<IButtonsProps> = ({
 			justifyContent="space-around"
 		>
 			{getStakeToken ? (
-				<EarnButton {...btnProps} onClick={() => router.push("/")} solid>
+				<EarnButton
+					{...btnProps}
+					onClick={() => router.push("/")}
+					solid
+					disabled
+				>
 					{`${t("earnPages.get")} ${symbol}`}
 				</EarnButton>
 			) : (
