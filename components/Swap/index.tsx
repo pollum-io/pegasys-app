@@ -1131,7 +1131,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 												: expert
 												? () => {
 														// eslint-disable-next-line
-														// @ts-ignore
+												// @ts-ignore
 														swapCall?.callback();
 														setTxType("swap");
 												  }
@@ -1189,7 +1189,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 													: approveValidation && !alreadyApproved
 													? () => approve()
 													: // eslint-disable-next-line
-													  // @ts-ignore
+											  // @ts-ignore
 													  () => swapCall?.callback()
 											}
 											bgColor={theme.bg.blueNavyLightness}
