@@ -3,6 +3,7 @@ import {
 	Collapse,
 	Flex,
 	Img,
+	Link,
 	SlideFade,
 	Text,
 	useColorMode,
@@ -69,7 +70,75 @@ export const StakeContainer: NextPage = () => {
 						position="relative"
 						borderRadius="xl"
 						backgroundColor={theme.bg.alphaPurple}
+					>
+						<Flex
+							zIndex="docked"
+							flexDirection="column"
+							px={["1rem", "1.325rem", "1.625rem", "1.625rem"]}
+							py={["0.8rem", "1.1rem", "1.375rem", "1.375rem"]}
+							gap="3"
+							h={["auto"]}
+							color="white"
+							// bg={theme.bg.blueGray}
+						>
+							<Text fontWeight="bold" fontSize="md">
+								Migrate your funds to Rollux
+							</Text>
+							<Text
+								fontWeight="medium"
+								fontSize="sm"
+								lineHeight="shorter"
+								w={["100%"]}
+							>
+								We are excited to announce the upgrade of our DeFi protocol from
+								v1 on Syscoin to v3 on Rollux! This upgrade brings significant
+								enhancements, including robust security measures, a suite of new
+								features, an optimized user experience, and a brand-new
+								incentives program. To take full advantage of these improvements
+								and participate in the new incentives program, please migrate
+								your funds from v1 to v3. For any assistance with the migration
+								process, our team is available to help you on Discord. Join us
+								and make the most of the upgraded platform!
+							</Text>
+						</Flex>
+						<Flex
+							zIndex="0"
+							position="relative"
+							top={["1.5", "1", "1", "1"]}
+							alignItems="center"
+							justifyContent="center"
+							flexDirection="row"
+							bgColor={theme.bg.alphaPurple}
+							borderBottomRadius="xl"
+							py="0.531rem"
+							pt="0.2rem"
+							color="white"
+						>
+							<Link
+								href="https://app.pegasys.fi/#/swap"
+								target="_blank"
+								rel="noreferrer"
+								_hover={{ cursor: "pointer" }}
+								flexDirection="row"
+							>
+								<Flex gap="2.5" alignItems="center">
+									<Text fontWeight="medium" fontSize="xs">
+										V3
+									</Text>
+
+									<MdOutlineCallMade size={18} />
+								</Flex>
+							</Link>
+						</Flex>
+					</Flex>
+					{/* <Flex
+						flexDirection="column"
+						zIndex="docked"
+						position="relative"
+						borderRadius="xl"
+						backgroundColor={theme.bg.alphaPurple}
 						h={["10.75rem", "unset", "unset", "unset"]}
+						mt={["1rem", "1rem", "1rem", "1rem"]}
 					>
 						<Img
 							borderRadius="xl"
@@ -121,7 +190,7 @@ export const StakeContainer: NextPage = () => {
 							</Text>
 							<MdOutlineCallMade size={18} />
 						</Flex>
-					</Flex>
+					</Flex> */}
 				</SlideFade>
 				<Flex
 					alignItems="center"

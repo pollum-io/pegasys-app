@@ -42,7 +42,12 @@ const Buttons: React.FC<IButtonsProps> = ({
 			justifyContent="space-around"
 		>
 			{getStakeToken ? (
-				<EarnButton {...btnProps} onClick={() => router.push("/")} solid>
+				<EarnButton
+					{...btnProps}
+					onClick={() => router.push("/")}
+					solid
+					disabled
+				>
 					{`${t("earnPages.get")} ${symbol}`}
 				</EarnButton>
 			) : (
@@ -65,7 +70,7 @@ const Buttons: React.FC<IButtonsProps> = ({
 						width={["50%", "50%", "50%", ""]}
 						disabled={isPeriodFinish}
 					>
-						Stake Period Finish
+						Stake period is over
 					</EarnButton>
 				</>
 			)}

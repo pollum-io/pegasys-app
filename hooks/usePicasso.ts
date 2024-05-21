@@ -47,6 +47,16 @@ const usePicasso = () => {
 				"icons/pegasys.png"
 			),
 
+			sysCoinLogo: useColorModeValue(
+				"icons/syscoin-logo.png",
+				"icons/syscoin-logo.png"
+			),
+
+			rolluxLogo: useColorModeValue(
+				"icons/rollux-logo.png",
+				"icons/rollux-logo.png"
+			),
+
 			borderExpertMode: useColorModeValue(
 				"icons/Border-light-gradient-02.png",
 				"icons/Border-gradient-02.png"
