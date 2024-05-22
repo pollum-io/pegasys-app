@@ -6,6 +6,7 @@ import {
 	Icon,
 	Img,
 	Input,
+	Link,
 	SlideFade,
 	Text,
 	useColorMode,
@@ -51,7 +52,11 @@ import React, {
 } from "react";
 import { useTranslation } from "react-i18next";
 import { IoIosArrowDown } from "react-icons/io";
-import { MdHelpOutline, MdWifiProtectedSetup } from "react-icons/md";
+import {
+	MdHelpOutline,
+	MdOutlineCallMade,
+	MdWifiProtectedSetup,
+} from "react-icons/md";
 import { getTokensGraphCandle } from "services/index";
 import {
 	IChartComponentData,
@@ -691,6 +696,35 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 								and make the most of the upgraded platform!
 							</Text>
 						</Flex>
+						<Flex
+							zIndex="0"
+							position="relative"
+							top={["1.5", "1", "1", "1"]}
+							alignItems="center"
+							justifyContent="center"
+							flexDirection="row"
+							bgColor={theme.bg.alphaPurple}
+							borderBottomRadius="xl"
+							py="0.531rem"
+							pt="0.2rem"
+							color="white"
+						>
+							<Link
+								href="https://app.pegasys.fi/#/swap"
+								target="_blank"
+								rel="noreferrer"
+								_hover={{ cursor: "pointer" }}
+								flexDirection="row"
+							>
+								<Flex gap="2.5" alignItems="center">
+									<Text fontWeight="medium" fontSize="xs">
+										V3
+									</Text>
+
+									<MdOutlineCallMade size={18} />
+								</Flex>
+							</Link>
+						</Flex>
 					</Flex>
 				</Flex>
 
@@ -1131,7 +1165,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 												: expert
 												? () => {
 														// eslint-disable-next-line
-												// @ts-ignore
+														// @ts-ignore
 														swapCall?.callback();
 														setTxType("swap");
 												  }
@@ -1189,7 +1223,7 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 													: approveValidation && !alreadyApproved
 													? () => approve()
 													: // eslint-disable-next-line
-											  // @ts-ignore
+													  // @ts-ignore
 													  () => swapCall?.callback()
 											}
 											bgColor={theme.bg.blueNavyLightness}
