@@ -1,4 +1,12 @@
 {
-	"exportall.config.folderListener": ["/components/Buttons", "/components"],
-	"exportall.config.relExclusion": ["/contexts/index.ts"]
+	"exportall.config.folderListener": [
+		"/components/Buttons",
+		"/components"
+	],
+	"exportall.config.relExclusion": [
+		"/contexts/index.ts"
+	],
+	"cSpell.words": [
+		"pegasys"
+	]
 }

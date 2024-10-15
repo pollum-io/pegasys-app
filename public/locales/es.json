@@ -670,6 +670,9 @@
 		"assets": "Activos",
 		"noPositions": "No se han encontrado puestos.",
 		"noLiquidity": "Sin liquidez apostada.",
-		"noTransactions": "No se encontraron transacciones recientes."
+		"noTransactions": "No se encontraron transacciones recientes.",
+		"transactionNameMint": "Añadido {{ symbol1 }} y {{ symbol2 }}",
+		"transactionNameBurn": "Eliminado {{ symbol1 }} y {{ symbol2 }}",
+		"transactionNameSwaps": "Swap {{ symbol1 }} por {{ symbol2 }}"
 	}
 }

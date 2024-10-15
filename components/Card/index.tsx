@@ -4,7 +4,7 @@ import { Flex } from "@chakra-ui/react";
 import { usePicasso } from "hooks";
 import { CardProps } from "./dto";
 
-const Card: React.FC<CardProps> = props => {
+export const Card: React.FC<CardProps> = props => {
 	const theme = usePicasso();
 
 	return (
@@ -20,4 +20,4 @@ const Card: React.FC<CardProps> = props => {
 	);
 };
 
-export default Card;
+// export default Card;

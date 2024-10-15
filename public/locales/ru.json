@@ -669,6 +669,9 @@
 		"assets": "Активы",
 		"noPositions": "Позиции не найдены.",
 		"noLiquidity": "Ликвидность без ставок.",
-		"noTransactions": "Последние сделки не найдены."
+		"noTransactions": "Последние сделки не найдены.",
+		"transactionNameMint": "Добавлен {{ symbol1 }} и {{ symbol2 }}",
+		"transactionNameBurn": "Ремовидо {{ symbol1 }} и {{ symbol2 }}",
+		"transactionNameSwaps": "Менять {{ symbol1 }} на {{ symbol2 }}"
 	}
 }

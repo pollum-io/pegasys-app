@@ -670,6 +670,9 @@
 		"assets": "Tài sản",
 		"noPositions": "Không tìm thấy vị trí nào.",
 		"noLiquidity": "Không có thanh khoản đặt cọc.",
-		"noTransactions": "Không tìm thấy giao dịch gần đây."
+		"noTransactions": "Không tìm thấy giao dịch gần đây.",
+		"transactionNameMint": "Thêm {{ symbol1 }} et {{ symbol2 }}",
+		"transactionNameBurn": "loại bỏ {{ symbol1 }} et {{ symbol2 }}",
+		"transactionNameSwaps": "Tráo đổi {{ symbol1 }} pour {{ symbol2 }}"
 	}
 }

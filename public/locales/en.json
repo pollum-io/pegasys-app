@@ -668,6 +668,9 @@
 		"assets": "Assets",
 		"noPositions": "No Positions Found.",
 		"noLiquidity": "No Staked Liquidity.",
-		"noTransactions": "No Recent Transactions Found."
+		"noTransactions": "No Recent Transactions Found.",
+		"transactionNameMint": "Add {{ symbol1 }} and {{ symbol2 }}",
+		"transactionNameBurn": "Remove {{ symbol1 }} and {{ symbol2 }}",
+		"transactionNameSwaps": "Swap {{ symbol1 }} for {{ symbol2 }}"
 	}
 }

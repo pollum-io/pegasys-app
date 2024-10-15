@@ -670,6 +670,9 @@
 		"assets": "资产",
 		"noPositions": "没有找到职位。",
 		"noLiquidity": "无抵押的流动性。",
-		"noTransactions": "没有发现最近的交易。"
+		"noTransactions": "没有发现最近的交易。",
+		"transactionNameMint": "额外的 {{ symbol1 }} 饿 {{ symbol2 }}",
+		"transactionNameBurn": "已删除 {{ symbol1 }} 饿 {{ symbol2 }}",
+		"transactionNameSwaps": "互换 {{ symbol1 }} 由 {{ symbol2 }}"
 	}
 }

@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { usePicasso } from "hooks";
+import { usePicasso, useTokens } from "hooks";
 import {
 	Button,
 	Flex,
@@ -21,6 +21,7 @@ import {
 	transactionCardsMockedData,
 	walletStatsCardsMockedData,
 } from "helpers/mockedData";
+import { usePortfolio } from "hooks/usePortfolio";
 
 export const PortfolioContainer: NextPage = () => {
 	const theme = usePicasso();
@@ -31,7 +32,11 @@ export const PortfolioContainer: NextPage = () => {
 	const { colorMode } = useColorMode();
 	const { isConnected } = useWallet();
 	const { t: translation } = useTranslation();
-
+	const { allTransactions, getTotalValueSwapped, liquidityPosition } =
+		usePortfolio();
+	const { userTokensBalance } = useTokens();
+	const fee = 0.003;
+	const totalFeePaid = getTotalValueSwapped * fee;
 	const scrollToSection = (elementRef: any) => {
 		window.scrollTo({
 			top: elementRef.current.offsetTop,
@@ -147,7 +152,7 @@ export const PortfolioContainer: NextPage = () => {
 										order={[1, 1, 0, 0]}
 										w="11rem"
 									>
-										{isConnected ? "$1.21" : "-"}
+										{isConnected ? `$${getTotalValueSwapped.toFixed(2)}` : "-"}
 									</Text>
 									<Text
 										fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
@@ -180,7 +185,7 @@ export const PortfolioContainer: NextPage = () => {
 										order={[1, 1, 0, 0]}
 										w={["11rem", "11rem", "9rem", "11rem"]}
 									>
-										{isConnected ? "$1450,00" : "-"}
+										{isConnected ? `$${totalFeePaid.toFixed(4)}` : "-"}
 									</Text>
 									<Text
 										fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
@@ -213,7 +218,7 @@ export const PortfolioContainer: NextPage = () => {
 										order={[1, 1, 0, 0]}
 										w={["11rem", "11rem", "8rem", "8rem"]}
 									>
-										{isConnected ? "12" : "-"}
+										{isConnected ? allTransactions.length : "-"}
 									</Text>
 									<Text
 										fontSize={["0.75rem", "0.875rem", "0.875rem", "0.875rem"]}
@@ -249,9 +254,9 @@ export const PortfolioContainer: NextPage = () => {
 							color={theme.text.mono}
 							mt="3rem"
 							display={
-								walletStatsCardsMockedData.length === 0
+								userTokensBalance.length === 0
 									? "none"
-									: ["none", "none", "flex", "flex"]
+									: ["flex", "flex", "flex", "flex"]
 							}
 							fontSize="0.875rem"
 						>
@@ -286,10 +291,10 @@ export const PortfolioContainer: NextPage = () => {
 							</Flex>
 						</Flex>
 						<Flex flexDirection="column" mt="1rem">
-							{walletStatsCardsMockedData.length === 0 ? (
+							{userTokensBalance.length === 0 ? (
 								<Flex
 									w="100%"
-									my={["3rem", "3rem", "8rem", "8rem"]}
+									my={["3rem", "3rem", "4rem", "4rem"]}
 									flexDirection="column"
 									alignItems="center"
 									justifyContent="center"
@@ -384,7 +389,9 @@ export const PortfolioContainer: NextPage = () => {
 												order={[1, 1, 0, 0]}
 												w="11rem"
 											>
-												{isConnected ? "$0.03" : "-"}
+												{isConnected
+													? `$${liquidityPosition.liquidity.toFixed(1)}`
+													: "-"}
 											</Text>
 											<Text
 												fontSize={[
@@ -418,7 +425,9 @@ export const PortfolioContainer: NextPage = () => {
 												color="#38A169"
 												w="10.7rem"
 											>
-												{isConnected ? "$0.0036" : "-"}
+												{isConnected
+													? `$${liquidityPosition.fees.toFixed(4)}`
+													: "-"}
 											</Text>
 
 											<Text
@@ -463,6 +472,7 @@ export const PortfolioContainer: NextPage = () => {
 									justifyContent="space-between"
 									w={["0", "0", "87%", "88%"]}
 									fontSize="0.875rem"
+									display={liquidityPosition.positions.length ? "flex" : "none"}
 								>
 									<Flex
 										flexDirection="row"
@@ -490,10 +500,10 @@ export const PortfolioContainer: NextPage = () => {
 							</Flex>
 						</Flex>
 						<Flex flexDirection="column" mt="1rem" gap={["0", "2", "2", "2"]}>
-							{liquidityCardsMockedData.length === 0 ? (
+							{liquidityPosition.positions.length === 0 ? (
 								<Flex
 									w="100%"
-									my={["3rem", "3rem", "8rem", "8rem"]}
+									my={["3rem", "3rem", "4rem", "4rem"]}
 									flexDirection="column"
 									alignItems="center"
 									justifyContent="center"
@@ -644,7 +654,7 @@ export const PortfolioContainer: NextPage = () => {
 										</Flex>
 									</Flex>
 
-									<InputGroup
+									{/* <InputGroup
 										alignItems="center"
 										w={["100%", "100%", "30rem", "25rem"]}
 									>
@@ -683,7 +693,7 @@ export const PortfolioContainer: NextPage = () => {
 											}}
 											_hover={{}}
 										/>
-									</InputGroup>
+									</InputGroup> */}
 								</Flex>
 							</Flex>
 							<Flex
@@ -693,7 +703,7 @@ export const PortfolioContainer: NextPage = () => {
 								color={theme.text.mono}
 								mt="3rem"
 								display={
-									transactionCardsMockedData.length === 0
+									allTransactions.length === 0
 										? "none"
 										: ["none", "none", "flex", "flex"]
 								}
@@ -727,7 +737,7 @@ export const PortfolioContainer: NextPage = () => {
 												<Text>{translation("portfolioPage.totalValue")}</Text>
 											</Flex>
 											<Flex w="8rem" mr={["0.5rem", "0", "0", "0"]}>
-												<Text>{translation("portfolioPage.totalAmount")}</Text>
+												<Text>{translation("portfolioPage.tokenAmount")}</Text>
 											</Flex>
 											<Flex w="8rem">
 												<Text>{translation("portfolioPage.tokenAmount")}</Text>
@@ -744,10 +754,10 @@ export const PortfolioContainer: NextPage = () => {
 								mt={["2rem", "2rem", "1rem", "1rem"]}
 								mb="20rem"
 							>
-								{transactionCardsMockedData.length === 0 ? (
+								{allTransactions.length === 0 ? (
 									<Flex
 										w="100%"
-										my={["3rem", "3rem", "8rem", "8rem"]}
+										my={["3rem", "3rem", "4rem", "4rem"]}
 										flexDirection="column"
 										alignItems="center"
 										justifyContent="center"
@@ -763,7 +773,7 @@ export const PortfolioContainer: NextPage = () => {
 										</Text>
 									</Flex>
 								) : (
-									<TransactionCards />
+									<TransactionCards buttonOption={buttonId} />
 								)}
 							</Flex>
 						</Flex>

@@ -670,6 +670,9 @@
 		"assets": "Varlıklar",
 		"noPositions": "Pozisyon Bulunamadı.",
 		"noLiquidity": "Bahisli Likidite Yok.",
-		"noTransactions": "Son İşlem Bulunamadı."
+		"noTransactions": "Son İşlem Bulunamadı.",
+		"transactionNameMint": "Katma {{ symbol1 }} ve {{ symbol2 }}",
+		"transactionNameBurn": "kaldırıldı {{ symbol1 }} ve {{ symbol2 }}",
+		"transactionNameSwaps": "Takas {{ symbol1 }} veya {{ symbol2 }}"
 	}
 }
