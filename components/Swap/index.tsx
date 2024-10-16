@@ -661,30 +661,34 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 				flexDirection="column"
 				alignItems="center"
 				justifyContent="center"
+				w={["xs", "md", "2xl", "2xl"]}
 			>
-				<Flex
-					flexDirection="column"
-					zIndex="docked"
-					position="relative"
-					borderRadius="xl"
-					backgroundColor={theme.bg.alphaPurple}
-					alignItems="center"
-					justifyContent="center"
-				>
+				<SlideFade in={Boolean(isMobile || !isMobile)} offsetY="-30px">
 					<Flex
-						zIndex="docked"
 						flexDirection="column"
-						px={["1rem", "1.325rem", "1.625rem", "1.625rem"]}
-						py={["0.8rem", "1.1rem", "1.1rem", "1.1rem"]}
-						gap="3"
-						color="white"
-						width={["100%", "5xl", "5xl", "5xl"]}
+						zIndex="docked"
+						position="relative"
+						borderRadius="xl"
+						backgroundColor={theme.bg.alphaPurple}
 					>
-						<Text fontWeight="bold" fontSize="md">
-							Migrate your funds to Rollux
-						</Text>
-						<Flex alignItems="center" justifyContent="center">
-							<Text fontWeight="medium" fontSize="sm" lineHeight="shorter">
+						<Flex
+							zIndex="docked"
+							flexDirection="column"
+							px={["1rem", "1.325rem", "1.625rem", "1.625rem"]}
+							py={["0.8rem", "1.1rem", "1.375rem", "1.375rem"]}
+							gap="3"
+							h={["auto"]}
+							color="white"
+						>
+							<Text fontWeight="bold" fontSize="md">
+								Migrate your funds to Rollux
+							</Text>
+							<Text
+								fontWeight="medium"
+								fontSize="sm"
+								lineHeight="shorter"
+								w={["100%"]}
+							>
 								We are excited to announce the upgrade of our DeFi protocol from
 								v1 on Syscoin to v3 on Rollux! This upgrade brings significant
 								enhancements, including robust security measures, a suite of new
@@ -726,9 +730,12 @@ export const Swap: FunctionComponent<ButtonProps> = () => {
 							</Link>
 						</Flex>
 					</Flex>
-				</Flex>
+				</SlideFade>
 
-				<Flex pt={["0.8rem", "1.1rem", "1.375rem", "1.375rem"]}>
+				<Flex
+					pt={["0.8rem", "1.1rem", "1.375rem", "1.375rem"]}
+					flexDirection={["column", "column", "column", "column", "row"]}
+				>
 					<SlideFade in={Boolean(userTokensBalance.length)} offsetY="-50px">
 						<Flex alignItems="center" flexDirection="column">
 							<Flex
